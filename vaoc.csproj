@@ -1,0 +1,503 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3B39F519-7FEC-4A4E-B921-60D4C0665176}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>vaoc</RootNamespace>
+    <AssemblyName>vaoc</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <PublishUrl>http://localhost/vaoc/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="astar\Arc.cs" />
+    <Compile Include="astar\AStar.cs" />
+    <Compile Include="astar\AStarVille.cs" />
+    <Compile Include="astar\SortableListVille.cs" />
+    <Compile Include="astar\TrackVille.cs" />
+    <Compile Include="astar\Node.cs" />
+    <Compile Include="astar\SortableList.cs" />
+    <Compile Include="astar\Track.cs" />
+    <Compile Include="BaseVaoc.cs">
+      <DependentUpon>BaseVaoc.xsd</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseVaoc.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseVaoc.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Cartographie.cs" />
+    <Compile Include="ClassHPAStarCreation.cs" />
+    <Compile Include="ClassPCCVillesCreation.cs" />
+    <Compile Include="data\ClassDataMessage.cs" />
+    <Compile Include="data\ClassDataUtilisateur.cs" />
+    <Compile Include="FabricantDeFilm.cs" />
+    <Compile Include="FormPCCNoms.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPCCNoms.Designer.cs">
+      <DependentUpon>FormPCCNoms.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormHPA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormHPA.Designer.cs">
+      <DependentUpon>FormHPA.cs</DependentUpon>
+    </Compile>
+    <Compile Include="data\ClassDataJeu.cs" />
+    <Compile Include="data\ClassDataModeles.cs" />
+    <Compile Include="data\ClassDataOrdre.cs" />
+    <Compile Include="data\ClassDataPartie.cs" />
+    <Compile Include="ClassMessager.cs" />
+    <Compile Include="ClassNotificationJoueurs.cs" />
+    <Compile Include="ClassTraitementHeure.cs" />
+    <Compile Include="ClassTraitementWeb.cs" />
+    <Compile Include="ClassVaocWebFactory.cs" />
+    <Compile Include="ClassVaocWebFichier.cs" />
+    <Compile Include="ClassVaocWebHTTP.cs" />
+    <Compile Include="data\ClassDataRole.cs" />
+    <Compile Include="FormNouveauModeleTerrain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNouveauModeleTerrain.Designer.cs">
+      <DependentUpon>FormNouveauModeleTerrain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPCCNomsChoix.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPCCNomsChoix.Designer.cs">
+      <DependentUpon>FormPCCNomsChoix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormRenfort.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRenfort.Designer.cs">
+      <DependentUpon>FormRenfort.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAptitudesModelesPions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAptitudesModelesPions.Designer.cs">
+      <DependentUpon>FormAptitudesModelesPions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormBatailles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBatailles.Designer.cs">
+      <DependentUpon>FormBatailles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormLibelleOrdre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormLibelleOrdre.Designer.cs">
+      <DependentUpon>FormLibelleOrdre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMessage.Designer.cs">
+      <DependentUpon>FormMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMessageArbitre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMessageArbitre.Designer.cs">
+      <DependentUpon>FormMessageArbitre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormNation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNation.Designer.cs">
+      <DependentUpon>FormNation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormModelesPions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormModelesPions.Designer.cs">
+      <DependentUpon>FormModelesPions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormOrdre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOrdre.Designer.cs">
+      <DependentUpon>FormOrdre.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormOutils.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOutils.Designer.cs">
+      <DependentUpon>FormOutils.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPhrase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPhrase.Designer.cs">
+      <DependentUpon>FormPhrase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPion.Designer.cs">
+      <DependentUpon>FormPion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormRole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormRole.Designer.cs">
+      <DependentUpon>FormRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormTests.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormTests.Designer.cs">
+      <DependentUpon>FormTests.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormUtilisateur.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUtilisateur.Designer.cs">
+      <DependentUpon>FormUtilisateur.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormCarte.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormCarte.Designer.cs">
+      <DependentUpon>FormCarte.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAPropos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAPropos.Designer.cs">
+      <DependentUpon>FormAPropos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormFondDeCarte.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormFondDeCarte.Designer.cs">
+      <DependentUpon>FormFondDeCarte.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormGeneral.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormGeneral.Designer.cs">
+      <DependentUpon>FormGeneral.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMeteo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMeteo.Designer.cs">
+      <DependentUpon>FormMeteo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormModelesMouvements.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormModelesMouvements.Designer.cs">
+      <DependentUpon>FormModelesMouvements.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormAptitude.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormAptitude.Designer.cs">
+      <DependentUpon>FormAptitude.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormNomCarte.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNomCarte.Designer.cs">
+      <DependentUpon>FormNomCarte.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPolice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPolice.Designer.cs">
+      <DependentUpon>FormPolice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPrincipale.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPrincipale.Designer.cs">
+      <DependentUpon>FormPrincipale.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormVideo.Designer.cs">
+      <DependentUpon>FormVideo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InterfaceVaocWeb.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormPCCNoms.resx">
+      <DependentUpon>FormPCCNoms.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormHPA.resx">
+      <DependentUpon>FormHPA.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNouveauModeleTerrain.resx">
+      <DependentUpon>FormNouveauModeleTerrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPCCNomsChoix.resx">
+      <DependentUpon>FormPCCNomsChoix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRenfort.resx">
+      <DependentUpon>FormRenfort.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAptitudesModelesPions.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAptitudesModelesPions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBatailles.resx">
+      <DependentUpon>FormBatailles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormLibelleOrdre.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormLibelleOrdre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMessage.resx">
+      <DependentUpon>FormMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMessageArbitre.resx">
+      <DependentUpon>FormMessageArbitre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNation.resx">
+      <DependentUpon>FormNation.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormModelesPions.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormModelesPions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormOrdre.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormOrdre.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormOutils.resx">
+      <DependentUpon>FormOutils.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPhrase.resx">
+      <DependentUpon>FormPhrase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPion.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormPion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormRole.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormTests.resx">
+      <DependentUpon>FormTests.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormUtilisateur.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormUtilisateur.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormCarte.resx">
+      <DependentUpon>FormCarte.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAPropos.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAPropos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormFondDeCarte.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormFondDeCarte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormGeneral.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormGeneral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMeteo.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormMeteo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormModelesMouvements.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormModelesMouvements.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormAptitude.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormAptitude.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNomCarte.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormNomCarte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPolice.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormPolice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPrincipale.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>FormPrincipale.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormVideo.resx">
+      <DependentUpon>FormVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="BaseVaoc.xsc">
+      <DependentUpon>BaseVaoc.xsd</DependentUpon>
+    </None>
+    <None Include="BaseVaoc.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BaseVaoc.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="BaseVaoc.xss">
+      <DependentUpon>BaseVaoc.xsd</DependentUpon>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Content Include="Resources\bullseye-ani.ani" />
+    <None Include="Resources\IconVAOC.ico" />
+    <Content Include="Resources\pontendommage.bmp" />
+    <Content Include="Resources\ponton.bmp" />
+    <Content Include="Resources\voirTrajetsVilles.bmp" />
+    <Content Include="Resources\tail2.ani" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\pontdetruit.bmp" />
+    <Content Include="Resources\pont.bmp" />
+    <Content Include="Resources\voirTopographie.bmp" />
+    <Content Include="Resources\voirTrajets.bmp" />
+    <Content Include="Resources\voirVilles.bmp" />
+    <Content Include="Resources\testPCC.bmp" />
+    <Content Include="Resources\voirBatailles.bmp" />
+    <Content Include="Resources\voirQG.bmp" />
+    <Content Include="Resources\voirUnites.bmp" />
+    <Content Include="Resources\zoomPlus.bmp" />
+    <Content Include="Resources\zoomMoins.bmp" />
+    <None Include="app.config" />
+    <None Include="Resources\ActualSizeHS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WaocLibrary\WaocLib.csproj">
+      <Project>{9585AC78-B64E-4A65-B358-4C6B77BFAE50}</Project>
+      <Name>WaocLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -13,7 +13,7 @@ namespace vaoc
             /// <summary>
             /// recherche le leader de la nation
             /// </summary>
-            /// <returns>renvoie le pion correspondant</returns>
+            /// <returns>renvoi le pion correspondant</returns>
             public TAB_PIONRow CommandantEnChef(int idNation)
             {
                 //le leader, c'est celui qui est propriétaire de lui-même

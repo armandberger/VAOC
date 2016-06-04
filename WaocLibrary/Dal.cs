@@ -122,10 +122,44 @@ namespace WaocLib
                 donneesSource.ReadXml(nomfichier);
                 foreach (DataTable table in donneesSource.Tables)
                     Debug.WriteLine(table.TableName + " : "+table.Rows.Count.ToString());
+                //DataTable tableTest = donneesSource.Tables[1];
+                //tableTest.EndLoadData();
+                bool bException = false;
+                Exception derniereErreur = new Exception();//le new juste pour eviter le warning de non affectation
                 foreach (DataTable table in donneesSource.Tables)
                 {
-                    Debug.WriteLine(table.TableName + " : " + table.Rows.Count.ToString());
-                    table.EndLoadData();
+                    DataRow[] rowErrors = table.GetErrors();
+
+                    Debug.WriteLine(table.TableName + "Errors:"+ rowErrors.Length);
+
+                    for (int i = 0; i < rowErrors.Length; i++)
+                    {
+                        Debug.WriteLine(rowErrors[i].RowError);
+
+                        foreach (DataColumn col in rowErrors[i].GetColumnsInError())
+                        {
+                            Debug.WriteLine(col.ColumnName
+                                + ":" + rowErrors[i].GetColumnError(col));
+                        }
+                    }
+
+                    Debug.WriteLine("EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString());
+                    try
+                    {
+                        table.EndLoadData();
+                        Debug.WriteLine("Exception sur EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        derniereErreur = e;
+                        bException = true;
+                    }
+                }
+                if (bException)
+                {
+                    Cursor.Current = oldCursor;
+                    MessageBox.Show("Erreur sur ChargerPartie :" + derniereErreur.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
                 Cursor.Current = oldCursor;
             }

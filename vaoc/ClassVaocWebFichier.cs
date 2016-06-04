@@ -129,25 +129,52 @@ namespace vaoc
                 return -1;
             }
             //recherche de tous les pions controlés par le joueur, sachant qu'il peut avoir plusieurs rôles !
-            string requete = string.Empty;
+            int i_onr = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;//le joueur n'a jamais donné d'ordres, valeur par defaut
+
+            List<ClassDataOrdre> listeOrdresXML = ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
+                                                            Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
             foreach (Donnees.TAB_ROLERow ligneRole in lignesRole)
             {
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(string.Format("ID_PION = {0} OR ID_PION_PROPRIETAIRE = {0}", ligneRole.ID_PION));
                 foreach (Donnees.TAB_PIONRow lignePion in lignesPion)
                 {
-                    if (lignePion.estMessager || lignePion.estPatrouille) { continue; }
+                    if (lignePion.estMessager || lignePion.estPatrouille || 
+                        (lignePion.estJoueur && lignePion.ID_PION!=ligneRole.ID_PION)) { continue; }
 
-                    if (requete.Length > 0) requete += " OR ";
-                    requete += " (ID_DESTINATAIRE = " + lignePion.ID_PION + " ) ";
+                    //on recherche le dernier ordre
+                    foreach (ClassDataOrdre xmlOrdre in listeOrdresXML)
+                    {
+                        if (xmlOrdre.ID_PION== lignePion.ID_PION && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - xmlOrdre.I_TOUR < i_onr))
+                        {
+                            i_onr = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - xmlOrdre.I_TOUR;
+                        }
+                    }
                 }
             }
-            Donnees.TAB_ORDRERow[] ligneOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
+            return i_onr;
+            /*
+                        string requete = string.Empty;
 
-            if (0 == ligneOrdre.Count())
-            {
-                return Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;//le joueur n'a jamais donné d'ordres
-            }
-            return Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - ligneOrdre[0].I_TOUR_DEBUT;
+                        foreach (Donnees.TAB_ROLERow ligneRole in lignesRole)
+                        {
+                            Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(string.Format("ID_PION = {0} OR ID_PION_PROPRIETAIRE = {0}", ligneRole.ID_PION));
+                            foreach (Donnees.TAB_PIONRow lignePion in lignesPion)
+                            {
+                                if (lignePion.estMessager || lignePion.estPatrouille) { continue; }
+
+                                if (requete.Length > 0) requete += " OR ";
+                                requete += " (ID_DESTINATAIRE = " + lignePion.ID_PION + " ) ";
+                            }
+                        }
+                        Donnees.TAB_ORDRERow[] ligneOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
+
+                        if (0 == ligneOrdre.Count())
+                        {
+                            return Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;//le joueur n'a jamais donné d'ordres
+                        }
+                        return Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - ligneOrdre[0].I_TOUR_DEBUT;
+                        */
         }
 
         public ClassDataUtilisateur GetUtilisateur(int id_utilisateur)

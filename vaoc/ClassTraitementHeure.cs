@@ -288,19 +288,27 @@ namespace vaoc
                 }
 
                 // Une unité envoie un message régulièrement, ça rassure le joueur s'il n'est pas proche de ses troupes !
-                foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+
+                i = 0;
+                while (i < Donnees.m_donnees.TAB_PION.Count())
                 {
-                    if (lignePion.B_DETRUIT || !lignePion.B_TELEPORTATION) { continue; }
-                    if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estDepot) { continue; }
-                    Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION);
-                    if (null == ligneMessage ||
-                        ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                    if (!lignePion.B_DETRUIT && !lignePion.B_TELEPORTATION)
                     {
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION))
+                        if (!lignePion.estMessager && !lignePion.estPatrouille && !lignePion.estDepot)
                         {
-                            return false;
+                            Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION);
+                            if (null == ligneMessage ||
+                                ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
+                            {
+                                if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION))
+                                {
+                                    return false;
+                                }
+                            }
                         }
                     }
+                    i++;
                 }
 
                 // On regarde si toutes les unités sont bien ravitaillées

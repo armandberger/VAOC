@@ -410,21 +410,21 @@ namespace vaoc
 
         partial class TAB_ORDREDataTable
         {
-            public int ProchainID_ORDRE
-            {
-                get
-                {
-                    if (this.Count > 0)
-                    {
-                        System.Nullable<int> maxIdOrdre =
-                            (from ordre in this
-                             select ordre.ID_ORDRE)
-                            .Max();
-                        return (int)maxIdOrdre;
-                    }
-                    return 0;
-                }
-            }
+            //public int ProchainID_ORDRE
+            //{
+            //    get
+            //    {
+            //        if (this.Count > 0)
+            //        {
+            //            System.Nullable<int> maxIdOrdre =
+            //                (from ordre in this
+            //                 select ordre.ID_ORDRE)
+            //                .Max();
+            //            return (int)maxIdOrdre+1;
+            //        }
+            //        return 0;
+            //    }
+            //}
 
             /// <summary>
             ///  Renvoi l'ordre correspondant à un identifiant du web
@@ -486,6 +486,23 @@ namespace vaoc
             public TAB_ORDRERow Courant(int ID_PION)
             {
                 string requete = string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL", ID_PION);
+                string tri = "ID_ORDRE";
+                TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
+                if (0 == resOrdre.Length)
+                {
+                    return null;
+                }
+                return resOrdre[0];
+            }
+
+            /// <summary>
+            ///  Renvoi le premier ordre affecté à l'unité, null si aucun
+            /// </summary>
+            /// <param name="ID_PION">identifiant du pion sur lequel on cherche l'ordre</param>
+            /// <returns>ordre courant du pion, null si aucun</returns>
+            public TAB_ORDRERow Premier(int ID_PION)
+            {
+                string requete = string.Format("ID_PION={0}", ID_PION);
                 string tri = "ID_ORDRE";
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
                 if (0 == resOrdre.Length)

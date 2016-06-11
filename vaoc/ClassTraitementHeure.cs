@@ -428,43 +428,58 @@ namespace vaoc
                 }
                 else
                 {
-                    double distanceMin, distanceMinEnMouvement;
-                    DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement);
-                     LogFile.Notifier(string.Format("Test de tous contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} Distance entre deux unités ennemies en mouvement : {2} ",
-                        nbTourExecutes, distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE));
-                    
-                    if (distanceMin < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                    //Si une bataille est en cours et qu'il fait jour on ne fait jamais plus de deux heures de suite
+                    if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
                     {
-                        //A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour, 4 tours la nuit
-                        if (nbTourExecutes >= 4)
+                        foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                         {
-                            bTourSuivant = false;
-                            LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
+                            if (ligneBataille.IsI_TOUR_FINNull())
+                            {
+                                bTourSuivant = false;
+                            }
+                        }
+                    }
+
+                    if (bTourSuivant)
+                    {
+                        double distanceMin, distanceMinEnMouvement;
+                        DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement);
+                        LogFile.Notifier(string.Format("Test de tous contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} Distance entre deux unités ennemies en mouvement : {2} ",
+                           nbTourExecutes, distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE));
+
+                        if (distanceMin < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                        {
+                            //A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour, 4 tours la nuit
+                            if (nbTourExecutes >= 4)
+                            {
+                                bTourSuivant = false;
+                                LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
+                            }
+                            else
+                            {
+                                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
+                                {
+                                    bTourSuivant = false;
+                                    LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
+                                }
+                            }
+                            // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
+                            if ((Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) ||
+                                (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL) ||
+                                (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
+                            {
+                                bTourSuivant = true;
+                                LogFile.Notifier("+1 tour pour finir au lever du soleil ou à la première heure du jour");
+                            }
                         }
                         else
                         {
-                            if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
+                            //A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite
+                            if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4))
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
+                                LogFile.Notifier("A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                             }
-                        }
-                        // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
-                        if ((Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) ||
-                            (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL) ||
-                            (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
-                        {
-                            bTourSuivant = true;
-                            LogFile.Notifier("+1 tour pour finir au lever du soleil ou à la première heure du jour");
-                        }
-                    }
-                    else
-                    {
-                        //A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite
-                        if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4))
-                        {
-                            bTourSuivant = false;
-                            LogFile.Notifier("A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                         }
                     }
                 }

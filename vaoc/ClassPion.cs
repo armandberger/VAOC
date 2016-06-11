@@ -2419,7 +2419,7 @@ namespace vaoc
                 while ((nom == string.Empty) && i < Donnees.m_donnees.TAB_NOMS_PROMUS.Count)
                 {
                     Donnees.TAB_NOMS_PROMUSRow ligneNomPromu = Donnees.m_donnees.TAB_NOMS_PROMUS[i++];
-                    if ((ligneNomPromu.IsB_NOM_PROMUNull() || ligneNomPromu.B_NOM_PROMU) && ligneNomPromu.ID_NATION == this.idNation)
+                    if ((ligneNomPromu.IsB_NOM_PROMUNull() || !ligneNomPromu.B_NOM_PROMU) && ligneNomPromu.ID_NATION == this.idNation)
                     {
                         nom = ligneNomPromu.S_NOM;
                         ligneNomPromu.B_NOM_PROMU = true;

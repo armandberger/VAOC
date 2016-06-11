@@ -84,6 +84,12 @@
             this.iENGAGEMENT3DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iENGAGEMENT4DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iENGAGEMENT5DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_0 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_COMBAT_5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBatailles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABBATAILLEBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -126,7 +132,13 @@
             this.iENGAGEMENT2DataGridViewTextBoxColumn,
             this.iENGAGEMENT3DataGridViewTextBoxColumn,
             this.iENGAGEMENT4DataGridViewTextBoxColumn,
-            this.iENGAGEMENT5DataGridViewTextBoxColumn});
+            this.iENGAGEMENT5DataGridViewTextBoxColumn,
+            this.S_COMBAT_0,
+            this.S_COMBAT_1,
+            this.S_COMBAT_2,
+            this.S_COMBAT_3,
+            this.S_COMBAT_4,
+            this.S_COMBAT_5});
             this.dataGridViewBatailles.DataSource = this.tABBATAILLEBindingSource;
             this.dataGridViewBatailles.Location = new System.Drawing.Point(12, 23);
             this.dataGridViewBatailles.Name = "dataGridViewBatailles";
@@ -486,6 +498,42 @@
             this.iENGAGEMENT5DataGridViewTextBoxColumn.HeaderText = "I_ENGAGEMENT_5";
             this.iENGAGEMENT5DataGridViewTextBoxColumn.Name = "iENGAGEMENT5DataGridViewTextBoxColumn";
             // 
+            // S_COMBAT_0
+            // 
+            this.S_COMBAT_0.DataPropertyName = "S_COMBAT_0";
+            this.S_COMBAT_0.HeaderText = "S_COMBAT_0";
+            this.S_COMBAT_0.Name = "S_COMBAT_0";
+            // 
+            // S_COMBAT_1
+            // 
+            this.S_COMBAT_1.DataPropertyName = "S_COMBAT_1";
+            this.S_COMBAT_1.HeaderText = "S_COMBAT_1";
+            this.S_COMBAT_1.Name = "S_COMBAT_1";
+            // 
+            // S_COMBAT_2
+            // 
+            this.S_COMBAT_2.DataPropertyName = "S_COMBAT_2";
+            this.S_COMBAT_2.HeaderText = "S_COMBAT_2";
+            this.S_COMBAT_2.Name = "S_COMBAT_2";
+            // 
+            // S_COMBAT_3
+            // 
+            this.S_COMBAT_3.DataPropertyName = "S_COMBAT_3";
+            this.S_COMBAT_3.HeaderText = "S_COMBAT_3";
+            this.S_COMBAT_3.Name = "S_COMBAT_3";
+            // 
+            // S_COMBAT_4
+            // 
+            this.S_COMBAT_4.DataPropertyName = "S_COMBAT_4";
+            this.S_COMBAT_4.HeaderText = "S_COMBAT_4";
+            this.S_COMBAT_4.Name = "S_COMBAT_4";
+            // 
+            // S_COMBAT_5
+            // 
+            this.S_COMBAT_5.DataPropertyName = "S_COMBAT_5";
+            this.S_COMBAT_5.HeaderText = "S_COMBAT_5";
+            this.S_COMBAT_5.Name = "S_COMBAT_5";
+            // 
             // FormBatailles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -565,5 +613,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn iENGAGEMENT3DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iENGAGEMENT4DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iENGAGEMENT5DataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_0;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_COMBAT_5;
     }
 }

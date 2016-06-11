@@ -106,7 +106,7 @@ namespace vaoc
                 int numLigne = 0;
                 foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
                 {
-                    //on ne donne pas la liste des messagers et des patrouilles
+                    //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
                     if (lignePion.estMessager || lignePion.estPatrouille) continue;
 
                     string nom, format;
@@ -241,6 +241,54 @@ namespace vaoc
                         ));
                 }
                 texte.AppendLine("</table><br/>");
+
+                //Maintenant on envoie la liste de toutes les patrouilles en cours
+                numLigne = 0;
+                bool bPremierePatrouille = true;
+                foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
+                {
+                    //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
+                    if (lignePion.estMessager || lignePion.estPatrouille) continue;
+
+                    requete = string.Format("ID_PION_PROPRIETAIRE={0}", lignePion.ID_PION);
+                    Donnees.TAB_PIONRow[] resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
+                    foreach (Donnees.TAB_PIONRow lignePatrouille in resPions)
+                    {
+                        if (lignePatrouille.estPatrouille && !lignePatrouille.B_DETRUIT && lignePatrouille.ID_PION != lignePion.ID_PION)
+                        {
+                            if (bPremierePatrouille)
+                            {
+                                bPremierePatrouille = false;
+                                texte.AppendLine("<div><b>Patrouilles :</b></div>");
+                                texte.AppendLine(string.Format("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\"><tr bgcolor=\"DarkGrey\"><th>{0}</th><th>{1}</th><th>{2}</th></tr>",
+                                    "Division", "Départ", "Destination"));
+                            }
+                            numLigne++;
+                            string sDateDepart, sDestination;
+                            //pour avoir l'heure de départ, je cherche le premier ordre, pas l'ordre courant
+                            Donnees.TAB_ORDRERow ligneOrdrePremier = Donnees.m_donnees.TAB_ORDRE.Premier(lignePatrouille.ID_PION);
+
+                            sDateDepart = ClassMessager.DateHeure(ligneOrdrePremier.I_TOUR_DEBUT, ligneOrdrePremier.I_PHASE_DEBUT, false);
+                            ClassMessager.CaseVersZoneGeographique(ligneOrdrePremier.ID_CASE_DESTINATION, out sDestination);
+
+                            string format = (0 == numLigne % 3) ? " bgcolor=\"LightGrey\"" : "";
+                            texte.AppendLine(string.Format("<tr {0}><td>{1}</td><td>{2}</td><td>{3}</td></tr>",
+                                format,
+                                lignePion.S_NOM,
+                                sDateDepart,
+                                sDestination
+                                ));
+                        }
+                    }
+                }
+                if (bPremierePatrouille)
+                {
+                    texte.AppendLine("<div>Vous n'avez actuellement aucune patrouille en exercice.</div><br/>");
+                }
+                else
+                {
+                    texte.AppendLine("</table><br/>");
+                }
             }
 
             //Envoie d'un éventuel message de l'arbitre

@@ -21,7 +21,7 @@ namespace vaoc
                             (from element in this
                              select element.ID_BATAILLE)
                             .Max();
-                        return (int)maxId;
+                        return (int)maxId+1;
                     }
                     return 0;
                 }

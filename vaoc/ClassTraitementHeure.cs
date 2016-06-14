@@ -288,7 +288,6 @@ namespace vaoc
                 }
 
                 // Une unité envoie un message régulièrement, ça rassure le joueur s'il n'est pas proche de ses troupes !
-
                 i = 0;
                 while (i < Donnees.m_donnees.TAB_PION.Count())
                 {
@@ -2509,18 +2508,25 @@ namespace vaoc
                     //est-ce que l'unité a fait une activité ce jour ?
                     if (!lignePion.reposComplet)
                     {
-                        int nbHeuresJour = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_JOUR / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
-                        int nbHeuresNuit = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_NUIT / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
+                        if ((lignePion.I_NB_HEURES_COMBAT > 0) || (lignePion.I_NB_PHASES_MARCHE_JOUR > 0) || (lignePion.I_NB_PHASES_MARCHE_NUIT > 0))
+                        {
+                            int nbHeuresJour = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_JOUR / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
+                            int nbHeuresNuit = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_NUIT / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
 
-                        int colonneFatigue = Math.Max(0, nbHeuresJour + nbHeuresNuit - (int)Math.Floor(lignePion.I_EXPERIENCE));
-                        fatigue = (lignePion.I_CAVALERIE > 0) ? Constantes.tableFatigueCavalerie[colonneFatigue] : Constantes.tableFatigueInfanterie[colonneFatigue];
-                        fatigue += nbHeuresNuit;
-                        fatigue += lignePion.I_NB_HEURES_COMBAT * 2;//combat toutes les deux heures
-                        //fatigue += lignePion.I_NB_HEURES_FORTIFICATION; ->jamais mis à jour de toute manière
-                        //modification d'après la météo courante
-                        fatigue = (int)((decimal)ligneMeteo.I_POURCENT_FATIGUE * fatigue / (decimal)100);
+                            int colonneFatigue = Math.Max(0, nbHeuresJour + nbHeuresNuit - (int)Math.Floor(lignePion.I_EXPERIENCE));
+                            fatigue = (lignePion.I_CAVALERIE > 0) ? Constantes.tableFatigueCavalerie[colonneFatigue] : Constantes.tableFatigueInfanterie[colonneFatigue];
+                            fatigue += nbHeuresNuit;
+                            fatigue += lignePion.I_NB_HEURES_COMBAT * 2;//combat toutes les deux heures
+                                                                        //fatigue += lignePion.I_NB_HEURES_FORTIFICATION; ->jamais mis à jour de toute manière
+                                                                        //modification d'après la météo courante
+                            fatigue = (int)((decimal)ligneMeteo.I_POURCENT_FATIGUE * fatigue / (decimal)100);
+                        }
+                        else
+                        {
+                            fatigue = 0;//cas d'une unité entrain de se fortifier, elle n'est pas en repose mais elle ne se fatigue pas
+                        }
 
-                        moral = lignePion.I_MORAL; //pas de modification permanente du moral, le moral effectif avec la fatigue doit être calculée sur l'instant
+                        moral = lignePion.I_MORAL; //pas de modification permanente du moral, le moral effectif avec la fatigue doit être calculée sur l'instant, donc diffmoral vaut toujours zéro !
                         fatigue = Math.Min(lignePion.I_FATIGUE + fatigue, 100);
                         diffmoral = moral - lignePion.I_MORAL;
                         diffatigue = fatigue - lignePion.I_FATIGUE;
@@ -3992,6 +3998,8 @@ namespace vaoc
             iWeb.SauvegardeModelesPion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
             iWeb.SauvegardeRole(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeForum(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
             iWeb.SauvegardeObjectifs(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 

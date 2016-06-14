@@ -181,9 +181,11 @@ namespace vaoc
             //    return resOrdre[0];
             //}
             //return null;//l'ordre actif n'est pas un ordre de mouvement
+
+            //Attention à tester avant utilisation !!! BEA Juin 2016
             IEnumerable<LigneORDRE> requete =
                 (from ligne in liste
-                 where ((ligne.ID_PION == ID_PION) && ligne.I_TOUR_FIN.HasValue && ligne.I_PHASE_FIN.HasValue)
+                 where ((ligne.ID_PION == ID_PION) && !ligne.I_TOUR_FIN.HasValue && !ligne.I_PHASE_FIN.HasValue)
                  select ligne).OrderBy(ligne => ligne.ID_ORDRE);
             if (0 == requete.Count()) { return null; }
             LigneORDRE ligneOrdre = requete.ElementAt(0);
@@ -192,6 +194,22 @@ namespace vaoc
                 return ligneOrdre;
             }
             return null;//l'ordre actif n'est pas un ordre de mouvement
+        }
+
+        /// <summary>
+        ///  Renvoi le dernier ordre de fortification affecté à l'unité, null si aucun
+        /// </summary>
+        /// <param name="ID_PION">Pion avec l'ordre</param>
+        /// <returns>ordre de mouvement du pion, null si aucun</returns>
+        public LigneORDRE SeFortifier(int ID_PION)
+        {
+            IEnumerable<LigneORDRE> requete =
+                (from ligne in liste
+                 where (ligne.ID_PION == ID_PION && ligne.I_ORDRE_TYPE == Constantes.ORDRES.SEFORTIFIER)
+                 select ligne).OrderBy(ligne => ligne.ID_ORDRE);
+            if (0 == requete.Count()) { return null; }
+            LigneORDRE ligneOrdre = requete.ElementAt(0);
+            return ligneOrdre;
         }
 
         /// <summary>

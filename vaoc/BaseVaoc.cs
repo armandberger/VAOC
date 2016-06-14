@@ -479,6 +479,23 @@ namespace vaoc
             }
 
             /// <summary>
+            ///  Renvoi le dernier ordre de fortification affecté à l'unité, null si aucun
+            /// </summary>
+            /// <param name="ID_PION">Pion avec l'ordre</param>
+            /// <returns>ordre de mouvement du pion, null si aucun</returns>
+            public TAB_ORDRERow SeFortifier(int ID_PION)
+            {
+                string tri = "ID_ORDRE";
+                string requete = string.Format("(ID_PION={0}) AND (I_ORDRE_TYPE={1})", ID_PION, Constantes.ORDRES.SEFORTIFIER);
+                TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
+                if (0 == resOrdre.Length)
+                {
+                    return null;
+                }
+                return resOrdre[0];
+            }
+
+            /// <summary>
             ///  Renvoi l'ordre courant affecté à l'unité, null si aucun
             /// </summary>
             /// <param name="ID_PION">identifiant du pion sur lequel on cherche l'ordre</param>

@@ -212,7 +212,25 @@ namespace vaoc
             //true si l'unité n'a fait aucune activité ce jour, false sinon
             public bool reposComplet
             {
-                get { return ((I_NB_HEURES_COMBAT == 0) && (I_NB_HEURES_FORTIFICATION == 0) && (I_NB_PHASES_MARCHE_JOUR == 0) && (I_NB_PHASES_MARCHE_NUIT == 0)); }
+                get
+                {
+                    //if ((I_NB_HEURES_COMBAT > 0) || (I_NB_HEURES_FORTIFICATION > 0) || (I_NB_PHASES_MARCHE_JOUR > 0) || (I_NB_PHASES_MARCHE_NUIT > 0))
+                    //I_NB_HEURES_FORTIFICATION n'est jamais renseigné
+                    if ((I_NB_HEURES_COMBAT > 0) || (I_NB_PHASES_MARCHE_JOUR > 0) || (I_NB_PHASES_MARCHE_NUIT > 0))
+                    {
+                        return false;
+                    }
+                    //si l'unité s'est fortifié durant la journée, elle n'était pas en repos
+                    Donnees.TAB_ORDRERow ligneORDRE = Donnees.m_donnees.TAB_ORDRE.SeFortifier(ID_PION);
+                    if (null != ligneORDRE)
+                    {
+                        if (ligneORDRE.IsI_TOUR_FINNull() || ligneORDRE.I_TOUR_FIN +24 > Donnees.m_donnees.TAB_PARTIE.HeureCourante())
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
 
             //renvoie la nation du pion

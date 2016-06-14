@@ -586,6 +586,57 @@ namespace vaoc
 
         #region mise à jour des données
 
+        /// <summary>
+        /// Sauvegarde de tab_vaoc_forum
+        /// </summary>
+        /// <param name="idPartie">identifiant de la partie</param>
+        public void SauvegardeForum(int idPartie)
+        {
+            string requete;
+
+            //On remet la table à vide pour la partie
+            requete = string.Format("DELETE FROM `tab_vaoc_forum` WHERE ID_PARTIE={0};",
+                                    idPartie);
+            AjouterLigne(requete);
+            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                if (null == lignePion)
+                {
+                    //il s'agit probablement d'un renfort,et, dans ce cas, on ne le met pas dans les rôles disponibles
+                    continue;
+                }
+                else
+                {
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    foreach (Donnees.TAB_ROLERow ligneRole2 in Donnees.m_donnees.TAB_ROLE)
+                    {
+                        Donnees.TAB_PIONRow lignePion2 = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole2.ID_PION);
+                        if (null == lignePion2)
+                        {
+                            //il s'agit probablement d'un renfort,et, dans ce cas, on ne le met pas dans les rôles disponibles
+                            continue;
+                        }
+                        if (lignePion.ID_PION == lignePion2.ID_PION) { continue; }
+                        if (lignePion.nation.ID_NATION != lignePion2.nation.ID_NATION) { continue; }
+
+                        //si les deux pions sont séparés de moins d'un kilomètre, on ajoute les lignes dans la table
+                        Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion2.ID_CASE);
+                        double dist = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCase2.I_X, ligneCase2.I_Y);
+                        if (dist <= 1)
+                        {
+                            requete = string.Format("INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ({0}, {1}, {2});",
+                                                    idPartie,
+                                                    lignePion.ID_PION,
+                                                    lignePion2.ID_PION
+                                                    );
+                            AjouterLigne(requete);
+                        }
+                    }
+                }
+            }
+        }
+
         public void TraitementEnCours(bool bTraitementEnCours, int idJeu, int idPartie)
         {
             int iTraitementEnCours = (bTraitementEnCours) ? 1 : 0;
@@ -1276,7 +1327,6 @@ namespace vaoc
             requete = string.Format("UPDATE `tab_vaoc_role` SET `B_ORDRES_TERMINES`=0 WHERE ID_PARTIE={0};",
                                     idPartie);
             AjouterLigne(requete);
-
         }
 
         /// <summary>

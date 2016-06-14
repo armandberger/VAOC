@@ -60,6 +60,12 @@ namespace vaoc
         /// <param name="idPartie">identifiant de la partie</param>
         void SauvegardeRole(int idPartie);
 
+        /// <summary>
+        /// Sauvegarde de tab_vaoc_forum
+        /// </summary>
+        /// <param name="idPartie">identifiant de la partie</param>
+        void SauvegardeForum(int idPartie);
+
         void SauvegardeBataille(int idPartie);
 
         /// <summary>

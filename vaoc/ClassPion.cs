@@ -1885,6 +1885,7 @@ namespace vaoc
                     }
 
                     //la construction est en cours, il faut ajouter la fatigue
+                    /* Non, cela ne fatigue mais empêche de se reposer, gérer dans le traitement de fatigue de fin de journée
                     if (ligneOrdre.I_TOUR_DEBUT != tour)
                     {
                         //on ne construit pas les fortifications de nuit
@@ -1892,7 +1893,7 @@ namespace vaoc
                         {
                             I_NB_PHASES_MARCHE_JOUR++;
                         }
-                    }
+                    }*/
 
                     if (ligneOrdre.I_TOUR_DEBUT + Constantes.CST_DUREE_CONSTRUIRE_FORTIFICATIONS == tour)
                     {

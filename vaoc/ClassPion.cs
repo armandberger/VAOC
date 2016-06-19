@@ -2420,6 +2420,11 @@ namespace vaoc
                 return true;
             }
 
+            /// <summary>
+            /// Creer un nouveau chef à partir du pion actuel, en en créant un nouveau
+            /// </summary>
+            /// <returns>renvoie le nouveau chef</returns>
+            [Obsolete("Il faut utiliser CreationRemplacantChefBlesse2")]
             public Donnees.TAB_PIONRow CreationRemplacantChefBlesse()
             {
                 int[] des;
@@ -2594,6 +2599,139 @@ namespace vaoc
                 lignePionRemplacant.SetI_TOUR_CONVOI_CREENull();
 
                 return lignePionRemplacant;
+            }
+
+            /// <summary>
+            /// Creer un nouveau chef à partir du pion actuel, déplace les anciennes valeurs sur le nouveau pion
+            /// le pion du rôle, et ses liens, ne sont donc pas modifiés
+            /// </summary>
+            /// <returns>renvoie l'ancien chef dont les valeur sont "stockées" (pour un eventuel retour)</returns>
+            public Donnees.TAB_PIONRow CreationRemplacantChefBlesse2()
+            {
+                string nom = string.Empty;
+                int tactiquePromu = Constantes.JetDeDes(1) / 3;//valeur tactique du nouveau chef
+
+                //on prend le nom suivant dans la liste
+                int i = 0;
+                while ((nom == string.Empty) && i < Donnees.m_donnees.TAB_NOMS_PROMUS.Count)
+                {
+                    Donnees.TAB_NOMS_PROMUSRow ligneNomPromu = Donnees.m_donnees.TAB_NOMS_PROMUS[i++];
+                    if ((ligneNomPromu.IsB_NOM_PROMUNull() || !ligneNomPromu.B_NOM_PROMU) && ligneNomPromu.ID_NATION == this.idNation)
+                    {
+                        nom = ligneNomPromu.S_NOM;
+                        ligneNomPromu.B_NOM_PROMU = true;
+                    }
+                }
+                if (nom == string.Empty)
+                {
+                    LogFile.Notifier("CreationRemplacantChefBlesse : Erreur, il n'y a plus de noms disponibles dans TAB_NOMS_PROMUS");
+                    return null;
+                }
+
+                //copie de l'ancien chef comme nouveau pion, blessé
+                Donnees.TAB_PIONRow ligneAncienPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
+                    ID_MODELE_PION,
+                    ID_PION_PROPRIETAIRE,
+                    -1,//int ID_NOUVEAU_PION_PROPRIETAIRE,
+                    -1,//int ID_ANCIEN_PION_PROPRIETAIRE,
+                    S_NOM,
+                    I_INFANTERIE,
+                    I_INFANTERIE,
+                    I_CAVALERIE,
+                    I_CAVALERIE,
+                    I_ARTILLERIE,
+                    I_ARTILLERIE,
+                    I_FATIGUE,
+                    I_MORAL,
+                    I_MORAL_MAX,
+                    I_EXPERIENCE,
+                    I_TACTIQUE,
+                    I_STRATEGIQUE,
+                    C_NIVEAU_HIERARCHIQUE,//char C_NIVEAU_HIERARCHIQUE, // 'A' c'est le meilleur, 'D' le pire
+                    0,//int I_DISTANCE_A_PARCOURIR,
+                    0,//int I_NB_PHASES_MARCHE_JOUR,
+                    0,//int I_NB_PHASES_MARCHE_NUIT,
+                    0,//int I_NB_HEURES_COMBAT,
+                    ID_CASE,
+                    -1,//I_TOUR_SANS_RAVITAILLEMENT,
+                    -1,//int ID_BATAILLE,
+                    -1,//int I_ZONE_BATAILLE,
+                    I_TOUR_RETRAITE_RESTANT,
+                    I_TOUR_FUITE_RESTANT,
+                    true,//bool B_DETRUIT,
+                    B_FUITE_AU_COMBAT,
+                    false,//bool B_INTERCEPTION,
+                    B_REDITION_RAVITAILLEMENT,
+                    false,//bool B_TELEPORTATION,
+                    B_ENNEMI_OBSERVABLE,
+                    I_MATERIEL,
+                    I_RAVITAILLEMENT,
+                    B_CAVALERIE_DE_LIGNE,
+                    B_CAVALERIE_LOURDE,
+                    B_GARDE,
+                    B_VIEILLE_GARDE,
+                    -1,//I_TOUR_CONVOI_CREE,
+                    -1,//ID_DEPOT_SOURCE
+                    I_SOLDATS_RAVITAILLES,
+                    I_NB_HEURES_FORTIFICATION,
+                    I_NIVEAU_FORTIFICATION,
+                    -1,//int ID_PION_REMPLACE,
+                    I_DUREE_HORS_COMBAT,
+                    -1,//int I_TOUR_BLESSURE,
+                    B_BLESSES,//bool B_BLESSES,
+                    false,//bool B_PRISONNIERS,
+                    false,//bool B_RENFORT,
+                    -1,//int ID_LIEU_RATTACHEMENT,
+                    'Z',//char C_NIVEAU_DEPOT,
+                    -1,//int ID_PION_ESCORTE, 
+                    0,//int I_INFANTERIE_ESCORTE, 
+                    0,//int I_CAVALERIE_ESCORTE,
+                    0//int I_MATERIEL_ESCORTE
+                    );
+
+                if (null == ligneAncienPion)
+                {
+                    LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_PIONRow");
+                    return null;
+                }
+
+                //on affecte les nouvelles valeurs
+                S_NOM = nom;
+                I_TACTIQUE = tactiquePromu;
+                I_STRATEGIQUE = Math.Max(2, I_STRATEGIQUE - 1);
+                C_NIVEAU_HIERARCHIQUE++;//char C_NIVEAU_HIERARCHIQUE, // 'A' c'est le meilleur, 'D' le pire
+                I_DUREE_HORS_COMBAT = 0;
+                B_BLESSES = false;
+                //ID_PION_REMPLACE = ligneAncienPion.ID_PION;
+                Donnees.TAB_PIONRow lignePrecedentChefRemplace = pionRemplace;
+                if (null != lignePrecedentChefRemplace)
+                {
+                    //un chef remplaçant blessé est simplement soustrait par son nouveau remplaçant, on ne gère pas son retour
+                    ID_PION_REMPLACE = lignePrecedentChefRemplace.ID_PION;
+                }
+                else
+                {
+                    ID_PION_REMPLACE = ligneAncienPion.ID_PION;
+                }
+
+                //le chef blessé n'est plus engagé (considéré en retraite)
+                Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ID_PION, ID_BATAILLE);
+                ligneBataillePion.B_RETRAITE = true;
+                SetID_BATAILLENull();
+                SetI_ZONE_BATAILLENull();
+
+                ligneAncienPion.SetID_NOUVEAU_PION_PROPRIETAIRENull();
+                ligneAncienPion.SetID_ANCIEN_PION_PROPRIETAIRENull();
+                ligneAncienPion.SetI_ZONE_BATAILLENull();
+                ligneAncienPion.SetID_PION_REMPLACENull();
+                ligneAncienPion.SetI_TOUR_BLESSURENull();
+                ligneAncienPion.SetID_LIEU_RATTACHEMENTNull();
+                ligneAncienPion.SetID_PION_ESCORTENull();
+                ligneAncienPion.SetID_DEPOT_SOURCENull();
+                ligneAncienPion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
+                ligneAncienPion.SetI_TOUR_CONVOI_CREENull();
+
+                return ligneAncienPion;
             }
 
             public bool ArriveADestination(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation)

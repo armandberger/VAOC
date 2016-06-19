@@ -1032,7 +1032,7 @@ namespace vaoc
 
             #region Blessures des chefs
             int i = 0;
-            Donnees.TAB_PIONRow ligneChefRemplacant;
+            Donnees.TAB_PIONRow ligneChefRemplace;
             while(i<Donnees.m_donnees.TAB_PION.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
@@ -1042,26 +1042,6 @@ namespace vaoc
                     //blessure grave sur plusieurs jours, si le leader est blessés depuis plus de CST_DUREE_INDISPONIBLE_SUR_BLESSURE on affecte un remplaçant
                     if (lignePion.I_TOUR_BLESSURE + Constantes.CST_DUREE_INDISPONIBLE_SUR_BLESSURE > Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                     {
-                        ligneChefRemplacant = lignePion.CreationRemplacantChefBlesse();
-                        if (null == ligneChefRemplacant)
-                        {
-                            LogFile.Notifier(string.Format("Erreur dans NouvelleHeure à l'appel de CreationRemplacantChefBlesse en créant le remplaçant de {0}:{1}", lignePion.ID_PION, lignePion.S_NOM));
-                            return false;
-                        }
-
-                        Donnees.TAB_PIONRow lignePrecedentChefRemplace = lignePion.pionRemplace;
-                        if (null != lignePrecedentChefRemplace)
-                        {
-                            //un chef remplaçant blessé est simplement soustrait par son nouveau remplaçant, on ne gère pas son retour
-                            ligneChefRemplacant.ID_PION_REMPLACE = lignePrecedentChefRemplace.ID_PION;
-                        }
-                        else
-                        {
-                            ligneChefRemplacant.ID_PION_REMPLACE = lignePion.ID_PION;
-                        }
-
-                        //dans tous les cas on considère le chef précédent comme mort pour qu'il n'apparaisse plus dans aucun compte rendu
-                        lignePion.DetruirePion();
                         //on envoie un message un peu bidon juste pour que le joueur sache bien que le pion est "mort"
                         //il faut l'envoyer avant de changer le rôle pour que le message arrive au joueur qui tient le pion
                         if (lignePion.I_DUREE_HORS_COMBAT == int.MaxValue)
@@ -1079,6 +1059,35 @@ namespace vaoc
                             }
                         }
 
+                        /*
+                        ligneChefRemplacant = lignePion.CreationRemplacantChefBlesse();
+                        if (null == ligneChefRemplacant)
+                        {
+                            LogFile.Notifier(string.Format("Erreur dans NouvelleHeure à l'appel de CreationRemplacantChefBlesse en créant le remplaçant de {0}:{1}", lignePion.ID_PION, lignePion.S_NOM));
+                            return false;
+                        }
+
+                        Donnees.TAB_PIONRow lignePrecedentChefRemplace = lignePion.pionRemplace;
+                        if (null != lignePrecedentChefRemplace)
+                        {
+                            //un chef remplaçant blessé est simplement soustrait par son nouveau remplaçant, on ne gère pas son retour
+                            ligneChefRemplacant.ID_PION_REMPLACE = lignePrecedentChefRemplace.ID_PION;
+                        }
+                        else
+                        {
+                            ligneChefRemplacant.ID_PION_REMPLACE = lignePion.ID_PION;
+                        }
+                        */
+                        ligneChefRemplace = lignePion.CreationRemplacantChefBlesse2();
+                        if (null == ligneChefRemplace)
+                        {
+                            LogFile.Notifier(string.Format("Erreur dans NouvelleHeure à l'appel de CreationRemplacantChefBlesse en créant le remplaçant de {0}:{1}", lignePion.ID_PION, lignePion.S_NOM));
+                            return false;
+                        }
+
+                        //dans tous les cas on considère le chef précédent comme mort pour qu'il n'apparaisse plus dans aucun compte rendu
+                        lignePion.DetruirePion();
+                        /*
                         Donnees.TAB_ROLERow ligneRole = Donnees.m_donnees.TAB_ROLE.TrouvePion(lignePion.ID_PION);
                         if (null != ligneRole) { ligneRole.ID_PION = ligneChefRemplacant.ID_PION; }
 
@@ -1102,6 +1111,19 @@ namespace vaoc
                         {
                             return false;
                         }
+                        */
+                        //on envoit un message à tous les leaders pour indiquer que le chef a changé
+                        //on envoit un message avec effet immédiat pour prévenir le joueur de l'arrivée du chef
+                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_CHEF_REMPLACANT))
+                        {
+                            return false;
+                        }
+
+                        //on prévient tous les autres rôles du changement
+                        if (!MessageATousLesRoles(lignePion, ClassMessager.MESSAGES.MESSAGE_CHEF_REMPLACANT, false))
+                        {
+                            return false;
+                        }
                     }
                 }
 
@@ -1114,9 +1136,18 @@ namespace vaoc
                         //Le precedent leader redevient actif (quid si le remplaçant a été remplacé ? -> on remplace pas un remplaçant, voir au-dessus)
 
                         //on recherche qui le remplacait, s'il n'y a pas de remplaçant, c'est qu'il s'agissait d'une blessure légère
-                        ligneChefRemplacant = lignePion.pionRemplacant;
-                        if (null != ligneChefRemplacant)
+                        ligneChefRemplace = lignePion.pionRemplacant;
+                        if (null != ligneChefRemplace)
                         {
+                            //on remet les caractéristiques du pion d'origine et c'est tout !
+                            lignePion.S_NOM = ligneChefRemplace.S_NOM;
+                            lignePion.I_TACTIQUE = ligneChefRemplace.I_TACTIQUE;
+                            lignePion.I_STRATEGIQUE = ligneChefRemplace.I_STRATEGIQUE;
+                            lignePion.C_NIVEAU_HIERARCHIQUE = ligneChefRemplace.C_NIVEAU_HIERARCHIQUE;
+                            lignePion.I_DUREE_HORS_COMBAT = 0;
+                            lignePion.B_BLESSES = false;
+
+                            /*
                             //on réétablit le rôle au chef d'origine s'il y en avait un
                             Donnees.TAB_ROLERow ligneRole = Donnees.m_donnees.TAB_ROLE.TrouvePion(ligneChefRemplacant.ID_PION);
                             if (null != ligneRole) { ligneRole.ID_PION = lignePion.ID_PION; }
@@ -1126,7 +1157,7 @@ namespace vaoc
                                 LogFile.Notifier(string.Format("Erreur dans NouvelleHeure à l'appel de TransfertsDesliens II de {0}:{1} vers {2}:{3} ",
                                     ligneChefRemplacant.ID_PION, ligneChefRemplacant.S_NOM, lignePion.ID_PION, lignePion.S_NOM));
                                 return false;
-                            }
+                            }*/
 
                             //on envoit un message avec effet immédiat pour prévenir le joueur de l'arrivée du chef
                             //if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_RETOUR_CHEF))
@@ -1141,11 +1172,13 @@ namespace vaoc
                             }
 
                             //on réactive l'ancier chef
+                            /*
                             lignePion.B_DETRUIT = false;
                             lignePion.ID_CASE = ligneChefRemplacant.ID_CASE;
                             lignePion.B_TELEPORTATION = true;
                             //on détruit le remplaçant
                             ligneChefRemplacant.DetruirePion();
+                            */
                         }
                     }
                 }

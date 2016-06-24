@@ -4030,8 +4030,7 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
 
                     //on calcule de combien de cases le pion a déjà avancé
-                    CalculerRepartitionEffectif(
-                        effectifTotalEnMouvement - ligneOrdre.I_EFFECTIF_DEPART,
+                    CalculerRepartitionEffectif(Math.Max(0,effectifTotalEnMouvement - ligneOrdre.I_EFFECTIF_DEPART),
                         out iInfanterie, out iCavalerie, out iArtillerie);
                     message = string.Format("PlacerPionEnRoute :effectif: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                     LogFile.Notifier(message, out messageErreur);

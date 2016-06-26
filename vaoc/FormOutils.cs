@@ -32,10 +32,6 @@ namespace vaoc
             }
         }
 
-        private void buttonTraitement_Click(object sender, EventArgs e)
-        {
-        }
-
         private void SauvegardeDecoupeFichier(string nomFichierFinal, Rectangle rect)
         {
             BitmapData imageCible = new BitmapData();
@@ -502,6 +498,95 @@ namespace vaoc
             MessageBox.Show("Le traitement s'est terminé avec succès.", "Coupe de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Cursor = oldcurseur;
              * */
+        }
+
+        /// <summary>
+        /// Retire toutes les cartes non utilisées dans une image 
+        /// Pratique pour retirer tous les gris d'une carte de fond en cours de traitement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonRetraitCouleur_Click(object sender, EventArgs e)
+        {
+            Cursor oldcurseur = Cursor;
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                Color[] couleursAConserver = new Color[10];
+                couleursAConserver[0] = Color.FromArgb(255, 255, 255);//plaine
+                couleursAConserver[1] = Color.FromArgb(0, 0, 128);//fleuve
+                couleursAConserver[2] = Color.FromArgb(200, 100, 100);//route
+                couleursAConserver[3] = Color.FromArgb(255, 0, 0);//forteresse
+                couleursAConserver[4] = Color.FromArgb(255, 150, 0);//ville
+                couleursAConserver[5] = Color.FromArgb(64, 64, 0);//colline
+                couleursAConserver[6] = Color.FromArgb(0, 200, 0);//forêt
+                couleursAConserver[7] = Color.FromArgb(255, 255, 150);//sable
+                couleursAConserver[8] = Color.FromArgb(0, 0, 255);//rivière
+                couleursAConserver[9] = Color.FromArgb(255, 0, 255);//marais
+
+                Color[] couleursARemplacer = new Color[2];
+                couleursARemplacer[0] = Color.FromArgb(200, 100, 100);//route
+                couleursARemplacer[1] = Color.FromArgb(255, 150, 0);//ville
+
+                Color[] couleursDeRemplacement = new Color[2];
+                couleursDeRemplacement[0] = Color.FromArgb(192, 192, 192);//route
+                couleursDeRemplacement[1] = Color.FromArgb(10, 10, 10);//ville
+
+                //Supression de toutes les couleurs non utilisées
+                m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
+                for (int x = 0; x < m_imageCarte.Width; x++)
+                {
+                    //on analyse la ligne de pixels suivants
+                    for (int y = 0; y < m_imageCarte.Height; y++)
+                    {
+                        Color pixelColor = m_imageCarte.GetPixel(x, y);
+                        //on le garde ?
+                        int i = 0;
+                        while (i < couleursAConserver.Count() &&
+                            (pixelColor.R != couleursAConserver[i].R || pixelColor.G != couleursAConserver[i].G || pixelColor.B != couleursAConserver[i].B))
+                            i++;
+                        //on supprime !
+                        if (i == couleursAConserver.Count())
+                        {
+                            m_imageCarte.SetPixel(x, y, couleursAConserver[0]);
+                        }
+                    }
+                }
+
+                //Remplacement de toutes les couleurs utilisées pour faire l'image par les couleurs finales
+                for (int x = 0; x < m_imageCarte.Width; x++)
+                {
+                    //on analyse la ligne de pixels suivants
+                    for (int y = 0; y < m_imageCarte.Height; y++)
+                    {
+                        Color pixelColor = m_imageCarte.GetPixel(x, y);
+                        //on la modifie ?
+                        int i = 0;
+                        while (i < couleursARemplacer.Count() &&
+                            (pixelColor.R != couleursARemplacer[i].R || pixelColor.G != couleursARemplacer[i].G || pixelColor.B != couleursARemplacer[i].B))
+                            i++;
+                        //on remplace !
+                        if (i != couleursARemplacer.Count())
+                        {
+                            m_imageCarte.SetPixel(x, y, couleursDeRemplacement[i]);
+                        }
+                    }
+                }
+
+                int positionPoint = textBoxFichierImage.Text.LastIndexOf(".");
+                //recopie de la chaine avant l'extension
+                string nomFichier = textBoxFichierImage.Text.Substring(0, positionPoint);
+                m_imageCarte.Save(nomFichier + "new" + ".bmp", ImageFormat.Bmp);
+                m_imageCarte.Dispose();
+                Cursor = oldcurseur;
+                MessageBox.Show("Traitement terminé avec succès", "Traitement d'image", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show(ex.Message, "Erreur dans le traitement d'image", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

@@ -31,7 +31,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonImage = new System.Windows.Forms.Button();
             this.textBoxFichierImage = new System.Windows.Forms.TextBox();
-            this.buttonTraitement = new System.Windows.Forms.Button();
+            this.buttonRetraitCouleur = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonDecoupe = new System.Windows.Forms.Button();
             this.buttonZoom = new System.Windows.Forms.Button();
@@ -42,6 +42,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxHauteur = new System.Windows.Forms.TextBox();
             this.groupBoxImages = new System.Windows.Forms.GroupBox();
+            this.textBoxNbCoteCarre = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonFusion = new System.Windows.Forms.Button();
+            this.buttonCoupe = new System.Windows.Forms.Button();
             this.groupBoxSQL = new System.Windows.Forms.GroupBox();
             this.textBoxRepertoireSources = new System.Windows.Forms.TextBox();
             this.buttonRepertoireSource = new System.Windows.Forms.Button();
@@ -52,10 +56,6 @@
             this.textBoxChoixFichierImport = new System.Windows.Forms.TextBox();
             this.buttonChoixFichierImport = new System.Windows.Forms.Button();
             this.buttonImport = new System.Windows.Forms.Button();
-            this.buttonCoupe = new System.Windows.Forms.Button();
-            this.buttonFusion = new System.Windows.Forms.Button();
-            this.textBoxNbCoteCarre = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBoxImages.SuspendLayout();
             this.groupBoxSQL.SuspendLayout();
             this.groupBoxImport.SuspendLayout();
@@ -88,15 +88,15 @@
             this.textBoxFichierImage.Size = new System.Drawing.Size(449, 20);
             this.textBoxFichierImage.TabIndex = 5;
             // 
-            // buttonTraitement
+            // buttonRetraitCouleur
             // 
-            this.buttonTraitement.Location = new System.Drawing.Point(17, 108);
-            this.buttonTraitement.Name = "buttonTraitement";
-            this.buttonTraitement.Size = new System.Drawing.Size(75, 23);
-            this.buttonTraitement.TabIndex = 6;
-            this.buttonTraitement.Text = "Traitement";
-            this.buttonTraitement.UseVisualStyleBackColor = true;
-            this.buttonTraitement.Click += new System.EventHandler(this.buttonTraitement_Click);
+            this.buttonRetraitCouleur.Location = new System.Drawing.Point(17, 108);
+            this.buttonRetraitCouleur.Name = "buttonRetraitCouleur";
+            this.buttonRetraitCouleur.Size = new System.Drawing.Size(138, 23);
+            this.buttonRetraitCouleur.TabIndex = 6;
+            this.buttonRetraitCouleur.Text = "Retrait des couleurs";
+            this.buttonRetraitCouleur.UseVisualStyleBackColor = true;
+            this.buttonRetraitCouleur.Click += new System.EventHandler(this.buttonRetraitCouleur_Click);
             // 
             // openFileDialog
             // 
@@ -185,7 +185,7 @@
             this.groupBoxImages.Controls.Add(this.buttonImageFond);
             this.groupBoxImages.Controls.Add(this.buttonZoom);
             this.groupBoxImages.Controls.Add(this.buttonDecoupe);
-            this.groupBoxImages.Controls.Add(this.buttonTraitement);
+            this.groupBoxImages.Controls.Add(this.buttonRetraitCouleur);
             this.groupBoxImages.Controls.Add(this.textBoxFichierImage);
             this.groupBoxImages.Controls.Add(this.buttonImage);
             this.groupBoxImages.Location = new System.Drawing.Point(7, 12);
@@ -194,6 +194,43 @@
             this.groupBoxImages.TabIndex = 15;
             this.groupBoxImages.TabStop = false;
             this.groupBoxImages.Text = "Traitment d\'images";
+            // 
+            // textBoxNbCoteCarre
+            // 
+            this.textBoxNbCoteCarre.Location = new System.Drawing.Point(428, 224);
+            this.textBoxNbCoteCarre.Name = "textBoxNbCoteCarre";
+            this.textBoxNbCoteCarre.Size = new System.Drawing.Size(64, 20);
+            this.textBoxNbCoteCarre.TabIndex = 18;
+            this.textBoxNbCoteCarre.Text = "3";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(210, 222);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(212, 13);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Nombre de cotés du carré (ex: 3 pour 3x3) :";
+            // 
+            // buttonFusion
+            // 
+            this.buttonFusion.Location = new System.Drawing.Point(116, 222);
+            this.buttonFusion.Name = "buttonFusion";
+            this.buttonFusion.Size = new System.Drawing.Size(75, 23);
+            this.buttonFusion.TabIndex = 16;
+            this.buttonFusion.Text = "Fusion";
+            this.buttonFusion.UseVisualStyleBackColor = true;
+            this.buttonFusion.Click += new System.EventHandler(this.buttonFusion_Click);
+            // 
+            // buttonCoupe
+            // 
+            this.buttonCoupe.Location = new System.Drawing.Point(18, 222);
+            this.buttonCoupe.Name = "buttonCoupe";
+            this.buttonCoupe.Size = new System.Drawing.Size(87, 23);
+            this.buttonCoupe.TabIndex = 15;
+            this.buttonCoupe.Text = "Coupe carree";
+            this.buttonCoupe.UseVisualStyleBackColor = true;
+            this.buttonCoupe.Click += new System.EventHandler(this.buttonCoupe_Click);
             // 
             // groupBoxSQL
             // 
@@ -286,43 +323,6 @@
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
-            // buttonCoupe
-            // 
-            this.buttonCoupe.Location = new System.Drawing.Point(18, 222);
-            this.buttonCoupe.Name = "buttonCoupe";
-            this.buttonCoupe.Size = new System.Drawing.Size(87, 23);
-            this.buttonCoupe.TabIndex = 15;
-            this.buttonCoupe.Text = "Coupe carree";
-            this.buttonCoupe.UseVisualStyleBackColor = true;
-            this.buttonCoupe.Click += new System.EventHandler(this.buttonCoupe_Click);
-            // 
-            // buttonFusion
-            // 
-            this.buttonFusion.Location = new System.Drawing.Point(116, 222);
-            this.buttonFusion.Name = "buttonFusion";
-            this.buttonFusion.Size = new System.Drawing.Size(75, 23);
-            this.buttonFusion.TabIndex = 16;
-            this.buttonFusion.Text = "Fusion";
-            this.buttonFusion.UseVisualStyleBackColor = true;
-            this.buttonFusion.Click += new System.EventHandler(this.buttonFusion_Click);
-            // 
-            // textBoxNbCoteCarre
-            // 
-            this.textBoxNbCoteCarre.Location = new System.Drawing.Point(428, 224);
-            this.textBoxNbCoteCarre.Name = "textBoxNbCoteCarre";
-            this.textBoxNbCoteCarre.Size = new System.Drawing.Size(64, 20);
-            this.textBoxNbCoteCarre.TabIndex = 18;
-            this.textBoxNbCoteCarre.Text = "3";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(210, 222);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(212, 13);
-            this.label3.TabIndex = 17;
-            this.label3.Text = "Nombre de cotés du carré (ex: 3 pour 3x3) :";
-            // 
             // FormOutils
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -349,7 +349,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonImage;
         private System.Windows.Forms.TextBox textBoxFichierImage;
-        private System.Windows.Forms.Button buttonTraitement;
+        private System.Windows.Forms.Button buttonRetraitCouleur;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button buttonDecoupe;
         private System.Windows.Forms.Button buttonZoom;

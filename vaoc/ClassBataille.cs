@@ -1073,8 +1073,8 @@ namespace vaoc
                             pertesRavitaillementTotal * 100 / effectifPoursuivantTotal);//il faut passer d'un nombre d'hommes a un pourcentage
 
                         lignePion.I_ARTILLERIE += canonsButin;
-                        lignePion.I_MATERIEL = materielButin;
-                        lignePion.I_RAVITAILLEMENT = ravitaillementButin;
+                        lignePion.I_MATERIEL += materielButin;
+                        lignePion.I_RAVITAILLEMENT += ravitaillementButin;
                         message = string.Format("Poursuite : Butin pour {0}:{1} de {2}% en matériel (total {3}%), {4}% en ravitaillement (total {5}%) et {6} canons (total {7} canons)",
                             lignePion.ID_PION, lignePion.S_NOM, materielButin, lignePion.I_MATERIEL, ravitaillementButin, lignePion.I_RAVITAILLEMENT, canonsButin, lignePion.I_ARTILLERIE);
 

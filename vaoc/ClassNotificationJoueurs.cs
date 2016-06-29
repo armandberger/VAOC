@@ -269,7 +269,15 @@ namespace vaoc
                             Donnees.TAB_ORDRERow ligneOrdrePremier = Donnees.m_donnees.TAB_ORDRE.Premier(lignePatrouille.ID_PION);
 
                             sDateDepart = ClassMessager.DateHeure(ligneOrdrePremier.I_TOUR_DEBUT, ligneOrdrePremier.I_PHASE_DEBUT, false);
-                            ClassMessager.CaseVersZoneGeographique(ligneOrdrePremier.ID_CASE_DESTINATION, out sDestination);
+                            if (lignePatrouille.possedeAptitude("PATROUILLEMESSAGER"))
+                            {
+                                //la patrouille revient
+                                ClassMessager.CaseVersZoneGeographique(ligneOrdrePremier.ID_CASE_DEPART, out sDestination);
+                            }
+                            else
+                            {
+                                ClassMessager.CaseVersZoneGeographique(ligneOrdrePremier.ID_CASE_DESTINATION, out sDestination);
+                            }
 
                             string format = (0 == numLigne % 3) ? " bgcolor=\"LightGrey\"" : "";
                             texte.AppendLine(string.Format("<tr {0}><td>{1}</td><td>{2}</td><td>{3}</td></tr>",

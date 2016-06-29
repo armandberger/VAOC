@@ -3520,6 +3520,7 @@ namespace vaoc
                     B_BLESSES = false;
                     B_PRISONNIERS = true;
                     S_NOM = "Prisonniers de " + S_NOM;
+                    CreerEscorte(lignePionEnnemi, this);
                 }
                 else
                 {
@@ -3676,6 +3677,13 @@ namespace vaoc
                 lignePionPrisonniers.I_MATERIEL = 0; // on ne laisse pas de matériel aux prisonniers
                 lignePionPrisonniers.I_RAVITAILLEMENT = lignePionQuiCapture.I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qui les capture
                 lignePionPrisonniers.ID_PION_PROPRIETAIRE = lignePionProprietaire.ID_PION;
+                CreerEscorte(lignePionQuiCapture, lignePionPrisonniers);
+                //note : le message de la capture est fait dans "capturePion" en amont
+                return lignePionPrisonniers;
+            }
+
+            private static void CreerEscorte(TAB_PIONRow lignePionQuiCapture, TAB_PIONRow lignePionPrisonniers)
+            {
                 lignePionPrisonniers.ID_PION_ESCORTE = lignePionQuiCapture.ID_PION;
 
                 // creation de l'escorte du convoi de prisonniers, c'est à dire réduction des effectifs correspondants de l'unité qui capture
@@ -3692,8 +3700,6 @@ namespace vaoc
                     //tout le pion d'origine passe en escorte, cela ne devrait pas arrivée souvent j'espère !
                     lignePionQuiCapture.DetruirePion();
                 }
-                //note : le message de la capture est fait dans "capturePion" en amont
-                return lignePionPrisonniers;
             }
 
             internal string ChaineAppartenance()

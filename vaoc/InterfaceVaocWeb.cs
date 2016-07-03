@@ -5,7 +5,7 @@ using System.Text;
 
 namespace vaoc
 {
-    interface InterfaceVaocWeb
+    public interface InterfaceVaocWeb
     {
         #region mise à jour des données
         void TraitementEnCours(bool bTraitementEnCours, int idJeu, int idPartie);

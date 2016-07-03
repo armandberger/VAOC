@@ -908,6 +908,14 @@ namespace vaoc
                 return true;
             }
 
+            internal void Arret(Donnees.TAB_ORDRERow ligneOrdre)
+            {
+                //il faut supprimer tous les ordres actuellement en cours
+                PlacerPionEnBivouac(ligneOrdre);
+                SupprimerTousLesOrdres(ligneOrdre.ID_ORDRE);
+                TerminerOrdre(ligneOrdre, false, false);
+            }
+
             /// <summary>
             /// indique si l'ordre de l'unité est dans le créneau actif en ce moment
             /// </summary>
@@ -3351,11 +3359,11 @@ namespace vaoc
                 {
                     if (estDepot && lignePionEnnemi.estCombattif)
                     {
-                        if (!CaptureDepot(lignePionEnnemi)) return false;
+                        if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
                     }
                     if (lignePionEnnemi.estDepot && estCombattif)
                     {
-                        if (!lignePionEnnemi.CaptureDepot(this)) return false;
+                        if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
                     }
                 }
                 #endregion
@@ -3366,27 +3374,27 @@ namespace vaoc
                 {
                     if ((estConvoi || estBlesses || estPrisonniers) && lignePionEnnemi.estCombattif)
                     {
-                        if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi)) return false;
+                        if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
                     }
                     if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers) && estCombattif)
                     {
-                        if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this)) return false;
+                        if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this, ligneCase)) return false;
                     }
 
                     if (estPontonnier && lignePionEnnemi.estCombattif)
                     {
-                        if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION)) return false;
+                        if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
                     }
                     if (lignePionEnnemi.estPontonnier && estCombattif)
                     {
-                        if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION)) return false;
+                        if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION, ligneCase)) return false;
                     }
                 }
                 #endregion
                 return true;
             }
 
-            internal bool CapturePion(Donnees.TAB_PIONRow lignePionEnnemi, int idNouveauPionProprietaire, string aptitude, int idNationCaptureur)
+            internal bool CapturePion(Donnees.TAB_PIONRow lignePionEnnemi, int idNouveauPionProprietaire, string aptitude, int idNationCaptureur, Donnees.TAB_CASERow ligneCaseContact)
             {
                 string message;
 
@@ -3448,6 +3456,22 @@ namespace vaoc
                 }
                 //le pion change de nationalité.
                 ID_MODELE_PION = idModelePionCaptureur;
+                //si l'unité faisait quelque chose, il faut qu'elle arrête
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(ID_PION);
+                if (null != ligneOrdre)
+                {
+                    //s'il y a un arrêt alors que l'unité est en mouvement il faut qu'elle fasse bivouac sur le point de contact
+                    //comme pour une bataille
+                    ID_CASE = ligneCaseContact.ID_CASE;
+                    SupprimerTousLesOrdres();
+                    PlacerStatique();
+                }
+                else
+                {
+                    SupprimerTousLesOrdres();
+                }
+                //l'unité ne peut pas être recapturée durant 2 heures pour éviter un effet, je te capture, je te recapture, etc...
+                I_TOUR_RETRAITE_RESTANT = 2; // même chose que I_TOUR_FUITE_RESTANT mais tu peux donner des ordres
                 #endregion
 
                 return true;
@@ -3500,7 +3524,7 @@ namespace vaoc
             /// <param name="lignePion">pion du convoi</param>
             /// <param name="lignePionEnnemi">^pion capturant le convoi</param>
             /// <returns>true si ok, false si ko</returns>
-            internal bool CaptureConvoiBlessesPrisonniers(Donnees.TAB_PIONRow lignePionEnnemi)
+            internal bool CaptureConvoiBlessesPrisonniers(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
                 //if (lignePion.estDepot) -> pas un bon test, c'est un convoi à ce moment là, pas un dépôt
                 if (estConvoiDeRavitaillement)
@@ -3512,7 +3536,7 @@ namespace vaoc
                         return DestructionAuContact(lignePionEnnemi);
                     }
                     C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
-                    return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION);
+                    return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
                 }
                 if (estBlesses)
                 {
@@ -3546,7 +3570,7 @@ namespace vaoc
                 //le pion change maintenant de proprietaire, celui-ci est affecté au proprietaire du pion de capture
                 //pas forcément très logique pour un convoi de ravitaillement mais pas logique non plus si le leader de niveau A est très très loin de l'unité
                 //à chaque pour lui de faire un transfert s'il ne veut pas laisser un dépôt à la charge de l'un de ses subordonnés
-                return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "", lignePionEnnemi.nation.ID_NATION);
+                return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
             }
 
             /// <summary>
@@ -3581,7 +3605,7 @@ namespace vaoc
             /// <param name="lignePionDepot">depôt capturé</param>
             /// <param name="lignePionEnnemi">pion capturant le dépot</param>
             /// <returns>true si ok, false si ko</returns>
-            internal bool CaptureDepot(Donnees.TAB_PIONRow lignePionEnnemi)
+            internal bool CaptureDepot(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
                 Donnees.TAB_PIONRow lignePionEnnemiQG = null;
                 Donnees.TAB_RENFORTRow lignePionEnnemiQGRenfort = null;
@@ -3638,7 +3662,7 @@ namespace vaoc
                 }
 
 
-                return CapturePion(lignePionEnnemi, idNouveauPionProprietaire, "DEPOT", idNationCaptureur);
+                return CapturePion(lignePionEnnemi, idNouveauPionProprietaire, "DEPOT", idNationCaptureur, ligneCaseCapture);
             }
 
             internal Donnees.TAB_PIONRow CreerConvoiDePrisonniers(Donnees.TAB_PIONRow lignePionQuiCapture)

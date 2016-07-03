@@ -5,7 +5,7 @@ using System.Text;
 
 namespace vaoc
 {
-    class ClassDataUtilisateur
+    public class ClassDataUtilisateur
     {
         public int ID_UTILISATEUR { get; set; }
         public string S_LOGIN { get; set; }

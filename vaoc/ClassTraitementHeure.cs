@@ -667,10 +667,7 @@ namespace vaoc
                     }
                     break;
                 case Constantes.ORDRES.ARRET:
-                    //il faut supprimer tous les ordres actuellement en cours
-                    lignePion.PlacerPionEnBivouac(ligneOrdre);
-                    lignePion.SupprimerTousLesOrdres(ligneOrdre.ID_ORDRE);
-                    lignePion.TerminerOrdre(ligneOrdre, false, false);
+                    lignePion.Arret(ligneOrdre);
                     break;
                 //case Constantes.ORDRES.TRANSFERER: -> Cas particulier, géré dans ExecuterMouvementSansEffectif car cet ordre n'est pas à l'initiative du joueur, on ne doit donc pas changer son ordre courant
                 //    Donnees.TAB_PIONRow lignePionTransfert = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_CIBLE);

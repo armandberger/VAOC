@@ -5,7 +5,7 @@ using System.Text;
 
 namespace vaoc
 {
-    class ClassDataPartie
+    public class ClassDataPartie
     {
         public int ID_PARTIE { get; set; }
         public int ID_JEU { get; set; }

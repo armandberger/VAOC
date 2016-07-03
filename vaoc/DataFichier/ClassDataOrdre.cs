@@ -5,7 +5,7 @@ using System.Text;
 
 namespace vaoc
 {
-    class ClassDataOrdre
+    public class ClassDataOrdre
     {
         public int ID_ORDRE { get; set; }
         public int ID_ORDRE_SUIVANT { get; set; }

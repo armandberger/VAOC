@@ -10,11 +10,40 @@ namespace vaoc
     public class ClassNotificationJoueurs
     {
         private string m_fichierCourant;
+        private InterfaceVaocWeb m_iWeb;
+        private List<ClassDataOrdre> m_listeOrdreWeb;
 
         public ClassNotificationJoueurs(string fichierCourant)
         {
             LogFile.CreationLogFile(fichierCourant, "courriel", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
             m_fichierCourant = fichierCourant;
+
+            m_iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, false);
+            m_listeOrdreWeb = m_iWeb.ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
+                                                Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+        }
+
+        /// <summary>
+        ///  Renvoi l'ordre correspondant à un identifiant du web
+        /// </summary>
+        /// <param name="ID_ORDREWEB">identifiant de l'ordre du web</param>
+        /// <returns>ordre Web, null si aucun</returns>
+        public ClassDataOrdre OrdreWeb(int ID_ORDREWEB)
+        {
+            //string requete = string.Format("ID_ORDRE_WEB={0}", ID_ORDREWEB);
+            //TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete);
+            //if (0 == resOrdre.Length)
+            //{
+            //    return null;
+            //}
+            //return resOrdre[0];
+
+            IEnumerable<ClassDataOrdre> requete =
+                (from ligne in m_listeOrdreWeb
+                 where (ligne.ID_ORDRE == ID_ORDREWEB)
+                 select ligne);
+            if (0 == requete.Count()) { return null; }
+            return requete.ElementAt(0);
         }
 
         public bool NotificationRole(Donnees.TAB_ROLERow ligneRole, int iDernierNotification, out string titre, out StringBuilder texte)
@@ -278,6 +307,13 @@ namespace vaoc
                             {
                                 ClassMessager.CaseVersZoneGeographique(ligneOrdrePremier.ID_CASE_DESTINATION, out sDestination);
                             }
+                            ClassDataOrdre OrdreOrigine = OrdreWeb(ligneOrdrePremier.ID_ORDRE_WEB);
+                            int idCaseOrigine;
+                            ClassMessager.ZoneGeographiqueVersCase(lignePatrouille, OrdreOrigine.I_DISTANCE,
+                                ClassMessager.DirectionOrdreVersCompas(OrdreOrigine.I_DIRECTION),
+                                OrdreOrigine.ID_NOM_LIEU, 
+                                out idCaseOrigine);
+                            ClassMessager.CaseVersZoneGeographique(idCaseOrigine, out sDestination);
 
                             string format = (0 == numLigne % 3) ? " bgcolor=\"LightGrey\"" : "";
                             texte.AppendLine(string.Format("<tr {0}><td>{1}</td><td>{2}</td><td>{3}</td></tr>",

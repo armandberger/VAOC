@@ -220,7 +220,7 @@ namespace vaoc
                     else
                     {
                         libelleFatigue = iFatigue.ToString();
-                        if (lignePion.estUniteArtillerie)
+                        if (lignePion.estArtillerie)
                         {
                             //Les unités d'artillerie n'ont pas de matériel ou de ravitaillement
                             libelleMoral = "N/A ";

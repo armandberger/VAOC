@@ -1345,7 +1345,7 @@ namespace vaoc
             /// Indique s'il s'agit uniquement d'une unité d'artillerie
             /// </summary>
             /// <returns>true si pur unité d'artillerie, false sinon</returns>
-            public bool estUniteArtillerie
+            public bool estArtillerie
             {
                 get
                 {
@@ -2419,7 +2419,7 @@ namespace vaoc
                 string message;
 
                 //if (lignePion.B_DETRUIT) { return true; } -> même les unités détruites gagnent de l'expérience car cela compte ensuite pour les blessés et les prisonniers
-                if (estUniteArtillerie) { return true; }//pas d'expérience pour les unités d'artillerie
+                if (estArtillerie) { return true; }//pas d'expérience pour les unités d'artillerie
                 decimal experienceAvant = I_EXPERIENCE;
                 I_EXPERIENCE = Math.Min(2, I_EXPERIENCE + Constantes.CST_GAIN_EXPERIENCE_BATAILLE);// 2 = expérience maximale
                 message = string.Format("GainExperienceFinDeBataille {0}:{1} voit son expérience passée de {2} à {3}",

@@ -1454,6 +1454,7 @@ namespace vaoc
                         rapportArtillerie = (0 == canons[i]) ? canons[i + 3] > 0 ? 2 : 0 : canons[i + 3] / canons[i];
                         if (rapportArtillerie >= 1) { relance[i + 3] = Math.Min(rapportArtillerie, 2); }// 2 dés de relance au maximum
                         message = string.Format("EffectuerBataille relance[{0}]={1} relance[{2}]={3}", i, relance[i], i + 3, relance[i + 3]);
+                        LogFile.Notifier(message, out messageErreur);
 
                         //modificateurs de terrain, appliquées uniquement si l'une des unités de la zone est en mode défense et si son niveau d'engagement est inférieur ou égal à l'attaquant
                         int valeurDesFortifications = 0;
@@ -1476,6 +1477,9 @@ namespace vaoc
                             ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN((int)this["ID_TERRAIN_" + Convert.ToString(i)]);
                             //les modificateurs de terrain sont en réduction des dés de l'adversaire
                             des[i + 3] -= ligneModeleTerrain.I_MODIFICATEUR_DEFENSE + valeurDesFortifications;
+                            message = string.Format("EffectuerBataille fortification zone:{0}, terrain defense={1}, fortification defense={4}, des[{2}]={3}", 
+                                i, relance[i], i + 3, des[i + 3], valeurDesFortifications);
+                            LogFile.Notifier(message, out messageErreur);
                         }
 
                         valeurDesFortifications = 0;
@@ -1682,7 +1686,6 @@ namespace vaoc
                 #endregion
 
                 #region Un des chefs présents est-il blessé ?
-                for (int kkk = 0; kkk < blessureChef.Count(); kkk++) blessureChef[kkk] = true;//test sur la blessure des chefs
                 for (i = 0; i < 3; i++)
                 {
                     //Un des chefs présents est-il blessé ?
@@ -1834,7 +1837,7 @@ namespace vaoc
                     lignePionEnBataille.I_INFANTERIE -= pertesInfanterie;
                     lignePionEnBataille.I_CAVALERIE -= pertesCavalerie;
                     lignePionEnBataille.I_ARTILLERIE -= pertesArtillerie;
-                    if (lignePionEnBataille.Moral <= 0 && !lignePionEnBataille.estUniteArtillerie)
+                    if (lignePionEnBataille.Moral <= 0 && !lignePionEnBataille.estArtillerie)
                     {
                         FuiteAuCombat(lignePionEnBataille, zoneDefenseur, lignePionsEnBatailleDefenseur);
                     }
@@ -2158,21 +2161,29 @@ namespace vaoc
 
                         if (!lignePion.IsI_ZONE_BATAILLENull() && lignePion.I_ZONE_BATAILLE >= 0)//cas du leader de la zone, engagé mais sans zone
                         {
-                            effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
-                            des[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
-                            canons[lignePion.I_ZONE_BATAILLE] += lignePion.I_ARTILLERIE;
-
-                            //modification liée à la valeur de matériel et de ravitaillement
-                            des[lignePion.I_ZONE_BATAILLE] += Constantes.CalculerEfficaciteAuCombat(lignePion.I_MATERIEL, lignePion.I_RAVITAILLEMENT);
-
-                            if (valeurTactique[lignePion.I_ZONE_BATAILLE] < lignePion.I_TACTIQUE)
+                            if (lignePion.estQG)
                             {
-                                valeurTactique[lignePion.I_ZONE_BATAILLE] = lignePion.I_TACTIQUE;
+                                if (valeurTactique[lignePion.I_ZONE_BATAILLE] < lignePion.I_TACTIQUE)
+                                {
+                                    valeurTactique[lignePion.I_ZONE_BATAILLE] = lignePion.I_TACTIQUE;
+                                }
                             }
-                            if (lignePion.B_CAVALERIE_DE_LIGNE) { presenceCavalerieDeLigne[lignePion.I_ZONE_BATAILLE] = true; }
-                            if (lignePion.B_CAVALERIE_LOURDE) { presenceCavalerieLourde[lignePion.I_ZONE_BATAILLE] = true; }
-                            if (lignePion.B_GARDE) { presenceGarde[lignePion.I_ZONE_BATAILLE] = true; }
-                            if (lignePion.B_VIEILLE_GARDE) { presenceVieilleGarde[lignePion.I_ZONE_BATAILLE] = true; }
+                            else
+                            {
+                                if (!lignePion.estArtillerie)
+                                {
+                                    //modification liée à la valeur de matériel et de ravitaillement
+                                    des[lignePion.I_ZONE_BATAILLE] += Constantes.CalculerEfficaciteAuCombat(lignePion.I_MATERIEL, lignePion.I_RAVITAILLEMENT);
+                                }
+                                canons[lignePion.I_ZONE_BATAILLE] += lignePion.I_ARTILLERIE;
+                                effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
+                                des[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
+
+                                if (lignePion.B_CAVALERIE_DE_LIGNE) { presenceCavalerieDeLigne[lignePion.I_ZONE_BATAILLE] = true; }
+                                if (lignePion.B_CAVALERIE_LOURDE) { presenceCavalerieLourde[lignePion.I_ZONE_BATAILLE] = true; }
+                                if (lignePion.B_GARDE) { presenceGarde[lignePion.I_ZONE_BATAILLE] = true; }
+                                if (lignePion.B_VIEILLE_GARDE) { presenceVieilleGarde[lignePion.I_ZONE_BATAILLE] = true; }
+                            }
                         }
                         if (!lignePion.estMessager && !lignePion.estQG)
                         {
@@ -2226,7 +2237,7 @@ namespace vaoc
                     if (lignePion.ID_PION != lignePionFuite.ID_PION &&
                         !lignePion.IsI_ZONE_BATAILLENull() && //possible si l'unité a déjà fuit le combat
                         lignePion.I_ZONE_BATAILLE == zone && lignePion.estCombattif
-                        && !lignePion.estUniteArtillerie)
+                        && !lignePion.estArtillerie)
                     {
                         lignePion.I_MORAL -= Constantes.CST_PERTE_MORAL_FUITE;
                         if (lignePion.Moral <= 0)

@@ -1631,6 +1631,13 @@ namespace vaoc
             //int id_ordre_suivant;
 
             LogFile.Notifier("Debut NouveauxOrdres");
+            nbTourExecutes = 0;
+            if (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE != 0)
+            {
+                //il doit s'agir d'un rechargement en cours de route
+                LogFile.Notifier("NouveauxOrdres : pas de traitement, la phase n'est pas égale à 0");
+                return true;
+            }
 
             List<ClassDataOrdre> liste = m_iWeb.ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
                                                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
@@ -1688,7 +1695,6 @@ namespace vaoc
                 }
             }
 
-            nbTourExecutes = 0;
             if (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR != tourDernierOrdre)
             {
                 if (DialogResult.No == MessageBox.Show("Attention ! Pas de nouveaux ordres à ce tour, derniers ordres fait au tour:" + tourDernierOrdre + ". Est-ce normal ?", "NouveauxOrdres()", MessageBoxButtons.YesNo))

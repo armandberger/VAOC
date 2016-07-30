@@ -1002,12 +1002,12 @@ namespace vaoc
                     foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivi)
                     {
                         if (lignePion.B_DETRUIT) { continue; }
-                        int pertesCavaleriePion = listePertesCavalerie.ContainsKey(lignePion.ID_PION) ? (int)listePertesCavalerie[lignePion.ID_PION] : 0;
                         int pertesInfanteriePion = listePertesInfanterie.ContainsKey(lignePion.ID_PION) ? (int)listePertesInfanterie[lignePion.ID_PION] : 0;
+                        int pertesCavaleriePion = listePertesCavalerie.ContainsKey(lignePion.ID_PION) ? (int)listePertesCavalerie[lignePion.ID_PION] : 0;
                         int pertesArtilleriePion = listePertesArtillerie.ContainsKey(lignePion.ID_PION) ? (int)listePertesArtillerie[lignePion.ID_PION] : 0;
                         int pertesMoralPion = listePertesMoral.ContainsKey(lignePion.ID_PION) ? (int)listePertesMoral[lignePion.ID_PION] : 0;
-                        int pertesMaterielPion = listePertesMateriel.ContainsKey(lignePion.ID_PION) ? (int)listePertesRavitaillement[lignePion.ID_PION] : 0;
-                        int pertesRavitaillementPion = listePertesRavitaillement.ContainsKey(lignePion.ID_PION) ? (int)listePertesArtillerie[lignePion.ID_PION] : 0;
+                        int pertesMaterielPion = listePertesMateriel.ContainsKey(lignePion.ID_PION) ? (int)listePertesMateriel[lignePion.ID_PION] : 0;
+                        int pertesRavitaillementPion = listePertesRavitaillement.ContainsKey(lignePion.ID_PION) ? (int)listePertesRavitaillement[lignePion.ID_PION] : 0;
                         if (0 == pertesCavalerieTotal + pertesInfanterieTotal + pertesArtillerieTotal)
                         {
                             if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))

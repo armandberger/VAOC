@@ -131,7 +131,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA
+                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -2664,12 +2664,16 @@ namespace vaoc
         private bool RecuperationFatigue(Donnees.TAB_PIONRow lignePion, out int diffatigue, Donnees.TAB_METEORow ligneMeteo)
         {
             string message;
+            int nbInfanteriePerdus = 0;
+            int nbCavaleriePerdus = 0;
+            int nbArtilleriePerdus = 0;
 
             //modification d'après la météo courante
             diffatigue = -1;
             int nbTrainardsInfanterie = lignePion.I_INFANTERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
             int nbTrainardsCavalerie = lignePion.I_CAVALERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
-            if ((nbTrainardsInfanterie + nbTrainardsCavalerie) * 2 / 10 >= Constantes.CST_TAILLE_MINIMUM_UNITE)
+            int nbTrainardsArtillerie = lignePion.I_ARTILLERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
+            if ((nbTrainardsInfanterie + nbTrainardsCavalerie) * 2 / 10 >= Constantes.CST_TAILLE_MINIMUM_UNITE || nbTrainardsArtillerie>5)
             {
                 //on constitue une unité de blessés/malades
                 Donnees.TAB_PIONRow lignePionConvoiDeBlesses = lignePion.CreerConvoi(lignePion.proprietaire, true /*bBlesses*/, false /*bPrisonniers*/, false /*bRenfort*/);
@@ -2681,8 +2685,14 @@ namespace vaoc
                 }
                 lignePionConvoiDeBlesses.I_INFANTERIE = nbTrainardsInfanterie * 2 /10;
                 lignePionConvoiDeBlesses.I_CAVALERIE = nbTrainardsCavalerie * 2 /10;
+                lignePionConvoiDeBlesses.I_ARTILLERIE = nbTrainardsArtillerie * 2 / 10;
                 lignePionConvoiDeBlesses.I_INFANTERIE_INITIALE = lignePionConvoiDeBlesses.I_INFANTERIE;
                 lignePionConvoiDeBlesses.I_CAVALERIE_INITIALE = lignePionConvoiDeBlesses.I_CAVALERIE;
+                lignePionConvoiDeBlesses.I_ARTILLERIE_INITIALE = lignePionConvoiDeBlesses.I_ARTILLERIE;
+                // blessés + 1/10 perdus définitivement (soit la moitié des 2/10 des blessés)
+                nbInfanteriePerdus = lignePionConvoiDeBlesses.I_INFANTERIE + lignePionConvoiDeBlesses.I_INFANTERIE/2;
+                nbCavaleriePerdus = lignePionConvoiDeBlesses.I_CAVALERIE + lignePionConvoiDeBlesses.I_CAVALERIE/2;
+                nbArtilleriePerdus = lignePionConvoiDeBlesses.I_ARTILLERIE + lignePionConvoiDeBlesses.I_ARTILLERIE/2;
                 if (!ClassMessager.EnvoyerMessage(lignePionConvoiDeBlesses, ClassMessager.MESSAGES.MESSAGE_MALADES_RECUPERATION))
                 {
                     message = string.Format("RecuperationFatigue : erreur lors de l'envoi d'un message MESSAGE_MALADES_RECUPERATION");
@@ -2691,7 +2701,7 @@ namespace vaoc
                 }
             }
 
-            //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus !
+            //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
             int recuperationFantassin = nbTrainardsInfanterie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
             int recuperationCavalerie = nbTrainardsCavalerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
 
@@ -2702,6 +2712,11 @@ namespace vaoc
             int fatigue = (effectifTheorique - effectifTheorique) * 100 / effectifTheorique;
             diffatigue = lignePion.I_FATIGUE - fatigue;
             lignePion.I_FATIGUE = fatigue;
+            //on retire les blessés et perte des effectifs
+            lignePion.I_INFANTERIE -= nbInfanteriePerdus;
+            lignePion.I_CAVALERIE -= nbCavaleriePerdus;
+            lignePion.I_ARTILLERIE -= nbArtilleriePerdus;
+
             return true;
         }
 

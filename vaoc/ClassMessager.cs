@@ -2579,7 +2579,7 @@ namespace vaoc
             {
                 bZone012 = true;
             }
-            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out nbUnites, ref des, ref effectifs, ref canons, out lignePionsEnBataille012, true/*bEngagement*/, false/*bCombattif*/))
+            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out nbUnites, ref des, ref effectifs, ref canons, out lignePionsEnBataille012, true/*bEngagement*/, false/*bCombattif*/, true/*QG*/))
             {
                 return false;
             }

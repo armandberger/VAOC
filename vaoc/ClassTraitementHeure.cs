@@ -131,7 +131,7 @@ namespace vaoc
                     }
                 }
 
-                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
+                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase

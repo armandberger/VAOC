@@ -1937,7 +1937,9 @@ namespace vaoc
                     break;
 
                 case Constantes.ORDRES.REPARER_PONT:
-                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DESTINATION, out zoneGeographique);
+                    //ligneOrdre.ID_CASE_DEPART et non destination car il n'y a pas destination, sur un ordre de destruction de pont
+                    // c'est la case la plus proche
+                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DEPART, out zoneGeographique);
                     retour = avecProprietaire ?
                                 string.Format("{0} a pour ordre de réparer un pont en {1}.",
                                 lignePionDestinataire.S_NOM, zoneGeographique)

@@ -2893,7 +2893,8 @@ namespace vaoc
                         vitesse = Math.Min(vitesse, resModeleMouvement[0].I_VITESSE_ARTILLERIE);
                     }
                 }
-                return vitesse;
+                //les unités en déroute (moral nul) bouge de 1 km/h plus  vite
+                return (I_MORAL>0) ? vitesse : vitesse+1;
             }
 
             /// <summary>

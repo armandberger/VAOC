@@ -1394,16 +1394,22 @@ namespace vaoc
                     return QGcombattif;
                 }
 
+                if (combattifSansMoral)
+                {
+                    return true;
+                }
+
                 if (I_MATERIEL <= 0 || I_RAVITAILLEMENT <= 0)
                 {
                     return false;
                 }
 
                 //Les unités de pur artillerie sont considérées comme combattives
-                if (I_MORAL > 0 || combattifSansMoral || (I_INFANTERIE == 0 && 0 == I_CAVALERIE))
+                if (I_MORAL > 0 || (I_INFANTERIE == 0 && 0 == I_CAVALERIE))
                 {
                     return true;
                 }
+
                 return false;
             }
 

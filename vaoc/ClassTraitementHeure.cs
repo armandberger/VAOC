@@ -975,7 +975,7 @@ namespace vaoc
                         }
                     }
 
-                    LogFile.Notifier(string.Format("VictoireDefaite : defaite[0]={0}, defaite[1]={1}, victoire[0]={2}, victoire[1]={3}",
+                    LogFile.Notifier(string.Format("VictoireDefaite : defaite(fuite au combat)[0]={0}, defaite(fuite au combat)[1]={1}, victoire[0](jamais de fuite au combat)={2}, victoire[1](jamais de fuite au combat)={3}",
                                                     defaite[0], defaite[1], victoire[0], victoire[1]));
                     if ((defaite[0] > defaite[1] * 2 && defaite[0] > victoire[0]) || (defaite[1] > defaite[0] * 2 && defaite[1] > victoire[1]))
                     {

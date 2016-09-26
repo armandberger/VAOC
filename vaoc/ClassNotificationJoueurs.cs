@@ -188,6 +188,7 @@ namespace vaoc
                     else
                     {
                         //le dernier message est en fait le plus récent
+                        if (ligneMessage.B_DETRUIT) { continue; }
                         ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
                         iInfanterie = ligneMessage.I_INFANTERIE;
                         iCavalerie = ligneMessage.I_CAVALERIE;

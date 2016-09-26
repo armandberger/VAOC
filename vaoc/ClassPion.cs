@@ -2361,13 +2361,15 @@ namespace vaoc
 
                 if (this.estDepot || this.estConvoiDeRavitaillement || this.estPontonnier)
                 {
-                    //je ne comprends pas ce cas, en plus, cela donne un encombrement nul quand les convois se déplacent et sa crée des bugs !
-                    //if (enMouvement || effectifInfanterie > 0)
-                    //{
-                    //    //return immediat car on ne doit pas tenir compte du moral ou des fourgons pour les depôts et les pontonniers
-                    //    return (int)((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_INFANTERIE);
-                    //}
-                    //else
+                    //je ne comprends pas ce cas, en plus, cela donne un encombrement nul quand les convois se déplacent et cela crée des bugs !
+                    //sauf que si on le met en commentaire, les pontonniers en mouvement n'avancent plus avec une partie des forces arrivées à destination, hum...
+                    //en effet, l'encombrement sur route devient 100-100 et donc les forces à destination ne progressent plus
+                    if (enMouvement /*|| effectifInfanterie > 0*/)
+                    {
+                        //return immediat car on ne doit pas tenir compte du moral ou des fourgons pour les depôts et les pontonniers
+                        return (int)((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_INFANTERIE);
+                    }
+                    else
                     {
                         if (this.estDepot) { return Constantes.CST_ENCOMBREMENT_DEPOT[(int)(C_NIVEAU_DEPOT - 'A')] * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE; }
                         if (this.estConvoiDeRavitaillement) { return Constantes.CST_ENCOMBREMENT_CONVOI_RAVITAILLEMENT * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE; }

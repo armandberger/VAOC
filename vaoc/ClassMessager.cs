@@ -2084,7 +2084,8 @@ namespace vaoc
             visionPixel = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
             #region calcul du cadre de vision
-            if (lignePion.estAuCombat)
+            //un joueur pouvant toujours voir les unités en bataille, autant continuer à lui donner les informations du cadre
+            if (lignePion.estAuCombat && !lignePion.estJoueur)
             {
                 Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePion.ID_BATAILLE);
                 xCaseHautGauche = ligneBataille.I_X_CASE_HAUT_GAUCHE;

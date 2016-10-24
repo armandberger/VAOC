@@ -3304,9 +3304,15 @@ namespace vaoc
             double cout, coutHorsRoute;
             List<Donnees.TAB_CASERow> chemin;
 
-            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_CHEMIN_IMPRATICABLE))
+            //a-t-on déjà envoyé un message pour prévenir mon supérieur recemment ?                            
+            Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION, ClassMessager.MESSAGES.MESSAGE_CHEMIN_IMPRATICABLE);
+            if (null == ligneMessage ||
+                ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
             {
-                return false;
+                if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_CHEMIN_IMPRATICABLE))
+                {
+                    return false;
+                }
             }
             Donnees.m_donnees.TAB_PARCOURS.SupprimerParcoursPion(lignePion.ID_PION);
             ligneOrdre.I_EFFECTIF_DEPART = lignePion.effectifTotalEnMouvement;

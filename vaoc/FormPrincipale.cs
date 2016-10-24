@@ -1261,7 +1261,7 @@ namespace vaoc
                 ligneJeu.S_NOM_CARTE_ZOOM = nomCarteZoom;
                 ligneJeu.I_LARGEUR_CARTE = general.largeurCarte;
                 ligneJeu.I_HAUTEUR_CARTE = general.hauteurCarte;
-                if (-1 == iTailleZonePCC) { Donnees.m_donnees.TAB_JEU[0].SetI_TAILLEBLOC_PCCNull(); } else { Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC = iTailleZonePCC; }
+                if (-1 == iTailleZonePCC) { ligneJeu.SetI_TAILLEBLOC_PCCNull(); } else { ligneJeu.I_TAILLEBLOC_PCC = iTailleZonePCC; }
 
                 //si les images de carte à changer, il faut les mettre à jour
                 if (nomCarte != general.nomCarte)
@@ -1363,6 +1363,7 @@ namespace vaoc
                 {
                     lignePartie.ID_METEO = idMeteo;
                 }
+                //lignePartie.SetID_VICTOIRENull();//BEA, à retirer
                 Donnees.m_donnees.TAB_PARTIE.AddTAB_PARTIERow(lignePartie);
             }
         }

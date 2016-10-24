@@ -839,14 +839,15 @@ namespace vaoc
             }
             if (null == ligneMessage)
             {
-                if (Donnees.m_donnees.TAB_PARTIE[0].IsID_VICTOIRENull() || Donnees.m_donnees.TAB_PARTIE[0].ID_VICTOIRE < 0)
-                {
-                    bDetruit = 0;
-                }
-                else
-                {
-                    bDetruit = (ligneMessage.B_DETRUIT) ? 1 : 0;//cas improbable où la partie serait terminée sans que le pion n'est reçu un seul message
-                }
+                //if (Donnees.m_donnees.TAB_PARTIE[0].IsID_VICTOIRENull() || Donnees.m_donnees.TAB_PARTIE[0].ID_VICTOIRE < 0)
+                //{
+                //    bDetruit = 0;
+                //}
+                //else
+                //{
+                //    bDetruit = (ligneMessage.B_DETRUIT) ? 1 : 0;//cas improbable où la partie serait terminée sans que le pion n'est reçu un seul message -> test impossible, ligneMessage est NULL
+                //}
+                bDetruit = 0;
 
                 if (lignePion.I_CAVALERIE > 0)
                 {

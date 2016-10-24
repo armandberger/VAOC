@@ -1384,7 +1384,7 @@ namespace vaoc
                     return false;
                 }
 
-                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses)
+                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers)
                 {
                     return false;
                 }

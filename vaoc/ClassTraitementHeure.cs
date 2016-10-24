@@ -1412,7 +1412,7 @@ namespace vaoc
                     // alors, qui contrôle la zone ?
                     int nationControle = (zone[0] > zone[1]) ? idNation0 : idNation1;
 
-                    if (!ligneNomCarte.IsID_NATION_CONTROLENull() && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
+                    if (nationControle>=0 && !ligneNomCarte.IsID_NATION_CONTROLENull() && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
                     {
                         //Quand un hopital est capturé, la moitié des blessés "disparaissent", ceux qui restent ne sont soignés que s'ils sont "libérés"
                         if (ligneNomCarte.B_HOPITAL)
@@ -3627,7 +3627,7 @@ namespace vaoc
 
                 //si l'unité a déjà modifiée sa position (à cause d'une rencontre ennemie par exemple, il ne faut pas la redeplacer)
                 //dans le cas inverse, on lui affecte bien la nouvelle case lié à son déplacement
-                if (id_case_source == lignePion.ID_CASE)
+                if (id_case_source == lignePion.ID_CASE && coutCase>0)
                 {
                     lignePion.ID_CASE = id_case_finale;
                 }

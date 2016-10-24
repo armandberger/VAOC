@@ -2253,7 +2253,7 @@ namespace vaoc
                                 unitesEnvironnantes += nomType;
                                 unitesEnvironnantes += lignePionVoisin.ChaineAppartenance();
                                 //unitesEnvironnantes += string.Format(" situé{1} à {0}  avec des effectifs de ", NomZoneGeographique, femminin);
-                                unitesEnvironnantes += string.Format(" avec des effectifs de ", NomZoneGeographique, femminin);
+                                unitesEnvironnantes += string.Format(" situé{1} à {0}", NomZoneGeographique, femminin);
                             }
                             else
                             {

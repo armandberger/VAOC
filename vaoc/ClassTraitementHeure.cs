@@ -950,7 +950,7 @@ namespace vaoc
                     defaite[0] = defaite[1] = 0;
                     foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
                     {
-                        if (lignePion.effectifTotal > 0 && !lignePion.B_DETRUIT)
+                        if (lignePion.effectifTotal > 0 && !lignePion.B_DETRUIT && !lignePion.estPrisonniers && !lignePion.estBlesses)
                         {
                             //unité combattante
                             ligneModelePion = lignePion.modelePion;
@@ -3047,6 +3047,7 @@ namespace vaoc
                                     }
 
                                     Donnees.TAB_ORDRERow ligneOrdreNouveau = ligneOrdre.ordreTransmis;
+                                    //if (null== ligneOrdreNouveau) { return true; }//BEA, pour régler un correctif d'un autre bug, à supprimer ensuite
                                     Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionDestinataire.ID_PION);
                                     Donnees.TAB_PIONRow lignePionDonneurOrdre = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_PROPRIETAIRE);
                                     Donnees.TAB_PIONRow lignePionMessage = lignePionDestinataire;

@@ -190,6 +190,21 @@ namespace vaoc
             Donnees.m_donnees.TAB_PCC_COUTS.Clear();
             Donnees.m_donnees.TAB_PCC_VILLES_INUTILE.Clear();
              * */
+             /*
+            int i = 0;
+            while (i< Donnees.m_donnees.TAB_MESSAGE.Count())
+            {
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+                if (ligneMessage.ID_PION_EMETTEUR == 3389 && ligneMessage.ID_MESSAGE > 5927)
+                {
+                    ligneMessage.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            */
             #endregion
 
             foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)

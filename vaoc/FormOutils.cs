@@ -514,7 +514,7 @@ namespace vaoc
             try
             {
                 Cursor = Cursors.WaitCursor;
-                Color[] couleursAConserver = new Color[15];
+                Color[] couleursAConserver = new Color[18];
                 couleursAConserver[0] = Color.FromArgb(255, 255, 255);//plaine
                 couleursAConserver[1] = Color.FromArgb(0, 0, 128);//fleuve
                 couleursAConserver[2] = Color.FromArgb(200, 100, 100);//route
@@ -526,22 +526,31 @@ namespace vaoc
                 couleursAConserver[8] = Color.FromArgb(0, 0, 255);//rivière
                 couleursAConserver[9] = Color.FromArgb(255, 0, 255);//marais
                 couleursAConserver[10] = Color.FromArgb(255, 255, 0);//pont
-                couleursAConserver[11] = Color.FromArgb(255, 255, 0);//guet
+                couleursAConserver[11] = Color.FromArgb(0, 255, 255);//guet
                 couleursAConserver[12] = Color.FromArgb(192, 192, 192);//route deuxieme passe
                 couleursAConserver[13] = Color.FromArgb(10, 10, 10);//ville deuxieme passe
-                couleursAConserver[13] = Color.FromArgb(255, 127, 255);//bac
+                couleursAConserver[14] = Color.FromArgb(255, 127, 255);//bac
+                couleursAConserver[15] = Color.FromArgb(255, 242, 0);//pont erreur
+                couleursAConserver[16] = Color.FromArgb(60, 63, 6);//colline erreur
+                couleursAConserver[17] = Color.FromArgb(64, 64, 6);//colline erreur
 
-                Color[] couleursARemplacer = new Color[4];
+                Color[] couleursARemplacer = new Color[7];
                 couleursARemplacer[0] = Color.FromArgb(200, 100, 100);//route
                 couleursARemplacer[1] = Color.FromArgb(255, 150, 0);//ville
                 couleursARemplacer[2] = Color.FromArgb(255, 255, 0);//pont
                 couleursARemplacer[3] = Color.FromArgb(0, 255, 255);//guet
+                couleursARemplacer[4] = Color.FromArgb(255, 242, 0);//pont erreur
+                couleursARemplacer[5] = Color.FromArgb(60, 63, 6);//colline erreur
+                couleursARemplacer[6] = Color.FromArgb(64, 64, 6);//colline erreur
 
-                Color[] couleursDeRemplacement = new Color[4];
+                Color[] couleursDeRemplacement = new Color[7];
                 couleursDeRemplacement[0] = Color.FromArgb(192, 192, 192);//route
                 couleursDeRemplacement[1] = Color.FromArgb(10, 10, 10);//ville
                 couleursDeRemplacement[2] = Color.FromArgb(150, 150, 150);//pont
                 couleursDeRemplacement[3] = Color.FromArgb(50, 50, 200);//guet
+                couleursDeRemplacement[4] = Color.FromArgb(150, 150, 150);//pont
+                couleursDeRemplacement[5] = Color.FromArgb(64, 64, 0);//colline
+                couleursDeRemplacement[6] = Color.FromArgb(64, 64, 0);//colline
 
                 //Supression de toutes les couleurs non utilisées
                 LogFile.CreationLogFile(textBoxFichierImage.Text, "SuppressionCouleur", 0, 0);

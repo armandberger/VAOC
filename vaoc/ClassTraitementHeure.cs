@@ -3047,7 +3047,7 @@ namespace vaoc
                                     }
 
                                     Donnees.TAB_ORDRERow ligneOrdreNouveau = ligneOrdre.ordreTransmis;
-                                    //if (null== ligneOrdreNouveau) { return true; }//BEA, pour régler un correctif d'un autre bug, à supprimer ensuite
+                                    if (null== ligneOrdreNouveau) { return true; }//BEA, pour régler un correctif d'un autre bug, à supprimer ensuite
                                     Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionDestinataire.ID_PION);
                                     Donnees.TAB_PIONRow lignePionDonneurOrdre = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_PROPRIETAIRE);
                                     Donnees.TAB_PIONRow lignePionMessage = lignePionDestinataire;

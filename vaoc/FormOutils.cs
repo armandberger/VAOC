@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Imaging;
+using WaocLib;
 
 namespace vaoc
 {
@@ -513,7 +514,7 @@ namespace vaoc
             try
             {
                 Cursor = Cursors.WaitCursor;
-                Color[] couleursAConserver = new Color[14];
+                Color[] couleursAConserver = new Color[15];
                 couleursAConserver[0] = Color.FromArgb(255, 255, 255);//plaine
                 couleursAConserver[1] = Color.FromArgb(0, 0, 128);//fleuve
                 couleursAConserver[2] = Color.FromArgb(200, 100, 100);//route
@@ -528,6 +529,7 @@ namespace vaoc
                 couleursAConserver[11] = Color.FromArgb(255, 255, 0);//guet
                 couleursAConserver[12] = Color.FromArgb(192, 192, 192);//route deuxieme passe
                 couleursAConserver[13] = Color.FromArgb(10, 10, 10);//ville deuxieme passe
+                couleursAConserver[13] = Color.FromArgb(255, 127, 255);//bac
 
                 Color[] couleursARemplacer = new Color[4];
                 couleursARemplacer[0] = Color.FromArgb(200, 100, 100);//route
@@ -542,6 +544,7 @@ namespace vaoc
                 couleursDeRemplacement[3] = Color.FromArgb(50, 50, 200);//guet
 
                 //Supression de toutes les couleurs non utilisées
+                LogFile.CreationLogFile(textBoxFichierImage.Text, "SuppressionCouleur", 0, 0);
                 m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
                 for (int x = 0; x < m_imageCarte.Width; x++)
                 {
@@ -557,6 +560,7 @@ namespace vaoc
                         //on supprime !
                         if (i == couleursAConserver.Count())
                         {
+                            LogFile.Notifier(string.Format("{0},{1} : RGB({2},{3},{4})", x,y, pixelColor.R, pixelColor.G, pixelColor.B));
                             m_imageCarte.SetPixel(x, y, couleursAConserver[0]);
                         }
                     }
@@ -588,7 +592,7 @@ namespace vaoc
                 m_imageCarte.Save(nomFichier + "new" + ".bmp", ImageFormat.Bmp);
                 m_imageCarte.Dispose();
                 Cursor = oldcurseur;
-                MessageBox.Show("Traitement terminé avec succès", "Traitement d'image", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Traitement terminé avec succès", "Traitement d'image", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

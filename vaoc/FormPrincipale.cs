@@ -1172,6 +1172,7 @@ namespace vaoc
             int idVictoire = -1;
             int idMeteo = -1;
             int iTailleZonePCC = -1;
+            int iTourNotification = 0;
 
             //initialisation des données de la form
             if (Donnees.m_donnees.TAB_JEU.Count > 0)
@@ -1258,6 +1259,7 @@ namespace vaoc
                 iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                 messageArbitre = Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE;
+                iTourNotification = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
             }
             else
             {
@@ -1378,6 +1380,7 @@ namespace vaoc
                 {
                     lignePartie.ID_METEO = idMeteo;
                 }
+                lignePartie.I_TOUR_NOTIFICATION = iTourNotification;
                 //lignePartie.SetID_VICTOIRENull();//BEA, à retirer
                 Donnees.m_donnees.TAB_PARTIE.AddTAB_PARTIERow(lignePartie);
             }

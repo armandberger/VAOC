@@ -3101,6 +3101,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_TOUR_NOTIFICATION;
             
+            private global::System.Data.DataColumn columnI_NB_METEO_SUCCESSIVE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_PARTIEDataTable() {
@@ -3264,6 +3266,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_NB_METEO_SUCCESSIVEColumn {
+                get {
+                    return this.columnI_NB_METEO_SUCCESSIVE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3315,7 +3325,8 @@ namespace vaoc {
                         int I_HAUTEUR_CARTE_ZOOM_WEB, 
                         int ID_VICTOIRE, 
                         bool FL_DEMARRAGE, 
-                        int I_TOUR_NOTIFICATION) {
+                        int I_TOUR_NOTIFICATION, 
+                        int I_NB_METEO_SUCCESSIVE) {
                 TAB_PARTIERow rowTAB_PARTIERow = ((TAB_PARTIERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PARTIE,
@@ -3333,7 +3344,8 @@ namespace vaoc {
                         I_HAUTEUR_CARTE_ZOOM_WEB,
                         ID_VICTOIRE,
                         FL_DEMARRAGE,
-                        I_TOUR_NOTIFICATION};
+                        I_TOUR_NOTIFICATION,
+                        I_NB_METEO_SUCCESSIVE};
                 rowTAB_PARTIERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PARTIERow);
                 return rowTAB_PARTIERow;
@@ -3379,6 +3391,7 @@ namespace vaoc {
                 this.columnID_VICTOIRE = base.Columns["ID_VICTOIRE"];
                 this.columnFL_DEMARRAGE = base.Columns["FL_DEMARRAGE"];
                 this.columnI_TOUR_NOTIFICATION = base.Columns["I_TOUR_NOTIFICATION"];
+                this.columnI_NB_METEO_SUCCESSIVE = base.Columns["I_NB_METEO_SUCCESSIVE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3416,6 +3429,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnFL_DEMARRAGE);
                 this.columnI_TOUR_NOTIFICATION = new global::System.Data.DataColumn("I_TOUR_NOTIFICATION", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_TOUR_NOTIFICATION);
+                this.columnI_NB_METEO_SUCCESSIVE = new global::System.Data.DataColumn("I_NB_METEO_SUCCESSIVE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_NB_METEO_SUCCESSIVE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PARTIE}, true));
                 this.columnID_PARTIE.AllowDBNull = false;
@@ -4941,6 +4956,10 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_POURCENT_RALLIEMENT;
             
+            private global::System.Data.DataColumn columnI_NB_TOURS_AGGRAVATION;
+            
+            private global::System.Data.DataColumn columnID_METEO_AGGRAVATION;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_METEODataTable() {
@@ -5024,6 +5043,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_NB_TOURS_AGGRAVATIONColumn {
+                get {
+                    return this.columnI_NB_TOURS_AGGRAVATION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ID_METEO_AGGRAVATIONColumn {
+                get {
+                    return this.columnID_METEO_AGGRAVATION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -5059,7 +5094,7 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TAB_METEORow AddTAB_METEORow(string S_NOM, short I_CHANCE, int I_POURCENT_RAVITAILLEMENT, int I_POURCENT_FATIGUE, int I_POURCENT_RALLIEMENT) {
+            public TAB_METEORow AddTAB_METEORow(string S_NOM, short I_CHANCE, int I_POURCENT_RAVITAILLEMENT, int I_POURCENT_FATIGUE, int I_POURCENT_RALLIEMENT, int I_NB_TOURS_AGGRAVATION, int ID_METEO_AGGRAVATION) {
                 TAB_METEORow rowTAB_METEORow = ((TAB_METEORow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -5067,7 +5102,9 @@ namespace vaoc {
                         I_CHANCE,
                         I_POURCENT_RAVITAILLEMENT,
                         I_POURCENT_FATIGUE,
-                        I_POURCENT_RALLIEMENT};
+                        I_POURCENT_RALLIEMENT,
+                        I_NB_TOURS_AGGRAVATION,
+                        ID_METEO_AGGRAVATION};
                 rowTAB_METEORow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_METEORow);
                 return rowTAB_METEORow;
@@ -5103,6 +5140,8 @@ namespace vaoc {
                 this.columnI_POURCENT_RAVITAILLEMENT = base.Columns["I_POURCENT_RAVITAILLEMENT"];
                 this.columnI_POURCENT_FATIGUE = base.Columns["I_POURCENT_FATIGUE"];
                 this.columnI_POURCENT_RALLIEMENT = base.Columns["I_POURCENT_RALLIEMENT"];
+                this.columnI_NB_TOURS_AGGRAVATION = base.Columns["I_NB_TOURS_AGGRAVATION"];
+                this.columnID_METEO_AGGRAVATION = base.Columns["ID_METEO_AGGRAVATION"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5120,6 +5159,10 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_POURCENT_FATIGUE);
                 this.columnI_POURCENT_RALLIEMENT = new global::System.Data.DataColumn("I_POURCENT_RALLIEMENT", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_POURCENT_RALLIEMENT);
+                this.columnI_NB_TOURS_AGGRAVATION = new global::System.Data.DataColumn("I_NB_TOURS_AGGRAVATION", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_NB_TOURS_AGGRAVATION);
+                this.columnID_METEO_AGGRAVATION = new global::System.Data.DataColumn("ID_METEO_AGGRAVATION", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_METEO_AGGRAVATION);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_METEO}, true));
                 this.columnID_METEO.AutoIncrement = true;
@@ -17561,6 +17604,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_NB_METEO_SUCCESSIVE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_PARTIE.I_NB_METEO_SUCCESSIVEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_NB_METEO_SUCCESSIVE\' dans la table \'TAB_PARTIE\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PARTIE.I_NB_METEO_SUCCESSIVEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_JEUNull() {
                 return this.IsNull(this.tableTAB_PARTIE.ID_JEUColumn);
             }
@@ -17737,6 +17797,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_TOUR_NOTIFICATIONNull() {
                 this[this.tableTAB_PARTIE.I_TOUR_NOTIFICATIONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_NB_METEO_SUCCESSIVENull() {
+                return this.IsNull(this.tableTAB_PARTIE.I_NB_METEO_SUCCESSIVEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_NB_METEO_SUCCESSIVENull() {
+                this[this.tableTAB_PARTIE.I_NB_METEO_SUCCESSIVEColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -18692,6 +18764,40 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_NB_TOURS_AGGRAVATION {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_METEO.I_NB_TOURS_AGGRAVATIONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_NB_TOURS_AGGRAVATION\' dans la table \'TAB_METEO\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_METEO.I_NB_TOURS_AGGRAVATIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int ID_METEO_AGGRAVATION {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_METEO.ID_METEO_AGGRAVATIONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_METEO_AGGRAVATION\' dans la table \'TAB_METEO\' est DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_METEO.ID_METEO_AGGRAVATIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_METEO.S_NOMColumn);
             }
@@ -18748,6 +18854,30 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_POURCENT_RALLIEMENTNull() {
                 this[this.tableTAB_METEO.I_POURCENT_RALLIEMENTColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_NB_TOURS_AGGRAVATIONNull() {
+                return this.IsNull(this.tableTAB_METEO.I_NB_TOURS_AGGRAVATIONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_NB_TOURS_AGGRAVATIONNull() {
+                this[this.tableTAB_METEO.I_NB_TOURS_AGGRAVATIONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsID_METEO_AGGRAVATIONNull() {
+                return this.IsNull(this.tableTAB_METEO.ID_METEO_AGGRAVATIONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetID_METEO_AGGRAVATIONNull() {
+                this[this.tableTAB_METEO.ID_METEO_AGGRAVATIONColumn] = global::System.Convert.DBNull;
             }
         }
         

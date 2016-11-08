@@ -1173,6 +1173,7 @@ namespace vaoc
             int idMeteo = -1;
             int iTailleZonePCC = -1;
             int iTourNotification = 0;
+            int iNbMeteoSuccessive = 0;
 
             //initialisation des données de la form
             if (Donnees.m_donnees.TAB_JEU.Count > 0)
@@ -1260,6 +1261,7 @@ namespace vaoc
                 iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                 messageArbitre = Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE;
                 iTourNotification = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
+                iNbMeteoSuccessive = Donnees.m_donnees.TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE;
             }
             else
             {
@@ -1381,6 +1383,7 @@ namespace vaoc
                     lignePartie.ID_METEO = idMeteo;
                 }
                 lignePartie.I_TOUR_NOTIFICATION = iTourNotification;
+                lignePartie.I_NB_METEO_SUCCESSIVE = iNbMeteoSuccessive;
                 //lignePartie.SetID_VICTOIRENull();//BEA, à retirer
                 Donnees.m_donnees.TAB_PARTIE.AddTAB_PARTIERow(lignePartie);
             }

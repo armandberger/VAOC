@@ -40,6 +40,8 @@ namespace vaoc
             this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iPOURCENTFATIGUEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMeteo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMETEOBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -76,7 +78,9 @@ namespace vaoc
             this.iCHANCEDataGridViewTextBoxColumn,
             this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn,
             this.iPOURCENTFATIGUEDataGridViewTextBoxColumn,
-            this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn});
+            this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn,
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn,
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn});
             this.dataGridViewMeteo.DataSource = this.tABMETEOBindingSource;
             this.dataGridViewMeteo.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewMeteo.Name = "dataGridViewMeteo";
@@ -129,6 +133,18 @@ namespace vaoc
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.HeaderText = "I_POURCENT_RALLIEMENT";
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.Name = "iPOURCENTRALLIEMENTDataGridViewTextBoxColumn";
             // 
+            // iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn
+            // 
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.DataPropertyName = "I_NB_TOURS_AGGRAVATION";
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.HeaderText = "I_NB_TOURS_AGGRAVATION";
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.Name = "iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn";
+            // 
+            // iDMETEOAGGRAVATIONDataGridViewTextBoxColumn
+            // 
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.DataPropertyName = "ID_METEO_AGGRAVATION";
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.HeaderText = "ID_METEO_AGGRAVATION";
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.Name = "iDMETEOAGGRAVATIONDataGridViewTextBoxColumn";
+            // 
             // FormMeteo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -163,5 +179,7 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iPOURCENTFATIGUEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iPOURCENTRALLIEMENTDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDMETEOAGGRAVATIONDataGridViewTextBoxColumn;
     }
 }

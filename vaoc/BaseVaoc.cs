@@ -1255,7 +1255,7 @@ namespace vaoc
         internal bool SauvegarderPartie(string nomFichier)
         {
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 5;
+            TAB_JEU[0].I_VERSION = 6;
             return Dal.SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, Donnees.m_donnees);
         }
 
@@ -1487,6 +1487,19 @@ namespace vaoc
                     ligneRenfort.B_GARDE = false;
                     ligneRenfort.B_VIEILLE_GARDE = false;
                 }
+            }
+
+            #endregion
+
+            #region version 5
+            if (TAB_JEU[0].I_VERSION < 6)
+            {
+                foreach (TAB_METEORow ligneMeteo in TAB_METEO)
+                {
+                    ligneMeteo.ID_METEO_AGGRAVATION = -1;
+                    ligneMeteo.I_NB_TOURS_AGGRAVATION = 0;
+                }
+                TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE = 0;
             }
 
             #endregion

@@ -2288,7 +2288,25 @@ namespace vaoc
             {
                 totalPourcentage += Donnees.m_donnees.TAB_METEO[i++].I_CHANCE;
             }
-            Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO;
+            //Si la nouvelle météo est la même que la précédente ou que l'aggravé, on augemente le nombre de même météo successive
+            if (Donnees.m_donnees.TAB_PARTIE[0].ID_METEO == Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO || Donnees.m_donnees.TAB_PARTIE[0].ID_METEO == Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO_AGGRAVATION)
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE++;
+            }
+            else
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE = 0;//on change de météo
+            }
+            //météo aggravée ?
+            if (Donnees.m_donnees.TAB_METEO[i - 1].I_NB_TOURS_AGGRAVATION > 0 && Donnees.m_donnees.TAB_METEO[i - 1].I_NB_TOURS_AGGRAVATION >= Donnees.m_donnees.TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE)
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO_AGGRAVATION;
+            }
+            else
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO;
+            }
+            
             LogFile.Notifier(string.Format("Nouvelle meteo id={0} ({1})", Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO, Donnees.m_donnees.TAB_METEO[i - 1].S_NOM));
             #endregion
 

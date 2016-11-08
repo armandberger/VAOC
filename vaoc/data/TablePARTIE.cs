@@ -45,8 +45,9 @@ namespace vaoc
                     ligne.I_HAUTEUR_CARTE_ZOOM_WEB,
                     ligne.ID_VICTOIRE,
                     ligne.FL_DEMARRAGE,
-                    ligne.I_TOUR_NOTIFICATION
-                    );
+                    ligne.I_TOUR_NOTIFICATION,
+                    ligne.I_NB_METEO_SUCCESSIVE
+                   );
             }
             return true;
         }

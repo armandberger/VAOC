@@ -418,7 +418,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                 ligne.AcceptChanges();
             }
              */
-            //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(174, 482);
+            //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
             string requete = "(ID_PROPRIETAIRE IS NOT NULL) OR (ID_NOUVEAU_PROPRIETAIRE IS NOT NULL)";
             Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
             foreach (Donnees.TAB_CASERow ligneChange in changeRows)
@@ -434,7 +434,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                 }
                 ligne.SetID_NOUVEAU_PROPRIETAIRENull();
             }
-            //Donnees.TAB_CASERow ligneCaseD2 = Donnees.m_donnees.TAB_CASE.FindByXY(174, 482);
+            //Donnees.TAB_CASERow ligneCaseD2 = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
         }
 
         internal static void RecadrerRect(Bitmap imageSource, ref Rectangle rect)

@@ -3598,9 +3598,11 @@ namespace vaoc
                 j++;
             }
 
+            // -> on a fait i++, donc la case chemin[i] est la suivante
             //la tête de colonne avance d'une case supplémentaire elle aussi
             //si on est arrivé à destination, on affecte les troupes qui viennent d'arriver sur place
-            if (i+1 >= chemin.Count)
+            //if (i + 1 >= chemin.Count)
+            if (i >= chemin.Count)
             {
                 lignePion.CalculerRepartitionEffectif(1, out iInfanterie, out iCavalerie, out iArtillerie);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterie + iCavalerie + iArtillerie;
@@ -3612,10 +3614,11 @@ namespace vaoc
             }
             else
             {
+                // -> on a fait i++, donc la case chemin[i] est la suivante
                 //calcul du coût pour avancer d'une case supplémentaire & messages de blocages
                 int coutCase;
                 bool bBlocageParUnite;
-                if (!CalculCoutCase(lignePion, ligneModelePion, ligneOrdre, ligneCaseDestination, chemin[i + 1], out coutCase, out bBlocageParUnite))
+                if (!CalculCoutCase(lignePion, ligneModelePion, ligneOrdre, ligneCaseDestination, chemin[i], out coutCase, out bBlocageParUnite))
                 {
                     return false;
                 }
@@ -3637,7 +3640,7 @@ namespace vaoc
                 else
                 {
                     //List<Donnees.TAB_CASERow> chemin;
-                    if (chemin[1].I_X == chemin[0].I_X || chemin[1].I_Y == chemin[0].I_Y)
+                    if (0==i || chemin[i].I_X == chemin[i-1].I_X || chemin[i].I_Y == chemin[i-1].I_Y)
                     {
                         //ligne droite
                         lignePion.I_DISTANCE_A_PARCOURIR += coutCase;
@@ -3647,7 +3650,7 @@ namespace vaoc
                         //diagonale
                         lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                     }
-                    if (!lignePion.RequisitionCase(chemin[i+1], true, ref nbplacesOccupes)) { return false; }
+                    if (!lignePion.RequisitionCase(chemin[i-1], true, ref nbplacesOccupes)) { return false; }
                 }
 
                 //si l'unité a déjà modifiée sa position (à cause d'une rencontre ennemie par exemple, il ne faut pas la redeplacer)

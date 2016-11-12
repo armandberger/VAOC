@@ -3908,7 +3908,7 @@ namespace vaoc
                 int iCavalerieRoute, iInfanterieRoute, iArtillerieRoute;
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 List<Donnees.TAB_CASERow> chemin;
-                int i;
+                int i,j;
                 int nbplacesOccupes;
                 double cout, coutHorsRoute;
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
@@ -4009,15 +4009,17 @@ namespace vaoc
                         {
                             //placer les effectifs en chemin
                             i = chemin.Count - 1;
-                            nbplacesOccupes = 0;
-                            while (i >= 0 && nbplacesOccupes < encombrement)
-                            {
-                                //une case de plus est occupée
-                                if (!RequisitionCase(chemin[i], true, ref nbplacesOccupes))
+                            j = nbplacesOccupes = 0;
+                            //while (i >= 0 && nbplacesOccupes < encombrement)
+                            while (i >= 0 && j < encombrement)
+                                {
+                                    //une case de plus est occupée
+                                    if (!RequisitionCase(chemin[i], true, ref nbplacesOccupes))
                                 {
                                     return false;
                                 }
                                 i--;
+                                j++;
                             }
                             if (nbplacesOccupes < encombrement)
                             {
@@ -4099,10 +4101,12 @@ namespace vaoc
                     }
                     else
                     {
-                        nbplacesOccupes = 0;
-                        while (i < chemin.Count && nbplacesOccupes < encombrement)
+                        j = nbplacesOccupes = 0;
+                        //while (i < chemin.Count && nbplacesOccupes < encombrement)
+                        while (i < chemin.Count && j < encombrement)//on doit toujours considérer, libre ou non, sinon, on saute les cases occupées par l'ennemi la nuit ou on avance plus vite si c'est des amis !
                         {
                             if (!RequisitionCase(chemin[i++], true, ref nbplacesOccupes)) { return false; }
+                            j++;
                         }
                         if (nbplacesOccupes < encombrement)
                         {

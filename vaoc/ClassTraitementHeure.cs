@@ -2202,6 +2202,10 @@ namespace vaoc
                     #endregion
                     break;
 
+                case Constantes.ORDRES.MESSAGE_FORUM:
+                    //on ne fait rien, ordre déjà traité directement dans l'interface web
+                    LogFile.Notifier("NouveauxOrdres reception d'un message forum ID=" + ordre.ID_ORDRE);
+                    break;
                 default:
                     //on ne devrait jamais se trouver là
                     LogFile.Notifier("NouveauxOrdres reception d'un type d'ordre inconne ID=" + ordre.I_TYPE);

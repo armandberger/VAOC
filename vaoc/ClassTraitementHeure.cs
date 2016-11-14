@@ -1537,7 +1537,7 @@ namespace vaoc
         }
 
         /// <summary>
-        /// Mise en place des nouveaux messages saisies par les joueurs en mode forum (partie non commencée)
+        /// Mise en place des nouveaux messages saisies par les joueurs en mode forum (partie non commencée ou lien direct)
         /// </summary>
         /// <returns>OK=true, KO=false</returns>
         private bool NouveauxMessages()
@@ -2203,7 +2203,10 @@ namespace vaoc
                     break;
 
                 case Constantes.ORDRES.MESSAGE_FORUM:
-                    //on ne fait rien, ordre déjà traité directement dans l'interface web
+                    //on ne fait rien, ordre déjà traité directement dans l'interface web -> en fait, c'est pas tout a fait vrai, il faut ajouter le message dans la table correspondante
+                    //pour que le joueur recoive au moins le message au moment du courriel de fin de tour
+                    //en fait, c'est inutile, déjà géré dans NouveauxMessages()
+                    //Donnees.m_donnees.TAB_MESSAGE.AddTAB_MESSAGERow(...
                     LogFile.Notifier("NouveauxOrdres reception d'un message forum ID=" + ordre.ID_ORDRE);
                     break;
                 default:

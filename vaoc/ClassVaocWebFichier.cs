@@ -483,6 +483,9 @@ namespace vaoc
                         //ordre.ID_PION ne change pas
                         ordre.ID_PION_DESTINATAIRE = lignePion.ID_PION;
                         break;
+                    case Constantes.ORDRES.MESSAGE_FORUM:
+                        //Ne rien faire, cet ordre est traité en direct dans l'interface web
+                        break;
                     default:
                         LogFile.Notifier("ListeOrdres Ordre inconnu reçu avec le code =" + ordre.I_TYPE);
                         return null;

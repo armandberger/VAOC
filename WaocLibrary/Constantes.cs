@@ -131,6 +131,10 @@ namespace WaocLib
             /// Faire un retrait d'une zone d'engagement sur un combat
             /// </summary>
             public const int RETRAIT = 16;
+            /// <summary>
+            /// Enovyer un message direct a un autre joueur a proximité
+            /// </summary>
+            public const int MESSAGE_FORUM = 17;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

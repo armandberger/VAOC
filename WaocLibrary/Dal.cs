@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Xml;
-using System.IO;
-using System.Runtime.InteropServices;
 
 namespace WaocLib
 {
@@ -98,7 +98,17 @@ namespace WaocLib
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                donnees.WriteXml(nomfichier);
+                if (File.Exists(nomfichier))
+                {
+                    File.Delete(nomfichier);
+                }
+                ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
+                ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
+                StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                donnees.WriteXml(ecrivain);
+                ecrivain.Close();
+                fichierZip.Dispose();
+                //donnees.WriteXml(nomfichier);
                 Cursor.Current = oldCursor;
             }
             catch (Exception e)
@@ -119,7 +129,18 @@ namespace WaocLib
                 Cursor.Current = Cursors.WaitCursor;
                 foreach (DataTable table in donneesSource.Tables)
                     table.BeginLoadData();//accelère le chargement en retirant les constructions d'index, etc.
-                donneesSource.ReadXml(nomfichier);
+                try
+                {
+                    ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
+                    ZipArchiveEntry fichier = fichierZip.Entries[0];
+                    donneesSource.ReadXml(fichier.Open());
+                    fichierZip.Dispose();
+                }
+                catch
+                {
+                    //il s'agit probablement d'un fichier non zippé, on le charge en direct
+                    donneesSource.ReadXml(nomfichier);
+                }
                 foreach (DataTable table in donneesSource.Tables)
                     Debug.WriteLine(table.TableName + " : "+table.Rows.Count.ToString());
                 //DataTable tableTest = donneesSource.Tables[1];

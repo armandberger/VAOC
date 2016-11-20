@@ -255,6 +255,12 @@ namespace vaoc
             bool bTraitement = true;
             try
             {
+                //on crée le repertoire "trajets" s'il n'existe pas déjà.                
+                if (!Directory.Exists(Dal.nomRepertoireTrajets()))
+                {
+                    Directory.CreateDirectory(Dal.nomRepertoireTrajets());
+                }
+
                 if (!traitementHPA.Initialisation(travailleur))
                 {
                     e.Cancel = true;

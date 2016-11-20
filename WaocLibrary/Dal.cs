@@ -282,10 +282,15 @@ namespace WaocLib
             }
         }
 
+        public static string nomRepertoireTrajets()
+        {
+            return string.Format("{0}trajets\\",Constantes.repertoireDonnees);
+        }
+
         private static string nomRepertoireTrajet(int idTrajet, string tipe)
         {
-            return string.Format("{0}trajet{1}{2}",
-                Constantes.repertoireDonnees, ((idTrajet / 10000) * 10000).ToString("000000"), tipe);
+            return string.Format("{0}\\trajet{1}{2}",
+                nomRepertoireTrajets(), ((idTrajet / 10000) * 10000).ToString("000000"), tipe);
         }
 
         private static string nomFichierTrajet(int idTrajet, string tipe)

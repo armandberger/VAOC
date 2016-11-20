@@ -84,7 +84,7 @@ namespace vaoc
             this.dataGridViewMeteo.DataSource = this.tABMETEOBindingSource;
             this.dataGridViewMeteo.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewMeteo.Name = "dataGridViewMeteo";
-            this.dataGridViewMeteo.Size = new System.Drawing.Size(814, 150);
+            this.dataGridViewMeteo.Size = new System.Drawing.Size(1231, 150);
             this.dataGridViewMeteo.TabIndex = 0;
             // 
             // tABMETEOBindingSource
@@ -117,39 +117,49 @@ namespace vaoc
             // 
             // iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn
             // 
+            this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn.DataPropertyName = "I_POURCENT_RAVITAILLEMENT";
             this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn.HeaderText = "I_POURCENT_RAVITAILLEMENT";
             this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn.Name = "iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn";
+            this.iPOURCENTRAVITAILLEMENTDataGridViewTextBoxColumn.Width = 199;
             // 
             // iPOURCENTFATIGUEDataGridViewTextBoxColumn
             // 
+            this.iPOURCENTFATIGUEDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.iPOURCENTFATIGUEDataGridViewTextBoxColumn.DataPropertyName = "I_POURCENT_FATIGUE";
             this.iPOURCENTFATIGUEDataGridViewTextBoxColumn.HeaderText = "I_POURCENT_FATIGUE";
             this.iPOURCENTFATIGUEDataGridViewTextBoxColumn.Name = "iPOURCENTFATIGUEDataGridViewTextBoxColumn";
+            this.iPOURCENTFATIGUEDataGridViewTextBoxColumn.Width = 153;
             // 
             // iPOURCENTRALLIEMENTDataGridViewTextBoxColumn
             // 
+            this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.DataPropertyName = "I_POURCENT_RALLIEMENT";
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.HeaderText = "I_POURCENT_RALLIEMENT";
             this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.Name = "iPOURCENTRALLIEMENTDataGridViewTextBoxColumn";
+            this.iPOURCENTRALLIEMENTDataGridViewTextBoxColumn.Width = 175;
             // 
             // iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn
             // 
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.DataPropertyName = "I_NB_TOURS_AGGRAVATION";
             this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.HeaderText = "I_NB_TOURS_AGGRAVATION";
             this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.Name = "iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn";
+            this.iNBTOURSAGGRAVATIONDataGridViewTextBoxColumn.Width = 184;
             // 
             // iDMETEOAGGRAVATIONDataGridViewTextBoxColumn
             // 
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.DataPropertyName = "ID_METEO_AGGRAVATION";
             this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.HeaderText = "ID_METEO_AGGRAVATION";
             this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.Name = "iDMETEOAGGRAVATIONDataGridViewTextBoxColumn";
+            this.iDMETEOAGGRAVATIONDataGridViewTextBoxColumn.Width = 171;
             // 
             // FormMeteo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(812, 211);
+            this.ClientSize = new System.Drawing.Size(1243, 211);
             this.Controls.Add(this.dataGridViewMeteo);
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.buttonValider);

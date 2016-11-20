@@ -2448,22 +2448,25 @@ namespace vaoc
                 if (bVictoire)
                 {
                     //les blessés legers reviennent au prorata du moral résiduel, les autres sont des blessés graves
-                    int infanterieRetour = (ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN) * 3 * ligneBataillePion.I_MORAL_FIN / 10 / lignePion.I_MORAL_MAX;
-                    int cavalerieRetour = (ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN) * 3 * ligneBataillePion.I_MORAL_FIN / 10 / lignePion.I_MORAL_MAX;
-                    if (infanterieRetour > 0 || cavalerieRetour > 0)
+                    if (lignePion.I_MORAL_MAX>0)
                     {
-                        lignePion.I_INFANTERIE += infanterieRetour;
-                        lignePion.I_CAVALERIE += cavalerieRetour;
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.SOINS_APRES_BATAILLE, infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this))
+                        int infanterieRetour = (ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN) * 3 * ligneBataillePion.I_MORAL_FIN / 10 / lignePion.I_MORAL_MAX;
+                        int cavalerieRetour = (ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN) * 3 * ligneBataillePion.I_MORAL_FIN / 10 / lignePion.I_MORAL_MAX;
+                        if (infanterieRetour > 0 || cavalerieRetour > 0)
                         {
-                            message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message SOINS_APRES_BATAILLE");
-                            LogFile.Notifier(message);
-                            return false;
+                            lignePion.I_INFANTERIE += infanterieRetour;
+                            lignePion.I_CAVALERIE += cavalerieRetour;
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.SOINS_APRES_BATAILLE, infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this))
+                            {
+                                message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message SOINS_APRES_BATAILLE");
+                                LogFile.Notifier(message);
+                                return false;
+                            }
                         }
-                    }
 
-                    infanterieBlesse += ((ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN) * 3 / 10) - infanterieRetour;
-                    cavalerieBlesse += ((ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN) * 3 / 10) - cavalerieRetour;
+                        infanterieBlesse += ((ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN) * 3 / 10) - infanterieRetour;
+                        cavalerieBlesse += ((ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN) * 3 / 10) - cavalerieRetour;
+                    }
                 }
                 else
                 {

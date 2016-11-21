@@ -83,13 +83,13 @@ namespace vaoc
             this.textBoxHauteurCarteZoomWeb = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.comboBoxObjectifVictoire = new System.Windows.Forms.ComboBox();
-            this.label28 = new System.Windows.Forms.Label();
             this.labelNomCarteTopographique = new System.Windows.Forms.Label();
             this.comboBoxID_JEU = new System.Windows.Forms.ComboBox();
             this.comboBoxID_PARTIE = new System.Windows.Forms.ComboBox();
             this.textBoxDateInitiale = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
+            this.buttonCarteTopographique = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeureInitiale)).BeginInit();
             this.SuspendLayout();
             // 
@@ -475,7 +475,7 @@ namespace vaoc
             // labelNomCarteZoom
             // 
             this.labelNomCarteZoom.AutoSize = true;
-            this.labelNomCarteZoom.Location = new System.Drawing.Point(592, 294);
+            this.labelNomCarteZoom.Location = new System.Drawing.Point(610, 294);
             this.labelNomCarteZoom.Name = "labelNomCarteZoom";
             this.labelNomCarteZoom.Size = new System.Drawing.Size(100, 13);
             this.labelNomCarteZoom.TabIndex = 48;
@@ -495,7 +495,7 @@ namespace vaoc
             // labelNomCarteGris
             // 
             this.labelNomCarteGris.AutoSize = true;
-            this.labelNomCarteGris.Location = new System.Drawing.Point(592, 383);
+            this.labelNomCarteGris.Location = new System.Drawing.Point(615, 378);
             this.labelNomCarteGris.Name = "labelNomCarteGris";
             this.labelNomCarteGris.Size = new System.Drawing.Size(100, 13);
             this.labelNomCarteGris.TabIndex = 50;
@@ -613,20 +613,10 @@ namespace vaoc
             this.comboBoxObjectifVictoire.Size = new System.Drawing.Size(208, 21);
             this.comboBoxObjectifVictoire.TabIndex = 60;
             // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(416, 421);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(102, 13);
-            this.label28.TabIndex = 61;
-            this.label28.Tag = "nom de la carte des terrains";
-            this.label28.Text = "carte topographique";
-            // 
             // labelNomCarteTopographique
             // 
             this.labelNomCarteTopographique.AutoSize = true;
-            this.labelNomCarteTopographique.Location = new System.Drawing.Point(592, 421);
+            this.labelNomCarteTopographique.Location = new System.Drawing.Point(615, 421);
             this.labelNomCarteTopographique.Name = "labelNomCarteTopographique";
             this.labelNomCarteTopographique.Size = new System.Drawing.Size(100, 13);
             this.labelNomCarteTopographique.TabIndex = 62;
@@ -678,18 +668,28 @@ namespace vaoc
             this.label29.TabIndex = 71;
             this.label29.Text = "géré automatiquement";
             // 
+            // buttonCarteTopographique
+            // 
+            this.buttonCarteTopographique.Location = new System.Drawing.Point(419, 416);
+            this.buttonCarteTopographique.Name = "buttonCarteTopographique";
+            this.buttonCarteTopographique.Size = new System.Drawing.Size(190, 23);
+            this.buttonCarteTopographique.TabIndex = 72;
+            this.buttonCarteTopographique.Text = "Choisir Carte Topographique";
+            this.buttonCarteTopographique.UseVisualStyleBackColor = true;
+            this.buttonCarteTopographique.Click += new System.EventHandler(this.buttonCarteTopographique_Click);
+            // 
             // FormGeneral
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 517);
+            this.Controls.Add(this.buttonCarteTopographique);
             this.Controls.Add(this.label29);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxDateInitiale);
             this.Controls.Add(this.comboBoxID_PARTIE);
             this.Controls.Add(this.comboBoxID_JEU);
             this.Controls.Add(this.labelNomCarteTopographique);
-            this.Controls.Add(this.label28);
             this.Controls.Add(this.comboBoxObjectifVictoire);
             this.Controls.Add(this.label27);
             this.Controls.Add(this.textBoxHauteurCarteZoomWeb);
@@ -811,12 +811,12 @@ namespace vaoc
         private System.Windows.Forms.TextBox textBoxHauteurCarteZoomWeb;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.ComboBox comboBoxObjectifVictoire;
-        private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Label labelNomCarteTopographique;
         private System.Windows.Forms.ComboBox comboBoxID_JEU;
         private System.Windows.Forms.ComboBox comboBoxID_PARTIE;
         private System.Windows.Forms.TextBox textBoxDateInitiale;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Button buttonCarteTopographique;
     }
 }

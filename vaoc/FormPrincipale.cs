@@ -1163,7 +1163,7 @@ namespace vaoc
         private void generalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormGeneral general = new FormGeneral();
-            string nomCarte, nomCarteZoom, nomCarteGris;
+            string nomCarte, nomCarteZoom, nomCarteGris, nomCarteTopographique;
             string repertoireDest;
             bool fl_demmarage = false;
             string messageArbitre = string.Empty;
@@ -1218,6 +1218,7 @@ namespace vaoc
             nomCarte = general.nomCarte;
             nomCarteGris=general.nomCarteGris;
             nomCarteZoom=general.nomCarteZoom;
+            nomCarteTopographique = general.nomCarteTopographique;
 
             if (Donnees.m_donnees.TAB_PARTIE.Count > 0)
             {
@@ -1278,6 +1279,7 @@ namespace vaoc
                 ligneJeu.S_NOM_CARTE_HISTORIQUE = nomCarte;
                 ligneJeu.S_NOM_CARTE_GRIS = nomCarteGris;
                 ligneJeu.S_NOM_CARTE_ZOOM = nomCarteZoom;
+                ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE = nomCarteTopographique;
                 ligneJeu.I_LARGEUR_CARTE = general.largeurCarte;
                 ligneJeu.I_HAUTEUR_CARTE = general.hauteurCarte;
                 if (-1 == iTailleZonePCC) { ligneJeu.SetI_TAILLEBLOC_PCCNull(); } else { ligneJeu.I_TAILLEBLOC_PCC = iTailleZonePCC; }
@@ -1340,7 +1342,23 @@ namespace vaoc
                     }
                 }
 
-                ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE = general.nomCarteTopographique;
+                if (nomCarteTopographique != general.nomCarteTopographique)
+                {
+                    ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE = general.nomCarteTopographique.Substring(general.nomCarteTopographique.LastIndexOf('\\') + 1); ;
+                    repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE;
+                    if (repertoireDest != general.nomCarteTopographique)
+                    {
+                        //destruction d'un eventuel même fichier avec le même nom
+                        if (File.Exists(repertoireDest))
+                        {
+                            File.Delete(repertoireDest);
+                        }
+                        //on recopie le fichier image vers le repertoire applicatif des cartes
+                        File.Copy(general.nomCarteTopographique, repertoireDest, true);
+                    }
+                }
+
+                
                 ligneJeu.DT_INITIALE = general.dateInitiale;
                 ligneJeu.I_NOMBRE_TOURS = general.nbTours;
                 ligneJeu.I_NOMBRE_PHASES = general.nbPhases;

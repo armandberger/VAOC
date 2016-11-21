@@ -467,5 +467,13 @@ namespace vaoc
         private void buttonReinitialiser_Click(object sender, EventArgs e)
         {
         }
+
+        private void buttonCarteTopographique_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.OK == this.openFileDialog.ShowDialog(this))
+            {
+                nomCarteTopographique = openFileDialog.FileName;
+            }
+        }
     }
 }

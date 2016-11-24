@@ -3591,8 +3591,8 @@ namespace vaoc
                 return false;
             }
             //le général avance d'une case et il est sur la dernière case de la colonne
-            id_case_finale = chemin[i+1].ID_CASE;
-            message = string.Format("ExecuterMouvementAvecEffectifForcesEnRoute : pion en {0}({1},{2})", chemin[i+1].ID_CASE, chemin[i+1].I_X, chemin[i+1].I_Y);
+            id_case_finale = chemin[++i].ID_CASE;
+            message = string.Format("ExecuterMouvementAvecEffectifForcesEnRoute : pion en {0}({1},{2})", chemin[i].ID_CASE, chemin[i].I_X, chemin[i].I_Y);
             LogFile.Notifier(message, out messageErreur);
 
             // On place les troupes sur le chemin

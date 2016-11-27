@@ -401,27 +401,27 @@ namespace vaoc
                     LogFile.Notifier("pas plus de 8 tours successifs et l'on s'arrête toujours au lever du soleil ou a une heure du matin (renforts potentiels) ou si la partie est terminée");
                     if (!Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
                     {
-                        LogFile.Notifier("Partie pas demarrée");
+                        LogFile.Notifier("Fin de tour :Partie pas demarrée");
                     }
                     if(1 == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                     {
-                        LogFile.Notifier("premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres");
+                        LogFile.Notifier("Fin de tour :premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres");
                     }
                     if (nbTourExecutes >= 8)
                     {
-                        LogFile.Notifier("Pas plus de 8 tours");
+                        LogFile.Notifier("Fin de tour :Pas plus de 8 tours");
                     }
                     if (Donnees.m_donnees.TAB_PARTIE.HeureCourante() == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL)
                     {
-                        LogFile.Notifier("Levée du jour");
+                        LogFile.Notifier("Fin de tour :Levée du jour");
                     }
                     if (bRenfort)
                     {
-                        LogFile.Notifier("Arrivée de renforts");
+                        LogFile.Notifier("Fin de tour :Arrivée de renforts");
                     }
                     if (m_bFinDeBataille)
                     {
-                        LogFile.Notifier("si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir");
+                        LogFile.Notifier("Fin de tour :si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir");
                     }
                     bTourSuivant = false;
                 }
@@ -452,14 +452,14 @@ namespace vaoc
                             if (nbTourExecutes >= 4)
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
+                                LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
                             }
                             else
                             {
                                 if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
                                 {
                                     bTourSuivant = false;
-                                    LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
+                                    LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
                                 }
                             }
                             // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
@@ -468,7 +468,7 @@ namespace vaoc
                                 (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
                             {
                                 bTourSuivant = true;
-                                LogFile.Notifier("+1 tour pour finir au lever du soleil ou à la première heure du jour");
+                                LogFile.Notifier("Fin de tour :+1 tour pour finir au lever du soleil ou à la première heure du jour");
                             }
                         }
                         else
@@ -477,7 +477,7 @@ namespace vaoc
                             if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4))
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
+                                LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                             }
                         }
                     }

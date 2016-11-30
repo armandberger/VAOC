@@ -1542,6 +1542,7 @@ namespace vaoc
         /// <returns>OK=true, KO=false</returns>
         private bool NouveauxMessages()
         {
+            /* ne marche pas pour les messages forum en cours de partie
             int tourMax, phaseMax;
 
             //on recherche le dernier identfiant en base
@@ -1560,16 +1561,15 @@ namespace vaoc
                 tourMax = ligneMessageMax.I_TOUR_DEPART;
                 phaseMax = ligneMessageMax.I_PHASE_DEPART;
             }
+            */
 
             List<ClassDataMessage> liste = m_iWeb.ListeMessages(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
             foreach (ClassDataMessage message in liste)
             {
-                int tourDepart, phaseDepart, tourArrivee, phaseArrivee;
-
-                ClassMessager.TourPhase(message.DT_DEPART, out tourDepart, out phaseDepart);
-                ClassMessager.TourPhase(message.DT_ARRIVEE, out tourArrivee, out phaseArrivee);
                 //if (message.ID_MESSAGE > ligneMessageMax[0].ID_MESSAGE), non fiable, même après un clear, le compteur ID ne repart pas à zéro
-                if (tourDepart>=tourMax && phaseDepart>phaseMax)
+                //if (tourDepart>=tourMax && phaseDepart>phaseMax) ->pour le forum en cours de partie, ne marche pas, phaseMax peut être égal à 100
+                Donnees.TAB_MESSAGERow ligneMessagePresent = Donnees.m_donnees.TAB_MESSAGE.FindByID_MESSAGE(message.ID_MESSAGE);
+                if (null== ligneMessagePresent)
                 {
                     Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(message.ID_EMETTEUR);
                     if (null == lignePionEmetteur)
@@ -1577,6 +1577,9 @@ namespace vaoc
                         LogFile.Notifier("NouveauxMessages: Impossible de trouver un pion emetteur pour le message ID=" + message.ID_MESSAGE);
                         return false;
                     }
+                    int tourDepart, phaseDepart, tourArrivee, phaseArrivee;
+                    ClassMessager.TourPhase(message.DT_DEPART, out tourDepart, out phaseDepart);
+                    ClassMessager.TourPhase(message.DT_ARRIVEE, out tourArrivee, out phaseArrivee);
                     int iTourSansRavitaillement = lignePionEmetteur.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? 0 : lignePionEmetteur.I_TOUR_SANS_RAVITAILLEMENT;
 
                     Donnees.m_donnees.TAB_MESSAGE.AddTAB_MESSAGERow(

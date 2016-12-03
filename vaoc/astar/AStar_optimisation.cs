@@ -1,53 +1,74 @@
-ï»¿using System;
-using System.Collections.Generic;
+// Copyright 2003 Eric Marchesin - <eric.marchesin@laposte.net>
+//
+// This source file(s) may be redistributed by any means PROVIDING they
+// are not sold for profit without the authors expressed written consent,
+// and providing that this notice and the authors name and all copyright
+// notices remain intact.
+// THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED. USE IT AT YOUR OWN RISK. THE AUTHOR ACCEPTS NO
+// LIABILITY FOR ANY DATA DAMAGE/LOSS THAT THIS PRODUCT MAY CAUSE.
+//-----------------------------------------------------------------------
+using System;
+using System.Collections;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WaocLib;//pour la Dal
+using System.Collections.Generic;
+using WaocLib;
+//using System.Linq.Expressions;
+
 
 namespace vaoc
 {
-    public class AstarTerrainOBJ
+    public class AstarTerrain
     {
         public int cout { get; set; }
         public bool route { get; set; }
     }
 
-    internal class BlocOBJ : IEquatable<BlocOBJ>
+    public class Bloc : IEquatable<Bloc>
     {
         public int xBloc { get; set; }
         public int yBloc { get; set; }
 
-        public BlocOBJ(int x, int y)
+        public Bloc(int x, int y)
         {
             xBloc = x;
             yBloc = y;
         }
 
-        public bool Equals(BlocOBJ bloc)
+        //public override bool Equals(object obj)
+        //{
+        //    Bloc bloc = (Bloc)obj;
+        //    return (bloc.xBloc == this.xBloc && bloc.yBloc == this.yBloc) ? true : false;
+        //}
+
+        public bool Equals(Bloc bloc)
         {
             return (bloc.xBloc == this.xBloc && bloc.yBloc == this.yBloc) ? true : false;
         }
 
+    //    public override int GetHashCode()
+    //    {
+    //        return base.GetHashCode();
+    //    }
     }
 
 	/// <summary>
 	/// Class to search the best path between two nodes on a graph.
 	/// </summary>
-    public class AStarOBJ
-    {
-		SortableListOBJ _Open, _Closed;
-		TrackOBJ _LeafToGoBackUp;
+	public class AStar
+	{
+		SortableList _Open, _Closed;
+		Track _LeafToGoBackUp;
 		int _NbIterations = -1;
 
-        public const double CST_COUTMAX = double.MaxValue;
+        public const int CST_COUTMAX = Int32.MaxValue;
         public const int CST_PLUSIEURSNATION = Int32.MaxValue;
-		SortableListOBJ.Equality SameNodesReached = new SortableListOBJ.Equality( TrackOBJ.SameEndNode );
+		SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
         //public static long SearchIdModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
-        public static AstarTerrainOBJ[] m_tableCoutsMouvementsTerrain;
+        public static AstarTerrain[] m_tableCoutsMouvementsTerrain;
         private static int m_nombrePixelParCase;
         private const double SQRT2 = 1.4142135623730950488016887242097;
         private int m_minX, m_maxX, m_minY, m_maxY;
@@ -58,9 +79,9 @@ namespace vaoc
         private int xmaxBlocEnd;
         private int yminBlocEnd;
         private int ymaxBlocEnd;
-        private int m_espace;//espace recherchÃ©
-        private int m_espaceTrouve;//nombre d'espace trouvÃ©
-        private static int m_idNation;//nation autorisÃ© Ã  se dÃ©placer sur le parcours
+        private int m_espace;//espace recherché
+        private int m_espaceTrouve;//nombre d'espace trouvé
+        private static int m_idNation;//nation autorisé à se déplacer sur le parcours
 
         #region constantes
         public const char CST_CHEMIN='C';
@@ -71,10 +92,10 @@ namespace vaoc
 		/// AStar Constructor.
 		/// </summary>
 		/// <param name="G">The graph on which AStar will perform the search.</param>
-		public AStarOBJ(/*Graph G*/)
+		public AStar(/*Graph G*/)
 		{
-			_Open = new SortableListOBJ();
-			_Closed = new SortableListOBJ();
+			_Open = new SortableList();
+			_Closed = new SortableList();
             m_tailleBloc = -1;//eviter la division par zero
 		}
 
@@ -82,37 +103,37 @@ namespace vaoc
         /// Renvoie la liste des blocs auquel appartient un point
         /// </summary>
         /// <param name="x">abscisse du point</param>
-        /// <param name="y">ordonnÃ©e du point</param>
-        internal List<BlocOBJ> NumÃ©roBlocParPosition(int x, int y)
+        /// <param name="y">ordonnée du point</param>
+        public List<Bloc> NuméroBlocParPosition(int x, int y)
         {
             if (m_tailleBloc <= 0)
             {
-                m_tailleBloc = BD.Base.Jeu[0].I_TAILLEBLOC_PCC;
+                m_tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
             }
 
-            List<BlocOBJ> listeBlocs = new List<BlocOBJ>();
+            List<Bloc> listeBlocs = new List<Bloc>();
             int xBloc = x / m_tailleBloc;
             int yBloc = y / m_tailleBloc;
 
-            listeBlocs.Add(new BlocOBJ(xBloc, yBloc));
+            listeBlocs.Add(new Bloc(xBloc, yBloc));
 
             if ((0 == x % m_tailleBloc) && (x != 0))
             {
-                listeBlocs.Add(new BlocOBJ(xBloc - 1, yBloc));
-                //je suis sur une frontiÃ¨re de blocs
+                listeBlocs.Add(new Bloc(xBloc - 1, yBloc));
+                //je suis sur une frontière de blocs
                 if ((0 == y % m_tailleBloc) && (y != 0))
                 {
-                    //je suis sur une frontiÃ¨re de blocs sur x et y
-                    listeBlocs.Add(new BlocOBJ(xBloc, yBloc - 1));
-                    listeBlocs.Add(new BlocOBJ(xBloc - 1, yBloc - 1));
+                    //je suis sur une frontière de blocs sur x et y
+                    listeBlocs.Add(new Bloc(xBloc, yBloc - 1));
+                    listeBlocs.Add(new Bloc(xBloc - 1, yBloc - 1));
                 }
             }
             else
             {
                 if ((0 == y % m_tailleBloc) && (y != 0))
                 {
-                    //je suis sur une frontiÃ¨re de blocs
-                    listeBlocs.Add(new BlocOBJ(xBloc, yBloc - 1));
+                    //je suis sur une frontière de blocs
+                    listeBlocs.Add(new Bloc(xBloc, yBloc - 1));
                 }
             }
             return listeBlocs;
@@ -126,7 +147,7 @@ namespace vaoc
         /// <param name="EndNode">The node to which the path must end.</param>
         /// <param name="tableCoutsMouvementsTerrain">couts de mouvement suivant les terrains</param>
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
-        public bool SearchPath(LigneCASE StartNode, LigneCASE EndNode, AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
+        public bool SearchPath(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain)
         {
             return SearchPath(StartNode, EndNode, tableCoutsMouvementsTerrain, 0,0,0,0);
         }
@@ -143,13 +164,13 @@ namespace vaoc
         /// <param name="ymin"> valeur y minimale pour la recherche</param>
         /// <param name="ymax"> valeur y maximale pour la recherche</param>
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
-        public bool SearchPath(LigneCASE StartNode, LigneCASE EndNode, AstarTerrainOBJ[] tableCoutsMouvementsTerrain, int xmin, int xmax, int ymin, int ymax)
+        public bool SearchPath(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain, int xmin, int xmax, int ymin, int ymax)
 		{
             DateTime timeStart;
             TimeSpan perf;
 
             m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
-            m_nombrePixelParCase = BD.Base.Jeu[0].I_ECHELLE;
+            m_nombrePixelParCase = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
             m_minX = xmin;
             m_minY = ymin;
             m_maxX = xmax;
@@ -157,7 +178,7 @@ namespace vaoc
             //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
             //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
 
-            Debug.WriteLine(string.Format("DÃ©but de AStar.SearchPath de {0} Ã  {1}", StartNode.ID_CASE, EndNode.ID_CASE));
+            Debug.WriteLine(string.Format("Début de AStar.SearchPath de {0} à {1}", StartNode.ID_CASE, EndNode.ID_CASE));
             m_idNation = -1;
             timeStart = DateTime.Now;
             Initialize(StartNode, EndNode);
@@ -175,7 +196,7 @@ namespace vaoc
         /// <param name="EndNode">The node to which the path must end.</param>
         /// <param name="tableCoutsMouvementsTerrain">couts de mouvement suivant les terrains</param>
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
-        public bool SearchPathHPA(LigneCASE StartNode, LigneCASE EndNode, AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
+        public bool SearchPathHPA(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain)
         {
             return SearchPathHPA(StartNode, EndNode, tableCoutsMouvementsTerrain, -1);
         }
@@ -187,28 +208,28 @@ namespace vaoc
         /// <param name="StartNode">The node from which the path must start.</param>
         /// <param name="EndNode">The node to which the path must end.</param>
         /// <param name="tableCoutsMouvementsTerrain">couts de mouvement suivant les terrains</param>
-        /// <param name="idNation">Nation de l'unitÃ© qui fait la recherche, celle-ci ne peut pas traverser les unitÃ©s ennemies (uniquement pour les dÃ©pÃ´ts), -1 sinon.</param>
+        /// <param name="idNation">Nation de l'unité qui fait la recherche, celle-ci ne peut pas traverser les unités ennemies (uniquement pour les dépôts), -1 sinon.</param>
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
-        public bool SearchPathHPA(LigneCASE StartNode, LigneCASE EndNode, AstarTerrainOBJ[] tableCoutsMouvementsTerrain, int idNation)
+        public bool SearchPathHPA(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain, int idNation)
         {
             DateTime timeStart;
             TimeSpan perf;
 
             m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
-            m_nombrePixelParCase = BD.Base.Jeu[0].I_ECHELLE;
-            m_tailleBloc = BD.Base.Jeu[0].I_TAILLEBLOC_PCC;
+            m_nombrePixelParCase = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+            m_tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
             m_minX = 0;
             m_minY = 0;
-            m_maxX = BD.Base.Jeu[0].I_LARGEUR_CARTE;
-            m_maxY = BD.Base.Jeu[0].I_HAUTEUR_CARTE;
+            m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
+            m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
             m_idNation = idNation;
 
             //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
             //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
 
-            LigneCASE lDebug1 = BD.Base.Case.TrouveParID_CASE(StartNode.ID_CASE);
-            LigneCASE lDebug2 = BD.Base.Case.TrouveParID_CASE(EndNode.ID_CASE);
-            Debug.WriteLine(string.Format("DÃ©but de AStar.SearchPathHPA de {0}({1},{2}) -> {3}({4},{5})",
+            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(StartNode.ID_CASE);
+            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(EndNode.ID_CASE);
+            Debug.WriteLine(string.Format("Début de AStar.SearchPathHPA de {0}({1},{2}) -> {3}({4},{5})",
                 lDebug1.ID_CASE,
                 lDebug1.I_X,
                 lDebug1.I_Y,
@@ -231,12 +252,12 @@ namespace vaoc
 		/// <exception cref="ArgumentNullException">StartNode and EndNode cannot be null.</exception>
 		/// <param name="StartNode">The node from which the path must start.</param>
 		/// <param name="EndNode">The node to which the path must end.</param>
-        public void Initialize(LigneCASE StartNode, LigneCASE EndNode)
+        public void Initialize(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode)
 		{
 			if ( StartNode==null || EndNode==null ) throw new ArgumentNullException();
 			_Closed.Clear();
 			_Open.Clear();
-			TrackOBJ.Target = EndNode;
+			Track.Target = EndNode;
             m_xBlocEnd = EndNode.I_X / m_tailleBloc; ;
             m_yBlocEnd = EndNode.I_Y / m_tailleBloc; ;
             xminBlocEnd = m_xBlocEnd * m_tailleBloc;
@@ -244,9 +265,9 @@ namespace vaoc
             yminBlocEnd = m_yBlocEnd * m_tailleBloc;
             ymaxBlocEnd = yminBlocEnd + m_tailleBloc;
 
-            TrackOBJ.tailleBloc = m_tailleBloc;
+            Track.tailleBloc = m_tailleBloc;
 
-            _Open.Add(new TrackOBJ(StartNode));
+            _Open.Add(new Track(StartNode));
 			_NbIterations = 0;
 			_LeafToGoBackUp = null;
 		}
@@ -265,38 +286,38 @@ namespace vaoc
             Debug.WriteLineIf(_NbIterations % 10000 == 0, "_NbIterations=" + _NbIterations.ToString());
 
 			int IndexMin = _Open.IndexOfMin();
-			//TrackOBJ BestTrackOBJ = (TrackOBJ)_Open[IndexMin];//on repart toujours du moins couteux
-            TrackOBJ BestTrackOBJ = (TrackOBJ)_Open.ValueOfCout(IndexMin);
+			//Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
+            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
             if (_NbIterations % 10000 == 0)
             {
-                Debug.WriteLine("BestTrackOBJ.Cost=" + BestTrackOBJ.Cost.ToString() + " BestTrackOBJ.EndNode.ID_CASE=" + BestTrackOBJ.EndNode.ID_CASE.ToString());
+                Debug.WriteLine("BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
                 Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
                 Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
             }
             //_Open.RemoveAt(IndexMin);
-            _Open.Remove(BestTrackOBJ);
-			if ( BestTrackOBJ.Succeed )
+            _Open.Remove(BestTrack);
+			if ( BestTrack.Succeed )
 			{
-                Debug.WriteLine(string.Format("BestTrackOBJ Case {0}({1},{2}), cout={3} en _NbIterations={4}",
-                    BestTrackOBJ.EndNode.ID_CASE,
-                    BestTrackOBJ.EndNode.I_X,
-                    BestTrackOBJ.EndNode.I_Y,
-                    BestTrackOBJ.Cost,
+                Debug.WriteLine(string.Format("BestTrack Case {0}({1},{2}), cout={3} en _NbIterations={4}",
+                    BestTrack.EndNode.ID_CASE,
+                    BestTrack.EndNode.I_X,
+                    BestTrack.EndNode.I_Y,
+                    BestTrack.Cost,
                     _NbIterations));
-                _LeafToGoBackUp = BestTrackOBJ;
+                _LeafToGoBackUp = BestTrack;
 				_Open.Clear();
 			}
 			else
 			{
-				Propagate(BestTrackOBJ);
-				_Closed.Add(BestTrackOBJ);
+				Propagate(BestTrack);
+				_Closed.Add(BestTrack);
 			}
             //traces de Debug
-            //foreach (TrackOBJ noeud in _Open)
+            //foreach (Track noeud in _Open)
             //{
             //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
-            //foreach (TrackOBJ noeud in _Closed)
+            //foreach (Track noeud in _Closed)
             //{
             //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
@@ -318,24 +339,24 @@ namespace vaoc
             Debug.WriteLineIf(_NbIterations % 10000 == 0, "_NbIterations=" + _NbIterations.ToString());
 
             int IndexMin = _Open.IndexOfMin();
-            //TrackOBJ BestTrackOBJ = (TrackOBJ)_Open[IndexMin];//on repart toujours du moins couteux
-            TrackOBJ BestTrackOBJ = (TrackOBJ)_Open.ValueOfCout(IndexMin);
+            //Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
+            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
             /* debug 
-            if (null==BestTrackOBJ.EndNodeHPA)
-                Debug.WriteLine(string.Format("BestTrackOBJ Case {0}({1},{2}), cout={3}",
-                    BestTrackOBJ.EndNode.ID_CASE,
-                    BestTrackOBJ.EndNode.I_X,
-                    BestTrackOBJ.EndNode.I_Y,
-                    BestTrackOBJ.Cost));
+            if (null==BestTrack.EndNodeHPA)
+                Debug.WriteLine(string.Format("BestTrack Case {0}({1},{2}), cout={3}",
+                    BestTrack.EndNode.ID_CASE,
+                    BestTrack.EndNode.I_X,
+                    BestTrack.EndNode.I_Y,
+                    BestTrack.Cost));
             else
             {
-                LigneCASE lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrackOBJ.EndNodeHPA.ID_CASE_DEBUT);
-                LigneCASE lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrackOBJ.EndNodeHPA.ID_CASE_FIN);
-                Debug.WriteLine(string.Format("BestTrackOBJ trajet {0}({1},{2}) -> {4}({5},{6}), cout={3}",
+                Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrack.EndNodeHPA.ID_CASE_DEBUT);
+                Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrack.EndNodeHPA.ID_CASE_FIN);
+                Debug.WriteLine(string.Format("BestTrack trajet {0}({1},{2}) -> {4}({5},{6}), cout={3}",
                     lDebug1.ID_CASE,
                     lDebug1.I_X,
                     lDebug1.I_Y,
-                    BestTrackOBJ.Cost,
+                    BestTrack.Cost,
                     lDebug2.ID_CASE,
                     lDebug2.I_X,
                     lDebug2.I_Y
@@ -345,31 +366,31 @@ namespace vaoc
 
             if (_NbIterations % 10000 == 0)
             {
-                Debug.WriteLine("BestTrackOBJ.Cost=" + BestTrackOBJ.Cost.ToString());
+                Debug.WriteLine("BestTrack.Cost=" + BestTrack.Cost.ToString());
                 Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
                 Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
             }
             //_Open.RemoveAt(IndexMin);
-            _Open.Remove(BestTrackOBJ);
-            if (BestTrackOBJ.Succeed)
+            _Open.Remove(BestTrack);
+            if (BestTrack.Succeed)
             {
-                Debug.WriteLine(string.Format("BestTrackOBJ cout={0} en _NbIterations={1}",
-                    BestTrackOBJ.Cost,
+                Debug.WriteLine(string.Format("BestTrack cout={0} en _NbIterations={1}",
+                    BestTrack.Cost,
                     _NbIterations));
-                _LeafToGoBackUp = BestTrackOBJ;
+                _LeafToGoBackUp = BestTrack;
                 _Open.Clear();
             }
             else
             {
-                PropagateHPA(BestTrackOBJ);
-                _Closed.Add(BestTrackOBJ);
+                PropagateHPA(BestTrack);
+                _Closed.Add(BestTrack);
             }
             //traces de Debug
-            //foreach (TrackOBJ noeud in _Open)
+            //foreach (Track noeud in _Open)
             //{
             //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
-            //foreach (TrackOBJ noeud in _Closed)
+            //foreach (Track noeud in _Closed)
             //{
             //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
@@ -377,21 +398,21 @@ namespace vaoc
             return _Open.Count > 0;
         }
 
-        private void PropagateHPA(TrackOBJ TrackOBJToPropagate)
+        private void PropagateHPA(Track TrackToPropagate)
         {
             /* debug 
-            if (null == TrackOBJToPropagate.EndNodeHPA)
+            if (null == TrackToPropagate.EndNodeHPA)
             {
-                Debug.WriteLine(string.Format("TrackOBJToPropagate Case {0}({1},{2}), cout={3}",
-                    TrackOBJToPropagate.EndNode.ID_CASE,
-                    TrackOBJToPropagate.EndNode.I_X,
-                    TrackOBJToPropagate.EndNode.I_Y,
-                    TrackOBJToPropagate.Cost));
+                Debug.WriteLine(string.Format("TrackToPropagate Case {0}({1},{2}), cout={3}",
+                    TrackToPropagate.EndNode.ID_CASE,
+                    TrackToPropagate.EndNode.I_X,
+                    TrackToPropagate.EndNode.I_Y,
+                    TrackToPropagate.Cost));
             }
              * */
-            foreach (TrackOBJ A in CasesVoisinesHPA(TrackOBJToPropagate))
+            foreach (Track A in CasesVoisinesHPA(TrackToPropagate))
             {
-                if (CST_COUTMAX == Cout(TrackOBJToPropagate, A))
+                if (CST_COUTMAX == Cout(TrackToPropagate, A))
                 {
                     continue;//case intraversable
                 }
@@ -399,11 +420,11 @@ namespace vaoc
                 //{
                 //    continue;
                 //}
-                TrackOBJ Successor = new TrackOBJ(TrackOBJToPropagate, A);// le cout est calculÃ© dans le new
+                Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
                 int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
                 int PosNO = _Open.IndexOf(Successor, SameNodesReached);
-                if (PosNF >= 0 && Successor.Cost >= ((TrackOBJ)_Closed[PosNF]).Cost) continue;
-                if (PosNO >= 0 && Successor.Cost >= ((TrackOBJ)_Open[PosNO]).Cost) continue;
+                if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
+                if (PosNO >= 0 && Successor.Cost >= ((Track)_Open[PosNO]).Cost) continue;
                 if (PosNF >= 0)
                 {
                     _Closed.RemoveAt(PosNF);
@@ -422,8 +443,8 @@ namespace vaoc
                         Successor.Cost));
                 else
                 {
-                    LigneCASE lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_DEBUT);
-                    LigneCASE lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_FIN);
+                    Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_DEBUT);
+                    Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_FIN);
                     Debug.WriteLine(string.Format("Successor trajet {0}({1},{2}) -> {4}({5},{6}), cout={3}",
                         lDebug1.ID_CASE,
                         lDebug1.I_X,
@@ -438,11 +459,11 @@ namespace vaoc
             }
         }
 
-        private void Propagate(TrackOBJ TrackOBJToPropagate)
+        private void Propagate(Track TrackToPropagate)
 		{
-            foreach (LigneCASE A in BD.Base.Case.CasesVoisines(TrackOBJToPropagate.EndNode))
+            foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
 			{
-                if (CST_COUTMAX == Cout(TrackOBJToPropagate.EndNode, A))
+                if (CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
                 {
                     continue;//case intraversable
                 }
@@ -450,11 +471,11 @@ namespace vaoc
                 {
                     continue;
                 }
-                TrackOBJ Successor = new TrackOBJ(TrackOBJToPropagate, A);// le cout est calculÃ© dans le new
+                Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
 				int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
 				int PosNO = _Open.IndexOf(Successor, SameNodesReached);
-				if ( PosNF>=0 && Successor.Cost>=((TrackOBJ)_Closed[PosNF]).Cost ) continue;
-				if ( PosNO>=0 && Successor.Cost>=((TrackOBJ)_Open[PosNO]).Cost ) continue;
+				if ( PosNF>=0 && Successor.Cost>=((Track)_Closed[PosNF]).Cost ) continue;
+				if ( PosNO>=0 && Successor.Cost>=((Track)_Open[PosNO]).Cost ) continue;
                 if (PosNF >= 0)
                 {
                     _Closed.RemoveAt(PosNF);
@@ -513,7 +534,7 @@ namespace vaoc
         /// <param name="CostOfPath">The cost of the result path / -1 if no result.</param>
         /// <param name="nbOutRoad">The cost of the result path out road / -1 if no result.</param>
         /// <returns>'true' if the search succeeded / 'false' if it failed.</returns>
-        public bool ResultInformation(out int NbArcsOfPath, out double CostOfPath, out int nbOutRoad)
+        public bool ResultInformation(out int NbArcsOfPath, out int CostOfPath, out int nbOutRoad)
         {
             CheckSearchHasEnded();
             if (!PathFound)
@@ -532,24 +553,24 @@ namespace vaoc
             }
         }
 
-        public double CoutGlobal
+        public int CoutGlobal
         {
             get
             {
                 int NbArcsOfPath; 
-                double CostOfPath;
+                int CostOfPath;
                 int outRoad;
                 ResultInformation(out NbArcsOfPath, out CostOfPath, out outRoad);
                 return CostOfPath;
             }
         }
 
-        public double HorsRouteGlobal
+        public int HorsRouteGlobal
         {
             get
             {
                 int NbArcsOfPath;
-                double CostOfPath;
+                int CostOfPath;
                 int outRoad;
                 ResultInformation(out NbArcsOfPath, out CostOfPath, out outRoad);
                 return outRoad;
@@ -560,7 +581,7 @@ namespace vaoc
 		/// Gets the array of nodes representing the found path.
 		/// </summary>
 		/// <exception cref="InvalidOperationException">You cannot get a result unless the search has ended.</exception>
-        public List<LigneCASE> PathByNodes
+        public List<Donnees.TAB_CASERow> PathByNodes
 		{
 			get 
 			{
@@ -570,10 +591,10 @@ namespace vaoc
 			}
 		}
 
-        private List<LigneCASE> GoBackUpNodes(TrackOBJ T)
+        private List<Donnees.TAB_CASERow> GoBackUpNodes(Track T)
 		{
 			int Nb = T.NbArcsVisited,j;
-            List<LigneCASE> Path = new List<LigneCASE>();
+            List<Donnees.TAB_CASERow> Path = new List<Donnees.TAB_CASERow>();
             List<int> listeCases;
 
             for (int i = Nb; i >= 0; i--, T = T.Queue)
@@ -590,7 +611,7 @@ namespace vaoc
                 else
                 {
                     /*
-                    LigneCASE lDebug1, lDebug2;
+                    Donnees.TAB_CASERow lDebug1, lDebug2;
                     lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_DEBUT);
                     lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_FIN);
                     Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCout : ID={0}({1},{2}) -> ID={3}({4},{5}) ",
@@ -605,7 +626,7 @@ namespace vaoc
                             j = 0;
                             while (j < listeCases.Count)
                             {
-                                LigneCASE ligneCase = BD.Base.Case.TrouveParID_CASE(listeCases[j++]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
                                 Path.Insert(0, ligneCase);
                                 /*
                                 Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
@@ -619,7 +640,7 @@ namespace vaoc
                             j = listeCases.Count - 1;
                             while (j >= 0)
                             {
-                                LigneCASE ligneCase = BD.Base.Case.TrouveParID_CASE(listeCases[j--]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j--]);
                                 Path.Insert(0, ligneCase);
                                 /*
                                 Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
@@ -639,25 +660,25 @@ namespace vaoc
 		}
 
         /// <summary>
-        /// Retire toute boucle qui pourrait se produire dans le trajet et qui empÃ¨che un pion d'arrive Ã  sa destination
-        /// En effet, on recherche sa position dans le parcours Ã  chaque fois
+        /// Retire toute boucle qui pourrait se produire dans le trajet et qui empèche un pion d'arrive à sa destination
+        /// En effet, on recherche sa position dans le parcours à chaque fois
         /// </summary>
         /// <param name="chemin"></param>
         /// <returns></returns>
-        public static List<LigneCASE> ParcoursOptimise(List<LigneCASE> chemin)
+        public static List<Donnees.TAB_CASERow> ParcoursOptimise(List<Donnees.TAB_CASERow> chemin)
         {
             if (null == chemin) { return null; }
-            List<LigneCASE> cheminRetour = new List<LigneCASE>();
+            List<Donnees.TAB_CASERow> cheminRetour = new List<Donnees.TAB_CASERow>();
             int i = 0;
             while (i < chemin.Count)
             {
-                //on regarde, si avant,on passe aprÃ¨s par la mÃªme case, si oui, on part de ce point
+                //on regarde, si avant,on passe après par la même case, si oui, on part de ce point
                 int j = i + 1;
                 while (j < chemin.Count && chemin[i] != chemin[j]) j++;
                 cheminRetour.Add(chemin[i]);
                 if (j < chemin.Count)
                 {
-                    //on a trouvÃ© une case Ã©quivalente, on repart de lÃ 
+                    //on a trouvé une case équivalente, on repart de là
                     i = j + 1;
                 }
                 else
@@ -669,69 +690,66 @@ namespace vaoc
             return cheminRetour;
         }
 
-        private System.Collections.Generic.IList<TrackOBJ> CasesVoisinesHPA(TrackOBJ TrackOBJSource)
+        private System.Collections.Generic.IList<Track> CasesVoisinesHPA(Track trackSource)
         {
-            System.Collections.Generic.IList<TrackOBJ> listeRetour;
-            //LigneCASE lDebug1, lDebug2;
+            System.Collections.Generic.IList<Track> listeRetour;
+            //Donnees.TAB_CASERow lDebug1, lDebug2;
             //DateTime timeStart;
             //TimeSpan perf;
             //timeStart = DateTime.Now;
 
-            listeRetour = new List<TrackOBJ>();
-            if (null != TrackOBJSource.EndNode)
+            listeRetour = new List<Track>();
+            if (null != trackSource.EndNode)
             {
-                //si le noeud est sur une frontiÃ¨re de bloc, soit c'est un point de jonction et on renvoit les TrackOBJs de blocs,
-                //soit ce n'est pas une frontiÃ¨re de bloc et on renvoit rien, soit ce n'est pas une frontiÃ¨re et on renvoit les points voisins
-                if ( (m_minX==TrackOBJSource.EndNode.I_X) || (m_minY==TrackOBJSource.EndNode.I_Y) || 
-                    (m_maxX==TrackOBJSource.EndNode.I_X) || (m_maxY==TrackOBJSource.EndNode.I_Y))
+                //si le noeud est sur une frontière de bloc, soit c'est un point de jonction et on renvoit les Tracks de blocs,
+                //soit ce n'est pas une frontière de bloc et on renvoit rien, soit ce n'est pas une frontière et on renvoit les points voisins
+                if ( (m_minX==trackSource.EndNode.I_X) || (m_minY==trackSource.EndNode.I_Y) || 
+                    (m_maxX==trackSource.EndNode.I_X) || (m_maxY==trackSource.EndNode.I_Y))
                 {
-                    //sur une bordure de carte, donc pas une frontiÃ¨re
+                    //sur une bordure de carte, donc pas une frontière
                     return listeRetour;//liste vide
                 }
 
                 //sommes nous sur une bordure ?
-                if ((0 == TrackOBJSource.EndNode.I_X % m_tailleBloc) || (0 == TrackOBJSource.EndNode.I_Y % m_tailleBloc))
+                if ((0 == trackSource.EndNode.I_X % m_tailleBloc) || (0 == trackSource.EndNode.I_Y % m_tailleBloc))
                 {
                     //sommes nous sur le bloc de destination
-                    if (TrackOBJSource.EndNode.I_X >= xminBlocEnd && TrackOBJSource.EndNode.I_X <= xmaxBlocEnd && TrackOBJSource.EndNode.I_Y >= yminBlocEnd && TrackOBJSource.EndNode.I_Y <= ymaxBlocEnd)
+                    if (trackSource.EndNode.I_X >= xminBlocEnd && trackSource.EndNode.I_X <= xmaxBlocEnd && trackSource.EndNode.I_Y >= yminBlocEnd && trackSource.EndNode.I_Y <= ymaxBlocEnd)
                     {
-                        IList<LigneCASE> tableCases = BD.Base.Case.CasesVoisinesInBloc(TrackOBJSource.EndNode, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
-                        foreach (LigneCASE ligneCase in tableCases)
+                        IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
+                        foreach (Donnees.TAB_CASERow ligneCase in tableCases)
                         {
                             /* debug 
                             Debug.WriteLine(string.Format("CasesVoisinesHPA bordure ajout de la case : ID={0}({1},{2}) ",
                                 ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                             /**/
-                            listeRetour.Add(new TrackOBJ(TrackOBJSource, ligneCase));
+                            listeRetour.Add(new Track(trackSource, ligneCase));
                         }
                     }
                     else
                     {
                         //nous sommes dans le bloc source
-                        //sur une frontiÃ¨re, on recherche s'il s'agit bien d'un point connu d'une frontiÃ¨re, donc avec des trajets
-                        List<BlocOBJ> listeBlocs = NumÃ©roBlocParPosition(TrackOBJSource.EndNode.I_X, TrackOBJSource.EndNode.I_Y);
+                        //sur une frontière, on recherche s'il s'agit bien d'un point connu d'une frontière, donc avec des trajets
+                        List<Bloc> listeBlocs = NuméroBlocParPosition(trackSource.EndNode.I_X, trackSource.EndNode.I_Y);
 
                         //modification des blocs
-                        foreach (BlocOBJ bloc in listeBlocs)
+                        foreach (Bloc bloc in listeBlocs)
                         {
                             string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",
-                                TrackOBJSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
+                                trackSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
 
-                            Donnees.TAB_PCC_COUTSRow[] lignesCout1 = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
-                            IEnumerable<LignePCC_COUTS> lignesCout = BD.Base.PccCouts.ListeLiensPointBloc(TrackOBJSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
-                                                              
-
-                            if (null != lignesCout && lignesCout.Count() > 0)
+                            Donnees.TAB_PCC_COUTSRow[] lignesCout = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
+                            if (null != lignesCout && lignesCout.Length > 0)
                             {
                                 /*
-                                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(TrackOBJSource.EndNode.ID_CASE);
-                                Debug.WriteLine(string.Format("case frontiÃ¨re : ID={0}({1},{2}) bloc :{3},{4}", lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, TrackOBJSource.blocX, TrackOBJSource.blocY));
+                                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNode.ID_CASE);
+                                Debug.WriteLine(string.Format("case frontière : ID={0}({1},{2}) bloc :{3},{4}", lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, trackSource.blocX, trackSource.blocY));
                                  */
-                                //c'est une case case de frontiÃ¨re valide
-                                List<LignePCC_COUTS> tableCout = BD.Base.PccCouts.CasesVoisines(lignesCout.ElementAt(0), true);
-                                foreach (LignePCC_COUTS ligneCout in tableCout)
+                                //c'est une case case de frontière valide
+                                List<Donnees.TAB_PCC_COUTSRow> tableCout = Donnees.m_donnees.TAB_PCC_COUTS.CasesVoisines(lignesCout[0], true);
+                                foreach (Donnees.TAB_PCC_COUTSRow ligneCout in tableCout)
                                 {
-                                    AjouterBlocHPA(TrackOBJSource, ligneCout, ref listeRetour);
+                                    AjouterBlocHPA(trackSource, ligneCout, ref listeRetour);
                                     /* debug 
                                     lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
                                     lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
@@ -740,7 +758,7 @@ namespace vaoc
                                     lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
                                     lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
                                     listeRetour[listeRetour.Count - 1].Cost));
-                                    //listeRetour.Add(new TrackOBJ(ligneCout));
+                                    //listeRetour.Add(new Track(ligneCout));
                                     */
                                 }
                             }
@@ -748,14 +766,14 @@ namespace vaoc
                             {
                                 //possible si l'on demarre d'une case de bordure qui n'est pas un point de liaison par exemple
                                 //ou que le point final est sur une bordure
-                                IList<LigneCASE> tableCases = BD.Base.Case.CasesVoisinesInBloc(TrackOBJSource.EndNode, TrackOBJSource.blocX, TrackOBJSource.blocY, m_tailleBloc);
-                                foreach (LigneCASE ligneCase in tableCases)
+                                IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, trackSource.blocX, trackSource.blocY, m_tailleBloc);
+                                foreach (Donnees.TAB_CASERow ligneCase in tableCases)
                                 {
                                     /* debug 
                                     Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
                                         ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                                     /**/
-                                    listeRetour.Add(new TrackOBJ(TrackOBJSource, ligneCase));
+                                    listeRetour.Add(new Track(trackSource, ligneCase));
                                 }
                             }
                         }
@@ -763,51 +781,51 @@ namespace vaoc
                 }
                 else
                 {
-                    //on est pas sur une frontiÃ¨re, on revient Ã  une case voisine de points
-                    IList<LigneCASE> tableCases = BD.Base.Case.CasesVoisines(TrackOBJSource.EndNode);
-                    foreach (LigneCASE ligneCase in tableCases)
+                    //on est pas sur une frontière, on revient à une case voisine de points
+                    IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisines(trackSource.EndNode);
+                    foreach (Donnees.TAB_CASERow ligneCase in tableCases)
                     {
                         /* debug
                         Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
                             ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                          */
-                        listeRetour.Add(new TrackOBJ(TrackOBJSource, ligneCase));
+                        listeRetour.Add(new Track(trackSource, ligneCase));
                     }
                 }
             }
             //on se trouve sur un parcours de blocs ?
-            if (null != TrackOBJSource.EndNodeHPA)
+            if (null != trackSource.EndNodeHPA)
             {
                 /* debug 
-                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(TrackOBJSource.EndNodeHPA.ID_CASE_DEBUT);
-                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(TrackOBJSource.EndNodeHPA.ID_CASE_FIN);
+                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_DEBUT);
+                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
                 Debug.WriteLine(string.Format("CasesVoisinesHPA Blocs voisins de : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9}",
-                lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, TrackOBJSource.EndNodeHPA.I_BLOCX, TrackOBJSource.EndNodeHPA.I_BLOCY,
-                lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, TrackOBJSource.EndNodeHPA.I_BLOCX, TrackOBJSource.EndNodeHPA.I_BLOCY));
+                lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, trackSource.EndNodeHPA.I_BLOCX, trackSource.EndNodeHPA.I_BLOCY,
+                lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, trackSource.EndNodeHPA.I_BLOCX, trackSource.EndNodeHPA.I_BLOCY));
                 /**/
-                List<LignePCC_COUTS> tableCout = BD.Base.PccCouts.CasesVoisines(TrackOBJSource.EndNodeHPA, false);
-                foreach (LignePCC_COUTS ligneCout in tableCout)
+                List<Donnees.TAB_PCC_COUTSRow> tableCout = Donnees.m_donnees.TAB_PCC_COUTS.CasesVoisines(trackSource.EndNodeHPA, false);
+                foreach (Donnees.TAB_PCC_COUTSRow ligneCout in tableCout)
                 {
-                    AjouterBlocHPA(TrackOBJSource, ligneCout, ref listeRetour);
+                    AjouterBlocHPA(trackSource, ligneCout, ref listeRetour);
                 }
 
                 //on regarde si le chemin ne conduit pas dans le bloc de destination
-                LigneCASE ligneCaseFin = BD.Base.Case.TrouveParID_CASE(TrackOBJSource.EndNodeHPA.ID_CASE_FIN);
+                Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
                 //if (ligneCout.I_BLOCX == m_xBlocEnd && ligneCout.I_BLOCY == m_yBlocEnd)
                 if (ligneCaseFin.I_X >= xminBlocEnd && ligneCaseFin.I_X <= xmaxBlocEnd && ligneCaseFin.I_Y >= yminBlocEnd && ligneCaseFin.I_Y <= ymaxBlocEnd)
                 {
-                    listeRetour.Add(new TrackOBJ(ligneCaseFin));
+                    listeRetour.Add(new Track(ligneCaseFin));
                 }
             }
             return listeRetour;
         }
 
-        private void AjouterBlocHPA(TrackOBJ TrackOBJSource, LignePCC_COUTS ligneCout, ref System.Collections.Generic.IList<TrackOBJ> listeRetour)
+        private void AjouterBlocHPA(Track trackSource, Donnees.TAB_PCC_COUTSRow ligneCout, ref System.Collections.Generic.IList<Track> listeRetour)
         {
-            //LigneCASE lDebug1, lDebug2;
-            TrackOBJ nouveauPoint;
+            //Donnees.TAB_CASERow lDebug1, lDebug2;
+            Track nouveauPoint;
 
-            nouveauPoint = new TrackOBJ(ligneCout);
+            nouveauPoint = new Track(ligneCout);
             listeRetour.Add(nouveauPoint);
             return;
 
@@ -816,7 +834,7 @@ namespace vaoc
             //int ymin = m_yBlocEnd * m_tailleBloc;
             //int ymax = ymin + m_tailleBloc;
 
-            //LigneCASE ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+            //Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
             ////if (ligneCout.I_BLOCX == m_xBlocEnd && ligneCout.I_BLOCY == m_yBlocEnd)
             //if (ligneCaseFin.I_X >= xmin && ligneCaseFin.I_X <= xmax && ligneCaseFin.I_Y >= ymin && ligneCaseFin.I_Y <= ymax)
             //{
@@ -827,18 +845,18 @@ namespace vaoc
             //    lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
             //    lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY, nouveauPoint.Cost));
             //    */
-            //    LigneCASE ligneCaseSource = ligneCaseFin;
-            //    //LigneCASE ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
+            //    Donnees.TAB_CASERow ligneCaseSource = ligneCaseFin;
+            //    //Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
             //                    /* debug 
             //    Debug.WriteLine(string.Format("AjouterBlocHPA Cases voisines de : ID={0}({1},{2}) bloc :{3},{4}",
             //        ligneCaseSource.ID_CASE, ligneCaseSource.I_X, ligneCaseSource.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY));
             //                      */
-            //    IList<LigneCASE> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(ligneCaseSource, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
+            //    IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(ligneCaseSource, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
 
-            //    foreach (LigneCASE ligneCase in tableCases)
+            //    foreach (Donnees.TAB_CASERow ligneCase in tableCases)
             //    {
-            //        //on ajoute que les cases dans le bloc et hors frontiÃ¨re
-            //        nouveauPoint = new TrackOBJ(ligneCase);
+            //        //on ajoute que les cases dans le bloc et hors frontière
+            //        nouveauPoint = new Track(ligneCase);
             //        listeRetour.Add(nouveauPoint);
             //                        /* debug
 
@@ -849,7 +867,7 @@ namespace vaoc
             //}
             //else
             //{
-            //    nouveauPoint = new TrackOBJ(ligneCout);
+            //    nouveauPoint = new Track(ligneCout);
             //                    /* debug 
 
             //    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
@@ -862,9 +880,9 @@ namespace vaoc
             //}
         }
 
-        //private System.Collections.Generic.IList<LigneCASE> CasesVoisines(LigneCASE caseSource)
+        //private System.Collections.Generic.IList<Donnees.TAB_CASERow> CasesVoisines(Donnees.TAB_CASERow caseSource)
         //{
-        //    System.Collections.Generic.IList<LigneCASE> listeRetour;
+        //    System.Collections.Generic.IList<Donnees.TAB_CASERow> listeRetour;
 
         //    //DateTime timeStart;
         //    //TimeSpan perf;
@@ -877,70 +895,78 @@ namespace vaoc
         //    //return DataSetCoutDonnees.m_donnees.TAB_CASE.CasesVoisines(caseSource);
         //}
 
-        static public double Cout(TrackOBJ TrackOBJSource, TrackOBJ TrackOBJDestination)
+        static public int Cout(Track trackSource, Track trackDestination)
         {
-            if (null != TrackOBJSource.EndNode && null != TrackOBJDestination.EndNode)
+            if (null != trackSource.EndNode && null != trackDestination.EndNode)
             {
                 //case vers case
-                return Cout(TrackOBJSource.EndNode, TrackOBJDestination.EndNode);
+                return Cout(trackSource.EndNode, trackDestination.EndNode);
             }
-            if (null != TrackOBJSource.EndNodeHPA && null != TrackOBJDestination.EndNodeHPA)
+            if (null != trackSource.EndNodeHPA && null != trackDestination.EndNodeHPA)
             {
                 //bloc vers bloc
-                Debug.WriteLineIf(TrackOBJSource.EndNodeHPA.ID_CASE_FIN != TrackOBJDestination.EndNodeHPA.ID_CASE_DEBUT,
-                    "Cout : TrackOBJSource.EndNodeHPA.ID_CASE_FIN != TrackOBJDestination.EndNodeHPA.ID_CASE_DEBUT");
-                if (m_idNation >= 0 && (null != TrackOBJDestination.EndNodeHPA.ID_NATION) && TrackOBJDestination.EndNodeHPA.ID_NATION!= m_idNation)
+                Debug.WriteLineIf(trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
+                    "Cout : trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNodeHPA.ID_CASE_DEBUT");
+                if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION!= m_idNation)
                 {
-                    return CST_COUTMAX;//trajet intraversable
+                    return AStar.CST_COUTMAX;//trajet intraversable
                 }
-                return TrackOBJDestination.EndNodeHPA.I_COUT;
+                return trackDestination.EndNodeHPA.I_COUT;
             }
-            if (null != TrackOBJSource.EndNode && null != TrackOBJDestination.EndNodeHPA)
+            if (null != trackSource.EndNode && null != trackDestination.EndNodeHPA)
             {
                 //case vers bloc
-                Debug.WriteLineIf(TrackOBJSource.EndNode.ID_CASE != TrackOBJDestination.EndNodeHPA.ID_CASE_DEBUT,
-                    "Cout : null != TrackOBJSource.EndNode && null != TrackOBJDestination.EndNodeHPA");
-                LigneCASE caseBloc = BD.Base.Case.TrouveParID_CASE(TrackOBJDestination.EndNodeHPA.ID_CASE_DEBUT);
-                //return Cout(TrackOBJSource.EndNode, caseBloc);
-                if (m_idNation >= 0 && (null!=TrackOBJDestination.EndNodeHPA.ID_NATION) && TrackOBJDestination.EndNodeHPA.ID_NATION != m_idNation)
+                Debug.WriteLineIf(trackSource.EndNode.ID_CASE != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
+                    "Cout : null != trackSource.EndNode && null != trackDestination.EndNodeHPA");
+                Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
+                //return Cout(trackSource.EndNode, caseBloc);
+                if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
                 {
-                    return CST_COUTMAX;//trajet intraversable
+                    return AStar.CST_COUTMAX;//trajet intraversable
                 }
-                return TrackOBJDestination.EndNodeHPA.I_COUT;
+                return trackDestination.EndNodeHPA.I_COUT;
             }
-            if (null != TrackOBJSource.EndNodeHPA && null != TrackOBJDestination.EndNode)
+            if (null != trackSource.EndNodeHPA && null != trackDestination.EndNode)
             {
                 //bloc vers case
-                //Debug.WriteLineIf(TrackOBJSource.EndNodeHPA.ID_CASE_FIN != TrackOBJDestination.EndNode.ID_CASE,
-                //    "Cout : null != TrackOBJSource.EndNodeHPA && null != TrackOBJDestination.EndNode");
+                //Debug.WriteLineIf(trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNode.ID_CASE,
+                //    "Cout : null != trackSource.EndNodeHPA && null != trackDestination.EndNode");
                 // -> pas anormal sur des cases voisines de la bordure
-                LigneCASE caseSource = BD.Base.Case.TrouveParID_CASE(TrackOBJSource.EndNodeHPA.ID_CASE_FIN);
-                return Cout(caseSource, TrackOBJDestination.EndNode);
+                Donnees.TAB_CASERow caseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
+                return Cout(caseSource, trackDestination.EndNode);
             }
-            throw new NotSupportedException("Erreur : Cout pour HPA non dÃ©fini");//normalement, on ne devrait jamais arriver lÃ 
+            throw new NotSupportedException("Erreur : Cout pour HPA non défini");//normalement, on ne devrait jamais arriver là
         }
 
-        //cout de dÃ©placement entre deux cases
-        static public double Cout(LigneCASE caseSource, LigneCASE caseFinale)
+        //cout de déplacement entre deux cases
+        static public int Cout(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
         {
+            //DateTime timeStart;
+            //TimeSpan perf;
+            //timeStart = DateTime.Now;
+            //if (caseFinale.ID_PROPRIETAIRE >= 0) -> Ne pas faire cela, sinon une unité entourée d'unités amies ne pourra plus se déplacer
+            //{
+            //    return Int32.MaxValue;//case déjà occupée
+            //}
+
             int retour = -1;
 
             if (m_idNation >= 0)
             {
-                if (caseFinale.ID_NOUVEAU_PROPRIETAIRE.HasValue && caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
+                if (!caseFinale.IsID_NOUVEAU_PROPRIETAIRENull() && caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
                 {
-                    LignePION lignePionProprietaire = BD.Base.Pion.TrouveParID_PION((int)caseFinale.ID_NOUVEAU_PROPRIETAIRE);
+                    Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE);
                     if (lignePionProprietaire.idNation != m_idNation)
                     {
-                        return CST_COUTMAX;//case intraversable
+                        return AStar.CST_COUTMAX;//case intraversable
                     }
                 }
-                if (caseFinale.ID_PROPRIETAIRE.HasValue && caseFinale.ID_PROPRIETAIRE >= 0)
+                if (!caseFinale.IsID_PROPRIETAIRENull() && caseFinale.ID_PROPRIETAIRE >= 0)
                 {
-                    LignePION lignePionProprietaire = BD.Base.Pion.TrouveParID_PION((int)caseFinale.ID_PROPRIETAIRE);
+                    Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE);
                     if (lignePionProprietaire.idNation != m_idNation)
                     {
-                        return CST_COUTMAX;//case intraversable
+                        return AStar.CST_COUTMAX;//case intraversable
                     }
                 }
             }
@@ -956,7 +982,27 @@ namespace vaoc
                 retour = (int)(m_nombrePixelParCase * SQRT2 * m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].cout);
             }
 
-           if (retour <= 0)
+            //cout de la case d'arrivée
+            //string requete = string.Format("ID_MODELE_MOUVEMENT={0} AND ID_METEO={1} AND ID_MODELE_TERRAIN={2}",
+            //    SearchIdModeleMouvement, SearchIdMeteo, caseFinale.ID_MODELE_TERRAIN);
+            //DataSetCoutDonnees.TAB_MOUVEMENT_COUTRow[] resCout = (DataSetCoutDonnees.TAB_MOUVEMENT_COUTRow[])DataSetCoutDonnees.m_donnees.TAB_MOUVEMENT_COUT.Select(requete);
+            //if (1!=resCout.Length)
+            //{
+            //    throw new InvalidOperationException("AStar.Cout, aucun ou plusieurs résultats de cout dans TAB_MOUVEMENT_COUT avec "+requete);
+            //}
+            //else
+            //{
+            //    retour = distance * resCout[0].I_COUT;
+            //}
+            //retour = distance * m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN];//resCout[0].I_COUT;
+            //if (caseFinale.I_X == 100 && caseFinale.I_Y == 100)
+            //{
+            //    Debug.WriteLine(string.Format("AStar.Cout de 100,100 à  {0},{1} = {2}", caseSource.I_X, caseSource.I_Y, retour));
+            //}
+
+            //perf = DateTime.Now - timeStart;
+            //Debug.WriteLine(string.Format("AStar.Cout en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
+            if (retour <= 0)
             {
                 return CST_COUTMAX;//case intraversable
             }
@@ -969,95 +1015,104 @@ namespace vaoc
         /// <param name="caseSource">case source</param>
         /// <param name="caseFinale">case finale</param>
         /// <returns></returns>
-        static public int HorsRoute(LigneCASE caseSource, LigneCASE caseFinale)
+        static public int HorsRoute(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
         {
             return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
         }
         
         /// <summary>
-        /// Recherche toutes les cases avec un cout de mouvement minimum autour d'un point donnÃ©. Les cases dÃ©jÃ  occupÃ©es ne sont pas considÃ©rÃ©es
-        /// lors du calcul de coÃ»t mais uniquement lors de la recherche de cases disponibles.
+        /// Recherche toutes les cases avec un cout de mouvement minimum autour d'un point donné. Les cases déjà occupées ne sont pas considérées
+        /// lors du calcul de coût mais uniquement lors de la recherche de cases disponibles.
         /// </summary>
         /// <param name="ligneCase">Case d'origine</param>
-        /// <param name="espace">Nombre de cases Ã  trouver</param>
+        /// <param name="espace">Nombre de cases à trouver</param>
         /// <param name="tableCoutsMouvementsTerrain">couts de mouvement suivant les terrains</param>
         /// <param name="nombrePixelParCase>echelle en pixels par case</param>
-        /// <param name="listeCaseEspace>liste des cases du parcours, ordonnÃ©es par I_COUT</param>
+        /// <param name="listeCaseEspace>liste des cases du parcours, ordonnées par I_COUT</param>
         /// <returns>true si OK, false si KO</returns>
-        internal bool SearchSpace(LigneCASE ligneCase, int espace, AstarTerrainOBJ[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out IEnumerable<LigneCASE> listeCaseEspace, out string erreur)
+        internal bool SearchSpace(Donnees.TAB_CASERow ligneCase, int espace, AstarTerrain[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out Donnees.TAB_CASERow[] listeCaseEspace, out string erreur)
         {
             DateTime    timeStart;
             TimeSpan    perf;
-            //string      requete;
+            string      requete;
             bool        bEspaceFound;
+            //DataSetCoutDonnees.TAB_CASERow[] retour;
 
             erreur = string.Empty;
-            Debug.WriteLine(string.Format("AStarOBJ.SearchSpace sur {0} espaces ", espace));
+            Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
             m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
             m_nombrePixelParCase = nombrePixelParCase;
+            //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
+            //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
             m_minX = 0;
             m_minY = 0;
-            m_maxX = BD.Base.Jeu[0].I_LARGEUR_CARTE;
-            m_maxY = BD.Base.Jeu[0].I_HAUTEUR_CARTE;
-            m_espace = espace * 2;//on double l'espace recherchÃ©e, une grande partie pouvant dÃ©jÃ  Ãªtre occupÃ©e par d'autres unitÃ©s.
+            m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
+            m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+            m_espace = espace * 2;//on double l'espace recherchée, une grande partie pouvant déjà être occupée par d'autres unités.
             m_idNation = idNation;
 
             listeCaseEspace = null;
             bEspaceFound = false;
             while (!bEspaceFound)
             {
-                //recherche des coÃ»ts Ã  partir de la case source
+                //recherche des coûts à partir de la case source
                 timeStart = DateTime.Now;
                 InitializeSpace(ligneCase);
                 if (m_espace <= 1)
                 {
-                    listeCaseEspace = new LigneCASE[0];
+                    listeCaseEspace = new Donnees.TAB_CASERow[0];
                     return true;
                 }
+                //m_minX= Math.Max(0, ligneCase.I_X-espace);
+                //m_minY= Math.Max(0, ligneCase.I_Y-espace);
+                //m_maxX= Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, ligneCase.I_X+espace);
+                //m_maxY = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE, ligneCase.I_Y + espace);
+
                 while (NextSpaceStep()) { }
                 perf = DateTime.Now - timeStart;
-                Debug.WriteLine(string.Format("AStarOBJ.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
+                Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
 
-                //on vÃ©rifie qu'il y a assez de cases disponibles pour remplir l'encombrement
-                //requete = string.Format("I_COUT<{0}", CST_COUTMAX);
-                //listeCaseEspace = (LigneCASE[])BD.Base.Case.Select(requete, "I_COUT");
-                var requete = from LigneCASE ligne in BD.Base.Case
-                                  where ligne.I_COUT<CST_COUTMAX
-                                  select ligne;
-
-                
-                listeCaseEspace = requete.OrderBy(LigneCASE => LigneCASE.I_COUT);
-
+                //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
+                listeCaseEspace = Donnees.m_donnees.TAB_CASE.ListeCasesNonCoutMax();
+                /*
+                requete = string.Format("I_COUT<{0}", CST_COUTMAX);
+                listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
                 if (listeCaseEspace.Count() < m_espace)
                 {
-                    erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unitÃ© en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
+                    erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
                     Debug.WriteLine(erreur);
-                    // on double l'espace et on recommence, en fait Ã§a sert pas Ã  grand chose a priori
+                    // on double l'espace et on recommence BEA, en fait ça sert pas à grand chose a priori, test inutile
                     //m_espace *= 2;
                 }
-                                
+                */
+                //else
+                //{
                 bEspaceFound =true;
+                //}
             }
             return bEspaceFound;
         }
 
-        private void InitializeSpace(LigneCASE ligneCase)
+        private void InitializeSpace(Donnees.TAB_CASERow ligneCase)
         {
             if (ligneCase == null) throw new ArgumentNullException();
             _Closed.Clear();//on utilise pas la liste mais...
-            TrackOBJ.Target = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testÃ© de nombreuse fois dans TrackOBJ
-            TrackOBJ.tailleBloc = m_tailleBloc;
+            Track.Target = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
+            Track.tailleBloc = m_tailleBloc;
             _Open.Clear();
-            _Open.Add(new TrackOBJ(ligneCase));
+            _Open.Add(new Track(ligneCase));
             _NbIterations = 0;
             m_espaceTrouve = 0;
             _LeafToGoBackUp = null;//on utilise pas la variable mais...
 
-            foreach (LigneCASE ligne in BD.Base.Case)
+            /*
+            foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
             {
                 ligne.I_COUT = CST_COUTMAX;
             }
-            ligneCase.I_COUT = 0;
+            */
+            Donnees.m_donnees.TAB_CASE.ReinitialisationListeCasesNonCoutMax();
+            ligneCase.iCOUT = 0;
         }
 
         private bool NextSpaceStep()
@@ -1069,67 +1124,67 @@ namespace vaoc
             }
             if (m_espaceTrouve > m_espace * 3)
             {
-                return false; //c'est bon on a la zone (et un peu plus des fois que certaines cases seraient occupÃ©es)
+                return false; //c'est bon on a la zone (et un peu plus des fois que certaines cases seraient occupées)
             }
             _NbIterations++;
 
             int IndexMin = _Open.IndexOfMin();
-            //TrackOBJ BestTrackOBJ = (TrackOBJ)_Open[IndexMin];//on repart toujours du moins couteux
-            TrackOBJ BestTrackOBJ = (TrackOBJ)_Open.ValueOfCout(IndexMin);
+            //Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
+            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
 
-            _Open.Remove(BestTrackOBJ);
-            PropagateSpace(BestTrackOBJ);
+            _Open.Remove(BestTrack);
+            PropagateSpace(BestTrack);
             //traces de Debug
-            //foreach (TrackOBJ noeud in _Open)
+            //foreach (Track noeud in _Open)
             //{
             //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
-            //foreach (TrackOBJ noeud in _Closed)
+            //foreach (Track noeud in _Closed)
             //{
             //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
             //Debug.WriteLine("");
             if (_NbIterations % 10000 == 0)
             {
-                Debug.WriteLine("NextSpaceStepOBJ BestTrackOBJ.Cost=" + BestTrackOBJ.Cost.ToString() + " BestTrackOBJ.EndNode.ID_CASE=" + BestTrackOBJ.EndNode.ID_CASE.ToString());
+                Debug.WriteLine("NextSpaceStep BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
                 Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
                 Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
             }
             return _Open.Count > 0;
         }
 
-        private void PropagateSpace(TrackOBJ TrackOBJToPropagate)
+        private void PropagateSpace(Track TrackToPropagate)
         {
             //DateTime timeStart;
             //TimeSpan perf;
 
             //timeStart = DateTime.Now;
-            foreach (LigneCASE A in BD.Base.Case.CasesVoisines(TrackOBJToPropagate.EndNode))
+            foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
             {
                 if (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY)
                 {
                     continue;
                 }
 
-                double cout = Cout(TrackOBJToPropagate.EndNode, A);
+                int cout = Cout(TrackToPropagate.EndNode, A);
                 if (cout != CST_COUTMAX)
                 {
                     //DateTime timeStart2 = DateTime.Now;
-                    ///if (A.I_COUT == CST_COUTMAX || (TrackOBJToPropagate.EndNode.I_COUT + cout < A.I_COUT))
-                    if ((TrackOBJToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
+                    ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))
+                    if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, BEA 28/11/2011
                     {
-                        if (A.I_COUT == CST_COUTMAX) m_espaceTrouve++;//on vient de trouver une case de plus
-                        A.I_COUT = TrackOBJToPropagate.EndNode.I_COUT + cout;
+                        if (A.I_COUT == AStar.CST_COUTMAX) m_espaceTrouve++;//on vient de trouver une case de plus
+                        A.iCOUT = TrackToPropagate.EndNode.I_COUT + cout;
                         if (A.I_COUT < 0)
                         {
-                            Debug.WriteLine("AStar.PropagateSpace cout nÃ©gatif !!!");
+                            Debug.WriteLine("AStar.PropagateSpace cout négatif !!!");
                         }
                         //if (A.I_X==100 && A.I_Y==100)
                         //{
                         //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
-                        //        A.I_COUT, cout, TrackOBJToPropagate.EndNode.I_X, TrackOBJToPropagate.EndNode.I_Y, TrackOBJToPropagate.EndNode.I_COUT));
+                        //        A.I_COUT, cout, TrackToPropagate.EndNode.I_X, TrackToPropagate.EndNode.I_Y, TrackToPropagate.EndNode.I_COUT));
                         //}
-                        TrackOBJ Successor = new TrackOBJ(TrackOBJToPropagate, A);// le cout est calculÃ© dans le new
+                        Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
                         _Open.Add(Successor);
                     }
                 }
@@ -1141,52 +1196,52 @@ namespace vaoc
         }
 
         /// <summary>
-        /// met Ã  jour les nations controllant les diffÃ©rents trajets
-        /// ceci afin que les trajets ne puissent pas Ãªtre empruntÃ©s par des nations qui ne les controllent pas (cas des ravitaillement par dÃ©pÃ´t)
+        /// met à jour les nations controllant les différents trajets
+        /// ceci afin que les trajets ne puissent pas être empruntés par des nations qui ne les controllent pas (cas des ravitaillement par dépôt)
         /// </summary>
         /// <returns>true si Ok, false si KO</returns>
         static public bool InitialisationProprietaireTrajet()
         {
             List<int> listeCases;
-            foreach (LignePCC_COUTS lignePCCCout in BD.Base.PccCouts)
+            foreach (Donnees.TAB_PCC_COUTSRow lignePCCCout in Donnees.m_donnees.TAB_PCC_COUTS)
             {
-                lignePCCCout.ID_NATION = null;//par dÃ©faut, Ã§a n'appartient Ã  personne
+                lignePCCCout.SetID_NATIONNull();//par défaut, ça n'appartient à personne
                 //on charge le trajet correspondant
                 if (!Dal.ChargerTrajet(lignePCCCout.ID_TRAJET, out listeCases)) {return false;}
                 int i=0;
                 int proprio = -1;
                 while (i < listeCases.Count)
                 {
-                    LigneCASE ligneCase = BD.Base.Case.TrouveParID_CASE(listeCases[i]);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[i]);
                     if (null == ligneCase) { return false; }
 
-                    if (ligneCase.ID_NOUVEAU_PROPRIETAIRE.HasValue && ligneCase.ID_NOUVEAU_PROPRIETAIRE >= 0)
+                    if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull() && ligneCase.ID_NOUVEAU_PROPRIETAIRE >= 0)
                     {
                         if (proprio < 0)
                         {
-                            proprio = (int)ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                            proprio = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
                         }
                         else
                         {
                             if (proprio != ligneCase.ID_NOUVEAU_PROPRIETAIRE)
                             {
                                 lignePCCCout.ID_NATION = CST_PLUSIEURSNATION; //plusieurs proprietaires
-                                break;//cela ne sert Ã  rien de continuer
+                                break;//cela ne sert à rien de continuer
                             }
                         }
                     }
-                    if (ligneCase.ID_PROPRIETAIRE.HasValue && ligneCase.ID_PROPRIETAIRE >= 0)
+                    if (!ligneCase.IsID_PROPRIETAIRENull() && ligneCase.ID_PROPRIETAIRE >= 0)
                     {
                         if (proprio < 0)
                         {
-                            proprio = (int)ligneCase.ID_PROPRIETAIRE;
+                            proprio = ligneCase.ID_PROPRIETAIRE;
                         }
                         else
                         {
                             if (proprio != ligneCase.ID_PROPRIETAIRE)
                             {
                                 lignePCCCout.ID_NATION = CST_PLUSIEURSNATION; //plusieurs proprietaires
-                                break;//cela ne sert Ã  rien de continuer
+                                break;//cela ne sert à rien de continuer
                             }
                         }
                     }

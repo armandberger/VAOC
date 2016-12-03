@@ -749,7 +749,43 @@ namespace vaoc
 
         partial class TAB_CASEDataTable
         {
-            private Array m_listeIndex = null; //renvoie l'id cas à partir d'un x,y : optimisation mémoire
+            private Array m_listeIndex = null; //renvoie l'index case à partir d'un x,y : optimisation mémoire
+            private List<int> m_listeCasesCoutNonMax = new List<int>(); //renvoie l'index case dont le cout ne vaut pas CST_COUTMAX, optimisation pour AStar.SearchSpace
+
+            public void AjouterCaseCoutNonMax(Donnees.TAB_CASERow ligne)
+            {
+                m_listeCasesCoutNonMax.Add((int)m_listeIndex.GetValue(ligne.I_X, ligne.I_Y));
+            }
+
+            public void InitialisationListeCaseNonCoutMax()
+            {
+                m_listeCasesCoutNonMax.Clear();
+                foreach (Donnees.TAB_CASERow ligne in this)
+                {
+                    ligne.I_COUT = AStar.CST_COUTMAX;
+                }
+            }
+
+            public void ReinitialisationListeCasesNonCoutMax()
+            {
+                foreach (int index in m_listeCasesCoutNonMax)
+                {
+                    Donnees.TAB_CASERow ligne = this[index];
+                    ligne.I_COUT = AStar.CST_COUTMAX;
+                }
+                m_listeCasesCoutNonMax.Clear();
+            }
+
+            public Donnees.TAB_CASERow[]  ListeCasesNonCoutMax()
+            {
+                Donnees.TAB_CASERow[] listeCases = new TAB_CASERow[m_listeCasesCoutNonMax.Count];
+                int i = 0;
+                foreach (int index in m_listeCasesCoutNonMax)
+                {
+                    listeCases[i++]=this[index];
+                }
+                return listeCases;
+            }
 
             public bool InitialisationListeCase(int maxX, int maxY)
             {
@@ -1271,7 +1307,6 @@ namespace vaoc
         private bool MiseAJourVersion()
         {
             #region version 1
-            //TAB_JEU[0].I_VERSION = 1;//BEA a virer après que le code soit fini
             if (TAB_JEU[0].I_VERSION < 2)
             {
                 foreach (TAB_MESSAGERow ligneMessage in TAB_MESSAGE)

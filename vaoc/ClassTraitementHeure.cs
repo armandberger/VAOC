@@ -83,7 +83,7 @@ namespace vaoc
                 }
             }
 
-            //Teleportation, pions nouvellement arrivés ou modification de la position par l'arbitre (pour le placement initial par exemple)
+            #region Teleportation, pions nouvellement arrivés ou modification de la position par l'arbitre (pour le placement initial par exemple)
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
                 if (lignePion.B_DETRUIT || !lignePion.B_TELEPORTATION) { continue; }
@@ -109,6 +109,27 @@ namespace vaoc
                 lignePion.DetruireEspacePion();//force, par la suite, le recalcul de tous les espaces, parcours, etc.
                 lignePion.B_TELEPORTATION = false;
             }
+            #endregion
+
+            #region transfert correctif
+            //i=0;
+            //while (i < Donnees.m_donnees.TAB_PION.Count)
+            //{
+            //    Donnees.TAB_PIONRow lignePionTransfert = Donnees.m_donnees.TAB_PION[i++];
+            //    if (lignePionTransfert.B_DETRUIT) { continue; }
+            //    if (2016 == lignePionTransfert.ID_PION_PROPRIETAIRE)
+            //    {
+            //        //grouchy vers Bessières
+            //        lignePionTransfert.TransfertPion(6);
+            //    }                
+            //}
+            Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(2016);
+            Donnees.TAB_PIONRow lignePionNouveau = Donnees.m_donnees.TAB_PION.FindByID_PION(6);
+            TransfertsDesliens(lignePionAncien, lignePionNouveau);
+            Donnees.TAB_ROLERow ligneRole = Donnees.m_donnees.TAB_ROLE.FindByID_ROLE(8);
+            ligneRole.ID_PION = 6;
+            lignePionAncien.DetruirePion();
+            #endregion
 
             //pour chaque phase
             nbPhases = (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE) ? Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES : Donnees.m_donnees.TAB_PARTIE[0].I_PHASE + 1;
@@ -1849,6 +1870,9 @@ namespace vaoc
                 case Constantes.ORDRES.COMBAT:
                 case Constantes.ORDRES.RETRAITE:
                 case Constantes.ORDRES.RETRAIT:
+                    // si on recherche ligneOrdreCourant après la création de ligneOrdreARemettre, forcement, ligneOrdreCourant
+                    // vaut ligneOrdreARemettre
+                    Donnees.TAB_ORDRERow ligneOrdreCourantCombat = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
                     #region envoi d'un ordre immédiat
                     ligneOrdreARemettre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         -1,//id_ordre transmis
@@ -1886,8 +1910,7 @@ namespace vaoc
                     //cet ordre a un effet immédiat et remplace tout ordre courant.
                     if (null == ligneOrdrePrecedent)
                     {
-                        Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
-                        ChangerOrdreCourant(lignePion, ligneOrdreCourant, ligneOrdreARemettre, true);
+                        ChangerOrdreCourant(lignePion, ligneOrdreCourantCombat, ligneOrdreARemettre, true);
 
                         LogFile.Notifier(string.Format("NouveauxOrdres envoie d'un ordre IDWeb={0}, ID={1} de type {2} à {3}({4})",
                                 ordre.ID_ORDRE,
@@ -3072,7 +3095,7 @@ namespace vaoc
                                     }
 
                                     Donnees.TAB_ORDRERow ligneOrdreNouveau = ligneOrdre.ordreTransmis;
-                                    if (null== ligneOrdreNouveau) { return true; }//BEA, pour régler un correctif d'un autre bug, à supprimer ensuite
+                                    if (null == ligneOrdreNouveau) { return true; }//pour régler un correctif d'un autre bug, à supprimer ensuite
                                     Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionDestinataire.ID_PION);
                                     Donnees.TAB_PIONRow lignePionDonneurOrdre = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_PROPRIETAIRE);
                                     Donnees.TAB_PIONRow lignePionMessage = lignePionDestinataire;

@@ -199,16 +199,19 @@ namespace vaoc
                 message = string.Format("FinDeBataille : après les pertes au combat il reste nbUnites012={0}  nbUnites345={1}",
                     nbUnites012, nbUnites345);
                 LogFile.Notifier(message, out messageErreur);
-                if ((0 == nbUnites012 || 0 == nbUnites345)
+                if ((0 == nbUnites012 || 0 == nbUnites345 || bRetraite012 || bRetraite345)
                     && (nbUnites012 > 0 || nbUnites345 > 0)
                     && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT >= 2))
                 {
                     //un des deux camps a remporté le combat, il engage une poursuite sur le vaincu
-                    if (nbUnites012 > 0)
+                    if (nbUnites012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
                         SortieDuChampDeBataille(lignePionsEnBataille345);
-                        GainMoralFinDeBataille(lignePionsCombattifBataille012);
+                        if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
+                        {
+                            GainMoralFinDeBataille(lignePionsCombattifBataille012);
+                        }
                         EnvoyerMessagesVictoireDefaite(lignePionsEnBataille012, lignePionsEnBataille345);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE012;
                         bVictoire345 = false;
@@ -217,7 +220,10 @@ namespace vaoc
                     {
                         Poursuite( ID_LEADER_345, lignePionsEnBataille345, ID_LEADER_012, lignePionsEnBataille012);
                         SortieDuChampDeBataille(lignePionsEnBataille012);
-                        GainMoralFinDeBataille(lignePionsCombattifBataille345);
+                        if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
+                        {
+                            GainMoralFinDeBataille(lignePionsCombattifBataille345);
+                        }
                         EnvoyerMessagesVictoireDefaite(lignePionsEnBataille345, lignePionsEnBataille012);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE345;
                         bVictoire012 = false;
@@ -1160,6 +1166,8 @@ namespace vaoc
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 bool bUniteEnDefense;
                 int idLeader;
+                bool bRetraite012 = false;
+                bool bRetraite345 = false;
 
                 bFinDeBataille = false;
                 Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(20);
@@ -1284,8 +1292,6 @@ namespace vaoc
                     message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Un ordre de retraite a été donné sur cette bataille.",
                         S_NOM, ID_BATAILLE);
                     LogFile.Notifier(message, out messageErreur);
-                    bool bRetraite012 = false;
-                    bool bRetraite345 = false;
                     foreach (Donnees.TAB_ORDRERow ligneOrdre in resOrdreRetraite)
                     {
                         if (ligneOrdre.I_ZONE_BATAILLE <= 2)
@@ -1297,7 +1303,11 @@ namespace vaoc
                             bRetraite345 = true;
                         }
                     }
-                    return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                    //même pour un ordre de retrait il doit au moins y avoir un tour de combat
+                    if (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT > 2)
+                    {
+                        return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                    }
                 }
                 #endregion
 
@@ -1530,7 +1540,7 @@ namespace vaoc
 
                 #endregion
 
-                if (!CalculDesPertesAuCombat(des, relance, lignePionsEnBataille012, lignePionsEnBataille345))
+                if (!CalculDesPertesAuCombat(des, relance, lignePionsEnBataille012, lignePionsEnBataille345, bRetraite012, bRetraite345))
                 {
                     message = string.Format("EffectuerBataille : erreur dans CalculDesPertesAuCombat II");
                     LogFile.Notifier(message, out messageErreur);
@@ -1581,6 +1591,12 @@ namespace vaoc
                 //Envoie d'un message prévenant d'un bruit de canon pour toutes les unités non présentes.
                 AlerteBruitDuCanon();
 
+                //Si un ordre de retraite a été donné et que c'était au premier jour, il est effectué en fin de combat
+                if (bRetraite012 || bRetraite345)
+                {
+                    return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                }
+
                 return true;
             }
 
@@ -1606,7 +1622,7 @@ namespace vaoc
             /// <param name="lignePionsEnBataille012"></param>
             /// <param name="lignePionsEnBataille345"></param>
             /// <returns>true si OK, false si KO</returns>
-            private bool CalculDesPertesAuCombat( int[] des, int[] relance, Donnees.TAB_PIONRow[] lignePionsEnBataille012, Donnees.TAB_PIONRow[] lignePionsEnBataille345)
+            private bool CalculDesPertesAuCombat( int[] des, int[] relance, Donnees.TAB_PIONRow[] lignePionsEnBataille012, Donnees.TAB_PIONRow[] lignePionsEnBataille345, bool bRetraite012, bool bRetraite345)
             {
                 string message, messageErreur;
                 int[] score = new int[6];
@@ -1649,8 +1665,8 @@ namespace vaoc
                 #region on vérifie que chaque camp peut bien prendre toutes les pertes en moral et effectif, si ce n'est pas le cas, les pertes sont nuls pour l'autre camp
                 for (i = 0; i < 3; i++)
                 {
-                    bool PremierCampKO = true;
-                    bool DeuxiemeCampKO = true;
+                    bool bCamp012KO = true;
+                    bool bCamp345KO = true;
 
                     if (des[i] > 0 && des[i + 3] > 0)
                     {
@@ -1664,7 +1680,7 @@ namespace vaoc
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i) { continue; }
                                 //effectifTotal += lignePionEnBataille.effectifTotal;
-                                if (lignePionEnBataille.I_MORAL > pertesMoral[i]) { PremierCampKO = false; }
+                                if (lignePionEnBataille.I_MORAL > pertesMoral[i]) { bCamp012KO = false; }
                             }
                         }
 
@@ -1674,20 +1690,20 @@ namespace vaoc
                             {
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i + 3) { continue; }
-                                if (lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) { DeuxiemeCampKO = false; }
+                                if (lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) { bCamp345KO = false; }
                             }
                         }
 
                         //un des bords va fuir complètement et pas l'autre ?
-                        if (!PremierCampKO || !DeuxiemeCampKO)
+                        if (!bCamp012KO || !bCamp345KO)
                         {
-                            if (PremierCampKO)
+                            if (bCamp012KO || bRetraite012)
                             {
                                 pertesMoral[i + 3] = 0;
                                 pertesEffectifs[i + 3] = 0;
                                 LogFile.Notifier("i=" + i + " le premier Camp est mis en déroute et n'inflige aucune perte à l'adversaire", out messageErreur);
                             }
-                            if (DeuxiemeCampKO)
+                            if (bCamp345KO || bRetraite345)
                             {
                                 pertesMoral[i] = 0;
                                 pertesEffectifs[i] = 0;

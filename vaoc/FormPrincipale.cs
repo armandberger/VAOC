@@ -160,6 +160,7 @@ namespace vaoc
                 {
                     TestsDePerformance();
                     Donnees.m_donnees.TAB_CASE.InitialisationListeCase(this.ImageCarte.Image.Width, this.ImageCarte.Image.Height);//optimisation mémoire
+                    Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
                 }
 
                 IEnumerable<Donnees.TAB_PIONRow> requete =

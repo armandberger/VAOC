@@ -1079,7 +1079,7 @@ namespace vaoc
                 {
                     erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
                     Debug.WriteLine(erreur);
-                    // on double l'espace et on recommence BEA, en fait ça sert pas à grand chose a priori
+                    // on double l'espace et on recommence, en fait ça sert pas à grand chose a priori
                     //m_espace *= 2;
                 }
                 //else
@@ -1165,7 +1165,7 @@ namespace vaoc
                 {
                     //DateTime timeStart2 = DateTime.Now;
                     ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))
-                    if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, BEA 28/11/2011
+                    if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
                     {
                         if (A.I_COUT == AStar.CST_COUTMAX) m_espaceTrouve++;//on vient de trouver une case de plus
                         A.I_COUT = TrackToPropagate.EndNode.I_COUT + cout;

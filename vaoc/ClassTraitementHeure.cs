@@ -422,27 +422,27 @@ namespace vaoc
                     LogFile.Notifier("pas plus de 8 tours successifs et l'on s'arrête toujours au lever du soleil ou a une heure du matin (renforts potentiels) ou si la partie est terminée");
                     if (!Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
                     {
-                        LogFile.Notifier("Partie pas demarrée");
+                        LogFile.Notifier("Fin de tour :Partie pas demarrée");
                     }
                     if(1 == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                     {
-                        LogFile.Notifier("premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres");
+                        LogFile.Notifier("Fin de tour :premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres");
                     }
                     if (nbTourExecutes >= 8)
                     {
-                        LogFile.Notifier("Pas plus de 8 tours");
+                        LogFile.Notifier("Fin de tour :Pas plus de 8 tours");
                     }
                     if (Donnees.m_donnees.TAB_PARTIE.HeureCourante() == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL)
                     {
-                        LogFile.Notifier("Levée du jour");
+                        LogFile.Notifier("Fin de tour :Levée du jour");
                     }
                     if (bRenfort)
                     {
-                        LogFile.Notifier("Arrivée de renforts");
+                        LogFile.Notifier("Fin de tour :Arrivée de renforts");
                     }
                     if (m_bFinDeBataille)
                     {
-                        LogFile.Notifier("si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir");
+                        LogFile.Notifier("Fin de tour :si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir");
                     }
                     bTourSuivant = false;
                 }
@@ -473,14 +473,14 @@ namespace vaoc
                             if (nbTourExecutes >= 4)
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
+                                LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
                             }
                             else
                             {
                                 if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
                                 {
                                     bTourSuivant = false;
-                                    LogFile.Notifier("A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
+                                    LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour");
                                 }
                             }
                             // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
@@ -489,7 +489,7 @@ namespace vaoc
                                 (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
                             {
                                 bTourSuivant = true;
-                                LogFile.Notifier("+1 tour pour finir au lever du soleil ou à la première heure du jour");
+                                LogFile.Notifier("Fin de tour :+1 tour pour finir au lever du soleil ou à la première heure du jour");
                             }
                         }
                         else
@@ -498,7 +498,7 @@ namespace vaoc
                             if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4))
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
+                                LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                             }
                         }
                     }
@@ -1563,6 +1563,7 @@ namespace vaoc
         /// <returns>OK=true, KO=false</returns>
         private bool NouveauxMessages()
         {
+            /* ne marche pas pour les messages forum en cours de partie
             int tourMax, phaseMax;
 
             //on recherche le dernier identfiant en base
@@ -1581,16 +1582,15 @@ namespace vaoc
                 tourMax = ligneMessageMax.I_TOUR_DEPART;
                 phaseMax = ligneMessageMax.I_PHASE_DEPART;
             }
+            */
 
             List<ClassDataMessage> liste = m_iWeb.ListeMessages(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
             foreach (ClassDataMessage message in liste)
             {
-                int tourDepart, phaseDepart, tourArrivee, phaseArrivee;
-
-                ClassMessager.TourPhase(message.DT_DEPART, out tourDepart, out phaseDepart);
-                ClassMessager.TourPhase(message.DT_ARRIVEE, out tourArrivee, out phaseArrivee);
                 //if (message.ID_MESSAGE > ligneMessageMax[0].ID_MESSAGE), non fiable, même après un clear, le compteur ID ne repart pas à zéro
-                if (tourDepart>=tourMax && phaseDepart>phaseMax)
+                //if (tourDepart>=tourMax && phaseDepart>phaseMax) ->pour le forum en cours de partie, ne marche pas, phaseMax peut être égal à 100
+                Donnees.TAB_MESSAGERow ligneMessagePresent = Donnees.m_donnees.TAB_MESSAGE.FindByID_MESSAGE(message.ID_MESSAGE);
+                if (null== ligneMessagePresent)
                 {
                     Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(message.ID_EMETTEUR);
                     if (null == lignePionEmetteur)
@@ -1598,6 +1598,9 @@ namespace vaoc
                         LogFile.Notifier("NouveauxMessages: Impossible de trouver un pion emetteur pour le message ID=" + message.ID_MESSAGE);
                         return false;
                     }
+                    int tourDepart, phaseDepart, tourArrivee, phaseArrivee;
+                    ClassMessager.TourPhase(message.DT_DEPART, out tourDepart, out phaseDepart);
+                    ClassMessager.TourPhase(message.DT_ARRIVEE, out tourArrivee, out phaseArrivee);
                     int iTourSansRavitaillement = lignePionEmetteur.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? 0 : lignePionEmetteur.I_TOUR_SANS_RAVITAILLEMENT;
 
                     Donnees.m_donnees.TAB_MESSAGE.AddTAB_MESSAGERow(

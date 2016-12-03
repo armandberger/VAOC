@@ -1032,7 +1032,7 @@ namespace vaoc
         {
             //le tour est le nombre d'heures entre la date de jeu et la date initiale
             TimeSpan tempsDifference = dateJeu.Subtract(Donnees.m_donnees.TAB_JEU[0].DT_INITIALE.AddHours(Donnees.m_donnees.TAB_JEU[0].I_HEURE_INITIALE));
-            tour = tempsDifference.Hours;
+            tour = tempsDifference.Days*24 + tempsDifference.Hours;
             phase = (tempsDifference.Minutes * 60 + tempsDifference.Seconds) * Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES / 3600;
         }
 

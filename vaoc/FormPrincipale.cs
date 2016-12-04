@@ -220,7 +220,10 @@ namespace vaoc
                 if (ligneNom.IsB_PONTNull()) { ligneNom.B_PONT = false; }
             }
 
-
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePion.IsID_PION_REMPLACENull() && 0==lignePion.ID_PION_REMPLACE) { lignePion.SetID_PION_REMPLACENull(); }
+            }
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
             //    lignePion.SetID_BATAILLENull();

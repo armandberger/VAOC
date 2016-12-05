@@ -3799,7 +3799,8 @@ namespace vaoc
             if (lignePion.effectifTotalEnMouvement == ligneOrdre.I_EFFECTIF_DEPART)
             {
                 Donnees.m_donnees.TAB_ESPACE.SupprimerEspacePion(lignePion.ID_PION);
-                Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
+                //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
             }
 
             //on calcule de combien de cases le pion a déjà avancé

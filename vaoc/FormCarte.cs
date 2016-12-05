@@ -141,7 +141,8 @@ namespace vaoc
                             labelTraitement.Text = "construction des cases";
                             progressBar.Maximum = m_imageCarte.Width;
                             tableCase.Clear();
-                            tableCase.AcceptChanges();
+                            //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                            //tableCase.AcceptChanges();
                             m_dateDebut = DateTime.Now;
                         }
                         //on analyse la ligne de pixels suivants
@@ -171,7 +172,8 @@ namespace vaoc
                     if (0 == m_sous_traitement)
                     {
                         tableCase.InitialisationListeCase(m_imageCarte.Width, m_imageCarte.Height);//optimisation mémoire
-                        tableCase.AcceptChanges();//on valide les ajouts du traitement précédent
+                        //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                        //tableCase.AcceptChanges();//on valide les ajouts du traitement précédent
                         labelTraitement.Text = "cases de remplacement";
                         m_tableCaseTraitement = (Donnees.TAB_CASERow[])m_tableCase.Select("ID_MODELE_TERRAIN_SI_OCCUPE IS NULL");
                         progressBar.Maximum = m_tableCaseTraitement.Length;
@@ -231,7 +233,8 @@ namespace vaoc
                     break;
                 case 2:
                 case 4:
-                    tableCase.AcceptChanges();
+                    //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                    //tableCase.AcceptChanges();
                     buttonGeneration.Text = "Générer la carte";
                     labelTraitement.Text = "terminé";
                     return false;//traitement terminé

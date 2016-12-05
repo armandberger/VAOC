@@ -1321,7 +1321,8 @@ namespace vaoc
                     ligneOrdre.I_TOUR_FIN = m_donnees.tableTAB_PARTIE[0].I_TOUR;
                     ligneOrdre.I_PHASE_FIN = m_donnees.tableTAB_PARTIE[0].I_PHASE;
                 }
-                m_donnees.TAB_ORDRE.AcceptChanges();
+                //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                //m_donnees.TAB_ORDRE.AcceptChanges();
 
                 //suppression des parcours en mémoire car l'unité devient statiques
                 m_donnees.TAB_ESPACE.SupprimerEspacePion(ID_PION);
@@ -3023,8 +3024,8 @@ namespace vaoc
                                                                             listeCaseEspace[i].ID_CASE,
                                                                             listeCaseEspace[i].I_COUT);
                 }
-
-                Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
+                //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
 
                 perf = DateTime.Now - timeStart;
                 message = string.Format("RechercheEspace : nouveau et stockage en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);

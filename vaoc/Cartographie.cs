@@ -1583,7 +1583,8 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                     {
                         ligneParcours.Delete();
                     }
-                    Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
+                    //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                    //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
                 }
 
                 chemin = etoile.PathByNodes;
@@ -1608,7 +1609,8 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                         }
                         casePrecedente = ligneCase.ID_CASE;
                     }
-                    Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
+                    //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
+                    //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
                 }
             }
 

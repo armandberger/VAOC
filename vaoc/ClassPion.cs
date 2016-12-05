@@ -629,6 +629,25 @@ namespace vaoc
                 }
             }
 
+            public int vision
+            {
+                get
+                {
+                    Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
+                    if (null == ligneModelePion)
+                    {
+                        return -1;
+                    }
+                    if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    {
+                        return ligneModelePion.I_VISION_JOUR;
+                    }
+                    else
+                    {
+                        return ligneModelePion.I_VISION_NUIT;
+                    }
+                }
+            }
             /// <summary>
             /// Indique si le pion a un ennemi dans son cadre de vision
             /// </summary>
@@ -637,23 +656,10 @@ namespace vaoc
             public bool EnnemiObservable(Donnees.TAB_CASERow ligneCase)
             {
                 bool bEnnemiObservable = false;
-                int vision, visionPixel;
+                int visionPixel;
                 string requete;
                 int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
-                Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
-                if (null == ligneModelePion)
-                {
-                    return false;
-                }
-                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-                {
-                    vision = ligneModelePion.I_VISION_JOUR;
-                }
-                else
-                {
-                    vision = ligneModelePion.I_VISION_NUIT;
-                }
                 visionPixel = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
                 #region calcul du cadre de vision
@@ -678,6 +684,7 @@ namespace vaoc
                 requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                 Donnees.TAB_CASERow[] ligneCaseVues = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
 
+                Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
                 foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
                 {
                     if (this.estEnnemi(ligneCaseVue, ligneModelePion, true, true))

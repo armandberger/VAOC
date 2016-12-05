@@ -2864,7 +2864,7 @@ namespace vaoc
             AstarTerrain[] tableCoutsMouvementsTerrain;
             List<Donnees.TAB_CASERow> chemin;
             //Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
-            Donnees.TAB_PIONRow lignePionDestinataire;
+            Donnees.TAB_PIONRow lignePionDestinataire = null;
             Donnees.TAB_PIONRow lignePionNouveauDestinataire;
             double cout, coutHorsRoute;
 
@@ -2930,6 +2930,38 @@ namespace vaoc
                     int pos = 0;
                     while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;
 
+                    //on vérifie si l'unité ne croise pas son destinataire en visuel et qui aurait bougé
+                    if (lignePion.estMessager)
+                    {
+                        lignePionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
+                        if (null == lignePionDestinataire)
+                        {
+                            message = string.Format("{0}(ID={1}, ExecuterMouvementSansEffectif I pas de destinataire ID_ORDRE:{2})",
+                                lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE);
+                            LogFile.Notifier(message, out messageErreur);
+                            return false;
+                        }
+
+                        // Si le destinataire n'a pas bougé, inutile de changer
+                        if (lignePionDestinataire.ID_CASE != ligneOrdre.ID_CASE_DESTINATION)
+                        {
+                            Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionDestinataire.ID_CASE);
+                            if (Constantes.Distance(chemin[pos].I_X, chemin[pos].I_Y, ligneCaseNouvelleDestination.I_X, ligneCaseNouvelleDestination.I_Y) < lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                            {
+                                if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                                {
+                                    message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif changement en visuel: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
+                                    LogFile.Notifier(message);
+                                    return false;
+                                }
+                                pos = 0;
+                                ligneOrdre.ID_CASE_DESTINATION = lignePionDestinataire.ID_CASE;
+                                ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;//sinon le trajet recalculé ne passe pas obligatoirement par la case courante
+                                ligneOrdre.SetID_NOM_DESTINATIONNull();//première ville destinatrice du message, sans valeur maintenant
+                            }
+                        }
+                    }
+
                     //on ajoute, le cout qu'il a fallu pour arriver jusqu'à cette case
                     int coutCase = ligneModelePion.CoutCase(chemin[pos+1].ID_MODELE_TERRAIN);
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(chemin[pos+1].ID_MODELE_TERRAIN);
@@ -2976,10 +3008,10 @@ namespace vaoc
                     if (lignePion.estMessager)
                     {
                         //on vérifie qu'il y a bien un destinataire valable
-                        lignePionDestinataire= Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
-                        if (null==lignePionDestinataire)
+                        lignePionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
+                        if (null == lignePionDestinataire)
                         {
-                            message = string.Format("{0}(ID={1}, ExecuterMouvementSansEffectif pas de destinataire ID_ORDRE:{2})", 
+                            message = string.Format("{0}(ID={1}, ExecuterMouvementSansEffectif II pas de destinataire ID_ORDRE:{2})",
                                 lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE);
                             LogFile.Notifier(message, out messageErreur);
                             return false;

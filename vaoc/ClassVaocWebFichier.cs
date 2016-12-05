@@ -945,7 +945,7 @@ namespace vaoc
                                     "`B_FUITE_AU_COMBAT`, `B_REDITION_RAVITAILLEMENT`, `B_DEPOT`, `B_PONTONNIER`," +
                                     "`I_MATERIEL`, `I_RAVITAILLEMENT`, `I_NIVEAU_FORTIFICATION`, " +
                                     "`I_TOUR_CONVOI_CREE`, `ID_DEPOT_SOURCE`, `B_CAVALERIE_DE_LIGNE`, `B_CAVALERIE_LOURDE`, `B_GARDE`, `B_VIEILLE_GARDE`," +
-                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES` " +
+                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`" +
                                     ") VALUES " +
                                     "({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+
@@ -1002,7 +1002,8 @@ namespace vaoc
                                     bConvoi,
                                     bRenfort,//50
                                     bQG,
-                                    lignePion.IsI_SOLDATS_RAVITAILLESNull() ? 0 : lignePion.I_SOLDATS_RAVITAILLES
+                                    lignePion.IsI_SOLDATS_RAVITAILLESNull() ? 0 : lignePion.I_SOLDATS_RAVITAILLES,
+                                    lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE
                                     );
             return requete;
         }

@@ -3184,7 +3184,7 @@ namespace vaoc
                     0,//I_SOLDATS_RAVITAILLES,
                     0,//I_NB_HEURES_FORTIFICATION,
                     0,//I_NIVEAU_FORTIFICATION,
-                    0,//ID_PION_REMPLACE,
+                    -1,//ID_PION_REMPLACE,
                     0,//I_DUREE_HORS_COMBAT,
                     0,//I_TOUR_BLESSURE,
                     bBlesses,//B_BLESSES,

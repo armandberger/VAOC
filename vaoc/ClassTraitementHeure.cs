@@ -112,23 +112,14 @@ namespace vaoc
             #endregion
 
             #region transfert correctif
-            //i=0;
-            //while (i < Donnees.m_donnees.TAB_PION.Count)
-            //{
-            //    Donnees.TAB_PIONRow lignePionTransfert = Donnees.m_donnees.TAB_PION[i++];
-            //    if (lignePionTransfert.B_DETRUIT) { continue; }
-            //    if (2016 == lignePionTransfert.ID_PION_PROPRIETAIRE)
-            //    {
-            //        //grouchy vers Bessières
-            //        lignePionTransfert.TransfertPion(6);
-            //    }                
-            //}
+            /*
             Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(2016);
             Donnees.TAB_PIONRow lignePionNouveau = Donnees.m_donnees.TAB_PION.FindByID_PION(6);
             TransfertsDesliens(lignePionAncien, lignePionNouveau);
             Donnees.TAB_ROLERow ligneRole = Donnees.m_donnees.TAB_ROLE.FindByID_ROLE(8);
             ligneRole.ID_PION = 6;
             lignePionAncien.DetruirePion();
+            */
             #endregion
 
             //pour chaque phase

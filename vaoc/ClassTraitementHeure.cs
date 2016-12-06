@@ -1346,9 +1346,19 @@ namespace vaoc
                         else
                         {
                             //on envoit un message avec effet immédiat pour prévenir le joueur de l'arrivée de la troupe
-                            if (!ClassMessager.EnvoyerMessageImmediat(lignePionRenfort, ClassMessager.MESSAGES.MESSAGE_RENFORT))
+                            if (string.Empty == ligneRenfort.S_MESSAGE_ARRIVEE)
                             {
-                                return false;
+                                if (!ClassMessager.EnvoyerMessageImmediat(lignePionRenfort, ClassMessager.MESSAGES.MESSAGE_RENFORT))
+                                {
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                if (!ClassMessager.EnvoyerMessageImmediat(lignePionRenfort, ClassMessager.MESSAGES.MESSAGE_RENFORT, ligneRenfort.S_MESSAGE_ARRIVEE))
+                                {
+                                    return false;
+                                }
                             }
 
                         }

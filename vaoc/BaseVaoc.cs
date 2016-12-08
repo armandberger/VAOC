@@ -1290,6 +1290,12 @@ namespace vaoc
 
         internal bool SauvegarderPartie(string nomFichier)
         {
+            if (0 == TAB_JEU.Count)
+            {
+                //possible sur une nouvelle partie
+                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees);
+            }
+
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
             return Dal.SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, Donnees.m_donnees);
@@ -1306,6 +1312,12 @@ namespace vaoc
 
         private bool MiseAJourVersion()
         {
+            if (0 == TAB_JEU.Count)
+            {
+                //possible sur une nouvelle partie
+                return true;
+            }
+
             #region version 1
             if (TAB_JEU[0].I_VERSION < 2)
             {
@@ -1374,7 +1386,6 @@ namespace vaoc
                 #endregion
             }
             #endregion
-
 
             #region version 2
             if (TAB_JEU[0].I_VERSION < 3)

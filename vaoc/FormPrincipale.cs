@@ -96,15 +96,17 @@ namespace vaoc
             }
         }
 
-
         private void MiseAJourTitreFenetre()
         {
-            this.Text = String.Format("VAOC - {0} {1} {2} tour:{3} phase:{4}",
+            if (Donnees.m_donnees.TAB_JEU.Count > 0 && Donnees.m_donnees.TAB_PARTIE.Count > 0)
+            {
+                this.Text = String.Format("VAOC - {0} {1} {2} tour:{3} phase:{4}",
                 Donnees.m_donnees.TAB_JEU[0].S_NOM,
                 Donnees.m_donnees.TAB_PARTIE[0].S_NOM,
                 ClassMessager.DateHeure(false),
                 Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                 Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            }
         }
 
         #endregion
@@ -146,7 +148,7 @@ namespace vaoc
 
                 Correctifs();
 
-                if (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
+                if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
                     && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE.Length > 0)
                 {
                     //chargement du fichier graphique de la carte
@@ -1180,9 +1182,9 @@ namespace vaoc
             int iNbMeteoSuccessive = 0;
 
             //initialisation des données de la form
+            general.fichierCourant = curFileName;
             if (Donnees.m_donnees.TAB_JEU.Count > 0)
             {
-                general.fichierCourant = curFileName;
                 general.echelle = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                 general.ID_modele_terrain_deploiement = Donnees.m_donnees.TAB_JEU[0].ID_MODELE_TERRAIN_DEPLOIEMENT;
                 general.coutDeBase = Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE;
@@ -1375,10 +1377,6 @@ namespace vaoc
                 ligneJeu.I_OBJECTIF = general.objectifVictoire;
 
                 Donnees.m_donnees.TAB_JEU.AddTAB_JEURow(ligneJeu);
-                //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
-                int moisEnCours = ClassMessager.DateHeure().Month;
-                Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];
-                Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours];
 
                 Donnees.m_donnees.TAB_PARTIE.Clear();
                 Donnees.TAB_PARTIERow lignePartie = Donnees.m_donnees.TAB_PARTIE.NewTAB_PARTIERow();
@@ -1408,6 +1406,11 @@ namespace vaoc
                 lignePartie.I_NB_METEO_SUCCESSIVE = iNbMeteoSuccessive;
                 //lignePartie.SetID_VICTOIRENull();//BEA, à retirer
                 Donnees.m_donnees.TAB_PARTIE.AddTAB_PARTIERow(lignePartie);
+
+                //On determine l'heure de levée et de coucher du soleil d'après le mois en cours, le calcul se base sur les données de TAB_PARTIE
+                int moisEnCours = ClassMessager.DateHeure().Month;
+                Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];
+                Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours];
             }
         }
 
@@ -1555,7 +1558,7 @@ namespace vaoc
             }
             if (toolStripAffichierTopographie.CheckState == CheckState.Checked)
             {
-                if (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
+                if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
                     && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE.Length > 0)
                 {
                     if (File.Exists(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE))
@@ -1752,7 +1755,7 @@ namespace vaoc
             FormFondDeCarte fFondDeCarte = new FormFondDeCarte();
 
             //initialisation des données de la form
-            if (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
+            if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
                 && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE.Length > 0)
             {
                 fFondDeCarte.largeur = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;

@@ -942,7 +942,7 @@ namespace vaoc
                 Donnees.TAB_GRAPHISMERow ligneGraphisme = RechercheGraphisme(pixelColor);
 
                 //créer la nouvelle ligne dans m_tableModelesTerrains
-                int id_modeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null) + 1;
+                int id_modeleTerrain = (0 == m_tableModelesTerrains.Count) ? 0 : (int)m_tableModelesTerrains.Compute("Max(ID_MODELE_TERRAIN)", null) + 1;
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain =m_tableModelesTerrains.AddTAB_MODELE_TERRAINRow(
                     id_modeleTerrain,
                     fNouveauModeleTerrain.nomTerrain, //S_NOM

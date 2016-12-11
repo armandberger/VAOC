@@ -992,7 +992,8 @@ namespace vaoc
                     if ((defaite[0] > defaite[1] * 2 && defaite[0] > victoire[0]) || (defaite[1] > defaite[0] * 2 && defaite[1] > victoire[1]))
                     {
                         LogFile.Notifier("VictoireDefaite : fin de la partie, l'un des deux camps est définitivement battu.");
-                        bFinDePartie = true;
+                        LogFile.Notifier("VictoireDefaite : Mais on continue tant qu'un joueur ne s'avoue pas vaincu !");
+                        //bFinDePartie = true;
                     }
                 }
                 if (bFinDePartie)
@@ -2972,38 +2973,42 @@ namespace vaoc
                         }
                     }
 
-                    //on ajoute, le cout qu'il a fallu pour arriver jusqu'à cette case
-                    int coutCase = ligneModelePion.CoutCase(chemin[pos+1].ID_MODELE_TERRAIN);
-                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(chemin[pos+1].ID_MODELE_TERRAIN);
-
-                    // Si le coût est négatif ou nul, c'est que la case est intraversable, cela peut arriver si l'unité à prévue de passer un ponton qui a été détruit.
-                    // dans ce cas, il faut recalculer le trajet.
-                    if (coutCase <= 0)
+                    //Suite au recalcul le pion peut se retrouver sur la même case que le destinataire
+                    if (lignePion.ID_CASE != ligneOrdre.ID_CASE_DESTINATION)
                     {
-                        if (!EtablirCheminPratiquable(lignePion, ligneOrdre, ligneCaseDestination, ligneModelePion))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
+                        //on ajoute, le cout qu'il a fallu pour arriver jusqu'à cette case
+                        int coutCase = ligneModelePion.CoutCase(chemin[pos + 1].ID_MODELE_TERRAIN);
+                        Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(chemin[pos + 1].ID_MODELE_TERRAIN);
 
-                        lignePion.ID_CASE = chemin[pos+1].ID_CASE;
-
-                        if (chemin[pos+1].I_X == chemin[pos].I_X || chemin[pos+1].I_Y == chemin[pos].I_Y)
+                        // Si le coût est négatif ou nul, c'est que la case est intraversable, cela peut arriver si l'unité à prévue de passer un ponton qui a été détruit.
+                        // dans ce cas, il faut recalculer le trajet.
+                        if (coutCase <= 0)
                         {
-                            //ligne droite
-                            lignePion.I_DISTANCE_A_PARCOURIR += coutCase;
+                            if (!EtablirCheminPratiquable(lignePion, ligneOrdre, ligneCaseDestination, ligneModelePion))
+                            {
+                                return false;
+                            }
                         }
                         else
                         {
-                            //diagonale
-                            lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
-                        }
-                    }
 
-                    //si l'unité emprunte un gué, on envoie un message d'alerte
-                    if (!PassageSurGueOuPontDetruit(lignePion, ligneModeleTerrain)) { return false; }
+                            lignePion.ID_CASE = chemin[pos + 1].ID_CASE;
+
+                            if (chemin[pos + 1].I_X == chemin[pos].I_X || chemin[pos + 1].I_Y == chemin[pos].I_Y)
+                            {
+                                //ligne droite
+                                lignePion.I_DISTANCE_A_PARCOURIR += coutCase;
+                            }
+                            else
+                            {
+                                //diagonale
+                                lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
+                            }
+                        }
+
+                        //si l'unité emprunte un gué, on envoie un message d'alerte
+                        if (!PassageSurGueOuPontDetruit(lignePion, ligneModeleTerrain)) { return false; }
+                    }
                 }
 
                 //est on est arrivé à destination ?

@@ -1838,7 +1838,14 @@ namespace vaoc
 
                     decimal rapporDePerteUnite = (decimal)lignePionEnBataille.effectifTotal / effectifTotalDefenseur;
                     //en-dessous d'une certaine taille, une unité est détruite pour ne pas avoir à gérer de trop petites unités, sauf si ce n'est que de l'artillerie
-                    if (lignePionEnBataille.effectifTotal - (pertesEffectif * rapporDePerteUnite) < Constantes.CST_TAILLE_MINIMUM_UNITE)
+                    if ((pertesEffectif * rapporDePerteUnite)>=1 &&
+                        (
+                        ((lignePionEnBataille.I_INFANTERIE>0 || lignePionEnBataille.I_CAVALERIE>0) &&
+                        (lignePionEnBataille.effectifTotal - (pertesEffectif * rapporDePerteUnite) < Constantes.CST_TAILLE_MINIMUM_UNITE))
+                        ||
+                        ((lignePionEnBataille.I_INFANTERIE == 0 && lignePionEnBataille.I_CAVALERIE == 0 && lignePionEnBataille.I_ARTILLERIE>0) &&
+                        (lignePionEnBataille.effectifTotal - (pertesEffectif * rapporDePerteUnite) < 1))
+                        ))
                     {
                         //Message indiquant une unité détruite
                         pertesInfanterieTotal += lignePionEnBataille.I_INFANTERIE;

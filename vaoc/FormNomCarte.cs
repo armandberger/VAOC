@@ -80,6 +80,21 @@ namespace vaoc
                     textBoxNom.Text = ligneNomCarte.S_NOM;
                     textBoxIDNOM.Text = ligneNomCarte.ID_NOM.ToString();
                     this.buttonSupprimer.Enabled = true;
+
+                    //Mise à jour des prisonniers de la prison et des blessés de l'hopital
+                    IEnumerable<Donnees.TAB_PIONRow> requete =
+                        from pion in Donnees.m_donnees.TAB_PION
+                        where (!pion.IsID_LIEU_RATTACHEMENTNull() && pion.ID_LIEU_RATTACHEMENT == m_ID_NOM)
+                        orderby pion.ID_PION
+                        select pion;
+
+                    foreach (Donnees.TAB_PIONRow lignePion in requete)
+                    {
+                        if (lignePion.B_BLESSES)
+                            this.listBoxBlesses.Items.Add(lignePion);
+                        if (lignePion.B_PRISONNIERS)
+                            this.listBoxPrisonniers.Items.Add(lignePion);
+                    }
                 }
                 else
                 {

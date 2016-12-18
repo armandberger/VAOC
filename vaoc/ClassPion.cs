@@ -253,6 +253,14 @@ namespace vaoc
             }
 
             /// <summary>
+            /// Nom du pion avec effectifs pour afficher dans une liste (sur FormNomCarte)
+            /// </summary>
+            public string nomListeEffectifs
+            {
+                get { return string.Format("{0}:{1} - {2}i {3}c {4}a", ID_PION, S_NOM, I_INFANTERIE, I_CAVALERIE, I_ARTILLERIE); }
+            }
+            
+            /// <summary>
             /// effectif total du pion en tenant compte de la fatigue
             /// </summary>
             public int effectifTotal

@@ -6,6 +6,10 @@ using System.Drawing.Drawing2D;
 
 namespace WaocLib
 {
+    /// <summary>
+    /// Attention ! pour être utilisable la librairie WoacLob doit être compilée en "any CPU" et non x64, raison pas claire, du au mode de compilation de Visual Studio ?
+    /// Sinon j'ai l'erreur : Type 'WaocLib.VaocPictureBox' introuvable. Vérifiez que l'assembly qui contient ce type est référencé. Si ce type est un composant de votre projet de développement, assurez-vous que le projet a été créé comme il se doit à l'aide des paramètres de votre plateforme actuelle ou Any CPU.
+    /// </summary>
     public class VaocPictureBox : PictureBox
     {
         System.Drawing.Drawing2D.SmoothingMode m_smoothingMode;

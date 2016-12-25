@@ -776,13 +776,13 @@ namespace vaoc
                 m_listeCasesCoutNonMax.Clear();
             }
 
-            public Donnees.TAB_CASERow[]  ListeCasesNonCoutMax()
+            public Donnees.TAB_CASERow[] ListeCasesNonCoutMax()
             {
                 Donnees.TAB_CASERow[] listeCases = new TAB_CASERow[m_listeCasesCoutNonMax.Count];
                 int i = 0;
                 foreach (int index in m_listeCasesCoutNonMax)
                 {
-                    listeCases[i++]=this[index];
+                    listeCases[i++] = this[index];
                 }
                 return listeCases;
             }

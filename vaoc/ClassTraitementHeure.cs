@@ -48,7 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            Donnees.TAB_ORDRERow ligneOrdreDebug = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(1067);
+            AmeliorationsPerformances();
             
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
@@ -498,6 +498,190 @@ namespace vaoc
                 nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;//le nombre de phases peut juste différer au premier tour, pas aux suivants
             }
             return true;
+        }
+
+        private void AmeliorationsPerformances()
+        {
+            #region Backup des messages, ordres et pions détruits ou passés
+            int i = 0;
+            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
+            {
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+                if (!ligneMessage.IsI_TOUR_ARRIVEENull())
+                {
+                    Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
+                        ligneMessage.ID_MESSAGE,
+                        ligneMessage.ID_PION_EMETTEUR,
+                        ligneMessage.ID_PION_PROPRIETAIRE,
+                        ligneMessage.I_TYPE,
+                        ligneMessage.I_TOUR_ARRIVEE,
+                        ligneMessage.I_PHASE_ARRIVEE,
+                        ligneMessage.I_TOUR_DEPART,
+                        ligneMessage.I_PHASE_DEPART,
+                        ligneMessage.S_TEXTE,
+                        ligneMessage.I_INFANTERIE,
+                        ligneMessage.I_CAVALERIE,
+                        ligneMessage.I_ARTILLERIE,
+                        ligneMessage.I_FATIGUE,
+                        ligneMessage.I_MORAL,
+                        ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
+                        ligneMessage.ID_BATAILLE,
+                        ligneMessage.I_ZONE_BATAILLE,
+                        ligneMessage.I_RETRAITE,
+                        ligneMessage.B_DETRUIT,
+                        ligneMessage.ID_CASE,
+                        ligneMessage.ID_CASE_DEBUT,
+                        ligneMessage.ID_CASE_FIN,
+                        ligneMessage.I_NB_PHASES_MARCHE_JOUR,
+                        ligneMessage.I_NB_PHASES_MARCHE_NUIT,
+                        ligneMessage.I_NB_HEURES_COMBAT,
+                        ligneMessage.I_MATERIEL,
+                        ligneMessage.I_RAVITAILLEMENT,
+                        ligneMessage.I_SOLDATS_RAVITAILLES,
+                        ligneMessage.I_NB_HEURES_FORTIFICATION,
+                        ligneMessage.I_NIVEAU_FORTIFICATION,
+                        ligneMessage.I_DUREE_HORS_COMBAT,
+                        ligneMessage.I_TOUR_BLESSURE,
+                        ligneMessage.C_NIVEAU_DEPOT
+                        );
+                    ligneMessage.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_ORDRE.Count())
+            {
+                bool bdetruire = false;
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE[i];
+                if (!ligneOrdre.IsI_TOUR_FINNull() || ligneOrdre.IsID_PIONNull() || ligneOrdre.ID_PION < 0)
+                {
+                    bdetruire = true;
+                }
+                else
+                {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+                    if (lignePion.B_DETRUIT)
+                    {
+                        bdetruire = true;
+                    }
+                    if (bdetruire)
+                    {
+                        Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
+                        ligneOrdre.ID_ORDRE,
+                        ligneOrdre.ID_ORDRE_TRANSMIS,
+                        ligneOrdre.ID_ORDRE_SUIVANT,
+                        ligneOrdre.ID_ORDRE_WEB,
+                        ligneOrdre.I_ORDRE_TYPE,
+                        ligneOrdre.ID_PION,
+                        ligneOrdre.ID_CASE_DEPART,
+                        ligneOrdre.I_EFFECTIF_DEPART,
+                        ligneOrdre.ID_CASE_DESTINATION,
+                        ligneOrdre.ID_NOM_DESTINATION,
+                        ligneOrdre.I_EFFECTIF_DESTINATION,
+                        ligneOrdre.I_TOUR_DEBUT,
+                        ligneOrdre.I_PHASE_DEBUT,
+                        ligneOrdre.I_TOUR_FIN,
+                        ligneOrdre.I_PHASE_FIN,
+                        ligneOrdre.ID_MESSAGE,
+                        ligneOrdre.ID_DESTINATAIRE,
+                        ligneOrdre.ID_CIBLE,
+                        ligneOrdre.ID_DESTINATAIRE_CIBLE,
+                        ligneOrdre.ID_BATAILLE,
+                        ligneOrdre.I_ZONE_BATAILLE,
+                        ligneOrdre.I_HEURE_DEBUT,
+                        ligneOrdre.I_DUREE,
+                        ligneOrdre.I_ENGAGEMENT);
+                        ligneOrdre.Delete();
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+            }
+
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_PION.Count())
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                if (lignePion.B_DETRUIT && lignePion.estMessager)
+                {
+                    Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
+                        lignePion.ID_PION,
+                        lignePion.ID_MODELE_PION,
+                        lignePion.ID_PION_PROPRIETAIRE,
+                        lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
+                        lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
+                        lignePion.S_NOM,
+                        lignePion.I_INFANTERIE,
+                        lignePion.I_INFANTERIE_INITIALE,
+                        lignePion.I_CAVALERIE,
+                        lignePion.I_CAVALERIE_INITIALE,
+                        lignePion.I_ARTILLERIE,
+                        lignePion.I_ARTILLERIE_INITIALE,
+                        lignePion.I_FATIGUE,
+                        lignePion.I_MORAL,
+                        lignePion.I_MORAL_MAX,
+                        lignePion.I_EXPERIENCE,
+                        lignePion.I_TACTIQUE,
+                        lignePion.I_STRATEGIQUE,
+                        lignePion.C_NIVEAU_HIERARCHIQUE,
+                        lignePion.I_DISTANCE_A_PARCOURIR,
+                        lignePion.I_NB_PHASES_MARCHE_JOUR,
+                        lignePion.I_NB_PHASES_MARCHE_NUIT,
+                        lignePion.I_NB_HEURES_COMBAT,
+                        lignePion.ID_CASE,
+                        lignePion.I_TOUR_SANS_RAVITAILLEMENT,
+                        lignePion.ID_BATAILLE,
+                        lignePion.I_ZONE_BATAILLE,
+                        lignePion.I_TOUR_RETRAITE_RESTANT,
+                        lignePion.I_TOUR_FUITE_RESTANT,
+                        lignePion.B_DETRUIT,
+                        lignePion.B_FUITE_AU_COMBAT,
+                        lignePion.B_INTERCEPTION,
+                        lignePion.B_REDITION_RAVITAILLEMENT,
+                        lignePion.B_TELEPORTATION,
+                        lignePion.B_ENNEMI_OBSERVABLE,
+                        lignePion.I_MATERIEL,
+                        lignePion.I_RAVITAILLEMENT,
+                        lignePion.B_CAVALERIE_DE_LIGNE,
+                        lignePion.B_CAVALERIE_LOURDE,
+                        lignePion.B_GARDE,
+                        lignePion.B_VIEILLE_GARDE,
+                        lignePion.I_TOUR_CONVOI_CREE,
+                        lignePion.ID_DEPOT_SOURCE,
+                        lignePion.I_SOLDATS_RAVITAILLES,
+                        lignePion.I_NB_HEURES_FORTIFICATION,
+                        lignePion.I_NIVEAU_FORTIFICATION,
+                        lignePion.ID_PION_REMPLACE,
+                        lignePion.I_DUREE_HORS_COMBAT,
+                        lignePion.I_TOUR_BLESSURE,
+                        lignePion.B_BLESSES,
+                        lignePion.B_PRISONNIERS,
+                        lignePion.B_RENFORT,
+                        lignePion.ID_LIEU_RATTACHEMENT,
+                        lignePion.C_NIVEAU_DEPOT,
+                        lignePion.ID_PION_ESCORTE,
+                        lignePion.I_INFANTERIE_ESCORTE,
+                        lignePion.I_CAVALERIE_ESCORTE,
+                        lignePion.I_MATERIEL_ESCORTE);
+                    lignePion.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            Debug.WriteLine(string.Format("Après AmeliorationsPerformances #pions={0} #messages={1} #ordres={2}",
+                Donnees.m_donnees.TAB_PION.Count(),
+                Donnees.m_donnees.TAB_MESSAGE.Count(),
+                Donnees.m_donnees.TAB_ORDRE.Count()));
+            #endregion
         }
 
         private bool ExecuterMouvementEnParallele()

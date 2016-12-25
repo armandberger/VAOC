@@ -124,6 +124,12 @@
     <Compile Include="data\TableMOUVEMENT_COUT.cs" />
     <Compile Include="data\TablePCC_COUTS.cs" />
     <Compile Include="data\TablePION.cs" />
+    <Compile Include="FormMessageAncien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMessageAncien.Designer.cs">
+      <DependentUpon>FormMessageAncien.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormNomsPromus.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -321,6 +327,9 @@
     <Compile Include="InterfaceVaocWeb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormMessageAncien.resx">
+      <DependentUpon>FormMessageAncien.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormNomsPromus.resx">
       <DependentUpon>FormNomsPromus.cs</DependentUpon>
       <SubType>Designer</SubType>

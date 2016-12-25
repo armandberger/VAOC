@@ -168,10 +168,10 @@ namespace WaocLib
                     try
                     {
                         table.EndLoadData();
-                        Debug.WriteLine("Exception sur EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString());
                     }
                     catch (Exception e)
                     {
+                        Debug.WriteLine("Exception sur EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString() + " = " + e.Message);
                         derniereErreur = e;
                         bException = true;
                     }

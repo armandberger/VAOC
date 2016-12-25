@@ -74,6 +74,8 @@ namespace vaoc
             this.buttonSupprimerTout = new System.Windows.Forms.Button();
             this.comboBoxProprietaire = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
+            this.listBoxBlesses = new System.Windows.Forms.ListBox();
+            this.listBoxPrisonniers = new System.Windows.Forms.ListBox();
             this.groupBoxNom.SuspendLayout();
             this.groupBoxRenfort.SuspendLayout();
             this.SuspendLayout();
@@ -91,15 +93,15 @@ namespace vaoc
             "En bas à gauche",
             "A gauche",
             "En Haut à gauche"});
-            this.comboBoxPosition.Location = new System.Drawing.Point(378, 62);
+            this.comboBoxPosition.Location = new System.Drawing.Point(535, 62);
             this.comboBoxPosition.Name = "comboBoxPosition";
-            this.comboBoxPosition.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxPosition.Size = new System.Drawing.Size(212, 21);
             this.comboBoxPosition.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(272, 62);
+            this.label1.Location = new System.Drawing.Point(429, 62);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(44, 13);
             this.label1.TabIndex = 5;
@@ -108,7 +110,7 @@ namespace vaoc
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(175, 453);
+            this.buttonAnnuler.Location = new System.Drawing.Point(177, 518);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 7;
@@ -118,7 +120,7 @@ namespace vaoc
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(13, 453);
+            this.buttonValider.Location = new System.Drawing.Point(15, 518);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 5;
@@ -128,7 +130,7 @@ namespace vaoc
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(272, 26);
+            this.label2.Location = new System.Drawing.Point(429, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
             this.label2.TabIndex = 7;
@@ -145,10 +147,10 @@ namespace vaoc
             // 
             // textBoxNom
             // 
-            this.textBoxNom.Location = new System.Drawing.Point(378, 29);
+            this.textBoxNom.Location = new System.Drawing.Point(535, 29);
             this.textBoxNom.MaxLength = 255;
             this.textBoxNom.Name = "textBoxNom";
-            this.textBoxNom.Size = new System.Drawing.Size(121, 20);
+            this.textBoxNom.Size = new System.Drawing.Size(212, 20);
             this.textBoxNom.TabIndex = 0;
             // 
             // comboBoxPolice
@@ -156,13 +158,13 @@ namespace vaoc
             this.comboBoxPolice.FormattingEnabled = true;
             this.comboBoxPolice.Location = new System.Drawing.Point(120, 62);
             this.comboBoxPolice.Name = "comboBoxPolice";
-            this.comboBoxPolice.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxPolice.Size = new System.Drawing.Size(286, 21);
             this.comboBoxPolice.TabIndex = 1;
             // 
             // buttonSupprimer
             // 
             this.buttonSupprimer.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimer.Location = new System.Drawing.Point(94, 453);
+            this.buttonSupprimer.Location = new System.Drawing.Point(96, 518);
             this.buttonSupprimer.Name = "buttonSupprimer";
             this.buttonSupprimer.Size = new System.Drawing.Size(75, 23);
             this.buttonSupprimer.TabIndex = 6;
@@ -253,7 +255,7 @@ namespace vaoc
             // 
             // textBoxVictoire
             // 
-            this.textBoxVictoire.Location = new System.Drawing.Point(389, 35);
+            this.textBoxVictoire.Location = new System.Drawing.Point(452, 39);
             this.textBoxVictoire.MaxLength = 5;
             this.textBoxVictoire.Name = "textBoxVictoire";
             this.textBoxVictoire.Size = new System.Drawing.Size(60, 20);
@@ -264,7 +266,7 @@ namespace vaoc
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(280, 35);
+            this.label9.Location = new System.Drawing.Point(343, 39);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(74, 13);
             this.label9.TabIndex = 19;
@@ -292,7 +294,7 @@ namespace vaoc
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(271, 26);
+            this.label11.Location = new System.Drawing.Point(421, 27);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(65, 13);
             this.label11.TabIndex = 22;
@@ -319,7 +321,7 @@ namespace vaoc
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(270, 55);
+            this.label14.Location = new System.Drawing.Point(420, 56);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(66, 13);
             this.label14.TabIndex = 25;
@@ -328,7 +330,7 @@ namespace vaoc
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(271, 82);
+            this.label15.Location = new System.Drawing.Point(421, 83);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(65, 13);
             this.label15.TabIndex = 26;
@@ -348,9 +350,9 @@ namespace vaoc
             "En bas à gauche",
             "A gauche",
             "En Haut à gauche"});
-            this.comboBoxModeleRenfort.Location = new System.Drawing.Point(375, 18);
+            this.comboBoxModeleRenfort.Location = new System.Drawing.Point(525, 19);
             this.comboBoxModeleRenfort.Name = "comboBoxModeleRenfort";
-            this.comboBoxModeleRenfort.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxModeleRenfort.Size = new System.Drawing.Size(214, 21);
             this.comboBoxModeleRenfort.TabIndex = 1;
             // 
             // groupBoxNom
@@ -365,7 +367,7 @@ namespace vaoc
             this.groupBoxNom.Controls.Add(this.label1);
             this.groupBoxNom.Location = new System.Drawing.Point(11, 107);
             this.groupBoxNom.Name = "groupBoxNom";
-            this.groupBoxNom.Size = new System.Drawing.Size(527, 100);
+            this.groupBoxNom.Size = new System.Drawing.Size(753, 100);
             this.groupBoxNom.TabIndex = 1;
             this.groupBoxNom.TabStop = false;
             this.groupBoxNom.Text = "Nom";
@@ -391,16 +393,16 @@ namespace vaoc
             this.groupBoxRenfort.Controls.Add(this.label14);
             this.groupBoxRenfort.Controls.Add(this.label11);
             this.groupBoxRenfort.Controls.Add(this.label12);
-            this.groupBoxRenfort.Location = new System.Drawing.Point(13, 252);
+            this.groupBoxRenfort.Location = new System.Drawing.Point(15, 317);
             this.groupBoxRenfort.Name = "groupBoxRenfort";
-            this.groupBoxRenfort.Size = new System.Drawing.Size(524, 178);
+            this.groupBoxRenfort.Size = new System.Drawing.Size(749, 178);
             this.groupBoxRenfort.TabIndex = 4;
             this.groupBoxRenfort.TabStop = false;
             this.groupBoxRenfort.Text = "Renfort";
             // 
             // textBoxRenfortRavitaillement
             // 
-            this.textBoxRenfortRavitaillement.Location = new System.Drawing.Point(376, 113);
+            this.textBoxRenfortRavitaillement.Location = new System.Drawing.Point(526, 114);
             this.textBoxRenfortRavitaillement.MaxLength = 5;
             this.textBoxRenfortRavitaillement.Name = "textBoxRenfortRavitaillement";
             this.textBoxRenfortRavitaillement.Size = new System.Drawing.Size(60, 20);
@@ -410,7 +412,7 @@ namespace vaoc
             // 
             // textBoxRenfortMateriel
             // 
-            this.textBoxRenfortMateriel.Location = new System.Drawing.Point(375, 84);
+            this.textBoxRenfortMateriel.Location = new System.Drawing.Point(525, 85);
             this.textBoxRenfortMateriel.MaxLength = 5;
             this.textBoxRenfortMateriel.Name = "textBoxRenfortMateriel";
             this.textBoxRenfortMateriel.Size = new System.Drawing.Size(60, 20);
@@ -420,7 +422,7 @@ namespace vaoc
             // 
             // textBoxRenfortCavaliers
             // 
-            this.textBoxRenfortCavaliers.Location = new System.Drawing.Point(375, 55);
+            this.textBoxRenfortCavaliers.Location = new System.Drawing.Point(525, 56);
             this.textBoxRenfortCavaliers.MaxLength = 5;
             this.textBoxRenfortCavaliers.Name = "textBoxRenfortCavaliers";
             this.textBoxRenfortCavaliers.Size = new System.Drawing.Size(60, 20);
@@ -474,13 +476,13 @@ namespace vaoc
             "En Haut à gauche"});
             this.comboBoxPionPropriétaire.Location = new System.Drawing.Point(116, 136);
             this.comboBoxPionPropriétaire.Name = "comboBoxPionPropriétaire";
-            this.comboBoxPionPropriétaire.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxPionPropriétaire.Size = new System.Drawing.Size(286, 21);
             this.comboBoxPionPropriétaire.TabIndex = 8;
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(271, 82);
+            this.label19.Location = new System.Drawing.Point(421, 83);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(61, 13);
             this.label19.TabIndex = 31;
@@ -489,7 +491,7 @@ namespace vaoc
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(271, 113);
+            this.label18.Location = new System.Drawing.Point(421, 114);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(93, 13);
             this.label18.TabIndex = 30;
@@ -527,7 +529,7 @@ namespace vaoc
             // checkBoxHopital
             // 
             this.checkBoxHopital.AutoSize = true;
-            this.checkBoxHopital.Location = new System.Drawing.Point(283, 213);
+            this.checkBoxHopital.Location = new System.Drawing.Point(438, 216);
             this.checkBoxHopital.Name = "checkBoxHopital";
             this.checkBoxHopital.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxHopital.Size = new System.Drawing.Size(59, 17);
@@ -538,7 +540,7 @@ namespace vaoc
             // buttonSupprimerTout
             // 
             this.buttonSupprimerTout.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimerTout.Location = new System.Drawing.Point(311, 453);
+            this.buttonSupprimerTout.Location = new System.Drawing.Point(540, 518);
             this.buttonSupprimerTout.Name = "buttonSupprimerTout";
             this.buttonSupprimerTout.Size = new System.Drawing.Size(224, 23);
             this.buttonSupprimerTout.TabIndex = 20;
@@ -550,19 +552,39 @@ namespace vaoc
             // 
             this.comboBoxProprietaire.DisplayMember = "nomListe";
             this.comboBoxProprietaire.FormattingEnabled = true;
-            this.comboBoxProprietaire.Location = new System.Drawing.Point(387, 66);
+            this.comboBoxProprietaire.Location = new System.Drawing.Point(450, 70);
             this.comboBoxProprietaire.Name = "comboBoxProprietaire";
-            this.comboBoxProprietaire.Size = new System.Drawing.Size(123, 21);
+            this.comboBoxProprietaire.Size = new System.Drawing.Size(212, 21);
             this.comboBoxProprietaire.TabIndex = 32;
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(280, 74);
+            this.label20.Location = new System.Drawing.Point(343, 78);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(60, 13);
             this.label20.TabIndex = 33;
             this.label20.Text = "Propriétaire";
+            // 
+            // listBoxBlesses
+            // 
+            this.listBoxBlesses.DisplayMember = "nomListeEffectifs";
+            this.listBoxBlesses.FormattingEnabled = true;
+            this.listBoxBlesses.HorizontalScrollbar = true;
+            this.listBoxBlesses.Location = new System.Drawing.Point(504, 213);
+            this.listBoxBlesses.Name = "listBoxBlesses";
+            this.listBoxBlesses.Size = new System.Drawing.Size(260, 95);
+            this.listBoxBlesses.TabIndex = 34;
+            // 
+            // listBoxPrisonniers
+            // 
+            this.listBoxPrisonniers.DisplayMember = "nomListeEffectifs";
+            this.listBoxPrisonniers.FormattingEnabled = true;
+            this.listBoxPrisonniers.HorizontalScrollbar = true;
+            this.listBoxPrisonniers.Location = new System.Drawing.Point(131, 216);
+            this.listBoxPrisonniers.Name = "listBoxPrisonniers";
+            this.listBoxPrisonniers.Size = new System.Drawing.Size(286, 95);
+            this.listBoxPrisonniers.TabIndex = 35;
             // 
             // FormNomCarte
             // 
@@ -570,7 +592,9 @@ namespace vaoc
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonAnnuler;
-            this.ClientSize = new System.Drawing.Size(547, 486);
+            this.ClientSize = new System.Drawing.Size(776, 553);
+            this.Controls.Add(this.listBoxPrisonniers);
+            this.Controls.Add(this.listBoxBlesses);
             this.Controls.Add(this.label20);
             this.Controls.Add(this.comboBoxProprietaire);
             this.Controls.Add(this.buttonSupprimerTout);
@@ -655,5 +679,7 @@ namespace vaoc
         private System.Windows.Forms.Button buttonSupprimerTout;
         private System.Windows.Forms.ComboBox comboBoxProprietaire;
         private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.ListBox listBoxBlesses;
+        private System.Windows.Forms.ListBox listBoxPrisonniers;
     }
 }

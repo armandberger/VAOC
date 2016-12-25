@@ -193,21 +193,21 @@ namespace vaoc
             Donnees.m_donnees.TAB_PCC_COUTS.Clear();
             Donnees.m_donnees.TAB_PCC_VILLES_INUTILE.Clear();
              * */
-             /*
-            int i = 0;
-            while (i< Donnees.m_donnees.TAB_MESSAGE.Count())
-            {
-                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
-                if (ligneMessage.ID_PION_EMETTEUR == 3389 && ligneMessage.ID_MESSAGE > 5927)
-                {
-                    ligneMessage.Delete();
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            */
+            /*
+           int i = 0;
+           while (i< Donnees.m_donnees.TAB_MESSAGE.Count())
+           {
+               Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+               if (ligneMessage.ID_PION_EMETTEUR == 3389 && ligneMessage.ID_MESSAGE > 5927)
+               {
+                   ligneMessage.Delete();
+               }
+               else
+               {
+                   i++;
+               }
+           }
+           */
             #endregion
 
             foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
@@ -1450,6 +1450,10 @@ namespace vaoc
                 m_modification = true;
                 Donnees.m_donnees.TAB_METEO.Clear();
                 Donnees.m_donnees.TAB_METEO.Merge(fMeteo.tableMeteo, false);
+                if (Donnees.m_donnees.TAB_PARTIE[0].IsID_METEONull() && Donnees.m_donnees.TAB_METEO.Count > 0)
+                {
+                    Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = Donnees.m_donnees.TAB_METEO[0].ID_METEO;
+                }
             }
         }
 
@@ -2244,7 +2248,6 @@ namespace vaoc
                 Donnees.m_donnees.TAB_MESSAGE.Clear();
                 Donnees.m_donnees.TAB_MESSAGE.Merge(fMessages.tableMessage, false);
             }
-
         }
 
         private void testsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -3350,6 +3353,19 @@ namespace vaoc
                         ligneNomCarte.SetID_PION_PROPRIETAIRE_RENFORTNull();
                     }
                 }
+            }
+        }
+
+        private void messagesAnciensToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormMessageAncien fMessagesAncien = new FormMessageAncien();
+
+            fMessagesAncien.tableMessage = Donnees.m_donnees.TAB_MESSAGE_ANCIEN;
+            if (DialogResult.OK == fMessagesAncien.ShowDialog())
+            {
+                m_modification = true;
+                Donnees.m_donnees.TAB_MESSAGE_ANCIEN.Clear();
+                Donnees.m_donnees.TAB_MESSAGE_ANCIEN.Merge(fMessagesAncien.tableMessage, false);
             }
         }
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Threading;
 using WaocLib;
 
 namespace vaoc
@@ -23,7 +25,7 @@ namespace vaoc
 
     class ClassHPAStarCreation
     {
-        #region Fields
+        #region Donnees
         private const int CST_LGPCC = 5;//longueur limite pour laquelle on ajoute deux points de sortie pour le PCC
         private AStar m_etoile = new AStar();
         private int m_idTrajet;
@@ -35,6 +37,7 @@ namespace vaoc
         private int m_etape;//etape de traitement
         private int m_tailleBloc;
         private System.ComponentModel.BackgroundWorker m_travailleur=null;
+        private List<Task<bool>> m_tasks = new List<Task<bool>>();
         #endregion
 
         #region Events
@@ -146,16 +149,17 @@ namespace vaoc
                                 //Calcul des points de frontière du bloc
                                 travailleur.ReportProgress(0, new HPACreationStatut(-1, -1, "Points dans les blocs"));//toujours zero durant le traitement, car affichage basé differement d'un pourcentage
                                 if (!this.CréationsPointsPCCBloc(m_sous_traitement, m_traitement)) { return false; }
+                                m_sous_traitement++;
                                 break;
                             case 1:
                                 //Calcul des PCC entre les points de frontière du bloc
                                 travailleur.ReportProgress(0, new HPACreationStatut(-1, -1, "Calcul des chemins dans les blocs"));//toujours zero durant le traitement, car affichage basé differement d'un pourcentage
-                                if (!this.CalculCheminPCCBloc(m_sous_traitement, m_traitement)) { return false; }
+                                if (!this.CalculCheminPCCBloc(m_sous_traitement++, m_traitement)) { return false; }
+                                //if (!this.CalculCheminPCCBlocParallele(ref m_sous_traitement)) { return false; }
                                 break;
                             default:
                                 throw new Exception("TraitementPCC : On essaye de traiter une étape inexistante !");
                         }
-                        m_sous_traitement++;
                     }
                     else
                     {
@@ -442,6 +446,30 @@ namespace vaoc
             return true;
         }
 
+        private bool CalculCheminPCCBlocParallele(ref int iAvance)
+        {
+            int nbTasks = Math.Min(100, m_nbBlocsHorizontaux - iAvance); // pas plus de 100 tâches à la fois
+            for (int k = 0; k < nbTasks; k++)
+            {
+                int XBloc = m_sous_traitement + k;
+                int YBloc = m_traitement;
+                m_tasks.Add(Task<bool>.Factory.StartNew(() =>
+                {
+                    return CalculCheminPCCBloc(XBloc, YBloc);
+                }));
+            }
+            Task.WaitAll(m_tasks.ToArray());
+            foreach (Task<bool> tache in m_tasks)
+            {
+                if (!tache.Result)
+                {
+                    return false;
+                }
+            }
+            iAvance += nbTasks;
+            return true;
+        }
+
         /// <summary>
         /// Calcul de tous les chemins entre les points de frontière du bloc et des coûts de parcours entre chaque point
         /// </summary>
@@ -450,6 +478,7 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         private bool CalculCheminPCCBloc(int xBloc, int yBloc)
         {
+            Debug.WriteLine(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
             return CalculCheminPCCBloc(xBloc, yBloc, false);
         }
 
@@ -483,7 +512,7 @@ namespace vaoc
                         {
                         //    j++;//pas de trajets entre deux points sur la même ligne
                         //    continue;
-                            Debug.WriteLine("meme ligne");
+                            //Debug.WriteLine("meme ligne");
                         }
                         string requete = string.Format("ID_CASE_DEBUT={0} AND ID_CASE_FIN={1} AND I_BLOCX={2} AND I_BLOCY={3}",
                             ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, xBloc, yBloc);
@@ -501,6 +530,8 @@ namespace vaoc
                         ClassTraitementHeure traitementtest = new ClassTraitementHeure();
                         Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         timeStart = DateTime.Now;
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
                         if (!m_etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                         {
                             LogFile.Notifier(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi ({8},{9})",
@@ -542,13 +573,15 @@ namespace vaoc
                             //}
                             //LogFile.Notifier(string.Format("trajet cout={0} #noeuds={1}", m_etoile.CoutGlobal, trajet.Length));
                         }
+                        Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         j++;
                     }
                 }
             }
             catch (Exception e)
             {
-                LogFile.Notifier("CalculCheminPCCBloc : exception =" + e.Message);
+                LogFile.Notifier("CalculCheminPCCBloc : exception =" + e.Message + " : " + e.StackTrace);
                 return false;
             }
             return true;

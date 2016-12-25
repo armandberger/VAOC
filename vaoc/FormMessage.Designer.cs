@@ -30,10 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.dataGridViewMessages = new System.Windows.Forms.DataGridView();
-            this.tABMESSAGEBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataSetCoutDonnees = new vaoc.Donnees();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
-            this.buttonValider = new System.Windows.Forms.Button();
             this.iDMESSAGEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONEMETTEURDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONPROPRIETAIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,6 +63,10 @@
             this.iDUREEHORSCOMBATDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iTOURBLESSUREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tABMESSAGEBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSetCoutDonnees = new vaoc.Donnees();
+            this.buttonAnnuler = new System.Windows.Forms.Button();
+            this.buttonValider = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMessages)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMESSAGEBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -116,36 +116,6 @@
             this.dataGridViewMessages.Name = "dataGridViewMessages";
             this.dataGridViewMessages.Size = new System.Drawing.Size(615, 143);
             this.dataGridViewMessages.TabIndex = 11;
-            // 
-            // tABMESSAGEBindingSource
-            // 
-            this.tABMESSAGEBindingSource.DataMember = "TAB_MESSAGE";
-            this.tABMESSAGEBindingSource.DataSource = this.dataSetCoutDonnees;
-            // 
-            // dataSetCoutDonnees
-            // 
-            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
-            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // buttonAnnuler
-            // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(187, 250);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 10;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
-            // 
-            // buttonValider
-            // 
-            this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(53, 250);
-            this.buttonValider.Name = "buttonValider";
-            this.buttonValider.Size = new System.Drawing.Size(75, 23);
-            this.buttonValider.TabIndex = 9;
-            this.buttonValider.Text = "Valider";
-            this.buttonValider.UseVisualStyleBackColor = true;
             // 
             // iDMESSAGEDataGridViewTextBoxColumn
             // 
@@ -345,6 +315,36 @@
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn.HeaderText = "C_NIVEAU_DEPOT";
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn.Name = "cNIVEAUDEPOTDataGridViewTextBoxColumn";
             // 
+            // tABMESSAGEBindingSource
+            // 
+            this.tABMESSAGEBindingSource.DataMember = "TAB_MESSAGE";
+            this.tABMESSAGEBindingSource.DataSource = this.dataSetCoutDonnees;
+            // 
+            // dataSetCoutDonnees
+            // 
+            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
+            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // buttonAnnuler
+            // 
+            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonAnnuler.Location = new System.Drawing.Point(187, 250);
+            this.buttonAnnuler.Name = "buttonAnnuler";
+            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnnuler.TabIndex = 10;
+            this.buttonAnnuler.Text = "Annuler";
+            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            // 
+            // buttonValider
+            // 
+            this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonValider.Location = new System.Drawing.Point(53, 250);
+            this.buttonValider.Name = "buttonValider";
+            this.buttonValider.Size = new System.Drawing.Size(75, 23);
+            this.buttonValider.TabIndex = 9;
+            this.buttonValider.Text = "Valider";
+            this.buttonValider.UseVisualStyleBackColor = true;
+            // 
             // FormMessage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -355,6 +355,7 @@
             this.Controls.Add(this.buttonValider);
             this.Name = "FormMessage";
             this.Text = "FormMessage";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormMessage_Load);
             this.Resize += new System.EventHandler(this.FormMessage_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMessages)).EndInit();

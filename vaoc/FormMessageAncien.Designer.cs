@@ -354,7 +354,8 @@
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.buttonValider);
             this.Name = "FormMessageAncien";
-            this.Text = "FormMessageAncien";
+            this.Text = "FormMessageAncien - Messages déjà reçus";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormMessageAncien_Load);
             this.Resize += new System.EventHandler(this.FormMessageAncien_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewMessages)).EndInit();

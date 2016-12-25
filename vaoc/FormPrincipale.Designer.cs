@@ -69,8 +69,14 @@ namespace vaoc
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panelImage = new System.Windows.Forms.Panel();
+            this.ImageCarte = new WaocLib.VaocPictureBox();
             this.menuPrincipal = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.fichiersRecentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -84,6 +90,7 @@ namespace vaoc
             this.fondDeCarteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.carteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hPAStarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pontsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.utilisateursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rolesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nomsDesLeadesPromusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,6 +103,10 @@ namespace vaoc
             this.phrasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bataillesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mEssagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.pionsAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ordresAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.messagesAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.heureSuivanteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creationInternetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -109,16 +120,15 @@ namespace vaoc
             this.statistiquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripCarte = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.toolStripAfficherVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripAfficherUnites = new System.Windows.Forms.ToolStripButton();
             this.toolStripAfficherQG = new System.Windows.Forms.ToolStripButton();
             this.toolStripAfficherBatailles = new System.Windows.Forms.ToolStripButton();
             this.toolStripAffichierTopographie = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripZoomPlus = new System.Windows.Forms.ToolStripButton();
             this.toolStripZoomMoins = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripPlusCourtChemin = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPontEndommage = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReparerPont = new System.Windows.Forms.ToolStripButton();
@@ -126,13 +136,7 @@ namespace vaoc
             this.toolStripButtonConstruirePonton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajets = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
-            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ImageCarte = new WaocLib.VaocPictureBox();
-            this.pontsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -140,9 +144,9 @@ namespace vaoc
             this.panelInformation.SuspendLayout();
             this.panelTestPlusCourtChemin.SuspendLayout();
             this.panelImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.menuPrincipal.SuspendLayout();
             this.toolStripCarte.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog
@@ -541,6 +545,20 @@ namespace vaoc
             this.panelImage.Size = new System.Drawing.Size(386, 521);
             this.panelImage.TabIndex = 3;
             // 
+            // ImageCarte
+            // 
+            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
+            this.ImageCarte.Name = "ImageCarte";
+            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
+            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
+            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+            this.ImageCarte.TabIndex = 3;
+            this.ImageCarte.TabStop = false;
+            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
+            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
+            // 
             // menuPrincipal
             // 
             this.menuPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -569,6 +587,56 @@ namespace vaoc
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "&Fichier";
+            // 
+            // nouveauToolStripMenuItem
+            // 
+            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
+            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
+            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.nouveauToolStripMenuItem.Text = "&Nouveau";
+            this.nouveauToolStripMenuItem.Click += new System.EventHandler(this.nouveauToolStripMenuItem_Click);
+            // 
+            // ouvrirToolStripMenuItem
+            // 
+            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
+            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
+            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
+            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
+            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.saveToolStripMenuItem.Text = "&Sauvegarder";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveasToolStripMenuItem
+            // 
+            this.saveasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveasToolStripMenuItem.Image")));
+            this.saveasToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
+            this.saveasToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.saveasToolStripMenuItem.Text = "s&Auvegarder Sous..";
+            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
+            // 
+            // imprimerToolStripMenuItem
+            // 
+            this.imprimerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("imprimerToolStripMenuItem.Image")));
+            this.imprimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
+            this.imprimerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.imprimerToolStripMenuItem.Text = "&Imprimer";
+            this.imprimerToolStripMenuItem.Click += new System.EventHandler(this.imprimerToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -616,7 +684,11 @@ namespace vaoc
             this.ordresToolStripMenuItem,
             this.phrasesToolStripMenuItem,
             this.bataillesToolStripMenuItem,
-            this.mEssagesToolStripMenuItem});
+            this.mEssagesToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.pionsAnciensToolStripMenuItem,
+            this.ordresAnciensToolStripMenuItem,
+            this.messagesAnciensToolStripMenuItem});
             this.ParametrageToolStripMenuItem.Name = "ParametrageToolStripMenuItem";
             this.ParametrageToolStripMenuItem.Size = new System.Drawing.Size(86, 20);
             this.ParametrageToolStripMenuItem.Text = "&Paramétrage";
@@ -676,6 +748,13 @@ namespace vaoc
             this.hPAStarToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.hPAStarToolStripMenuItem.Text = "&HPAStar";
             this.hPAStarToolStripMenuItem.Click += new System.EventHandler(this.hPAStarToolStripMenuItem_Click);
+            // 
+            // pontsToolStripMenuItem
+            // 
+            this.pontsToolStripMenuItem.Name = "pontsToolStripMenuItem";
+            this.pontsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.pontsToolStripMenuItem.Text = "Ponts";
+            this.pontsToolStripMenuItem.Click += new System.EventHandler(this.pontsToolStripMenuItem_Click);
             // 
             // utilisateursToolStripMenuItem
             // 
@@ -760,6 +839,32 @@ namespace vaoc
             this.mEssagesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.mEssagesToolStripMenuItem.Text = "M&Essages";
             this.mEssagesToolStripMenuItem.Click += new System.EventHandler(this.mEssagesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(239, 6);
+            // 
+            // pionsAnciensToolStripMenuItem
+            // 
+            this.pionsAnciensToolStripMenuItem.Name = "pionsAnciensToolStripMenuItem";
+            this.pionsAnciensToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.pionsAnciensToolStripMenuItem.Text = "Pions Anciens";
+            this.pionsAnciensToolStripMenuItem.Click += new System.EventHandler(this.pionsAnciensToolStripMenuItem_Click);
+            // 
+            // ordresAnciensToolStripMenuItem
+            // 
+            this.ordresAnciensToolStripMenuItem.Name = "ordresAnciensToolStripMenuItem";
+            this.ordresAnciensToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.ordresAnciensToolStripMenuItem.Text = "Ordres Anciens";
+            this.ordresAnciensToolStripMenuItem.Click += new System.EventHandler(this.ordresAnciensToolStripMenuItem_Click);
+            // 
+            // messagesAnciensToolStripMenuItem
+            // 
+            this.messagesAnciensToolStripMenuItem.Name = "messagesAnciensToolStripMenuItem";
+            this.messagesAnciensToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.messagesAnciensToolStripMenuItem.Text = "Messages Anciens";
+            this.messagesAnciensToolStripMenuItem.Click += new System.EventHandler(this.messagesAnciensToolStripMenuItem_Click);
             // 
             // actionsToolStripMenuItem
             // 
@@ -880,24 +985,6 @@ namespace vaoc
             this.toolStripCarte.TabIndex = 6;
             this.toolStripCarte.Text = "Barre d\'outils";
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // backgroundTraitement
-            // 
-            this.backgroundTraitement.WorkerReportsProgress = true;
-            this.backgroundTraitement.WorkerSupportsCancellation = true;
-            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
-            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
-            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
-            // 
             // toolStripAfficherVilles
             // 
             this.toolStripAfficherVilles.CheckOnClick = true;
@@ -955,6 +1042,11 @@ namespace vaoc
             this.toolStripAffichierTopographie.Text = "voir carte topographique";
             this.toolStripAffichierTopographie.Click += new System.EventHandler(this.toolStripButtonAffichierTopographie_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripZoomPlus
             // 
             this.toolStripZoomPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -976,6 +1068,11 @@ namespace vaoc
             this.toolStripZoomMoins.Tag = "Zoom -";
             this.toolStripZoomMoins.Text = "Zoom -";
             this.toolStripZoomMoins.Click += new System.EventHandler(this.toolStripButtonZoomMoins_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripPlusCourtChemin
             // 
@@ -1053,76 +1150,13 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles.Text = "voir les trajets entre villes";
             this.toolStripButtonTrajetsVilles.Click += new System.EventHandler(this.toolStripButtonTrajetsVilles_Click);
             // 
-            // nouveauToolStripMenuItem
+            // backgroundTraitement
             // 
-            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
-            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
-            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.nouveauToolStripMenuItem.Text = "&Nouveau";
-            this.nouveauToolStripMenuItem.Click += new System.EventHandler(this.nouveauToolStripMenuItem_Click);
-            // 
-            // ouvrirToolStripMenuItem
-            // 
-            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
-            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
-            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
-            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
-            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.saveToolStripMenuItem.Text = "&Sauvegarder";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveasToolStripMenuItem
-            // 
-            this.saveasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveasToolStripMenuItem.Image")));
-            this.saveasToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-            this.saveasToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.saveasToolStripMenuItem.Text = "s&Auvegarder Sous..";
-            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
-            // 
-            // imprimerToolStripMenuItem
-            // 
-            this.imprimerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("imprimerToolStripMenuItem.Image")));
-            this.imprimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
-            this.imprimerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.imprimerToolStripMenuItem.Text = "&Imprimer";
-            this.imprimerToolStripMenuItem.Click += new System.EventHandler(this.imprimerToolStripMenuItem_Click);
-            // 
-            // ImageCarte
-            // 
-            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
-            this.ImageCarte.Name = "ImageCarte";
-            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
-            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
-            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            this.ImageCarte.TabIndex = 3;
-            this.ImageCarte.TabStop = false;
-            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
-            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
-            // 
-            // pontsToolStripMenuItem
-            // 
-            this.pontsToolStripMenuItem.Name = "pontsToolStripMenuItem";
-            this.pontsToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.pontsToolStripMenuItem.Text = "Ponts";
-            this.pontsToolStripMenuItem.Click += new System.EventHandler(this.pontsToolStripMenuItem_Click);
+            this.backgroundTraitement.WorkerReportsProgress = true;
+            this.backgroundTraitement.WorkerSupportsCancellation = true;
+            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
+            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
+            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
             // FormPrincipale
             // 
@@ -1149,11 +1183,11 @@ namespace vaoc
             this.panelTestPlusCourtChemin.ResumeLayout(false);
             this.panelTestPlusCourtChemin.PerformLayout();
             this.panelImage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.menuPrincipal.ResumeLayout(false);
             this.menuPrincipal.PerformLayout();
             this.toolStripCarte.ResumeLayout(false);
             this.toolStripCarte.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1264,6 +1298,10 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem nomsDesLeadesPromusToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem statistiquesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pontsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem messagesAnciensToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripMenuItem pionsAnciensToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ordresAnciensToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

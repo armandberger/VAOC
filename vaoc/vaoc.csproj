@@ -162,6 +162,18 @@
     <Compile Include="FormNouveauModeleTerrain.Designer.cs">
       <DependentUpon>FormNouveauModeleTerrain.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormOrdreAncien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormOrdreAncien.Designer.cs">
+      <DependentUpon>FormOrdreAncien.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormPionAncien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPionAncien.Designer.cs">
+      <DependentUpon>FormPionAncien.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormPonts.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -340,6 +352,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormNouveauModeleTerrain.resx">
       <DependentUpon>FormNouveauModeleTerrain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormOrdreAncien.resx">
+      <DependentUpon>FormOrdreAncien.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPionAncien.resx">
+      <DependentUpon>FormPionAncien.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormPonts.resx">
       <DependentUpon>FormPonts.cs</DependentUpon>

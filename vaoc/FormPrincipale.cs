@@ -3368,6 +3368,33 @@ namespace vaoc
                 Donnees.m_donnees.TAB_MESSAGE_ANCIEN.Merge(fMessagesAncien.tableMessage, false);
             }
         }
+
+        private void pionsAnciensToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormPionAncien fPion = new FormPionAncien();
+
+            fPion.tablePions = Donnees.m_donnees.TAB_PION_ANCIEN;
+            if (DialogResult.OK == fPion.ShowDialog())
+            {
+                m_modification = true;
+
+                Donnees.m_donnees.TAB_PION_ANCIEN.Clear();
+                Donnees.m_donnees.TAB_PION_ANCIEN.Merge(fPion.tablePions, false);
+            }
+        }
+
+        private void ordresAnciensToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormOrdreAncien fOrdre = new FormOrdreAncien();
+
+            fOrdre.tableOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN;
+            if (DialogResult.OK == fOrdre.ShowDialog())
+            {
+                m_modification = true;
+                Donnees.m_donnees.TAB_ORDRE_ANCIEN.Clear();
+                Donnees.m_donnees.TAB_ORDRE_ANCIEN.Merge(fOrdre.tableOrdre, false);
+            }
+        }
     }
 
     internal static class NativeMethods

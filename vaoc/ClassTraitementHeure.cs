@@ -48,7 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            AmeliorationsPerformances();
+            //AmeliorationsPerformances();
             
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
@@ -509,7 +509,7 @@ namespace vaoc
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 if (!ligneMessage.IsI_TOUR_ARRIVEENull())
                 {
-                    Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
+                    Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncien = Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
                         ligneMessage.ID_MESSAGE,
                         ligneMessage.ID_PION_EMETTEUR,
                         ligneMessage.ID_PION_PROPRIETAIRE,
@@ -519,14 +519,14 @@ namespace vaoc
                         ligneMessage.I_TOUR_DEPART,
                         ligneMessage.I_PHASE_DEPART,
                         ligneMessage.S_TEXTE,
-                        ligneMessage.I_INFANTERIE,
-                        ligneMessage.I_CAVALERIE,
-                        ligneMessage.I_ARTILLERIE,
-                        ligneMessage.I_FATIGUE,
-                        ligneMessage.I_MORAL,
-                        ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
-                        ligneMessage.ID_BATAILLE,
-                        ligneMessage.I_ZONE_BATAILLE,
+                        ligneMessage.IsI_INFANTERIENull() ? -1 : ligneMessage.I_INFANTERIE,
+                        ligneMessage.IsI_CAVALERIENull() ? -1 : ligneMessage.I_CAVALERIE,
+                        ligneMessage.IsI_ARTILLERIENull() ? -1 : ligneMessage.I_ARTILLERIE,
+                        ligneMessage.IsI_FATIGUENull() ? -1 : ligneMessage.I_FATIGUE,
+                        ligneMessage.IsI_MORALNull() ? -1 : ligneMessage.I_MORAL,
+                        ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
+                        ligneMessage.IsID_BATAILLENull() ? -1 : ligneMessage.ID_BATAILLE,
+                        ligneMessage.IsI_ZONE_BATAILLENull() ? -1 : ligneMessage.I_ZONE_BATAILLE,
                         ligneMessage.I_RETRAITE,
                         ligneMessage.B_DETRUIT,
                         ligneMessage.ID_CASE,
@@ -535,15 +535,28 @@ namespace vaoc
                         ligneMessage.I_NB_PHASES_MARCHE_JOUR,
                         ligneMessage.I_NB_PHASES_MARCHE_NUIT,
                         ligneMessage.I_NB_HEURES_COMBAT,
-                        ligneMessage.I_MATERIEL,
-                        ligneMessage.I_RAVITAILLEMENT,
-                        ligneMessage.I_SOLDATS_RAVITAILLES,
+                        ligneMessage.IsI_MATERIELNull() ? -1 : ligneMessage.I_MATERIEL,
+                        ligneMessage.IsI_RAVITAILLEMENTNull() ? -1 :ligneMessage.I_RAVITAILLEMENT,
+                        ligneMessage.IsI_SOLDATS_RAVITAILLESNull() ? -1 :ligneMessage.I_SOLDATS_RAVITAILLES,
                         ligneMessage.I_NB_HEURES_FORTIFICATION,
                         ligneMessage.I_NIVEAU_FORTIFICATION,
-                        ligneMessage.I_DUREE_HORS_COMBAT,
-                        ligneMessage.I_TOUR_BLESSURE,
+                        ligneMessage.IsI_DUREE_HORS_COMBATNull() ? -1 : ligneMessage.I_DUREE_HORS_COMBAT,
+                        ligneMessage.IsI_TOUR_BLESSURENull() ? -1 : ligneMessage.I_TOUR_BLESSURE,
                         ligneMessage.C_NIVEAU_DEPOT
                         );
+                    if (ligneMessage.IsI_INFANTERIENull()) { ligneMessageAncien.SetI_INFANTERIENull(); }
+                    if (ligneMessage.IsI_CAVALERIENull()) { ligneMessageAncien.SetI_CAVALERIENull(); }
+                    if (ligneMessage.IsI_ARTILLERIENull()) { ligneMessageAncien.SetI_ARTILLERIENull(); }
+                    if (ligneMessage.IsI_FATIGUENull()) { ligneMessageAncien.SetI_FATIGUENull(); }
+                    if (ligneMessage.IsI_MORALNull()) { ligneMessageAncien.SetI_MORALNull(); }
+                    if (ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_TOUR_SANS_RAVITAILLEMENTNull(); }
+                    if (ligneMessage.IsID_BATAILLENull()) { ligneMessageAncien.SetID_BATAILLENull(); }
+                    if (ligneMessage.IsI_ZONE_BATAILLENull()) { ligneMessageAncien.SetI_ZONE_BATAILLENull(); }
+                    if (ligneMessage.IsI_MATERIELNull()) { ligneMessageAncien.SetI_MATERIELNull(); }
+                    if (ligneMessage.IsI_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
+                    if (ligneMessage.IsI_SOLDATS_RAVITAILLESNull()) { ligneMessageAncien.SetI_SOLDATS_RAVITAILLESNull(); }
+                    if (ligneMessage.IsI_DUREE_HORS_COMBATNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
+                    if (ligneMessage.IsI_TOUR_BLESSURENull()) { ligneMessageAncien.SetI_TOUR_BLESSURENull(); }
                     ligneMessage.Delete();
                 }
                 else
@@ -570,16 +583,16 @@ namespace vaoc
                     }
                     if (bdetruire)
                     {
-                        Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
+                        Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
                         ligneOrdre.ID_ORDRE,
                         ligneOrdre.ID_ORDRE_TRANSMIS,
                         ligneOrdre.ID_ORDRE_SUIVANT,
                         ligneOrdre.ID_ORDRE_WEB,
                         ligneOrdre.I_ORDRE_TYPE,
                         ligneOrdre.ID_PION,
-                        ligneOrdre.ID_CASE_DEPART,
+                        ligneOrdre.IsID_CASE_DEPARTNull() ? -1 : ligneOrdre.ID_CASE_DEPART,
                         ligneOrdre.I_EFFECTIF_DEPART,
-                        ligneOrdre.ID_CASE_DESTINATION,
+                        ligneOrdre.IsID_CASE_DESTINATIONNull() ? -1 :ligneOrdre.ID_CASE_DESTINATION,
                         ligneOrdre.ID_NOM_DESTINATION,
                         ligneOrdre.I_EFFECTIF_DESTINATION,
                         ligneOrdre.I_TOUR_DEBUT,
@@ -590,11 +603,16 @@ namespace vaoc
                         ligneOrdre.ID_DESTINATAIRE,
                         ligneOrdre.ID_CIBLE,
                         ligneOrdre.ID_DESTINATAIRE_CIBLE,
-                        ligneOrdre.ID_BATAILLE,
-                        ligneOrdre.I_ZONE_BATAILLE,
+                        ligneOrdre.IsID_BATAILLENull() ? -1 : ligneOrdre.ID_BATAILLE,
+                        ligneOrdre.IsI_ZONE_BATAILLENull() ? -1 : ligneOrdre.I_ZONE_BATAILLE,
                         ligneOrdre.I_HEURE_DEBUT,
                         ligneOrdre.I_DUREE,
                         ligneOrdre.I_ENGAGEMENT);
+                        if (ligneOrdre.IsI_ZONE_BATAILLENull()) { ligneOrdreAncien.SetI_ZONE_BATAILLENull(); }
+                        if (ligneOrdre.IsID_BATAILLENull()) { ligneOrdreAncien.SetID_BATAILLENull(); }
+                        if (ligneOrdre.IsID_CASE_DEPARTNull()) { ligneOrdreAncien.SetID_CASE_DEPARTNull(); }
+                        if (ligneOrdre.IsID_CASE_DESTINATIONNull()) { ligneOrdreAncien.SetID_CASE_DESTINATIONNull(); }
+                        if (ligneOrdre.IsID_CIBLENull()) { ligneOrdreAncien.SetID_CIBLENull(); }
                         ligneOrdre.Delete();
                     }
                     else
@@ -2786,7 +2804,8 @@ namespace vaoc
                             int nbHeuresJour = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_JOUR / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
                             int nbHeuresNuit = (int)Math.Ceiling((decimal)lignePion.I_NB_PHASES_MARCHE_NUIT / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
 
-                            int colonneFatigue = Math.Max(0, nbHeuresJour + nbHeuresNuit - (int)Math.Floor(lignePion.I_EXPERIENCE));
+                            //bHeuresJour + nbHeuresNuit peut être supérieur à 24 à cause des arrondis, d'où le Min(24,... ci-dessous)
+                            int colonneFatigue = Math.Max(0, Math.Min(24,nbHeuresJour + nbHeuresNuit) - (int)Math.Floor(lignePion.I_EXPERIENCE));
                             fatigue = (lignePion.I_CAVALERIE > 0) ? Constantes.tableFatigueCavalerie[colonneFatigue] : Constantes.tableFatigueInfanterie[colonneFatigue];
                             fatigue += nbHeuresNuit;
                             fatigue += lignePion.I_NB_HEURES_COMBAT * 2;//combat toutes les deux heures

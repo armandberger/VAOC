@@ -48,8 +48,8 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            //AmeliorationsPerformances();
-            
+            AmeliorationsPerformances();
+
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
             Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];
@@ -514,11 +514,11 @@ namespace vaoc
                         ligneMessage.ID_PION_EMETTEUR,
                         ligneMessage.ID_PION_PROPRIETAIRE,
                         ligneMessage.I_TYPE,
-                        ligneMessage.I_TOUR_ARRIVEE,
-                        ligneMessage.I_PHASE_ARRIVEE,
-                        ligneMessage.I_TOUR_DEPART,
-                        ligneMessage.I_PHASE_DEPART,
-                        ligneMessage.S_TEXTE,
+                        ligneMessage.IsI_TOUR_ARRIVEENull() ? -1 : ligneMessage.I_TOUR_ARRIVEE,
+                        ligneMessage.IsI_PHASE_ARRIVEENull() ? -1 : ligneMessage.I_PHASE_ARRIVEE,
+                        ligneMessage.IsI_TOUR_DEPARTNull() ? -1 : ligneMessage.I_TOUR_DEPART,
+                        ligneMessage.IsI_PHASE_DEPARTNull() ? -1 : ligneMessage.I_PHASE_DEPART,
+                        ligneMessage.IsS_TEXTENull() ? "" : ligneMessage.S_TEXTE,
                         ligneMessage.IsI_INFANTERIENull() ? -1 : ligneMessage.I_INFANTERIE,
                         ligneMessage.IsI_CAVALERIENull() ? -1 : ligneMessage.I_CAVALERIE,
                         ligneMessage.IsI_ARTILLERIENull() ? -1 : ligneMessage.I_ARTILLERIE,
@@ -527,23 +527,29 @@ namespace vaoc
                         ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
                         ligneMessage.IsID_BATAILLENull() ? -1 : ligneMessage.ID_BATAILLE,
                         ligneMessage.IsI_ZONE_BATAILLENull() ? -1 : ligneMessage.I_ZONE_BATAILLE,
-                        ligneMessage.I_RETRAITE,
+                        ligneMessage.IsI_RETRAITENull() ? -1 : ligneMessage.I_RETRAITE,
                         ligneMessage.B_DETRUIT,
                         ligneMessage.ID_CASE,
-                        ligneMessage.ID_CASE_DEBUT,
-                        ligneMessage.ID_CASE_FIN,
-                        ligneMessage.I_NB_PHASES_MARCHE_JOUR,
-                        ligneMessage.I_NB_PHASES_MARCHE_NUIT,
-                        ligneMessage.I_NB_HEURES_COMBAT,
+                        ligneMessage.IsID_CASE_DEBUTNull() ? -1 : ligneMessage.ID_CASE_DEBUT,
+                        ligneMessage.IsID_CASE_FINNull() ? -1 : ligneMessage.ID_CASE_FIN,
+                        ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_JOUR,
+                        ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_NUIT,
+                        ligneMessage.IsI_NB_HEURES_COMBATNull() ? -1 : ligneMessage.I_NB_HEURES_COMBAT,
                         ligneMessage.IsI_MATERIELNull() ? -1 : ligneMessage.I_MATERIEL,
                         ligneMessage.IsI_RAVITAILLEMENTNull() ? -1 :ligneMessage.I_RAVITAILLEMENT,
                         ligneMessage.IsI_SOLDATS_RAVITAILLESNull() ? -1 :ligneMessage.I_SOLDATS_RAVITAILLES,
-                        ligneMessage.I_NB_HEURES_FORTIFICATION,
-                        ligneMessage.I_NIVEAU_FORTIFICATION,
+                        ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull() ? -1 : ligneMessage.I_NB_HEURES_FORTIFICATION,
+                        ligneMessage.IsI_NIVEAU_FORTIFICATIONNull() ? -1 : ligneMessage.I_NIVEAU_FORTIFICATION,
                         ligneMessage.IsI_DUREE_HORS_COMBATNull() ? -1 : ligneMessage.I_DUREE_HORS_COMBAT,
                         ligneMessage.IsI_TOUR_BLESSURENull() ? -1 : ligneMessage.I_TOUR_BLESSURE,
-                        ligneMessage.C_NIVEAU_DEPOT
+                        ligneMessage.IsC_NIVEAU_DEPOTNull() ? 'X' : ligneMessage.C_NIVEAU_DEPOT
                         );
+
+                    if (ligneMessage.IsI_TOUR_ARRIVEENull()) { ligneMessageAncien.SetI_TOUR_ARRIVEENull(); }
+                    if (ligneMessage.IsI_PHASE_ARRIVEENull()) { ligneMessageAncien.SetI_PHASE_ARRIVEENull(); }
+                    if (ligneMessage.IsI_TOUR_DEPARTNull()) { ligneMessageAncien.SetI_TOUR_DEPARTNull(); }
+                    if (ligneMessage.IsI_PHASE_DEPARTNull()) { ligneMessageAncien.SetI_PHASE_DEPARTNull(); }
+                    if (ligneMessage.IsS_TEXTENull()) { ligneMessageAncien.SetS_TEXTENull(); }
                     if (ligneMessage.IsI_INFANTERIENull()) { ligneMessageAncien.SetI_INFANTERIENull(); }
                     if (ligneMessage.IsI_CAVALERIENull()) { ligneMessageAncien.SetI_CAVALERIENull(); }
                     if (ligneMessage.IsI_ARTILLERIENull()) { ligneMessageAncien.SetI_ARTILLERIENull(); }
@@ -552,11 +558,21 @@ namespace vaoc
                     if (ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_TOUR_SANS_RAVITAILLEMENTNull(); }
                     if (ligneMessage.IsID_BATAILLENull()) { ligneMessageAncien.SetID_BATAILLENull(); }
                     if (ligneMessage.IsI_ZONE_BATAILLENull()) { ligneMessageAncien.SetI_ZONE_BATAILLENull(); }
+                    if (ligneMessage.IsI_RETRAITENull()) { ligneMessageAncien.SetI_RETRAITENull(); }
+                    if (ligneMessage.IsID_CASE_DEBUTNull()) { ligneMessageAncien.SetID_CASE_DEBUTNull(); }
+                    if (ligneMessage.IsID_CASE_FINNull()) { ligneMessageAncien.SetID_CASE_FINNull(); }
+                    if (ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_JOURNull(); }
+                    if (ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_NUITNull(); }
+                    if (ligneMessage.IsI_NB_HEURES_COMBATNull()) { ligneMessageAncien.SetI_NB_HEURES_COMBATNull(); }
                     if (ligneMessage.IsI_MATERIELNull()) { ligneMessageAncien.SetI_MATERIELNull(); }
                     if (ligneMessage.IsI_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
                     if (ligneMessage.IsI_SOLDATS_RAVITAILLESNull()) { ligneMessageAncien.SetI_SOLDATS_RAVITAILLESNull(); }
+                    if (ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NB_HEURES_FORTIFICATIONNull(); }
+                    if (ligneMessage.IsI_NIVEAU_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NIVEAU_FORTIFICATIONNull(); }
                     if (ligneMessage.IsI_DUREE_HORS_COMBATNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
                     if (ligneMessage.IsI_TOUR_BLESSURENull()) { ligneMessageAncien.SetI_TOUR_BLESSURENull(); }
+                    if (ligneMessage.IsC_NIVEAU_DEPOTNull()) { ligneMessageAncien.SetC_NIVEAU_DEPOTNull(); }
+
                     ligneMessage.Delete();
                 }
                 else
@@ -581,44 +597,63 @@ namespace vaoc
                     {
                         bdetruire = true;
                     }
-                    if (bdetruire)
-                    {
-                        Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
-                        ligneOrdre.ID_ORDRE,
-                        ligneOrdre.ID_ORDRE_TRANSMIS,
-                        ligneOrdre.ID_ORDRE_SUIVANT,
-                        ligneOrdre.ID_ORDRE_WEB,
-                        ligneOrdre.I_ORDRE_TYPE,
-                        ligneOrdre.ID_PION,
-                        ligneOrdre.IsID_CASE_DEPARTNull() ? -1 : ligneOrdre.ID_CASE_DEPART,
-                        ligneOrdre.I_EFFECTIF_DEPART,
-                        ligneOrdre.IsID_CASE_DESTINATIONNull() ? -1 :ligneOrdre.ID_CASE_DESTINATION,
-                        ligneOrdre.ID_NOM_DESTINATION,
-                        ligneOrdre.I_EFFECTIF_DESTINATION,
-                        ligneOrdre.I_TOUR_DEBUT,
-                        ligneOrdre.I_PHASE_DEBUT,
-                        ligneOrdre.I_TOUR_FIN,
-                        ligneOrdre.I_PHASE_FIN,
-                        ligneOrdre.ID_MESSAGE,
-                        ligneOrdre.ID_DESTINATAIRE,
-                        ligneOrdre.ID_CIBLE,
-                        ligneOrdre.ID_DESTINATAIRE_CIBLE,
-                        ligneOrdre.IsID_BATAILLENull() ? -1 : ligneOrdre.ID_BATAILLE,
-                        ligneOrdre.IsI_ZONE_BATAILLENull() ? -1 : ligneOrdre.I_ZONE_BATAILLE,
-                        ligneOrdre.I_HEURE_DEBUT,
-                        ligneOrdre.I_DUREE,
-                        ligneOrdre.I_ENGAGEMENT);
-                        if (ligneOrdre.IsI_ZONE_BATAILLENull()) { ligneOrdreAncien.SetI_ZONE_BATAILLENull(); }
-                        if (ligneOrdre.IsID_BATAILLENull()) { ligneOrdreAncien.SetID_BATAILLENull(); }
-                        if (ligneOrdre.IsID_CASE_DEPARTNull()) { ligneOrdreAncien.SetID_CASE_DEPARTNull(); }
-                        if (ligneOrdre.IsID_CASE_DESTINATIONNull()) { ligneOrdreAncien.SetID_CASE_DESTINATIONNull(); }
-                        if (ligneOrdre.IsID_CIBLENull()) { ligneOrdreAncien.SetID_CIBLENull(); }
-                        ligneOrdre.Delete();
-                    }
-                    else
-                    {
-                        i++;
-                    }
+                }
+                if (bdetruire)
+                {
+                    Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
+                    ligneOrdre.ID_ORDRE,
+                    ligneOrdre.IsID_ORDRE_TRANSMISNull() ? -1 : ligneOrdre.ID_ORDRE_TRANSMIS,
+                    ligneOrdre.IsID_ORDRE_SUIVANTNull() ? -1 : ligneOrdre.ID_ORDRE_SUIVANT,
+                    ligneOrdre.IsID_ORDRE_WEBNull() ? -1 : ligneOrdre.ID_ORDRE_WEB,
+                    ligneOrdre.I_ORDRE_TYPE,
+                    ligneOrdre.IsID_PIONNull() ? -1 : ligneOrdre.ID_PION,
+                    ligneOrdre.IsID_CASE_DEPARTNull() ? -1 : ligneOrdre.ID_CASE_DEPART,
+                    ligneOrdre.IsI_EFFECTIF_DEPARTNull() ? -1 : ligneOrdre.I_EFFECTIF_DEPART,
+                    ligneOrdre.IsID_CASE_DESTINATIONNull() ? -1 : ligneOrdre.ID_CASE_DESTINATION,
+                    ligneOrdre.IsID_NOM_DESTINATIONNull() ? -1 : ligneOrdre.ID_NOM_DESTINATION,
+                    ligneOrdre.IsI_EFFECTIF_DESTINATIONNull() ? -1 : ligneOrdre.I_EFFECTIF_DESTINATION,
+                    ligneOrdre.IsI_TOUR_DEBUTNull() ? -1 : ligneOrdre.I_TOUR_DEBUT,
+                    ligneOrdre.IsI_PHASE_DEBUTNull() ? -1 : ligneOrdre.I_PHASE_DEBUT,
+                    ligneOrdre.IsI_TOUR_FINNull() ? -1 : ligneOrdre.I_TOUR_FIN,
+                    ligneOrdre.IsI_PHASE_FINNull() ? -1 : ligneOrdre.I_PHASE_FIN,
+                    ligneOrdre.IsID_MESSAGENull() ? -1 : ligneOrdre.ID_MESSAGE,
+                    ligneOrdre.IsID_DESTINATAIRENull() ? -1 : ligneOrdre.ID_DESTINATAIRE,
+                    ligneOrdre.IsID_CIBLENull() ? -1 : ligneOrdre.ID_CIBLE,
+                    ligneOrdre.IsID_DESTINATAIRE_CIBLENull() ? -1 : ligneOrdre.ID_DESTINATAIRE_CIBLE,
+                    ligneOrdre.IsID_BATAILLENull() ? -1 : ligneOrdre.ID_BATAILLE,
+                    ligneOrdre.IsI_ZONE_BATAILLENull() ? -1 : ligneOrdre.I_ZONE_BATAILLE,
+                    ligneOrdre.IsI_HEURE_DEBUTNull() ? -1 : ligneOrdre.I_HEURE_DEBUT,
+                    ligneOrdre.IsI_DUREENull() ? -1 : ligneOrdre.I_DUREE,
+                    ligneOrdre.IsI_ENGAGEMENTNull() ? -1 : ligneOrdre.I_ENGAGEMENT);
+
+                    if (ligneOrdre.IsID_ORDRE_TRANSMISNull()) { ligneOrdreAncien.SetID_ORDRE_TRANSMISNull(); }
+                    if (ligneOrdre.IsID_ORDRE_SUIVANTNull()) { ligneOrdreAncien.SetID_ORDRE_SUIVANTNull(); }
+                    if (ligneOrdre.IsID_ORDRE_WEBNull()) { ligneOrdreAncien.SetID_ORDRE_WEBNull(); }
+                    if (ligneOrdre.IsID_PIONNull()) { ligneOrdreAncien.SetID_PIONNull(); }
+                    if (ligneOrdre.IsID_CASE_DEPARTNull()) { ligneOrdreAncien.SetID_CASE_DEPARTNull(); }
+                    if (ligneOrdre.IsI_EFFECTIF_DEPARTNull()) { ligneOrdreAncien.SetI_EFFECTIF_DEPARTNull(); }
+                    if (ligneOrdre.IsID_CASE_DESTINATIONNull()) { ligneOrdreAncien.SetID_CASE_DESTINATIONNull(); }
+                    if (ligneOrdre.IsID_NOM_DESTINATIONNull()) { ligneOrdreAncien.SetID_NOM_DESTINATIONNull(); }
+                    if (ligneOrdre.IsI_EFFECTIF_DESTINATIONNull()) { ligneOrdreAncien.SetI_EFFECTIF_DESTINATIONNull(); }
+                    if (ligneOrdre.IsI_TOUR_DEBUTNull()) { ligneOrdreAncien.SetI_TOUR_DEBUTNull(); }
+                    if (ligneOrdre.IsI_PHASE_FINNull()) { ligneOrdreAncien.SetI_PHASE_FINNull(); }
+                    if (ligneOrdre.IsI_TOUR_FINNull()) { ligneOrdreAncien.SetI_TOUR_FINNull(); }
+                    if (ligneOrdre.IsI_PHASE_DEBUTNull()) { ligneOrdreAncien.SetI_PHASE_DEBUTNull(); }
+                    if (ligneOrdre.IsID_MESSAGENull()) { ligneOrdreAncien.SetID_MESSAGENull(); }
+                    if (ligneOrdre.IsID_DESTINATAIRENull()) { ligneOrdreAncien.SetID_DESTINATAIRENull(); }
+                    if (ligneOrdre.IsID_CIBLENull()) { ligneOrdreAncien.SetID_CIBLENull(); }
+                    if (ligneOrdre.IsID_DESTINATAIRE_CIBLENull()) { ligneOrdreAncien.SetID_DESTINATAIRE_CIBLENull(); }
+                    if (ligneOrdre.IsID_BATAILLENull()) { ligneOrdreAncien.SetID_BATAILLENull(); }
+                    if (ligneOrdre.IsI_ZONE_BATAILLENull()) { ligneOrdreAncien.SetI_ZONE_BATAILLENull(); }
+                    if (ligneOrdre.IsI_HEURE_DEBUTNull()) { ligneOrdreAncien.SetI_HEURE_DEBUTNull(); }
+                    if (ligneOrdre.IsI_DUREENull()) { ligneOrdreAncien.SetI_DUREENull(); }
+                    if (ligneOrdre.IsI_ENGAGEMENTNull()) { ligneOrdreAncien.SetI_ENGAGEMENTNull(); }
+
+                    ligneOrdre.Delete();
+                }
+                else
+                {
+                    i++;
                 }
             }
 
@@ -628,65 +663,100 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 if (lignePion.B_DETRUIT && lignePion.estMessager)
                 {
-                    Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
+                    Donnees.TAB_PION_ANCIENRow lignePionAncien = Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
                         lignePion.ID_PION,
                         lignePion.ID_MODELE_PION,
                         lignePion.ID_PION_PROPRIETAIRE,
-                        lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
-                        lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
+                        lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull() ? -1 : lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
+                        lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull() ? -1 : lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
                         lignePion.S_NOM,
-                        lignePion.I_INFANTERIE,
-                        lignePion.I_INFANTERIE_INITIALE,
-                        lignePion.I_CAVALERIE,
-                        lignePion.I_CAVALERIE_INITIALE,
-                        lignePion.I_ARTILLERIE,
-                        lignePion.I_ARTILLERIE_INITIALE,
-                        lignePion.I_FATIGUE,
-                        lignePion.I_MORAL,
+                        lignePion.IsI_INFANTERIENull() ? -1 : lignePion.I_INFANTERIE,
+                        lignePion.IsI_INFANTERIE_INITIALENull() ? -1 : lignePion.I_INFANTERIE_INITIALE,
+                        lignePion.IsI_CAVALERIENull() ? -1 : lignePion.I_CAVALERIE,
+                        lignePion.IsI_CAVALERIE_INITIALENull() ? -1 : lignePion.I_CAVALERIE_INITIALE,
+                        lignePion.IsI_ARTILLERIENull() ? -1 : lignePion.I_ARTILLERIE,
+                        lignePion.IsI_ARTILLERIE_INITIALENull() ? -1 : lignePion.I_ARTILLERIE_INITIALE,
+                        lignePion.IsI_FATIGUENull() ? -1 : lignePion.I_FATIGUE,
+                        lignePion.IsI_MORALNull() ? -1 : lignePion.I_MORAL,
                         lignePion.I_MORAL_MAX,
                         lignePion.I_EXPERIENCE,
                         lignePion.I_TACTIQUE,
                         lignePion.I_STRATEGIQUE,
                         lignePion.C_NIVEAU_HIERARCHIQUE,
                         lignePion.I_DISTANCE_A_PARCOURIR,
-                        lignePion.I_NB_PHASES_MARCHE_JOUR,
-                        lignePion.I_NB_PHASES_MARCHE_NUIT,
-                        lignePion.I_NB_HEURES_COMBAT,
+                        lignePion.IsI_NB_PHASES_MARCHE_JOURNull() ? -1 : lignePion.I_NB_PHASES_MARCHE_JOUR,
+                        lignePion.IsI_NB_PHASES_MARCHE_NUITNull() ? -1 : lignePion.I_NB_PHASES_MARCHE_NUIT,
+                        lignePion.IsI_NB_HEURES_COMBATNull() ? -1 : lignePion.I_NB_HEURES_COMBAT,
                         lignePion.ID_CASE,
-                        lignePion.I_TOUR_SANS_RAVITAILLEMENT,
-                        lignePion.ID_BATAILLE,
-                        lignePion.I_ZONE_BATAILLE,
-                        lignePion.I_TOUR_RETRAITE_RESTANT,
-                        lignePion.I_TOUR_FUITE_RESTANT,
+                        lignePion.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : lignePion.I_TOUR_SANS_RAVITAILLEMENT,
+                        lignePion.IsID_BATAILLENull() ? -1 : lignePion.ID_BATAILLE,
+                        lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE,
+                        lignePion.IsI_TOUR_RETRAITE_RESTANTNull() ? -1 : lignePion.I_TOUR_RETRAITE_RESTANT,
+                        lignePion.IsI_TOUR_FUITE_RESTANTNull() ? -1 : lignePion.I_TOUR_FUITE_RESTANT,
                         lignePion.B_DETRUIT,
                         lignePion.B_FUITE_AU_COMBAT,
                         lignePion.B_INTERCEPTION,
                         lignePion.B_REDITION_RAVITAILLEMENT,
                         lignePion.B_TELEPORTATION,
                         lignePion.B_ENNEMI_OBSERVABLE,
-                        lignePion.I_MATERIEL,
-                        lignePion.I_RAVITAILLEMENT,
+                        lignePion.IsI_MATERIELNull() ? -1 : lignePion.I_MATERIEL,
+                        lignePion.IsI_RAVITAILLEMENTNull() ? -1 : lignePion.I_RAVITAILLEMENT,
                         lignePion.B_CAVALERIE_DE_LIGNE,
                         lignePion.B_CAVALERIE_LOURDE,
                         lignePion.B_GARDE,
                         lignePion.B_VIEILLE_GARDE,
-                        lignePion.I_TOUR_CONVOI_CREE,
-                        lignePion.ID_DEPOT_SOURCE,
-                        lignePion.I_SOLDATS_RAVITAILLES,
-                        lignePion.I_NB_HEURES_FORTIFICATION,
-                        lignePion.I_NIVEAU_FORTIFICATION,
-                        lignePion.ID_PION_REMPLACE,
-                        lignePion.I_DUREE_HORS_COMBAT,
-                        lignePion.I_TOUR_BLESSURE,
+                        lignePion.IsI_TOUR_CONVOI_CREENull() ? -1 : lignePion.I_TOUR_CONVOI_CREE,
+                        lignePion.IsID_DEPOT_SOURCENull() ? -1 : lignePion.ID_DEPOT_SOURCE,
+                        lignePion.IsI_SOLDATS_RAVITAILLESNull() ? -1 : lignePion.I_SOLDATS_RAVITAILLES,
+                        lignePion.IsI_NB_HEURES_FORTIFICATIONNull() ? -1 : lignePion.I_NB_HEURES_FORTIFICATION,
+                        lignePion.IsI_NIVEAU_FORTIFICATIONNull() ? -1 : lignePion.I_NIVEAU_FORTIFICATION,
+                        lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE,
+                        lignePion.IsI_DUREE_HORS_COMBATNull() ? -1 : lignePion.I_DUREE_HORS_COMBAT,
+                        lignePion.IsI_TOUR_BLESSURENull() ? -1 : lignePion.I_TOUR_BLESSURE,
                         lignePion.B_BLESSES,
                         lignePion.B_PRISONNIERS,
                         lignePion.B_RENFORT,
-                        lignePion.ID_LIEU_RATTACHEMENT,
-                        lignePion.C_NIVEAU_DEPOT,
-                        lignePion.ID_PION_ESCORTE,
-                        lignePion.I_INFANTERIE_ESCORTE,
-                        lignePion.I_CAVALERIE_ESCORTE,
-                        lignePion.I_MATERIEL_ESCORTE);
+                        lignePion.IsID_LIEU_RATTACHEMENTNull() ? -1 : lignePion.ID_LIEU_RATTACHEMENT,
+                        lignePion.IsC_NIVEAU_DEPOTNull() ? 'X' : lignePion.C_NIVEAU_DEPOT,
+                        lignePion.IsID_PION_ESCORTENull() ? -1 : lignePion.ID_PION_ESCORTE,
+                        lignePion.IsI_INFANTERIE_ESCORTENull() ? -1 : lignePion.I_INFANTERIE_ESCORTE,
+                        lignePion.IsI_CAVALERIE_ESCORTENull() ? -1 : lignePion.I_CAVALERIE_ESCORTE,
+                        lignePion.IsI_MATERIEL_ESCORTENull() ? -1 : lignePion.I_MATERIEL_ESCORTE);
+
+                    if (lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull()) { lignePionAncien.SetID_NOUVEAU_PION_PROPRIETAIRENull(); }
+                    if (lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull()) { lignePionAncien.SetID_ANCIEN_PION_PROPRIETAIRENull(); }
+                    if (lignePion.IsI_INFANTERIENull()) { lignePionAncien.SetI_INFANTERIENull(); }
+                    if (lignePion.IsI_CAVALERIENull()) { lignePionAncien.SetI_CAVALERIENull(); }
+                    if (lignePion.IsI_ARTILLERIENull()) { lignePionAncien.SetI_ARTILLERIENull(); }
+                    if (lignePion.IsI_INFANTERIE_INITIALENull()) { lignePionAncien.SetI_INFANTERIE_INITIALENull(); }
+                    if (lignePion.IsI_CAVALERIE_INITIALENull()) { lignePionAncien.SetI_CAVALERIE_INITIALENull(); }
+                    if (lignePion.IsI_ARTILLERIE_INITIALENull()) { lignePionAncien.SetI_ARTILLERIE_INITIALENull(); }
+                    if (lignePion.IsI_FATIGUENull()) { lignePionAncien.SetI_FATIGUENull(); }
+                    if (lignePion.IsI_MORALNull()) { lignePionAncien.SetI_MORALNull(); }
+                    if (lignePion.IsI_TOUR_SANS_RAVITAILLEMENTNull()) { lignePionAncien.SetI_TOUR_SANS_RAVITAILLEMENTNull(); }
+                    if (lignePion.IsID_BATAILLENull()) { lignePionAncien.SetID_BATAILLENull(); }
+                    if (lignePion.IsI_ZONE_BATAILLENull()) { lignePionAncien.SetI_ZONE_BATAILLENull(); }
+                    if (lignePion.IsI_TOUR_RETRAITE_RESTANTNull()) { lignePionAncien.SetI_TOUR_RETRAITE_RESTANTNull(); }
+                    if (lignePion.IsI_TOUR_FUITE_RESTANTNull()) { lignePionAncien.SetI_TOUR_FUITE_RESTANTNull(); }
+                    if (lignePion.IsI_NB_PHASES_MARCHE_JOURNull()) { lignePionAncien.SetI_NB_PHASES_MARCHE_JOURNull(); }
+                    if (lignePion.IsI_NB_PHASES_MARCHE_NUITNull()) { lignePionAncien.SetI_NB_PHASES_MARCHE_NUITNull(); }
+                    if (lignePion.IsI_NB_HEURES_COMBATNull()) { lignePionAncien.SetI_NB_HEURES_COMBATNull(); }
+                    if (lignePion.IsI_MATERIELNull()) { lignePionAncien.SetI_MATERIELNull(); }
+                    if (lignePion.IsI_RAVITAILLEMENTNull()) { lignePionAncien.SetI_DUREE_HORS_COMBATNull(); }
+                    if (lignePion.IsI_SOLDATS_RAVITAILLESNull()) { lignePionAncien.SetI_SOLDATS_RAVITAILLESNull(); }
+                    if (lignePion.IsI_TOUR_CONVOI_CREENull()) { lignePionAncien.SetI_TOUR_CONVOI_CREENull(); }
+                    if (lignePion.IsID_DEPOT_SOURCENull()) { lignePionAncien.SetID_DEPOT_SOURCENull(); }
+                    if (lignePion.IsI_NB_HEURES_FORTIFICATIONNull()) { lignePionAncien.SetI_NB_HEURES_FORTIFICATIONNull(); }
+                    if (lignePion.IsI_NIVEAU_FORTIFICATIONNull()) { lignePionAncien.SetI_NIVEAU_FORTIFICATIONNull(); }
+                    if (lignePion.IsID_PION_REMPLACENull()) { lignePionAncien.SetID_PION_REMPLACENull(); }
+                    if (lignePion.IsI_DUREE_HORS_COMBATNull()) { lignePionAncien.SetI_DUREE_HORS_COMBATNull(); }
+                    if (lignePion.IsI_TOUR_BLESSURENull()) { lignePionAncien.SetI_TOUR_BLESSURENull(); }
+                    if (lignePion.IsID_LIEU_RATTACHEMENTNull()) { lignePionAncien.SetID_LIEU_RATTACHEMENTNull(); }
+                    if (lignePion.IsC_NIVEAU_DEPOTNull()) { lignePionAncien.SetC_NIVEAU_DEPOTNull(); }
+                    if (lignePion.IsID_PION_ESCORTENull()) { lignePionAncien.SetID_PION_ESCORTENull(); }
+                    if (lignePion.IsI_INFANTERIE_ESCORTENull()) { lignePionAncien.SetI_INFANTERIE_ESCORTENull(); }
+                    if (lignePion.IsI_CAVALERIE_ESCORTENull()) { lignePionAncien.SetI_CAVALERIE_ESCORTENull(); }
+                    if (lignePion.IsI_MATERIEL_ESCORTENull()) { lignePionAncien.SetI_MATERIEL_ESCORTENull(); }
                     lignePion.Delete();
                 }
                 else

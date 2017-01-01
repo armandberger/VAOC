@@ -1042,6 +1042,10 @@ namespace vaoc
                     {
                         return false; //cas possible si j'ai détruit une unité manuellement
                     }
+                    if (lignePionAdversaire.B_DETRUIT)
+                    {
+                        return false;
+                    }
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {

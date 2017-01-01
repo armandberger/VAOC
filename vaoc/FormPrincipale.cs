@@ -155,25 +155,7 @@ namespace vaoc
                     ConstruireImageCarte();
                 }
                 MiseAJourTitreFenetre();
-                //mise à jour de la liste de selection des unités
-                comboBoxListeUnites.Items.Clear();
-
-                if (null != this.ImageCarte.Image)
-                {
-                    TestsDePerformance();
-                    Donnees.m_donnees.TAB_CASE.InitialisationListeCase(this.ImageCarte.Image.Width, this.ImageCarte.Image.Height);//optimisation mémoire
-                    Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
-                }
-
-                IEnumerable<Donnees.TAB_PIONRow> requete =
-                from pion in Donnees.m_donnees.TAB_PION
-                orderby pion.ID_PION
-                select pion;
-
-                foreach (Donnees.TAB_PIONRow lignePion in requete)
-                {
-                    comboBoxListeUnites.Items.Add(lignePion);
-                }
+                MiseAJourListeUnites();
             }
             else
             {
@@ -182,8 +164,48 @@ namespace vaoc
             return true;
         }
 
+        private void MiseAJourListeUnites()
+        {
+            //mise à jour de la liste de selection des unités
+            comboBoxListeUnites.Items.Clear();
+
+            if (null != this.ImageCarte.Image)
+            {
+                TestsDePerformance();
+                Donnees.m_donnees.TAB_CASE.InitialisationListeCase(this.ImageCarte.Image.Width, this.ImageCarte.Image.Height);//optimisation mémoire
+                Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
+            }
+
+            IEnumerable<Donnees.TAB_PIONRow> requete =
+            from pion in Donnees.m_donnees.TAB_PION
+            orderby pion.ID_PION
+            select pion;
+
+            foreach (Donnees.TAB_PIONRow lignePion in requete)
+            {
+                comboBoxListeUnites.Items.Add(lignePion);
+            }
+        }
+
         private void Correctifs()
         {
+            #region remise à 0 de la fatigue pour les prisonniers et l'artillerie
+            int i = 0;
+            while (i < Donnees.m_donnees.TAB_PION.Count)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                //calcul de la fatigue et du moral
+                if (!lignePion.B_DETRUIT 
+                    && (lignePion.estDepot || lignePion.estBlesses
+                    || lignePion.estConvoiDeRavitaillement || lignePion.estQG || lignePion.estMessager
+                    || lignePion.estPatrouille || lignePion.estPontonnier || lignePion.estPrisonniers)
+                    )
+                {
+                    lignePion.I_FATIGUE = 0;
+                }
+                i++;
+            }
+            #endregion
             #region Suppression de données dans les tables
             /*
             Donnees.m_donnees.TAB_CASE.Clear();
@@ -2021,6 +2043,8 @@ namespace vaoc
                         }
                     }
                 }
+                //Il faut remettre à jour la liste car les références ont pu changer
+                MiseAJourListeUnites();
             }
         }
 

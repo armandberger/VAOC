@@ -48,7 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            AmeliorationsPerformances();
+            //AmeliorationsPerformances();
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
@@ -2860,7 +2860,10 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 //calcul de la fatigue et du moral
-                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0 && !lignePion.estDepot && !lignePion.estBlesses && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager && !lignePion.estPatrouille && !lignePion.estPontonnier)
+                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0 
+                    && !lignePion.estDepot && !lignePion.estBlesses 
+                    && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager 
+                    && !lignePion.estPatrouille && !lignePion.estPontonnier && !lignePion.estPrisonniers)
                 {
                     //est-ce que l'unité a fait un combat durant cette journée ?
                     requete = string.Format("ID_PION={0} AND B_ENGAGEE=True", lignePion.ID_PION);

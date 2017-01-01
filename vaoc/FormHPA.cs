@@ -214,14 +214,14 @@ namespace vaoc
                         {
                             if (cout != coutLocal)
                             {
-                                MessageBox.Show(string.Format("Ecart de cout {0}<>{1} pour modele_mouvement={2}, modele_teerrain={3}, meteo={4}. PCC hierarchique impossible", 
-                                    cout,
-                                    coutLocal,
-                                    ligneModeleMouvement.ID_MODELE_MOUVEMENT,
-                                    ligneModeleTerrain.ID_MODELE_TERRAIN,
-                                    ligneMeteo.ID_METEO), 
-                                    "PCC Hierarchique", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                                return;
+                                //    MessageBox.Show(string.Format("Ecart de cout {0}<>{1} pour modele_mouvement={2}, modele_teerrain={3}, meteo={4}. PCC hierarchique impossible", 
+                                //        cout,
+                                //        coutLocal,
+                                //        ligneModeleMouvement.ID_MODELE_MOUVEMENT,
+                                //        ligneModeleTerrain.ID_MODELE_TERRAIN,
+                                //        ligneMeteo.ID_METEO), 
+                                //        "PCC Hierarchique", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                //    return;
                             }
                         }
                     }

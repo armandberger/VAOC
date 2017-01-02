@@ -48,7 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            //AmeliorationsPerformances();
+            AmeliorationsPerformances();
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
@@ -504,6 +504,7 @@ namespace vaoc
         {
             #region Backup des messages, ordres et pions détruits ou passés
             int i = 0;
+            /* Retrait de l'optimisation sur les messages, en effets, certains pouvant être crées sur le web d'autres par l'interface, cela crée des bugs d'identifiants.
             while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
@@ -580,7 +581,7 @@ namespace vaoc
                     i++;
                 }
             }
-
+            */
             i = 0;
             while (i < Donnees.m_donnees.TAB_ORDRE.Count())
             {

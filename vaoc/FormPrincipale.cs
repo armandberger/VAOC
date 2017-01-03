@@ -41,6 +41,7 @@ namespace vaoc
         protected List<Donnees.TAB_CASERow> m_cheminVerifierTrajet;
         protected Cursor m_ancienCurseur;
         protected Donnees.TAB_PIONRow m_lignePionSelection;
+        protected int m_nbBatailles;
 
         #region gestion du fichier le plus récent
         protected MruStripMenuInline mruMenu;
@@ -2176,6 +2177,7 @@ namespace vaoc
 
             string messageErreur = string.Empty;
             e.Cancel = false;
+            m_nbBatailles = Donnees.m_donnees.TAB_BATAILLE.Count;
             if (!traitement.TraitementHeure(fichierCourant, travailleur, out messageErreur))
             {
                 e.Cancel = true;
@@ -2209,7 +2211,16 @@ namespace vaoc
             else
             {
                 RemiseEnVeille();
-                MessageBox.Show("Traitement terminé avec succès", "Fin de traitement", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string message;
+                if (m_nbBatailles == Donnees.m_donnees.TAB_BATAILLE.Count)
+                {
+                    message = "Traitement terminé avec succès";
+                }
+                else
+                {
+                    message = "Traitement terminé avec succès avec "+ (Donnees.m_donnees.TAB_BATAILLE.Count - m_nbBatailles).ToString() + " nouvelles batailles !";
+                }
+                MessageBox.Show(message, "Fin de traitement", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //ConstruireImageCarte(); ne peut pas être appelé depuis un autre process
             }
         }

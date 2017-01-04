@@ -458,6 +458,22 @@ namespace vaoc
             }
 
             /// <summary>
+            /// indique si le pion a l'aptitude messager ou pas
+            /// </summary>
+            /// <returns>true si Messager false sinon</returns>
+            public bool estMessager
+            {
+                get
+                {
+                    if (possedeAptitude("MESSAGER") || possedeAptitude("PATROUILLEMESSAGER"))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            /// <summary>
             /// indique si le pion a l'aptitude PONTONNIER ou pas 
             /// </summary>
             /// <returns>true si PONTONNIER false sinon</returns>
@@ -520,20 +536,17 @@ namespace vaoc
             }
 
             /// <summary>
-            /// indique si le pion a l'aptitude messager ou pas
+            /// indique si le pion est un renfort ou pas
             /// </summary>
-            /// <returns>true si Messager false sinon</returns>
-            public bool estMessager
+            /// <returns>true si renfort false sinon</returns>
+            public bool estRenfort
             {
                 get
                 {
-                    if (possedeAptitude("MESSAGER") || possedeAptitude("PATROUILLEMESSAGER"))
-                    {
-                        return true;
-                    }
-                    return false;
+                    return B_RENFORT;
                 }
             }
+
 
             /// <summary>
             /// indique si le pion a l'aptitude depot ou pas
@@ -1404,7 +1417,7 @@ namespace vaoc
                     return false;
                 }
 
-                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers)
+                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers || estRenfort)
                 {
                     return false;
                 }
@@ -4184,6 +4197,75 @@ namespace vaoc
                     return (null != ligneOrdre);
                 }
             }
+        }
+
+        partial class TAB_PION_ANCIENRow
+        {
+            public bool possedeAptitude(string nomAptitude)
+            {
+                string requete;
+
+                //recherche le modèle du pion
+                requete = string.Format("ID_MODELE_PION={0}", this.ID_MODELE_PION);
+                TAB_MODELE_PIONRow[] resModelePion = (TAB_MODELE_PIONRow[])m_donnees.TAB_MODELE_PION.Select(requete);
+
+                //recherche l'aptitude fournie en paramètre
+                requete = string.Format("S_NOM='{0}'", nomAptitude);
+                TAB_APTITUDESRow[] resAptitude = (TAB_APTITUDESRow[])m_donnees.TAB_APTITUDES.Select(requete);
+
+                //recherche si le modele de pion possède l'aptitude demandée
+                requete = string.Format("ID_MODELE_PION={0} AND ID_APTITUDE={1}", resModelePion[0].ID_MODELE_PION, resAptitude[0].ID_APTITUDE);
+                TAB_APTITUDES_PIONRow[] resAptitudesPion = (TAB_APTITUDES_PIONRow[])m_donnees.TAB_APTITUDES_PION.Select(requete);
+                if (null == resAptitudesPion || 0 == resAptitudesPion.Length)
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            /// <summary>
+            /// indique si le pion a l'aptitude messager ou pas
+            /// </summary>
+            /// <returns>true si Messager false sinon</returns>
+            public bool estMessager
+            {
+                get
+                {
+                    if (possedeAptitude("MESSAGER") || possedeAptitude("PATROUILLEMESSAGER"))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            /// <summary>
+            /// indique si le pion a l'aptitude patrouille ou pas
+            /// </summary>
+            /// <returns>true si Patrouille false sinon</returns>
+            public bool estPatrouille
+            {
+                get
+                {
+                    if (possedeAptitude("PATROUILLE") || possedeAptitude("PATROUILLEMESSAGER"))
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            /// <summary>
+            /// rennvoie le proprietaire du pion
+            /// </summary>
+            public TAB_PIONRow proprietaire
+            {
+                get
+                {
+                    return m_donnees.TAB_PION.FindByID_PION(ID_PION_PROPRIETAIRE);
+                }
+            }
+
         }
     }
 }

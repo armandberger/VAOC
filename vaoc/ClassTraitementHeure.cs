@@ -658,6 +658,8 @@ namespace vaoc
                 }
             }
 
+            /* complexe aussi sur les pions, quand on remonte sur proprietaire dans sauvegardeMesage de ClassVaocWebFichier, il faut des fois être sur un ancien des fois non et pas possible
+             *  a priori de faire un cast automatique entre les deix
             i = 0;
             while (i < Donnees.m_donnees.TAB_PION.Count())
             {
@@ -765,7 +767,7 @@ namespace vaoc
                     i++;
                 }
             }
-
+            */
             Debug.WriteLine(string.Format("Après AmeliorationsPerformances #pions={0} #messages={1} #ordres={2}",
                 Donnees.m_donnees.TAB_PION.Count(),
                 Donnees.m_donnees.TAB_MESSAGE.Count(),

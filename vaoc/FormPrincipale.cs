@@ -191,6 +191,7 @@ namespace vaoc
         private void Correctifs()
         {
             #region remise à 0 de la fatigue pour les prisonniers et l'artillerie
+            /*
             int i = 0;
             while (i < Donnees.m_donnees.TAB_PION.Count)
             {
@@ -206,6 +207,7 @@ namespace vaoc
                 }
                 i++;
             }
+            */
             #endregion
             #region Suppression de données dans les tables
             /*

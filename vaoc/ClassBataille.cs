@@ -678,7 +678,7 @@ namespace vaoc
                 if (de < 0) de = 0;
                 if (de > 9) de = 9;
 
-                moral = (moralCavaleriePoursuivant - 1) / 10;
+                moral = Math.Min(3,(moralCavaleriePoursuivant - 1) / 10);
                 pertes = ((Constantes.tablePoursuite[de, moral] * effectifCavaleriePoursuivant / 100) / Constantes.CST_PAS_DE_PERTES) * Constantes.CST_PAS_DE_PERTES;//on travaille par multiples de CST_PAS_DE_PERTES
                 pertesMoral = Constantes.tablePoursuite[de, moral]; //pertes en points de moral des unités, également égal aux poucentage de pertes en ravitaillement *2, d'équipement *3, de canons *2
                 pertesRavitaillement = pertesMoral * 2;

@@ -217,10 +217,10 @@ namespace vaoc
 
         public int IndexOfCout(object O)
 		{
-            Monitor.Enter(O);
+            //Monitor.Enter(O);
             int Result = _ListCout.BinarySearch(O, _ComparerCout);
             while (Result > 0 && _ListCout[Result - 1].Equals(O)) Result--; // We want to point at the FIRST occurence
-            Monitor.Exit(O);
+            //Monitor.Exit(O);
             return Result;
 		}
 
@@ -617,12 +617,12 @@ namespace vaoc
             public int Compare(object a, object b)
             {
                 int valA, valB;
-                Monitor.Enter(a);
+                //Monitor.Enter(a);
                 valA = (null != ((Track)a).EndNode) ? ((Track)a).EndNode.ID_CASE : ((Track)a).EndNodeHPA.ID_CASE_FIN;
-                Monitor.Exit(a);
-                Monitor.Enter(b);
+                //Monitor.Exit(a);
+                //Monitor.Enter(b);
                 valB = (null != ((Track)b).EndNode) ? ((Track)b).EndNode.ID_CASE : ((Track)b).EndNodeHPA.ID_CASE_FIN;
-                Monitor.Exit(b);
+                //Monitor.Exit(b);
                 return valA - valB;
             }
         }

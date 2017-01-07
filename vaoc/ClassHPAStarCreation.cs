@@ -29,6 +29,9 @@ namespace vaoc
         private const int CST_LGPCC = 5;//longueur limite pour laquelle on ajoute deux points de sortie pour le PCC
         private AStar m_etoile = new AStar();
         private int m_idTrajet;
+        static readonly object m_verrouIDTrajet = new object();
+        static ReaderWriterLockSlim _rwPCCCOUT = new ReaderWriterLockSlim();
+        
         //protected LogFile m_log = null;
         private int m_nbBlocsHorizontaux;//nombre de blocs sur l'axe des abscisses
         private int m_nbBlocsVerticaux;//nombre de blocs sur l'axe des ordonnées
@@ -38,8 +41,9 @@ namespace vaoc
         private int m_tailleBloc;
         private System.ComponentModel.BackgroundWorker m_travailleur=null;
         private List<Task<bool>> m_tasks = new List<Task<bool>>();
-        public const int NB_TACHES = 100;
+        public const int NB_TACHES = 10000;
         private AStar[] m_etoileParallele;
+        private AStarOBJ[] m_etoileParalleleOBJ;
         #endregion
 
         #region Events
@@ -83,6 +87,8 @@ namespace vaoc
             m_nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
             m_etoileParallele = new AStar[NB_TACHES];
             for (int i = 0; i < NB_TACHES; i++) { m_etoileParallele[i] = new AStar(); }
+            m_etoileParalleleOBJ = new AStarOBJ[NB_TACHES];
+            for (int i = 0; i < NB_TACHES; i++) { m_etoileParalleleOBJ[i] = new AStarOBJ(); }
 
             if (Donnees.m_donnees.TAB_PCC_COUTS.Count > 0)
             {
@@ -160,7 +166,7 @@ namespace vaoc
                                 //Sur la carte 1813 (5111x4338), le traitement mono prend 430 heures...
                                 //1569 heures dans le première version parallèle...
                                 travailleur.ReportProgress(0, new HPACreationStatut(-1, -1, "Calcul des chemins dans les blocs"));//toujours zero durant le traitement, car affichage basé differement d'un pourcentage
-                                //if (!this.CalculCheminPCCBloc(m_sous_traitement++, m_traitement)) { return false; }
+                                //if (!this.CalculCheminPCCBloc(m_sous_traitement++, m_traitement, 0)) { return false; }
                                 if (!this.CalculCheminPCCBlocParallele(ref m_sous_traitement)) { return false; }
                                 break;
                             default:
@@ -169,6 +175,9 @@ namespace vaoc
                     }
                     else
                     {
+                        LogFile.Notifier(string.Format("traitement n°{0} en {1} sous-traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count={2}, BD.Base.PccCouts.Count={3}",
+                            m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, BD.Base.PccCouts.Count()));
+
                         m_sous_traitement = 0;
                         m_traitement++;
                     }
@@ -204,7 +213,7 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         private bool CréationsPointsPCCBloc(int xBloc, int yBloc)
         {
-            LogFile.Notifier(string.Format("TraitementPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
+            //LogFile.Notifier(string.Format("TraitementPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
             int xmin, xmax, ymin, ymax;
 
             try
@@ -365,7 +374,7 @@ namespace vaoc
                 // liste des points ayant ce modele
                 //les frontières étant communes et allant de haut en bas, de gauche vers la droite, 
                 //il faut à chaque fois ne traiter que les frontières droite et basse de chaque bloc mais ajouter dans les deux blocs
-                LogFile.Notifier(string.Format("AjouterPointsPCC terrainMin={0}", terrainMin));
+                //LogFile.Notifier(string.Format("AjouterPointsPCC terrainMin={0}", terrainMin));
                 int nbCases = 0;
                 int nbCasesContinue = 0;//on ne garde que les points en continue s'il sont supérieur à une longueur de CST_LGPCC
                 for (i = debut; i < fin + 1; i++)//+1 car frontière commune avec le voisin
@@ -376,7 +385,7 @@ namespace vaoc
                         //case de sortie possible
                         if (0 == nbCasesContinue || nbCasesContinue > CST_LGPCC)
                         {
-                            LogFile.Notifier(string.Format("Point x={0}, y={1}, id={2}", ligneCase.I_X, ligneCase.I_Y, ligneCase.ID_CASE));
+                            //LogFile.Notifier(string.Format("Point x={0}, y={1}, id={2}", ligneCase.I_X, ligneCase.I_Y, ligneCase.ID_CASE));
                             nbCases++;
                             nbCasesContinue = 0;
                             //ajout des cases dans le bloc courant et dans le bloc x+1,y ou le bloc x,y+1
@@ -455,11 +464,13 @@ namespace vaoc
         private bool CalculCheminPCCBlocParallele(ref int iAvance)
         {
             int nbTasks = Math.Min(NB_TACHES, m_nbBlocsHorizontaux - iAvance); // pas plus de 100 tâches à la fois
+            /*
             for (int k = 0; k < nbTasks; k++)
             {
                 int XBloc = m_sous_traitement + k;
                 int YBloc = m_traitement;
                 int numeroTache = k; //pour la pile des Astar
+                CalculCheminPCCBloc(XBloc, YBloc, numeroTache);
                 m_tasks.Add(Task<bool>.Factory.StartNew(() =>
                 {
                     return CalculCheminPCCBloc(XBloc, YBloc, numeroTache);
@@ -473,7 +484,12 @@ namespace vaoc
                     return false;
                 }
             }
+             * */
+            //Parallel.For(0, nbTasks, k => CalculCheminPCCBloc(m_sous_traitement + k, m_traitement, k));
+            Parallel.For(0, nbTasks, k => CalculCheminPCCBlocOBJ(m_sous_traitement + k, m_traitement, false, k));
             iAvance += nbTasks;
+            //CalculCheminPCCBlocOBJ(m_sous_traitement, m_traitement, false, 0);
+            //iAvance++;
             return true;
         }
 
@@ -492,14 +508,14 @@ namespace vaoc
         private bool CalculCheminPCCBloc(int xBloc, int yBloc, bool bCreation, int numeroTache)
         {
             int i, j, k;
-            DateTime timeStart;
-            TimeSpan perf;
+            //DateTime timeStart;
+            //TimeSpan perf;
             Donnees.TAB_PCC_CASE_BLOCSRow[] listeCases;
             Donnees.TAB_CASERow ligneCaseDepart, ligneCaseArrivee;
             int xmin, xmax, ymin, ymax;
             List<int> listeCasesTrajet = new List<int>();
 
-            LogFile.Notifier(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}, numeroTache={2} ", xBloc, yBloc, numeroTache));
+            //LogFile.Notifier(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}, numeroTache={2} ", xBloc, yBloc, numeroTache));
             try
             {
                 PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
@@ -523,7 +539,11 @@ namespace vaoc
                         }
                         string requete = string.Format("ID_CASE_DEBUT={0} AND ID_CASE_FIN={1} AND I_BLOCX={2} AND I_BLOCY={3}",
                             ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, xBloc, yBloc);
+                        //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);//pour éviter toute modification durant la requete
+                        _rwPCCCOUT.EnterReadLock();
                         Donnees.TAB_PCC_COUTSRow[] lignesCouts = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
+                        _rwPCCCOUT.ExitReadLock();
+                        //Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
                         if (null != lignesCouts && lignesCouts.Length>0)
                         {
                             //le trajet existe déjà à cause d'un traitement précédent (cas d'une reprise)
@@ -536,15 +556,16 @@ namespace vaoc
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
                         Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
-                        timeStart = DateTime.Now;
+                        //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStar etoile = m_etoileParallele[numeroTache];
+                        //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
                         if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                         {
-                            LogFile.Notifier(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi ({8},{9})",
-                                ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y,
-                                ligneCaseArrivee.ID_CASE, ligneCaseArrivee.I_X, ligneCaseArrivee.I_Y,
-                                xBloc, yBloc, i, j));
+                            //LogFile.Notifier(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi ({8},{9})",
+                            //    ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y,
+                            //    ligneCaseArrivee.ID_CASE, ligneCaseArrivee.I_X, ligneCaseArrivee.I_Y,
+                            //    xBloc, yBloc, i, j));
                             //dans ce cas on ajouter un chemin de coût maximum
                             //correctif : en fait, non, on s'en fiche de ces trajets
                             //Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE,AStar.CST_COUTMAX, -1);
@@ -552,24 +573,169 @@ namespace vaoc
                         }
                         else
                         {
-                            perf = DateTime.Now - timeStart;
-                            //LogFile.Notifier(string.Format("{0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("etoile.SearchPath {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
                             //ajout des trajets et des couts
-                            m_idTrajet++;
                             k = 0;
                             listeCasesTrajet.Clear();
-                            List<Donnees.TAB_CASERow> trajet = m_etoile.PathByNodes;
+                            //LogFile.Notifier(string.Format("etoile n°={0} m_idTrajet={1}", numeroTache, m_idTrajet));
+                            List<Donnees.TAB_CASERow> trajet = etoile.PathByNodes;
                             while (k < trajet.Count)
                             {
                                 //Donnees.m_donnees.TAB_PCC_TRAJET.AddTAB_PCC_TRAJETRow(m_idTrajet, trajet[k].ID_CASE, k);
                                 listeCasesTrajet.Add(trajet[k].ID_CASE);
                                 k++;
                             }
-                            Dal.SauvegarderTrajet(m_idTrajet, listeCasesTrajet);
-                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
-                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, m_etoile.CoutGlobal, m_idTrajet, m_etoile.CoutGlobal, bCreation, -1);
-                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, m_etoile.CoutGlobal, m_idTrajet, m_etoile.CoutGlobal, bCreation, -1);
-                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
+                            Monitor.Enter(m_verrouIDTrajet);//m_idTrajet est une ressource partagée, si je ne veux pas que la valeur bouge entre le ++ et l'affectaction, il faut verrouiller
+                            m_idTrajet++;
+                            int numeroTrajet = m_idTrajet;
+                            Monitor.Exit(m_verrouIDTrajet);
+
+                            //timeStart = DateTime.Now;
+                            Dal.SauvegarderTrajet(numeroTrajet, listeCasesTrajet);
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("Dal.SauvegarderTrajet {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+                            //timeStart = DateTime.Now;
+                            //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
+                            _rwPCCCOUT.EnterWriteLock();
+                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, -1);
+                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, -1);
+                            _rwPCCCOUT.ExitWriteLock();
+                            //Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+                            //il faut ajouter l'aller et le retour !
+                            //if (ligneCaseDepart.ID_CASE < ligneCaseArrivee.ID_CASE)
+                            //{
+                            //    Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, m_etoile.CoutGlobal, m_idTrajet);
+                            //}
+                            //else
+                            //{
+                            //    Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, m_etoile.CoutGlobal, m_idTrajet);
+                            //}
+                            //LogFile.Notifier(string.Format("trajet cout={0} #noeuds={1}", m_etoile.CoutGlobal, trajet.Length));
+                        }
+                        //Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        j++;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogFile.Notifier("CalculCheminPCCBloc : exception =" + e.Message + " : " + e.StackTrace);
+                return false;
+            }
+            return true;
+        }
+
+        private bool CalculCheminPCCBlocOBJ(int xBloc, int yBloc, bool bCreation, int numeroTache)
+        {
+            int i, j, k;
+            //DateTime timeStart;
+            //TimeSpan perf;
+            Donnees.TAB_PCC_CASE_BLOCSRow[] listeCases;
+            LigneCASE ligneCaseDepart, ligneCaseArrivee;
+            int xmin, xmax, ymin, ymax;
+            List<int> listeCasesTrajet = new List<int>();
+
+            LogFile.Notifier(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}, numeroTache={2} ", xBloc, yBloc, numeroTache));
+            try
+            {
+                PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
+
+                //recherche de tous les points dans le bloc
+                listeCases = Donnees.m_donnees.TAB_PCC_CASE_BLOCS.ListeCasesBloc(xBloc, yBloc);
+                //if (0==listeCases.Length), cas impossible, testé à l'étape précédente !
+
+                for (i = 0; i < listeCases.Length; i++)
+                {
+                    ligneCaseDepart = BD.Base.Case.TrouveParID_CASE(listeCases[i].ID_CASE);
+                    j = i + 1;
+                    while (j < listeCases.Length)
+                    {
+                        ligneCaseArrivee = BD.Base.Case.TrouveParID_CASE(listeCases[j].ID_CASE);
+                        if (ligneCaseDepart.I_X == ligneCaseArrivee.I_X || ligneCaseDepart.I_Y == ligneCaseArrivee.I_Y)
+                        {
+                            //    j++;//pas de trajets entre deux points sur la même ligne
+                            //    continue;
+                            //Debug.WriteLine("meme ligne");
+                        }
+                        string requete = string.Format("ID_CASE_DEBUT={0} AND ID_CASE_FIN={1} AND I_BLOCX={2} AND I_BLOCY={3}",
+                            ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, xBloc, yBloc);
+                        _rwPCCCOUT.EnterReadLock();
+                        IEnumerable<LignePCC_COUTS> listePccCouts = BD.Base.PccCouts.ListeLiensPointBloc(ligneCaseDepart.ID_CASE, xBloc, yBloc);
+                        _rwPCCCOUT.ExitReadLock();
+                        bool bExiste = false;
+                        foreach(LignePCC_COUTS lignePccCout in listePccCouts)
+                        {
+                            if (lignePccCout.ID_CASE_FIN == ligneCaseArrivee.ID_CASE)
+                            {
+                                bExiste = true;
+                                break;
+                            }
+                        }
+                        if (bExiste)
+                        {
+                            //le trajet existe déjà à cause d'un traitement précédent (cas d'une reprise)
+                            j++;
+                            continue;
+                        }
+                        //recherche du plus court chemin
+                        AstarTerrainOBJ[] tableCoutsMouvementsTerrain;
+                        //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
+                        //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
+                        Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                        //timeStart = DateTime.Now;
+                        //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                        AStarOBJ etoile = m_etoileParalleleOBJ[numeroTache];
+                        //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
+                        if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
+                        {
+                            //LogFile.Notifier(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi ({8},{9})",
+                            //    ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y,
+                            //    ligneCaseArrivee.ID_CASE, ligneCaseArrivee.I_X, ligneCaseArrivee.I_Y,
+                            //    xBloc, yBloc, i, j));
+                            //dans ce cas on ajouter un chemin de coût maximum
+                            //correctif : en fait, non, on s'en fiche de ces trajets
+                            //Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE,AStar.CST_COUTMAX, -1);
+                            //Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, AStar.CST_COUTMAX, -1);
+                        }
+                        else
+                        {
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("etoile.SearchPath {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
+                            //ajout des trajets et des couts
+                            k = 0;
+                            listeCasesTrajet.Clear();
+                            //LogFile.Notifier(string.Format("etoile n°={0} m_idTrajet={1}", numeroTache, m_idTrajet));
+                            List<LigneCASE> trajet = etoile.PathByNodes;
+                            while (k < trajet.Count)
+                            {
+                                //Donnees.m_donnees.TAB_PCC_TRAJET.AddTAB_PCC_TRAJETRow(m_idTrajet, trajet[k].ID_CASE, k);
+                                listeCasesTrajet.Add(trajet[k].ID_CASE);
+                                k++;
+                            }
+                            Monitor.Enter(m_verrouIDTrajet);//m_idTrajet est une ressource partagée, si je ne veux pas que la valeur bouge entre le ++ et l'affectaction, il faut verrouiller
+                            m_idTrajet++;
+                            int numeroTrajet = m_idTrajet;
+                            Monitor.Exit(m_verrouIDTrajet);
+
+                            //timeStart = DateTime.Now;
+                            Dal.SauvegarderTrajet(numeroTrajet, listeCasesTrajet);
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("Dal.SauvegarderTrajet {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+                            //timeStart = DateTime.Now;
+                            //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
+                            _rwPCCCOUT.EnterWriteLock();
+                            BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
+                            BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
+                            _rwPCCCOUT.ExitWriteLock();
+                            //Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
+                            //perf = DateTime.Now - timeStart;
+                            //LogFile.Notifier(string.Format("Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow {0} min, {1} sec, {2} mil", perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                             //il faut ajouter l'aller et le retour !
                             //if (ligneCaseDepart.ID_CASE < ligneCaseArrivee.ID_CASE)

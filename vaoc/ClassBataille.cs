@@ -320,7 +320,8 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePionEnBataille = Donnees.m_donnees.TAB_PION[i++];
                     if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.nation.ID_NATION!= idNation 
-                        || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0) { continue; }
+                        || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0
+                        || lignePionEnBataille.estMessager || lignePionEnBataille.estQG || lignePionEnBataille.estConvoi) { continue; }
 
                     Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionEnBataille.ID_CASE);
                     if (ligneCasePionBataille.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCasePionBataille.I_Y >= I_Y_CASE_HAUT_GAUCHE 

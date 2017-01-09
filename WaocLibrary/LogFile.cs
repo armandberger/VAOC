@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
 
 namespace WaocLib
 {
@@ -10,7 +11,7 @@ namespace WaocLib
         private static string m_fileName="";
         private static bool m_ecriture;//true si en cours d'écriture, false sinon, pour gérer le multi-processeur
         private static StringBuilder m_phrases = new StringBuilder();//phrases à écrire
-
+        private static readonly object m_verrouEcriture = new object();
         //public LogFile(string nomFichier, string suffixe, int tour, int phase)
         //{
         //    string nomfichierTourPhase;
@@ -83,10 +84,12 @@ namespace WaocLib
             if (!m_ecriture)
             {
                 m_ecriture = true;
+                Monitor.Enter(m_verrouEcriture);
                 file = new StreamWriter(m_fileName, true);                
                 file.WriteLine(m_phrases.ToString());
-                m_phrases.Clear();
                 file.Close();
+                Monitor.Exit(m_verrouEcriture);
+                m_phrases.Clear();
                 m_ecriture = false;
             }
         }

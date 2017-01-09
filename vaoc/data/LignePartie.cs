@@ -22,7 +22,7 @@ namespace vaoc
         public int ID_METEO { get; set; }
         public int I_LARGEUR_CARTE_ZOOM_WEB { get; set; }
         public int I_HAUTEUR_CARTE_ZOOM_WEB { get; set; }
-        public int ID_VICTOIRE { get; set; }
+        public int? ID_VICTOIRE { get; set; }
         public bool FL_DEMARRAGE { get; set; }
         public int I_TOUR_NOTIFICATION { get; set; }
         public int I_NB_METEO_SUCCESSIVE { get; set; }
@@ -42,7 +42,14 @@ namespace vaoc
             ID_METEO = ligneXML.ID_METEO;
             I_LARGEUR_CARTE_ZOOM_WEB = ligneXML.I_LARGEUR_CARTE_ZOOM_WEB;
             I_HAUTEUR_CARTE_ZOOM_WEB = ligneXML.I_HAUTEUR_CARTE_ZOOM_WEB;
-            ID_VICTOIRE = ligneXML.ID_VICTOIRE;
+            if (ligneXML.IsID_VICTOIRENull()) 
+            {
+                ID_VICTOIRE = null;
+            }
+            else
+            {
+                ID_VICTOIRE = ligneXML.ID_VICTOIRE;
+            }
             FL_DEMARRAGE = ligneXML.FL_DEMARRAGE;
             I_TOUR_NOTIFICATION = ligneXML.I_TOUR_NOTIFICATION;
             I_NB_METEO_SUCCESSIVE = ligneXML.I_NB_METEO_SUCCESSIVE;

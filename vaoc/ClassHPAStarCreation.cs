@@ -730,8 +730,8 @@ namespace vaoc
                             //timeStart = DateTime.Now;
                             //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
                             _rwPCCCOUT.EnterWriteLock();
-                            //BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
-                            //BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
+                            BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
+                            BD.Base.PccCouts.Ajouter(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, (int)etoile.CoutGlobal, numeroTrajet, (int)etoile.CoutGlobal, bCreation, null);
                             _rwPCCCOUT.ExitWriteLock();
                             //Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
                             //perf = DateTime.Now - timeStart;

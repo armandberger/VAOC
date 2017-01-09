@@ -124,6 +124,11 @@ namespace vaoc
             listePCCCouts.Add(ligne);            
         }
 
+        public void Ajouter(int I_BLOCX, int I_BLOCY, int ID_CASE_DEBUT, int ID_CASE_FIN, int I_COUT, int ID_TRAJET, int I_COUT_INITIAL, bool B_CREATION, int? ID_NATION)
+        {
+            LignePCC_COUTS ligne = new LignePCC_COUTS(I_BLOCX, I_BLOCY, ID_CASE_DEBUT, ID_CASE_FIN, I_COUT, I_COUT_INITIAL, ID_TRAJET, B_CREATION, ID_NATION);
+        }
+
         public void Supprimer(LignePCC_COUTS ligne)
         {
             List<LignePCC_COUTS> listePCCCouts;

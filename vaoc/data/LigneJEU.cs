@@ -108,7 +108,7 @@ namespace vaoc
             S_NOM_CARTE_GRIS = ligneXML.S_NOM_CARTE_GRIS;
             S_NOM_CARTE_HISTORIQUE = ligneXML.S_NOM_CARTE_HISTORIQUE;
             I_OBJECTIF = ligneXML.I_OBJECTIF;
-            I_TAILLEBLOC_PCC = ligneXML.I_TAILLEBLOC_PCC;
+            I_TAILLEBLOC_PCC = ligneXML.IsI_TAILLEBLOC_PCCNull() ? 0 : ligneXML.I_TAILLEBLOC_PCC;
             //I_ZONEVILLE_PCC= zoneVillePCC;
             //I_DISTANCEVILLEMAX_PCC= distanceVilleMaxPCC;
             I_VERSION = ligneXML.I_VERSION;

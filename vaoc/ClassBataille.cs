@@ -213,6 +213,7 @@ namespace vaoc
                             GainMoralFinDeBataille(lignePionsCombattifBataille012);
                         }
                         EnvoyerMessagesVictoireDefaite(lignePionsEnBataille012, lignePionsEnBataille345);
+                        DesengagementDuVaincu(false);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE012;
                         bVictoire345 = false;
                     }
@@ -227,6 +228,7 @@ namespace vaoc
                         EnvoyerMessagesVictoireDefaite(lignePionsEnBataille345, lignePionsEnBataille012);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE345;
                         bVictoire012 = false;
+                        DesengagementDuVaincu(true);
                     }
                 }
                 else
@@ -259,7 +261,7 @@ namespace vaoc
                         ligneBataillePions.I_MORAL_FIN = lignePion.I_MORAL;
                         ligneBataillePions.I_FATIGUE_FIN = lignePion.I_FATIGUE;
 
-                        if (lignePion.estQG || lignePion.estConvoi)
+                        if (lignePion.estQG || lignePion.estConvoi || lignePion.estRenfort)
                         {
                             //remet les zones du dernier message reçu à vide, un peu débile mais sinon l'unité est toujours marquée comme engagée !
                             //Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION);
@@ -297,6 +299,37 @@ namespace vaoc
                 //foreach (DataSetCoutDonnees.TAB_BATAILLE_PIONSRow lignePionBataille in resBataillePions) { lignePionBataille.Delete(); }
                 bFinDeBataille = true;
                 return true;
+            }
+
+            /// <summary>
+            ///tous les pions dans la zone de bataille des battus mais non engagées, on un temps de retraite pour éviter de redéclencher immédiatement un combat sur d'autres unités
+            ///il faut prendre toutes les zones dans la zone, pas seulement celles dans la bataille car les unités avec 0 de moral ne sont pas incluses et cela reprovoque une fin de
+            ///bataille juste après la fin de l'autre si plusieures unités à 0 de moral sont dans la zone.
+            /// </summary>
+            /// <param name="bZone012">true prendre la nation de la zone 012, 345 sinon</param>
+            private void DesengagementDuVaincu(bool bZone012)
+            {
+                int idNation = bZone012 ? ID_NATION_012 : ID_NATION_345;
+
+                string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}",
+                        this.I_X_CASE_HAUT_GAUCHE, this.I_Y_CASE_HAUT_GAUCHE, this.I_X_CASE_BAS_DROITE, this.I_Y_CASE_BAS_DROITE);
+                Donnees.TAB_CASERow[] lignesCaseBataille = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+
+                int i = 0;
+                while (i < Donnees.m_donnees.TAB_PION.Count)
+                {
+                    Donnees.TAB_PIONRow lignePionEnBataille = Donnees.m_donnees.TAB_PION[i++];
+                    if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.nation.ID_NATION!= idNation 
+                        || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0
+                        || lignePionEnBataille.estMessager || lignePionEnBataille.estQG || lignePionEnBataille.estConvoi) { continue; }
+
+                    Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionEnBataille.ID_CASE);
+                    if (ligneCasePionBataille.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCasePionBataille.I_Y >= I_Y_CASE_HAUT_GAUCHE 
+                        && ligneCasePionBataille.I_X <= I_X_CASE_BAS_DROITE && ligneCasePionBataille.I_Y <= I_Y_CASE_BAS_DROITE)
+                    {
+                        lignePionEnBataille.I_TOUR_RETRAITE_RESTANT = 2;
+                    }
+                }
             }
 
             /// <summary>

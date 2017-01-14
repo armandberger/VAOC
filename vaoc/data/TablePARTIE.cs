@@ -43,11 +43,12 @@ namespace vaoc
                     ligne.ID_METEO,
                     ligne.I_LARGEUR_CARTE_ZOOM_WEB,
                     ligne.I_HAUTEUR_CARTE_ZOOM_WEB,
-                    ligne.ID_VICTOIRE,
+                    (null == ligne.ID_VICTOIRE) ? -1 : (int)ligne.ID_VICTOIRE,
                     ligne.FL_DEMARRAGE,
                     ligne.I_TOUR_NOTIFICATION,
                     ligne.I_NB_METEO_SUCCESSIVE
                    );
+                if (null == ligne.ID_VICTOIRE) { ligneXML.SetID_VICTOIRENull();  }
             }
             return true;
         }

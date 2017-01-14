@@ -149,6 +149,12 @@ namespace vaoc
             }
             else
             {
+                //inutile c'est pour le searchHPA
+                //Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC = tailleBloc;
+                //if (null != BD.Base && null != BD.Base.Jeu && BD.Base.Jeu.Count > 0)
+                //{
+                //    BD.Base.Jeu[0].I_TAILLEBLOC_PCC = tailleBloc;
+                //}
                 m_nbBlocsHorizontaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE / (decimal)tailleBloc);
                 m_nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
                 bNouveau = true;

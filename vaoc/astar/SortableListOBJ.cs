@@ -25,7 +25,7 @@ namespace vaoc
 	public class SortableListOBJ : IList, ICloneable
 	{
 		private ArrayList _List;
-		private IComparer _Comparer;
+        private IComparer _Comparer;
         private IComparer _ComparerCout;//je fais une double indexation, une sur le coût, l'autre sur les ID
         private ArrayList _ListCout;
         private bool _UseObjectsComparison;

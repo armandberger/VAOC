@@ -82,6 +82,7 @@ namespace vaoc
         private int m_espace;//espace recherché
         private int m_espaceTrouve;//nombre d'espace trouvé
         private static int m_idNation;//nation autorisé à se déplacer sur le parcours
+        private Donnees.TAB_CASERow m_cible = null;//private static Donnees.TAB_CASERow _Target = null; de Track
 
         #region constantes
         public const char CST_CHEMIN='C';
@@ -257,7 +258,7 @@ namespace vaoc
 			if ( StartNode==null || EndNode==null ) throw new ArgumentNullException();
 			_Closed.Clear();
 			_Open.Clear();
-			Track.Target = EndNode;
+            m_cible = EndNode;
             m_xBlocEnd = EndNode.I_X / m_tailleBloc; ;
             m_yBlocEnd = EndNode.I_Y / m_tailleBloc; ;
             xminBlocEnd = m_xBlocEnd * m_tailleBloc;
@@ -265,9 +266,9 @@ namespace vaoc
             yminBlocEnd = m_yBlocEnd * m_tailleBloc;
             ymaxBlocEnd = yminBlocEnd + m_tailleBloc;
 
-            Track.tailleBloc = m_tailleBloc;
+            //Track.tailleBloc = m_tailleBloc;
 
-            _Open.Add(new Track(StartNode));
+            _Open.Add(new Track(StartNode, m_tailleBloc));
 			_NbIterations = 0;
 			_LeafToGoBackUp = null;
 		}
@@ -296,7 +297,7 @@ namespace vaoc
             }
             //_Open.RemoveAt(IndexMin);
             _Open.Remove(BestTrack);
-			if ( BestTrack.Succeed )
+			if ( BestTrack.Succeed(m_cible) )
 			{
                 Debug.WriteLine(string.Format("BestTrack Case {0}({1},{2}), cout={3} en _NbIterations={4}",
                     BestTrack.EndNode.ID_CASE,
@@ -372,7 +373,7 @@ namespace vaoc
             }
             //_Open.RemoveAt(IndexMin);
             _Open.Remove(BestTrack);
-            if (BestTrack.Succeed)
+            if (BestTrack.Succeed(m_cible))
             {
                 Debug.WriteLine(string.Format("BestTrack cout={0} en _NbIterations={1}",
                     BestTrack.Cost,
@@ -422,8 +423,8 @@ namespace vaoc
                 //}
                 Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
                 int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
-                int PosNO = _Open.IndexOf(Successor, SameNodesReached);
                 if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
+                int PosNO = _Open.IndexOf(Successor, SameNodesReached);
                 if (PosNO >= 0 && Successor.Cost >= ((Track)_Open[PosNO]).Cost) continue;
                 if (PosNF >= 0)
                 {
@@ -473,9 +474,9 @@ namespace vaoc
                 }
                 Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
 				int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
-				int PosNO = _Open.IndexOf(Successor, SameNodesReached);
 				if ( PosNF>=0 && Successor.Cost>=((Track)_Closed[PosNF]).Cost ) continue;
-				if ( PosNO>=0 && Successor.Cost>=((Track)_Open[PosNO]).Cost ) continue;
+                int PosNO = _Open.IndexOf(Successor, SameNodesReached);
+                if (PosNO >= 0 && Successor.Cost >= ((Track)_Open[PosNO]).Cost) continue;
                 if (PosNF >= 0)
                 {
                     _Closed.RemoveAt(PosNF);
@@ -814,7 +815,7 @@ namespace vaoc
                 //if (ligneCout.I_BLOCX == m_xBlocEnd && ligneCout.I_BLOCY == m_yBlocEnd)
                 if (ligneCaseFin.I_X >= xminBlocEnd && ligneCaseFin.I_X <= xmaxBlocEnd && ligneCaseFin.I_Y >= yminBlocEnd && ligneCaseFin.I_Y <= ymaxBlocEnd)
                 {
-                    listeRetour.Add(new Track(ligneCaseFin));
+                    listeRetour.Add(new Track(ligneCaseFin, m_tailleBloc));
                 }
             }
             return listeRetour;
@@ -1094,10 +1095,10 @@ namespace vaoc
         {
             if (ligneCase == null) throw new ArgumentNullException();
             _Closed.Clear();//on utilise pas la liste mais...
-            Track.Target = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
-            Track.tailleBloc = m_tailleBloc;
+            m_cible = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
+            //Track.tailleBloc = m_tailleBloc;
             _Open.Clear();
-            _Open.Add(new Track(ligneCase));
+            _Open.Add(new Track(ligneCase, m_tailleBloc));
             _NbIterations = 0;
             m_espaceTrouve = 0;
             _LeafToGoBackUp = null;//on utilise pas la variable mais...

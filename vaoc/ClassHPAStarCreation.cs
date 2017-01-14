@@ -178,7 +178,8 @@ namespace vaoc
                         if (1 == m_etape)
                         {
                             LogFile.Notifier(string.Format("traitement n°{0} en {1} sous-traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count={2}, BD.Base.PccCouts.Count={3}",
-                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, BD.Base.PccCouts.Count()));
+                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, 
+                                (null==BD.Base || null==BD.Base.PccCouts) ? 0 : BD.Base.PccCouts.Count()));
                         }
 
                         m_sous_traitement = 0;
@@ -201,7 +202,7 @@ namespace vaoc
             }
             catch(Exception e)
             {
-                LogFile.Notifier("TraitementPCC : exception =" + e.Message);
+                LogFile.Notifier(string.Format("TraitementPCC : exception ={0}, stackTrace={1}", e.Message, e.StackTrace));
                 return false;
             }
             return true;
@@ -475,8 +476,8 @@ namespace vaoc
                 int numeroTache = k; //pour la pile des Astar
                 m_tasks.Add(Task<bool>.Factory.StartNew(() =>
                 {
-                    //return CalculCheminPCCBloc(XBloc, YBloc, numeroTache);
-                    return CalculCheminPCCBlocOBJ(XBloc, YBloc, false, numeroTache);
+                    return CalculCheminPCCBloc(XBloc, YBloc, numeroTache);
+                    //return CalculCheminPCCBlocOBJ(XBloc, YBloc, false, numeroTache);
                 }));
             }
             Task.WaitAll(m_tasks.ToArray());

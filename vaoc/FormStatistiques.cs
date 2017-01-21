@@ -70,18 +70,16 @@ namespace vaoc
                 {
                     //recherche du nombre d'ordres donnés par le joueur sur son propre pion ou les pions sous ses ordres
                     requete = "ID_PION = " + lignePion.ID_PION;
-                    foreach (Donnees.TAB_PIONRow lignePionSous in Donnees.m_donnees.TAB_PION)
-                    {
-                        if (!lignePionSous.estJoueur && !lignePionSous.estMessager && lignePionSous.ID_PION_PROPRIETAIRE == lignePion.ID_PION)
-                        {
-                            requete += " OR ID_PION = " + lignePionSous.ID_PION;
-                        }
-                    }
+                    requete += OrdresAuxUnites(lignePion);
 
                     DataRow[] nbordres = Donnees.m_donnees.TAB_ORDRE.Select(requete);
-                    dataGridOrdres.Rows.Add(new string[3] { lignePion.nation.S_NOM, lignePion.S_NOM, nbordres.Count().ToString()});
+                    DataRow[] nbordresAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.Select(requete);
+                    dataGridOrdres.Rows.Add(new string[3] { lignePion.nation.S_NOM, lignePion.S_NOM, (nbordres.Count()+ nbordresAncien.Count()).ToString()});
 
                     //recherche du nombre de messages envoyés et reçus par le joueur, hors mis le forum initial
+                    //quand il y a eut remplacement tous les messages possédés par ce pion sont transférés au nouveau pion par contre
+                    //les messages émis par le précédent pion restent marqués comme envoyés par le pion disparus
+                    // => ID_PION_PROPRIETAIRE n'a pas à tenir du compte du remplacement mais ID_PION_EMETTEUR oui
                     var result = from message in Donnees.m_donnees.TAB_MESSAGE
                                  where (message.ID_PION_EMETTEUR == lignePion.ID_PION) && (message.I_TOUR_DEPART>0)
                                  group message by message.ID_PION_PROPRIETAIRE into grps
@@ -98,6 +96,61 @@ namespace vaoc
                     }
                 }
             }
+        }
+
+        /*
+        private int NombreMessagesEnvoyes(Donnees.TAB_PIONRow lignePion, ref int nbMessagesRecus)
+        {
+            var result = from message in Donnees.m_donnees.TAB_MESSAGE
+                         where (message.ID_PION_EMETTEUR == lignePion.ID_PION) && (message.I_TOUR_DEPART > 0)
+                         group message by message.ID_PION_PROPRIETAIRE into grps
+                         select new { Key = grps.Key, Value = grps };
+            foreach (var valeur in result)
+            {
+                Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(valeur.Key);
+                if (!lignePionEmetteur.estMessager && lignePion.ID_PION != lignePionEmetteur.ID_PION)
+                {
+                    string requete = string.Format("ID_PION_EMETTEUR={0} AND ID_PION_PROPRIETAIRE={1} AND I_TOUR_DEPART>0", valeur.Key, lignePion.ID_PION);
+                    Donnees.TAB_MESSAGERow[] nbMessagesRecs = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
+                    nbMessagesRecus += nbMessagesRecs.Count();
+                }
+            }
+        }
+
+        private int NombreMessagesRecues(Donnees.TAB_PIONRow lignePion, int idPIONEMETTEUR)
+        {
+            int iRetour = 0;
+            string requete = string.Format("ID_PION_EMETTEUR={0} AND ID_PION_PROPRIETAIRE={1} AND I_TOUR_DEPART>0", idPIONEMETTEUR, lignePion.ID_PION);
+            Donnees.TAB_MESSAGERow[] nbMessagesRecs = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
+            iRetour = nbMessagesRecs.Count();
+            if (!lignePion.IsID_PION_REMPLACENull() && lignePion.ID_PION_REMPLACE > 0)
+            {
+                Donnees.TAB_PIONRow lignePionRemplace = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_REMPLACE);
+                iRetour += NombreMessagesRecues(lignePionRemplace, idPIONEMETTEUR);
+            }
+            return iRetour; 
+        }
+        */
+
+        private string OrdresAuxUnites(Donnees.TAB_PIONRow lignePion)
+        {
+            string requete = string.Empty;
+            foreach (Donnees.TAB_PIONRow lignePionSous in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePionSous.estJoueur && !lignePionSous.estMessager && lignePionSous.ID_PION_PROPRIETAIRE == lignePion.ID_PION)
+                {
+                    requete += " OR ID_PION = " + lignePionSous.ID_PION;
+                }
+            }
+            if (!lignePion.IsID_PION_REMPLACENull() &&  lignePion.ID_PION_REMPLACE>0)
+            {
+                requete += " OR ID_PION = " + lignePion.ID_PION_REMPLACE;
+                /* ce qui suit ne sert à rien puisque tous les pions ont été transférés lors du remplacement
+                Donnees.TAB_PIONRow lignePionRemplace = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_REMPLACE);
+                requete += OrdresAuxUnites(lignePionRemplace);
+                */
+            }
+            return requete;
         }
 
         /// <summary>

@@ -766,7 +766,7 @@ namespace vaoc
                 //pas les patrouilles je pense car elles ne sont jamais directement rattachées à un joueur
                 //il faut donc que les messages (voir SauvegarderMessages reference toujours le propriétaire du porteur du message et non le porteur lui-même)
                 //if (lignePion.estMessager || lignePion.estPatrouille)
-                if (lignePion.estMessager)
+                if (lignePion.estMessager || lignePion.estPatrouille)
                 {
                     continue;
                 }

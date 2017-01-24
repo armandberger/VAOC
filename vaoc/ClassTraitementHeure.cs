@@ -48,6 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
+            TestCreation();
             AmeliorationsPerformances();
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
@@ -582,6 +583,7 @@ namespace vaoc
                 }
             }
             */
+
             i = 0;
             while (i < Donnees.m_donnees.TAB_ORDRE.Count())
             {
@@ -773,7 +775,7 @@ namespace vaoc
                 Donnees.m_donnees.TAB_MESSAGE.Count(),
                 Donnees.m_donnees.TAB_ORDRE.Count()));
             #endregion
-        }
+        }        
 
         private bool ExecuterMouvementEnParallele()
         {
@@ -2863,9 +2865,9 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 //calcul de la fatigue et du moral
-                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0 
-                    && !lignePion.estDepot && !lignePion.estBlesses 
-                    && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager 
+                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0
+                    && !lignePion.estDepot && !lignePion.estBlesses
+                    && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager
                     && !lignePion.estPatrouille && !lignePion.estPontonnier && !lignePion.estPrisonniers)
                 {
                     //est-ce que l'unité a fait un combat durant cette journée ?
@@ -4441,6 +4443,156 @@ namespace vaoc
 
             iWeb.TraitementEnCours(false, Donnees.m_donnees.TAB_JEU[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
             return true;
+        }
+
+        /// <summary>
+        /// Création aléatoire d'unités et d'ordres pour faire des tests de performances sans avoir à envoyer un xml web
+        /// </summary>
+        internal void TestCreation()
+        {
+            //Ajout de phrases pour tous les cas pour éviter des crash
+            TestCreationPhrases();
+            //Création de cent unités dans chaque camp
+            TestCreationUnite(0, 100);
+            //TestCreationUnite(1, 10); -> y'a qu'un camp :-)
+            //Ajout de 100 ordres
+            TestCreationOrdres();
+        }
+
+        private void TestCreationPhrases()
+        {
+            foreach (ClassMessager.MESSAGES tipeMessage in Enum.GetValues(typeof(ClassMessager.MESSAGES)))
+            {
+                Donnees.m_donnees.TAB_PHRASE.AddTAB_PHRASERow((int)tipeMessage, "Phrase pour " + tipeMessage.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Creation d'ordres fictifs pour faire des tests de performances
+        /// </summary>
+        private void TestCreationOrdres()
+        {
+            Random hasard = new Random();
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                int heureDebut = hasard.Next(12);
+                //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[hasard.Next(Donnees.m_donnees.TAB_PION.Count())];
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                    -1,//ID_ORDRE_TRANSMIS
+                        -1,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
+                        -1,///ID_ORDRE_WEB
+                        Constantes.ORDRES.MOUVEMENT,
+                        lignePion.ID_PION,
+                        lignePion.ID_CASE,
+                        lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE,
+                        Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE,//ID_CASE_DESTINATION
+                        -1,//id ville de destination
+                        0,//I_EFFECTIF_DESTINATION
+                        Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
+                        -1,//I_TOUR_FIN
+                        -1,//I_PHASE_FIN
+                        -1,//ID_MESSAGE
+                        -1,//ID_DESTINATAIRE
+                        -1,//ID_CIBLE
+                        -1,//ID_DESTINATAIRE_CIBLE
+                        -1,//null
+                        -1,//I_ZONE_BATAILLE
+                        heureDebut, //Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_HEURE_DEBUT
+                        heureDebut + hasard.Next(12), //Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL - Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_DUREE
+                        -1//I_ENGAGEMENT
+                        );//ID_BATAILLE
+                    ligneOrdre.SetID_ORDRE_TRANSMISNull();
+                    ligneOrdre.SetID_ORDRE_SUIVANTNull();
+                    ligneOrdre.SetID_ORDRE_WEBNull();
+                    ligneOrdre.SetID_MESSAGENull();
+                    ligneOrdre.SetID_DESTINATAIRENull();
+                    ligneOrdre.SetID_BATAILLENull();
+                    ligneOrdre.SetI_TOUR_FINNull();
+                    ligneOrdre.SetI_PHASE_FINNull();
+                    ligneOrdre.SetID_NOM_DESTINATIONNull();
+                    ligneOrdre.SetID_CIBLENull();
+                    ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
+                    ligneOrdre.SetI_ENGAGEMENTNull();            }
+        }
+
+        /// <summary>
+        /// Creation d'unitées fictives pour faire des tests de performances
+        /// </summary>
+        /// <param name="idNation">nation de l'unité</param>
+        /// <param name="nbUnites">nombre d'unités</param>
+        private void TestCreationUnite(int idNation, int nbUnites)
+        {
+            Random hasard = new Random();
+            for (int i=0; i<nbUnites;i++)
+            {
+                string requete = string.Format("ID_NATION={0}", idNation);
+                Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                int iInfanterie = 0, iCavalerie = 0, iArtillerie = 0;
+                switch(hasard.Next(3))
+                {
+                    case 0:
+                        //unité d'infanterie
+                        iInfanterie = 1000 + hasard.Next(10)*1000;
+                        break;
+                    case 1:
+                        //unité de cavalerie
+                        iCavalerie = 500 + hasard.Next(10)*500;
+                        break;
+                    default:
+                        //unité mixte
+                        iInfanterie = 1000 + hasard.Next(10)*1000;
+                        iCavalerie = 500 + hasard.Next(10)*500;
+                        iArtillerie = hasard.Next(10);
+                        break;
+                }
+                Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
+                    resModelePion[hasard.Next(resModelePion.Count())].ID_MODELE_PION,
+                    -1,//ID_PION_PROPRIETAIRE
+                    -1,
+                    -1,
+                    string.Format("Test {0} n°{1}", idNation, i),
+                    iInfanterie, iInfanterie,
+                    iCavalerie, iCavalerie,
+                    iArtillerie, iArtillerie, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
+                    Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE, 0, 0, -1,
+                    0, //I_TOUR_RETRAITE_RESTANT
+                    0, false, false, false, false, false,
+                    false,//B_ENNEMI_OBSERVABLE
+                    0,//I_MATERIEL,
+                    0,//I_RAVITAILLEMENT,
+                    false,//B_CAVALERIE_DE_LIGNE,
+                    false,//B_CAVALERIE_LOURDE,
+                    false,//B_GARDE,
+                    false,//B_VIEILLE_GARDE,
+                    0,//I_TOUR_CONVOI_CREE,
+                    -1,//ID_DEPOT_SOURCE
+                    0,//I_SOLDATS_RAVITAILLES,
+                    0,//I_NB_HEURES_FORTIFICATION,
+                    0,//I_NIVEAU_FORTIFICATION,
+                    0,//ID_PION_REMPLACE,
+                    0,//I_DUREE_HORS_COMBAT,
+                    0,//I_TOUR_BLESSURE,
+                    false,//B_BLESSES,
+                    false,//B_PRISONNIERS,
+                    false,//B_RENFORT
+                    -1,//ID_LIEU_RATTACHEMENT,
+                    'Z',//C_NIVEAU_DEPOT
+                    -1,//ID_PION_ESCORTE, 
+                    0,//I_INFANTERIE_ESCORTE, 
+                    0,//I_CAVALERIE_ESCORTE
+                    0//I_MATERIEL_ESCORTE
+                    );
+                ligneNouveauPion.SetID_ANCIEN_PION_PROPRIETAIRENull();
+                ligneNouveauPion.SetID_NOUVEAU_PION_PROPRIETAIRENull();
+                ligneNouveauPion.SetI_ZONE_BATAILLENull();
+                ligneNouveauPion.SetID_BATAILLENull();
+                ligneNouveauPion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
+                ligneNouveauPion.SetID_LIEU_RATTACHEMENTNull();
+                ligneNouveauPion.SetID_PION_ESCORTENull();
+                ligneNouveauPion.SetID_DEPOT_SOURCENull();
+                ligneNouveauPion.ID_PION_PROPRIETAIRE = 0; //Le propriéaire final doit forcément appartenir à un joueur qui doit être crée comme id=0 ligneNouveauPion.ID_PION;
+            }
         }
     }
 }

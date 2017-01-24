@@ -178,8 +178,7 @@ namespace vaoc
                         if (1 == m_etape)
                         {
                             LogFile.Notifier(string.Format("traitement n°{0} en {1} sous-traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count={2}, BD.Base.PccCouts.Count={3}",
-                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, 
-                                (null==BD.Base || null==BD.Base.PccCouts) ? 0 : BD.Base.PccCouts.Count()));
+                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, BD.Base.PccCouts.Count()));
                         }
 
                         m_sous_traitement = 0;
@@ -202,7 +201,7 @@ namespace vaoc
             }
             catch(Exception e)
             {
-                LogFile.Notifier(string.Format("TraitementPCC : exception ={0}, stackTrace={1}", e.Message, e.StackTrace));
+                LogFile.Notifier("TraitementPCC : exception =" + e.Message);
                 return false;
             }
             return true;

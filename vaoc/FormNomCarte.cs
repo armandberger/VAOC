@@ -103,7 +103,7 @@ namespace vaoc
             }
         }
 
-        public int id_police
+    public int id_police
         {
             set 
             {
@@ -218,7 +218,11 @@ namespace vaoc
             }
             get
             {
-                return (Donnees.TAB_MODELE_PIONRow)comboBoxModeleRenfort.Items[comboBoxModeleRenfort.SelectedIndex];
+                if (comboBoxModeleRenfort.Items.Count > 0 && comboBoxModeleRenfort.SelectedIndex>=0)
+                {
+                    return (Donnees.TAB_MODELE_PIONRow)comboBoxModeleRenfort.Items[comboBoxModeleRenfort.SelectedIndex];
+                }
+                return null;
             }
         }
 

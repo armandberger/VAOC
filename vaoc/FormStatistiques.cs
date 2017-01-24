@@ -94,7 +94,52 @@ namespace vaoc
                             dataGridMessages.Rows.Add(new string[5] { lignePion.nation.S_NOM, lignePion.S_NOM, valeur.Value.Count().ToString(), nbMessagesRecs.Count().ToString(), lignePionEmetteur.S_NOM });
                         }
                     }
+                    if (!lignePion.IsID_PION_REMPLACENull() && lignePion.ID_PION_REMPLACE > 0)
+                    {
+                        Donnees.TAB_PIONRow lignePionRemplace = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_REMPLACE);
+                        AjouterMessagesEnvoyés(lignePion, lignePionRemplace);
+                    }
                 }
+            }
+        }
+
+        private void AjouterMessagesEnvoyés(Donnees.TAB_PIONRow lignePionSource, Donnees.TAB_PIONRow lignePionRemplace)
+        {
+            var result = from message in Donnees.m_donnees.TAB_MESSAGE
+                         where (message.ID_PION_EMETTEUR == lignePionRemplace.ID_PION) && (message.I_TOUR_DEPART > 0)
+                         group message by message.ID_PION_PROPRIETAIRE into grps
+                         select new { Key = grps.Key, Value = grps };
+            foreach (var valeur in result)
+            {
+                Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(valeur.Key);
+                if (!lignePionEmetteur.estMessager && lignePionRemplace.ID_PION != lignePionEmetteur.ID_PION)
+                {
+                    /* recherche de la ligne correspondante précédente */
+                    string requete = string.Format("ID_PION_EMETTEUR={0} AND ID_PION_PROPRIETAIRE={1} AND I_TOUR_DEPART>0", valeur.Key, lignePionRemplace.ID_PION);
+                    //normalement doit renvoyé 0 puisque les messages ont été transférés
+                    Donnees.TAB_MESSAGERow[] nbMessagesRecs = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
+                    int i = 0;
+                    while (i < dataGridMessages.Rows.Count
+                        && (dataGridMessages.Rows[i].Cells[0].Value.ToString() != lignePionSource.nation.S_NOM
+                        || dataGridMessages.Rows[i].Cells[1].Value.ToString() != lignePionSource.S_NOM
+                        || dataGridMessages.Rows[i].Cells[4].Value.ToString() != lignePionEmetteur.S_NOM)
+                        ) i++;
+                    if (i < dataGridMessages.Rows.Count)
+                    {
+                        dataGridMessages.Rows[i].Cells[2].Value = (Convert.ToInt32(dataGridMessages.Rows[i].Cells[2].Value.ToString()) + valeur.Value.Count()).ToString();
+                        dataGridMessages.Rows[i].Cells[3].Value = (Convert.ToInt32(dataGridMessages.Rows[i].Cells[3].Value.ToString()) + nbMessagesRecs.Count()).ToString();
+                    }
+                    else
+                    {
+                        //nouvelle ligne, le dernier remplaçant n'avait rien envoyé à ce joueur mais le précédent si
+                        dataGridMessages.Rows.Add(new string[5] { lignePionSource.nation.S_NOM, lignePionSource.S_NOM, valeur.Value.Count().ToString(), nbMessagesRecs.Count().ToString(), lignePionEmetteur.S_NOM });
+                    }
+                }
+            }
+            if (!lignePionRemplace.IsID_PION_REMPLACENull() && lignePionRemplace.ID_PION_REMPLACE > 0)
+            {
+                Donnees.TAB_PIONRow lignePionRemplaceSuite = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePionRemplace.ID_PION_REMPLACE);
+                AjouterMessagesEnvoyés(lignePionSource, lignePionRemplaceSuite);
             }
         }
 

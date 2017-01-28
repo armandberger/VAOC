@@ -94,7 +94,8 @@ namespace vaoc
                         int ID_PION_ESCORTE,
                         int I_INFANTERIE_ESCORTE,//55
                         int I_CAVALERIE_ESCORTE,
-                        int I_MATERIEL_ESCORTE
+                        int I_MATERIEL_ESCORTE,
+                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                 )
             {
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
@@ -165,7 +166,8 @@ namespace vaoc
                         ID_PION_ESCORTE,
                         I_INFANTERIE_ESCORTE,
                         I_CAVALERIE_ESCORTE,
-                        I_MATERIEL_ESCORTE
+                        I_MATERIEL_ESCORTE,
+                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
@@ -2127,6 +2129,7 @@ namespace vaoc
                     if (meilleurRavitaillementDirect)
                     {
                         ligneMeilleurDepot.I_SOLDATS_RAVITAILLES += this.effectifTotal;
+                        ligneMeilleurDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                     }
                     message = string.Format("{0}(ID={1}, Ravitaillement ok, distance 'effective' du dépôt {3} = {2} km)", S_NOM, ID_PION, meilleurDistanceRavitaillement, ligneMeilleurDepot.S_NOM);
                     LogFile.Notifier(message);
@@ -2564,7 +2567,8 @@ namespace vaoc
                     -1,//int ID_PION_ESCORTE, 
                     0,//int I_INFANTERIE_ESCORTE, 
                     0,//int I_CAVALERIE_ESCORTE,
-                    0//int I_MATERIEL_ESCORTE
+                    0,//int I_MATERIEL_ESCORTE
+                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     );
 
                 if (null == lignePionRemplacant)
@@ -2738,7 +2742,8 @@ namespace vaoc
                     -1,//int ID_PION_ESCORTE, 
                     0,//int I_INFANTERIE_ESCORTE, 
                     0,//int I_CAVALERIE_ESCORTE,
-                    0//int I_MATERIEL_ESCORTE
+                    0,//int I_MATERIEL_ESCORTE
+                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     );
 
                 if (null == ligneAncienPion)
@@ -3074,13 +3079,13 @@ namespace vaoc
                 ClassMessager.MESSAGES typeMessage;
                 string phrase;
 
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
                 if (estMessager)
                 {
                     return true;//si la patrouille est déjà transformée en messager, elle n'envoit pas de deuxième rapport
                 }
 
                 #region création du message d'après ce qu'il y a autour de la patrouille
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
                 if (!ligneCase.EstInnocupe() && estEnnemi(ligneCase))
                 {
                     //cas particulier, la patrouille trouve un ennemi
@@ -3230,7 +3235,8 @@ namespace vaoc
                     -1,//ID_PION_ESCORTE, 
                     0,//I_INFANTERIE_ESCORTE, 
                     0,//I_CAVALERIE_ESCORTE
-                    0//I_MATERIEL_ESCORTE
+                    0,//I_MATERIEL_ESCORTE
+                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     );
                 lignePionConvoi.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionConvoi.SetID_NOUVEAU_PION_PROPRIETAIRENull();

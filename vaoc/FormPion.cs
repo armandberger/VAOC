@@ -107,7 +107,8 @@ namespace vaoc
                             Convert.ToInt32((ligne.Cells["ID_PION_ESCORTE"].Value)),
                             Convert.ToInt32((ligne.Cells["I_INFANTERIE_ESCORTE"].Value)),
                             Convert.ToInt32((ligne.Cells["I_CAVALERIE_ESCORTE"].Value)),
-                            Convert.ToInt32((ligne.Cells["I_MATERIEL_ESCORTE"].Value))                            
+                            Convert.ToInt32((ligne.Cells["I_MATERIEL_ESCORTE"].Value)),
+                            Convert.ToInt32((ligne.Cells["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"].Value))
                             );
                         if (lignePion.ID_BATAILLE < 0) lignePion.SetID_BATAILLENull();
                         if (lignePion.I_TOUR_SANS_RAVITAILLEMENT < 0) lignePion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
@@ -120,7 +121,7 @@ namespace vaoc
                         if (lignePion.ID_ANCIEN_PION_PROPRIETAIRE < 0) lignePion.SetID_ANCIEN_PION_PROPRIETAIRENull();
                         if (lignePion.ID_PION_ESCORTE < 0) lignePion.SetID_PION_ESCORTENull();
                         if (lignePion.ID_DEPOT_SOURCE < 0) lignePion.SetID_DEPOT_SOURCENull();
-                        
+                        if (lignePion.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT < 0) lignePion.SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull();                        
                     }
                 }
                 return table;
@@ -201,6 +202,7 @@ namespace vaoc
                     ligneGrid.Cells["I_CAVALERIE_ESCORTE"].Value = lignePion.I_CAVALERIE_ESCORTE;
                     ligneGrid.Cells["I_MATERIEL_ESCORTE"].Value = lignePion.I_MATERIEL_ESCORTE;
                     ligneGrid.Cells["ID_DEPOT_SOURCE"].Value = lignePion.IsID_DEPOT_SOURCENull() ? -1 : lignePion.ID_DEPOT_SOURCE;
+                    ligneGrid.Cells["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"].Value = lignePion.IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() ? -1 : lignePion.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
                 }
             }
         }

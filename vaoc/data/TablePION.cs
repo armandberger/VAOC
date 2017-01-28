@@ -93,7 +93,8 @@ namespace vaoc
                     ligne.ID_PION_ESCORTE ?? -1,
                     ligne.I_INFANTERIE_ESCORTE ?? -1, 
                     ligne.I_CAVALERIE_ESCORTE ?? -1, 
-                    ligne.I_MATERIEL_ESCORTE ?? -1);
+                    ligne.I_MATERIEL_ESCORTE ?? -1,
+                    ligne.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT ?? -1);
 
                 if (!ligne.ID_ANCIEN_PION_PROPRIETAIRE.HasValue) { ligneXML.SetID_ANCIEN_PION_PROPRIETAIRENull(); }
                 if (!ligne.ID_NOUVEAU_PION_PROPRIETAIRE.HasValue) { ligneXML.SetID_NOUVEAU_PION_PROPRIETAIRENull(); }

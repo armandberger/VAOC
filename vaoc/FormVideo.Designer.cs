@@ -48,6 +48,8 @@
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxMasque = new System.Windows.Forms.TextBox();
             this.buttonOuvrirFilm = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
@@ -184,7 +186,7 @@
             // 
             // buttonCreerFilmHistorique
             // 
-            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(329, 343);
+            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(402, 343);
             this.buttonCreerFilmHistorique.Name = "buttonCreerFilmHistorique";
             this.buttonCreerFilmHistorique.Size = new System.Drawing.Size(120, 23);
             this.buttonCreerFilmHistorique.TabIndex = 19;
@@ -212,7 +214,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(508, 343);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(571, 343);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -220,11 +222,31 @@
             this.buttonOuvrirFilm.UseVisualStyleBackColor = true;
             this.buttonOuvrirFilm.Click += new System.EventHandler(this.buttonOuvrirFilm_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(133, 343);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(63, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "Film simple :";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(297, 343);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(99, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Film avec batailles :";
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 378);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonOuvrirFilm);
             this.Controls.Add(this.textBoxMasque);
             this.Controls.Add(this.label6);
@@ -272,6 +294,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxMasque;
         private System.Windows.Forms.Button buttonOuvrirFilm;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
     }
 }
 

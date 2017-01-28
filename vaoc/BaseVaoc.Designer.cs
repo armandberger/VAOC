@@ -8119,6 +8119,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_MATERIEL_ESCORTE;
             
+            private global::System.Data.DataColumn columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_PIONDataTable() {
@@ -8618,6 +8620,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn {
+                get {
+                    return this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -8711,7 +8721,8 @@ namespace vaoc {
                         int ID_PION_ESCORTE, 
                         int I_INFANTERIE_ESCORTE, 
                         int I_CAVALERIE_ESCORTE, 
-                        int I_MATERIEL_ESCORTE) {
+                        int I_MATERIEL_ESCORTE, 
+                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT) {
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PION,
@@ -8771,7 +8782,8 @@ namespace vaoc {
                         ID_PION_ESCORTE,
                         I_INFANTERIE_ESCORTE,
                         I_CAVALERIE_ESCORTE,
-                        I_MATERIEL_ESCORTE};
+                        I_MATERIEL_ESCORTE,
+                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT};
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
                 return rowTAB_PIONRow;
@@ -8859,6 +8871,7 @@ namespace vaoc {
                 this.columnI_INFANTERIE_ESCORTE = base.Columns["I_INFANTERIE_ESCORTE"];
                 this.columnI_CAVALERIE_ESCORTE = base.Columns["I_CAVALERIE_ESCORTE"];
                 this.columnI_MATERIEL_ESCORTE = base.Columns["I_MATERIEL_ESCORTE"];
+                this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = base.Columns["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8980,6 +8993,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_CAVALERIE_ESCORTE);
                 this.columnI_MATERIEL_ESCORTE = new global::System.Data.DataColumn("I_MATERIEL_ESCORTE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_MATERIEL_ESCORTE);
+                this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = new global::System.Data.DataColumn("I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PION}, true));
                 this.columnID_PION.AllowDBNull = false;
@@ -24184,6 +24199,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_PION.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT\' dans la table \'T" +
+                                "AB_PION\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PION.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_MODELE_PIONNull() {
                 return this.IsNull(this.tableTAB_PION.ID_MODELE_PIONColumn);
             }
@@ -24828,6 +24860,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_MATERIEL_ESCORTENull() {
                 this[this.tableTAB_PION.I_MATERIEL_ESCORTEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() {
+                return this.IsNull(this.tableTAB_PION.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() {
+                this[this.tableTAB_PION.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn] = global::System.Convert.DBNull;
             }
         }
         

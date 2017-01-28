@@ -1562,7 +1562,8 @@ namespace vaoc
                     -1,//ID_PION_ESCORTE, 
                     0,//I_INFANTERIE_ESCORTE, 
                     0,//I_CAVALERIE_ESCORTE
-                    0//I_MATERIEL_ESCORTE
+                    0,//I_MATERIEL_ESCORTE
+                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     );
                 lignePionMessager.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionMessager.SetID_NOUVEAU_PION_PROPRIETAIRENull();

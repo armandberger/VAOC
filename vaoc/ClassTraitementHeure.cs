@@ -1580,7 +1580,8 @@ namespace vaoc
                             - 1,//ID_PION_ESCORTE, 
                             0,//I_INFANTERIE_ESCORTE, 
                             0,//I_CAVALERIE_ESCORTE
-                            0//I_MATERIEL_ESCORTE
+                            0,//I_MATERIEL_ESCORTE
+                            0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                             );
 
                         lignePionRenfort.SetID_ANCIEN_PION_PROPRIETAIRENull();
@@ -2813,6 +2814,16 @@ namespace vaoc
 
                 ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
 
+                //Un depôt de niveau A n'a t-il fait aucun ravitaillement direct depuis une semaine
+                if ('A' == ligneDepot.C_NIVEAU_DEPOT && 
+                    ((ligneDepot.IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() && 24*7 < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
+                    || (ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT + 24*7 < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)))
+                {
+                    // les depôt de niveau A ne sont pas réduits,mais il faut une semaine entre le dernier ravitaillement
+                    // pour revenir au niveau 0
+                    ligneDepot.I_SOLDATS_RAVITAILLES = 0;
+                }
+
                 //Le dépôt est-il épuisé ?
                 if (ligneDepot.I_SOLDATS_RAVITAILLES >= Constantes.tableLimiteRavitaillementDepot[ligneDepotTable])
                 {
@@ -2830,15 +2841,20 @@ namespace vaoc
                     }
                     else
                     {
-                        ligneDepot.C_NIVEAU_DEPOT++;//on réduit mais dans la table ASCII c'est le caractère suivant !
-                        ligneDepot.I_SOLDATS_RAVITAILLES = 0;
-
-                        //on envoie un message pour prévenir le joueur
-                        if (!ClassMessager.EnvoyerMessage(ligneDepot,  ClassMessager.MESSAGES.MESSAGE_DEPOT_REDUIT))
+                        if ('A' != ligneDepot.C_NIVEAU_DEPOT)
                         {
-                            message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_REDUIT dans ReductionDesDepots", ligneDepot.S_NOM, ligneDepot.ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
+                            // les depôt de niveau A ne sont pas réduits,mais il faut une semaine entre le dernier ravitaillement
+                            // pour revenir au niveau 0
+                            ligneDepot.C_NIVEAU_DEPOT++;//on réduit mais dans la table ASCII c'est le caractère suivant !
+                            ligneDepot.I_SOLDATS_RAVITAILLES = 0;
+
+                            //on envoie un message pour prévenir le joueur
+                            if (!ClassMessager.EnvoyerMessage(ligneDepot, ClassMessager.MESSAGES.MESSAGE_DEPOT_REDUIT))
+                            {
+                                message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_REDUIT dans ReductionDesDepots", ligneDepot.S_NOM, ligneDepot.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
                         }
                     }
                 }
@@ -3530,7 +3546,8 @@ namespace vaoc
                                                     -1,//ID_PION_ESCORTE, 
                                                     0,//I_INFANTERIE_ESCORTE, 
                                                     0,//I_CAVALERIE_ESCORTE
-                                                    0//I_MATERIEL_ESCORTE
+                                                    0,//I_MATERIEL_ESCORTE
+                                                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                                                 );
                                                 lignePionPatrouille.SetID_ANCIEN_PION_PROPRIETAIRENull();
                                                 lignePionPatrouille.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -4581,7 +4598,8 @@ namespace vaoc
                     -1,//ID_PION_ESCORTE, 
                     0,//I_INFANTERIE_ESCORTE, 
                     0,//I_CAVALERIE_ESCORTE
-                    0//I_MATERIEL_ESCORTE
+                    0,//I_MATERIEL_ESCORTE
+                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     );
                 ligneNouveauPion.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 ligneNouveauPion.SetID_NOUVEAU_PION_PROPRIETAIRENull();

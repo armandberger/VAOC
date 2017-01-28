@@ -2963,7 +2963,7 @@ namespace vaoc
                 timeStart = DateTime.Now;
                 tableCoutsMouvementsTerrain = null;
                 erreur = string.Empty;
-                Donnees.TAB_CASERow[] listeCaseEspace = null;
+                List <Donnees.TAB_CASERow> listeCaseEspace = null;
                 listeIDCaseEspace = null;
 
                 if (null == ligneCaseDepart)
@@ -3050,8 +3050,8 @@ namespace vaoc
                 //    //}
                 //}
 
-                listeIDCaseEspace = new int[listeCaseEspace.Length];
-                for (int i = 0; i < listeCaseEspace.Length; i++)
+                listeIDCaseEspace = new int[listeCaseEspace.Count];
+                for (int i = 0; i < listeCaseEspace.Count; i++)
                 {
                     listeIDCaseEspace[i] = listeCaseEspace[i].ID_CASE;
                     Donnees.m_donnees.TAB_ESPACE.AddTAB_ESPACERow(ID_PION,

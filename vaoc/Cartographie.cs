@@ -1391,10 +1391,10 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
         /// Indispensable avant de faire une recherche sur un parcours dont on ne peut pas traverser les cases occupées par l'adversaire
         /// </summary>
         /// <returns>true si OK, false si KO</returns>
-        internal static bool InitialiserProprietairesTrajets()
-        {
-            return AStar.InitialisationProprietaireTrajet();
-        }
+        //internal static bool InitialiserProprietairesTrajets()
+        //{
+        //    return AStar.InitialisationProprietaireTrajet();
+        //}
 
         static public int AvancementPourRecalcul(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out string erreur)
         {

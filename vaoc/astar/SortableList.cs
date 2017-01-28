@@ -99,7 +99,8 @@ namespace vaoc
 			get
 			{
 				if ( Index>=_List.Count || Index<0 ) throw new ArgumentOutOfRangeException("Index is less than zero or Index is greater than Count.");
-				return _List[Index];
+				//return _List[Index];
+                return _ListCout[Index];//C'est uniquement la liste des couts qui restre triée
 			}
 			set
 			{

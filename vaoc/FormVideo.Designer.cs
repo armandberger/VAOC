@@ -50,14 +50,17 @@
             this.buttonOuvrirFilm = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(195, 343);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(195, 393);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonCreerFilm.TabIndex = 0;
+            this.buttonCreerFilm.Tag = "Film simple";
             this.buttonCreerFilm.Text = "Creer Film";
             this.buttonCreerFilm.UseVisualStyleBackColor = true;
             this.buttonCreerFilm.Click += new System.EventHandler(this.buttonCreerFilm_Click);
@@ -163,6 +166,7 @@
             this.labelPolice.Name = "labelPolice";
             this.labelPolice.Size = new System.Drawing.Size(743, 151);
             this.labelPolice.TabIndex = 11;
+            this.labelPolice.Text = "Police de caractère";
             // 
             // buttonRepertoireSource
             // 
@@ -186,7 +190,7 @@
             // 
             // buttonCreerFilmHistorique
             // 
-            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(402, 343);
+            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(402, 393);
             this.buttonCreerFilmHistorique.Name = "buttonCreerFilmHistorique";
             this.buttonCreerFilmHistorique.Size = new System.Drawing.Size(120, 23);
             this.buttonCreerFilmHistorique.TabIndex = 19;
@@ -214,7 +218,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(571, 343);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(571, 393);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -225,7 +229,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(133, 343);
+            this.label7.Location = new System.Drawing.Point(133, 393);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 13);
             this.label7.TabIndex = 23;
@@ -234,17 +238,34 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(297, 343);
+            this.label8.Location = new System.Drawing.Point(297, 393);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(99, 13);
             this.label8.TabIndex = 24;
             this.label8.Text = "Film avec batailles :";
             // 
+            // progressBar
+            // 
+            this.progressBar.Location = new System.Drawing.Point(26, 355);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(732, 23);
+            this.progressBar.Step = 1;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar.TabIndex = 25;
+            // 
+            // backgroundTraitement
+            // 
+            this.backgroundTraitement.WorkerReportsProgress = true;
+            this.backgroundTraitement.WorkerSupportsCancellation = true;
+            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
+            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 378);
+            this.ClientSize = new System.Drawing.Size(779, 426);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonOuvrirFilm);
@@ -296,6 +317,8 @@
         private System.Windows.Forms.Button buttonOuvrirFilm;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ProgressBar progressBar;
+        private System.ComponentModel.BackgroundWorker backgroundTraitement;
     }
 }
 

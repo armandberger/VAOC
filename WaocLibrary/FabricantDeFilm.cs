@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.ComponentModel;
+using System.Windows.Forms;
 //using WaocLib;
 
 namespace WaocLib
@@ -44,8 +46,198 @@ namespace WaocLib
     
     public class FabricantDeFilm
     {
+        private FileInfo[] m_listeFichiers;
+        private AviWriter m_aw;
+        private int m_traitement;//traitement principal
+        private bool m_bHistoriqueBataille;
+        private string m_repertoireVideo;
+        private float m_rapport;
+        private List<LieuRemarquable> m_lieuxRemarquables;
+        private int m_largeurMax;
+        private int m_hauteurMax;
+        private int m_largeur;
+        private int m_hauteur;
+        private string[] m_texteImages;
+        private int m_hauteurBandeau;
+        private Font m_police;
+        System.ComponentModel.BackgroundWorker m_travailleur;
+
         public FabricantDeFilm()
         {
+        }
+
+        public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
+                                    string[] texteImages, int largeurOptimale, int HauteurOptimale, 
+                                    bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables,
+                                    System.ComponentModel.BackgroundWorker worker)
+        {
+            try
+            {
+                SizeF tailleTexte;
+                Graphics G;
+                Bitmap fichierImageSource;
+                m_largeur = int.MaxValue;
+                m_hauteur = int.MaxValue;
+                m_hauteurMax = 0;
+                m_largeurMax = 0;
+                m_bHistoriqueBataille = bHistoriqueBataille;
+                m_repertoireVideo = repertoireVideo;
+                m_lieuxRemarquables = lieuxRemarquables;
+                m_texteImages = texteImages;
+                m_hauteurBandeau = 0;
+                m_police = police;
+                m_travailleur = worker;
+
+                //recherche le nombre d'images et leur taille
+                DirectoryInfo dir = new DirectoryInfo(repertoireImages);
+                m_listeFichiers = dir.GetFiles(texteMasqueImage, SearchOption.TopDirectoryOnly);
+                if (0 == m_listeFichiers.Length) { return "le repertoire source ne contient aucune image " + texteMasqueImage; }
+
+                Array.Sort(m_listeFichiers, new MyCustomComparer());//tri par nom
+                foreach (FileInfo fichier in m_listeFichiers)
+                {
+                    Bitmap fichierImage = (Bitmap)Image.FromFile(fichier.FullName);
+                    if (m_largeurMax < fichierImage.Width) { m_largeurMax = fichierImage.Width; }
+                    if (m_hauteurMax < fichierImage.Height) { m_hauteurMax = fichierImage.Height; }
+                    if (m_largeur > fichierImage.Width) { m_largeur = fichierImage.Width; }
+                    if (m_hauteur > fichierImage.Height) { m_hauteur = fichierImage.Height; }
+                }
+
+                if (m_largeurMax != m_largeur || m_hauteurMax != m_hauteur)
+                {
+                    return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué",
+                        m_hauteur, m_largeur, m_hauteurMax, m_largeurMax);
+                }
+
+                //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
+                if (null != texteImages && texteImages.Length > 0)
+                {
+                    fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
+                    G = Graphics.FromImage(fichierImageSource);
+                    tailleTexte = G.MeasureString("XX", police);
+                    m_hauteurBandeau = (int)(tailleTexte.Height * 1);
+                    fichierImageSource.Dispose();
+                }
+
+                //calcul de la taille optimale
+                if ((float)m_largeur / largeurOptimale > (float)m_hauteur / (HauteurOptimale - m_hauteurBandeau))
+                {
+                    //on se cale donc sur la largeur (effort le plus grand)
+                    m_rapport = (float)largeurOptimale / m_largeur;
+                    m_hauteur = (int)(m_hauteur * m_rapport);
+                    m_largeur = largeurOptimale;
+                }
+                else
+                {
+                    m_rapport = (float)(HauteurOptimale - m_hauteurBandeau) / m_hauteur;
+                    m_largeur = (int)(m_largeur * m_rapport);
+                    m_hauteur = HauteurOptimale - m_hauteurBandeau;
+                }
+
+                m_aw = new AviWriter();
+                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
+                m_traitement = 0;
+                return string.Empty;
+            }
+            catch (AviWriter.AviException e)
+            {
+                return "AVI Exception in: " + e.ToString();
+            }
+        }
+
+        public string Terminer()
+        {
+            try
+            {
+                m_aw.Close();
+                m_travailleur.ReportProgress(100);
+                return string.Empty;
+            }
+            catch (AviWriter.AviException e)
+            {
+                return "AVI Exception in: " + e.ToString();
+            }
+        }
+
+        public string Traitement()
+        {
+            SizeF tailleTexte;
+            Graphics G;
+            Bitmap fichierImageSource;
+            try
+            {
+                FileInfo fichier = m_listeFichiers[m_traitement];
+                fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
+                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
+                G = Graphics.FromImage(fichierImage);
+                G.PageUnit = GraphicsUnit.Pixel;
+                //bandeau avec texte
+                if (null != m_texteImages && m_texteImages.Length > 0)
+                {
+                    G.FillRectangle(Brushes.White, new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau));
+                    tailleTexte = G.MeasureString(m_texteImages[m_traitement], m_police);
+                    G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black,
+                        new Rectangle((m_largeur - (int)tailleTexte.Width) / 2,
+                                        m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                        m_largeur - (m_largeur - (int)tailleTexte.Width) / 2, 
+                                        m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
+                    m_traitement++;
+                }
+
+                //image de base
+                G.DrawImage(fichierImageSource, 0, 0, m_largeur, m_hauteur);
+
+                if (m_bHistoriqueBataille)
+                {
+                    Pen styloExterieur = new Pen(Color.Black, 3);
+                    Pen styloInterieur = new Pen(Color.White, 1);
+                    //on ajoute les batailles s'il y en a
+                    foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
+                    {
+                        if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
+                        {
+                            G.DrawRectangle(styloExterieur,
+                                ligneLieu.i_X_CASE_HAUT_GAUCHE * m_rapport,
+                                ligneLieu.i_Y_CASE_HAUT_GAUCHE * m_rapport,
+                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+
+                            G.DrawRectangle(styloInterieur,
+                                ligneLieu.i_X_CASE_HAUT_GAUCHE * m_rapport,
+                                ligneLieu.i_Y_CASE_HAUT_GAUCHE * m_rapport,
+                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+                        }
+                    }
+                }
+                //G.DrawImageUnscaled(fichierImageSource, 0, 0);
+                fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
+                fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
+                BitmapData bmpDat = fichierImage.LockBits(
+                    new Rectangle(0, 0, m_largeur, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+
+
+                //BitmapData imageCible = new BitmapData();
+                //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
+                //m_imageCarte.UnlockBits(imageCible);
+                //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+                //imageFinale.Save(nomFichierFinal);
+                m_aw.AddFrame(bmpDat);
+                fichierImage.UnlockBits(bmpDat);
+                G.Dispose();
+                fichierImage.Dispose();
+                fichierImageSource.Dispose();
+                m_travailleur.ReportProgress(m_traitement*100/m_listeFichiers.Length);
+                if (m_traitement == m_listeFichiers.Length)
+                {
+                    return "film crée";
+                }
+                return string.Empty;
+            }
+            catch (AviWriter.AviException e)
+            {
+                return "AVI Exception in: " + e.ToString();
+            }
         }
 
         public string CreerFilm(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, string[] texteImages
@@ -61,16 +253,15 @@ namespace WaocLib
                 int hmax = 0;
                 int wmax = 0;
                 int hauteurBandeau = 0;
-                int iTexte;
                 float rapport;
 
                 //recherche le nombre d'images et leur taille
                 DirectoryInfo dir = new DirectoryInfo(repertoireImages);
-                FileInfo[] listeFichiers = dir.GetFiles(texteMasqueImage,SearchOption.TopDirectoryOnly);
-                if (0 == listeFichiers.Length) {return "le repertoire source ne contient aucune image "+texteMasqueImage;}
+                m_listeFichiers = dir.GetFiles(texteMasqueImage,SearchOption.TopDirectoryOnly);
+                if (0 == m_listeFichiers.Length) {return "le repertoire source ne contient aucune image "+texteMasqueImage;}
 
-                Array.Sort(listeFichiers, new MyCustomComparer());//tri par nom
-                foreach (FileInfo fichier in listeFichiers)
+                Array.Sort(m_listeFichiers, new MyCustomComparer());//tri par nom
+                foreach (FileInfo fichier in m_listeFichiers)
                 {
                     Bitmap fichierImage = (Bitmap)Image.FromFile(fichier.FullName);
                     if (wmax < fichierImage.Width) { wmax = fichierImage.Width; }
@@ -87,7 +278,7 @@ namespace WaocLib
                 //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
                 if (null != texteImages && texteImages.Length > 0)
                 {
-                    fichierImageSource = (Bitmap)Image.FromFile(listeFichiers[0].FullName);
+                    fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
                     G = Graphics.FromImage(fichierImageSource);
                     tailleTexte = G.MeasureString("XX", police);
                     hauteurBandeau = (int)(tailleTexte.Height * 1);
@@ -109,11 +300,11 @@ namespace WaocLib
                     h = HauteurOptimale - hauteurBandeau;
                 }
 
-                AviWriter aw = new AviWriter();
-                Bitmap bmp = aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
+                m_aw = new AviWriter();
+                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
 
-                iTexte = 0;
-                foreach (FileInfo fichier in listeFichiers)
+                m_traitement = 0;
+                foreach (FileInfo fichier in m_listeFichiers)
                 {
                     fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
                     Bitmap fichierImage = new Bitmap(w, h + hauteurBandeau, fichierImageSource.PixelFormat);
@@ -123,10 +314,10 @@ namespace WaocLib
                     if (null != texteImages && texteImages.Length > 0)
                     {
                         G.FillRectangle(Brushes.White, new Rectangle(0, h, w, hauteurBandeau));
-                        tailleTexte = G.MeasureString(texteImages[iTexte], police);
-                        G.DrawString(texteImages[iTexte], police, Brushes.Black, new Rectangle((w - (int)tailleTexte.Width) / 2, h + (hauteurBandeau - (int)tailleTexte.Height) / 2,
+                        tailleTexte = G.MeasureString(texteImages[m_traitement], police);
+                        G.DrawString(texteImages[m_traitement], police, Brushes.Black, new Rectangle((w - (int)tailleTexte.Width) / 2, h + (hauteurBandeau - (int)tailleTexte.Height) / 2,
                             w - (w - (int)tailleTexte.Width) / 2, hauteurBandeau - (hauteurBandeau - (int)tailleTexte.Height) / 2));
-                        iTexte++;
+                        m_traitement++;
                     }
 
                     //image de base
@@ -139,7 +330,7 @@ namespace WaocLib
                         //on ajoute les batailles s'il y en a
                         foreach (LieuRemarquable ligneLieu in lieuxRemarquables)
                         {
-                            if (iTexte >= ligneLieu.iTourDebut && iTexte <= ligneLieu.iTourFin)
+                            if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                             {
                                 G.DrawRectangle(styloExterieur,
                                     ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
@@ -167,7 +358,7 @@ namespace WaocLib
                     //m_imageCarte.UnlockBits(imageCible);
                     //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
                     //imageFinale.Save(nomFichierFinal);
-                    aw.AddFrame(bmpDat);
+                    m_aw.AddFrame(bmpDat);
                     fichierImage.UnlockBits(bmpDat);
                     G.Dispose();
                     fichierImage.Dispose();
@@ -201,7 +392,7 @@ namespace WaocLib
                     Console.Write(".");
                 }
                 */
-                aw.Close();
+                m_aw.Close();
                 return string.Empty;
             }
             catch (AviWriter.AviException e)
@@ -209,6 +400,5 @@ namespace WaocLib
                 return "AVI Exception in: " + e.ToString();
             }
         }
-
     }
 }

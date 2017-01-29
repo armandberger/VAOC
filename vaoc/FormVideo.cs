@@ -13,6 +13,10 @@ namespace vaoc
 {
     public partial class FormVideo : Form
     {
+        private Cursor m_oldcurseur;
+        private List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
+        private string[] m_texteImages;
+
         public FormVideo()
         {
             InitializeComponent();
@@ -86,16 +90,16 @@ namespace vaoc
 
         private void buttonCreerFilmHistorique_Click(object sender, EventArgs e)
         {
-            string[] texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1];
+            m_texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1];
             this.buttonOuvrirFilm.Enabled = false;
-            List<LieuRemarquable> listeLieux = new List<LieuRemarquable>();
 
             for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
             {
-                texteImages[i] = ClassMessager.DateHeure(i, 0, false);
+                m_texteImages[i] = ClassMessager.DateHeure(i, 0, false);
             }
 
             //on ajoute les batailles s'il y en a
+            m_listeLieux.Clear();
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
                 LieuRemarquable lieu =new LieuRemarquable();
@@ -105,24 +109,96 @@ namespace vaoc
                 lieu.i_X_CASE_HAUT_GAUCHE = ligneBataille.I_X_CASE_HAUT_GAUCHE;
                 lieu.i_Y_CASE_BAS_DROITE =ligneBataille.I_Y_CASE_BAS_DROITE;
                 lieu.i_Y_CASE_HAUT_GAUCHE = ligneBataille.I_Y_CASE_HAUT_GAUCHE;
-                listeLieux.Add(lieu);
+                m_listeLieux.Add(lieu);
             }
 
+            /* -> deporté dans un traitement background ci-dessous
             FabricantDeFilm film = new FabricantDeFilm();
             string retour = film.CreerFilm(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
-                                        this.textBoxMasque.Text, texteImages,
-                                        Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text), true, listeLieux);
+                                        this.textBoxMasque.Text, m_texteImages,
+                                        Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text), 
+                                        true, m_listeLieux);
             if (string.Empty != retour)
             {
                 MessageBox.Show("Erreur lors de la création du film :" + retour);
             }
             MessageBox.Show("film crée");
             this.buttonOuvrirFilm.Enabled = true;
+            */
+
+            //lancement du traitement
+            this.buttonOuvrirFilm.Enabled = false;
+            m_oldcurseur = Cursor;
+            Cursor = Cursors.WaitCursor;
+            //m_dateDebut = DateTime.Now;
+            progressBar.Value = 0;
+            Invalidate();
+            backgroundTraitement.RunWorkerAsync();
         }
 
         private void buttonOuvrirFilm_Click(object sender, EventArgs e)
         {
             Process.Start(this.textBoxRepertoireVideo.Text+"\\video.avi");
+        }
+
+        private void backgroundTraitement_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            try
+            {
+                if (null != e)
+                {
+                    progressBar.Value = e.ProgressPercentage;
+                }
+                //AfficherTemps();
+            }
+            catch (Exception ex)
+            {
+                BackgroundWorker travailleur = sender as BackgroundWorker;
+                travailleur.CancelAsync();
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
+        {
+            FabricantDeFilm cineaste = new FabricantDeFilm();
+            BackgroundWorker travailleur = sender as BackgroundWorker;
+            string erreurTraitement = string.Empty;
+            try
+            {
+                erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
+                                        this.textBoxMasque.Text, m_texteImages,
+                                        Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
+                                        true, m_listeLieux,
+                                        travailleur);
+                if (string.Empty != erreurTraitement)
+                {
+                    e.Cancel = true;
+                    MessageBox.Show(erreurTraitement, "Fabricant de Film : Initialisation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                while (string.Empty == erreurTraitement)
+                {
+                    if (travailleur.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        erreurTraitement = "film crée";
+                    }
+                    else
+                    {
+                        erreurTraitement = cineaste.Traitement();
+                    }
+                    cineaste.Terminer();
+                }
+                MessageBox.Show(erreurTraitement, "Fabricant de Film", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                travailleur.CancelAsync();
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }

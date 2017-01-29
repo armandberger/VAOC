@@ -189,8 +189,10 @@ namespace vaoc
                     {
                         erreurTraitement = cineaste.Traitement();
                     }
-                    cineaste.Terminer();
                 }
+                cineaste.Terminer();
+                this.buttonOuvrirFilm.Enabled = true;
+                Cursor = m_oldcurseur;
                 MessageBox.Show(erreurTraitement, "Fabricant de Film", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

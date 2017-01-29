@@ -135,7 +135,7 @@ namespace WaocLib
                 }
 
                 m_aw = new AviWriter();
-                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
+                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur, m_hauteur + m_hauteurBandeau);
                 m_traitement = 0;
                 return string.Empty;
             }

@@ -1195,5 +1195,57 @@ namespace vaoc
 
             return true;
         }
+
+        internal void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
+        {
+            CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, false);
+        }
+
+        internal void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain, bool bRoutier)
+        {
+            CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, bRoutier, false);
+        }
+
+        internal void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
+        {
+            int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
+            tableCoutsMouvementsTerrain = new AstarTerrainOBJ[maxNumeroModeleTerrain + 1];
+            // par défaut on initialise les valeurs à "impassable"
+            for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
+            {
+                tableCoutsMouvementsTerrain[i] = new AstarTerrainOBJ();
+                tableCoutsMouvementsTerrain[i].cout = AStar.CST_COUTMAX;
+                tableCoutsMouvementsTerrain[i].route = false;
+            }
+
+            //recherche des vrais valeurs et des plus mauvaises valeurs suivant les effectifs présents
+            foreach (Donnees.TAB_MODELE_TERRAINRow ligneterrain in Donnees.m_donnees.TAB_MODELE_TERRAIN)
+            {
+                // Toutes les cases coutent la même chose dans ce jeu, le terrain influe seulement sur la vitesse de l'unité (voir CalculVitesseMouvementPion)
+                //dans le cas où l'on ne veut que les "routes", les modèles non routiers restent en impassables
+                //if (!bRoutier || ligneterrain.B_CIRCUIT_ROUTIER)
+                if ((!bRoutier && !bHorsRoute) ||
+                    (bRoutier && ligneterrain.B_CIRCUIT_ROUTIER) ||
+                    (bHorsRoute && ligneterrain.ID_MODELE_TERRAIN != 60 /*!ligneterrain.B_CIRCUIT_ROUTIER*/))
+                {
+                    //string requete = string.Format("ID_MODELE_MOUVEMENT={0} AND ID_METEO={1} AND ID_MODELE_TERRAIN={2}",
+                    //    Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].ID_MODELE_MOUVEMENT,
+                    //    Donnees.m_donnees.TAB_PARTIE[0].ID_METEO,
+                    //    );
+                    //Donnees.TAB_MOUVEMENT_COUTRow[] resCout = (Donnees.TAB_MOUVEMENT_COUTRow[])Donnees.m_donnees.TAB_MOUVEMENT_COUT.Select(requete);
+                    int coutCase = Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].CoutCase(ligneterrain.ID_MODELE_TERRAIN);
+                    //if (1 != resCout.Length)
+                    //{
+                    //    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = AStar.CST_COUTMAX;//normalement ne devrait pas arriver
+                    //    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = false;//normalement ne devrait pas arriver
+                    //}
+                    //else
+                    {
+                        tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = coutCase; // resCout[0].I_COUT;
+                        tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = ligneterrain.B_CIRCUIT_ROUTIER;
+                    }
+                }
+            }
+        }
     }
 }

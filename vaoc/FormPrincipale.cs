@@ -2741,7 +2741,7 @@ namespace vaoc
                     //maintenant on compare avec la version HPA
                     //Donnees.m_donnees.TAB_PCC_COUTS.Initialisation(); -> deja fait au chargement
                     if (null == m_etoileHPA) m_etoileHPA = new AStar();
-                    AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    m_etoileHPA.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                     timeStart = DateTime.Now;
                     //if (!m_etoileHPA.InitialisationProprietaireTrajet())
                     //{
@@ -2771,7 +2771,7 @@ namespace vaoc
                     {
                         if (null == m_etoileOBJ) m_etoileOBJ = new AStarOBJ();
                         AstarTerrainOBJ[] tableCoutsMouvementsTerrainOBJ;
-                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrainOBJ);
+                        m_etoileOBJ.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrainOBJ);
                         timeStart = DateTime.Now;
                         LigneCASE departCase = BD.Base.Case.TrouveParID_CASE(m_departPlusCourtChemin.ID_CASE);
 
@@ -3147,7 +3147,7 @@ namespace vaoc
             requete = string.Format("ID_VILLE_DEBUT=50 AND ID_VILLE_FIN=26");
             Donnees.TAB_PCC_VILLESRow[] lignesCout2 = (Donnees.TAB_PCC_VILLESRow[])Donnees.m_donnees.TAB_PCC_VILLES.Select(requete);*/
             
-            AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+            m_etoileHPA.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
             if (!m_etoileHPA.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain))
             {
                 MessageBox.Show("Il n'y a aucun chemin possible entre les deux points", "buttonVerifierTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Information);

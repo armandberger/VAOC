@@ -2015,6 +2015,7 @@ namespace vaoc
                 bool meilleurRavitaillementDirect;
                 Donnees.TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO.FindByID_METEO(Donnees.m_donnees.TAB_PARTIE[0].ID_METEO);
                 Donnees.TAB_NATIONRow ligneNation;
+                AStar etoile = new AStar();
 
                 bUniteRavitaillee = false;
                 meilleurDistanceRavitaillement = -1;
@@ -2058,7 +2059,7 @@ namespace vaoc
                     Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
                     Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
 
-                    if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
                         message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans Ravitaillement :{2})", S_NOM, ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -2236,7 +2237,8 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 encombrementTotal = CalculerEncombrement(ligneNation, this.infanterie, this.cavalerie, this.artillerie, true);
-                if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                AStar etoile = new AStar();
+                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
                     message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans CalculPionPositionRelativeAvancement:{2}", S_NOM, ID_PION, messageErreur);
                     LogFile.Notifier(message, out messageErreur);
@@ -2298,7 +2300,7 @@ namespace vaoc
                     encombrementRoute = CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
 
                     //recherche du plus court chemin
-                    if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
                         message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans CalculPionPositionRelativeAvancement: {2})", S_NOM, ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -2979,9 +2981,6 @@ namespace vaoc
                 }
 
                 typeEspace = (depart) ? AStar.CST_DEPART : AStar.CST_DESTINATION;
-                //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
-                Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
-
                 //existe-il déjà un chemin pour le pion sur le trajet demandé ?
                 requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", ID_PION, typeEspace);
                 Donnees.TAB_ESPACERow[] parcoursExistant = (Donnees.TAB_ESPACERow[])Donnees.m_donnees.TAB_ESPACE.Select(requete, "I_COUT");
@@ -3033,6 +3032,9 @@ namespace vaoc
                         Donnees.m_donnees.TAB_ESPACE.RemoveTAB_ESPACERow(parcoursExistant[i]);
                     }
                 }
+
+                //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
+                etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
                 if (!etoile.SearchSpace(ligneCaseDepart, espace, tableCoutsMouvementsTerrain, nombrePixelParCase, nation.ID_NATION, out listeCaseEspace, out erreur))
@@ -3955,13 +3957,14 @@ namespace vaoc
                 double cout, coutHorsRoute;
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                AStar etoile = new AStar();
 
                 idCaseDebut = -1;
                 idCaseFin = ID_CASE;//valeur par défaut
                 int effectifInfanterie = (estDepot || estConvoiDeRavitaillement || estPontonnier) ? effectifTotalEnMouvement : infanterie;
                 encombrementTotal = CalculerEncombrement(ligneNation, effectifInfanterie, cavalerie, artillerie, true);
                 //recherche du plus court chemin
-                if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
                     message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans PlacerPionEnRoute: {2})", S_NOM, ID_PION, messageErreur);
                     LogFile.Notifier(message, out messageErreur);

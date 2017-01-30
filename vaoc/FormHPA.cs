@@ -471,7 +471,7 @@ namespace vaoc
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                     ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                    AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    m_etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                     if (!m_etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                     {
                         Debug.WriteLine(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi {8}",

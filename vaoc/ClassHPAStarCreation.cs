@@ -558,10 +558,10 @@ namespace vaoc
                         AstarTerrain[] tableCoutsMouvementsTerrain;
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStar etoile = m_etoileParallele[numeroTache];
+                        etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
                         if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                         {
@@ -692,10 +692,10 @@ namespace vaoc
                         AstarTerrainOBJ[] tableCoutsMouvementsTerrain;
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStarOBJ etoile = m_etoileParalleleOBJ[numeroTache];
+                        etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
                         if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                         {

@@ -15,24 +15,24 @@ namespace vaoc
 {
     class Cartographie
     {
-        static protected AStar m_star = null;
+        //static protected AStar m_star = null;
         static protected Bitmap m_imageCarteHistorique;
         static protected Bitmap m_imageCarteGris;
         static protected Bitmap m_imageCarteZoom;
         static protected Bitmap m_imageCarteTopographique;
         static protected float m_rapportZoom;
 
-        internal static AStar etoile
-        {
-            get
-            {
-                if (null == m_star)
-                {
-                    m_star = new AStar();
-                }
-                return m_star;
-            }
-        }
+        //internal static AStar etoile
+        //{
+        //    get
+        //    {
+        //        if (null == m_star)
+        //        {
+        //            m_star = new AStar();
+        //        }
+        //        return m_star;
+        //    }
+        //}
 
         internal static float rapportZoom
         {
@@ -267,6 +267,21 @@ namespace vaoc
                         brosse = new SolidBrush(couleur);
                         rect = new Rectangle((int)(noeud.I_X * zoom - zoom / 2), (int)(noeud.I_Y * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
                         graph.FillEllipse(brosse, rect);
+                    }
+                }
+                else 
+                {
+                    if (!noeud.IsID_NOUVEAU_PROPRIETAIRENull())
+                    {
+                        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(noeud.ID_NOUVEAU_PROPRIETAIRE);
+                        if (null != lignePion)
+                        {
+                            Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                            couleur = Color.FromArgb(ligneModelePion.I_ROUGE, ligneModelePion.I_VERT, ligneModelePion.I_BLEU);
+                            brosse = new SolidBrush(couleur);
+                            rect = new Rectangle((int)(noeud.I_X * zoom - zoom / 2), (int)(noeud.I_Y * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
+                            graph.FillEllipse(brosse, rect);
+                        }
                     }
                 }
             }
@@ -638,6 +653,8 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
 
         internal static bool PlacerLesUnitesStatiques()
         {
+            return PlacerLesUnitesStatiquesParallele();
+            /*
             string message;
             int i = 0;
             while (i<Donnees.m_donnees.TAB_PION.Count)
@@ -652,89 +669,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                 ++i;
             }
             return true;
-        }
-
-        internal static void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
-        {
-            bool bRoutier, bHorsRoute;
-            bRoutier = bHorsRoute = false;
-            //int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
-            int maxNumeroModeleTerrain = BD.Base.ModeleTerrain.MaxID;
-            tableCoutsMouvementsTerrain = new AstarTerrainOBJ[maxNumeroModeleTerrain + 1];
-            // par défaut on initialise les valeurs à "impassable"
-            for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
-            {
-                tableCoutsMouvementsTerrain[i] = new AstarTerrainOBJ();
-                tableCoutsMouvementsTerrain[i].cout = AStar.CST_COUTMAX;
-                tableCoutsMouvementsTerrain[i].route = false;
-            }
-
-            //recherche des vrais valeurs et des plus mauvaises valeurs suivant les effectifs présents
-            foreach (LigneMODELE_TERRAIN ligneterrain in BD.Base.ModeleTerrain)
-            {
-                // Toutes les cases coutent la même chose dans ce jeu, le terrain influe seulement sur la vitesse de l'unité (voir CalculVitesseMouvementPion)
-                //dans le cas où l'on ne veut que les "routes", les modèles non routiers restent en impassables
-                if ((!bRoutier && !bHorsRoute) ||
-                    (bRoutier && ligneterrain.B_CIRCUIT_ROUTIER) ||
-                    (bHorsRoute && ligneterrain.ID_MODELE_TERRAIN != 60 /*!ligneterrain.B_CIRCUIT_ROUTIER*/))
-                {
-                    int coutCase = Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].CoutCase(ligneterrain.ID_MODELE_TERRAIN);
-                    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = coutCase; 
-                    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = ligneterrain.B_CIRCUIT_ROUTIER;
-                }
-            }
-        }
-
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
-        {
-            CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, false);
-        }
-
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier)
-        {
-            CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, bRoutier, false);
-        }
-
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
-        {
-            int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
-            tableCoutsMouvementsTerrain = new AstarTerrain[maxNumeroModeleTerrain + 1];
-            // par défaut on initialise les valeurs à "impassable"
-            for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
-            {
-                tableCoutsMouvementsTerrain[i] = new AstarTerrain();
-                tableCoutsMouvementsTerrain[i].cout = AStar.CST_COUTMAX;
-                tableCoutsMouvementsTerrain[i].route = false;
-            }
-
-            //recherche des vrais valeurs et des plus mauvaises valeurs suivant les effectifs présents
-            foreach (Donnees.TAB_MODELE_TERRAINRow ligneterrain in Donnees.m_donnees.TAB_MODELE_TERRAIN)
-            {
-                // Toutes les cases coutent la même chose dans ce jeu, le terrain influe seulement sur la vitesse de l'unité (voir CalculVitesseMouvementPion)
-                //dans le cas où l'on ne veut que les "routes", les modèles non routiers restent en impassables
-                //if (!bRoutier || ligneterrain.B_CIRCUIT_ROUTIER)
-                if ((!bRoutier && !bHorsRoute) ||
-                    (bRoutier && ligneterrain.B_CIRCUIT_ROUTIER) ||
-                    (bHorsRoute && ligneterrain.ID_MODELE_TERRAIN!=60 /*!ligneterrain.B_CIRCUIT_ROUTIER*/))
-                {
-                    //string requete = string.Format("ID_MODELE_MOUVEMENT={0} AND ID_METEO={1} AND ID_MODELE_TERRAIN={2}",
-                    //    Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].ID_MODELE_MOUVEMENT,
-                    //    Donnees.m_donnees.TAB_PARTIE[0].ID_METEO,
-                    //    );
-                    //Donnees.TAB_MOUVEMENT_COUTRow[] resCout = (Donnees.TAB_MOUVEMENT_COUTRow[])Donnees.m_donnees.TAB_MOUVEMENT_COUT.Select(requete);
-                    int coutCase = Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].CoutCase(ligneterrain.ID_MODELE_TERRAIN);
-                    //if (1 != resCout.Length)
-                    //{
-                    //    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = AStar.CST_COUTMAX;//normalement ne devrait pas arriver
-                    //    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = false;//normalement ne devrait pas arriver
-                    //}
-                    //else
-                    {
-                        tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = coutCase; // resCout[0].I_COUT;
-                        tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = ligneterrain.B_CIRCUIT_ROUTIER;
-                    }
-                }
-            }
+             * */
         }
 
         /// <summary>
@@ -1386,16 +1321,6 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             return izone;
         }
 
-        /// <summary>
-        /// Initialise la valeur de ID_NATION pour TAB_PCC_COUT
-        /// Indispensable avant de faire une recherche sur un parcours dont on ne peut pas traverser les cases occupées par l'adversaire
-        /// </summary>
-        /// <returns>true si OK, false si KO</returns>
-        //internal static bool InitialiserProprietairesTrajets()
-        //{
-        //    return AStar.InitialisationProprietaireTrajet();
-        //}
-
         static public int AvancementPourRecalcul(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out string erreur)
         {
             string requete, messageErreur, tri;
@@ -1438,187 +1363,5 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             erreur = "chemin introuvable ou incorrect pour l'unité demandée";
             return -1;
         }
-
-        /// <summary>
-        /// Recherche d'un trajet pour une unité sur la carte
-        /// </summary>
-        /// <param name="tipePacours">type de parcours typeParcours.MOUVEMENT ou typeParcours.RAVITAILLEMENT</param>
-        /// <param name="lignePion">Pion effectuant le trajet</param>
-        /// <param name="ligneCaseDepart">case de départ</param>
-        /// <param name="ligneCaseDestination">case de destination</param>
-        /// <param name="ligneOrdre">ordre de mouvement lié à ce chemin </param>
-        /// <param name="chemin">liste de cases formant le chemin trouvé</param>
-        /// <param name="coutGlobal">cout global du chemin</param>
-        /// <param name="coutHorsRoute">part du cout effecuté en dehors d'une route</param>
-        /// <param name="tableCoutsMouvementsTerrain">table du cout de mouvement des cases suivant l'unité et la météo</param>
-        /// <param name="erreur">message d'erreur</param>
-        /// <returns>true si ok, false si ko</returns>
-        internal static bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<Donnees.TAB_CASERow> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
-        {
-            string requete, message, messageErreur, tri;
-            int i;
-            DateTime timeStart;
-            TimeSpan perf;
-            int idNation=-1;//nation du pion, à indiquer dans la recherche du chemin si on ne peut pas traverser les troupes ennemies (ex: ravitaillement)
-            Donnees.TAB_PARCOURSRow[] parcoursExistant = null;
-
-            timeStart = DateTime.Now;
-            chemin = null;
-            tableCoutsMouvementsTerrain = null;
-            erreur = string.Empty;
-            coutGlobal = coutHorsRoute = 0;
-
-            if (null == lignePion || null == ligneCaseDepart || null == ligneCaseDestination)
-            {
-                erreur = string.Format("RechercheChemin : lignePion ou ligneCaseDepart ou ligneCaseDestination null");
-                LogFile.Notifier(erreur, out messageErreur);
-                return false;
-            }
-
-            //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
-            //il faut faire ce calcul très tot, car cette table peut être utilisée par l'appelant même si l'on ne renvoit effectivement pas de trajet
-            CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
-
-            //existe-il déjà un chemin pour le pion sur le trajet demandé ?
-            //On ne stocke pas cette information pourles liaisons entre depôt car les parcours changent à chaque test suite aux déplacements des troupes et des ennemis
-            if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
-            {
-                requete = string.Format("ID_PION={0}", lignePion.ID_PION);
-                tri = "I_ORDRE";
-                parcoursExistant = (Donnees.TAB_PARCOURSRow[])Donnees.m_donnees.TAB_PARCOURS.Select(requete, tri);
-
-                if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
-                {
-                    //if (lignePion.effectifTotal > 0)
-                    //{
-                        if ((ligneCaseDepart.ID_CASE == parcoursExistant[0].ID_CASE)
-                            && (ligneCaseDestination.ID_CASE == parcoursExistant[parcoursExistant.Length - 1].ID_CASE))
-                        {
-                            //on renvoie le chemin existant
-                            chemin = new List<Donnees.TAB_CASERow>(parcoursExistant.Length);
-                            for (i = 0; i < parcoursExistant.Length; i++)
-                            {
-                                chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE));
-                            }
-                            perf = DateTime.Now - timeStart;
-                            message = string.Format("RechercheChemin : existant en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-                            LogFile.Notifier(message, out messageErreur);
-                            return true;
-                        }
-                        //sinon, ce n'est pas le même chemin, il faut donc le recalculer
-                        message = string.Format("RechercheChemin unité avec effectif: différent parcours existant allant de {0} à {1}, chemin demandé de {2} à {3}",
-                            parcoursExistant[0].ID_CASE, parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
-                            ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
-                        LogFile.Notifier(message, out messageErreur);
-                    //}
-                    /* 14/05/2015, cela ne sert surement plus à rien les unités sans effectif suivent la même règle que les autres maintenant
-                    else
-                    {
-                        if (ligneCaseDestination.ID_CASE == parcoursExistant[parcoursExistant.Length - 1].ID_CASE)
-                        {
-                            //cherche où l'unité se trouve dans le chemin existant
-                            i = 0;
-                            //while (i < parcoursExistant.Length && parcoursExistant[i].ID_CASE != ligneCaseDestination.ID_CASE) i++;
-                            while (i < parcoursExistant.Length && parcoursExistant[i].ID_CASE != ligneCaseDepart.ID_CASE) i++;
-                            if (i < parcoursExistant.Length)
-                            {
-                                chemin = new List<Donnees.TAB_CASERow>(parcoursExistant.Length - i);
-                                for (int j = 0; j < parcoursExistant.Length - i; j++)
-                                {
-                                    chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i + j].ID_CASE));
-                                }
-                                perf = DateTime.Now - timeStart;
-                                message = string.Format("RechercheChemin : existant en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-                                LogFile.Notifier(message, out messageErreur);
-                                return true;
-                            }
-                            //sinon, ce n'est pas le même chemin, il faut donc le recalculer
-                            message = string.Format("RechercheChemin unité sans effectif: différent parcours existant vers {0}, chemin demandé vers {1}",
-                                parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
-                                ligneCaseDestination.ID_CASE);
-                            LogFile.Notifier(message, out messageErreur);
-                        }
-                    }
-                     * */
-                    //destruction de tout autre parcours précédent 14/05/2015: cela semble totalement idiot de faire ça, detruire les parcours mémorisé !!!
-                    /*
-                    foreach (Donnees.TAB_PARCOURSRow ligneParcours in parcoursExistant)
-                    {
-                        ligneParcours.Delete();
-                    }
-                    Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
-                     * */
-                }
-            }
-
-            if (tipePacours == Constantes.TYPEPARCOURS.RAVITAILLEMENT)
-            {
-                //Dans le cas d'un ravitaitellement, les troupes ne peuvent pas traverser les lignes ennemies
-                idNation = lignePion.idNation;
-            }
-
-            //calcul du nouveau parcours
-            message = string.Format("RechercheChemin : SearchPath de {0} ({1},{2}) à {3} ({4},{5})",
-                ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
-            LogFile.Notifier(message, out messageErreur);
-            etoile.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain, idNation);
-            if (!etoile.PathFound) 
-            {
-                //en mode ravitaillement, il peut être normal de ne pas trouver de chemin vers un dépôt
-                if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
-                {
-                    erreur = string.Format("{0}(ID={1}, erreur sur SearchPath dans RechercheChemin idDepart={2}, idDestination={3})",
-                        lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
-                    LogFile.Notifier(erreur, out messageErreur);
-                    return false;
-                }
-                LogFile.Notifier("RechercheChemin : aucun chemin trouvé");
-            }
-            else
-            {
-                //destruction de tout autre parcours précédent
-                if (null != parcoursExistant)
-                {
-                    foreach (Donnees.TAB_PARCOURSRow ligneParcours in parcoursExistant)
-                    {
-                        ligneParcours.Delete();
-                    }
-                    //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
-                    //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
-                }
-
-                chemin = etoile.PathByNodes;
-                message = string.Format("RechercheChemin : SearchPath longueur={0}", chemin.Count);
-                LogFile.Notifier(message, out messageErreur);
-
-                //chemin = ParcoursOptimise(chemin); -> déplacé directement dans AStar
-                coutGlobal = etoile.CoutGlobal;
-                coutHorsRoute = etoile.HorsRouteGlobal;
-
-                //stockage du chemin en table, sauf pour les recherches de depôt
-                int casePrecedente = -1;
-                if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
-                {
-                    i = 0;
-                    foreach (Donnees.TAB_CASERow ligneCase in chemin)
-                    {
-                        if (casePrecedente != ligneCase.ID_CASE)
-                        {
-                            //pour éviter d'avoir deux fois la même case de suite dans le parcours, possible dans certains cas rares
-                            Donnees.m_donnees.TAB_PARCOURS.AddTAB_PARCOURSRow(lignePion.ID_PION, i++, ligneCase.ID_CASE);
-                        }
-                        casePrecedente = ligneCase.ID_CASE;
-                    }
-                    //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
-                    //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
-                }
-            }
-
-            perf = DateTime.Now - timeStart;
-            message = string.Format("RechercheChemin : nouveau et stockage en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-            LogFile.Notifier(message, out messageErreur);
-            return true;
-        }
-
     }
 }

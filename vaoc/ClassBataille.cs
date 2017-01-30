@@ -346,6 +346,7 @@ namespace vaoc
                 List<Donnees.TAB_CASERow> chemin;
                 string message, messageErreur;
                 int i;
+                AStar etoile = new AStar();
 
                 //Deux cas possibles, soit l'unité est en mouvement (possible pour les unités non engagées) et on "avance" l'unité jusqu'à ce qu'elle
                 //sorte du champ de bataille
@@ -377,7 +378,7 @@ namespace vaoc
                         Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                         Donnees.TAB_CASERow ligneCaseDepart = (lignePion.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
 
-                        if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                        if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                         {
                             message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans SortieDuChampDeBataille: {2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                             LogFile.Notifier(message, out messageErreur);

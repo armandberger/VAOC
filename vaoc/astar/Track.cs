@@ -98,20 +98,20 @@ namespace vaoc
         //    Id = idGlobal++;
         //}
 
-        public Track(Track PreviousTrack, Donnees.TAB_CASERow caseFinale)
+        public Track(Track PreviousTrack, Donnees.TAB_CASERow caseFinale, AStar etoile)
 		{
             //if (_Target==null) throw new InvalidOperationException("You must specify a target Node for the Track class.");
 			Queue = PreviousTrack;
             if (null == Queue.EndNodeHPA)
             {
-                _Cost = Queue.Cost+AStar.Cout(Queue.EndNode, caseFinale);
-                _OutRoad = Queue.OutRoad + AStar.HorsRoute(Queue.EndNode, caseFinale);
+                _Cost = Queue.Cost + etoile.Cout(Queue.EndNode, caseFinale);
+                _OutRoad = Queue.OutRoad + etoile.HorsRoute(Queue.EndNode, caseFinale);
             }
             else
             {
-                Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Queue.EndNodeHPA.ID_CASE_FIN);                
-                _Cost = Queue.Cost + AStar.Cout(ligneCaseSource, caseFinale);
-                _OutRoad = Queue.OutRoad + AStar.HorsRoute(ligneCaseSource, caseFinale);
+                Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Queue.EndNodeHPA.ID_CASE_FIN);
+                _Cost = Queue.Cost + etoile.Cout(ligneCaseSource, caseFinale);
+                _OutRoad = Queue.OutRoad + etoile.HorsRoute(ligneCaseSource, caseFinale);
             }
 			_NbArcsVisited = Queue._NbArcsVisited + 1;
 			EndNode = caseFinale;
@@ -120,7 +120,7 @@ namespace vaoc
             Id = idGlobal++;
         }
 
-        public Track(Track PreviousTrack, Track NextTrack)
+        public Track(Track PreviousTrack, Track NextTrack, AStar etoile)
         {
             //if (_Target == null) throw new InvalidOperationException("You must specify a target Node for the Track class.");
             Queue = PreviousTrack;
@@ -143,7 +143,7 @@ namespace vaoc
             //    //le noeud précédent est un bloc
             //    _Cost = Queue.Cost + Queue.EndNodeHPA.I_COUT;
             //}
-            _Cost = PreviousTrack.Cost + AStar.Cout(PreviousTrack, NextTrack);
+            _Cost = PreviousTrack.Cost + etoile.Cout(PreviousTrack, NextTrack);
             _NbArcsVisited = Queue._NbArcsVisited + 1;
             EndNode = NextTrack.EndNode;
             EndNodeHPA = NextTrack.EndNodeHPA;

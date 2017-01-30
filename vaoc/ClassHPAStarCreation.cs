@@ -558,7 +558,7 @@ namespace vaoc
                         AstarTerrain[] tableCoutsMouvementsTerrain;
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                        Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStar etoile = m_etoileParallele[numeroTache];
@@ -692,7 +692,7 @@ namespace vaoc
                         AstarTerrainOBJ[] tableCoutsMouvementsTerrain;
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                        Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStarOBJ etoile = m_etoileParalleleOBJ[numeroTache];

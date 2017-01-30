@@ -68,8 +68,8 @@ namespace vaoc
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
         //public static long SearchIdModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
-        public static AstarTerrain[] m_tableCoutsMouvementsTerrain;
-        private static int m_nombrePixelParCase;
+        public AstarTerrain[] m_tableCoutsMouvementsTerrain;
+        private int m_nombrePixelParCase;
         private const double SQRT2 = 1.4142135623730950488016887242097;
         private int m_minX, m_maxX, m_minY, m_maxY;
         private int m_tailleBloc;
@@ -81,7 +81,7 @@ namespace vaoc
         private int ymaxBlocEnd;
         private int m_espace;//espace recherché
         private int m_espaceTrouve;//nombre d'espace trouvé
-        private static int m_idNation;//nation autorisé à se déplacer sur le parcours
+        private int m_idNation;//nation autorisé à se déplacer sur le parcours
         private Donnees.TAB_CASERow m_cible = null;//private static Donnees.TAB_CASERow _Target = null; de Track
 
         #region constantes
@@ -318,11 +318,11 @@ namespace vaoc
             //{
             //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
-            //foreach (Track noeud in _Closed)
-            //{
-            //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
-            //}
-            //Debug.WriteLine("");
+            foreach (Track noeud in _Closed)
+            {
+                Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
+            }
+            Debug.WriteLine("");
             return _Open.Count > 0;
 		}
 
@@ -421,7 +421,7 @@ namespace vaoc
                 //{
                 //    continue;
                 //}
-                Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
+                Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
                 int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
                 if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
                 int PosNO = _Open.IndexOf(Successor, SameNodesReached);
@@ -472,7 +472,7 @@ namespace vaoc
                 {
                     continue;
                 }
-                Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
+                Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
 				int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
 				if ( PosNF>=0 && Successor.Cost>=((Track)_Closed[PosNF]).Cost ) continue;
                 int PosNO = _Open.IndexOf(Successor, SameNodesReached);
@@ -666,7 +666,7 @@ namespace vaoc
         /// </summary>
         /// <param name="chemin"></param>
         /// <returns></returns>
-        public static List<Donnees.TAB_CASERow> ParcoursOptimise(List<Donnees.TAB_CASERow> chemin)
+        public List<Donnees.TAB_CASERow> ParcoursOptimise(List<Donnees.TAB_CASERow> chemin)
         {
             if (null == chemin) { return null; }
             List<Donnees.TAB_CASERow> cheminRetour = new List<Donnees.TAB_CASERow>();
@@ -724,7 +724,7 @@ namespace vaoc
                             Debug.WriteLine(string.Format("CasesVoisinesHPA bordure ajout de la case : ID={0}({1},{2}) ",
                                 ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                             /**/
-                            listeRetour.Add(new Track(trackSource, ligneCase));
+                            listeRetour.Add(new Track(trackSource, ligneCase, this));
                         }
                     }
                     else
@@ -774,7 +774,7 @@ namespace vaoc
                                     Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
                                         ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                                     /**/
-                                    listeRetour.Add(new Track(trackSource, ligneCase));
+                                    listeRetour.Add(new Track(trackSource, ligneCase, this));
                                 }
                             }
                         }
@@ -790,7 +790,7 @@ namespace vaoc
                         Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
                             ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                          */
-                        listeRetour.Add(new Track(trackSource, ligneCase));
+                        listeRetour.Add(new Track(trackSource, ligneCase, this));
                     }
                 }
             }
@@ -896,7 +896,7 @@ namespace vaoc
         //    //return DataSetCoutDonnees.m_donnees.TAB_CASE.CasesVoisines(caseSource);
         //}
 
-        static public int Cout(Track trackSource, Track trackDestination)
+        public int Cout(Track trackSource, Track trackDestination)
         {
             if (null != trackSource.EndNode && null != trackDestination.EndNode)
             {
@@ -925,11 +925,10 @@ namespace vaoc
                 //Debug.WriteLineIf(trackSource.EndNode.ID_CASE != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
                 //    "Cout : null != trackSource.EndNode && null != trackDestination.EndNodeHPA");
                 Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
-                //return Cout(trackSource.EndNode, caseBloc);
-                if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
-                {
-                    return AStar.CST_COUTMAX;//trajet intraversable
-                }
+                //if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
+                //{
+                //    return AStar.CST_COUTMAX;//trajet intraversable
+                //}
                 return trackDestination.EndNodeHPA.I_COUT;
             }
             if (null != trackSource.EndNodeHPA && null != trackDestination.EndNode)
@@ -951,7 +950,7 @@ namespace vaoc
         }
 
         //cout de déplacement entre deux cases
-        static public int Cout(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
+        public int Cout(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
         {
             //DateTime timeStart;
             //TimeSpan perf;
@@ -1027,7 +1026,7 @@ namespace vaoc
         /// <param name="caseSource">case source</param>
         /// <param name="caseFinale">case finale</param>
         /// <returns></returns>
-        static public int HorsRoute(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
+        public int HorsRoute(Donnees.TAB_CASERow caseSource, Donnees.TAB_CASERow caseFinale)
         {
             return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
         }
@@ -1190,7 +1189,7 @@ namespace vaoc
                         //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
                         //        A.I_COUT, cout, TrackToPropagate.EndNode.I_X, TrackToPropagate.EndNode.I_Y, TrackToPropagate.EndNode.I_COUT));
                         //}
-                        Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
+                        Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
                         _Open.Add(Successor);
                     }
                 }
@@ -1206,7 +1205,7 @@ namespace vaoc
         /// ceci afin que les trajets ne puissent pas être empruntés par des nations qui ne les controllent pas (cas des ravitaillement par dépôt)
         /// </summary>
         /// <returns>true si Ok, false si KO</returns>
-        static public bool InitialisationProprietaireTrajet0()
+        public bool InitialisationProprietaireTrajet0()
         {
             List<int> listeCases;
             foreach (Donnees.TAB_PCC_COUTSRow lignePCCCout in Donnees.m_donnees.TAB_PCC_COUTS)
@@ -1258,7 +1257,7 @@ namespace vaoc
             return true;
         }
 
-        internal static void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
+        internal void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
         {
             bool bRoutier, bHorsRoute;
             bRoutier = bHorsRoute = false;
@@ -1289,17 +1288,17 @@ namespace vaoc
             }
         }
 
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
+        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
         {
             CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, false);
         }
 
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier)
+        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier)
         {
             CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, bRoutier, false);
         }
 
-        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
+        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
         {
             int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
             tableCoutsMouvementsTerrain = new AstarTerrain[maxNumeroModeleTerrain + 1];
@@ -1701,7 +1700,7 @@ namespace vaoc
                         //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
                         //        A.I_COUT, cout, TrackToPropagate.EndNode.I_X, TrackToPropagate.EndNode.I_Y, TrackToPropagate.EndNode.I_COUT));
                         //}
-                        Track Successor = new Track(TrackToPropagate, A);// le cout est calculé dans le new
+                        Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
                         _Open.Add(Successor);
                     }
                 }

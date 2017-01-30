@@ -2405,8 +2405,9 @@ namespace vaoc
                     Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE);
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     double cout, coutHorsRoute;
+                    AStar etoile = new AStar();
 
-                    if (Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
+                    if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
                         m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
                         this.buttonVerifierTrajet.Enabled = true;
@@ -2740,7 +2741,7 @@ namespace vaoc
                     //maintenant on compare avec la version HPA
                     //Donnees.m_donnees.TAB_PCC_COUTS.Initialisation(); -> deja fait au chargement
                     if (null == m_etoileHPA) m_etoileHPA = new AStar();
-                    Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                     timeStart = DateTime.Now;
                     //if (!m_etoileHPA.InitialisationProprietaireTrajet())
                     //{
@@ -2770,7 +2771,7 @@ namespace vaoc
                     {
                         if (null == m_etoileOBJ) m_etoileOBJ = new AStarOBJ();
                         AstarTerrainOBJ[] tableCoutsMouvementsTerrainOBJ;
-                        Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrainOBJ);
+                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrainOBJ);
                         timeStart = DateTime.Now;
                         LigneCASE departCase = BD.Base.Case.TrouveParID_CASE(m_departPlusCourtChemin.ID_CASE);
 
@@ -3146,7 +3147,7 @@ namespace vaoc
             requete = string.Format("ID_VILLE_DEBUT=50 AND ID_VILLE_FIN=26");
             Donnees.TAB_PCC_VILLESRow[] lignesCout2 = (Donnees.TAB_PCC_VILLESRow[])Donnees.m_donnees.TAB_PCC_VILLES.Select(requete);*/
             
-            Cartographie.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+            AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
             if (!m_etoileHPA.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain))
             {
                 MessageBox.Show("Il n'y a aucun chemin possible entre les deux points", "buttonVerifierTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -3195,7 +3196,8 @@ namespace vaoc
             Donnees.m_donnees.TAB_ESPACE.SupprimerEspacePion(m_lignePionSelection.ID_PION);
             Donnees.m_donnees.TAB_PARCOURS.SupprimerParcoursPion(m_lignePionSelection.ID_PION);
             //Recalcul du nouveau trajet
-            if (!Cartographie.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
+            AStar etoile = new AStar();
+            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
                 m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, ligneOrdre,
                 out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
             {

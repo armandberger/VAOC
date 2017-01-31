@@ -48,7 +48,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            //TestCreation();
+            TestCreation();
             AmeliorationsPerformances();
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
@@ -144,7 +144,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
+                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -186,7 +186,6 @@ namespace vaoc
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("PlacerLesUnitesStatiques en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
-
                     //timeStart = DateTime.Now;
                     //if (!Cartographie.PlacerLesUnitesStatiquesParallele())
                     //{
@@ -222,14 +221,14 @@ namespace vaoc
                     }
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("ExecuterMouvement en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
-                    //timeStart = DateTime.Now;
-                    //perf = DateTime.Now - timeStart;
-                    //if (!ExecuterMouvementEnParallele())
-                    //{
-                    //    messageErreur = "Erreur durant le traitement ExecuterMouvementEnParallele";
-                    //    return false;
-                    //}
-                    //Debug.WriteLine(string.Format("ExecuterMouvementEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    timeStart = DateTime.Now;
+                    perf = DateTime.Now - timeStart;
+                    if (!ExecuterMouvementEnParallele())
+                    {
+                        messageErreur = "Erreur durant le traitement ExecuterMouvementEnParallele";
+                        return false;
+                    }
+                    Debug.WriteLine(string.Format("ExecuterMouvementEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
                     #region Mouvement de toutes les unités sans effectif (QG, messagers)
@@ -4475,10 +4474,10 @@ namespace vaoc
             //Ajout de phrases pour tous les cas pour éviter des crash
             TestCreationPhrases();
             //Création de cent unités dans chaque camp
-            TestCreationUnite(0, 100);
+            TestCreationUnite(0, 10);
             //TestCreationUnite(1, 10); -> y'a qu'un camp :-)
             //Ajout de 100 ordres
-            TestCreationOrdres();
+            TestCreationOrdres(); // en commentaire pour tester le placement statique
         }
 
         private void TestCreationPhrases()
@@ -4524,18 +4523,19 @@ namespace vaoc
                         heureDebut + hasard.Next(12), //Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL - Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_DUREE
                         -1//I_ENGAGEMENT
                         );//ID_BATAILLE
-                    ligneOrdre.SetID_ORDRE_TRANSMISNull();
-                    ligneOrdre.SetID_ORDRE_SUIVANTNull();
-                    ligneOrdre.SetID_ORDRE_WEBNull();
-                    ligneOrdre.SetID_MESSAGENull();
-                    ligneOrdre.SetID_DESTINATAIRENull();
-                    ligneOrdre.SetID_BATAILLENull();
-                    ligneOrdre.SetI_TOUR_FINNull();
-                    ligneOrdre.SetI_PHASE_FINNull();
-                    ligneOrdre.SetID_NOM_DESTINATIONNull();
-                    ligneOrdre.SetID_CIBLENull();
-                    ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
-                    ligneOrdre.SetI_ENGAGEMENTNull();            }
+                ligneOrdre.SetID_ORDRE_TRANSMISNull();
+                ligneOrdre.SetID_ORDRE_SUIVANTNull();
+                ligneOrdre.SetID_ORDRE_WEBNull();
+                ligneOrdre.SetID_MESSAGENull();
+                ligneOrdre.SetID_DESTINATAIRENull();
+                ligneOrdre.SetID_BATAILLENull();
+                ligneOrdre.SetI_TOUR_FINNull();
+                ligneOrdre.SetI_PHASE_FINNull();
+                ligneOrdre.SetID_NOM_DESTINATIONNull();
+                ligneOrdre.SetID_CIBLENull();
+                ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
+                ligneOrdre.SetI_ENGAGEMENTNull();
+            }
         }
 
         /// <summary>
@@ -4546,28 +4546,31 @@ namespace vaoc
         private void TestCreationUnite(int idNation, int nbUnites)
         {
             Random hasard = new Random();
-            for (int i=0; i<nbUnites;i++)
+            for (int i = 0; i < nbUnites; i++)
             {
                 string requete = string.Format("ID_NATION={0}", idNation);
                 Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
                 int iInfanterie = 0, iCavalerie = 0, iArtillerie = 0;
-                switch(hasard.Next(3))
+                switch (hasard.Next(3))
                 {
                     case 0:
                         //unité d'infanterie
-                        iInfanterie = 1000 + hasard.Next(10)*1000;
+                        iInfanterie = 1000 + hasard.Next(10) * 1000;
                         break;
                     case 1:
                         //unité de cavalerie
-                        iCavalerie = 500 + hasard.Next(10)*500;
+                        iCavalerie = 500 + hasard.Next(10) * 500;
                         break;
                     default:
                         //unité mixte
-                        iInfanterie = 1000 + hasard.Next(10)*1000;
-                        iCavalerie = 500 + hasard.Next(10)*500;
+                        iInfanterie = 1000 + hasard.Next(10) * 1000;
+                        iCavalerie = 500 + hasard.Next(10) * 500;
                         iArtillerie = hasard.Next(10);
                         break;
                 }
+                int idCase;
+                //idCase = Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE;
+                idCase = Donnees.m_donnees.TAB_CASE.FindByXY(i * 10, i * 10).ID_CASE;
                 Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     resModelePion[hasard.Next(resModelePion.Count())].ID_MODELE_PION,
                     -1,//ID_PION_PROPRIETAIRE
@@ -4577,7 +4580,7 @@ namespace vaoc
                     iInfanterie, iInfanterie,
                     iCavalerie, iCavalerie,
                     iArtillerie, iArtillerie, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
-                    Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE, 0, 0, -1,
+                    idCase, 0, 0, -1,
                     0, //I_TOUR_RETRAITE_RESTANT
                     0, false, false, false, false, false,
                     false,//B_ENNEMI_OBSERVABLE

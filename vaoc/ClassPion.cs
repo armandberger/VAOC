@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using WaocLib;
 
 namespace vaoc
@@ -638,18 +639,18 @@ namespace vaoc
 
             #endregion
 
-            static protected AStar m_star = null;
-            internal AStar etoile
-            {
-                get
-                {
-                    if (null == m_star)
-                    {
-                        m_star = new AStar();
-                    }
-                    return m_star;
-                }
-            }
+            //static protected AStar m_star = null;
+            //internal AStar etoile
+            //{
+            //    get
+            //    {
+            //        if (null == m_star)
+            //        {
+            //            m_star = new AStar();
+            //        }
+            //        return m_star;
+            //    }
+            //}
 
             public int vision
             {
@@ -2981,9 +2982,11 @@ namespace vaoc
                 }
 
                 typeEspace = (depart) ? AStar.CST_DEPART : AStar.CST_DESTINATION;
-                //existe-il déjà un chemin pour le pion sur le trajet demandé ?
+                //existe-il déjà un chemin pour le pion sur le trajet demandé ? BEA, vérifier, si cela se trouve c'est devenu aussi rapide de refaire le calcul à chaque fois
                 requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", ID_PION, typeEspace);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE); 
                 Donnees.TAB_ESPACERow[] parcoursExistant = (Donnees.TAB_ESPACERow[])Donnees.m_donnees.TAB_ESPACE.Select(requete, "I_COUT");
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE); 
 
                 if (parcoursExistant.Length > 5000)
                 {
@@ -3034,6 +3037,7 @@ namespace vaoc
                 }
 
                 //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
+                AStar etoile = new AStar();
                 etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
@@ -3058,6 +3062,7 @@ namespace vaoc
                 //}
 
                 listeIDCaseEspace = new int[listeCaseEspace.Count];
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 for (int i = 0; i < listeCaseEspace.Count; i++)
                 {
                     listeIDCaseEspace[i] = listeCaseEspace[i].ID_CASE;
@@ -3066,6 +3071,7 @@ namespace vaoc
                                                                             listeCaseEspace[i].ID_CASE,
                                                                             listeCaseEspace[i].I_COUT);
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
 

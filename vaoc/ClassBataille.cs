@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using WaocLib;
 
 namespace vaoc
@@ -70,6 +71,7 @@ namespace vaoc
                         bEnDefense = !lignePion.OrdreActif(ligneOrdre);
                     }
 
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS);
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         ID_BATAILLE, lignePion.ID_PION, ligneModele.ID_NATION, false, bEnDefense,
                         lignePion.I_INFANTERIE,
@@ -87,16 +89,20 @@ namespace vaoc
                         -1
                     ))
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
                         message = string.Format("AjouterPionDansLaBataille : impossible d'ajouter le pion {0} à la bataille {1}", lignePion.ID_PION, ID_BATAILLE);
                         LogFile.Notifier(message, out messageErreur);
                         return false;//problème à l'ajout
                     }
                     lignePion.ID_BATAILLE = ID_BATAILLE;
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
 
                     //il faut terminer tout ordre en cours d'execution par l'unité et placer l'unité dans la case courante du combat
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     lignePion.ID_CASE = ligneCaseCombat.ID_CASE;
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.PlacerStatique();
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
 
                     //il faut envoyer un message au propriétaire de l'unité pour indiquer cet ajout
                     ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE, this);
@@ -2363,6 +2369,7 @@ namespace vaoc
                     //l'unité fuit automatiquement vers son chef
                     lignePionFuite.SupprimerTousLesOrdres();
                     Donnees.TAB_PIONRow lignePionChef = lignePionFuite.proprietaire;
+                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         -1,//ID_ORDRE_TRANSMIS
                         -1,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
@@ -2400,6 +2407,7 @@ namespace vaoc
                     ligneOrdre.SetID_CIBLENull();
                     ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
                     ligneOrdre.SetI_ENGAGEMENTNull();
+                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
                 }
                 else
                 {

@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using WaocLib;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace vaoc
 {
@@ -397,59 +398,6 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             //     hasard.Next(ImageCarte.Image.Width),
             //     hasard.Next(ImageCarte.Image.Height));
             graph.Dispose();
-        }
-
-        internal static void MiseAJourProprietaires()
-        {
-            /* Ce traitement prend 2 minutes ! Mais il n'est pas possible de le faire en Linq, donc pas de solution à moins d'utiliser
-            foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
-            {
-                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
-                {
-                    ligne.SetID_PROPRIETAIRENull();
-                }
-                else
-                {
-                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                }
-                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
-            }
-             * */
-            /* autre solution en 5 secondes, mais ne marche pas car ne remet pas a blanc idProprietaire en fait
-            Donnees.TAB_CASEDataTable changeDataSet = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.GetChanges();
-            if (0==changeDataSet.Rows.Count) { return; }
-            foreach (Donnees.TAB_CASERow ligneChange in changeDataSet)
-            {
-                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
-                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
-                {
-                    ligne.SetID_PROPRIETAIRENull();
-                }
-                else
-                {
-                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                }
-                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
-                ligne.AcceptChanges();
-            }
-             */
-            //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
-            string requete = "(ID_PROPRIETAIRE IS NOT NULL) OR (ID_NOUVEAU_PROPRIETAIRE IS NOT NULL)";
-            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-            foreach (Donnees.TAB_CASERow ligneChange in changeRows)
-            {
-                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
-                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
-                {
-                    ligne.SetID_PROPRIETAIRENull();
-                }
-                else
-                {
-                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                }
-                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
-            }
-            //Donnees.TAB_CASERow ligneCaseD2 = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
         }
 
         internal static void RecadrerRect(Bitmap imageSource, ref Rectangle rect)
@@ -1143,6 +1091,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             }
             #endregion
 
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE); 
             ligneBataille = Donnees.m_donnees.TAB_BATAILLE.AddTAB_BATAILLERow(
                                     Donnees.m_donnees.TAB_BATAILLE.ProchainID_BATAILLE,
                                     nomBataille,
@@ -1184,6 +1133,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             }
             ligneBataille.SetI_TOUR_FINNull();
             ligneBataille.SetI_PHASE_FINNull();
+            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE); 
 
             //ajout des pions et leaders présents dans la bataille
             //foreach (DataSetCoutDonnees.TAB_PIONRow lignePion in DataSetCoutDonnees.m_donnees.TAB_PION) -> pas possible car on ajouter des pions en cas d'envoie de message dans AjouterPionDansLaBataille

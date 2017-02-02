@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using WaocLib;
 
 namespace vaoc
@@ -234,7 +235,9 @@ namespace vaoc
                         //si la case n'a pas déjà été modifiée, on l'ajoute dans la liste des cases modifiée
                         if (null == Donnees.m_donnees.TAB_CASE_MODIFICATION.FindByID_CASE(ligneCasePont.ID_CASE))
                         {
+                            Monitor.Enter(Donnees.m_donnees.TAB_CASE_MODIFICATION); 
                             Donnees.m_donnees.TAB_CASE_MODIFICATION.AddTAB_CASE_MODIFICATIONRow(ligneCasePont.ID_CASE, ligneCasePont.ID_MODELE_TERRAIN);
+                            Monitor.Exit(Donnees.m_donnees.TAB_CASE_MODIFICATION);
                         }
 
                         //dans quels blocs se trouve-t-on ?

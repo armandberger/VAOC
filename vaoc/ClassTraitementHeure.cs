@@ -9,6 +9,7 @@ using System.Windows.Forms;
 
 using WaocLib;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace vaoc
 {
@@ -144,7 +145,7 @@ namespace vaoc
                     }
                 }
 
-                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
+                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -203,6 +204,7 @@ namespace vaoc
                     {
                         return false;
                     }
+                    /* methode standard
                     timeStart = DateTime.Now;
                     i = 0;
                     while (i < Donnees.m_donnees.TAB_PION.Count())
@@ -221,14 +223,15 @@ namespace vaoc
                     }
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("ExecuterMouvement en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                     * */
                     timeStart = DateTime.Now;
-                    perf = DateTime.Now - timeStart;
-                    if (!ExecuterMouvementEnParallele())
+                    if (!ExecuterMouvementAvecEffectifsEnParallele())
                     {
-                        messageErreur = "Erreur durant le traitement ExecuterMouvementEnParallele";
+                        messageErreur = "Erreur durant le traitement ExecuterMouvementAvecEffectifsEnParallele";
                         return false;
                     }
-                    Debug.WriteLine(string.Format("ExecuterMouvementEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("ExecuterMouvementAvecEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
                     #region Mouvement de toutes les unités sans effectif (QG, messagers)
@@ -238,6 +241,7 @@ namespace vaoc
                         return false;
                     }
 
+                    /* Version Standard
                     i = 0;
                     while (i < Donnees.m_donnees.TAB_PION.Count())
                     {
@@ -253,9 +257,19 @@ namespace vaoc
                         }
                         i++;
                     }
+                    */
+                    timeStart = DateTime.Now;
+                    if (!ExecuterMouvementSansEffectifsEnParallele())
+                    {
+                        messageErreur = "Erreur durant le traitement ExecuterMouvementSansEffectifsEnParallele";
+                        return false;
+                    }
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("ExecuterMouvementSansEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
                     #region Toutes les actions qui ne sont pas des mouvements
+                    /* Version Standard
                     i = 0;
                     while (i < Donnees.m_donnees.TAB_PION.Count())
                     {
@@ -268,6 +282,9 @@ namespace vaoc
                         }
                         i++;
                     }
+                    */
+
+                    ExecuterActionHorsMouvementEnParallele();
                     #endregion
 
                     /************* rendre actif l'ordre suivant
@@ -277,7 +294,7 @@ namespace vaoc
                  * --> et en plus c'est pas vrai, il faut indiquer i_tour_debut/i_phase_debut dans l'ordre, tout est géré dans TerminerOrdreCourant (sur PIONRow)
                  *********************************/
                     LogFile.Notifier("Mise à jour des propriétaires des cases");
-                    Cartographie.MiseAJourProprietaires();
+                    MiseAJourProprietaires();
                     if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % 10) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                     {
                         Donnees.m_donnees.SauvegarderPartie(fichierCourant);
@@ -774,15 +791,60 @@ namespace vaoc
                 Donnees.m_donnees.TAB_MESSAGE.Count(),
                 Donnees.m_donnees.TAB_ORDRE.Count()));
             #endregion
-        }        
+        }
 
-        private bool ExecuterMouvementEnParallele()
+        private bool ExecuterActionHorsMouvementEnParallele()
         {
-            // Cela ne marche pas car j'ai un conflit d'écriture sur I_COUT quand je fais la recherche d'espace
+            /*i = 0;
+            while (i < Donnees.m_donnees.TAB_PION.Count())
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                if (lignePion.B_DETRUIT) { i++; continue; }
+                if (!ExecuterOrdreHorsMouvement(lignePion, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                {
+                    messageErreur = "Erreur durant le traitement ExecuterMouvement";
+                    return false;
+                }
+                i++;
+            }*/
+
+            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePion.B_DETRUIT)
+                {
+                    liste.Add(lignePion);
+                }
+            }
+            //Parallel.ForEach(liste, item => ExecuterOrdreHorsMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));             
+
+            ParallelLoopResult result = Parallel.ForEach(liste, (item, loopstate) =>
+                {
+                    if (!ExecuterOrdreHorsMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) loopstate.Break();
+                });
+            return result.IsCompleted;
+        }
+
+        private bool ExecuterMouvementAvecEffectifsEnParallele()
+        {
             List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
                 if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0)
+                {
+                    liste.Add(lignePion);
+                }
+            }
+            Parallel.ForEach(liste, item => ExecuterMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));
+            return true;
+        }
+
+        private bool ExecuterMouvementSansEffectifsEnParallele()
+        {
+            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotal)
                 {
                     liste.Add(lignePion);
                 }
@@ -2538,6 +2600,7 @@ namespace vaoc
             Donnees.TAB_ORDRERow ligneOrdreARemettre;
             //Cela indique qu'il est impossible de se rendre à l'emplacement indiqué
             //il faut quand même ajouter un ordre terminé cela peut servir dans le message
+            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE); 
             ligneOrdreARemettre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                 -1,//id_ordre_transmis
                 -1,//id_ordre_suivant,//id_ordre_suivant
@@ -2573,6 +2636,7 @@ namespace vaoc
             ligneOrdreARemettre.SetI_ENGAGEMENTNull();
             if (ordre.ID_PION_CIBLE < 0) { ligneOrdreARemettre.SetID_CIBLENull(); }
             if (ordre.ID_PION_DESTINATAIRE_CIBLE < 0) { ligneOrdreARemettre.SetID_DESTINATAIRE_CIBLENull(); }
+            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE); 
 
             // Il faut envoyer un message pour prévenir l'officier responsable
             ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DESTINATION_IMPOSSIBLE);
@@ -3122,6 +3186,7 @@ namespace vaoc
                 {
                     //si l'unité n'est pas arrivée à destination, il faut ajouter la fatigue
                     //l'unité est entrain de marcher, compte pour la fatigue en fin de journée
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {
                         lignePion.I_NB_PHASES_MARCHE_NUIT++;
@@ -3130,6 +3195,7 @@ namespace vaoc
                     {
                         lignePion.I_NB_PHASES_MARCHE_JOUR++;
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 }
 
                 if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG)
@@ -3500,6 +3566,7 @@ namespace vaoc
 
                                             if (idModelePATROUILLE >= 0)
                                             {
+                                                Monitor.Enter(Donnees.m_donnees.TAB_PION); 
                                                 lignePionPatrouille = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                                                     idModelePATROUILLE,//ID_MODELE_PION
                                                     lignePionDestinataire.ID_PION, //ID_PION_PROPRIETAIRE
@@ -3557,6 +3624,7 @@ namespace vaoc
                                                 lignePionPatrouille.SetID_PION_ESCORTENull();
                                                 lignePionPatrouille.SetID_PION_REMPLACENull();
                                                 lignePionPatrouille.SetID_DEPOT_SOURCENull();
+                                                Monitor.Exit(Donnees.m_donnees.TAB_PION); 
                                             }
                                             else
                                             {
@@ -4426,6 +4494,61 @@ namespace vaoc
             return true;
         }
 
+        private void MiseAJourProprietaires()
+        {
+            /* Ce traitement prend 2 minutes ! Mais il n'est pas possible de le faire en Linq, donc pas de solution à moins d'utiliser
+            foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
+            {
+                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
+                {
+                    ligne.SetID_PROPRIETAIRENull();
+                }
+                else
+                {
+                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                }
+                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
+            }
+             * */
+            /* autre solution en 5 secondes, mais ne marche pas car ne remet pas a blanc idProprietaire en fait
+            Donnees.TAB_CASEDataTable changeDataSet = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.GetChanges();
+            if (0==changeDataSet.Rows.Count) { return; }
+            foreach (Donnees.TAB_CASERow ligneChange in changeDataSet)
+            {
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
+                {
+                    ligne.SetID_PROPRIETAIRENull();
+                }
+                else
+                {
+                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                }
+                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
+                ligne.AcceptChanges();
+            }
+             */
+            //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
+            string requete = "(ID_PROPRIETAIRE IS NOT NULL) OR (ID_NOUVEAU_PROPRIETAIRE IS NOT NULL)";
+            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+            foreach (Donnees.TAB_CASERow ligneChange in changeRows)
+            {
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
+                {
+                    ligne.SetID_PROPRIETAIRENull();
+                }
+                else
+                {
+                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                }
+                ligne.SetID_NOUVEAU_PROPRIETAIRENull();
+            }
+            //Donnees.TAB_CASERow ligneCaseD2 = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+        }
+
         internal bool miseÀJourInternet(string fichierCourant, out string messageErreur)
         {
             InterfaceVaocWeb iWeb;
@@ -4496,7 +4619,7 @@ namespace vaoc
             Random hasard = new Random();
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
-                int heureDebut = hasard.Next(12);
+                int heureDebut = 0; // hasard.Next(12);
                 //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[hasard.Next(Donnees.m_donnees.TAB_PION.Count())];
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                     -1,//ID_ORDRE_TRANSMIS
@@ -4548,7 +4671,7 @@ namespace vaoc
             Random hasard = new Random();
             for (int i = 0; i < nbUnites; i++)
             {
-                string requete = string.Format("ID_NATION={0}", idNation);
+                string requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
                 Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
                 int iInfanterie = 0, iCavalerie = 0, iArtillerie = 0;
                 switch (hasard.Next(3))
@@ -4570,9 +4693,10 @@ namespace vaoc
                 }
                 int idCase;
                 //idCase = Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE;
-                idCase = Donnees.m_donnees.TAB_CASE.FindByXY(i * 10, i * 10).ID_CASE;
+                //Note : il ne faut pas qu'une unité commence sur un bord de carte ou cela fait planter l'algorithme de recherche
+                idCase = Donnees.m_donnees.TAB_CASE.FindByXY((i + 1) * 30, (i + 1) * 30).ID_CASE;
                 Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
-                    resModelePion[hasard.Next(resModelePion.Count())].ID_MODELE_PION,
+                    resModelePion[0].ID_MODELE_PION,
                     -1,//ID_PION_PROPRIETAIRE
                     -1,
                     -1,

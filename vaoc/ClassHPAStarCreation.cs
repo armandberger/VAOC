@@ -392,6 +392,7 @@ namespace vaoc
                             nbCases++;
                             nbCasesContinue = 0;
                             //ajout des cases dans le bloc courant et dans le bloc x+1,y ou le bloc x,y+1
+                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_CASE_BLOCS);
                             if (null == Donnees.m_donnees.TAB_PCC_CASE_BLOCS.FindByID_CASEI_BLOCXI_BLOCY(ligneCase.ID_CASE, xBloc, yBloc))
                                 Donnees.m_donnees.TAB_PCC_CASE_BLOCS.AddTAB_PCC_CASE_BLOCSRow(ligneCase.ID_CASE, xBloc, yBloc);
 
@@ -440,6 +441,7 @@ namespace vaoc
                                         Donnees.m_donnees.TAB_PCC_CASE_BLOCS.AddTAB_PCC_CASE_BLOCSRow(ligneCase.ID_CASE, xBloc + 1, yBloc + 1);
                                 }
                             }
+                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_CASE_BLOCS);
                         }
                         nbCasesContinue++;
                     }

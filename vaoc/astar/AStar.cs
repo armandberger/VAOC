@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using WaocLib;
+using System.Threading;
 //using System.Linq.Expressions;
 
 
@@ -411,10 +412,12 @@ namespace vaoc
                     TrackToPropagate.Cost));
             }
              * */
-            foreach (Track A in CasesVoisinesHPA(TrackToPropagate))
+            IList<Track> liste = CasesVoisinesHPA(TrackToPropagate); 
+            foreach (Track A in liste)
             {
                 if (CST_COUTMAX == Cout(TrackToPropagate, A))
                 {
+                    Debug.Write("X");
                     continue;//case intraversable
                 }
                 //if ((m_minX != m_maxX) && (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY))
@@ -1500,6 +1503,7 @@ namespace vaoc
                 int casePrecedente = -1;
                 if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
                     i = 0;
                     foreach (Donnees.TAB_CASERow ligneCase in chemin)
                     {
@@ -1512,6 +1516,7 @@ namespace vaoc
                     }
                     //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                     //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
+                    Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
                 }
             }
 

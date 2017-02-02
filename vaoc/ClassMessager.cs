@@ -5,6 +5,7 @@ using System.Text;
 using WaocLib;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace vaoc
 {
@@ -1261,6 +1262,7 @@ namespace vaoc
                 }
 
                 //Le message est directement visible, le destinataire est un joueur 
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
                 Donnees.TAB_MESSAGERow ligneMessageDirect = Donnees.m_donnees.TAB_MESSAGE.AjouterMessage(
                     lignePionEmetteur.ID_PION,
                     lignePionDestinataire.ID_PION,
@@ -1312,7 +1314,7 @@ namespace vaoc
                 {
                     ligneMessageDirect.I_ZONE_BATAILLE = lignePionEmetteur.I_ZONE_BATAILLE;
                 }
-
+                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
                 ClassTraitementHeure.ReceptionMessageTransfert(lignePionEmetteur, ligneMessageDirect);
                 LogFile.Notifier(string.Format("CreerMessager: envoi d'un message direct {0} au pion ID={1}", phrase, lignePionDestinataire.ID_PION));
             }
@@ -1351,6 +1353,7 @@ namespace vaoc
                 if (null!=lignePionMessager)
                 {
                     //il faut ajouter le message 
+                    Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
                     Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.AjouterMessage(
                         lignePionEmetteur.ID_PION,
                         lignePionMessager.ID_PION,
@@ -1403,7 +1406,10 @@ namespace vaoc
                     {
                         ligneMessage.I_ZONE_BATAILLE = lignePionEmetteur.I_ZONE_BATAILLE;
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
+
                     //et maintenant, un ordre de mouvement
+                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         -1,//id_ordre_transmis
                         -1,//id_ordre_suivant
@@ -1441,6 +1447,7 @@ namespace vaoc
                     ligneOrdre.SetID_NOM_DESTINATIONNull();
                     ligneOrdre.SetID_CIBLENull();
                     ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
+                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
                     LogFile.Notifier(string.Format("CreerMessager: envoi d'un message indirect \"{0}\" ID={2} au pion ID={1} par le messager ID={3}", 
                         phrase, lignePionDestinataire.ID_PION, ligneMessage.ID_MESSAGE, lignePionMessager.ID_PION));
                 }
@@ -1529,6 +1536,7 @@ namespace vaoc
             if (idModeleMESSAGER >= 0)
             {
                 //on a trouvé le modèle, il faut créer le pion associé
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 lignePionMessager = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     idModeleMESSAGER,
                     lignePionEmetteur.ID_PION, //lignePionEmetteur.ID_PION_PROPRIETAIRE, ne peut pas être bon, des fois, c'est "0" le propriétaire
@@ -1573,6 +1581,7 @@ namespace vaoc
                 lignePionMessager.SetID_LIEU_RATTACHEMENTNull();
                 lignePionMessager.SetID_PION_ESCORTENull();
                 lignePionMessager.SetID_DEPOT_SOURCENull();
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
             }
 
             return lignePionMessager;

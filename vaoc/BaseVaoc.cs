@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using WaocLib;
 
 namespace vaoc
@@ -179,10 +180,12 @@ namespace vaoc
                 string requete = string.Format("ID_PION={0}", id_pion);
 
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
             }
         }
 
@@ -203,10 +206,12 @@ namespace vaoc
                 //remplacement par les nouvelles lignes
                 string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", id_pion, typeEspaceSource);
                 System.Data.DataRow[] lignesARemplacer = Select(requete);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 foreach (TAB_ESPACERow ligne in lignesARemplacer)
                 {
                     ligne.C_TYPE = typeEspaceDestination;
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
             }
 
             public void SupprimerEspacePion(int id_pion, char typeEspace)
@@ -214,10 +219,12 @@ namespace vaoc
                 string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", id_pion, typeEspace);
 
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
             }
 
             public void SupprimerEspacePion(int id_pion)
@@ -225,10 +232,12 @@ namespace vaoc
                 string requete = string.Format("ID_PION={0}", id_pion);
 
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
             }
         }
 
@@ -391,7 +400,9 @@ namespace vaoc
                         C_NIVEAU_DEPOT
                 };
                 rowTAB_MESSAGERow.ItemArray = columnValuesArray;
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
                 this.Rows.Add(rowTAB_MESSAGERow);
+                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
                 return rowTAB_MESSAGERow;
             }
         }

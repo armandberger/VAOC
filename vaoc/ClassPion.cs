@@ -760,6 +760,7 @@ namespace vaoc
                 }
                 //lignePion.SupprimerTousLesOrdres(); si on fait cela, les ordres ne seront plus visibles sur le web
                 //si l'unité a des effectifs sur carte, il faut les supprimer pour avoir un affichage correcte après la bataille
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 if (!estQG && !estMessager && !estPatrouille)
                 {
                     string requete = string.Format("(ID_PROPRIETAIRE= {0}) OR (ID_NOUVEAU_PROPRIETAIRE={0})", ID_PION);
@@ -787,6 +788,7 @@ namespace vaoc
                         }
                     }
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
             }
 
             /// <summary>
@@ -1354,17 +1356,23 @@ namespace vaoc
                 requete = (idordre == -1) ? string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL", ID_PION) :
                                           string.Format("ID_PION={0} AND ID_ORDRE< {1} AND I_TOUR_FIN IS NULL", ID_PION, idordre);
                 TAB_ORDRERow[] resOrdres = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
                 foreach (TAB_ORDRERow ligneOrdre in resOrdres)
                 {
                     ligneOrdre.I_TOUR_FIN = m_donnees.tableTAB_PARTIE[0].I_TOUR;
                     ligneOrdre.I_PHASE_FIN = m_donnees.tableTAB_PARTIE[0].I_PHASE;
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //m_donnees.TAB_ORDRE.AcceptChanges();
 
                 //suppression des parcours en mémoire car l'unité devient statiques
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 m_donnees.TAB_ESPACE.SupprimerEspacePion(ID_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
                 m_donnees.TAB_PARCOURS.SupprimerParcoursPion(ID_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
 
                 return true;
             }
@@ -2513,6 +2521,7 @@ namespace vaoc
                     return null;
                 }
 
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow lignePionRemplacant = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -2585,6 +2594,7 @@ namespace vaoc
                 else
                 {
                     lignePionRemplacant.ID_BATAILLE = ID_BATAILLE;
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS); 
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         lignePionRemplacant.ID_BATAILLE, lignePionRemplacant.ID_PION, lignePionRemplacant.nation.ID_NATION, false, false /*bEnDefense*/,
                         lignePionRemplacant.I_INFANTERIE,
@@ -2602,9 +2612,11 @@ namespace vaoc
                         -1 // I_ZONE_BATAILLE_ENGAGEMENT
                     ))
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
                         LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_BATAILLE_PIONSRow");
                         return null;
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
 
                     //le chef blessé n'est plus engagé (considéré en retraite)
                     Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ID_PION, ID_BATAILLE);
@@ -2656,7 +2668,7 @@ namespace vaoc
                 lignePionRemplacant.SetID_DEPOT_SOURCENull();
                 lignePionRemplacant.SetI_TOUR_SANS_RAVITAILLEMENTNull();
                 lignePionRemplacant.SetI_TOUR_CONVOI_CREENull();
-
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 return lignePionRemplacant;
             }
 
@@ -2688,6 +2700,7 @@ namespace vaoc
                 }
 
                 //copie de l'ancien chef comme nouveau pion, blessé
+                Monitor.Enter(Donnees.m_donnees.TAB_PION); 
                 Donnees.TAB_PIONRow ligneAncienPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -2751,6 +2764,7 @@ namespace vaoc
 
                 if (null == ligneAncienPion)
                 {
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION); 
                     LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_PIONRow");
                     return null;
                 }
@@ -2790,6 +2804,7 @@ namespace vaoc
                 ligneAncienPion.SetID_DEPOT_SOURCENull();
                 ligneAncienPion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
                 ligneAncienPion.SetI_TOUR_CONVOI_CREENull();
+                Monitor.Exit(Donnees.m_donnees.TAB_PION); 
 
                 return ligneAncienPion;
             }
@@ -3210,6 +3225,7 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePionConvoi = null;
 
+                Monitor.Enter(Donnees.m_donnees.TAB_PION); 
                 lignePionConvoi = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     -1,//idModeleCONVOI,
                     lignePionProprietaire.ID_PION,
@@ -3283,6 +3299,7 @@ namespace vaoc
                         }
                     }
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_PION); 
                 return lignePionConvoi;
             }
 
@@ -3331,8 +3348,10 @@ namespace vaoc
                     //}
                     if (enMouvement || ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
                     {
-                        //Une unité en mouvement étant la seule à surchargée une route, son occupation es prioritaire par rapport à une unité fixe
+                        //Une unité en mouvement étant la seule à surchargée une route, son occupation est prioritaire par rapport à une unité fixe
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         ligneCase.ID_NOUVEAU_PROPRIETAIRE = ID_PION;
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     }
 
                     nbplaces++;

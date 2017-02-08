@@ -2201,7 +2201,10 @@ namespace vaoc
             this.Cursor = m_ancienCurseur;
             if (null != e.Error)
             {
-                MessageBox.Show("Erreur durant le traitement :" + e.Error.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string message = e.Error.Message;
+                if (null != e.Error.InnerException) { message += e.Error.InnerException.Message; }
+                message += "\r\n"+e.Error.StackTrace; 
+                MessageBox.Show("Erreur durant le traitement :" + message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (e.Cancelled)
             {

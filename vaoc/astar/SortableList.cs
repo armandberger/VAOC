@@ -99,8 +99,7 @@ namespace vaoc
 			get
 			{
 				if ( Index>=_List.Count || Index<0 ) throw new ArgumentOutOfRangeException("Index is less than zero or Index is greater than Count.");
-				//return _List[Index];
-                return _ListCout[Index];//C'est uniquement la liste des couts qui restre triée
+				return _List[Index];
 			}
 			set
 			{
@@ -548,15 +547,15 @@ namespace vaoc
 		/// Returns the object of the list whose value is minimum
 		/// </summary>
 		/// <returns>The minimum object in the list</returns>
-		public int IndexOfMin()
+		public int IndexOfMinCout()
 		{
             int RetInt = -1;
 			if ( _List.Count>0 )
 			{
 				RetInt = 0;
-				object RetObj = _ListCout[0];
 				if ( !_IsSorted )
 				{
+                    object RetObj = _ListCout[0];
                     for (int i = 1; i < _ListCout.Count; i++)
                         if (_Comparer.Compare(RetObj, _ListCout[i]) > 0)
 						{
@@ -572,15 +571,15 @@ namespace vaoc
 		/// Returns the object of the list whose value is maximum
 		/// </summary>
 		/// <returns>The maximum object in the list</returns>
-		public int IndexOfMax()
+		public int IndexOfMaxCout()
 		{
 			int RetInt = -1;
 			if ( _List.Count>0 )
 			{
 				RetInt = _List.Count-1;
-                object RetObj = _ListCout[_ListCout.Count - 1];
 				if ( !_IsSorted )
 				{
+                    object RetObj = _ListCout[_ListCout.Count - 1];
                     for (int i = _ListCout.Count - 2; i >= 0; i--)
                         if (_Comparer.Compare(RetObj, _ListCout[i]) < 0)
 						{

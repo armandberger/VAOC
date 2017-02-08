@@ -49,7 +49,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
 
-            TestCreation();
+            //TestCreation();
             AmeliorationsPerformances();
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours

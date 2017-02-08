@@ -287,14 +287,14 @@ namespace vaoc
 			_NbIterations++;
             Debug.WriteLineIf(_NbIterations % 10000 == 0, "_NbIterations=" + _NbIterations.ToString());
 
-			int IndexMin = _Open.IndexOfMin();
+			int IndexMin = _Open.IndexOfMinCout();
 			//Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
             Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
             if (_NbIterations % 10000 == 0)
             {
                 Debug.WriteLine("BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
-                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
-                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
+                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() /*+ "_Open.CountCout=" + _Open.CountCout.ToString()*/);
+                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() /*+ "_Closed.CountCout=" + _Closed.CountCout.ToString()*/);
             }
             //_Open.RemoveAt(IndexMin);
             _Open.Remove(BestTrack);
@@ -319,11 +319,11 @@ namespace vaoc
             //{
             //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
             //}
-            foreach (Track noeud in _Closed)
-            {
-                Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
-            }
-            Debug.WriteLine("");
+            //foreach (Track noeud in _Closed)
+            //{
+            //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
+            //}
+            //Debug.WriteLine("");
             return _Open.Count > 0;
 		}
 
@@ -340,7 +340,7 @@ namespace vaoc
             _NbIterations++;
             Debug.WriteLineIf(_NbIterations % 10000 == 0, "_NbIterations=" + _NbIterations.ToString());
 
-            int IndexMin = _Open.IndexOfMin();
+            int IndexMin = _Open.IndexOfMinCout();
             //Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
             Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
             /* debug 
@@ -369,8 +369,8 @@ namespace vaoc
             if (_NbIterations % 10000 == 0)
             {
                 Debug.WriteLine("BestTrack.Cost=" + BestTrack.Cost.ToString());
-                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
-                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
+                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() /*+ "_Open.CountCout=" + _Open.CountCout.ToString()*/);
+                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() /*+ "_Closed.CountCout=" + _Closed.CountCout.ToString()*/);
             }
             //_Open.RemoveAt(IndexMin);
             _Open.Remove(BestTrack);
@@ -1136,9 +1136,9 @@ namespace vaoc
             }
             _NbIterations++;
 
-            int IndexMin = _Open.IndexOfMin();
-            //Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
-            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
+            int IndexMin = _Open.IndexOfMinCout();
+            Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
+            //Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
 
             _Open.Remove(BestTrack);
             PropagateSpace(BestTrack);
@@ -1155,8 +1155,8 @@ namespace vaoc
             if (_NbIterations % 10000 == 0)
             {
                 Debug.WriteLine("NextSpaceStep BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
-                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
-                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
+                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() /*+ "_Open.CountCout=" + _Open.CountCout.ToString()*/);
+                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() /*+ "_Closed.CountCout=" + _Closed.CountCout.ToString()*/);
             }
             return _Open.Count > 0;
         }
@@ -1581,7 +1581,7 @@ namespace vaoc
                 int i = 0;
                 while(i < _Closed.Count)
                 {
-                    Track caseEspace = (Track)_Closed[i++];
+                    Track caseEspace = (Track)_Closed.ValueOfCout(i++);
                     //test qui suit inutile, de toute façon les CST_COUTMAX ne sont pas ajoutées dans le Closed
                     //if (caseEspace.Cost == AStar.CST_COUTMAX)
                     //{ 
@@ -1642,9 +1642,9 @@ namespace vaoc
             }
             _NbIterations++;
 
-            int IndexMin = _Open.IndexOfMin();
-            //Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
-            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
+            int IndexMin = _Open.IndexOfMinCout();
+            Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);//on repart toujours du moins couteux
+            //Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
 
             _Open.Remove(BestTrack);
             //PropagateSpace2(BestTrack); -> il me semble qu'il suffit de faire comme Propagate (après juste pareil mais en tenant de l'occupation de case
@@ -1667,8 +1667,8 @@ namespace vaoc
             if (_NbIterations % 10000 == 0)
             {
                 Debug.WriteLine("NextSpaceStep BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
-                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() + "_Open.CountCout=" + _Open.CountCout.ToString());
-                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() + "_Closed.CountCout=" + _Closed.CountCout.ToString());
+                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() /*+ "_Open.CountCout=" + _Open.CountCout.ToString()*/);
+                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() /*+ "_Closed.CountCout=" + _Closed.CountCout.ToString()*/);
             }
             return _Open.Count > 0;
         }

@@ -178,7 +178,7 @@ namespace vaoc
                         if (1 == m_etape)
                         {
                             LogFile.Notifier(string.Format("traitement n°{0} en {1} sous-traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count={2}, BD.Base.PccCouts.Count={3}",
-                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, BD.Base.PccCouts.Count()));
+                                m_traitement, m_sous_traitement, Donnees.m_donnees.TAB_PCC_COUTS.Count, (null == BD.Base || null==BD.Base.PccCouts) ? 0 : BD.Base.PccCouts.Count()));
                         }
 
                         m_sous_traitement = 0;
@@ -223,7 +223,7 @@ namespace vaoc
             {
                 PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
                 //si l'on est sur le bord droit, inutile d'ajouter des points, il n'y a pas de voisins
-                if (xmax < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1)
+                if (xmax < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE)
                 {
                     if (!AjouterPointsPCC(xBloc, yBloc, xmin, xmax, ymax, true))
                     {
@@ -231,7 +231,7 @@ namespace vaoc
                     }
                 }
 
-                if (ymax < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1)
+                if (ymax < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE)
                 {
                     if (!AjouterPointsPCC(xBloc, yBloc, ymin, ymax, xmax, false))
                     {

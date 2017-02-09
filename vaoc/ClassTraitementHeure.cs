@@ -3261,7 +3261,9 @@ namespace vaoc
             if (lignePion.I_DISTANCE_A_PARCOURIR > 0)
             {
                 vitesse = lignePion.CalculVitesseMouvement();//vitesse en km/h
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 message = string.Format("{0}, ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
                     lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR, vitesse);
                 LogFile.Notifier(message, out messageErreur);
@@ -3922,7 +3924,9 @@ namespace vaoc
             //l'unité avance-t-elle suffisement pour progresser d'une case de plus ?
             //lignePion.I_DISTANCE_A_PARCOURIR = 0;//pour les tests
             vitesse = lignePion.CalculVitesseMouvement();//vitesse en km/h
+            Monitor.Enter(Donnees.m_donnees.TAB_PION);
             lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
+            Monitor.Exit(Donnees.m_donnees.TAB_PION);
             message = string.Format("{0}, ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}",
                 lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR);
             LogFile.Notifier(message, out messageErreur);
@@ -4246,7 +4250,9 @@ namespace vaoc
             if (i+1 >= chemin.Count)
             {
                 lignePion.CalculerRepartitionEffectif(1, out iInfanterie, out iCavalerie, out iArtillerie);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterie + iCavalerie + iArtillerie;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
                 message = string.Format("ExecuterMouvementAvecEffectifForcesAuDepart : premiers effectifs à destination: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                 LogFile.Notifier(message, out messageErreur);
             }
@@ -4277,6 +4283,7 @@ namespace vaoc
                 }
                 else
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     if (i < 2 || chemin[i].I_X == chemin[i - 1].I_X || chemin[i].I_Y == chemin[i - 1].I_Y)
                     {
                         //ligne droite
@@ -4287,6 +4294,7 @@ namespace vaoc
                         //diagonale
                         lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                     //la nouvelle case est-elle occupée par un ennemi ?
                     if (!lignePion.RequisitionCase(chemin[i+1], true, ref nbplacesOccupes)) { return false; }
                 }
@@ -4299,7 +4307,9 @@ namespace vaoc
             LogFile.Notifier(message, out messageErreur);
 
             //on place les effectifs encore au départ
+            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
             ligneOrdre.I_EFFECTIF_DEPART = Math.Max(0, lignePion.effectifTotalEnMouvement - iInfanterie - iCavalerie - iArtillerie);
+            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
             lignePion.PlacementPion(ligneOrdre.ID_CASE_DEPART, ligneNation, true, ligneOrdre.I_EFFECTIF_DEPART);
             message = string.Format("ExecuterMouvementAvecEffectifForcesAuDepart : ligneOrdre.ID_ORDRE={0} ligneOrdre.I_EFFECTIF_DEPART final={1}",
                 ligneOrdre.ID_ORDRE, ligneOrdre.I_EFFECTIF_DEPART);

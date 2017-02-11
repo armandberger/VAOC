@@ -337,6 +337,7 @@
       <DependentUpon>FormVideo.cs</DependentUpon>
     </Compile>
     <Compile Include="InterfaceVaocWeb.cs" />
+    <Compile Include="MiseAJourDonneesHistorique.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMessageAncien.resx">

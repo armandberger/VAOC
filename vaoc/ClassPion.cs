@@ -107,7 +107,7 @@ namespace vaoc
                 {
                     return null;
                 }
-
+                Monitor.Enter(this);
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         resCout[0].ID_PION+1,
@@ -172,6 +172,7 @@ namespace vaoc
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
+                Monitor.Exit(this);
                 return rowTAB_PIONRow;
             }
         }
@@ -1052,15 +1053,18 @@ namespace vaoc
                 TAB_MODELE_PIONRow ligneModeleAdversaire;
                 TAB_PIONRow lignePionAdversaire;
 
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 if (!ligneCase.IsID_PROPRIETAIRENull())
                 {
                     lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
                     if (null == lignePionAdversaire)
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         return false; //cas possible si j'ai détruit une unité manuellement
                     }
                     if (lignePionAdversaire.B_DETRUIT)
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         return false;
                     }
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
@@ -1072,9 +1076,10 @@ namespace vaoc
                     {
                         if (bCombattif)
                         {
+                            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                             return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
                         }
-
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         return true;
                     }
                 }
@@ -1088,9 +1093,11 @@ namespace vaoc
                     }
                     if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
                     }
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                 return false;
             }
 

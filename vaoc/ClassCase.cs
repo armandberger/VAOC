@@ -11,6 +11,9 @@ namespace vaoc
     {
         partial class TAB_CASERow
         {
+            //private Object m_verrou = new Object();  
+
+            /*
             static protected AStar m_star = null;
             internal AStar etoile
             {
@@ -22,7 +25,7 @@ namespace vaoc
                     }
                     return m_star;
                 }
-            }
+            }*/
 
             public double iCOUT
             {
@@ -75,9 +78,18 @@ namespace vaoc
             /// <returns>false si vide ou occupé par le même, true si occupé par une ennemi</returns>
             public bool EstOccupeeOuBloqueParEnnemi(TAB_PIONRow lignePion, bool enMouvement)
             {
-                if (!IsID_PROPRIETAIRENull())
+                // je stocke les variables pour libérer la table le plus rapidement possible
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                bool isProprietaireNull = IsID_PROPRIETAIRENull();
+                bool isNouveauProprietaireNull = IsID_NOUVEAU_PROPRIETAIRENull();
+                int? idProprietaire = null;
+                if (!isProprietaireNull) idProprietaire = ID_PROPRIETAIRE;
+                int? idNouveauProprietaire = null;
+                if (!isNouveauProprietaireNull) idNouveauProprietaire = ID_NOUVEAU_PROPRIETAIRE;
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                if (!isProprietaireNull)
                 {
-                    if ((lignePion.ID_PION == ID_PROPRIETAIRE) && IsID_NOUVEAU_PROPRIETAIRENull())
+                    if ((lignePion.ID_PION == idProprietaire) && isNouveauProprietaireNull)
                     {
                         return false;
                     }
@@ -87,8 +99,12 @@ namespace vaoc
                         return false;
                     }
                 }
-                if (IsID_NOUVEAU_PROPRIETAIRENull()) { return false; }
-                return (lignePion.ID_PION != ID_NOUVEAU_PROPRIETAIRE);
+                if (isNouveauProprietaireNull) 
+                {
+                    return false; 
+                }
+                bool retour = lignePion.ID_PION != idNouveauProprietaire;
+                return retour;
             }
 
             public bool EstOccupeeParAmi(TAB_PIONRow lignePion)
@@ -164,6 +180,7 @@ namespace vaoc
                     {
                         Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCasePont.ID_MODELE_TERRAIN);
                         //dans quels blocs se trouve-t-on ?
+                        AStar etoile = new AStar();
                         List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(ligneCasePont.I_X, ligneCasePont.I_Y);
 
                         //modification des blocs
@@ -241,6 +258,7 @@ namespace vaoc
                         }
 
                         //dans quels blocs se trouve-t-on ?
+                        AStar etoile = new AStar();
                         List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(ligneCasePont.I_X, ligneCasePont.I_Y);
 
                         //modification des parcours

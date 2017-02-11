@@ -52,11 +52,12 @@
             this.label8 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.buttonMajDonnees = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(195, 393);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(91, 391);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -190,7 +191,7 @@
             // 
             // buttonCreerFilmHistorique
             // 
-            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(402, 393);
+            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(298, 391);
             this.buttonCreerFilmHistorique.Name = "buttonCreerFilmHistorique";
             this.buttonCreerFilmHistorique.Size = new System.Drawing.Size(120, 23);
             this.buttonCreerFilmHistorique.TabIndex = 19;
@@ -218,10 +219,11 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(571, 393);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 391);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
+            this.buttonOuvrirFilm.Tag = "";
             this.buttonOuvrirFilm.Text = "Ouvrir Film";
             this.buttonOuvrirFilm.UseVisualStyleBackColor = true;
             this.buttonOuvrirFilm.Click += new System.EventHandler(this.buttonOuvrirFilm_Click);
@@ -229,7 +231,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(133, 393);
+            this.label7.Location = new System.Drawing.Point(29, 391);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 13);
             this.label7.TabIndex = 23;
@@ -238,7 +240,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(297, 393);
+            this.label8.Location = new System.Drawing.Point(193, 391);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(99, 13);
             this.label8.TabIndex = 24;
@@ -260,11 +262,24 @@
             this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             // 
+            // buttonMajDonnees
+            // 
+            this.buttonMajDonnees.Enabled = false;
+            this.buttonMajDonnees.Location = new System.Drawing.Point(607, 391);
+            this.buttonMajDonnees.Name = "buttonMajDonnees";
+            this.buttonMajDonnees.Size = new System.Drawing.Size(151, 23);
+            this.buttonMajDonnees.TabIndex = 26;
+            this.buttonMajDonnees.Tag = "Uniquement si TAB_VIDEO n\'a pas été mis à jour durant la partie";
+            this.buttonMajDonnees.Text = "Mise à jour des données";
+            this.buttonMajDonnees.UseVisualStyleBackColor = true;
+            this.buttonMajDonnees.Click += new System.EventHandler(this.buttonMajDonnees_Click);
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 426);
+            this.Controls.Add(this.buttonMajDonnees);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -319,6 +334,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
+        private System.Windows.Forms.Button buttonMajDonnees;
     }
 }
 

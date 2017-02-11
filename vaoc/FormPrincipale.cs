@@ -3244,6 +3244,7 @@ namespace vaoc
         {
             FormVideo frmVideo = new FormVideo();
             frmVideo.repertoireSource = Constantes.repertoireDonnees;
+            frmVideo.fichierCourant = this.fichierCourant;
             frmVideo.Show(this);
         }
 

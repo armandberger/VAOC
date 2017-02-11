@@ -25,6 +25,8 @@ namespace vaoc
             this.textBoxMasque.Text = "carte_general_*.png";
         }
 
+        public string fichierCourant { get; set; }
+
         public string repertoireSource
         {
             set
@@ -200,7 +202,19 @@ namespace vaoc
                 travailleur.CancelAsync();
                 MessageBox.Show(ex.Message);
             }
+        }
 
+        /// <summary>
+        /// Rechargement de tous les fichiers précédents pour mettre à jour TAB_VIDEO
+        /// </summary>
+        private void buttonMajDonnees_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            int nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+            while (i<nombretours)
+            {
+                Dal.ChargerPartie(Dal.NomFichierTourPhase(fichierCourant, i, 0), Donnees.m_donnees);
+            }
         }
     }
 }

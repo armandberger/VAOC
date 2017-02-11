@@ -52,37 +52,44 @@ namespace WaocLib
             }
         }
         
+        /// <summary>
+        /// Renvoie le nom du fichier sans les indications de tour ou de phase
+        /// </summary>
+        /// <param name="nomfichier">nom d'origine</param>
+        /// <returns>chaine filtrée</returns>
+        static public string NomFichierTourPhase(string nomfichier, int tour, int phase)
+        {
+            //recopie de la chaine avant l'extension
+            int positionPoint = nomfichier.LastIndexOf(".");
+            string nomfichierTourPhase = nomfichier.Substring(0, positionPoint);
+
+            //ajout du tour et de la phase
+            //amélioration pour que la toute dernière sauvegarde mette directement le bon nom de fichier
+            int tourfichier = -1;//indication du tour courant dans le nom du fichier
+            int i = nomfichierTourPhase.Length - 1;
+            while (char.IsDigit(nomfichierTourPhase[i])) i--;
+            //string test = nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1);
+            if (i != nomfichierTourPhase.Length - 1) tourfichier = Convert.ToInt32(nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1));
+            if (tourfichier > 0 && tour > tourfichier && 0 == phase)
+            {
+                nomfichierTourPhase = string.Format("{0}{1}{2}",
+                        nomfichierTourPhase.Substring(0, i + 1),
+                        tour,
+                        nomfichier.Substring(positionPoint, nomfichier.Length - positionPoint));
+            }
+            else
+            {
+                nomfichierTourPhase = string.Format("{0}_{001}_{002}{3}", nomfichierTourPhase, tour, phase, nomfichier.Substring(positionPoint, nomfichier.Length - positionPoint));
+            }
+            return nomfichierTourPhase;
+        }
+
         static public bool SauvegarderPartie(string nomfichier, int tour, int phase, DataSet donnees)
         {
-            string nomfichierTourPhase;
-
             Cursor oldCursor = Cursor.Current;
             try
             {
-                //recopie de la chaine avant l'extension
-                int positionPoint = nomfichier.LastIndexOf(".");
-                nomfichierTourPhase = nomfichier.Substring(0, positionPoint);
-
-                //ajout du tour et de la phase
-                //amélioration pour que la toute dernière sauvegarde mette directement le bon nom de fichier
-                int tourfichier = -1;//indication du tour courant dans le nom du fichier
-                int i = nomfichierTourPhase.Length - 1;
-                while (char.IsDigit(nomfichierTourPhase[i])) i--;
-                //string test = nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1);
-                if (i != nomfichierTourPhase.Length - 1) tourfichier = Convert.ToInt32(nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1));
-                if (tourfichier > 0 && tour > tourfichier && 0 == phase)
-                {
-                    nomfichierTourPhase = string.Format("{0}{1}{2}",
-                            nomfichierTourPhase.Substring(0, i + 1),
-                            tour,
-                            nomfichier.Substring(positionPoint, nomfichier.Length - positionPoint));
-                }
-                else
-                {
-                    nomfichierTourPhase = string.Format("{0}_{001}_{002}{3}", nomfichierTourPhase, tour, phase, nomfichier.Substring(positionPoint, nomfichier.Length - positionPoint));
-                }
-
-                return SauvegarderPartie(nomfichierTourPhase, donnees);
+                return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase), donnees);
             }
             catch (Exception e)
             {

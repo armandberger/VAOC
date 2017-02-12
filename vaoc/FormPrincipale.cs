@@ -3438,6 +3438,17 @@ namespace vaoc
                 Donnees.m_donnees.TAB_ORDRE_ANCIEN.Merge(fOrdre.tableOrdre, false);
             }
         }
+
+        private void repriseDeDonnéesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormReprise fReprise = new FormReprise();
+
+            fReprise.fichierCourant = this.fichierCourant;
+            if (DialogResult.OK == fReprise.ShowDialog())
+            {
+                m_modification = true;
+            }
+        }
     }
 
     internal static class NativeMethods

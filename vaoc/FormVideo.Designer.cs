@@ -52,7 +52,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.buttonMajDonnees = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
@@ -262,24 +261,11 @@
             this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             // 
-            // buttonMajDonnees
-            // 
-            this.buttonMajDonnees.Enabled = false;
-            this.buttonMajDonnees.Location = new System.Drawing.Point(607, 391);
-            this.buttonMajDonnees.Name = "buttonMajDonnees";
-            this.buttonMajDonnees.Size = new System.Drawing.Size(151, 23);
-            this.buttonMajDonnees.TabIndex = 26;
-            this.buttonMajDonnees.Tag = "Uniquement si TAB_VIDEO n\'a pas été mis à jour durant la partie";
-            this.buttonMajDonnees.Text = "Mise à jour des données";
-            this.buttonMajDonnees.UseVisualStyleBackColor = true;
-            this.buttonMajDonnees.Click += new System.EventHandler(this.buttonMajDonnees_Click);
-            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 426);
-            this.Controls.Add(this.buttonMajDonnees);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -334,7 +320,6 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
-        private System.Windows.Forms.Button buttonMajDonnees;
     }
 }
 

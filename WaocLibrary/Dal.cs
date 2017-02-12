@@ -57,7 +57,7 @@ namespace WaocLib
         /// </summary>
         /// <param name="nomfichier">nom d'origine</param>
         /// <returns>chaine filtrée</returns>
-        static public string NomFichierTourPhase(string nomfichier, int tour, int phase)
+        static public string NomFichierTourPhase(string nomfichier, int tour, int phase, bool bSuperieur)
         {
             //recopie de la chaine avant l'extension
             int positionPoint = nomfichier.LastIndexOf(".");
@@ -70,7 +70,7 @@ namespace WaocLib
             while (char.IsDigit(nomfichierTourPhase[i])) i--;
             //string test = nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1);
             if (i != nomfichierTourPhase.Length - 1) tourfichier = Convert.ToInt32(nomfichierTourPhase.Substring(i + 1, nomfichierTourPhase.Length - i - 1));
-            if (tourfichier > 0 && tour > tourfichier && 0 == phase)
+            if ((tourfichier > 0 && tour > tourfichier && 0 == phase) || !bSuperieur)
             {
                 nomfichierTourPhase = string.Format("{0}{1}{2}",
                         nomfichierTourPhase.Substring(0, i + 1),
@@ -89,7 +89,7 @@ namespace WaocLib
             Cursor oldCursor = Cursor.Current;
             try
             {
-                return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase), donnees);
+                return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase, true), donnees);
             }
             catch (Exception e)
             {

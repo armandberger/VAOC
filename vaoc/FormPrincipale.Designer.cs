@@ -137,6 +137,7 @@ namespace vaoc
             this.toolStripButtonTrajets = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.repriseDeDonnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -878,7 +879,8 @@ namespace vaoc
             this.genererLeFilmToolStripMenuItem,
             this.testsToolStripMenuItem,
             this.outilsToolStripMenuItem,
-            this.statistiquesToolStripMenuItem});
+            this.statistiquesToolStripMenuItem,
+            this.repriseDeDonnéesToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.actionsToolStripMenuItem.Text = "&Actions";
@@ -1158,6 +1160,13 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
+            // repriseDeDonnéesToolStripMenuItem
+            // 
+            this.repriseDeDonnéesToolStripMenuItem.Name = "repriseDeDonnéesToolStripMenuItem";
+            this.repriseDeDonnéesToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.repriseDeDonnéesToolStripMenuItem.Text = "&Reprise de Données";
+            this.repriseDeDonnéesToolStripMenuItem.Click += new System.EventHandler(this.repriseDeDonnéesToolStripMenuItem_Click);
+            // 
             // FormPrincipale
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1302,6 +1311,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem pionsAnciensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ordresAnciensToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem repriseDeDonnéesToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

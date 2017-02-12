@@ -1304,12 +1304,25 @@ namespace vaoc
             if (0 == TAB_JEU.Count)
             {
                 //possible sur une nouvelle partie
-                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees);
+                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, true);
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
-            return Dal.SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, Donnees.m_donnees);
+            return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true);
+        }
+
+        internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur)
+        {
+            if (0 == TAB_JEU.Count)
+            {
+                //possible sur une nouvelle partie
+                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, bSuperieur);
+            }
+
+            //Mise à jour de la version du fichier pour de futures mise à jour
+            TAB_JEU[0].I_VERSION = 6;
+            return Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
         }
 
         internal bool ChargerPartie(string filename)

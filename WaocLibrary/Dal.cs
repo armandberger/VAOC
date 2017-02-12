@@ -84,12 +84,12 @@ namespace WaocLib
             return nomfichierTourPhase;
         }
 
-        static public bool SauvegarderPartie(string nomfichier, int tour, int phase, DataSet donnees)
+        static public bool SauvegarderPartie(string nomfichier, int tour, int phase, DataSet donnees, bool bSuperieur)
         {
             Cursor oldCursor = Cursor.Current;
             try
             {
-                return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase, true), donnees);
+                return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase, bSuperieur), donnees);
             }
             catch (Exception e)
             {
@@ -134,6 +134,7 @@ namespace WaocLib
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
+                donneesSource.Clear();
                 foreach (DataTable table in donneesSource.Tables)
                     table.BeginLoadData();//accelère le chargement en retirant les constructions d'index, etc.
                 try

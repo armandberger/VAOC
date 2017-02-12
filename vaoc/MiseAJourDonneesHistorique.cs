@@ -55,11 +55,12 @@ namespace vaoc
             try
             {
                 int idCaseDebut, idCaseFin;
-
+                string nomfichier = Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false);
                 int nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR +1;
-                if (!Dal.ChargerPartie(Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false), Donnees.m_donnees))
+                //if (!Dal.ChargerPartie(Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false), Donnees.m_donnees))
+                if (!Donnees.m_donnees.ChargerPartie(nomfichier))
                 {
-                    return "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
+                        return "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
                 }
 
                 foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
@@ -69,7 +70,7 @@ namespace vaoc
                         continue;
                     }
                     lignePion.CasesDebutFin(out idCaseDebut, out idCaseFin);
-                    Donnees.m_donnees.TAB_VIDEO.AddTAB_VIDEORow(
+                    Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO.AddTAB_VIDEORow(
                         m_traitement,
                         lignePion.ID_PION,
                         lignePion.ID_MODELE_PION,
@@ -81,7 +82,7 @@ namespace vaoc
                         lignePion.I_FATIGUE,
                         lignePion.I_MORAL,
                         idCaseDebut,
-                        lignePion.ID_BATAILLE,
+                        lignePion.IsID_BATAILLENull() ? -1 : lignePion.ID_BATAILLE,
                         lignePion.B_DETRUIT,
                         lignePion.B_FUITE_AU_COMBAT,
                         lignePion.I_MATERIEL,
@@ -90,11 +91,13 @@ namespace vaoc
                         lignePion.B_PRISONNIERS,
                         lignePion.C_NIVEAU_DEPOT
                     );
+                    if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
                 }
 
                 if (m_bAvecSauvegarde)
                 {
-                    Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
+                    Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false);
+                    //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
                 }
 
                 m_traitement++;

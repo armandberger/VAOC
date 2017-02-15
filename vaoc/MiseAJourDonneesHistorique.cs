@@ -63,6 +63,20 @@ namespace vaoc
                         return "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
                 }
 
+                int i = 0;
+                while (i< Donnees.m_donnees.TAB_VIDEO.Count)
+                {
+                    Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[i];
+                    if (ligneVideo.I_TOUR== m_traitement)
+                    {
+                        ligneVideo.Delete();
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                }
+
                 foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
                 {
                     if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.estQG)

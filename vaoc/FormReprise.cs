@@ -29,6 +29,7 @@ namespace vaoc
             progressBar.Value = 0;
             Invalidate();
             backgroundTraitement.RunWorkerAsync();
+            this.buttonOK.Enabled = true;
         }
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
@@ -59,7 +60,6 @@ namespace vaoc
                     }
                 }
                 majHistorique.Terminer();
-                this.buttonOK.Enabled = true;
                 Cursor = m_oldcurseur;
                 MessageBox.Show(erreurTraitement, "Reprise des données", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

@@ -93,7 +93,7 @@ namespace vaoc
                         CheckBox cocheAptitude = new CheckBox();
                         cocheAptitude.Text = ligneAptitude.S_NOM;
                         cocheAptitude.Name = string.Format("Aptitude{0:000}{1:000}", ligneModele.ID_MODELE_PION, ligneAptitude.ID_APTITUDE);
-                        requete = string.Format("ID_MODELE_PION='{0}' AND ID_APTITUDE='{1}'", ligneModele.ID_MODELE_PION, ligneAptitude.ID_APTITUDE);
+                        requete = string.Format("ID_MODELE_PION='{0}' AND ID_APTITUDE='{1}'", ligneModele.ID_MODELE_PION, ligneAptitude.ID_APTITUDE);                        
                         Donnees.TAB_APTITUDES_PIONRow[] resData = (Donnees.TAB_APTITUDES_PIONRow[])m_tableAptitudesPions.Select(requete);
                         if (resData.Length > 0)
                         {

@@ -218,8 +218,8 @@ namespace vaoc
             {
                 string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", id_pion, typeEspace);
 
-                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
@@ -231,8 +231,8 @@ namespace vaoc
             {
                 string requete = string.Format("ID_PION={0}", id_pion);
 
-                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
@@ -838,7 +838,9 @@ namespace vaoc
                     if (null == m_listeIndex)
                     {
                         string requete = string.Format("I_X={0} AND I_Y={1}", x, y);
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         TAB_CASERow[] resCase = (TAB_CASERow[])Select(requete);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         if (0 == resCase.Length)
                         {
                             return null;

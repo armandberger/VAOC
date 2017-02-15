@@ -686,7 +686,9 @@ namespace vaoc
 
             //on regarde s'il y a un lieu ou une route très proche (1 kilomètre), si oui, on recale la case dessus
             requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}",x-echelle, y-echelle, x+echelle, y+echelle);
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
             Donnees.TAB_CASERow[] ligneCaseResultat = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
             if (0==ligneCaseResultat.Length)
             {
                 return false;

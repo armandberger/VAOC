@@ -9,9 +9,8 @@ namespace WaocLib
     public class LogFile
     {
         private static string m_fileName="";
-        private static bool m_ecriture;//true si en cours d'écriture, false sinon, pour gérer le multi-processeur
         private static StringBuilder m_phrases = new StringBuilder();//phrases à écrire
-        private static readonly object m_verrouEcriture = new object();
+        private static readonly object m_verrouEcriture = new object();//pour gérer le multi-processeur
         //public LogFile(string nomFichier, string suffixe, int tour, int phase)
         //{
         //    string nomfichierTourPhase;
@@ -81,17 +80,12 @@ namespace WaocLib
             if (m_fileName == string.Empty) { return; }
             StreamWriter file;
             m_phrases.AppendFormat("{0}:{1}:{2} {3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
-            if (!m_ecriture)
-            {
-                m_ecriture = true;
-                Monitor.Enter(m_verrouEcriture);
-                file = new StreamWriter(m_fileName, true);                
-                file.WriteLine(m_phrases.ToString());
-                file.Close();
-                Monitor.Exit(m_verrouEcriture);
-                m_phrases.Clear();
-                m_ecriture = false;
-            }
+            Monitor.Enter(m_verrouEcriture);
+            file = new StreamWriter(m_fileName, true);                
+            file.WriteLine(m_phrases.ToString());
+            file.Close();
+            Monitor.Exit(m_verrouEcriture);
+            m_phrases.Clear();
         }
     }
 }

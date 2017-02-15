@@ -247,7 +247,9 @@ namespace vaoc
 
                 //desengagement de toutes les unités
                 requete = string.Format("ID_BATAILLE={0}", ID_BATAILLE);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow[] resPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 foreach (Donnees.TAB_PIONRow lignePion in resPion)
                 {
                     lignePion.SetID_BATAILLENull();
@@ -319,7 +321,9 @@ namespace vaoc
 
                 string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}",
                         this.I_X_CASE_HAUT_GAUCHE, this.I_Y_CASE_HAUT_GAUCHE, this.I_X_CASE_BAS_DROITE, this.I_Y_CASE_BAS_DROITE);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 Donnees.TAB_CASERow[] lignesCaseBataille = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
 
                 int i = 0;
                 while (i < Donnees.m_donnees.TAB_PION.Count)
@@ -1326,7 +1330,9 @@ namespace vaoc
                 //Un ordre de retraite a-t-il été donné à ce tour ? ou à un autre ? En fait, il ne peut y avoir qu'une retraite sur une bataille !
                 string requete = string.Format("ID_BATAILLE={0} AND  I_ORDRE_TYPE={1}",
                     ID_BATAILLE, Constantes.ORDRES.RETRAITE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
                 Donnees.TAB_ORDRERow[] resOrdreRetraite = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
                 if (resOrdreRetraite.Length > 0)
                 {
                     message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Un ordre de retraite a été donné sur cette bataille.",

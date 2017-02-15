@@ -102,12 +102,13 @@ namespace vaoc
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
                 //être incrementé automatiquement à cause de la bascule des pions de TAB_RENFORT vers TAB_PION
                 string tri = "ID_PION DESC";
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 TAB_PIONRow[] resCout = (TAB_PIONRow[])Select(string.Empty, tri);
                 if (0 == resCout.Length)
                 {
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                     return null;
                 }
-                Monitor.Enter(this);
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         resCout[0].ID_PION+1,
@@ -172,7 +173,7 @@ namespace vaoc
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
-                Monitor.Exit(this);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 return rowTAB_PIONRow;
             }
         }
@@ -189,7 +190,9 @@ namespace vaoc
                 {
                     //on recherche le pion de remplacement
                     string requete = string.Format("ID_PION_REMPLACE = {0}", ID_PION);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     TAB_PIONRow[] resPions = (TAB_PIONRow[])m_donnees.TAB_PION.Select(requete);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                     if (resPions.Length <= 0)
                     {
                         return null;
@@ -706,7 +709,9 @@ namespace vaoc
                 #endregion
 
                 requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 Donnees.TAB_CASERow[] ligneCaseVues = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
 
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
                 foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
@@ -765,7 +770,9 @@ namespace vaoc
                 if (!estQG && !estMessager && !estPatrouille)
                 {
                     string requete = string.Format("(ID_PROPRIETAIRE= {0}) OR (ID_NOUVEAU_PROPRIETAIRE={0})", ID_PION);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                     Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     foreach (Donnees.TAB_CASERow ligneChange in changeRows)
                     {
                         Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
@@ -802,8 +809,10 @@ namespace vaoc
 
             public void DetruirePion()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 B_DETRUIT = true;
                 I_MORAL = 0; //ainsi, les blessés légers d'une bataille sont mis automatiquement en bléssés graves (sinon, l'unité pourrait "renaitre" post bataille)
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
                 DetruireEspacePion();
             }
 
@@ -1192,7 +1201,9 @@ namespace vaoc
                 int xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + Constantes.CST_DISTANCE_RECHERCHE_ENNEMI * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + Constantes.CST_DISTANCE_RECHERCHE_ENNEMI * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 Donnees.TAB_CASERow[] ligneCaseRecherches = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
 
                 //on recherche si un ennemi de l'unité se trouve proche de la case indiquée
                 foreach (Donnees.TAB_CASERow ligneCaseRecherche in ligneCaseRecherches)
@@ -2943,7 +2954,9 @@ namespace vaoc
                 string requete;
 
                 requete = string.Format("ID_MODELE_PION={0}", ID_MODELE_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION);
                 Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION);
 
                 requete = string.Format("ID_MODELE_MOUVEMENT={0}", resModelePion[0].ID_MODELE_MOUVEMENT);
                 Donnees.TAB_MODELE_MOUVEMENTRow[] resModeleMouvement = (Donnees.TAB_MODELE_MOUVEMENTRow[])Donnees.m_donnees.TAB_MODELE_MOUVEMENT.Select(requete);
@@ -3709,7 +3722,9 @@ namespace vaoc
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
                 idNationCaptureur = lignePionEnnemi.idNation;
                 requete = "C_NIVEAU_HIERARCHIQUE = 'A'";
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
 
                 //on garde le premier QG de la bonne nationalité
                 foreach (Donnees.TAB_PIONRow lignePion in lignesPion)

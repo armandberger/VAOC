@@ -1732,7 +1732,9 @@ namespace vaoc
 
                     string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}", 
                         xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                     Donnees.TAB_CASERow[] lignesCaseRecherche = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
 
                     zone[0] = zone[1] = 0;
                     foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
@@ -1780,6 +1782,7 @@ namespace vaoc
                         if (ligneNomCarte.B_HOPITAL)
                         {
                             requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                             foreach (Donnees.TAB_PIONRow lignePionBlesses in lignesPionResultat)
                             {
@@ -1795,12 +1798,14 @@ namespace vaoc
                                     lignePionBlesses.I_CAVALERIE = lignePionBlesses.I_CAVALERIE / 2;
                                 }
                             }
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION);
                         }
 
                         //Quand une prison change de camp, les prisonniers deviennent des renforts
                         if (ligneNomCarte.B_PRISON)
                         {
                             requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                             foreach (Donnees.TAB_PIONRow lignePionPrisonniers in lignesPionResultat)
                             {
@@ -1818,6 +1823,7 @@ namespace vaoc
                                     return false;
                                 }
                             }
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION);
                         }
                     }
                     //si la nation change, on modifie la valeur, sinon on garde la valeur par défaut
@@ -1838,6 +1844,7 @@ namespace vaoc
             Donnees.TAB_MESSAGERow[] resMessages;
 
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
+            Monitor.Enter(Donnees.m_donnees.TAB_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
             foreach (Donnees.TAB_PIONRow lignePion in resPions)
             {
@@ -1857,13 +1864,16 @@ namespace vaoc
             {
                 lignePion.ID_ANCIEN_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
+            Monitor.Exit(Donnees.m_donnees.TAB_PION);
 
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
+            Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
             resMessages = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
             foreach (Donnees.TAB_MESSAGERow ligneMessage in resMessages)
             {
                 ligneMessage.ID_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
+            Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
 
             return true;
         }
@@ -2762,6 +2772,7 @@ namespace vaoc
 
                     //recherche de toutes les unités rattachés à ce nom
                     string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                     foreach(Donnees.TAB_PIONRow lignePion in lignesPionResultat)
                     {
@@ -2811,6 +2822,7 @@ namespace vaoc
                             lignePionRapport.I_ARTILLERIE += lignePion.I_ARTILLERIE;
                         }
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                     //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
                     lignePionRapport.DetruirePion();
                     if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))

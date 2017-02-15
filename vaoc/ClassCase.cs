@@ -356,7 +356,9 @@ namespace vaoc
                 int xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, I_X + Constantes.CST_DISTANCE_RECHERCHE_PONT_GUET * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, I_Y + Constantes.CST_DISTANCE_RECHERCHE_PONT_GUET * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 Donnees.TAB_CASERow[] ligneCaseRecherches = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
 
                 //on recherche le pont ou le guet le plus proche de la case indiquée
                 tailleDuPontOuGue = -1;

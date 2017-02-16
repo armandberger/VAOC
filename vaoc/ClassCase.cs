@@ -355,17 +355,14 @@ namespace vaoc
                 int yCaseHautGauche = Math.Max(0, I_Y - Constantes.CST_DISTANCE_RECHERCHE_PONT_GUET * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, I_X + Constantes.CST_DISTANCE_RECHERCHE_PONT_GUET * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, I_Y + Constantes.CST_DISTANCE_RECHERCHE_PONT_GUET * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
-                string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                Donnees.TAB_CASERow[] ligneCaseRecherches = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                 //on recherche le pont ou le guet le plus proche de la case indiquée
                 tailleDuPontOuGue = -1;
                 int distancePontGue = int.MaxValue;
                 Donnees.TAB_CASERow ligneCasePontGue = null;
 
-                foreach (Donnees.TAB_CASERow ligneCaseRecherche in ligneCaseRecherches)
+                foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
                 {
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseRecherche.ID_MODELE_TERRAIN);
                     if (ligneModeleTerrain.ID_MODELE_TERRAIN != 63 && ligneModeleTerrain.ID_MODELE_TERRAIN != 60

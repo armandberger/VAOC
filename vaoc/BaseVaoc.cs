@@ -179,8 +179,8 @@ namespace vaoc
             {
                 string requete = string.Format("ID_PION={0}", id_pion);
 
-                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
@@ -864,52 +864,30 @@ namespace vaoc
                 }
             }
 
-            int[] m_xVoisins = new int[8];
-            int[] m_yVoisins = new int[8];
-            List<TAB_CASERow> listeCasesVoisins = new List<TAB_CASERow>();
-
-            public List<TAB_CASERow> CasesVoisines2(TAB_CASERow source)
+            public TAB_CASERow[] CasesCadre(int xCaseHautGauche, int yCaseHautGauche, int xCaseBasDroite, int yCaseBasDroite)
             {
-                int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;
-                int hauteur = m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1;
-
-                listeCasesVoisins.Clear();
-                if (source.I_X > 0 && source.I_Y > 0)
+                //note, je ne vérifie pas que les coordonnées du cadre sont bien entre 0 et largeur/hauteur, je considère que cela a été fait dans le calcul de ces valeurs
+                int nb = 0;
+                TAB_CASERow[] resCase;
+                resCase = new TAB_CASERow[(xCaseBasDroite - xCaseHautGauche + 1) * (yCaseBasDroite - yCaseHautGauche + 1)];
+                for (int x = xCaseHautGauche; x <= xCaseBasDroite; x++)
                 {
-                    listeCasesVoisins.Add(FindByXY(source.I_X - 1, source.I_Y - 1));
-                }
-                if (source.I_X > 0 && source.I_Y < hauteur)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X - 1, source.I_Y + 1));
-                }
-                if (source.I_X < largeur && source.I_Y < hauteur)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X + 1, source.I_Y + 1));
-                }
-                if (source.I_X < largeur && source.I_Y > 0)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X + 1, source.I_Y - 1));
-                }
-                if (source.I_X > 0)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X - 1, source.I_Y));
-                }
-                if (source.I_X < largeur)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X + 1, source.I_Y));
-                }
-                if (source.I_Y > 0)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X, source.I_Y - 1));
-                }
-                if (source.I_Y < hauteur)
-                {
-                    listeCasesVoisins.Add(FindByXY(source.I_X, source.I_Y + 1));
+                    for (int y = yCaseHautGauche; y <= yCaseBasDroite; y++)
+                    {
+                        resCase[nb++] = FindByXY(x, y);
+                    }
                 }
 
-                return listeCasesVoisins;
+                /* Note : La méthode ci-dessous est clairement plus rapide sur une petite carte (testée sur une carte 1152x648, à vérifier sur une grande carte
+                requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                Donnees.TAB_CASERow[] resCase = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                */
+
+                return resCase;
             }
-
+            
             public TAB_CASERow[] CasesVoisines(TAB_CASERow source)
             {
                 int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;

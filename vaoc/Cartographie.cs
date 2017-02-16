@@ -780,16 +780,13 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             RectangleChampDeBataille(ligneCaseBataille, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
             #region recherche de l'orientation
-            nbZoneConflitO = nbZoneConflitV = 0;
-            requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}", 
-                xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-            Donnees.TAB_CASERow[] lignesCaseBataille = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-
+            Donnees.TAB_CASERow[] lignesCaseBataille = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
             // recherche sur l'horizontale
             // | 0 | 1 | 2 |
             // | 3 | 4 | 5 |
             zone0_H.Initialize();
             zone1_H.Initialize();
+            nbZoneConflitO = nbZoneConflitV = 0;
             foreach (Donnees.TAB_CASERow ligneCaseZone in lignesCaseBataille)
             {
                 //si la case n'appartient à personne, ce n'est pas un critère

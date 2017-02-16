@@ -79,13 +79,20 @@ namespace WaocLib
         {
             if (m_fileName == string.Empty) { return; }
             StreamWriter file;
-            m_phrases.AppendFormat("{0}:{1}:{2} {3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
-            Monitor.Enter(m_verrouEcriture);
-            file = new StreamWriter(m_fileName, true);                
-            file.WriteLine(m_phrases.ToString());
-            file.Close();
-            Monitor.Exit(m_verrouEcriture);
-            m_phrases.Clear();
+            try
+            {
+                Monitor.Enter(m_verrouEcriture);
+                m_phrases.AppendFormat("{0}:{1}:{2} {3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
+                file = new StreamWriter(m_fileName, true);
+                file.WriteLine(m_phrases.ToString());
+                file.Close();
+                m_phrases.Clear();
+                Monitor.Exit(m_verrouEcriture);
+            }
+            catch
+            {
+                Monitor.Exit(m_verrouEcriture);
+            }
         }
     }
 }

@@ -675,22 +675,22 @@ namespace vaoc
                     }
                 }
             }
-            /// <summary>
-            /// Indique si le pion a un ennemi dans son cadre de vision
-            /// </summary>
-            /// <param name="ligneCase"></param>
-            /// <returns>true si un ennemi est en vu, false sinon</returns>
-            public bool EnnemiObservable(Donnees.TAB_CASERow ligneCase)
-            {
-                bool bEnnemiObservable = false;
-                int visionPixel;
-                string requete;
-                int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
+            /// <summary>
+            /// calcul du cadre de vision du pion
+            /// </summary>
+            /// <param name="ligneCase">si null, prend la case du pion</param>
+            /// <param name="xCaseHautGauche">abscisse supérieur gauche</param>
+            /// <param name="yCaseHautGauche">ordonnée supérieur gauche</param>
+            /// <param name="xCaseBasDroite">abscisse inférieure droite</param>
+            /// <param name="yCaseBasDroite">ordonnée inférieure droite</param>
+            public void CadreVision(Donnees.TAB_CASERow ligneCase, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite)
+            {
+                int visionPixel;
                 visionPixel = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
-                #region calcul du cadre de vision
-                if (this.estAuCombat)
+                //un joueur pouvant toujours voir les unités en bataille, autant continuer à lui donner les informations du cadre
+                if (estAuCombat && !estJoueur)
                 {
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(this.ID_BATAILLE);
                     xCaseHautGauche = ligneBataille.I_X_CASE_HAUT_GAUCHE;
@@ -706,13 +706,22 @@ namespace vaoc
                     xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCaseBase.I_X + visionPixel);
                     yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCaseBase.I_Y + visionPixel);
                 }
-                #endregion
+            }
 
-                requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                Donnees.TAB_CASERow[] ligneCaseVues = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            /// <summary>
+            /// Indique si le pion a un ennemi dans son cadre de vision
+            /// </summary>
+            /// <param name="ligneCase"></param>
+            /// <returns>true si un ennemi est en vu, false sinon</returns>
+            public bool EnnemiObservable(Donnees.TAB_CASERow ligneCase)
+            {
+                bool bEnnemiObservable = false;
+                //string requete;
+                int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
+                CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+
+                Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
                 foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
                 {
@@ -1200,13 +1209,10 @@ namespace vaoc
                 int yCaseHautGauche = Math.Max(0, ligneCase.I_Y - Constantes.CST_DISTANCE_RECHERCHE_ENNEMI * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + Constantes.CST_DISTANCE_RECHERCHE_ENNEMI * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                 int yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + Constantes.CST_DISTANCE_RECHERCHE_ENNEMI * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
-                string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                Donnees.TAB_CASERow[] ligneCaseRecherches = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                 //on recherche si un ennemi de l'unité se trouve proche de la case indiquée
-                foreach (Donnees.TAB_CASERow ligneCaseRecherche in ligneCaseRecherches)
+                foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
                 {
                     if (estEnnemi(ligneCaseRecherche, true))
                     {
@@ -3019,6 +3025,7 @@ namespace vaoc
                 typeEspace = (depart) ? AStar.CST_DEPART : AStar.CST_DESTINATION;
                 //existe-il déjà un chemin pour le pion sur le trajet demandé ? BEA, vérifier, si cela se trouve c'est devenu aussi rapide de refaire le calcul à chaque fois
                 requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", ID_PION, typeEspace);
+                /* Note : en traitement parallèle, il semblerait que locker/rechercher les données de TAB_ESPACE prennent plus de temps que de refaire le calcul
                 Monitor.Enter(Donnees.m_donnees.TAB_ESPACE); 
                 Donnees.TAB_ESPACERow[] parcoursExistant = (Donnees.TAB_ESPACERow[])Donnees.m_donnees.TAB_ESPACE.Select(requete, "I_COUT");
                 Monitor.Exit(Donnees.m_donnees.TAB_ESPACE); 
@@ -3036,22 +3043,6 @@ namespace vaoc
                     && parcoursExistant.Length < 5000)
                 {
                     //il existe déjà un parcours mémorisé
-                    //on met à jour les valeurs de cout sur la carte
-                    //foreach (DataSetCoutDonnees.TAB_CASERow ligneCaseCout in DataSetCoutDonnees.m_donnees.TAB_CASE)
-                    //{
-                    //    ligneCaseCout.I_COUT= AStar.CST_COUTMAX; //.ID_PROPRIETAIRE = DataSetCoutDonnees.CST_AUCUNPROPRIETAIRE;
-                    //}
-
-                    //perf = DateTime.Now - timeStart;
-                    //message = string.Format("RechercheEspace : initialisation en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-                    //LogFile.Notifier(message, out messageErreur);
-
-                    //foreach (DataSetCoutDonnees.TAB_ESPACERow ligneEspace in parcoursExistant)
-                    //{
-                    //    DataSetCoutDonnees.TAB_CASERow ligneCase = DataSetCoutDonnees.m_donnees.TAB_CASE.FindByID_CASE(ligneEspace.ID_CASE);
-                    //    ligneCase.I_COUT = ligneEspace.I_COUT;
-                    //}
-
                     listeIDCaseEspace = new int[parcoursExistant.Length];
                     for (int i = 0; i < parcoursExistant.Length; i++)
                     {
@@ -3065,12 +3056,14 @@ namespace vaoc
                 //suppression de l'ancien espace
                 if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                     for (int i = 0; i < parcoursExistant.Length; i++)
                     {
                         Donnees.m_donnees.TAB_ESPACE.RemoveTAB_ESPACERow(parcoursExistant[i]);
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
                 }
-
+                */
                 //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
                 AStar etoile = new AStar();
                 etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
@@ -3086,27 +3079,24 @@ namespace vaoc
                 perf = DateTime.Now - timeStart;
                 message = string.Format("RechercheEspace : nouveau en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
 
-                //stockage de l'espace en table
-                //foreach (DataSetCoutDonnees.TAB_CASERow ligneCase in DataSetCoutDonnees.m_donnees.TAB_CASE)
-                //foreach (DataSetCoutDonnees.TAB_CASERow ligneCase in listeCaseEspace)
-                //{
-                //    //if (ligneCase.I_COUT != AStar.CST_COUTMAX)
-                //    //{
-                //        DataSetCoutDonnees.m_donnees.TAB_ESPACE.AddTAB_ESPACERow(lignePion.ID_PION, typeEspace, ligneCase.ID_CASE, ligneCase.I_COUT);
-                //    //}
-                //}
-
-                listeIDCaseEspace = new int[listeCaseEspace.Count];
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
-                for (int i = 0; i < listeCaseEspace.Count; i++)
+                int nbCaseEspace = listeCaseEspace.Count;
+                listeIDCaseEspace = new int[nbCaseEspace];
+                for (int i = 0; i < nbCaseEspace; i++)
                 {
                     listeIDCaseEspace[i] = listeCaseEspace[i].ID_CASE;
+                }
+                //stockage de l'espace en table
+                /*
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                for (int i = 0; i < nbCaseEspace; i++)
+                {
                     Donnees.m_donnees.TAB_ESPACE.AddTAB_ESPACERow(ID_PION,
                                                                             typeEspace,
                                                                             listeCaseEspace[i].ID_CASE,
                                                                             listeCaseEspace[i].I_COUT);
                 }
                 Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                 * */
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
 

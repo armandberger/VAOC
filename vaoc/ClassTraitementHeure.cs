@@ -145,7 +145,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 99;//BEA, permet de tester une fin de bataille
+                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 95;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -1374,6 +1374,7 @@ namespace vaoc
         private bool NouvelleHeure(bool bPartieCommence, out bool bRenfort)
         {
             string message, messageErreur;
+            string requete;
 
             LogFile.Notifier("Debut nouvelle heure");
             bRenfort = false;
@@ -1730,11 +1731,7 @@ namespace vaoc
                     yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, yCaseBasDroite);
                     #endregion
 
-                    string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}", 
-                        xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                    Donnees.TAB_CASERow[] lignesCaseRecherche = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                    Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                     zone[0] = zone[1] = 0;
                     foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
@@ -3166,6 +3163,7 @@ namespace vaoc
             }
             */
 
+            TestCreationUnite(0, 1);
             ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
             if (null != ligneOrdre)
@@ -4717,6 +4715,7 @@ namespace vaoc
                 //idCase = Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE;
                 //Note : il ne faut pas qu'une unité commence sur un bord de carte ou cela fait planter l'algorithme de recherche
                 idCase = Donnees.m_donnees.TAB_CASE.FindByXY((i + 1) * 30, (i + 1) * 30).ID_CASE;
+                Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     resModelePion[0].ID_MODELE_PION,
                     -1,//ID_PION_PROPRIETAIRE
@@ -4764,6 +4763,8 @@ namespace vaoc
                 ligneNouveauPion.SetID_PION_ESCORTENull();
                 ligneNouveauPion.SetID_DEPOT_SOURCENull();
                 ligneNouveauPion.ID_PION_PROPRIETAIRE = 0; //Le propriéaire final doit forcément appartenir à un joueur qui doit être crée comme id=0 ligneNouveauPion.ID_PION;
+                ligneNouveauPion.S_NOM = string.Format("Test {0} n°{1} p:{2}", idNation, ligneNouveauPion.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION);
             }
         }
     }

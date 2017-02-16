@@ -685,10 +685,7 @@ namespace vaoc
             if (y > Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1) { y = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1; }
 
             //on regarde s'il y a un lieu ou une route très proche (1 kilomètre), si oui, on recale la case dessus
-            requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}",x-echelle, y-echelle, x+echelle, y+echelle);
-            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-            Donnees.TAB_CASERow[] ligneCaseResultat = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            Donnees.TAB_CASERow[] ligneCaseResultat = Donnees.m_donnees.TAB_CASE.CasesCadre(x - echelle, y - echelle, x + echelle, y + echelle);
             if (0==ligneCaseResultat.Length)
             {
                 return false;
@@ -2030,19 +2027,10 @@ namespace vaoc
 
         private static bool PionVoitPion(Donnees.TAB_PIONRow lignePion, Donnees.TAB_PIONRow lignePionCible)
         {
-            int vision, visionKM;
+            int visionKM;
             double dist;
 
-            Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-            if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-            {
-                vision = ligneModelePion.I_VISION_JOUR;
-            }
-            else
-            {
-                vision = ligneModelePion.I_VISION_NUIT;
-            }
-            visionKM = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+            visionKM = lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
             Donnees.TAB_CASERow ligneCaseCible = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionCible.ID_CASE);
             dist = Constantes.Distance(ligneCaseCible.I_X, ligneCaseCible.I_Y, ligneCase.I_X, ligneCase.I_Y);
@@ -2064,9 +2052,9 @@ namespace vaoc
         /// <returns>true si ok, false sinon</returns>
         public static bool PionsEnvironnants(Donnees.TAB_PIONRow lignePion, MESSAGES typeMessage, Donnees.TAB_CASERow ligneCaseDestination, out string unitesEnvironnantes, out bool bEnDanger)
         {
-            int vision, visionPixel;
             string NomZoneGeographique;
-            string nomType, femminin, requete;
+            string nomType, femminin;
+            //string requete;
             int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
             bool bAmiCombattif;
 
@@ -2085,38 +2073,11 @@ namespace vaoc
             {
                 return false;
             }
-            if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-            {
-                vision = ligneModelePion.I_VISION_JOUR;
-            }
-            else
-            {
-                vision = ligneModelePion.I_VISION_NUIT;
-            }
-            visionPixel = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
-            #region calcul du cadre de vision
-            //un joueur pouvant toujours voir les unités en bataille, autant continuer à lui donner les informations du cadre
-            if (lignePion.estAuCombat && !lignePion.estJoueur)
-            {
-                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePion.ID_BATAILLE);
-                xCaseHautGauche = ligneBataille.I_X_CASE_HAUT_GAUCHE;
-                yCaseHautGauche = ligneBataille.I_Y_CASE_HAUT_GAUCHE;
-                xCaseBasDroite = ligneBataille.I_X_CASE_BAS_DROITE;
-                yCaseBasDroite = ligneBataille.I_Y_CASE_BAS_DROITE;
-            }
-            else
-            {
-                Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
-                xCaseHautGauche = Math.Max(0, ligneCase.I_X - visionPixel);
-                yCaseHautGauche = Math.Max(0, ligneCase.I_Y - visionPixel);
-                xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + visionPixel);
-                yCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + visionPixel);
-            }
-            #endregion
+            Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
+            lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
-            requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-            Donnees.TAB_CASERow[] ligneCaseVues = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+            Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
             Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
             //dans le cas d'une patrouille, sur 2-4 (2d6) elle ne voit pas l'ennemi même s'il existe
@@ -2409,7 +2370,7 @@ namespace vaoc
             if (0 == unitesVisibles.Count)
             {
                 CaseVersZoneGeographique(lignePion.ID_CASE, out NomZoneGeographique);
-                unitesEnvironnantes = string.Format("Aucune unité présente à {0} km autour de {1}", vision, NomZoneGeographique);
+                unitesEnvironnantes = string.Format("Aucune unité présente à {0} km autour de {1}", lignePion.vision, NomZoneGeographique);
             }
 
             //Ajout des informations d'état sur les ponts/gués environnants.
@@ -2474,15 +2435,7 @@ namespace vaoc
             {
                 return false;
             }
-            if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-            {
-                vision = ligneModelePion.I_VISION_JOUR;
-            }
-            else
-            {
-                vision = ligneModelePion.I_VISION_NUIT;
-            }
-            visionKM = vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+            visionKM = lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
             foreach (Donnees.TAB_PIONRow lignePionVoisin in Donnees.m_donnees.TAB_PION)
@@ -2555,7 +2508,7 @@ namespace vaoc
             if (string.Empty == unitesEnvironnantes)
             {
                 CaseVersZoneGeographique(lignePion.ID_CASE, out NomZoneGeographique);
-                unitesEnvironnantes = string.Format(" aucune unité présente à {0} km autour de {1}", vision, NomZoneGeographique);
+                unitesEnvironnantes = string.Format(" aucune unité présente à {0} km autour de {1}", lignePion.vision, NomZoneGeographique);
             }
             return true;
         }

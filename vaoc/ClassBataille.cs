@@ -319,12 +319,7 @@ namespace vaoc
             {
                 int idNation = bZone012 ? ID_NATION_012 : ID_NATION_345;
 
-                string requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<{2} AND I_Y<{3}",
-                        this.I_X_CASE_HAUT_GAUCHE, this.I_Y_CASE_HAUT_GAUCHE, this.I_X_CASE_BAS_DROITE, this.I_Y_CASE_BAS_DROITE);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                Donnees.TAB_CASERow[] lignesCaseBataille = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
-
+                Donnees.TAB_CASERow[] lignesCaseBataille = Donnees.m_donnees.TAB_CASE.CasesCadre(this.I_X_CASE_HAUT_GAUCHE, this.I_Y_CASE_HAUT_GAUCHE, this.I_X_CASE_BAS_DROITE, this.I_Y_CASE_BAS_DROITE);
                 int i = 0;
                 while (i < Donnees.m_donnees.TAB_PION.Count)
                 {

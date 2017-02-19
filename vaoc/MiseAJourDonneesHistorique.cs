@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +85,16 @@ namespace vaoc
                     {
                         continue;
                     }
-                    lignePion.CasesDebutFin(out idCaseDebut, out idCaseFin);
+                    try
+                    {
+                        lignePion.CasesDebutFin(out idCaseDebut, out idCaseFin);
+                    }
+                    catch (Exception eCasesDebutFin)
+                    {
+                        //parfois il y a des erreurs de récupération
+                        idCaseDebut = lignePion.ID_CASE;
+                        Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
+                    }
                     Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO.AddTAB_VIDEORow(
                         m_traitement,
                         lignePion.ID_PION,

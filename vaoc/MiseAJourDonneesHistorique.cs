@@ -15,6 +15,7 @@ namespace vaoc
         private string m_fichierSource { get; set; }
         private bool m_bAvecSauvegarde { get; set; }
         private int m_traitement;//traitement principal
+        private int m_nombretours;
         System.ComponentModel.BackgroundWorker m_travailleur;
 
         public string Initialisation(string fichierSource, bool avecSauvegarde, System.ComponentModel.BackgroundWorker worker)
@@ -23,6 +24,7 @@ namespace vaoc
             {
                 m_fichierSource = fichierSource;
                 m_bAvecSauvegarde = avecSauvegarde;
+                m_nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1;
 
                 m_travailleur = worker;
                 m_traitement = 0;
@@ -56,7 +58,6 @@ namespace vaoc
             {
                 int idCaseDebut, idCaseFin;
                 string nomfichier = Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false);
-                int nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR +1;
                 //if (!Dal.ChargerPartie(Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false), Donnees.m_donnees))
                 if (!Donnees.m_donnees.ChargerPartie(nomfichier))
                 {
@@ -115,7 +116,7 @@ namespace vaoc
                 }
 
                 m_traitement++;
-                m_travailleur.ReportProgress(m_traitement * 100 / nombretours);
+                m_travailleur.ReportProgress(m_traitement * 100 / m_nombretours);
                 if (m_traitement == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                 {
                     return "Reprise terminée";

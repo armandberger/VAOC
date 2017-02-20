@@ -348,6 +348,10 @@ namespace vaoc
                 //    return false;
                 //}
 
+                //on met à jour les données pour le film vidéo de fin de partie
+                MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
+                majVideo.MiseAjourVideo();
+
                 //reconstruction de la carte suite aux batailles éventuelles, pour l'affichage générale
                 message = string.Format("**** Reconstruction carte ****");
                 if (!LogFile.Notifier(message, out messageErreur)) { return false; }

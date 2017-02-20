@@ -19,7 +19,7 @@ namespace vaoc
         private int m_nombretours;
         System.ComponentModel.BackgroundWorker m_travailleur;
 
-        public string Initialisation(string fichierSource, bool avecSauvegarde, System.ComponentModel.BackgroundWorker worker)
+        public string Initialisation(string fichierSource, bool avecSauvegarde, int debut, System.ComponentModel.BackgroundWorker worker)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace vaoc
                 m_nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1;
 
                 m_travailleur = worker;
-                m_traitement = 0;
+                m_traitement = debut;
                 return string.Empty;
             }
             catch (Exception e)

@@ -37,9 +37,29 @@ namespace vaoc
             MiseAJourDonneesHistorique majHistorique = new MiseAJourDonneesHistorique();
             BackgroundWorker travailleur = sender as BackgroundWorker;
             string erreurTraitement = string.Empty;
+            int tourDebut;
             try
             {
-                erreurTraitement = majHistorique.Initialisation(this.fichierCourant, this.checkBoxSauvegarde.Checked, travailleur);
+                if (string.Empty==this.textBoxTour.Text)
+                {
+                    tourDebut = 0;
+                }
+                else
+                {
+                    try
+                    {
+                        tourDebut = Convert.ToInt16(this.textBoxTour.Text);
+                    }
+                    catch
+                    {
+                        tourDebut = 0;
+                    }
+
+                }
+                erreurTraitement = majHistorique.Initialisation(this.fichierCourant, 
+                                                                this.checkBoxSauvegarde.Checked,
+                                                                tourDebut, 
+                                                                travailleur);
                 if (string.Empty != erreurTraitement)
                 {
                     e.Cancel = true;

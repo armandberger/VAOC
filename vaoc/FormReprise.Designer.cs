@@ -33,11 +33,13 @@
             this.checkBoxSauvegarde = new System.Windows.Forms.CheckBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxTour = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonMajDonnees
             // 
-            this.buttonMajDonnees.Location = new System.Drawing.Point(252, 47);
+            this.buttonMajDonnees.Location = new System.Drawing.Point(141, 43);
             this.buttonMajDonnees.Name = "buttonMajDonnees";
             this.buttonMajDonnees.Size = new System.Drawing.Size(151, 23);
             this.buttonMajDonnees.TabIndex = 27;
@@ -82,12 +84,32 @@
             this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(298, 48);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.TabIndex = 31;
+            this.label1.Text = "A partir du tour :";
+            // 
+            // textBoxTour
+            // 
+            this.textBoxTour.Location = new System.Drawing.Point(386, 45);
+            this.textBoxTour.MaxLength = 3;
+            this.textBoxTour.Name = "textBoxTour";
+            this.textBoxTour.Size = new System.Drawing.Size(34, 20);
+            this.textBoxTour.TabIndex = 32;
+            this.textBoxTour.Text = "0";
+            // 
             // FormReprise
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 85);
+            this.Controls.Add(this.textBoxTour);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.checkBoxSauvegarde);
             this.Controls.Add(this.progressBar);
@@ -106,5 +128,7 @@
         private System.Windows.Forms.CheckBox checkBoxSauvegarde;
         private System.Windows.Forms.Button buttonOK;
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBoxTour;
     }
 }

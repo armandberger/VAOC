@@ -3367,6 +3367,7 @@ namespace vaoc
                     nbplaces++;
                     if (estMessager || estPatrouille || estDepot /*|| lignePion.estConvoi || lignePion.estPontonnier*/) { return true; }
                     //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE);
                     foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                     {
                         if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
@@ -3375,8 +3376,8 @@ namespace vaoc
                         {
                             ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
                         }
-
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE);
                 }
                 else
                 {

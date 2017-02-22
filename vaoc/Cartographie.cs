@@ -694,6 +694,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
 
             //la case ou l'une des unités fait-elle déjà partie d'une ou plusieurs bataille ?
             nouvelleBataille = true;
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE);
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
                 if (!ligneBataille.IsI_TOUR_FINNull()) { continue; }
@@ -725,6 +726,8 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                     }
                 }
             }
+            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE);
+
             //si les unités ne sont dans aucune bataille, il faut la créer
             if (nouvelleBataille)
             {

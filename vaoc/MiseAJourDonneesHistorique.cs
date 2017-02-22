@@ -142,8 +142,6 @@ namespace vaoc
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
             }
-
-            return idCaseDebut;
         }
     }
 }

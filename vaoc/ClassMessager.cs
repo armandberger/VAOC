@@ -625,7 +625,7 @@ namespace vaoc
         public static bool ZoneGeographiqueVersCase(Donnees.TAB_PIONRow lignePion, int distance, COMPAS direction, int id_lieu, out int id_case)
         {
             int x, y;
-            string requete;
+            //string requete;
             int echelle =Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
             double distanceMax;
 
@@ -2424,7 +2424,7 @@ namespace vaoc
         [Obsolete]
         public static bool PionsEnvironnantsParKm(Donnees.TAB_PIONRow lignePion, out string unitesEnvironnantes)
         {
-            int vision, visionKM;
+            int visionKM;
             double dist;
             string NomZoneGeographique;
             string nomType, femminin;

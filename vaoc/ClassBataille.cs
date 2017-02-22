@@ -100,9 +100,9 @@ namespace vaoc
                     //il faut terminer tout ordre en cours d'execution par l'unité et placer l'unité dans la case courante du combat
                     Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     lignePion.ID_CASE = ligneCaseCombat.ID_CASE;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.PlacerStatique();
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
 
                     //il faut envoyer un message au propriétaire de l'unité pour indiquer cet ajout
                     ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE, this);

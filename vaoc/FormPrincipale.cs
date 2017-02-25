@@ -3473,6 +3473,19 @@ namespace vaoc
                 m_modification = true;
             }
         }
+
+        private void donneesVidéoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormVideoTable fVideoTable = new FormVideoTable();
+
+            fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
+            if (DialogResult.OK == fVideoTable.ShowDialog())
+            {
+                m_modification = true;
+                Donnees.m_donnees.TAB_VIDEO.Clear();
+                Donnees.m_donnees.TAB_VIDEO.Merge(fVideoTable.tableVideo, false);
+            }
+        }
     }
 
     internal static class NativeMethods

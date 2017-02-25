@@ -118,6 +118,7 @@ namespace vaoc
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statistiquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.repriseDeDonnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripCarte = new System.Windows.Forms.ToolStrip();
             this.toolStripAfficherVilles = new System.Windows.Forms.ToolStripButton();
@@ -137,7 +138,7 @@ namespace vaoc
             this.toolStripButtonTrajets = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.repriseDeDonnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.donneesVidéoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -876,6 +877,7 @@ namespace vaoc
             this.notificationAuxJoueursToolStripMenuItem,
             this.toolStripSeparator5,
             this.initilisationPartieToolStripMenuItem,
+            this.donneesVidéoToolStripMenuItem,
             this.genererLeFilmToolStripMenuItem,
             this.testsToolStripMenuItem,
             this.outilsToolStripMenuItem,
@@ -953,6 +955,13 @@ namespace vaoc
             this.statistiquesToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.statistiquesToolStripMenuItem.Text = "&Statistiques";
             this.statistiquesToolStripMenuItem.Click += new System.EventHandler(this.statistiquesToolStripMenuItem_Click);
+            // 
+            // repriseDeDonnéesToolStripMenuItem
+            // 
+            this.repriseDeDonnéesToolStripMenuItem.Name = "repriseDeDonnéesToolStripMenuItem";
+            this.repriseDeDonnéesToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.repriseDeDonnéesToolStripMenuItem.Text = "&Reprise de Données";
+            this.repriseDeDonnéesToolStripMenuItem.Click += new System.EventHandler(this.repriseDeDonnéesToolStripMenuItem_Click);
             // 
             // AProposToolStripMenuItem
             // 
@@ -1160,12 +1169,12 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // repriseDeDonnéesToolStripMenuItem
+            // donneesVidéoToolStripMenuItem
             // 
-            this.repriseDeDonnéesToolStripMenuItem.Name = "repriseDeDonnéesToolStripMenuItem";
-            this.repriseDeDonnéesToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
-            this.repriseDeDonnéesToolStripMenuItem.Text = "&Reprise de Données";
-            this.repriseDeDonnéesToolStripMenuItem.Click += new System.EventHandler(this.repriseDeDonnéesToolStripMenuItem_Click);
+            this.donneesVidéoToolStripMenuItem.Name = "donneesVidéoToolStripMenuItem";
+            this.donneesVidéoToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.donneesVidéoToolStripMenuItem.Text = "Donnees Vidéo";
+            this.donneesVidéoToolStripMenuItem.Click += new System.EventHandler(this.donneesVidéoToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1312,6 +1321,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem pionsAnciensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ordresAnciensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem repriseDeDonnéesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem donneesVidéoToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

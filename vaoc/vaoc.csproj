@@ -342,6 +342,12 @@
     <Compile Include="FormVideo.Designer.cs">
       <DependentUpon>FormVideo.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormVideoTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormVideoTable.Designer.cs">
+      <DependentUpon>FormVideoTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="InterfaceVaocWeb.cs" />
     <Compile Include="MiseAJourDonneesHistorique.cs" />
     <Compile Include="Program.cs" />
@@ -469,6 +475,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormVideo.resx">
       <DependentUpon>FormVideo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormVideoTable.resx">
+      <DependentUpon>FormVideoTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

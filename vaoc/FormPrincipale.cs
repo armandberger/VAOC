@@ -757,8 +757,32 @@ namespace vaoc
             //DateTime timeStart;
             //TimeSpan perf;
 
-            //Transfert dans la base mémoire
 
+
+            #region Performances sur chargement en modèle OBJ – Au final, et contre toute attente, c’est beaucoup plus long !        
+            //BD.Base.Initialisation(ImageCarte.Image.Width, ImageCarte.Image.Height);
+            //BD.Base.Importer(Donnees.m_donnees);
+
+            //timeStart = DateTime.Now;
+
+            //Stream TestFileStream = File.Create("L:\\testvaoc.bin");
+            //BinaryFormatter serializer = new BinaryFormatter();
+            //serializer.Serialize(TestFileStream, BD.Base);
+            //TestFileStream.Close();
+            //perf = DateTime.Now - timeStart;
+            //Debug.WriteLine(string.Format("Serialize en mémoire en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+            //timeStart = DateTime.Now;
+
+            //perf = DateTime.Now - timeStart;
+            //TestFileStream = File.OpenRead("L:\\testvaoc.bin");
+            //BinaryFormatter serializer2 = new BinaryFormatter();
+            //BD.Base = (BD)serializer2.Deserialize(TestFileStream);
+            //TestFileStream.Close();
+            //perf = DateTime.Now - timeStart;
+            //Debug.WriteLine(string.Format("DeSerialize en mémoire en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+            #endregion
+
+            //Transfert dans la base mémoire
             #region Performances sur linq Dataobject plutot que XML --> et il semblerait que ce soit 20 fois plus rapide en DataObject (mais c'est quand même très rapide dans l'autre cas) -> faux, c'est 20 fois plus rapide si on ne l'excute pas, sinon c'est 3 fois plus lent !
             /* 
 

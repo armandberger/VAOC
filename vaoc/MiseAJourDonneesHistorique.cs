@@ -18,6 +18,7 @@ namespace vaoc
         private int m_traitement;//traitement principal
         private int m_nombretours;
         System.ComponentModel.BackgroundWorker m_travailleur;
+        private Donnees.TAB_VIDEODataTable m_tableVideo = null;
 
         public string Initialisation(string fichierSource, bool avecSauvegarde, int debut, System.ComponentModel.BackgroundWorker worker)
         {
@@ -28,6 +29,7 @@ namespace vaoc
                 m_nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1;
                 m_travailleur = worker;
                 m_traitement = (0==debut) ? 0 : debut-1;//-1 pour reprendre les anciennes données, on reexcute donc le précédent tour
+                m_tableVideo = new Donnees.TAB_VIDEODataTable();
                 return string.Empty;
             }
             catch (Exception e)
@@ -63,10 +65,17 @@ namespace vaoc
                     return "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
                 }
 
-                MiseAjourVideo();
+                if (0 == m_tableVideo.Rows.Count)
+                {
+                    m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);
+                }
+
+                MiseAjourVideo(m_tableVideo);
 
                 if (m_bAvecSauvegarde)
                 {
+                    Donnees.m_donnees.TAB_VIDEO.Clear();
+                    Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
                     Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false);
                     //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
                 }
@@ -85,14 +94,14 @@ namespace vaoc
             }
         }
 
-        public void MiseAjourVideo()
+        public void MiseAjourVideo(Donnees.TAB_VIDEODataTable tableVideo)
         {
             int idCaseDebut, idCaseFin;
             //si on refait le même tour, on supprimer les anciennes données pour ne pas les avoir en double
             int i = 0;
-            while (i < Donnees.m_donnees.TAB_VIDEO.Count)
+            while (i < tableVideo.Count)
             {
-                Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[i];
+                Donnees.TAB_VIDEORow ligneVideo = tableVideo[i];
                 if (ligneVideo.I_TOUR == m_traitement)
                 {
                     ligneVideo.Delete();
@@ -119,15 +128,19 @@ namespace vaoc
                     idCaseDebut = lignePion.ID_CASE;
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
-                Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO.AddTAB_VIDEORow(
+                Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
+                    lignePion.nation.ID_NATION,
                     lignePion.ID_PION,
                     lignePion.ID_MODELE_PION,
                     lignePion.ID_PION_PROPRIETAIRE,
                     lignePion.S_NOM,
                     lignePion.I_INFANTERIE,
+                    lignePion.I_INFANTERIE_INITIALE,
                     lignePion.I_CAVALERIE,
+                    lignePion.I_CAVALERIE_INITIALE,
                     lignePion.I_ARTILLERIE,
+                    lignePion.I_ARTILLERIE_INITIALE,
                     lignePion.I_FATIGUE,
                     lignePion.I_MORAL,
                     idCaseDebut,

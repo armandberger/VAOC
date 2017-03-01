@@ -57,7 +57,8 @@ namespace vaoc
                             Convert.ToBoolean(ligne.Cells["B_VIEILLE_GARDE"].Value),
                             Convert.ToChar(ligne.Cells["C_NIVEAU_DEPOT"].Value),
                             Convert.ToBoolean(ligne.Cells["B_RENFORT"].Value),
-                            Convert.ToString(ligne.Cells["S_MESSAGE_ARRIVEE"].Value)                            
+                            Convert.ToString(ligne.Cells["S_MESSAGE_ARRIVEE"].Value),
+                            Convert.ToInt32(ligne.Cells["I_VICTOIRE"].Value)    
                             );
                     }
                 }
@@ -118,7 +119,8 @@ namespace vaoc
                     ligneGrid.Cells["B_VIEILLE_GARDE"].Value = ligneRenfort.B_VIEILLE_GARDE;
                     ligneGrid.Cells["C_NIVEAU_DEPOT"].Value = ligneRenfort.C_NIVEAU_DEPOT;
                     ligneGrid.Cells["B_RENFORT"].Value = ligneRenfort.B_RENFORT;
-                    ligneGrid.Cells["S_MESSAGE_ARRIVEE"].Value = ligneRenfort.S_MESSAGE_ARRIVEE;                    
+                    ligneGrid.Cells["S_MESSAGE_ARRIVEE"].Value = ligneRenfort.S_MESSAGE_ARRIVEE;
+                    ligneGrid.Cells["I_VICTOIRE"].Value = ligneRenfort.I_VICTOIRE;
                 }
             }
         }

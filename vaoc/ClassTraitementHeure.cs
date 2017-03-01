@@ -350,7 +350,8 @@ namespace vaoc
 
                 //on met à jour les données pour le film vidéo de fin de partie
                 MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
-                majVideo.MiseAjourVideo();
+                majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
+                majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
 
                 //reconstruction de la carte suite aux batailles éventuelles, pour l'affichage générale
                 message = string.Format("**** Reconstruction carte ****");
@@ -1647,7 +1648,8 @@ namespace vaoc
                             0,//I_INFANTERIE_ESCORTE, 
                             0,//I_CAVALERIE_ESCORTE
                             0,//I_MATERIEL_ESCORTE
-                            0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                            0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                            ligneRenfort.I_VICTOIRE
                             );
 
                         lignePionRenfort.SetID_ANCIEN_PION_PROPRIETAIRENull();
@@ -3630,7 +3632,8 @@ namespace vaoc
                                                     0,//I_INFANTERIE_ESCORTE, 
                                                     0,//I_CAVALERIE_ESCORTE
                                                     0,//I_MATERIEL_ESCORTE
-                                                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                                                    0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                                                    0//I_VICTOIRE
                                                 );
                                                 lignePionPatrouille.SetID_ANCIEN_PION_PROPRIETAIRENull();
                                                 lignePionPatrouille.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -4756,7 +4759,8 @@ namespace vaoc
                     0,//I_INFANTERIE_ESCORTE, 
                     0,//I_CAVALERIE_ESCORTE
                     0,//I_MATERIEL_ESCORTE
-                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    1//I_VICTOIRE
                     );
                 ligneNouveauPion.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 ligneNouveauPion.SetID_NOUVEAU_PION_PROPRIETAIRENull();

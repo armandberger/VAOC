@@ -31,7 +31,6 @@ namespace vaoc
             this.buttonAnnuler = new System.Windows.Forms.Button();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewRenfort = new System.Windows.Forms.DataGridView();
-            this.labelCommentaire = new System.Windows.Forms.Label();
             this.ID_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MODELE_PION = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.ID_PION_PROPRIETAIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,6 +56,8 @@ namespace vaoc
             this.I_RAVITAILLEMENT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.B_RENFORT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.S_MESSAGE_ARRIVEE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelCommentaire = new System.Windows.Forms.Label();
+            this.I_VICTOIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRenfort)).BeginInit();
             this.SuspendLayout();
             // 
@@ -109,20 +110,12 @@ namespace vaoc
             this.I_MATERIEL,
             this.I_RAVITAILLEMENT,
             this.B_RENFORT,
-            this.S_MESSAGE_ARRIVEE});
+            this.S_MESSAGE_ARRIVEE,
+            this.I_VICTOIRE});
             this.dataGridViewRenfort.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewRenfort.Name = "dataGridViewRenfort";
             this.dataGridViewRenfort.Size = new System.Drawing.Size(965, 228);
             this.dataGridViewRenfort.TabIndex = 6;
-            // 
-            // labelCommentaire
-            // 
-            this.labelCommentaire.AutoSize = true;
-            this.labelCommentaire.Location = new System.Drawing.Point(12, 423);
-            this.labelCommentaire.Name = "labelCommentaire";
-            this.labelCommentaire.Size = new System.Drawing.Size(240, 13);
-            this.labelCommentaire.TabIndex = 9;
-            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique";
             // 
             // ID_PION
             // 
@@ -274,6 +267,20 @@ namespace vaoc
             this.S_MESSAGE_ARRIVEE.Name = "S_MESSAGE_ARRIVEE";
             this.S_MESSAGE_ARRIVEE.Width = 150;
             // 
+            // labelCommentaire
+            // 
+            this.labelCommentaire.AutoSize = true;
+            this.labelCommentaire.Location = new System.Drawing.Point(12, 423);
+            this.labelCommentaire.Name = "labelCommentaire";
+            this.labelCommentaire.Size = new System.Drawing.Size(240, 13);
+            this.labelCommentaire.TabIndex = 9;
+            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique";
+            // 
+            // I_VICTOIRE
+            // 
+            this.I_VICTOIRE.HeaderText = "I_VICTOIRE";
+            this.I_VICTOIRE.Name = "I_VICTOIRE";
+            // 
             // FormRenfort
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -324,5 +331,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_RAVITAILLEMENT;
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_RENFORT;
         private System.Windows.Forms.DataGridViewTextBoxColumn S_MESSAGE_ARRIVEE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_VICTOIRE;
     }
 }

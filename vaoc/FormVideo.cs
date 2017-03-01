@@ -15,6 +15,7 @@ namespace vaoc
     {
         private Cursor m_oldcurseur;
         private List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
+        private List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
         private string[] m_texteImages;
 
         public FormVideo()
@@ -114,6 +115,47 @@ namespace vaoc
                 m_listeLieux.Add(lieu);
             }
 
+            //on ajoute les effectifs et les points de victoire
+            for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
+            {
+                for (int j=0; j<=Donnees.m_donnees.TAB_NATION.Count; j++)
+                {
+                    System.Nullable<int> effectifs =
+                        (from video in Donnees.m_donnees.TAB_VIDEO
+                         where (video.I_TOUR == i) 
+                            && (video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                            && (false == video.B_DETRUIT)
+                            && (false == video.B_PRISONNIERS)
+                            && (false == video.B_BLESSES)
+                         select (video.I_INFANTERIE+video.I_CAVALERIE)*video.I_FATIGUE/100)
+                        .Sum();
+
+                    System.Nullable<int> victoires =
+                        (from video in Donnees.m_donnees.TAB_VIDEO
+                         where (video.I_TOUR == i)
+                            && (video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                            && ((true == video.B_DETRUIT) || (false == video.B_FUITE_AU_COMBAT))
+                            && (video.I_INFANTERIE_INITIALE>0 || video.I_CAVALERIE_INITIALE>0)
+                         select video.ID_PION)
+                        .Count();
+                    
+                    EffectifEtVictoire effV = new EffectifEtVictoire();
+                    effV.iTour = i;
+                    effV.iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION;
+                    effV.iEffectif = effectifs.HasValue ? effectifs.Value : 0;
+                    effV.iVictoire = victoires.HasValue ? victoires.Value : 0;
+                    m_effectifsEtVictoires.Add(effV);
+                }
+                /*
+                string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",
+                    trackSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
+
+                Donnees.TAB_VIDEORow[] lignesCout = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
+                if (null != lignesCout && lignesCout.Length > 0)
+                {
+                 * */
+            }
+
             /* -> deporté dans un traitement background ci-dessous
             FabricantDeFilm film = new FabricantDeFilm();
             string retour = film.CreerFilm(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
@@ -171,7 +213,7 @@ namespace vaoc
                 erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
-                                        true, m_listeLieux,
+                                        true, m_listeLieux, m_effectifsEtVictoires,
                                         travailleur);
                 if (string.Empty != erreurTraitement)
                 {

@@ -5,10 +5,17 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.ComponentModel;
 using System.Windows.Forms;
-//using WaocLib;
 
 namespace WaocLib
 {
+    public class EffectifEtVictoire
+    {
+        public int iTour;
+        public int iNation;
+        public int iEffectif;
+        public int iVictoire;
+    }
+
     public class LieuRemarquable
     {
         public int iTourDebut;
@@ -53,6 +60,7 @@ namespace WaocLib
         private string m_repertoireVideo;
         private float m_rapport;
         private List<LieuRemarquable> m_lieuxRemarquables;
+        private List<EffectifEtVictoire> m_effectifsEtVictoires;
         private int m_largeurMax;
         private int m_hauteurMax;
         private int m_largeur;
@@ -68,7 +76,7 @@ namespace WaocLib
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, 
-                                    bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables,
+                                    bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables, List<EffectifEtVictoire> effectifsEtVictoires,
                                     System.ComponentModel.BackgroundWorker worker)
         {
             try
@@ -83,10 +91,12 @@ namespace WaocLib
                 m_bHistoriqueBataille = bHistoriqueBataille;
                 m_repertoireVideo = repertoireVideo;
                 m_lieuxRemarquables = lieuxRemarquables;
+                m_effectifsEtVictoires = effectifsEtVictoires;
                 m_texteImages = texteImages;
                 m_hauteurBandeau = 0;
                 m_police = police;
                 m_travailleur = worker;
+                float largeurTexte, hauteurTexte;
 
                 //recherche le nombre d'images et leur taille
                 DirectoryInfo dir = new DirectoryInfo(repertoireImages);
@@ -109,13 +119,25 @@ namespace WaocLib
                         m_hauteur, m_largeur, m_hauteurMax, m_largeurMax);
                 }
 
-                //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
+                //calcul de la hauteur du bandeau = 2 fois la hauteur de la police, et de la largeur du bandeau (au cas où cela dépassererait la largeur min)
                 if (null != texteImages && texteImages.Length > 0)
                 {
                     fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
                     G = Graphics.FromImage(fichierImageSource);
-                    tailleTexte = G.MeasureString("XX", police);
-                    m_hauteurBandeau = (int)(tailleTexte.Height * 1);
+                    largeurTexte = hauteurTexte = 0;
+                    foreach(string texte in texteImages)
+                    {
+                        tailleTexte = G.MeasureString(texte, police);
+                        largeurTexte = Math.Max(largeurTexte, tailleTexte.Width);
+                        hauteurTexte = Math.Max(hauteurTexte, tailleTexte.Height);
+                    }
+
+                    //ajout des chiffres d'effectif à droite et à gauche
+                    tailleTexte = G.MeasureString("000.000", police);
+                    hauteurTexte = Math.Max(hauteurTexte, tailleTexte.Height);
+
+                    m_hauteurBandeau = (int)(hauteurTexte * 2);
+                    m_largeur = Math.Max((int)(largeurTexte * 1), m_largeur) + 2 * (int)(tailleTexte.Width * 2);
                     fichierImageSource.Dispose();
                 }
 
@@ -162,6 +184,7 @@ namespace WaocLib
         public string Traitement()
         {
             SizeF tailleTexte;
+            int largeurCote;
             Graphics G;
             Bitmap fichierImageSource;
             try
@@ -171,17 +194,56 @@ namespace WaocLib
                 Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
+                //bandes blanches en bas et sur les côtés
+                //bas
+                G.FillRectangle(Brushes.White, new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau));
+                //gauche
+                largeurCote = (m_largeur - fichierImageSource.Width)/2;
+                G.FillRectangle(Brushes.White, new Rectangle(0, 0, largeurCote, m_hauteur));
+                //droite
+                G.FillRectangle(Brushes.White, new Rectangle(m_largeur - largeurCote, 0, largeurCote, m_hauteur));
+
                 //bandeau avec texte
                 if (null != m_texteImages && m_texteImages.Length > 0)
                 {
-                    G.FillRectangle(Brushes.White, new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau));
                     tailleTexte = G.MeasureString(m_texteImages[m_traitement], m_police);
                     G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black,
                         new Rectangle((m_largeur - (int)tailleTexte.Width) / 2,
                                         m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
-                                        m_largeur - (m_largeur - (int)tailleTexte.Width) / 2, 
-                                        m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
-                    m_traitement++;
+                                        (int)tailleTexte.Width, 
+                                        (int)tailleTexte.Height));
+                                        //m_largeur - (m_largeur - (int)tailleTexte.Width) / 2, 
+                                        //m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
+                }
+
+                // effectifs et indicateur de victoire par camp
+                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                {
+                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                    {
+                        if (eev.iTour!=m_traitement)
+                        {
+                            continue;
+                        }
+                        string strEffectif = eev.iEffectif.ToString("{0:N0}");
+                        tailleTexte = G.MeasureString(strEffectif, m_police);
+                        if (0==eev.iNation)
+                        {
+                            G.DrawString(strEffectif, m_police, Brushes.Blue,
+                                new Rectangle((largeurCote - (int)tailleTexte.Width) / 2,
+                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                                (int)tailleTexte.Width, 
+                                                (int)tailleTexte.Height));
+                        }
+                        else
+                        {
+                            G.DrawString(strEffectif, m_police, Brushes.Red,
+                                new Rectangle(m_largeur - (largeurCote - (int)tailleTexte.Width) / 2,
+                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                                (int)tailleTexte.Width, 
+                                                (int)tailleTexte.Height));
+                        }
+                    }
                 }
 
                 //image de base
@@ -227,6 +289,7 @@ namespace WaocLib
                 G.Dispose();
                 fichierImage.Dispose();
                 fichierImageSource.Dispose();
+                m_traitement++;
                 m_travailleur.ReportProgress(m_traitement*100/m_listeFichiers.Length);
                 if (m_traitement == m_listeFichiers.Length)
                 {

@@ -96,7 +96,8 @@ namespace vaoc
                         int I_INFANTERIE_ESCORTE,//55
                         int I_CAVALERIE_ESCORTE,
                         int I_MATERIEL_ESCORTE,
-                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
+                        int I_VICTOIRE
                 )
             {
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
@@ -169,7 +170,8 @@ namespace vaoc
                         I_INFANTERIE_ESCORTE,
                         I_CAVALERIE_ESCORTE,
                         I_MATERIEL_ESCORTE,
-                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
+                        I_VICTOIRE
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
@@ -2604,7 +2606,8 @@ namespace vaoc
                     0,//int I_INFANTERIE_ESCORTE, 
                     0,//int I_CAVALERIE_ESCORTE,
                     0,//int I_MATERIEL_ESCORTE
-                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0//I_VICTOIRE
                     );
 
                 if (null == lignePionRemplacant)
@@ -2783,7 +2786,8 @@ namespace vaoc
                     0,//int I_INFANTERIE_ESCORTE, 
                     0,//int I_CAVALERIE_ESCORTE,
                     0,//int I_MATERIEL_ESCORTE
-                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0//I_VICTOIRE
                     );
 
                 if (null == ligneAncienPion)
@@ -3270,7 +3274,8 @@ namespace vaoc
                     0,//I_INFANTERIE_ESCORTE, 
                     0,//I_CAVALERIE_ESCORTE
                     0,//I_MATERIEL_ESCORTE
-                    0//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
+                    0//I_VICTOIRE
                     );
                 lignePionConvoi.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionConvoi.SetID_NOUVEAU_PION_PROPRIETAIRENull();

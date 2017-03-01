@@ -30,5 +30,29 @@ namespace vaoc
             }
         }
         #endregion
+
+        private void FormVideoTable_Load(object sender, EventArgs e)
+        {
+            Redimensionner();
+        }
+
+        private void FormVideoTable_Resize(object sender, EventArgs e)
+        {
+            Redimensionner();
+        }
+
+        private void Redimensionner()
+        {
+            #region positionnement des boutons annuler et valider
+            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
+            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
+            buttonValider.Top = buttonAnnuler.Top = Height - 3 * buttonValider.Height;
+            #endregion
+
+            #region positionnement de la grille
+            this.dataGridViewVideo.Width = Width;
+            this.dataGridViewVideo.Height = Height - 4 * buttonValider.Height;
+            #endregion
+        }
     }
 }

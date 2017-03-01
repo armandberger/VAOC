@@ -8156,6 +8156,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
             
+            private global::System.Data.DataColumn columnI_VICTOIRE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_PIONDataTable() {
@@ -8663,6 +8665,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_VICTOIREColumn {
+                get {
+                    return this.columnI_VICTOIRE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -8757,7 +8767,8 @@ namespace vaoc {
                         int I_INFANTERIE_ESCORTE, 
                         int I_CAVALERIE_ESCORTE, 
                         int I_MATERIEL_ESCORTE, 
-                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT) {
+                        int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT, 
+                        int I_VICTOIRE) {
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PION,
@@ -8818,7 +8829,8 @@ namespace vaoc {
                         I_INFANTERIE_ESCORTE,
                         I_CAVALERIE_ESCORTE,
                         I_MATERIEL_ESCORTE,
-                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT};
+                        I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
+                        I_VICTOIRE};
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
                 return rowTAB_PIONRow;
@@ -8907,6 +8919,7 @@ namespace vaoc {
                 this.columnI_CAVALERIE_ESCORTE = base.Columns["I_CAVALERIE_ESCORTE"];
                 this.columnI_MATERIEL_ESCORTE = base.Columns["I_MATERIEL_ESCORTE"];
                 this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = base.Columns["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"];
+                this.columnI_VICTOIRE = base.Columns["I_VICTOIRE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9030,6 +9043,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_MATERIEL_ESCORTE);
                 this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = new global::System.Data.DataColumn("I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT);
+                this.columnI_VICTOIRE = new global::System.Data.DataColumn("I_VICTOIRE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_VICTOIRE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PION}, true));
                 this.columnID_PION.AllowDBNull = false;
@@ -9064,6 +9079,7 @@ namespace vaoc {
                 this.columnI_CAVALERIE_ESCORTE.Caption = "I_INFANTERIE_ESCORTE";
                 this.columnI_CAVALERIE_ESCORTE.DefaultValue = ((int)(0));
                 this.columnI_MATERIEL_ESCORTE.DefaultValue = ((int)(0));
+                this.columnI_VICTOIRE.DefaultValue = ((int)(0));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -12777,6 +12793,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnS_MESSAGE_ARRIVEE;
             
+            private global::System.Data.DataColumn columnI_VICTOIRE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_RENFORTDataTable() {
@@ -13012,6 +13030,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_VICTOIREColumn {
+                get {
+                    return this.columnI_VICTOIRE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -13072,7 +13098,8 @@ namespace vaoc {
                         bool B_VIEILLE_GARDE, 
                         char C_NIVEAU_DEPOT, 
                         bool B_RENFORT, 
-                        string S_MESSAGE_ARRIVEE) {
+                        string S_MESSAGE_ARRIVEE, 
+                        int I_VICTOIRE) {
                 TAB_RENFORTRow rowTAB_RENFORTRow = ((TAB_RENFORTRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PION,
@@ -13099,7 +13126,8 @@ namespace vaoc {
                         B_VIEILLE_GARDE,
                         C_NIVEAU_DEPOT,
                         B_RENFORT,
-                        S_MESSAGE_ARRIVEE};
+                        S_MESSAGE_ARRIVEE,
+                        I_VICTOIRE};
                 rowTAB_RENFORTRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_RENFORTRow);
                 return rowTAB_RENFORTRow;
@@ -13154,6 +13182,7 @@ namespace vaoc {
                 this.columnC_NIVEAU_DEPOT = base.Columns["C_NIVEAU_DEPOT"];
                 this.columnB_RENFORT = base.Columns["B_RENFORT"];
                 this.columnS_MESSAGE_ARRIVEE = base.Columns["S_MESSAGE_ARRIVEE"];
+                this.columnI_VICTOIRE = base.Columns["I_VICTOIRE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -13209,6 +13238,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnB_RENFORT);
                 this.columnS_MESSAGE_ARRIVEE = new global::System.Data.DataColumn("S_MESSAGE_ARRIVEE", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnS_MESSAGE_ARRIVEE);
+                this.columnI_VICTOIRE = new global::System.Data.DataColumn("I_VICTOIRE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_VICTOIRE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PION}, true));
                 this.columnID_PION.AllowDBNull = false;
@@ -13223,6 +13254,7 @@ namespace vaoc {
                 this.columnB_CAVALERIE_LOURDE.DefaultValue = ((bool)(false));
                 this.columnB_GARDE.DefaultValue = ((bool)(false));
                 this.columnB_VIEILLE_GARDE.DefaultValue = ((bool)(false));
+                this.columnI_VICTOIRE.DefaultValue = ((int)(0));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -18883,6 +18915,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_TOUR;
             
+            private global::System.Data.DataColumn columnID_NATION;
+            
             private global::System.Data.DataColumn columnID_PION;
             
             private global::System.Data.DataColumn columnID_MODELE_PION;
@@ -18893,9 +18927,15 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_INFANTERIE;
             
+            private global::System.Data.DataColumn columnI_INFANTERIE_INITIALE;
+            
             private global::System.Data.DataColumn columnI_CAVALERIE;
             
+            private global::System.Data.DataColumn columnI_CAVALERIE_INITIALE;
+            
             private global::System.Data.DataColumn columnI_ARTILLERIE;
+            
+            private global::System.Data.DataColumn columnI_ARTILLERIE_INITIALE;
             
             private global::System.Data.DataColumn columnI_FATIGUE;
             
@@ -18962,6 +19002,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ID_NATIONColumn {
+                get {
+                    return this.columnID_NATION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn ID_PIONColumn {
                 get {
                     return this.columnID_PION;
@@ -19002,6 +19050,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_INFANTERIE_INITIALEColumn {
+                get {
+                    return this.columnI_INFANTERIE_INITIALE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn I_CAVALERIEColumn {
                 get {
                     return this.columnI_CAVALERIE;
@@ -19010,9 +19066,25 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_CAVALERIE_INITIALEColumn {
+                get {
+                    return this.columnI_CAVALERIE_INITIALE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn I_ARTILLERIEColumn {
                 get {
                     return this.columnI_ARTILLERIE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_ARTILLERIE_INITIALEColumn {
+                get {
+                    return this.columnI_ARTILLERIE_INITIALE;
                 }
             }
             
@@ -19143,13 +19215,17 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_VIDEORow AddTAB_VIDEORow(
                         int I_TOUR, 
+                        int ID_NATION, 
                         int ID_PION, 
                         int ID_MODELE_PION, 
                         int ID_PION_PROPRIETAIRE, 
                         string S_NOM, 
                         int I_INFANTERIE, 
+                        int I_INFANTERIE_INITIALE, 
                         int I_CAVALERIE, 
+                        int I_CAVALERIE_INITIALE, 
                         int I_ARTILLERIE, 
+                        int I_ARTILLERIE_INITIALE, 
                         int I_FATIGUE, 
                         int I_MORAL, 
                         int ID_CASE, 
@@ -19164,13 +19240,17 @@ namespace vaoc {
                 TAB_VIDEORow rowTAB_VIDEORow = ((TAB_VIDEORow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         I_TOUR,
+                        ID_NATION,
                         ID_PION,
                         ID_MODELE_PION,
                         ID_PION_PROPRIETAIRE,
                         S_NOM,
                         I_INFANTERIE,
+                        I_INFANTERIE_INITIALE,
                         I_CAVALERIE,
+                        I_CAVALERIE_INITIALE,
                         I_ARTILLERIE,
+                        I_ARTILLERIE_INITIALE,
                         I_FATIGUE,
                         I_MORAL,
                         ID_CASE,
@@ -19205,13 +19285,17 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
                 this.columnI_TOUR = base.Columns["I_TOUR"];
+                this.columnID_NATION = base.Columns["ID_NATION"];
                 this.columnID_PION = base.Columns["ID_PION"];
                 this.columnID_MODELE_PION = base.Columns["ID_MODELE_PION"];
                 this.columnID_PION_PROPRIETAIRE = base.Columns["ID_PION_PROPRIETAIRE"];
                 this.columnS_NOM = base.Columns["S_NOM"];
                 this.columnI_INFANTERIE = base.Columns["I_INFANTERIE"];
+                this.columnI_INFANTERIE_INITIALE = base.Columns["I_INFANTERIE_INITIALE"];
                 this.columnI_CAVALERIE = base.Columns["I_CAVALERIE"];
+                this.columnI_CAVALERIE_INITIALE = base.Columns["I_CAVALERIE_INITIALE"];
                 this.columnI_ARTILLERIE = base.Columns["I_ARTILLERIE"];
+                this.columnI_ARTILLERIE_INITIALE = base.Columns["I_ARTILLERIE_INITIALE"];
                 this.columnI_FATIGUE = base.Columns["I_FATIGUE"];
                 this.columnI_MORAL = base.Columns["I_MORAL"];
                 this.columnID_CASE = base.Columns["ID_CASE"];
@@ -19230,6 +19314,8 @@ namespace vaoc {
             private void InitClass() {
                 this.columnI_TOUR = new global::System.Data.DataColumn("I_TOUR", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_TOUR);
+                this.columnID_NATION = new global::System.Data.DataColumn("ID_NATION", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_NATION);
                 this.columnID_PION = new global::System.Data.DataColumn("ID_PION", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnID_PION);
                 this.columnID_MODELE_PION = new global::System.Data.DataColumn("ID_MODELE_PION", typeof(int), null, global::System.Data.MappingType.Element);
@@ -19240,10 +19326,16 @@ namespace vaoc {
                 base.Columns.Add(this.columnS_NOM);
                 this.columnI_INFANTERIE = new global::System.Data.DataColumn("I_INFANTERIE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_INFANTERIE);
+                this.columnI_INFANTERIE_INITIALE = new global::System.Data.DataColumn("I_INFANTERIE_INITIALE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_INFANTERIE_INITIALE);
                 this.columnI_CAVALERIE = new global::System.Data.DataColumn("I_CAVALERIE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_CAVALERIE);
+                this.columnI_CAVALERIE_INITIALE = new global::System.Data.DataColumn("I_CAVALERIE_INITIALE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_CAVALERIE_INITIALE);
                 this.columnI_ARTILLERIE = new global::System.Data.DataColumn("I_ARTILLERIE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_ARTILLERIE);
+                this.columnI_ARTILLERIE_INITIALE = new global::System.Data.DataColumn("I_ARTILLERIE_INITIALE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ARTILLERIE_INITIALE);
                 this.columnI_FATIGUE = new global::System.Data.DataColumn("I_FATIGUE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_FATIGUE);
                 this.columnI_MORAL = new global::System.Data.DataColumn("I_MORAL", typeof(int), null, global::System.Data.MappingType.Element);
@@ -24781,6 +24873,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_VICTOIRE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_PION.I_VICTOIREColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_VICTOIRE\' dans la table \'TAB_PION\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PION.I_VICTOIREColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_MODELE_PIONNull() {
                 return this.IsNull(this.tableTAB_PION.ID_MODELE_PIONColumn);
             }
@@ -25437,6 +25545,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() {
                 this[this.tableTAB_PION.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECTColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_VICTOIRENull() {
+                return this.IsNull(this.tableTAB_PION.I_VICTOIREColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_VICTOIRENull() {
+                this[this.tableTAB_PION.I_VICTOIREColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -29219,6 +29339,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_VICTOIRE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_RENFORT.I_VICTOIREColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_VICTOIRE\' dans la table \'TAB_RENFORT\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_RENFORT.I_VICTOIREColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_MODELE_PIONNull() {
                 return this.IsNull(this.tableTAB_RENFORT.ID_MODELE_PIONColumn);
             }
@@ -29503,6 +29639,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetS_MESSAGE_ARRIVEENull() {
                 this[this.tableTAB_RENFORT.S_MESSAGE_ARRIVEEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_VICTOIRENull() {
+                return this.IsNull(this.tableTAB_RENFORT.I_VICTOIREColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_VICTOIRENull() {
+                this[this.tableTAB_RENFORT.I_VICTOIREColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -33861,6 +34009,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int ID_NATION {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.ID_NATIONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_NATION\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.ID_NATIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_PION {
                 get {
                     return ((int)(this[this.tableTAB_VIDEO.ID_PIONColumn]));
@@ -33937,6 +34101,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_INFANTERIE_INITIALE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_INFANTERIE_INITIALEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_INFANTERIE_INITIALE\' dans la table \'TAB_VIDEO\' est D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_INFANTERIE_INITIALEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_CAVALERIE {
                 get {
                     try {
@@ -33953,6 +34134,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_CAVALERIE_INITIALE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_CAVALERIE_INITIALEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_CAVALERIE_INITIALE\' dans la table \'TAB_VIDEO\' est DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_CAVALERIE_INITIALEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_ARTILLERIE {
                 get {
                     try {
@@ -33964,6 +34162,23 @@ namespace vaoc {
                 }
                 set {
                     this[this.tableTAB_VIDEO.I_ARTILLERIEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_ARTILLERIE_INITIALE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_ARTILLERIE_INITIALEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ARTILLERIE_INITIALE\' dans la table \'TAB_VIDEO\' est D" +
+                                "BNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_ARTILLERIE_INITIALEColumn] = value;
                 }
             }
             
@@ -34148,6 +34363,18 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsID_NATIONNull() {
+                return this.IsNull(this.tableTAB_VIDEO.ID_NATIONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetID_NATIONNull() {
+                this[this.tableTAB_VIDEO.ID_NATIONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_MODELE_PIONNull() {
                 return this.IsNull(this.tableTAB_VIDEO.ID_MODELE_PIONColumn);
             }
@@ -34196,6 +34423,18 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_INFANTERIE_INITIALENull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_INFANTERIE_INITIALEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_INFANTERIE_INITIALENull() {
+                this[this.tableTAB_VIDEO.I_INFANTERIE_INITIALEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsI_CAVALERIENull() {
                 return this.IsNull(this.tableTAB_VIDEO.I_CAVALERIEColumn);
             }
@@ -34208,6 +34447,18 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_CAVALERIE_INITIALENull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_CAVALERIE_INITIALEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_CAVALERIE_INITIALENull() {
+                this[this.tableTAB_VIDEO.I_CAVALERIE_INITIALEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsI_ARTILLERIENull() {
                 return this.IsNull(this.tableTAB_VIDEO.I_ARTILLERIEColumn);
             }
@@ -34216,6 +34467,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_ARTILLERIENull() {
                 this[this.tableTAB_VIDEO.I_ARTILLERIEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_ARTILLERIE_INITIALENull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_ARTILLERIE_INITIALEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_ARTILLERIE_INITIALENull() {
+                this[this.tableTAB_VIDEO.I_ARTILLERIE_INITIALEColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

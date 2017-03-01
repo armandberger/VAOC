@@ -95,6 +95,7 @@ namespace vaoc
             this.buttonRenfort = new System.Windows.Forms.Button();
             this.donnees = new vaoc.Donnees();
             this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.I_VICTOIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.donnees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMODELEPIONBindingSource)).BeginInit();
@@ -183,7 +184,8 @@ namespace vaoc
             this.I_INFANTERIE_ESCORTE,
             this.I_CAVALERIE_ESCORTE,
             this.I_MATERIEL_ESCORTE,
-            this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT});
+            this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
+            this.I_VICTOIRE});
             this.dataGridViewPions.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewPions.Name = "dataGridViewPions";
             this.dataGridViewPions.Size = new System.Drawing.Size(1001, 228);
@@ -546,6 +548,11 @@ namespace vaoc
             this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
             this.tABMODELEPIONBindingSource.DataSource = this.donnees;
             // 
+            // I_VICTOIRE
+            // 
+            this.I_VICTOIRE.HeaderText = "I_VICTOIRE";
+            this.I_VICTOIRE.Name = "I_VICTOIRE";
+            // 
             // FormPion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -636,5 +643,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_CAVALERIE_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_MATERIEL_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_VICTOIRE;
     }
 }

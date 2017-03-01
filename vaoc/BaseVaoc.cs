@@ -9,6 +9,9 @@ namespace vaoc
 {
     partial class Donnees
     {
+        partial class TAB_PIONDataTable
+        {
+        }
         #region variables
         public static Donnees m_donnees;
         #endregion
@@ -887,7 +890,7 @@ namespace vaoc
 
                 return resCase;
             }
-            
+
             public TAB_CASERow[] CasesVoisines(TAB_CASERow source)
             {
                 int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;

@@ -67,6 +67,7 @@ namespace vaoc
         public int? I_CAVALERIE_ESCORTE { get; set; }
         public int? I_MATERIEL_ESCORTE { get; set; }
         public int? I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT { get; set; }
+        public int? I_VICTOIRE { get; set; }
 
         public LignePION(Donnees.TAB_PIONRow ligneRow)
         {

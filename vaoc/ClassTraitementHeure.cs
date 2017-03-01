@@ -3169,7 +3169,7 @@ namespace vaoc
             }
             */
 
-            TestCreationUnite(0, 1);
+            //TestCreationUnite(0, 1);
             ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
             if (null != ligneOrdre)

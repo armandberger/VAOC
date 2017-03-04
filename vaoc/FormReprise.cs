@@ -79,9 +79,9 @@ namespace vaoc
                         erreurTraitement = majHistorique.Traitement();
                     }
                 }
-                majHistorique.Terminer();
                 Cursor = m_oldcurseur;
                 MessageBox.Show(erreurTraitement, "Reprise des données", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                majHistorique.Terminer();
             }
             catch (Exception ex)
             {

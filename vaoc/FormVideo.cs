@@ -118,7 +118,7 @@ namespace vaoc
             //on ajoute les effectifs et les points de victoire
             for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
             {
-                for (int j=0; j<=Donnees.m_donnees.TAB_NATION.Count; j++)
+                for (int j=0; j<Donnees.m_donnees.TAB_NATION.Count; j++)
                 {
                     System.Nullable<int> effectifs =
                         (from video in Donnees.m_donnees.TAB_VIDEO
@@ -127,14 +127,14 @@ namespace vaoc
                             && (false == video.B_DETRUIT)
                             && (false == video.B_PRISONNIERS)
                             && (false == video.B_BLESSES)
-                         select (video.I_INFANTERIE+video.I_CAVALERIE)*video.I_FATIGUE/100)
+                         select (video.I_INFANTERIE+video.I_CAVALERIE)*(100-video.I_FATIGUE)/100)
                         .Sum();
 
                     System.Nullable<int> victoires =
                         (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == i)
                             && (video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                            && ((true == video.B_DETRUIT) || (false == video.B_FUITE_AU_COMBAT))
+                            && ((true == video.B_DETRUIT) || (true == video.B_FUITE_AU_COMBAT))
                             && (video.I_INFANTERIE_INITIALE>0 || video.I_CAVALERIE_INITIALE>0)
                          select video.ID_PION)
                         .Count();

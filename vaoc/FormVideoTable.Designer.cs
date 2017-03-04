@@ -30,17 +30,22 @@
         {
             this.components = new System.ComponentModel.Container();
             this.buttonValider = new System.Windows.Forms.Button();
-            this.dataSetCoutDonnees = new vaoc.Donnees();
-            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewVideo = new System.Windows.Forms.DataGridView();
+            this.buttonAnnuler = new System.Windows.Forms.Button();
+            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSetCoutDonnees = new vaoc.Donnees();
             this.iTOURDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDMODELEPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONPROPRIETAIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iINFANTERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iINFANTERIEINITIALEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iCAVALERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iCAVALERIEINITIALEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iARTILLERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iARTILLERIEINITIALEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iFATIGUEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iMORALDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDCASEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,32 +57,21 @@
             this.bBLESSESDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.bPRISONNIERSDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).BeginInit();
+            this.iVICTOIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(-137, 214);
+            this.buttonValider.Location = new System.Drawing.Point(140, 312);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 9;
             this.buttonValider.Text = "Valider";
             this.buttonValider.UseVisualStyleBackColor = true;
-            // 
-            // dataSetCoutDonnees
-            // 
-            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
-            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // tABBindingSource
-            // 
-            this.tABBindingSource.DataMember = "TAB_VIDEO";
-            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
             // 
             // dataGridViewVideo
             // 
@@ -86,13 +80,17 @@
             this.dataGridViewVideo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewVideo.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iTOURDataGridViewTextBoxColumn,
+            this.iDNATIONDataGridViewTextBoxColumn,
             this.iDPIONDataGridViewTextBoxColumn,
             this.iDMODELEPIONDataGridViewTextBoxColumn,
             this.iDPIONPROPRIETAIREDataGridViewTextBoxColumn,
             this.sNOMDataGridViewTextBoxColumn,
             this.iINFANTERIEDataGridViewTextBoxColumn,
+            this.iINFANTERIEINITIALEDataGridViewTextBoxColumn,
             this.iCAVALERIEDataGridViewTextBoxColumn,
+            this.iCAVALERIEINITIALEDataGridViewTextBoxColumn,
             this.iARTILLERIEDataGridViewTextBoxColumn,
+            this.iARTILLERIEINITIALEDataGridViewTextBoxColumn,
             this.iFATIGUEDataGridViewTextBoxColumn,
             this.iMORALDataGridViewTextBoxColumn,
             this.iDCASEDataGridViewTextBoxColumn,
@@ -103,18 +101,45 @@
             this.iRAVITAILLEMENTDataGridViewTextBoxColumn,
             this.bBLESSESDataGridViewCheckBoxColumn,
             this.bPRISONNIERSDataGridViewCheckBoxColumn,
-            this.cNIVEAUDEPOTDataGridViewTextBoxColumn});
+            this.cNIVEAUDEPOTDataGridViewTextBoxColumn,
+            this.iVICTOIREDataGridViewTextBoxColumn});
             this.dataGridViewVideo.DataSource = this.tABBindingSource;
             this.dataGridViewVideo.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewVideo.Name = "dataGridViewVideo";
             this.dataGridViewVideo.Size = new System.Drawing.Size(1424, 188);
             this.dataGridViewVideo.TabIndex = 10;
             // 
+            // buttonAnnuler
+            // 
+            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonAnnuler.Location = new System.Drawing.Point(221, 312);
+            this.buttonAnnuler.Name = "buttonAnnuler";
+            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnnuler.TabIndex = 12;
+            this.buttonAnnuler.Text = "Annuler";
+            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            // 
+            // tABBindingSource
+            // 
+            this.tABBindingSource.DataMember = "TAB_VIDEO";
+            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
+            // 
+            // dataSetCoutDonnees
+            // 
+            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
+            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
             // iTOURDataGridViewTextBoxColumn
             // 
             this.iTOURDataGridViewTextBoxColumn.DataPropertyName = "I_TOUR";
             this.iTOURDataGridViewTextBoxColumn.HeaderText = "I_TOUR";
             this.iTOURDataGridViewTextBoxColumn.Name = "iTOURDataGridViewTextBoxColumn";
+            // 
+            // iDNATIONDataGridViewTextBoxColumn
+            // 
+            this.iDNATIONDataGridViewTextBoxColumn.DataPropertyName = "ID_NATION";
+            this.iDNATIONDataGridViewTextBoxColumn.HeaderText = "ID_NATION";
+            this.iDNATIONDataGridViewTextBoxColumn.Name = "iDNATIONDataGridViewTextBoxColumn";
             // 
             // iDPIONDataGridViewTextBoxColumn
             // 
@@ -146,17 +171,35 @@
             this.iINFANTERIEDataGridViewTextBoxColumn.HeaderText = "I_INFANTERIE";
             this.iINFANTERIEDataGridViewTextBoxColumn.Name = "iINFANTERIEDataGridViewTextBoxColumn";
             // 
+            // iINFANTERIEINITIALEDataGridViewTextBoxColumn
+            // 
+            this.iINFANTERIEINITIALEDataGridViewTextBoxColumn.DataPropertyName = "I_INFANTERIE_INITIALE";
+            this.iINFANTERIEINITIALEDataGridViewTextBoxColumn.HeaderText = "I_INFANTERIE_INITIALE";
+            this.iINFANTERIEINITIALEDataGridViewTextBoxColumn.Name = "iINFANTERIEINITIALEDataGridViewTextBoxColumn";
+            // 
             // iCAVALERIEDataGridViewTextBoxColumn
             // 
             this.iCAVALERIEDataGridViewTextBoxColumn.DataPropertyName = "I_CAVALERIE";
             this.iCAVALERIEDataGridViewTextBoxColumn.HeaderText = "I_CAVALERIE";
             this.iCAVALERIEDataGridViewTextBoxColumn.Name = "iCAVALERIEDataGridViewTextBoxColumn";
             // 
+            // iCAVALERIEINITIALEDataGridViewTextBoxColumn
+            // 
+            this.iCAVALERIEINITIALEDataGridViewTextBoxColumn.DataPropertyName = "I_CAVALERIE_INITIALE";
+            this.iCAVALERIEINITIALEDataGridViewTextBoxColumn.HeaderText = "I_CAVALERIE_INITIALE";
+            this.iCAVALERIEINITIALEDataGridViewTextBoxColumn.Name = "iCAVALERIEINITIALEDataGridViewTextBoxColumn";
+            // 
             // iARTILLERIEDataGridViewTextBoxColumn
             // 
             this.iARTILLERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ARTILLERIE";
             this.iARTILLERIEDataGridViewTextBoxColumn.HeaderText = "I_ARTILLERIE";
             this.iARTILLERIEDataGridViewTextBoxColumn.Name = "iARTILLERIEDataGridViewTextBoxColumn";
+            // 
+            // iARTILLERIEINITIALEDataGridViewTextBoxColumn
+            // 
+            this.iARTILLERIEINITIALEDataGridViewTextBoxColumn.DataPropertyName = "I_ARTILLERIE_INITIALE";
+            this.iARTILLERIEINITIALEDataGridViewTextBoxColumn.HeaderText = "I_ARTILLERIE_INITIALE";
+            this.iARTILLERIEINITIALEDataGridViewTextBoxColumn.Name = "iARTILLERIEINITIALEDataGridViewTextBoxColumn";
             // 
             // iFATIGUEDataGridViewTextBoxColumn
             // 
@@ -224,25 +267,11 @@
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn.HeaderText = "C_NIVEAU_DEPOT";
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn.Name = "cNIVEAUDEPOTDataGridViewTextBoxColumn";
             // 
-            // buttonAnnuler
+            // iVICTOIREDataGridViewTextBoxColumn
             // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(221, 312);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 12;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(87, 312);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "Valider";
-            this.button1.UseVisualStyleBackColor = true;
+            this.iVICTOIREDataGridViewTextBoxColumn.DataPropertyName = "I_VICTOIRE";
+            this.iVICTOIREDataGridViewTextBoxColumn.HeaderText = "I_VICTOIRE";
+            this.iVICTOIREDataGridViewTextBoxColumn.Name = "iVICTOIREDataGridViewTextBoxColumn";
             // 
             // FormVideoTable
             // 
@@ -250,16 +279,15 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1268, 383);
             this.Controls.Add(this.buttonAnnuler);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridViewVideo);
             this.Controls.Add(this.buttonValider);
             this.Name = "FormVideoTable";
             this.Text = "FormVideoTable";
             this.Load += new System.EventHandler(this.FormVideoTable_Load);
             this.Resize += new System.EventHandler(this.FormVideoTable_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -270,15 +298,18 @@
         private System.Windows.Forms.BindingSource tABBindingSource;
         private System.Windows.Forms.DataGridView dataGridViewVideo;
         private System.Windows.Forms.Button buttonAnnuler;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridViewTextBoxColumn iTOURDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDPIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDMODELEPIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDPIONPROPRIETAIREDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iINFANTERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iINFANTERIEINITIALEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iCAVALERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iCAVALERIEINITIALEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iARTILLERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iARTILLERIEINITIALEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iFATIGUEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iMORALDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDCASEDataGridViewTextBoxColumn;
@@ -290,5 +321,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn bBLESSESDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn bPRISONNIERSDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cNIVEAUDEPOTDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iVICTOIREDataGridViewTextBoxColumn;
     }
 }

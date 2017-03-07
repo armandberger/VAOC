@@ -128,6 +128,18 @@ namespace vaoc
                     idCaseDebut = lignePion.ID_CASE;
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
+                int iVictoire = 0;
+                if (lignePion.IsI_VICTOIRENull())
+                {
+                    if (lignePion.estCombattifQG(false,true))
+                    {
+                        iVictoire = 1;
+                    }
+                }
+                else
+                {
+                    iVictoire = lignePion.I_VICTOIRE;
+                }
                 Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
                     lignePion.nation.ID_NATION,
@@ -151,7 +163,8 @@ namespace vaoc
                     lignePion.I_RAVITAILLEMENT,
                     lignePion.B_BLESSES,
                     lignePion.B_PRISONNIERS,
-                    lignePion.C_NIVEAU_DEPOT
+                    lignePion.C_NIVEAU_DEPOT,
+                    iVictoire
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
             }

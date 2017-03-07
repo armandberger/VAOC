@@ -225,7 +225,7 @@ namespace WaocLib
                         {
                             continue;
                         }
-                        string strEffectif = eev.iEffectif.ToString("{0:N0}");
+                        string strEffectif = eev.iEffectif.ToString("000,000");
                         tailleTexte = G.MeasureString(strEffectif, m_police);
                         if (0==eev.iNation)
                         {

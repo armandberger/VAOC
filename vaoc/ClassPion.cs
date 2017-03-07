@@ -102,6 +102,7 @@ namespace vaoc
             {
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
                 //être incrementé automatiquement à cause de la bascule des pions de TAB_RENFORT vers TAB_PION
+                LogFile.Notifier("AjouterPion:AddTAB_PIONRow");
                 string tri = "ID_PION DESC";
                 Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 TAB_PIONRow[] resCout = (TAB_PIONRow[])Select(string.Empty, tri);

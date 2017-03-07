@@ -32,6 +32,10 @@ namespace vaoc
             this.buttonAnnuler = new System.Windows.Forms.Button();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewPions = new System.Windows.Forms.DataGridView();
+            this.labelCommentaire = new System.Windows.Forms.Label();
+            this.buttonRenfort = new System.Windows.Forms.Button();
+            this.donnees = new vaoc.Donnees();
+            this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ID_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.B_DETRUIT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MODELE_PION = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -39,6 +43,8 @@ namespace vaoc
             this.ID_NOUVEAU_PION_PROPRIETAIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID_ANCIEN_PION_PROPRIETAIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.S_NOM = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ID_CASE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_VICTOIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_INFANTERIE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_INFANTERIE_INITIALE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_CAVALERIE = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,7 +62,6 @@ namespace vaoc
             this.I_NB_PHASES_MARCHE_JOUR = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_NB_PHASES_MARCHE_NUIT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_NB_HEURES_COMBAT = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ID_CASE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_TOUR_SANS_RAVITAILLEMENT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID_BATAILLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_ZONE_BATAILLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -91,11 +96,6 @@ namespace vaoc
             this.I_CAVALERIE_ESCORTE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_MATERIEL_ESCORTE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.labelCommentaire = new System.Windows.Forms.Label();
-            this.buttonRenfort = new System.Windows.Forms.Button();
-            this.donnees = new vaoc.Donnees();
-            this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.I_VICTOIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.donnees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMODELEPIONBindingSource)).BeginInit();
@@ -133,6 +133,8 @@ namespace vaoc
             this.ID_NOUVEAU_PION_PROPRIETAIRE,
             this.ID_ANCIEN_PION_PROPRIETAIRE,
             this.S_NOM,
+            this.ID_CASE,
+            this.I_VICTOIRE,
             this.I_INFANTERIE,
             this.I_INFANTERIE_INITIALE,
             this.I_CAVALERIE,
@@ -150,7 +152,6 @@ namespace vaoc
             this.I_NB_PHASES_MARCHE_JOUR,
             this.I_NB_PHASES_MARCHE_NUIT,
             this.I_NB_HEURES_COMBAT,
-            this.ID_CASE,
             this.I_TOUR_SANS_RAVITAILLEMENT,
             this.ID_BATAILLE,
             this.I_ZONE_BATAILLE,
@@ -184,12 +185,40 @@ namespace vaoc
             this.I_INFANTERIE_ESCORTE,
             this.I_CAVALERIE_ESCORTE,
             this.I_MATERIEL_ESCORTE,
-            this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
-            this.I_VICTOIRE});
+            this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT});
             this.dataGridViewPions.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewPions.Name = "dataGridViewPions";
             this.dataGridViewPions.Size = new System.Drawing.Size(1001, 228);
             this.dataGridViewPions.TabIndex = 6;
+            // 
+            // labelCommentaire
+            // 
+            this.labelCommentaire.Location = new System.Drawing.Point(12, 405);
+            this.labelCommentaire.Name = "labelCommentaire";
+            this.labelCommentaire.Size = new System.Drawing.Size(240, 41);
+            this.labelCommentaire.TabIndex = 9;
+            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique\r\nAttention ! Pas d\'une unité" +
+    " sur un bord de carte car sinon crash AStar\r\n";
+            // 
+            // buttonRenfort
+            // 
+            this.buttonRenfort.Location = new System.Drawing.Point(524, 413);
+            this.buttonRenfort.Name = "buttonRenfort";
+            this.buttonRenfort.Size = new System.Drawing.Size(114, 23);
+            this.buttonRenfort.TabIndex = 10;
+            this.buttonRenfort.Text = "Mettre en renfort";
+            this.buttonRenfort.UseVisualStyleBackColor = true;
+            this.buttonRenfort.Click += new System.EventHandler(this.buttonRenfort_Click);
+            // 
+            // donnees
+            // 
+            this.donnees.DataSetName = "Donnees";
+            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // tABMODELEPIONBindingSource
+            // 
+            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
+            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
             // 
             // ID_PION
             // 
@@ -240,6 +269,16 @@ namespace vaoc
             this.S_NOM.HeaderText = "S_NOM";
             this.S_NOM.Name = "S_NOM";
             this.S_NOM.Width = 70;
+            // 
+            // ID_CASE
+            // 
+            this.ID_CASE.HeaderText = "ID_CASE";
+            this.ID_CASE.Name = "ID_CASE";
+            // 
+            // I_VICTOIRE
+            // 
+            this.I_VICTOIRE.HeaderText = "I_VICTOIRE";
+            this.I_VICTOIRE.Name = "I_VICTOIRE";
             // 
             // I_INFANTERIE
             // 
@@ -340,11 +379,6 @@ namespace vaoc
             // 
             this.I_NB_HEURES_COMBAT.HeaderText = "I_NB_HEURES_COMBAT";
             this.I_NB_HEURES_COMBAT.Name = "I_NB_HEURES_COMBAT";
-            // 
-            // ID_CASE
-            // 
-            this.ID_CASE.HeaderText = "ID_CASE";
-            this.ID_CASE.Name = "ID_CASE";
             // 
             // I_TOUR_SANS_RAVITAILLEMENT
             // 
@@ -519,40 +553,6 @@ namespace vaoc
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT.HeaderText = "I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT";
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT.Name = "I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT";
             // 
-            // labelCommentaire
-            // 
-            this.labelCommentaire.Location = new System.Drawing.Point(12, 405);
-            this.labelCommentaire.Name = "labelCommentaire";
-            this.labelCommentaire.Size = new System.Drawing.Size(240, 41);
-            this.labelCommentaire.TabIndex = 9;
-            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique\r\nAttention ! Pas d\'une unité" +
-    " sur un bord de carte car sinon crash AStar\r\n";
-            // 
-            // buttonRenfort
-            // 
-            this.buttonRenfort.Location = new System.Drawing.Point(524, 413);
-            this.buttonRenfort.Name = "buttonRenfort";
-            this.buttonRenfort.Size = new System.Drawing.Size(114, 23);
-            this.buttonRenfort.TabIndex = 10;
-            this.buttonRenfort.Text = "Mettre en renfort";
-            this.buttonRenfort.UseVisualStyleBackColor = true;
-            this.buttonRenfort.Click += new System.EventHandler(this.buttonRenfort_Click);
-            // 
-            // donnees
-            // 
-            this.donnees.DataSetName = "Donnees";
-            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // tABMODELEPIONBindingSource
-            // 
-            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
-            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
-            // 
-            // I_VICTOIRE
-            // 
-            this.I_VICTOIRE.HeaderText = "I_VICTOIRE";
-            this.I_VICTOIRE.Name = "I_VICTOIRE";
-            // 
             // FormPion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -591,6 +591,8 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_NOUVEAU_PION_PROPRIETAIRE;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_ANCIEN_PION_PROPRIETAIRE;
         private System.Windows.Forms.DataGridViewTextBoxColumn S_NOM;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID_CASE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_VICTOIRE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_INFANTERIE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_INFANTERIE_INITIALE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_CAVALERIE;
@@ -608,7 +610,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_NB_PHASES_MARCHE_JOUR;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_NB_PHASES_MARCHE_NUIT;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_NB_HEURES_COMBAT;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ID_CASE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_SANS_RAVITAILLEMENT;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_BATAILLE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_ZONE_BATAILLE;
@@ -643,6 +644,5 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_CAVALERIE_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_MATERIEL_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
-        private System.Windows.Forms.DataGridViewTextBoxColumn I_VICTOIRE;
     }
 }

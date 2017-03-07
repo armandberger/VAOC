@@ -71,6 +71,7 @@ namespace vaoc
                         bEnDefense = !lignePion.OrdreActif(ligneOrdre);
                     }
 
+                    LogFile.Notifier("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow");
                     Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS);
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         ID_BATAILLE, lignePion.ID_PION, ligneModele.ID_NATION, false, bEnDefense,
@@ -250,8 +251,9 @@ namespace vaoc
                 Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow[] resPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                 Monitor.Exit(Donnees.m_donnees.TAB_PION);
-                foreach (Donnees.TAB_PIONRow lignePion in resPion)
+                for (int l=0; l<resPion.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = resPion[l];
                     lignePion.SetID_BATAILLENull();
                     lignePion.SetI_ZONE_BATAILLENull();
                     Donnees.TAB_BATAILLE_PIONSRow ligneBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ID_BATAILLE);
@@ -364,8 +366,9 @@ namespace vaoc
                                                 && I_X_CASE_HAUT_GAUCHE <= Case.I_X && I_Y_CASE_HAUT_GAUCHE <= Case.I_Y)
                                          select Case;
 
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     //si l'unité n'a aucune position dans le champ de bataille, cela ne sert à rien de la bouger !
                     var listeCasesOccupees = from Case in listeCasesBataille
@@ -538,8 +541,9 @@ namespace vaoc
             {
                 string message;
                 //message indiquant la victoire au vainqueur
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsVictoire)
+                for (int l = 0; l < lignePionsVictoire.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsVictoire[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
                     {
@@ -548,8 +552,9 @@ namespace vaoc
                         return false;
                     }
                 }
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsDefaite)
+                for (int l = 0; l < lignePionsDefaite.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsDefaite[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
                     {
@@ -567,8 +572,9 @@ namespace vaoc
                 string message, messageErreur;
 
                 //gain au moral pour les unités qui tiennent le terrain
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     moral = (lignePion.I_MORAL + Constantes.CST_GAIN_MORAL_MAITRE_TERRAIN > lignePion.I_MORAL_MAX) ? lignePion.I_MORAL_MAX - lignePion.I_MORAL : Constantes.CST_GAIN_MORAL_MAITRE_TERRAIN;
 
@@ -590,8 +596,9 @@ namespace vaoc
             {
                 string message, messageErreur;
 
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {
@@ -647,8 +654,9 @@ namespace vaoc
                 effectifCavaleriePoursuivant = 0;
                 moralCavaleriePoursuivant = 0;
                 effectifCavaleriePoursuivi = 0;
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
+                for (int l = 0; l < lignePionsPoursuivant.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsPoursuivant[l];
                     if (lignePion.B_DETRUIT || lignePion.estQG) { continue; }
                     if (lignePion.Moral >= Constantes.CST_LIMITE_MORAL_CAVALERIE_POURSUITE && lignePion.cavalerie > 0)
                     {
@@ -667,8 +675,9 @@ namespace vaoc
                 if (0 == effectifCavaleriePoursuivant)
                 {
                     #region aucune cavalerie pour faire la poursuite, on en informe les chefs ayant des unités dans la bataille
-                    foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
+                    for (int l = 0; l < lignePionsPoursuivant.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignePionsPoursuivant[l];
                         if (lignePion.B_DETRUIT) { continue; }
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_POSSIBLE, this))
                         {
@@ -678,8 +687,9 @@ namespace vaoc
                         }
                     }
 
-                    foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivi)
+                    for (int l = 0; l < lignePionsPoursuivi.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                         if (lignePion.B_DETRUIT) { continue; }
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))
                         {
@@ -697,8 +707,9 @@ namespace vaoc
                 LogFile.Notifier("Poursuite : moralCavaleriePoursuivant = " + moralCavaleriePoursuivant);
 
                 //calcul des effectifs de cavalerie du poursuivi
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivi)
+                for (int l = 0; l < lignePionsPoursuivi.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                     if (lignePion.B_DETRUIT || lignePion.estQG) { continue; }
                     effectifCavaleriePoursuivi += lignePion.I_CAVALERIE;
                 }
@@ -741,8 +752,9 @@ namespace vaoc
                 if (0 == pertes)
                 {
                     #region On informe les unités que la poursuite est sans effet
-                    foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
+                    for (int l = 0; l < lignePionsPoursuivant.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignePionsPoursuivant[l];
                         if (lignePion.B_DETRUIT) { continue; }
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_SANS_EFFET, this))
                         {
@@ -751,8 +763,9 @@ namespace vaoc
                             return false;
                         }
                     }
-                    foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivi)
+                    for (int l = 0; l < lignePionsPoursuivi.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                         if (lignePion.B_DETRUIT) { continue; }
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))
                         {
@@ -1145,8 +1158,9 @@ namespace vaoc
             private int CalculModificateurStrategique(int idLeader, Donnees.TAB_PIONRow[] lignePionsEnBataille)
             {
                 int nbUnites = 0;
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.estCombattif) nbUnites++;
                 }
                 return CalculModificateurStrategique(idLeader, nbUnites);
@@ -1644,8 +1658,9 @@ namespace vaoc
             private int EffectifTotalSurZone(int zone, Donnees.TAB_PIONRow[] lignePionsEnBataille, bool bCombatif)
             {
                 int effectifTotal = 0;
-                foreach (Donnees.TAB_PIONRow lignePionBataille in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePionBataille = lignePionsEnBataille[l];
                     if ((!bCombatif || lignePionBataille.estCombattif) && lignePionBataille.I_ZONE_BATAILLE == zone)
                     {
                         effectifTotal += lignePionBataille.effectifTotal;
@@ -2025,8 +2040,9 @@ namespace vaoc
                 }
 
                 //on regarde s'il y a un leader de niveau hierarchique supérieur ou si aucun leader n'est encore choisi
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT || lignePion.B_BLESSES) { continue; }
                     if (lignePion.estQG && lignePion.I_STRATEGIQUE > 0)// test sur strategique ajouté à cause du cas "Bessières", général pouvant uniquement servir en appui tactique mais pas en commandement
                     {

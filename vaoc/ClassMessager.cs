@@ -549,8 +549,9 @@ namespace vaoc
                 return false;
             }
 
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            for (int l=0; l<Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
+                Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
                 if (null == ligneCase)
                 {
@@ -591,8 +592,9 @@ namespace vaoc
             double dist;
 
             ligneNom = null;
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            for (int l=0; l< Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
+                Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
                 if (null == ligneCase)
                 {
@@ -802,8 +804,9 @@ namespace vaoc
             double dist;
             id_lieu = -1;
             nomLieu = string.Empty;
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            for (int l=0; l<Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
+                Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
                 if (null == ligneCaseSource)
                 {
@@ -2086,8 +2089,9 @@ namespace vaoc
             {
                 //on recherche toutes les unités visibles, et on se préparent à calculer le barycentre de leur position
 
-                foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
+                for (int l=0; l<ligneCaseVues.Count(); l++)
                 {
+                    Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
                     if (!ligneCaseVue.IsID_PROPRIETAIRENull() && ligneCaseVue.ID_PROPRIETAIRE!=lignePion.ID_PION)
                     {
                         if (unitesVisibles.ContainsKey(ligneCaseVue.ID_PROPRIETAIRE))
@@ -2110,8 +2114,9 @@ namespace vaoc
                 }
 
                 //il est possible qu'une unité ne soit pas visible car n'ayant trouvée aucune case pour se placer, on ajoute donc toute unité dont l'emplacement est dans la zone de vue
-                foreach (Donnees.TAB_PIONRow lignePionVue in Donnees.m_donnees.TAB_PION)
+                for (int l=0; l<Donnees.m_donnees.TAB_PION.Count; l++)
                 {
+                    Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
                     if (lignePionVue.B_DETRUIT) { continue; }
                     Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVue.ID_CASE);
                     if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
@@ -2377,8 +2382,9 @@ namespace vaoc
             //Ajout des informations d'état sur les ponts/gués environnants.
             bool bPontOuGuet = false;
             Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
-            foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
+            for (int l=0; l<ligneCaseVues.Count(); l++)
             {
+                Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
                 if (ligneModeleTerrain.B_PONT || ligneModeleTerrain.B_PONTON)
                 {
@@ -2389,8 +2395,9 @@ namespace vaoc
                         List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
                         listeCasesVoisines.Add(ligneCaseVue);
                         ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
-                        foreach (Donnees.TAB_CASERow ligneCasePont in listeCasesVoisines)
+                        for (int ll=0; ll<listeCasesVoisines.Count; ll++)
                         {
+                            Donnees.TAB_CASERow ligneCasePont = listeCasesVoisines[ll];
                             listePonts.Add(ligneCasePont.ID_CASE, ligneCasePont);
                         }
                         if (!bPontOuGuet) 
@@ -2439,8 +2446,9 @@ namespace vaoc
             visionKM = lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-            foreach (Donnees.TAB_PIONRow lignePionVoisin in Donnees.m_donnees.TAB_PION)
+            for (int l=0; l<Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION[l];
                 if (lignePionVoisin.B_DETRUIT) { continue; }
                 if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
                 Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVoisin.ID_CASE);

@@ -78,16 +78,18 @@ namespace vaoc
                 //on initialise également la météo
                 Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = Donnees.m_donnees.TAB_PARTIE[0].ID_METEO_INITIALE;
                 //on envoit un message avec effet immédiat pour prévenir le joueur de l'arrivée de la troupe
-                foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+                for(int l=0; l< Donnees.m_donnees.TAB_PION.Count;l++)
                 {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                     if (lignePion.B_DETRUIT) { continue; }//plutot curieux une unité détruite en début de partie mais...
                     lignePion.B_TELEPORTATION = true;//le pion arrive sur la carte
                 }
             }
 
             #region Teleportation, pions nouvellement arrivés ou modification de la position par l'arbitre (pour le placement initial par exemple)
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (lignePion.B_DETRUIT || !lignePion.B_TELEPORTATION) { continue; }
                 //s'il y a un ordre courant, il faut changer la case de depart
                 Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
@@ -307,8 +309,9 @@ namespace vaoc
 
                 /************ A la fin de l'heure ****************/
                 //on regarde toutes les unités qui participent à un combat
-                foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
+                    Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];
                     if (!ligneBataille.EffectuerBataille(out m_bFinDeBataille))
                     {
                         messageErreur = "Erreur durant le traitement EffectuerBataille";
@@ -464,8 +467,9 @@ namespace vaoc
                     //Si une bataille est en cours et qu'il fait jour on ne fait jamais plus de deux heures de suite
                     if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && nbTourExecutes >= 2)
                     {
-                        foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                        for (int l=0; l< Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                         {
+                            Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];
                             if (ligneBataille.IsI_TOUR_FINNull())
                             {
                                 bTourSuivant = false;
@@ -814,8 +818,9 @@ namespace vaoc
             }*/
 
             List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (!lignePion.B_DETRUIT)
                 {
                     liste.Add(lignePion);
@@ -833,8 +838,9 @@ namespace vaoc
         private bool ExecuterMouvementAvecEffectifsEnParallele()
         {
             List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0)
                 {
                     liste.Add(lignePion);
@@ -847,8 +853,9 @@ namespace vaoc
         private bool ExecuterMouvementSansEffectifsEnParallele()
         {
             List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotal)
                 {
                     liste.Add(lignePion);
@@ -867,14 +874,16 @@ namespace vaoc
             //on constitue la liste des cases de chaque nation
             Dictionary<int, List<Donnees.TAB_CASERow>> lignesCasesProprietaires = new Dictionary<int, List<Donnees.TAB_CASERow>>();
             //List<Donnees.TAB_CASERow>[] lignesCasesProprietaires = new List<Donnees.TAB_CASERow>[Donnees.m_donnees.TAB_NATION.Count];
-            foreach (Donnees.TAB_NATIONRow ligneNation in Donnees.m_donnees.TAB_NATION)
+            for (int l=0; l< Donnees.m_donnees.TAB_NATION.Count; l++)
             {
+                Donnees.TAB_NATIONRow ligneNation = Donnees.m_donnees.TAB_NATION[l];
                 lignesCasesProprietaires.Add(ligneNation.ID_NATION, new List<Donnees.TAB_CASERow>());
             }
 
             //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(174, 482);
-            foreach (Donnees.TAB_CASERow ligneCase in Donnees.m_donnees.TAB_CASE)
+            for (int l=0; l< Donnees.m_donnees.TAB_CASE.Count; l++)
             {
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE[l];
                 if (!ligneCase.IsID_PROPRIETAIRENull())
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
@@ -894,12 +903,14 @@ namespace vaoc
                 {
                     List<Donnees.TAB_CASERow> lignesCasesProprietairesTest = lignesCasesProprietaires.ElementAt(j).Value;
 
-                    foreach (Donnees.TAB_CASERow ligneCaseBase in lignesCasesProprietairesBase)
+                    for (int l=0; l< lignesCasesProprietairesBase.Count;l++)
                     {
+                        Donnees.TAB_CASERow ligneCaseBase = lignesCasesProprietairesBase[l];
                         Donnees.TAB_PIONRow lignePionBase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBase.ID_PROPRIETAIRE);
                         bool enMouvementBase= lignePionBase.enMouvement;
-                        foreach (Donnees.TAB_CASERow ligneCaseTest in lignesCasesProprietairesTest)
+                        for (int ll= 0; ll < lignesCasesProprietairesTest.Count; ll++)
                         {
+                            Donnees.TAB_CASERow ligneCaseTest = lignesCasesProprietairesTest[ll];
                             double distance = Constantes.Distance(ligneCaseBase.I_X, ligneCaseBase.I_Y, ligneCaseTest.I_X, ligneCaseTest.I_Y);
                             if (distance < distanceMin)
                             {
@@ -1303,8 +1314,9 @@ namespace vaoc
                     //alors la partie s'arrête
                     victoire[0] = victoire[1] = 0;
                     defaite[0] = defaite[1] = 0;
-                    foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+                    for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                         if (lignePion.effectifTotal > 0 && !lignePion.B_DETRUIT && !lignePion.estPrisonniers && !lignePion.estBlesses)
                         {
                             //unité combattante
@@ -1321,8 +1333,9 @@ namespace vaoc
                         }
                     }
 
-                    foreach (Donnees.TAB_RENFORTRow ligneRenfort in Donnees.m_donnees.TAB_RENFORT)
+                    for (int l=0; l<Donnees.m_donnees.TAB_RENFORT.Count; l++)
                     {
+                        Donnees.TAB_RENFORTRow ligneRenfort = Donnees.m_donnees.TAB_RENFORT[l];
                         if (ligneRenfort.effectifTotal > 0)
                         {
                             ligneModelePion = Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(ligneRenfort.ID_MODELE_PION);
@@ -1544,8 +1557,9 @@ namespace vaoc
             #region Réduction des tours de fuite
             LogFile.Notifier("**** Réduction des tours de fuite ****");
 
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (lignePion.B_DETRUIT) { continue; }
                 Donnees.TAB_BATAILLERow ligneBataille = null;
                 if (!lignePion.IsID_BATAILLENull())
@@ -1740,8 +1754,9 @@ namespace vaoc
                     Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                     zone[0] = zone[1] = 0;
-                    foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
+                    for (int l=0; l< lignesCaseRecherche.Count(); l++)
                     {
+                        Donnees.TAB_CASERow ligneCaseRecherche = lignesCaseRecherche[l];
                         if (!ligneCaseRecherche.EstInnocupe()) //.ID_PROPRIETAIRE. != DataSetCoutDonnees.CST_AUCUNPROPRIETAIRE)
                         {
                             lignePion = ligneCaseRecherche.TrouvePionSurCase();
@@ -1787,8 +1802,9 @@ namespace vaoc
                             requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
                             Monitor.Enter(Donnees.m_donnees.TAB_PION);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            foreach (Donnees.TAB_PIONRow lignePionBlesses in lignesPionResultat)
+                            for (int l=0; l<lignesPionResultat.Count(); l++)
                             {
+                                Donnees.TAB_PIONRow lignePionBlesses = lignesPionResultat[l];
                                 if (lignePionBlesses.effectifTotal / 2 < Constantes.CST_TAILLE_MINIMUM_UNITE)
                                 {
                                     //Il n'y a plus assez de blessés pour constituer une unité de renforts suffisants
@@ -1810,8 +1826,9 @@ namespace vaoc
                             requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                             Monitor.Enter(Donnees.m_donnees.TAB_PION);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            foreach (Donnees.TAB_PIONRow lignePionPrisonniers in lignesPionResultat)
+                            for (int l=0; l<lignesPionResultat.Count(); l++)
                             {
+                                Donnees.TAB_PIONRow lignePionPrisonniers = lignesPionResultat[l];
                                 lignePionPrisonniers.B_PRISONNIERS = false;
                                 lignePionPrisonniers.SetID_LIEU_RATTACHEMENTNull();
                                 lignePionPrisonniers.S_NOM = "Renforts de " + lignePionPrisonniers.S_NOM;
@@ -1849,22 +1866,25 @@ namespace vaoc
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             Monitor.Enter(Donnees.m_donnees.TAB_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            foreach (Donnees.TAB_PIONRow lignePion in resPions)
+            for (int l=0; l< resPions.Count(); l++)
             {
+                Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
 
             requete = string.Format("ID_NOUVEAU_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            foreach (Donnees.TAB_PIONRow lignePion in resPions)
+            for (int l = 0; l < resPions.Count(); l++)
             {
+                Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_NOUVEAU_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
 
             requete = string.Format("ID_ANCIEN_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            foreach (Donnees.TAB_PIONRow lignePion in resPions)
+            for (int l = 0; l < resPions.Count(); l++)
             {
+                Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_ANCIEN_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
             Monitor.Exit(Donnees.m_donnees.TAB_PION);
@@ -1872,8 +1892,9 @@ namespace vaoc
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
             resMessages = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
-            foreach (Donnees.TAB_MESSAGERow ligneMessage in resMessages)
+            for (int l=0; l<resMessages.Count(); l++)
             {
+                Donnees.TAB_MESSAGERow ligneMessage = resMessages[l];
                 ligneMessage.ID_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
             Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
@@ -2700,8 +2721,9 @@ namespace vaoc
             #endregion
 
             //initialisation des unités -> déjà fait dans FinDuJour/FatigueEtRepos mais au cas où...
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 lignePion.I_NB_PHASES_MARCHE_JOUR = 0;
                 lignePion.I_NB_PHASES_MARCHE_NUIT = 0;
                 lignePion.I_NB_HEURES_COMBAT = 0;
@@ -2777,8 +2799,9 @@ namespace vaoc
                     string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
                     Monitor.Enter(Donnees.m_donnees.TAB_PION);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    foreach(Donnees.TAB_PIONRow lignePion in lignesPionResultat)
+                    for(int l=0; l<lignesPionResultat.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
                         if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal>0))
                         {
                             //cela fait-il une semaine que l'unité a rejoint l'hopital
@@ -2856,8 +2879,9 @@ namespace vaoc
                     //recherche de toutes les unités rattachés à ce nom
                     string requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    foreach (Donnees.TAB_PIONRow lignePion in lignesPionResultat)
+                    for (int l=0; l<lignesPionResultat.Count(); l++)
                     {
+                        Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
                         if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal > 0))
                         {
                             // pour le rapport d'effectifs
@@ -3169,7 +3193,7 @@ namespace vaoc
             }
             */
 
-            TestCreationUnite(0, 1);
+            //TestCreationUnite(0, 1);
             ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
             if (null != ligneOrdre)
@@ -4559,9 +4583,10 @@ namespace vaoc
             string requete = "(ID_PROPRIETAIRE IS NOT NULL) OR (ID_NOUVEAU_PROPRIETAIRE IS NOT NULL)";
             Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
             Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-            foreach (Donnees.TAB_CASERow ligneChange in changeRows)
+            for (int l=0; l<changeRows.Count(); l++)
             {
-                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                //Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                Donnees.TAB_CASERow ligne = changeRows[l];
                 if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
                 {
                     ligne.SetID_PROPRIETAIRENull();

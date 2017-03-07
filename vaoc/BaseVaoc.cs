@@ -9,9 +9,6 @@ namespace vaoc
 {
     partial class Donnees
     {
-        partial class TAB_PIONDataTable
-        {
-        }
         #region variables
         public static Donnees m_donnees;
         #endregion
@@ -366,6 +363,7 @@ namespace vaoc
                 }
                 id_messageGlobal++;
 
+                LogFile.Notifier("AjouterMessage");
                 TAB_MESSAGERow rowTAB_MESSAGERow = ((TAB_MESSAGERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         id_messageGlobal,

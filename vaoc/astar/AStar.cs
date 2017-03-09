@@ -741,8 +741,9 @@ namespace vaoc
                         {
                             string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",
                                 trackSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
-
+                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
                             Donnees.TAB_PCC_COUTSRow[] lignesCout = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
+                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
                             if (null != lignesCout && lignesCout.Length > 0)
                             {
                                 /*
@@ -1088,7 +1089,9 @@ namespace vaoc
 
                 //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
                 requete = string.Format("I_COUT<{0}", CST_COUTMAX);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                 listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                 if (listeCaseEspace.Count() < m_espace)
                 {
                     erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
@@ -1389,7 +1392,9 @@ namespace vaoc
             {
                 requete = string.Format("ID_PION={0}", lignePion.ID_PION);
                 tri = "I_ORDRE";
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
                 parcoursExistant = (Donnees.TAB_PARCOURSRow[])Donnees.m_donnees.TAB_PARCOURS.Select(requete, tri);
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
 
                 if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
                 {

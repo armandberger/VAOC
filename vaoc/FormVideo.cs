@@ -16,7 +16,9 @@ namespace vaoc
         private Cursor m_oldcurseur;
         private List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
         private List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
+        private List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
         private string[] m_texteImages;
+        delegate void FinTraitementCallBack(string strErreur);
 
         public FormVideo()
         {
@@ -133,11 +135,10 @@ namespace vaoc
                     System.Nullable<int> victoires =
                         (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == i)
-                            && (video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                            && ((true == video.B_DETRUIT) || (true == video.B_FUITE_AU_COMBAT))
-                            && (video.I_INFANTERIE_INITIALE>0 || video.I_CAVALERIE_INITIALE>0)
-                         select video.ID_PION)
-                        .Count();
+                            && ((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
+                            && ((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (false == video.B_DETRUIT || false == video.B_FUITE_AU_COMBAT))
+                         select video.I_VICTOIRE)
+                        .Sum();
                     
                     EffectifEtVictoire effV = new EffectifEtVictoire();
                     effV.iTour = i;
@@ -155,6 +156,53 @@ namespace vaoc
                 {
                  * */
             }
+
+            //On ajoute les unites à représenter à l'écran
+            for (int j=0; j<Donnees.m_donnees.TAB_VIDEO.Count; j++)
+            {
+                Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[j];
+                if (ligneVideo.ID_PION < 0) 
+                { 
+                    continue; //case comptant seulement pour les points de victoire
+                }
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
+                UniteRemarquable unite = new UniteRemarquable();
+                unite.iNation = ligneVideo.ID_NATION;
+                unite.iTour = ligneVideo.I_TOUR;
+                unite.i_X_CASE = ligneCase.I_X;
+                unite.i_Y_CASE = ligneCase.I_Y;
+                if ('D'==ligneVideo.C_NIVEAU_DEPOT)
+                {
+                    unite.tipe = TIPEUNITEVIDEO.CONVOI;
+                }
+                else
+                {
+                    if ('A' == ligneVideo.C_NIVEAU_DEPOT || 'B' == ligneVideo.C_NIVEAU_DEPOT || 'C' == ligneVideo.C_NIVEAU_DEPOT || 'D' == ligneVideo.C_NIVEAU_DEPOT)
+                    {
+                        unite.tipe = TIPEUNITEVIDEO.DEPOT;
+                    }
+                    else
+                    {
+                        if (0 == ligneVideo.I_INFANTERIE_INITIALE && 0 == ligneVideo.I_CAVALERIE_INITIALE && ligneVideo.I_ARTILLERIE_INITIALE > 0)
+                        {
+                            unite.tipe = TIPEUNITEVIDEO.ARTILLERIE;
+                        }
+                        else
+                        {
+                            if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
+                            {
+                                unite.tipe = TIPEUNITEVIDEO.CAVALERIE;
+                            }
+                            else
+                            {
+                                unite.tipe = TIPEUNITEVIDEO.INFANTERIE;
+                            }
+                        }
+                    }
+                }
+                
+                m_unitesRemarquables.Add(unite);
+            }            
 
             /* -> deporté dans un traitement background ci-dessous
             FabricantDeFilm film = new FabricantDeFilm();
@@ -213,7 +261,7 @@ namespace vaoc
                 erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
-                                        true, m_listeLieux, m_effectifsEtVictoires,
+                                        true, m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE,
                                         travailleur);
                 if (string.Empty != erreurTraitement)
                 {
@@ -235,15 +283,21 @@ namespace vaoc
                     }
                 }
                 cineaste.Terminer();
-                this.buttonOuvrirFilm.Enabled = true;
-                Cursor = m_oldcurseur;
-                MessageBox.Show(erreurTraitement, "Fabricant de Film", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FinTraitementCallBack cb = new FinTraitementCallBack(FinTraitement);
+                this.Invoke(cb, new object[] { erreurTraitement });
             }
             catch (Exception ex)
             {
                 travailleur.CancelAsync();
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void FinTraitement(string strErreur)
+        {
+            this.buttonOuvrirFilm.Enabled = true;
+            Cursor = m_oldcurseur;
+            MessageBox.Show(strErreur, "Fabricant de Film", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

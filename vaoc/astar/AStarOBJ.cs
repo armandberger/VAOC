@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WaocLib;//pour la Dal
 
@@ -717,9 +718,10 @@ namespace vaoc
                             string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",
                                 TrackOBJSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
 
+                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
                             Donnees.TAB_PCC_COUTSRow[] lignesCout1 = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
                             IEnumerable<LignePCC_COUTS> lignesCout = BD.Base.PccCouts.ListeLiensPointBloc(TrackOBJSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
-                                                              
+                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
 
                             if (null != lignesCout && lignesCout.Count() > 0)
                             {

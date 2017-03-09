@@ -90,13 +90,15 @@ namespace vaoc
             this.label3 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this.buttonCarteTopographique = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.textBoxNbPtsVictoire = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeureInitiale)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(234, 484);
+            this.buttonValider.Location = new System.Drawing.Point(234, 498);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 18;
@@ -106,7 +108,7 @@ namespace vaoc
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(527, 482);
+            this.buttonAnnuler.Location = new System.Drawing.Point(527, 496);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 19;
@@ -678,11 +680,33 @@ namespace vaoc
             this.buttonCarteTopographique.UseVisualStyleBackColor = true;
             this.buttonCarteTopographique.Click += new System.EventHandler(this.buttonCarteTopographique_Click);
             // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(18, 458);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(165, 13);
+            this.label28.TabIndex = 73;
+            this.label28.Text = "Nombre total de points de victoire";
+            // 
+            // textBoxNbPtsVictoire
+            // 
+            this.textBoxNbPtsVictoire.Location = new System.Drawing.Point(189, 453);
+            this.textBoxNbPtsVictoire.MaxLength = 5;
+            this.textBoxNbPtsVictoire.Name = "textBoxNbPtsVictoire";
+            this.textBoxNbPtsVictoire.ReadOnly = true;
+            this.textBoxNbPtsVictoire.Size = new System.Drawing.Size(104, 20);
+            this.textBoxNbPtsVictoire.TabIndex = 74;
+            this.textBoxNbPtsVictoire.Tag = "";
+            this.textBoxNbPtsVictoire.Text = "Calcul automatique";
+            // 
             // FormGeneral
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 517);
+            this.ClientSize = new System.Drawing.Size(831, 531);
+            this.Controls.Add(this.textBoxNbPtsVictoire);
+            this.Controls.Add(this.label28);
             this.Controls.Add(this.buttonCarteTopographique);
             this.Controls.Add(this.label29);
             this.Controls.Add(this.label3);
@@ -818,5 +842,7 @@ namespace vaoc
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Button buttonCarteTopographique;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.TextBox textBoxNbPtsVictoire;
     }
 }

@@ -128,18 +128,6 @@ namespace vaoc
                     idCaseDebut = lignePion.ID_CASE;
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
-                int iVictoire = 0;
-                if (lignePion.IsI_VICTOIRENull())
-                {
-                    if (lignePion.estCombattifQG(false,true))
-                    {
-                        iVictoire = 1;
-                    }
-                }
-                else
-                {
-                    iVictoire = lignePion.I_VICTOIRE;
-                }
                 Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
                     lignePion.nation.ID_NATION,
@@ -164,9 +152,44 @@ namespace vaoc
                     lignePion.B_BLESSES,
                     lignePion.B_PRISONNIERS,
                     lignePion.C_NIVEAU_DEPOT,
-                    iVictoire
+                    lignePion.I_VICTOIRE
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
+            }
+
+            foreach( Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            {
+                if (ligneNomCarte.IsID_NATION_CONTROLENull() || ligneNomCarte.ID_NATION_CONTROLE<0)
+                { 
+                    continue;  
+                }
+                Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
+                    m_traitement,
+                    ligneNomCarte.ID_NATION_CONTROLE,
+                    -1,//lignePion.ID_PION,
+                    -1,//lignePion.ID_MODELE_PION,
+                    -1,//lignePion.ID_PION_PROPRIETAIRE,
+                    ligneNomCarte.S_NOM,
+                    0, //lignePion.I_INFANTERIE,
+                    0, //lignePion.I_INFANTERIE_INITIALE,
+                    0, //lignePion.I_CAVALERIE,
+                    0, //lignePion.I_CAVALERIE_INITIALE,
+                    0, //lignePion.I_ARTILLERIE,
+                    0, //lignePion.I_ARTILLERIE_INITIALE,
+                    0, //lignePion.I_FATIGUE,
+                    0, //lignePion.I_MORAL,
+                    -1,//idCaseDebut,
+                    -1, //lignePion.ID_BATAILLE,
+                    false, //lignePion.B_DETRUIT,
+                    false, //lignePion.B_FUITE_AU_COMBAT,
+                    0, //lignePion.I_MATERIEL,
+                    0, //lignePion.I_RAVITAILLEMENT,
+                    false, //lignePion.B_BLESSES,
+                    false, //lignePion.B_PRISONNIERS,
+                    ' ',//lignePion.C_NIVEAU_DEPOT,
+                    ligneNomCarte.I_VICTOIRE
+                );
+
             }
         }
     }

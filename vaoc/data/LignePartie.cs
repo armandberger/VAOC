@@ -26,6 +26,7 @@ namespace vaoc
         public bool FL_DEMARRAGE { get; set; }
         public int I_TOUR_NOTIFICATION { get; set; }
         public int I_NB_METEO_SUCCESSIVE { get; set; }
+        public int I_NB_TOTAL_VICTOIRE { get; set; }
 
         public LignePARTIE(Donnees.TAB_PARTIERow ligneXML)
         {
@@ -53,6 +54,7 @@ namespace vaoc
             FL_DEMARRAGE = ligneXML.FL_DEMARRAGE;
             I_TOUR_NOTIFICATION = ligneXML.I_TOUR_NOTIFICATION;
             I_NB_METEO_SUCCESSIVE = ligneXML.I_NB_METEO_SUCCESSIVE;
+            I_NB_TOTAL_VICTOIRE = ligneXML.I_NB_TOTAL_VICTOIRE;
         }
     }
 }

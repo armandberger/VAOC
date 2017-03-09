@@ -126,6 +126,8 @@ namespace vaoc
             */
             #endregion
 
+            CalculNombreTotalPointsDeVictoire();
+
             //pour chaque phase
             nbPhases = (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE) ? Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES : Donnees.m_donnees.TAB_PARTIE[0].I_PHASE + 1;
 
@@ -802,6 +804,30 @@ namespace vaoc
             #endregion
         }
 
+        /// <summary>
+        /// Calcul du nombre total de pts de victoire possibles sur la partie avec les unités et les noms de lieux
+        /// </summary>
+        private void CalculNombreTotalPointsDeVictoire()
+        {
+            System.Nullable<int> victoire =
+                (from pion in Donnees.m_donnees.TAB_PION
+                 select pion.I_VICTOIRE)
+                .Sum();
+
+            victoire +=
+                (from nom_carte in Donnees.m_donnees.TAB_NOMS_CARTE
+                 select nom_carte.I_VICTOIRE).Sum();
+
+            if (Donnees.m_donnees.TAB_PARTIE[0].IsI_NB_TOTAL_VICTOIRENull())
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE = victoire.Value;
+            }
+            else
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE = Math.Max(victoire.Value, Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE);
+            }
+        }
+
         private bool ExecuterActionHorsMouvementEnParallele()
         {
             /*i = 0;
@@ -827,12 +853,19 @@ namespace vaoc
                 }
             }
             //Parallel.ForEach(liste, item => ExecuterOrdreHorsMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));             
-
-            ParallelLoopResult result = Parallel.ForEach(liste, (item, loopstate) =>
+            try
+            {
+                ParallelLoopResult result = Parallel.ForEach(liste, (item, loopstate) =>
                 {
                     if (!ExecuterOrdreHorsMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) loopstate.Break();
                 });
-            return result.IsCompleted;
+                return result.IsCompleted;
+            }
+            catch(AggregateException ex)
+            {
+                LogFile.Notifier("ExecuterActionHorsMouvementEnParallele Exception" + ex.Message + " trace:" + ex.StackTrace);
+            }
+            return true;
         }
 
         private bool ExecuterMouvementAvecEffectifsEnParallele()
@@ -846,7 +879,14 @@ namespace vaoc
                     liste.Add(lignePion);
                 }
             }
-            Parallel.ForEach(liste, item => ExecuterMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));
+            try
+            {
+                Parallel.ForEach(liste, item => ExecuterMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));
+            }
+            catch (AggregateException ex)
+            {
+                LogFile.Notifier("ExecuterMouvementAvecEffectifsEnParallele Exception" + ex.Message + " trace:" + ex.StackTrace);
+            }
             return true;
         }
 
@@ -861,7 +901,14 @@ namespace vaoc
                     liste.Add(lignePion);
                 }
             }
-            Parallel.ForEach(liste, item => ExecuterMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));
+            try
+            {
+                Parallel.ForEach(liste, item => ExecuterMouvement(item, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE));
+            }
+            catch (AggregateException ex)
+            {
+                LogFile.Notifier("ExecuterMouvementAvecEffectifsEnParallele Exception" + ex.Message + " trace:" + ex.StackTrace);
+            }
             return true;
         }
 

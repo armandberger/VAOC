@@ -35,15 +35,21 @@ namespace vaoc
 
                 //recherche le modèle du pion
                 requete = string.Format("ID_MODELE_PION={0}", this.ID_MODELE_PION);
+                Monitor.Enter(m_donnees.TAB_MODELE_PION);
                 TAB_MODELE_PIONRow[] resModelePion = (TAB_MODELE_PIONRow[])m_donnees.TAB_MODELE_PION.Select(requete);
+                Monitor.Exit(m_donnees.TAB_MODELE_PION);
 
                 //recherche l'aptitude fournie en paramètre
                 requete = string.Format("S_NOM='{0}'", nomAptitude);
+                Monitor.Enter(m_donnees.TAB_APTITUDES);
                 TAB_APTITUDESRow[] resAptitude = (TAB_APTITUDESRow[])m_donnees.TAB_APTITUDES.Select(requete);
+                Monitor.Exit(m_donnees.TAB_APTITUDES);
 
                 //recherche si le modele de pion possède l'aptitude demandée
                 requete = string.Format("ID_MODELE_PION={0} AND ID_APTITUDE={1}", resModelePion[0].ID_MODELE_PION, resAptitude[0].ID_APTITUDE);
+                Monitor.Enter(m_donnees.TAB_APTITUDES_PION);
                 TAB_APTITUDES_PIONRow[] resAptitudesPion = (TAB_APTITUDES_PIONRow[])m_donnees.TAB_APTITUDES_PION.Select(requete);
+                Monitor.Exit(m_donnees.TAB_APTITUDES_PION);
                 if (null == resAptitudesPion || 0 == resAptitudesPion.Length)
                 {
                     return false;
@@ -168,7 +174,9 @@ namespace vaoc
             {
                 string requete = string.Format("I_BLOCX={0} AND I_BLOCY={1}",
                     xBloc, yBloc);
+                Monitor.Enter(this);
                 TAB_PCC_CASE_BLOCSRow[] resCase = (TAB_PCC_CASE_BLOCSRow[])Select(requete);
+                Monitor.Exit(this);
                 return resCase;
             }
         }

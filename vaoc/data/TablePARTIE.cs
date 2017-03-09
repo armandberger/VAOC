@@ -46,7 +46,8 @@ namespace vaoc
                     (null == ligne.ID_VICTOIRE) ? -1 : (int)ligne.ID_VICTOIRE,
                     ligne.FL_DEMARRAGE,
                     ligne.I_TOUR_NOTIFICATION,
-                    ligne.I_NB_METEO_SUCCESSIVE
+                    ligne.I_NB_METEO_SUCCESSIVE,
+                    ligne.I_NB_TOTAL_VICTOIRE
                    );
                 if (null == ligne.ID_VICTOIRE) { ligneXML.SetID_VICTOIRENull();  }
             }

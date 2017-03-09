@@ -376,6 +376,14 @@ namespace vaoc
                 }
             }
         }
+
+        public int nbPointsTotalVictoire
+        {
+            set 
+            {
+                textBoxNbPtsVictoire.Text = Convert.ToString(value);
+            }
+        }
        #endregion
 
         private void buttonTestMessagerie_Click(object sender, EventArgs e)

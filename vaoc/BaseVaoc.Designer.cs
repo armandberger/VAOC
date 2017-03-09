@@ -3243,6 +3243,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_NB_METEO_SUCCESSIVE;
             
+            private global::System.Data.DataColumn columnI_NB_TOTAL_VICTOIRE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_PARTIEDataTable() {
@@ -3414,6 +3416,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_NB_TOTAL_VICTOIREColumn {
+                get {
+                    return this.columnI_NB_TOTAL_VICTOIRE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3466,7 +3476,8 @@ namespace vaoc {
                         int ID_VICTOIRE, 
                         bool FL_DEMARRAGE, 
                         int I_TOUR_NOTIFICATION, 
-                        int I_NB_METEO_SUCCESSIVE) {
+                        int I_NB_METEO_SUCCESSIVE, 
+                        int I_NB_TOTAL_VICTOIRE) {
                 TAB_PARTIERow rowTAB_PARTIERow = ((TAB_PARTIERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PARTIE,
@@ -3485,7 +3496,8 @@ namespace vaoc {
                         ID_VICTOIRE,
                         FL_DEMARRAGE,
                         I_TOUR_NOTIFICATION,
-                        I_NB_METEO_SUCCESSIVE};
+                        I_NB_METEO_SUCCESSIVE,
+                        I_NB_TOTAL_VICTOIRE};
                 rowTAB_PARTIERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PARTIERow);
                 return rowTAB_PARTIERow;
@@ -3532,6 +3544,7 @@ namespace vaoc {
                 this.columnFL_DEMARRAGE = base.Columns["FL_DEMARRAGE"];
                 this.columnI_TOUR_NOTIFICATION = base.Columns["I_TOUR_NOTIFICATION"];
                 this.columnI_NB_METEO_SUCCESSIVE = base.Columns["I_NB_METEO_SUCCESSIVE"];
+                this.columnI_NB_TOTAL_VICTOIRE = base.Columns["I_NB_TOTAL_VICTOIRE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3571,6 +3584,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_TOUR_NOTIFICATION);
                 this.columnI_NB_METEO_SUCCESSIVE = new global::System.Data.DataColumn("I_NB_METEO_SUCCESSIVE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_NB_METEO_SUCCESSIVE);
+                this.columnI_NB_TOTAL_VICTOIRE = new global::System.Data.DataColumn("I_NB_TOTAL_VICTOIRE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_NB_TOTAL_VICTOIRE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PARTIE}, true));
                 this.columnID_PARTIE.AllowDBNull = false;
@@ -20923,6 +20938,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_NB_TOTAL_VICTOIRE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_PARTIE.I_NB_TOTAL_VICTOIREColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_NB_TOTAL_VICTOIRE\' dans la table \'TAB_PARTIE\' est DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PARTIE.I_NB_TOTAL_VICTOIREColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_JEUNull() {
                 return this.IsNull(this.tableTAB_PARTIE.ID_JEUColumn);
             }
@@ -21111,6 +21143,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_NB_METEO_SUCCESSIVENull() {
                 this[this.tableTAB_PARTIE.I_NB_METEO_SUCCESSIVEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_NB_TOTAL_VICTOIRENull() {
+                return this.IsNull(this.tableTAB_PARTIE.I_NB_TOTAL_VICTOIREColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_NB_TOTAL_VICTOIRENull() {
+                this[this.tableTAB_PARTIE.I_NB_TOTAL_VICTOIREColumn] = global::System.Convert.DBNull;
             }
         }
         

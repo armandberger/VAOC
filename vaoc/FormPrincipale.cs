@@ -1240,7 +1240,7 @@ namespace vaoc
                 general.rayonDeBataille = Donnees.m_donnees.TAB_JEU[0].I_RAYON_BATAILLE;
                 general.id_jeu = Donnees.m_donnees.TAB_JEU[0].ID_JEU;
                 general.objectifVictoire = Donnees.m_donnees.TAB_JEU[0].I_OBJECTIF;
-
+                
                 if (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_HISTORIQUENull())
                 {
                     general.nomCarte = Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE;
@@ -1277,6 +1277,10 @@ namespace vaoc
 
             if (Donnees.m_donnees.TAB_PARTIE.Count > 0)
             {
+                if (!Donnees.m_donnees.TAB_PARTIE[0].IsI_NB_TOTAL_VICTOIRENull())
+                {
+                    general.nbPointsTotalVictoire = Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE;
+                }
                 if (!Donnees.m_donnees.TAB_PARTIE[0].IsS_NOMNull())
                 {
                     general.nomPartie = Donnees.m_donnees.TAB_PARTIE[0].S_NOM;

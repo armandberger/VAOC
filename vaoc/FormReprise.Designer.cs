@@ -59,6 +59,8 @@
             // checkBoxSauvegarde
             // 
             this.checkBoxSauvegarde.AutoSize = true;
+            this.checkBoxSauvegarde.Checked = true;
+            this.checkBoxSauvegarde.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSauvegarde.Location = new System.Drawing.Point(12, 47);
             this.checkBoxSauvegarde.Name = "checkBoxSauvegarde";
             this.checkBoxSauvegarde.Size = new System.Drawing.Size(110, 17);

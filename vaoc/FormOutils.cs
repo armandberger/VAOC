@@ -46,7 +46,7 @@ namespace vaoc
         {
             Cursor oldcurseur = Cursor;
             string nomFichier, extensionFichier;
-            int i,j;
+            //int i,j;
 
             textBoxFichierImage.Text = textBoxFichierImage.Text;
             try
@@ -77,7 +77,7 @@ namespace vaoc
             {
                 string nomFichierFinal;
                 Rectangle rect;
-
+                /*
                 int l= Convert.ToInt32(textBoxLargeur.Text);
                 int h= Convert.ToInt32(textBoxHauteur.Text);
                 for (i = 0; i < l; i++)
@@ -91,6 +91,14 @@ namespace vaoc
                         SauvegardeDecoupeFichier(nomFichierFinal, rect);
                     }
                 }
+                */
+
+                #region coupure spécifique
+                rect = new Rectangle(0, 1128 * 5, m_imageCarte.Width, m_imageCarte.Height-1128*5);
+                nomFichierFinal = string.Format("{0}_{1}{2}", nomFichier, 1, extensionFichier);
+                SauvegardeDecoupeFichier(nomFichierFinal, rect);
+                #endregion
+
                 #region coupure en 4
                 //rect = new Rectangle(0, 0, m_imageCarte.Width / 2, m_imageCarte.Height / 2);
                 //nomFichierFinal = string.Format("{0}_{1}{2}", nomFichier, 1, extensionFichier);

@@ -62,22 +62,28 @@ namespace vaoc
                 //if (!Dal.ChargerPartie(Dal.NomFichierTourPhase(m_fichierSource, m_traitement, 0, false), Donnees.m_donnees))
                 if (!Donnees.m_donnees.ChargerPartie(nomfichier))
                 {
-                    return "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
+                    string message = "Erreur dans Dal.ChargerPartie, tour n°" + m_traitement.ToString();
+                    LogFile.Notifier(message);
+                    // bon, on continue, il manquera un tour voilà tout
+                    //return message;
                 }
-
-                if (0 == m_tableVideo.Rows.Count)
+                else
                 {
-                    m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);
-                }
+                    if (0 == m_tableVideo.Rows.Count)
+                    {
+                        m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);
+                    }
 
-                MiseAjourVideo(m_tableVideo);
+                    MiseAjourVideo(m_tableVideo);
+                    //CalculNombreTotalPointsDeVictoire(); -> pas possible I_VICTOIRE non renseigné
 
-                if (m_bAvecSauvegarde)
-                {
-                    Donnees.m_donnees.TAB_VIDEO.Clear();
-                    Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
-                    Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false);
-                    //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
+                    if (m_bAvecSauvegarde)
+                    {
+                        Donnees.m_donnees.TAB_VIDEO.Clear();
+                        Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
+                        Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false);
+                        //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
+                    }
                 }
 
                 m_traitement++;
@@ -152,7 +158,7 @@ namespace vaoc
                     lignePion.B_BLESSES,
                     lignePion.B_PRISONNIERS,
                     lignePion.C_NIVEAU_DEPOT,
-                    lignePion.I_VICTOIRE
+                    lignePion.IsI_VICTOIRENull() ? 0 : lignePion.I_VICTOIRE
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
             }
@@ -190,6 +196,30 @@ namespace vaoc
                     ligneNomCarte.I_VICTOIRE
                 );
 
+            }
+        }
+
+        /// <summary>
+        /// Calcul du nombre total de pts de victoire possibles sur la partie avec les unités et les noms de lieux
+        /// </summary>
+        private void CalculNombreTotalPointsDeVictoire()
+        {
+            System.Nullable<int> victoire =
+                (from pion in Donnees.m_donnees.TAB_PION
+                 select pion.I_VICTOIRE)
+                .Sum();
+
+            victoire +=
+                (from nom_carte in Donnees.m_donnees.TAB_NOMS_CARTE
+                 select nom_carte.I_VICTOIRE).Sum();
+
+            if (Donnees.m_donnees.TAB_PARTIE[0].IsI_NB_TOTAL_VICTOIRENull())
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE = victoire.Value;
+            }
+            else
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE = Math.Max(victoire.Value, Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE);
             }
         }
     }

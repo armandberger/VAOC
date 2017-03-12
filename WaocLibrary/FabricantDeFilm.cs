@@ -155,11 +155,11 @@ namespace WaocLib
 
                     //ajout des chiffres d'effectif à droite et à gauche
                     tailleTexte = G.MeasureString(999999.ToString("000,000"), police);
-                    m_largeurCote = (int)tailleTexte.Width;
+                    m_largeurCote = (int)tailleTexte.Width+1;
                     hauteurTexte = Math.Max(hauteurTexte, tailleTexte.Height);
 
-                    m_hauteurBandeau = (int)(hauteurTexte * 2);
-                    m_largeur = Math.Max((int)(largeurTexte * 1), m_largeur); // non, car on inclue pas les bords dans la taille d'image +2 * (int)(tailleTexte.Width * 2);
+                    m_hauteurBandeau = (int)(hauteurTexte * 1.5);
+                    m_largeur = Math.Max((int)(largeurTexte * 1)+1, m_largeur); // non, car on inclue pas les bords dans la taille d'image +2 * (int)(tailleTexte.Width * 2);
                     fichierImageSource.Dispose();
                 }
 
@@ -253,14 +253,17 @@ namespace WaocLib
                             G.DrawString(strEffectif, m_police, Brushes.Blue,
                                 new Rectangle((m_largeurCote - (int)tailleTexte.Width) / 2,
                                                 m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
-                                                (int)tailleTexte.Width, 
-                                                (int)tailleTexte.Height));
+                                                (int)tailleTexte.Width+1, 
+                                                (int)tailleTexte.Height+1));
                             //affichage de la barre de victoire
                             //barre inférieure
                             G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
                             //barre verticale (points)
                             int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
-                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART, m_hauteur - BARRE_EPAISSEUR - h, m_largeurCote - 2 * BARRE_ECART, h));                            
+                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART + m_largeurCote / 4, 
+                                                                        m_hauteur - BARRE_EPAISSEUR - h, 
+                                                                        m_largeurCote / 2 - 2 * BARRE_ECART, 
+                                                                        h));                            
                         }
                         else
                         {
@@ -268,15 +271,18 @@ namespace WaocLib
                             G.DrawString(strEffectif, m_police, Brushes.Red,
                                 new Rectangle(m_largeur + m_largeurCote - (m_largeurCote - (int)tailleTexte.Width) / 2,
                                                 m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
-                                                (int)tailleTexte.Width, 
-                                                (int)tailleTexte.Height));
+                                                (int)tailleTexte.Width+1, 
+                                                (int)tailleTexte.Height+1));
 
                             //affichage de la barre de victoire
                             //barre inférieure
                             G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
                             //barre verticale (points)
                             int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
-                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART, m_hauteur - BARRE_EPAISSEUR - h, m_largeurCote - 2 * BARRE_ECART, h));
+                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART + m_largeurCote / 4, 
+                                                                        m_hauteur - BARRE_EPAISSEUR - h, 
+                                                                        m_largeurCote / 2 - 2 * BARRE_ECART, 
+                                                                        h));
                         }
                     }
                 }

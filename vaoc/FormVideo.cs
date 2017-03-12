@@ -135,8 +135,8 @@ namespace vaoc
                     System.Nullable<int> victoires =
                         (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == i)
-                            && ((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
-                            && ((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (false == video.B_DETRUIT || false == video.B_FUITE_AU_COMBAT))
+                            && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
+                                || ((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (false == video.B_DETRUIT || false == video.B_FUITE_AU_COMBAT)))
                          select video.I_VICTOIRE)
                         .Sum();
                     

@@ -807,7 +807,7 @@ namespace vaoc
         /// <summary>
         /// Calcul du nombre total de pts de victoire possibles sur la partie avec les unités et les noms de lieux
         /// </summary>
-        private void CalculNombreTotalPointsDeVictoire()
+        public void CalculNombreTotalPointsDeVictoire()
         {
             System.Nullable<int> victoire =
                 (from pion in Donnees.m_donnees.TAB_PION

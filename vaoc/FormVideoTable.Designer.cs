@@ -31,9 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewVideo = new System.Windows.Forms.DataGridView();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
-            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataSetCoutDonnees = new vaoc.Donnees();
             this.iTOURDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +55,9 @@
             this.bPRISONNIERSDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.cNIVEAUDEPOTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iVICTOIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSetCoutDonnees = new vaoc.Donnees();
+            this.buttonAnnuler = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -108,26 +108,6 @@
             this.dataGridViewVideo.Name = "dataGridViewVideo";
             this.dataGridViewVideo.Size = new System.Drawing.Size(1424, 188);
             this.dataGridViewVideo.TabIndex = 10;
-            // 
-            // buttonAnnuler
-            // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(221, 312);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 12;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
-            // 
-            // tABBindingSource
-            // 
-            this.tABBindingSource.DataMember = "TAB_VIDEO";
-            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
-            // 
-            // dataSetCoutDonnees
-            // 
-            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
-            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // iTOURDataGridViewTextBoxColumn
             // 
@@ -273,16 +253,38 @@
             this.iVICTOIREDataGridViewTextBoxColumn.HeaderText = "I_VICTOIRE";
             this.iVICTOIREDataGridViewTextBoxColumn.Name = "iVICTOIREDataGridViewTextBoxColumn";
             // 
+            // tABBindingSource
+            // 
+            this.tABBindingSource.DataMember = "TAB_VIDEO";
+            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
+            // 
+            // dataSetCoutDonnees
+            // 
+            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
+            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // buttonAnnuler
+            // 
+            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonAnnuler.Location = new System.Drawing.Point(221, 312);
+            this.buttonAnnuler.Name = "buttonAnnuler";
+            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnnuler.TabIndex = 12;
+            this.buttonAnnuler.Text = "Annuler";
+            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            // 
             // FormVideoTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1268, 383);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(1458, 383);
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.dataGridViewVideo);
             this.Controls.Add(this.buttonValider);
             this.Name = "FormVideoTable";
             this.Text = "FormVideoTable";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormVideoTable_Load);
             this.Resize += new System.EventHandler(this.FormVideoTable_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).EndInit();

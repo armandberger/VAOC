@@ -44,19 +44,17 @@
             this.buttonRepertoireSource = new System.Windows.Forms.Button();
             this.buttonRepertoireSortie = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.buttonCreerFilmHistorique = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxMasque = new System.Windows.Forms.TextBox();
             this.buttonOuvrirFilm = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.checkBoxCarteUnites = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(91, 391);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 391);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -188,16 +186,6 @@
             this.buttonRepertoireSortie.UseVisualStyleBackColor = true;
             this.buttonRepertoireSortie.Click += new System.EventHandler(this.buttonRepertoireSortie_Click);
             // 
-            // buttonCreerFilmHistorique
-            // 
-            this.buttonCreerFilmHistorique.Location = new System.Drawing.Point(298, 391);
-            this.buttonCreerFilmHistorique.Name = "buttonCreerFilmHistorique";
-            this.buttonCreerFilmHistorique.Size = new System.Drawing.Size(120, 23);
-            this.buttonCreerFilmHistorique.TabIndex = 19;
-            this.buttonCreerFilmHistorique.Text = "Creer Film Historique";
-            this.buttonCreerFilmHistorique.UseVisualStyleBackColor = true;
-            this.buttonCreerFilmHistorique.Click += new System.EventHandler(this.buttonCreerFilmHistorique_Click);
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -227,24 +215,6 @@
             this.buttonOuvrirFilm.UseVisualStyleBackColor = true;
             this.buttonOuvrirFilm.Click += new System.EventHandler(this.buttonOuvrirFilm_Click);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(29, 391);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(63, 13);
-            this.label7.TabIndex = 23;
-            this.label7.Text = "Film simple :";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(193, 391);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(99, 13);
-            this.label8.TabIndex = 24;
-            this.label8.Text = "Film avec batailles :";
-            // 
             // progressBar
             // 
             this.progressBar.Location = new System.Drawing.Point(26, 355);
@@ -261,18 +231,27 @@
             this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             // 
+            // checkBoxCarteUnites
+            // 
+            this.checkBoxCarteUnites.AutoSize = true;
+            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 391);
+            this.checkBoxCarteUnites.Name = "checkBoxCarteUnites";
+            this.checkBoxCarteUnites.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxCarteUnites.TabIndex = 26;
+            this.checkBoxCarteUnites.Text = "cartes avec unités";
+            this.checkBoxCarteUnites.UseVisualStyleBackColor = true;
+            this.checkBoxCarteUnites.CheckedChanged += new System.EventHandler(this.checkBoxCarteUnites_CheckedChanged);
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 426);
+            this.Controls.Add(this.checkBoxCarteUnites);
             this.Controls.Add(this.progressBar);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.buttonOuvrirFilm);
             this.Controls.Add(this.textBoxMasque);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.buttonCreerFilmHistorique);
             this.Controls.Add(this.buttonRepertoireSortie);
             this.Controls.Add(this.buttonRepertoireSource);
             this.Controls.Add(this.labelPolice);
@@ -312,14 +291,12 @@
         private System.Windows.Forms.Button buttonRepertoireSource;
         private System.Windows.Forms.Button buttonRepertoireSortie;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
-        private System.Windows.Forms.Button buttonCreerFilmHistorique;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxMasque;
         private System.Windows.Forms.Button buttonOuvrirFilm;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
+        private System.Windows.Forms.CheckBox checkBoxCarteUnites;
     }
 }
 

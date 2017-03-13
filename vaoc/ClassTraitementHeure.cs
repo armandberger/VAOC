@@ -4765,38 +4765,74 @@ namespace vaoc
         /// </summary>
         /// <param name="idNation">nation de l'unité</param>
         /// <param name="nbUnites">nombre d'unités</param>
+        /// <summary>
+
+        /// Creation d'unitées fictives pour faire des tests de performances
+
+        /// </summary>
+
+        /// <param name="idNation">nation de l'unité</param>
+
+        /// <param name="nbUnites">nombre d'unités</param>
+
         private void TestCreationUnite(int idNation, int nbUnites)
         {
             Random hasard = new Random();
             for (int i = 0; i < nbUnites; i++)
             {
-                string requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
-                Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                string requete;
+                Donnees.TAB_MODELE_PIONRow[] resModelePion;
                 int iInfanterie = 0, iCavalerie = 0, iArtillerie = 0;
-                switch (hasard.Next(3))
+                char niveauDepot = 'Z';
+                int idModelePion;
+
+                switch (i % 6)
                 {
                     case 0:
                         //unité d'infanterie
                         iInfanterie = 1000 + hasard.Next(10) * 1000;
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
                         break;
                     case 1:
                         //unité de cavalerie
                         iCavalerie = 500 + hasard.Next(10) * 500;
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                        break;
+                    case 2:
+                        niveauDepot = 'D';
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Convoi'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                        break;
+                    case 3:
+                        niveauDepot = 'B';
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Depot'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
+                        break;
+                    case 4:
+                        //unité d'artillerie
+                        iArtillerie = hasard.Next(10);
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
                         break;
                     default:
                         //unité mixte
                         iInfanterie = 1000 + hasard.Next(10) * 1000;
                         iCavalerie = 500 + hasard.Next(10) * 500;
                         iArtillerie = hasard.Next(10);
+                        requete = string.Format("ID_NATION={0} AND S_NOM='Division'", idNation);
+                        resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
                         break;
                 }
+                idModelePion = resModelePion[0].ID_MODELE_PION;
                 int idCase;
                 //idCase = Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE;
                 //Note : il ne faut pas qu'une unité commence sur un bord de carte ou cela fait planter l'algorithme de recherche
                 idCase = Donnees.m_donnees.TAB_CASE.FindByXY((i + 1) * 30, (i + 1) * 30).ID_CASE;
                 Monitor.Enter(Donnees.m_donnees.TAB_PION);
                 Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
-                    resModelePion[0].ID_MODELE_PION,
+                    idModelePion,
                     -1,//ID_PION_PROPRIETAIRE
                     -1,
                     -1,
@@ -4826,9 +4862,9 @@ namespace vaoc
                     false,//B_PRISONNIERS,
                     false,//B_RENFORT
                     -1,//ID_LIEU_RATTACHEMENT,
-                    'Z',//C_NIVEAU_DEPOT
-                    -1,//ID_PION_ESCORTE, 
-                    0,//I_INFANTERIE_ESCORTE, 
+                    niveauDepot,//C_NIVEAU_DEPOT
+                    -1,//ID_PION_ESCORTE,
+                    0,//I_INFANTERIE_ESCORTE,
                     0,//I_CAVALERIE_ESCORTE
                     0,//I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
@@ -4847,5 +4883,5 @@ namespace vaoc
                 Monitor.Exit(Donnees.m_donnees.TAB_PION);
             }
         }
-    }
+   }
 }

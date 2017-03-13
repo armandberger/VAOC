@@ -19,13 +19,12 @@ namespace vaoc
         private List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
         private string[] m_texteImages;
         delegate void FinTraitementCallBack(string strErreur);
+        private string m_repertoireSource;
 
         public FormVideo()
         {
             InitializeComponent();
             labelPolice.Text = labelPolice.Font.ToString();
-            //initialisation des repertoires et données
-            this.textBoxMasque.Text = "carte_general_*.png";
         }
 
         public string fichierCourant { get; set; }
@@ -34,28 +33,10 @@ namespace vaoc
         {
             set
             {
-                string repertoireHistorique = string.Format("{0}{1}_{2}_historique",
-                    value,
-                    Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
-                    Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""));
-                this.textBoxRepertoireImages.Text = repertoireHistorique;
-                this.textBoxRepertoireVideo.Text = repertoireHistorique;
+                m_repertoireSource = value;
+                //initialisation des repertoires et données
+                InitialisationRepertoire();
             }
-        }
-
-        private void buttonCreerFilm_Click(object sender, EventArgs e)
-        {
-            this.buttonOuvrirFilm.Enabled = false;
-            FabricantDeFilm film = new FabricantDeFilm();
-            string retour = film.CreerFilm(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
-                                        this.textBoxMasque.Text, null, 
-                                        Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text), false, null);
-            if (string.Empty != retour)
-            {
-                MessageBox.Show("Erreur lors de la création du film :" + retour);
-            }
-            MessageBox.Show("film crée");
-            this.buttonOuvrirFilm.Enabled = true;
         }
 
         private void buttonChoixPolice_Click(object sender, EventArgs e)
@@ -93,7 +74,7 @@ namespace vaoc
             }
         }
 
-        private void buttonCreerFilmHistorique_Click(object sender, EventArgs e)
+        private void buttonCreerFilm_Click(object sender, EventArgs e)
         {
             m_texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1];
             this.buttonOuvrirFilm.Enabled = false;
@@ -165,43 +146,40 @@ namespace vaoc
                 { 
                     continue; //case comptant seulement pour les points de victoire
                 }
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
+                if (lignePion.estQG)
+                {
+                    continue; //on n'affiche pas les QG
+                }
+                
                 UniteRemarquable unite = new UniteRemarquable();
                 unite.iNation = ligneVideo.ID_NATION;
                 unite.iTour = ligneVideo.I_TOUR;
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
                 unite.i_X_CASE = ligneCase.I_X;
                 unite.i_Y_CASE = ligneCase.I_Y;
-                if ('D'==ligneVideo.C_NIVEAU_DEPOT)
+                m_unitesRemarquables.Add(unite);
+                if (lignePion.estConvoiDeRavitaillement)
                 {
                     unite.tipe = TIPEUNITEVIDEO.CONVOI;
+                    continue;
                 }
-                else
+                if (lignePion.estDepot)
                 {
-                    if ('A' == ligneVideo.C_NIVEAU_DEPOT || 'B' == ligneVideo.C_NIVEAU_DEPOT || 'C' == ligneVideo.C_NIVEAU_DEPOT || 'D' == ligneVideo.C_NIVEAU_DEPOT)
-                    {
-                        unite.tipe = TIPEUNITEVIDEO.DEPOT;
-                    }
-                    else
-                    {
-                        if (0 == ligneVideo.I_INFANTERIE_INITIALE && 0 == ligneVideo.I_CAVALERIE_INITIALE && ligneVideo.I_ARTILLERIE_INITIALE > 0)
-                        {
-                            unite.tipe = TIPEUNITEVIDEO.ARTILLERIE;
-                        }
-                        else
-                        {
-                            if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
-                            {
-                                unite.tipe = TIPEUNITEVIDEO.CAVALERIE;
-                            }
-                            else
-                            {
-                                unite.tipe = TIPEUNITEVIDEO.INFANTERIE;
-                            }
-                        }
-                    }
+                    unite.tipe = TIPEUNITEVIDEO.DEPOT;
+                    continue;
                 }
-                
-                m_unitesRemarquables.Add(unite);
+                if (lignePion.estArtillerie)
+                {
+                    unite.tipe = TIPEUNITEVIDEO.ARTILLERIE;
+                    continue;
+                }
+                if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
+                {
+                    unite.tipe = TIPEUNITEVIDEO.CAVALERIE;
+                    continue;
+                }
+                unite.tipe = TIPEUNITEVIDEO.INFANTERIE;                
             }            
 
             /* -> deporté dans un traitement background ci-dessous
@@ -298,6 +276,31 @@ namespace vaoc
             this.buttonOuvrirFilm.Enabled = true;
             Cursor = m_oldcurseur;
             MessageBox.Show(strErreur, "Fabricant de Film", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void InitialisationRepertoire()
+        {
+            if (checkBoxCarteUnites.Checked)
+            {
+                textBoxMasque.Text = "*.png";
+                string repertoireHistorique = string.Format("{0}{1}_{2}_historique",
+                    m_repertoireSource,
+                    Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
+                    Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""));
+                this.textBoxRepertoireImages.Text = repertoireHistorique;
+                this.textBoxRepertoireVideo.Text = repertoireHistorique;
+            }
+            else
+            {
+                textBoxMasque.Text = Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE;
+                this.textBoxRepertoireImages.Text = m_repertoireSource[m_repertoireSource.Length -1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length-1) : m_repertoireSource;
+                this.textBoxRepertoireVideo.Text = m_repertoireSource;
+            }
+        }
+
+        private void checkBoxCarteUnites_CheckedChanged(object sender, EventArgs e)
+        {
+            InitialisationRepertoire();
         }
     }
 }

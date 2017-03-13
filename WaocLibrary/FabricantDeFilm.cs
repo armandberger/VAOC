@@ -5,10 +5,11 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace WaocLib
 {
-    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI};
+    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER};
 
     public class EffectifEtVictoire
     {
@@ -85,7 +86,8 @@ namespace WaocLib
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
         private const int BARRE_EPAISSEUR = 3;
-        private const int TAILLE_UNITE = 10;
+        private const int TAILLE_UNITE = 14;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
+        private const int EPAISSEUR_LIGNE_UNITE = 1;
 
         public FabricantDeFilm()
         {
@@ -210,6 +212,7 @@ namespace WaocLib
             Bitmap fichierImageSource;
             try
             {
+                Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
                 Bitmap fichierImage = new Bitmap(m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
@@ -320,32 +323,7 @@ namespace WaocLib
                         {
                             continue;
                         }
-                        Pen styloUnite = new Pen((unite.iNation==0) ? Color.Blue : Color.Red, 2);
-                        switch (unite.tipe)
-                        {
-                            case TIPEUNITEVIDEO.INFANTERIE:
-                                G.DrawRectangle(styloUnite,
-                                    m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE/2,
-                                    unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
-                                    TAILLE_UNITE,
-                                    TAILLE_UNITE);
-                                //barre haut gauche, bas droite
-                                G.DrawLine(styloUnite, 
-                                    m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE/2,
-                                    unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
-                                    m_largeurCote + unite.i_X_CASE * m_rapport + TAILLE_UNITE/2,
-                                    unite.i_Y_CASE * m_rapport + TAILLE_UNITE / 2
-                                    );
-                                //barre bas gauche, haut droite
-                                G.DrawLine(styloUnite, 
-                                    m_largeurCote + unite.i_X_CASE * m_rapport + TAILLE_UNITE/2,
-                                    unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
-                                    m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE/2,
-                                    unite.i_Y_CASE * m_rapport + TAILLE_UNITE / 2
-                                    );
-                                
-                                break;
-                        }
+                        DessineUnite(G, unite);
                     }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
@@ -376,6 +354,95 @@ namespace WaocLib
             catch (AviWriter.AviException e)
             {
                 return "AVI Exception in: " + e.ToString();
+            }
+        }
+
+        private void DessineUnite(Graphics G, UniteRemarquable unite)
+        {
+            Pen styloUnite = new Pen((unite.iNation == 0) ? Color.Blue : Color.Red, EPAISSEUR_LIGNE_UNITE);
+            Brush brosseUnite = new SolidBrush((unite.iNation == 0) ? Color.Blue : Color.Red);
+            switch (unite.tipe)
+            {
+                case TIPEUNITEVIDEO.INFANTERIE:
+                    //barre haut gauche, bas droite
+                    G.DrawLine(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        m_largeurCote + unite.i_X_CASE * m_rapport + TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport + TAILLE_UNITE / 2
+                        );
+                    //barre haut droite , bas gauche
+                    G.DrawLine(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport + TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport + TAILLE_UNITE / 2
+                        );
+                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
+                    G.DrawRectangle(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    break;
+                case TIPEUNITEVIDEO.CAVALERIE:
+                    //barre haut gauche, bas droite
+                    G.DrawLine(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        m_largeurCote + unite.i_X_CASE * m_rapport + TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport + TAILLE_UNITE / 2
+                        );
+                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
+                    G.DrawRectangle(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    break;
+                case TIPEUNITEVIDEO.ARTILLERIE:
+                    G.FillEllipse(brosseUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 4,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 4,
+                        TAILLE_UNITE/2,
+                        TAILLE_UNITE/2);
+                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
+                    G.DrawRectangle(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    break;
+                case TIPEUNITEVIDEO.CONVOI:
+                    G.DrawEllipse(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    G.FillPie(brosseUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE,
+                        0,180);
+                    break;
+                case TIPEUNITEVIDEO.DEPOT:
+                    G.FillEllipse(brosseUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    break;
+                case TIPEUNITEVIDEO.PONTONNIER:
+                    break;
+                default:
+                    //carre vide
+                    G.DrawRectangle(styloUnite,
+                        m_largeurCote + unite.i_X_CASE * m_rapport - TAILLE_UNITE / 2,
+                        unite.i_Y_CASE * m_rapport - TAILLE_UNITE / 2,
+                        TAILLE_UNITE,
+                        TAILLE_UNITE);
+                    break;
             }
         }
 

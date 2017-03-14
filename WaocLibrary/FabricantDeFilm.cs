@@ -82,6 +82,7 @@ namespace WaocLib
         private int m_hauteurBandeau;
         private int m_largeurCote;
         private int m_totalvictoire;
+        private int m_nbImages;
         private Font m_police;
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
@@ -96,7 +97,7 @@ namespace WaocLib
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, 
                                     bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
-                                        List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire,
+                                        List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire, int nbImages,
                                     System.ComponentModel.BackgroundWorker worker)
         {
             try
@@ -116,6 +117,7 @@ namespace WaocLib
                 m_texteImages = texteImages;
                 m_hauteurBandeau = 0;
                 m_largeurCote = 0;
+                m_nbImages = nbImages;
                 m_police = police;
                 m_totalvictoire = totalvictoire;
                 m_travailleur = worker;
@@ -181,7 +183,7 @@ namespace WaocLib
                 }
 
                 m_aw = new AviWriter();
-                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur, m_hauteur + m_hauteurBandeau);
+                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau);
                 m_traitement = 0;
                 return string.Empty;
             }
@@ -213,7 +215,7 @@ namespace WaocLib
             try
             {
                 Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
-                FileInfo fichier = m_listeFichiers[m_traitement];
+                FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
                 Bitmap fichierImage = new Bitmap(m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
                 G = Graphics.FromImage(fichierImage);
@@ -344,8 +346,10 @@ namespace WaocLib
                 fichierImage.Dispose();
                 fichierImageSource.Dispose();
                 m_traitement++;
-                m_travailleur.ReportProgress(m_traitement*100/m_listeFichiers.Length);
-                if (m_traitement == m_listeFichiers.Length)
+                m_travailleur.ReportProgress(m_traitement*100/m_nbImages);
+                //m_travailleur.ReportProgress(m_traitement * 100 / m_listeFichiers.Length);
+                //if (m_traitement == m_listeFichiers.Length)
+                if (m_traitement == m_nbImages)
                 {
                     return "film crée";
                 }
@@ -445,7 +449,7 @@ namespace WaocLib
                     break;
             }
         }
-
+        /*
         public string CreerFilm(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, string[] texteImages
                                 ,int largeurOptimale, int HauteurOptimale, bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables)
         {
@@ -570,34 +574,6 @@ namespace WaocLib
                     fichierImage.Dispose();
                     fichierImageSource.Dispose();
                 }
-                /*
-                Color[] palette = new Color[50];
-                for (int i = 0; i < 50; i++)
-                {
-                    palette[i] = Color.FromArgb(i * 4, 255 - i * 4, 50 + i * 2);
-                }
-                AviWriter aw = new AviWriter();
-                Bitmap bmp = aw.Open(repertoireVideo + "\\" + "test.avi", 1, w, h);
-
-                double f = 1.2;
-                double centerX = -0.7454333;
-                double centerY = -0.1130211;
-                double pctAreaNewImage = 0.9;
-                double endWidth_times_2 = 0.0001;
-
-                while (f > endWidth_times_2)
-                {
-                    MandelbrotCalc.CalcMandelBrot(
-                      bmp,
-                      centerX - f, centerY - f,
-                      centerX + f, centerY + f,
-                      palette);
-
-                    f = Math.Sqrt(pctAreaNewImage * f * f);
-                    aw.AddFrame();
-                    Console.Write(".");
-                }
-                */
                 m_aw.Close();
                 return string.Empty;
             }
@@ -606,5 +582,6 @@ namespace WaocLib
                 return "AVI Exception in: " + e.ToString();
             }
         }
+        */
     }
 }

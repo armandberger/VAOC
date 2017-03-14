@@ -268,6 +268,7 @@
             this.Controls.Add(this.buttonCreerFilm);
             this.Name = "FormVideo";
             this.Text = "Création d\'une vidéo à partir d\'images";
+            this.Load += new System.EventHandler(this.FormVideo_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

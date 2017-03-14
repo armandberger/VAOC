@@ -239,7 +239,8 @@ namespace vaoc
                 erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
-                                        true, m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE,
+                                        true, m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, 
+                                        Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);
                 if (string.Empty != erreurTraitement)
                 {
@@ -294,13 +295,20 @@ namespace vaoc
             {
                 textBoxMasque.Text = Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE;
                 this.textBoxRepertoireImages.Text = m_repertoireSource[m_repertoireSource.Length -1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length-1) : m_repertoireSource;
-                this.textBoxRepertoireVideo.Text = m_repertoireSource;
+                this.textBoxRepertoireVideo.Text = m_repertoireSource[m_repertoireSource.Length - 1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length - 1) : m_repertoireSource;
             }
         }
 
         private void checkBoxCarteUnites_CheckedChanged(object sender, EventArgs e)
         {
             InitialisationRepertoire();
+        }
+
+        private void FormVideo_Load(object sender, EventArgs e)
+        {
+            Bitmap fichierImage = (Bitmap)Image.FromFile(m_repertoireSource + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
+            textBoxLargeurBase.Text = fichierImage.Width.ToString();
+            textBoxHauteurBase.Text = fichierImage.Height.ToString();
         }
     }
 }

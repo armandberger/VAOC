@@ -190,23 +190,21 @@ namespace vaoc
 
         private void Correctifs()
         {
-            #region reaffectatio des des points de victoire d'après le dernier tour chargé sur la table video
-            /*
-            Donnees.TAB_VIDEORow[] lignesVideoVictoire = (Donnees.TAB_VIDEORow[]) Donnees.m_donnees.TAB_VIDEO.Select("I_VICTOIRE>0 AND I_TOUR=0" );//+ Donnees.m_donnees.TAB_PARTIE[0].I_TOUR
-            if (lignesVideoVictoire.Count()>0)
-            {
-                foreach (Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
-                {
-                    foreach (Donnees.TAB_VIDEORow ligneVideoVictoire in lignesVideoVictoire)
-                    {
-                        if (ligneVideo.ID_PION == ligneVideoVictoire.ID_PION)
-                        {
-                            ligneVideo.I_VICTOIRE = ligneVideoVictoire.I_VICTOIRE;
-                        }
-                    }
-                }
-            }
-            */
+            #region reaffectation des des points de victoire d'après le dernier tour chargé sur la table video
+            //Donnees.TAB_VIDEORow[] lignesVideoVictoire = (Donnees.TAB_VIDEORow[]) Donnees.m_donnees.TAB_VIDEO.Select("I_VICTOIRE>0 AND I_TOUR=0" );//+ Donnees.m_donnees.TAB_PARTIE[0].I_TOUR
+            //if (lignesVideoVictoire.Count()>0)
+            //{
+            //    foreach (Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
+            //    {
+            //        foreach (Donnees.TAB_VIDEORow ligneVideoVictoire in lignesVideoVictoire)
+            //        {
+            //            if (ligneVideo.ID_PION == ligneVideoVictoire.ID_PION)
+            //            {
+            //                ligneVideo.I_VICTOIRE = ligneVideoVictoire.I_VICTOIRE;
+            //            }
+            //        }
+            //    }
+            //}
             #endregion
 
             #region calcul des points de victoire

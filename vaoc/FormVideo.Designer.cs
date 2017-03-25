@@ -50,11 +50,15 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.checkBoxCarteUnites = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBoxTailleUnite = new System.Windows.Forms.TextBox();
+            this.textBoxEpaisseurUnite = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 391);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 437);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -133,7 +137,7 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(212, 136);
+            this.label5.Location = new System.Drawing.Point(212, 182);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(555, 44);
             this.label5.TabIndex = 9;
@@ -149,7 +153,7 @@
             // 
             // buttonChoixPolice
             // 
-            this.buttonChoixPolice.Location = new System.Drawing.Point(12, 136);
+            this.buttonChoixPolice.Location = new System.Drawing.Point(12, 182);
             this.buttonChoixPolice.Name = "buttonChoixPolice";
             this.buttonChoixPolice.Size = new System.Drawing.Size(178, 20);
             this.buttonChoixPolice.TabIndex = 10;
@@ -160,7 +164,7 @@
             // labelPolice
             // 
             this.labelPolice.Font = new System.Drawing.Font("Gabriola", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPolice.Location = new System.Drawing.Point(15, 180);
+            this.labelPolice.Location = new System.Drawing.Point(15, 226);
             this.labelPolice.Name = "labelPolice";
             this.labelPolice.Size = new System.Drawing.Size(743, 151);
             this.labelPolice.TabIndex = 11;
@@ -206,7 +210,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 391);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 437);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -217,7 +221,7 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(26, 355);
+            this.progressBar.Location = new System.Drawing.Point(26, 401);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(732, 23);
             this.progressBar.Step = 1;
@@ -234,7 +238,7 @@
             // checkBoxCarteUnites
             // 
             this.checkBoxCarteUnites.AutoSize = true;
-            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 391);
+            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 437);
             this.checkBoxCarteUnites.Name = "checkBoxCarteUnites";
             this.checkBoxCarteUnites.Size = new System.Drawing.Size(113, 17);
             this.checkBoxCarteUnites.TabIndex = 26;
@@ -242,11 +246,49 @@
             this.checkBoxCarteUnites.UseVisualStyleBackColor = true;
             this.checkBoxCarteUnites.CheckedChanged += new System.EventHandler(this.checkBoxCarteUnites_CheckedChanged);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 144);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(153, 13);
+            this.label7.TabIndex = 27;
+            this.label7.Text = "Taille des unités (nombre paire)";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(258, 144);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(144, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Epaisseur de ligne des unités";
+            // 
+            // textBoxTailleUnite
+            // 
+            this.textBoxTailleUnite.Location = new System.Drawing.Point(163, 141);
+            this.textBoxTailleUnite.Name = "textBoxTailleUnite";
+            this.textBoxTailleUnite.Size = new System.Drawing.Size(67, 20);
+            this.textBoxTailleUnite.TabIndex = 29;
+            this.textBoxTailleUnite.Text = "18";
+            // 
+            // textBoxEpaisseurUnite
+            // 
+            this.textBoxEpaisseurUnite.Location = new System.Drawing.Point(408, 141);
+            this.textBoxEpaisseurUnite.Name = "textBoxEpaisseurUnite";
+            this.textBoxEpaisseurUnite.Size = new System.Drawing.Size(67, 20);
+            this.textBoxEpaisseurUnite.TabIndex = 30;
+            this.textBoxEpaisseurUnite.Text = "1";
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 426);
+            this.ClientSize = new System.Drawing.Size(779, 465);
+            this.Controls.Add(this.textBoxEpaisseurUnite);
+            this.Controls.Add(this.textBoxTailleUnite);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.checkBoxCarteUnites);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.buttonOuvrirFilm);
@@ -298,6 +340,10 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
         private System.Windows.Forms.CheckBox checkBoxCarteUnites;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBoxTailleUnite;
+        private System.Windows.Forms.TextBox textBoxEpaisseurUnite;
     }
 }
 

@@ -116,11 +116,30 @@ namespace vaoc
                     System.Nullable<int> victoires =
                         (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == i)
-                            && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
-                                || ((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION) && (false == video.B_DETRUIT || false == video.B_FUITE_AU_COMBAT)))
+                            && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                                    && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
+                                || ((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                                    && (false == video.B_DETRUIT && false == video.B_FUITE_AU_COMBAT))
+                                    )
                          select video.I_VICTOIRE)
                         .Sum();
-                    
+
+                    var test1 =
+                        (from video in Donnees.m_donnees.TAB_VIDEO
+                         where (video.I_TOUR == i)
+                            && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                                    && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
+                                    && video.I_VICTOIRE>0)
+                         select video);
+
+                    var test2 =
+                        (from video in Donnees.m_donnees.TAB_VIDEO
+                         where (video.I_TOUR == i)
+                            && (((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                                    && (false == video.B_DETRUIT && false == video.B_FUITE_AU_COMBAT))
+                                    && video.I_VICTOIRE > 0)
+                         select video);
+
                     EffectifEtVictoire effV = new EffectifEtVictoire();
                     effV.iTour = i;
                     effV.iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION;
@@ -147,9 +166,9 @@ namespace vaoc
                     continue; //case comptant seulement pour les points de victoire
                 }
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
-                if (lignePion.estQG)
+                if (lignePion.estQG || lignePion.estPrisonniers || lignePion.estBlesses)
                 {
-                    continue; //on n'affiche pas les QG
+                    continue; //on n'affiche pas les QG, les prisonniers, les blesses
                 }
                 
                 UniteRemarquable unite = new UniteRemarquable();
@@ -239,6 +258,7 @@ namespace vaoc
                 erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
+                                        Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
                                         true, m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, 
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);

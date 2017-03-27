@@ -1844,6 +1844,9 @@ namespace vaoc
                 case Constantes.ORDRES.RETRAIT:
                     retour = "retrait";
                     break;
+                case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                    retour = "alimenter une ligne de ravitaillement":
+                    break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");
                     retour = "inconnu";
@@ -2015,6 +2018,13 @@ namespace vaoc
                                 lignePionDestinataire.S_NOM)
                              :
                                 "faire un retrait de la zone de bataille en cours.";
+                    break;
+                case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                    retour = avecProprietaire ?
+                                string.Format("{0} gère actuellement une ligne de ravitaillement permanente.",
+                                lignePionDestinataire.S_NOM)
+                             :
+                                "alimenter une ligne de ravitaillement.";
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");
@@ -2357,6 +2367,7 @@ namespace vaoc
                             case Constantes.ORDRES.GENERERCONVOI:
                             case Constantes.ORDRES.RENFORCER:
                             case Constantes.ORDRES.ETABLIRDEPOT:
+                            case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
                                 unitesEnvironnantes += " à l'arrêt";
                                 break;
                             case Constantes.ORDRES.SEFORTIFIER:

@@ -132,9 +132,13 @@ namespace WaocLib
             /// </summary>
             public const int RETRAIT = 16;
             /// <summary>
-            /// Enovyer un message direct a un autre joueur a proximité
+            /// Envoyer un message direct a un autre joueur a proximité
             /// </summary>
             public const int MESSAGE_FORUM = 17;
+            /// <summary>
+            /// Création et envoyer un convoi de ravitaillement automatiquement toutes les 24 heures
+            /// </summary>
+            public const int LIGNE_RAVITAILLEMENT = 18;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

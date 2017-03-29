@@ -1845,7 +1845,7 @@ namespace vaoc
                     retour = "retrait";
                     break;
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
-                    retour = "alimenter une ligne de ravitaillement":
+                    retour = "alimenter une ligne de ravitaillement";
                     break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");

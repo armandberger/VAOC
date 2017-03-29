@@ -79,7 +79,7 @@ namespace vaoc
             }
             try
             {
-                if (null == m_imageCarteZoom || bForcage)
+                if((null == m_imageCarteZoom || bForcage) && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_ZOOMNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM.Length > 0)
                 {
                     if (null != m_imageCarteZoom) { m_imageCarteZoom.Dispose(); }
                     m_imageCarteZoom = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM);
@@ -103,7 +103,7 @@ namespace vaoc
                 LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE, ex.Message));
                 return false;
             }
-            m_rapportZoom = (float)m_imageCarteZoom.Width / (float)m_imageCarteHistorique.Width;
+            m_rapportZoom = (null != m_imageCarteZoom) ? (float)m_imageCarteZoom.Width / (float)m_imageCarteHistorique.Width : 5;
             
             return true;
         }

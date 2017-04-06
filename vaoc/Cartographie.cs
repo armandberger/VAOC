@@ -88,7 +88,7 @@ namespace vaoc
             catch (Exception ex)
             {
                 LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM, ex.Message));
-                return false;
+                //return false; c'est possible maintenant, de ne pas avoir de carte zoom
             }
             try
             {
@@ -103,7 +103,7 @@ namespace vaoc
                 LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE, ex.Message));
                 return false;
             }
-            m_rapportZoom = (null != m_imageCarteZoom) ? (float)m_imageCarteZoom.Width / (float)m_imageCarteHistorique.Width : 5;
+            m_rapportZoom = (null != m_imageCarteZoom) ? (float)m_imageCarteZoom.Width / (float)m_imageCarteHistorique.Width : 1;
             
             return true;
         }
@@ -229,12 +229,12 @@ namespace vaoc
             graph.Dispose();
         }
 
-    public static void AfficherUnites(Constantes.MODELESCARTE modele)
+        public static void AfficherUnites(Constantes.MODELESCARTE modele)
         {
             Bitmap imageSource = GetImage(modele);
             if (Constantes.MODELESCARTE.ZOOM == modele)
             {
-                AfficherUnites(imageSource, m_rapportZoom);
+                AfficherUnites(imageSource, m_rapportZoom, 0, 0, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1);
             }
             else
             {
@@ -244,17 +244,23 @@ namespace vaoc
 
         public static void AfficherUnites(Bitmap imageSource)
         {
-            AfficherUnites(imageSource, 1);
+            AfficherUnites(imageSource, 1, 0, 0, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1);
         }
 
-        public static void AfficherUnites(Bitmap imageSource, float zoom)
+        public static void AfficherUnites(Bitmap imageSource, float zoom, int xCaseHautGauche, int yCaseHautGauche, int xCaseBasDroite, int yCaseBasDroite)
         {
             Color couleur;
-            Graphics graph = Graphics.FromImage(imageSource);
+            Graphics graph;
             Rectangle rect;
             SolidBrush brosse;
+
+            if (null == imageSource) return; // possible si fichier zoom non renseigné, car trop lourd pour être chargé
+            graph = Graphics.FromImage(imageSource);
+
             foreach (Donnees.TAB_CASERow noeud in Donnees.m_donnees.TAB_CASE)
             {
+                if (noeud.I_X < xCaseHautGauche || noeud.I_X > xCaseBasDroite) { continue; }
+                if (noeud.I_Y < yCaseHautGauche || noeud.I_Y > yCaseBasDroite) { continue; }
                 if (!noeud.IsID_PROPRIETAIRENull())
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(noeud.ID_PROPRIETAIRE);
@@ -266,11 +272,11 @@ namespace vaoc
                         //graph.DrawLine(stylo, (int)(noeud.I_X * zoom), (int)(noeud.I_Y * zoom), (int)(noeud.I_X * zoom), (int)(noeud.I_Y * zoom));
                         //imageSource.SetPixel((int)(noeud.I_X * zoom), (int)(noeud.I_Y * zoom), couleur);
                         brosse = new SolidBrush(couleur);
-                        rect = new Rectangle((int)(noeud.I_X * zoom - zoom / 2), (int)(noeud.I_Y * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
+                        rect = new Rectangle((int)((noeud.I_X - xCaseHautGauche) * zoom - zoom / 2), (int)((noeud.I_Y - yCaseHautGauche) * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
                         graph.FillEllipse(brosse, rect);
                     }
                 }
-                else 
+                else
                 {
                     if (!noeud.IsID_NOUVEAU_PROPRIETAIRENull())
                     {
@@ -280,7 +286,7 @@ namespace vaoc
                             Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
                             couleur = Color.FromArgb(ligneModelePion.I_ROUGE, ligneModelePion.I_VERT, ligneModelePion.I_BLEU);
                             brosse = new SolidBrush(couleur);
-                            rect = new Rectangle((int)(noeud.I_X * zoom - zoom / 2), (int)(noeud.I_Y * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
+                            rect = new Rectangle((int)((noeud.I_X - xCaseHautGauche) * zoom - zoom / 2), (int)((noeud.I_Y - yCaseHautGauche) * zoom - zoom / 2), (int)zoom + 1, (int)zoom + 1);
                             graph.FillEllipse(brosse, rect);
                         }
                     }
@@ -288,6 +294,7 @@ namespace vaoc
             }
             graph.Dispose();
         }
+
 
         public static void AfficherNoms(Bitmap imageSource)
         {
@@ -404,17 +411,17 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
         {
             if (rect.X < 0) rect.X = 0;
             if (rect.Y < 0) rect.Y = 0;
-            if (rect.Left + rect.Width > imageSource.Width)
+            if (rect.Left + rect.Width + 1 > imageSource.Width)
             {
-                rect.Width = imageSource.Width - rect.Left;
+                rect.Width = imageSource.Width - rect.Left - 1;
             }
-            if (rect.Top + rect.Height > imageSource.Height)
+            if (rect.Top + rect.Height + 1 > imageSource.Height)
             {
-                rect.Height = imageSource.Height - rect.Top;
+                rect.Height = imageSource.Height - rect.Top - 1;
             }
         }
 
-        protected static Bitmap GetImage(Constantes.MODELESCARTE modele)
+        public static Bitmap GetImage(Constantes.MODELESCARTE modele)
         {
             switch (modele)
             {
@@ -447,9 +454,10 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
         /// <param name="rect">rectangle dans l'image finale</param>
         /// <param name="angleRotation">angle en degrés</param>
         /// <returns></returns>
-        internal static bool DecoupeFichier(Constantes.MODELESCARTE modele, string nomFichierFinal, Rectangle rect, float angleRotation)
+        internal static bool DecoupeFichier(Constantes.MODELESCARTE modele, string nomFichierFinal, Rectangle rect, float angleRotation, float zoom)
         {
             Bitmap imageSource = GetImage(modele);
+            Bitmap imageFinale;
 
             RecadrerRect(imageSource, ref rect);
             if (0 == rect.Height || 0 == rect.Width)
@@ -457,10 +465,23 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
                 return true;//rien à faire ?
             }
 
-            BitmapData imageCible = new BitmapData();
-            imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
-            imageSource.UnlockBits(imageCible);
-            Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+            if (1 == zoom)
+            {
+                BitmapData imageCible = new BitmapData();
+                imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
+                imageSource.UnlockBits(imageCible);
+                imageFinale = new Bitmap((int)(imageCible.Width), (int)(imageCible.Height), imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+            }
+            else
+            {
+                imageFinale = new Bitmap((int)(rect.Width * zoom), (int)(rect.Height * zoom), imageSource.PixelFormat);
+                imageFinale.SetResolution(imageSource.HorizontalResolution, imageSource.VerticalResolution);
+                Graphics graph = Graphics.FromImage(imageFinale);
+                graph.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graph.DrawImage(imageSource, new Rectangle(0, 0, (int)(rect.Width * zoom), (int)(rect.Height * zoom)), rect, GraphicsUnit.Pixel);
+                graph.Dispose();
+            }
+
             /* ne fonctionne pas visiblement
             if (angleRotation > 0)
             {
@@ -469,7 +490,7 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             }
             */
             imageFinale.Save(nomFichierFinal, ImageFormat.Png);
-            imageFinale.Dispose();
+            //imageFinale.Dispose();
             return true;
         }
 
@@ -1312,6 +1333,29 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             }
             erreur = "chemin introuvable ou incorrect pour l'unité demandée";
             return -1;
+        }
+
+        internal static void AfficherUnitesZoom(string nomfichier, int xCaseHautGauche, int yCaseHautGauche, int xCaseBasDroite, int yCaseBasDroite)
+        {
+            Bitmap imageSource = GetImage(Constantes.MODELESCARTE.HISTORIQUE);
+
+            Rectangle rect = new Rectangle(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite - xCaseHautGauche, yCaseBasDroite - yCaseHautGauche);
+
+            BitmapData imageCible = new BitmapData();
+            imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
+            imageSource.UnlockBits(imageCible);
+            Bitmap imageFinale;
+
+            imageFinale = new Bitmap((int)(rect.Width * Constantes.CST_FACTEUR_ZOOM), (int)(rect.Height * Constantes.CST_FACTEUR_ZOOM), imageSource.PixelFormat);
+            imageFinale.SetResolution(imageSource.HorizontalResolution, imageSource.VerticalResolution);
+            Graphics graph = Graphics.FromImage(imageFinale);
+            graph.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            graph.DrawImage(imageSource, new Rectangle(0, 0, (int)(rect.Width * Constantes.CST_FACTEUR_ZOOM), (int)(rect.Height * Constantes.CST_FACTEUR_ZOOM)), rect, GraphicsUnit.Pixel);
+            graph.Dispose();
+            AfficherUnites(imageFinale, Constantes.CST_FACTEUR_ZOOM, xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+
+            imageFinale.Save(nomfichier, ImageFormat.Png);
+            imageFinale.Dispose();
         }
     }
 }

@@ -1163,8 +1163,17 @@ namespace vaoc
             int flDemmarage = (lignePartie.FL_DEMARRAGE) ? 1 : 0;
             int largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE);
             int hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE);
-            int largeurZoom = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM);
-            int hauteurZoom = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM);
+            int largeurZoom, hauteurZoom;
+            if (null == Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
+            {
+                largeurZoom = largeur * Constantes.CST_FACTEUR_ZOOM;
+                hauteurZoom = hauteur * Constantes.CST_FACTEUR_ZOOM;
+            }
+            else
+            {
+                largeurZoom = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM);
+                hauteurZoom = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM);
+            }
             string sMultZoomX = ((decimal)largeurZoom/largeur).ToString().Replace(",", ".");
             string sMultZoomY = ((decimal)hauteurZoom / hauteur).ToString().Replace(",", ".");
             int idVictoire = lignePartie.IsID_VICTOIRENull() ? -1 : lignePartie.ID_VICTOIRE;

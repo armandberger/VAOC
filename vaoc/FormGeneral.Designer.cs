@@ -92,6 +92,7 @@ namespace vaoc
             this.buttonCarteTopographique = new System.Windows.Forms.Button();
             this.label28 = new System.Windows.Forms.Label();
             this.textBoxNbPtsVictoire = new System.Windows.Forms.TextBox();
+            this.buttonSuppressionZoom = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeureInitiale)).BeginInit();
             this.SuspendLayout();
             // 
@@ -700,11 +701,23 @@ namespace vaoc
             this.textBoxNbPtsVictoire.Tag = "";
             this.textBoxNbPtsVictoire.Text = "Calcul automatique";
             // 
+            // buttonSuppressionZoom
+            // 
+            this.buttonSuppressionZoom.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.buttonSuppressionZoom.Image = global::vaoc.Properties.Resources.zoomMoins;
+            this.buttonSuppressionZoom.Location = new System.Drawing.Point(563, 284);
+            this.buttonSuppressionZoom.Name = "buttonSuppressionZoom";
+            this.buttonSuppressionZoom.Size = new System.Drawing.Size(23, 23);
+            this.buttonSuppressionZoom.TabIndex = 75;
+            this.buttonSuppressionZoom.UseVisualStyleBackColor = true;
+            this.buttonSuppressionZoom.Click += new System.EventHandler(this.buttonSuppressionZoom_Click);
+            // 
             // FormGeneral
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 531);
+            this.Controls.Add(this.buttonSuppressionZoom);
             this.Controls.Add(this.textBoxNbPtsVictoire);
             this.Controls.Add(this.label28);
             this.Controls.Add(this.buttonCarteTopographique);
@@ -844,5 +857,6 @@ namespace vaoc
         private System.Windows.Forms.Button buttonCarteTopographique;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.TextBox textBoxNbPtsVictoire;
+        private System.Windows.Forms.Button buttonSuppressionZoom;
     }
 }

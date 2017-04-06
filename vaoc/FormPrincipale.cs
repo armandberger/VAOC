@@ -1393,17 +1393,43 @@ namespace vaoc
 
                 if (nomCarteZoom != general.nomCarteZoom)
                 {
-                    ligneJeu.S_NOM_CARTE_ZOOM = general.nomCarteZoom.Substring(general.nomCarteZoom.LastIndexOf('\\') + 1);
-                    repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_ZOOM;
-                    if (repertoireDest != general.nomCarteZoom)
+                    if (string.Empty == general.nomCarteZoom)
                     {
-                        //destruction d'un eventuel même fichier avec le même nom
-                        if (File.Exists(repertoireDest))
+                        ligneJeu.SetS_NOM_CARTE_ZOOMNull();
+                    }
+                    else
+                    {
+                        ligneJeu.S_NOM_CARTE_ZOOM = general.nomCarteZoom.Substring(general.nomCarteZoom.LastIndexOf('\\') + 1);
+                        repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_ZOOM;
+                        if (repertoireDest != general.nomCarteZoom)
                         {
-                            File.Delete(repertoireDest);
+                            //destruction d'un eventuel même fichier avec le même nom
+                            if (File.Exists(repertoireDest))
+                            {
+                                File.Delete(repertoireDest);
+                            }
+                            //on recopie le fichier image vers le repertoire applicatif des cartes
+                            File.Copy(general.nomCarteZoom, repertoireDest, true);
                         }
-                        //on recopie le fichier image vers le repertoire applicatif des cartes
-                        File.Copy(general.nomCarteZoom, repertoireDest, true);
+                    }
+                    if (string.Empty == general.nomCarteZoom)
+                    {
+                        ligneJeu.SetS_NOM_CARTE_ZOOMNull();
+                    }
+                    else
+                    {
+                        ligneJeu.S_NOM_CARTE_ZOOM = general.nomCarteZoom.Substring(general.nomCarteZoom.LastIndexOf('\\') + 1);
+                        repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_ZOOM;
+                        if (repertoireDest != general.nomCarteZoom)
+                        {
+                            //destruction d'un eventuel même fichier avec le même nom
+                            if (File.Exists(repertoireDest))
+                            {
+                                File.Delete(repertoireDest);
+                            }
+                            //on recopie le fichier image vers le repertoire applicatif des cartes
+                            File.Copy(general.nomCarteZoom, repertoireDest, true);
+                        }
                     }
                 }
 

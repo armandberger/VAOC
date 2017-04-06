@@ -483,5 +483,10 @@ namespace vaoc
                 nomCarteTopographique = openFileDialog.FileName;
             }
         }
+
+        private void buttonSuppressionZoom_Click(object sender, EventArgs e)
+        {
+            nomCarteZoom = string.Empty;
+        }
     }
 }

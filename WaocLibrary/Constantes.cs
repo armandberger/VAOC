@@ -74,6 +74,8 @@ namespace WaocLib
         public enum MODELESCARTE { HISTORIQUE, ZOOM, GRIS, TOPOGRAPHIQUE };
         //liste des différents recherches de parcours
         public enum TYPEPARCOURS { MOUVEMENT = 0, RAVITAILLEMENT = 1 };
+        //facteur zoom par défaut
+        public const int CST_FACTEUR_ZOOM = 5;
 
         //liste des différents ordres
         /*

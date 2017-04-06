@@ -86,29 +86,51 @@ namespace vaoc
                     nomfichier = string.Format("{0}\\carte_{1}_{2}.png",
                         repertoireCarte,
                         i, j);
-                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0)) { return false; }
+                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
                 }
             }
 
             //fichier zoom
-            largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM);
-            hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM);
-            for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+            if (null == Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
             {
-                for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE) * Constantes.CST_FACTEUR_ZOOM;
+                hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE) * Constantes.CST_FACTEUR_ZOOM;
+                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
                 {
-                    rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
-                            j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB,
-                            Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
-                            Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB);
+                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                    {
+                        rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM,
+                                j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM,
+                                Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM,
+                                Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM);
 
-                    nomfichier = string.Format("{0}\\carteZoom_{1}_{2}.png",
-                        repertoireCarte,
-                        i, j);
-                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0)) { return false; }
+                        nomfichier = string.Format("{0}\\carteZoom_{1}_{2}.png",
+                            repertoireCarte,
+                            i, j);
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, Constantes.CST_FACTEUR_ZOOM)) { return false; }
+                    }
                 }
             }
-            
+            else
+            {
+                largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM);
+                hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM);
+                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+                {
+                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                    {
+                        rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
+                                j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB,
+                                Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
+                                Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB);
+
+                        nomfichier = string.Format("{0}\\carteZoom_{1}_{2}.png",
+                            repertoireCarte,
+                            i, j);
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                    }
+                }
+            }
             #endregion
 
             //ajout des unités et des noms sur les cartes
@@ -250,11 +272,24 @@ namespace vaoc
                     nomfichier = string.Format("{0}\\carterole_{1}_zoom.png",
                         repertoireTour,
                         ligneRole.ID_ROLE);
-                    rect = new Rectangle((int)(Cartographie.rapportZoom * (ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
-                             (int)(Cartographie.rapportZoom * (ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
-                            (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2),
-                            (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2));
-                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0)) { return false; }
+                    if (null == Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
+                    {
+                        //cas d'un fichier trop gros pour être chargé
+                        Cartographie.AfficherUnitesZoom(nomfichier,
+                                                        Math.Max(0, ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Max(0, ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                                                        );
+                    }
+                    else
+                    {
+                        rect = new Rectangle((int)(Cartographie.rapportZoom * (ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
+                                 (int)(Cartographie.rapportZoom * (ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
+                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2),
+                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2));
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                    }
                 }
             }
             #endregion
@@ -271,23 +306,30 @@ namespace vaoc
                 //fichier vision historique de la bataille
                 nomfichier = string.Format("{0}\\bataille_{1}.png",
                     repertoireTour,ligneBataille.ID_BATAILLE);
-                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0)) { return false; }
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
 
                 //fichier topographique de la bataille
                 nomfichier = string.Format("{0}\\bataille_{1}_topographique.png",
                     repertoireTour, ligneBataille.ID_BATAILLE);
-                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, 0)) { return false; }
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, 0, 1)) { return false; }
             }
             #endregion
 
             #region Carte général pour afficher en fin de partie
             nomfichier = string.Format("{0}\\carte_general_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
             rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE));
-            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0)) { return false; }
+            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
 
             nomfichier = string.Format("{0}\\carte_generalzoom_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
             rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM));
-            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0)) { return false; }
+            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
+
+            if (null != Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
+            {
+                nomfichier = string.Format("{0}\\carte_generalzoom_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+                rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM));
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+            }
             #endregion
 
             #region Fichiers annexes et techniques

@@ -1290,14 +1290,12 @@ namespace vaoc
 
         internal bool SauvegarderPartie(string nomFichier)
         {
-            if (0 == TAB_JEU.Count)
+            if (0 == TAB_PARTIE.Count)
             {
                 //possible sur une nouvelle partie
                 return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, true);
             }
 
-            //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 6;
             return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true);
         }
 
@@ -1311,7 +1309,37 @@ namespace vaoc
 
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
+            if (!SauvegarderCases()) { return false; }
             return Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
+        }
+
+        internal bool SauvegarderCases()
+        {
+            if (0 == TAB_PARTIE.Count || 0 == TAB_JEU.Count)
+            {
+                return true;
+            }
+            int iTour, iPhase;
+            iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+            iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+
+            for(int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x+=1000)
+            {
+                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += 1000)
+                {
+                    string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
+                        x, x + 1000, y, y + 1000);
+                    Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                    if (0==listeCases.Count()) { return true; }
+                    Donnees baseCases = new Donnees();
+                    for (int i=0; i< listeCases.Count();i++)
+                    {
+                        baseCases.TAB_CASE.ImportRow(listeCases[i]);
+                    }
+                    if (!Dal.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
+                }
+            }
+            return true;
         }
 
         internal bool ChargerPartie(string filename)

@@ -127,6 +127,47 @@ namespace WaocLib
             return true;
         }
 
+        public static string nomRepertoireCases()
+        {
+            return string.Format("{0}cases\\", Constantes.repertoireDonnees);
+        }
+
+        static public bool SauvegarderCases(DataSet donnees, int x, int y, int tour, int phase)
+        {
+            Cursor oldCursor = Cursor.Current;
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                string repertoire = nomRepertoireCases();
+                if (!Directory.Exists(repertoire))
+                {
+                    Directory.CreateDirectory(repertoire);
+                }
+                string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                    repertoire, x, y, tour, phase);
+
+                if (File.Exists(nomfichier))
+                {
+                    File.Delete(nomfichier);
+                }
+                ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
+                ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
+                StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                donnees.WriteXml(ecrivain);
+                ecrivain.Close();
+                fichierZip.Dispose();
+                //donnees.WriteXml(nomfichier);
+                Cursor.Current = oldCursor;
+            }
+            catch (Exception e)
+            {
+                Cursor.Current = oldCursor;
+                MessageBox.Show("Erreur sur SauvegarderCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
         static public bool ChargerPartie(string nomfichier, DataSet donneesSource)
         {
             Cursor oldCursor = Cursor.Current;
@@ -201,6 +242,7 @@ namespace WaocLib
             return true;
         }
 
+        #region trajets
         static public bool ChargerTrajet(int idTrajet, out List<int> listeCase)
         {
             return ChargerTrajet(idTrajet, "", out listeCase);
@@ -305,6 +347,6 @@ namespace WaocLib
         {
             return nomRepertoireTrajet(idTrajet, tipe) + string.Format("\\trajet{0}{1}.xml", idTrajet.ToString("000000"), tipe);
         }
-
+        #endregion
     }
 }

@@ -1412,15 +1412,19 @@ namespace vaoc
                             File.Copy(general.nomCarteZoom, repertoireDest, true);
                         }
                     }
-                    if (string.Empty == general.nomCarteZoom)
+                }
+
+                if (nomCarteGris != general.nomCarteGris)
+                {
+                    if (string.Empty == general.nomCarteGris)
                     {
-                        ligneJeu.SetS_NOM_CARTE_ZOOMNull();
+                        ligneJeu.SetS_NOM_CARTE_GRISNull();
                     }
                     else
                     {
-                        ligneJeu.S_NOM_CARTE_ZOOM = general.nomCarteZoom.Substring(general.nomCarteZoom.LastIndexOf('\\') + 1);
-                        repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_ZOOM;
-                        if (repertoireDest != general.nomCarteZoom)
+                        ligneJeu.S_NOM_CARTE_GRIS = general.nomCarteGris.Substring(general.nomCarteGris.LastIndexOf('\\') + 1);
+                        repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_GRIS;
+                        if (repertoireDest != general.nomCarteGris)
                         {
                             //destruction d'un eventuel même fichier avec le même nom
                             if (File.Exists(repertoireDest))
@@ -1428,24 +1432,8 @@ namespace vaoc
                                 File.Delete(repertoireDest);
                             }
                             //on recopie le fichier image vers le repertoire applicatif des cartes
-                            File.Copy(general.nomCarteZoom, repertoireDest, true);
+                            File.Copy(general.nomCarteGris, repertoireDest, true);
                         }
-                    }
-                }
-
-                if (nomCarteGris != general.nomCarteGris)
-                {
-                    ligneJeu.S_NOM_CARTE_GRIS = general.nomCarteGris.Substring(general.nomCarteGris.LastIndexOf('\\') + 1);
-                    repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_GRIS;
-                    if (repertoireDest != general.nomCarteGris)
-                    {
-                        //destruction d'un eventuel même fichier avec le même nom
-                        if (File.Exists(repertoireDest))
-                        {
-                            File.Delete(repertoireDest);
-                        }
-                        //on recopie le fichier image vers le repertoire applicatif des cartes
-                        File.Copy(general.nomCarteGris, repertoireDest, true);
                     }
                 }
 

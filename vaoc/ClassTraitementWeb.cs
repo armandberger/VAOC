@@ -320,10 +320,6 @@ namespace vaoc
             rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE));
             if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
 
-            nomfichier = string.Format("{0}\\carte_generalzoom_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
-            rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM));
-            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
-
             if (null != Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
             {
                 nomfichier = string.Format("{0}\\carte_generalzoom_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);

@@ -66,7 +66,7 @@ namespace vaoc
             }
             try
             {
-                if (null == m_imageCarteGris || bForcage)
+                if ((null == m_imageCarteGris || bForcage) && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_GRISNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS.Length > 0)
                 {
                     if (null != m_imageCarteGris) { m_imageCarteGris.Dispose(); }
                     m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS);
@@ -505,6 +505,8 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
         internal static bool FichierGrise(Constantes.MODELESCARTE modele, string nomFichierFinal, Rectangle rect, Rectangle rectGris)
         {
             Bitmap imageSource = GetImage(modele);
+            Bitmap imageFinale;
+            Graphics graph;
 
             if (null == imageSource)
             {
@@ -514,35 +516,56 @@ SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I
             RecadrerRect(imageSource, ref rect);
             if (null == m_imageCarteGris)
             {
-                LogFile.Notifier("Erreur dans FichierGrise, l'image carte grisée n'est pas chargée");
-                return false;
+                RecadrerRect(imageSource, ref rectGris);
+                imageFinale = new Bitmap(rectGris.Width, rectGris.Height, imageSource.PixelFormat);
+                graph = Graphics.FromImage(imageFinale);
+                //première copie
+                graph.DrawImage(imageSource, 0, 0, rectGris, GraphicsUnit.Pixel);
+                for (int x = 0; x < rectGris.Width; x++ )
+                {
+                    for (int y = 0; y < rectGris.Height; y++)
+                    {
+                        Color couleur = imageFinale.GetPixel(x,y);
+                        Double facteurgris= 0.7;
+                        Color couleurFinale = Color.FromArgb(
+                                                        Math.Min(Math.Max((int)(couleur.R*facteurgris),0),255), 
+                                                        Math.Min(Math.Max((int)(couleur.G*facteurgris),0),255), 
+                                                        Math.Min(Math.Max((int)(couleur.B*facteurgris),0),255)
+                                                            );
+                        imageFinale.SetPixel(x, y, couleurFinale);
+                    }
+                }
+                //recopie des pixels non grisés
+                graph.DrawImage(imageSource, rect.X - rectGris.X, rect.Y - rectGris.Y, rect, GraphicsUnit.Pixel);
             }
-            LogFile.Notifier(string.Format("FichierGrise rectGris Left={0}, Top={1}, Width={2}, Height={3}", rectGris.Left, rectGris.Top, rectGris.Width, rectGris.Height));
-            RecadrerRect(m_imageCarteGris, ref rectGris);
-
-            //Si les images n'ont pas la même résolution, DrawImage refait une mise à l'échelle automatique !
-            Bitmap imageFinale = new Bitmap(rectGris.Width, rectGris.Height, m_imageCarteGris.PixelFormat);
-            if (Math.Abs(imageSource.HorizontalResolution - m_imageCarteGris.HorizontalResolution) > 1 ||
-                Math.Abs(m_imageCarteGris.HorizontalResolution - imageFinale.HorizontalResolution) > 1 ||
-                Math.Abs(imageSource.VerticalResolution - m_imageCarteGris.VerticalResolution) > 1 ||
-                Math.Abs(m_imageCarteGris.VerticalResolution - imageFinale.VerticalResolution) > 1)
+            else
             {
-                LogFile.Notifier(string.Format("Erreur dans FichierGrise, {0} et {1} DOIVENT avoir une résolution horizontale de {2} dpi, et verticale de {3} dpi au lieu de {4}, {5} dpi et {6},{7} dpi respectivement",
-                    modele.ToString(),
-                    Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS,
-                    imageFinale.HorizontalResolution,
-                    imageFinale.VerticalResolution,
-                    imageSource.HorizontalResolution,
-                    imageSource.VerticalResolution,
-                    m_imageCarteGris.HorizontalResolution,
-                    m_imageCarteGris.VerticalResolution));
-                return false;
+                LogFile.Notifier(string.Format("FichierGrise rectGris Left={0}, Top={1}, Width={2}, Height={3}", rectGris.Left, rectGris.Top, rectGris.Width, rectGris.Height));
+                RecadrerRect(m_imageCarteGris, ref rectGris);
+
+                //Si les images n'ont pas la même résolution, DrawImage refait une mise à l'échelle automatique !
+                imageFinale = new Bitmap(rectGris.Width, rectGris.Height, m_imageCarteGris.PixelFormat);
+                if (Math.Abs(imageSource.HorizontalResolution - m_imageCarteGris.HorizontalResolution) > 1 ||
+                    Math.Abs(m_imageCarteGris.HorizontalResolution - imageFinale.HorizontalResolution) > 1 ||
+                    Math.Abs(imageSource.VerticalResolution - m_imageCarteGris.VerticalResolution) > 1 ||
+                    Math.Abs(m_imageCarteGris.VerticalResolution - imageFinale.VerticalResolution) > 1)
+                {
+                    LogFile.Notifier(string.Format("Erreur dans FichierGrise, {0} et {1} DOIVENT avoir une résolution horizontale de {2} dpi, et verticale de {3} dpi au lieu de {4}, {5} dpi et {6},{7} dpi respectivement",
+                        modele.ToString(),
+                        Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS,
+                        imageFinale.HorizontalResolution,
+                        imageFinale.VerticalResolution,
+                        imageSource.HorizontalResolution,
+                        imageSource.VerticalResolution,
+                        m_imageCarteGris.HorizontalResolution,
+                        m_imageCarteGris.VerticalResolution));
+                    return false;
+                }
+
+                graph = Graphics.FromImage(imageFinale);
+                graph.DrawImage(m_imageCarteGris, 0, 0, rectGris, GraphicsUnit.Pixel);
+                graph.DrawImage(imageSource, rect.X - rectGris.X, rect.Y - rectGris.Y, rect, GraphicsUnit.Pixel);
             }
-
-            Graphics graph = Graphics.FromImage(imageFinale);
-            graph.DrawImage(m_imageCarteGris, 0, 0, rectGris, GraphicsUnit.Pixel);
-            graph.DrawImage(imageSource, rect.X - rectGris.X, rect.Y - rectGris.Y, rect, GraphicsUnit.Pixel);
-
             //sauvegarde
             imageFinale.Save(nomFichierFinal, ImageFormat.Png);
 

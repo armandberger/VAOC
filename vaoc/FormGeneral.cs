@@ -488,5 +488,10 @@ namespace vaoc
         {
             nomCarteZoom = string.Empty;
         }
+
+        private void buttonSuppressionGris_Click(object sender, EventArgs e)
+        {
+            nomCarteGris = string.Empty;
+        }
     }
 }

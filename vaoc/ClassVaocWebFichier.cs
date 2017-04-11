@@ -991,7 +991,7 @@ namespace vaoc
                                     lignePion.I_MATERIEL,
                                     lignePion.I_RAVITAILLEMENT,
                                     lignePion.I_NIVEAU_FORTIFICATION,
-                                    lignePion.IsI_TOUR_CONVOI_CREENull() ? -1 : lignePion.I_TOUR_CONVOI_CREE,//40
+                                    lignePion.IsI_TOUR_CONVOI_CREENull() ? 0 : lignePion.I_TOUR_CONVOI_CREE,//40
                                     lignePion.IsID_DEPOT_SOURCENull() ? -1 : lignePion.ID_DEPOT_SOURCE,
                                     lignePion.B_CAVALERIE_DE_LIGNE ? 1 : 0,
                                     lignePion.B_CAVALERIE_LOURDE ? 1 : 0,

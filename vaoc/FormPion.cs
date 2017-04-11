@@ -187,7 +187,7 @@ namespace vaoc
                     ligneGrid.Cells["B_CAVALERIE_LOURDE"].Value = lignePion.B_CAVALERIE_LOURDE;
                     ligneGrid.Cells["B_GARDE"].Value = lignePion.B_GARDE;
                     ligneGrid.Cells["B_VIEILLE_GARDE"].Value = lignePion.B_VIEILLE_GARDE;
-                    ligneGrid.Cells["I_TOUR_CONVOI_CREE"].Value = lignePion.IsI_TOUR_CONVOI_CREENull() ? -1 : lignePion.I_TOUR_CONVOI_CREE;
+                    ligneGrid.Cells["I_TOUR_CONVOI_CREE"].Value = lignePion.IsI_TOUR_CONVOI_CREENull() ? 0 : lignePion.I_TOUR_CONVOI_CREE;
                     ligneGrid.Cells["I_SOLDATS_RAVITAILLES"].Value = lignePion.I_SOLDATS_RAVITAILLES;
                     ligneGrid.Cells["I_NB_HEURES_FORTIFICATION"].Value = lignePion.I_NB_HEURES_FORTIFICATION;
                     ligneGrid.Cells["I_NIVEAU_FORTIFICATION"].Value = lignePion.I_NIVEAU_FORTIFICATION;

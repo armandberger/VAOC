@@ -15,14 +15,14 @@ namespace Traitement
         {
             try
             {
-                Bitmap imageSource = (Bitmap)Bitmap.FromFile("C:\\Users\\Public\\Documents\\vaoc\\1813\\1813_zoom_final.jpg");
+                Bitmap imageSource = (Bitmap)Bitmap.FromFile("C:\\berlin\\1813_terrain.bmp");
 
                 BitmapData imageCible = new BitmapData();
-                Rectangle rect = new Rectangle(0, 1128 * 5, imageSource.Width, imageSource.Height - 1128 * 5);
+                Rectangle rect = new Rectangle(0, 1128, imageSource.Width, imageSource.Height - 1128);
                 imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
                 imageSource.UnlockBits(imageCible);
                 Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-                imageFinale.Save("C:\\Users\\Public\\Documents\\vaoc\\1813\\1813P_zoom_final.jpg", ImageFormat.Jpeg);
+                imageFinale.Save("C:\\berlin\\1813P_terrain.bmp", ImageFormat.Bmp);
             }
             catch (Exception ex)
             {

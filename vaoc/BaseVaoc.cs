@@ -984,6 +984,8 @@ namespace vaoc
             {
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
+                TAB_CASERow ligneCase;
+                int i;
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -1014,9 +1016,9 @@ namespace vaoc
                     this.Merge(donneesSource, false);
                     //mise à jour de l'index
                     Debug.WriteLine("ChargerCases :" + this.Count);
-                    for (int i = debutNouvellesLignes; i < this.Count; i++)
+                    for (i = debutNouvellesLignes; i < this.Count; i++)
                     {
-                        TAB_CASERow ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
+                        ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
                     Cursor.Current = oldCursor;

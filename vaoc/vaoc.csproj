@@ -67,6 +67,8 @@
     </Reference>
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -513,6 +515,7 @@
     <Content Include="IconVAOC.ico" />
     <Content Include="Resources\bullseye-ani.ani" />
     <None Include="Resources\IconVAOC.ico" />
+    <Content Include="Resources\memoire.bmp" />
     <Content Include="Resources\pontendommage.bmp" />
     <Content Include="Resources\ponton.bmp" />
     <Content Include="Resources\voirTrajetsVilles.bmp" />

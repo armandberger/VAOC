@@ -3889,12 +3889,12 @@ namespace vaoc {
                 return rowTAB_CASERow;
             }
             
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TAB_CASERow FindByID_CASE(int ID_CASE) {
-                return ((TAB_CASERow)(this.Rows.Find(new object[] {
-                            ID_CASE})));
-            }
+            //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            //[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            //public TAB_CASERow FindByID_CASE(int ID_CASE) {
+            //    return ((TAB_CASERow)(this.Rows.Find(new object[] {
+            //                ID_CASE})));
+            //}
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]

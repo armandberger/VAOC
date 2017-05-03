@@ -1649,6 +1649,7 @@ namespace vaoc
                 //partie non crée, ou chargée, on ne peut rien afficher
                 return;
             }
+
             if (toolStripAffichierTopographie.CheckState == CheckState.Checked)
             {
                 if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
@@ -1687,19 +1688,46 @@ namespace vaoc
             ImageCarte.Width = (int)Math.Floor(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE * m_zoom);
             ImageCarte.Height = (int)Math.Floor(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE * m_zoom);
 
-            if ( toolStripAfficherBatailles.CheckState == CheckState.Unchecked)
+            if (toolStripButtonMemoire.CheckState == CheckState.Checked)
+            {
+                //on affiche les zones des cases non chargées
+                Graphics graph = Graphics.FromImage(ImageCarte.Image);
+                Pen styloCadrillage = new Pen(Color.DarkSeaGreen, 5);
+                //styloCadrillage.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                //styloCadrillage.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
+                //float[] traits = new float[2];
+                //traits[0] = 2;
+                //traits[1] = 8;
+                //styloCadrillage.DashPattern = traits;
+                for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
+                {
+                    for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
+                    {
+                        if (!Donnees.m_donnees.TAB_CASE.estCaseChargee(x,y))
+                        {
+                            int largeur = Math.Min(Constantes.CST_TAILLE_BLOC_CASES, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1 - x);
+                            int hauteur = Math.Min(Constantes.CST_TAILLE_BLOC_CASES, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1 - y);
+                            //graph.DrawRectangle(styloCadrillage, x, y, largeur, hauteur);
+                            graph.DrawEllipse(styloCadrillage, x, y, largeur, hauteur);
+                        }
+                    }
+                }
+                graph.Dispose();
+            }
+
+            if (toolStripAfficherBatailles.CheckState == CheckState.Checked)
             {
                 Cartographie.AfficherBatailles((Bitmap)ImageCarte.Image);
             }
-            if (toolStripAfficherUnites.CheckState == CheckState.Unchecked)
+            if (toolStripAfficherUnites.CheckState == CheckState.Checked)
             {
                 Cartographie.AfficherUnites((Bitmap)ImageCarte.Image);//ajout des unités
             }
-            if (toolStripAfficherQG.CheckState == CheckState.Unchecked)
+            if (toolStripAfficherQG.CheckState == CheckState.Checked)
             {
                 Cartographie.AfficherQG((Bitmap)ImageCarte.Image);//ajout des QG
             }
-            if (toolStripAfficherVilles.CheckState == CheckState.Unchecked)
+            if (toolStripAfficherVilles.CheckState == CheckState.Checked)
             {
                 Cartographie.AfficherNoms((Bitmap)ImageCarte.Image);//ajout des noms de villes
             }
@@ -3525,6 +3553,11 @@ namespace vaoc
                 Donnees.m_donnees.TAB_VIDEO.Clear();
                 Donnees.m_donnees.TAB_VIDEO.Merge(fVideoTable.tableVideo, false);
             }
+        }
+
+        private void toolStripButtonMemoire_Click(object sender, EventArgs e)
+        {
+            ConstruireImageCarte();
         }
     }
 

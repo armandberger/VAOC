@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using WaocLib;
 
 namespace vaoc
@@ -811,12 +816,19 @@ namespace vaoc
             {
                 m_listeIndex = Array.CreateInstance(typeof(int), maxX, maxY);
 
-                for (int i = 0; i < this.Count; i++)
+                if (0 == this.Count)
                 {
-                    TAB_CASERow ligneCase = this[i];
-                    if (ligneCase.I_X < maxX && ligneCase.I_Y < maxY)
+                    for (int x=0; x < maxX; x++) for (int y=0; y < maxY; y++) { m_listeIndex.SetValue(-1, x, y); }
+                }
+                else
+                {
+                    for (int i = 0; i < this.Count; i++)
                     {
-                        m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
+                        TAB_CASERow ligneCase = this[i];
+                        if (ligneCase.I_X < maxX && ligneCase.I_Y < maxY)
+                        {
+                            m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
+                        }
                     }
                 }
                 return true;
@@ -834,6 +846,16 @@ namespace vaoc
                 return FindByID_CASE(ligneNom.ID_CASE);
             }
 
+            public bool estCaseChargee(int x, int y)
+            {
+                int index = (int)m_listeIndex.GetValue(x, y);
+                if (index < 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+
             /// <summary>
             /// renvoie une case d'après ses coordonnées
             /// </summary>
@@ -847,9 +869,9 @@ namespace vaoc
                     if (null == m_listeIndex)
                     {
                         string requete = string.Format("I_X={0} AND I_Y={1}", x, y);
-                        Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Enter(m_donnees.TAB_CASE);
                         TAB_CASERow[] resCase = (TAB_CASERow[])Select(requete);
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(m_donnees.TAB_CASE);
                         if (0 == resCase.Length)
                         {
                             return null;
@@ -864,7 +886,16 @@ namespace vaoc
                     }
                     else
                     {
-                        return this[(int)m_listeIndex.GetValue(x, y)];
+                        int index = (int)m_listeIndex.GetValue(x, y);
+                        if (index < 0)
+                        {
+                            if (!m_donnees.ChargerCases(x, y))
+                            {
+                                return null;
+                            }
+                            index = (int)m_listeIndex.GetValue(x, y);
+                        }
+                        return this[index];
                     }
                 }
                 catch
@@ -873,6 +904,179 @@ namespace vaoc
                 }
             }
 
+            private string nomRepertoireCases()
+            {
+                return string.Format("{0}cases\\", Constantes.repertoireDonnees);
+            }
+
+            private string NomFichierCases(int x, int y, int tour, int phase, string repertoire)
+            {
+                string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                    repertoire, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
+                                (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, phase);
+                return nomfichier;
+            }
+
+            internal bool SauvegarderCases(Donnees.TAB_CASEDataTable baseSource, int x, int y, int tour, int phase)
+            {
+                Cursor oldCursor = Cursor.Current;
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    string repertoire = nomRepertoireCases();
+                    if (!Directory.Exists(repertoire))
+                    {
+                        Directory.CreateDirectory(repertoire);
+                    }
+                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire); ;
+
+                    if (File.Exists(nomfichier))
+                    {
+                        File.Delete(nomfichier);
+                    }
+                    ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
+                    ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
+                    StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                    baseSource.WriteXml(ecrivain);
+                    ecrivain.Close();
+                    fichierZip.Dispose();
+                    Cursor.Current = oldCursor;
+                }
+                catch (Exception e)
+                {
+                    Cursor.Current = oldCursor;
+                    MessageBox.Show("Erreur sur BaseVaoc.SauvegarderCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                return true;
+            }
+
+            public int XY_Vers_ID_CASE(int x, int y)
+            {
+                return x * m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE + y;
+            }
+
+            public void ID_CASE_Vers_XY(int idcase, out int x, out int y)
+            {
+                y = idcase % m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+                x = (idcase-y) / m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+            }
+
+            //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            //[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public TAB_CASERow FindByID_CASE(int ID_CASE)
+            {
+                TAB_CASERow retour;
+                retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
+                            ID_CASE})));
+                if (null == retour)
+                {
+                    int x,y;
+                    m_donnees.TAB_CASE.ID_CASE_Vers_XY(ID_CASE, out x, out y);
+                    ChargerCases(x, y, m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE);
+                    retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
+                            ID_CASE})));
+                }
+                return retour;
+            }            
+
+            internal bool ChargerCases(int x, int y, int tour, int phase)
+            {
+                Cursor oldCursor = Cursor.Current;
+                Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    string repertoire = nomRepertoireCases();
+                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+
+                    //on recherche le dernier fichier sauvegardé sur les cases
+                    int phaserecherche = phase;
+                    while (!File.Exists(nomfichier) && phaserecherche >= 0)
+                    {
+                        nomfichier = NomFichierCases(x, y, tour, phaserecherche, repertoire);
+                        phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                    }
+                    if (phase < 0)
+                    {
+                        Cursor.Current = oldCursor;
+                        MessageBox.Show(string.Format("Erreur sur ChargerCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
+                            x, y, tour, phase)
+                            , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+
+                    ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
+                    ZipArchiveEntry fichier = fichierZip.Entries[0];
+                    donneesSource.ReadXml(fichier.Open());
+                    fichierZip.Dispose();
+                    int debutNouvellesLignes = this.Count;
+                    this.Merge(donneesSource, false);
+                    //mise à jour de l'index
+                    Debug.WriteLine("ChargerCases :" + this.Count);
+                    for (int i = debutNouvellesLignes; i < this.Count; i++)
+                    {
+                        TAB_CASERow ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
+                        m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
+                    }
+                    Cursor.Current = oldCursor;
+                }
+                catch (Exception e)
+                {
+                    Cursor.Current = oldCursor;
+                    MessageBox.Show("Erreur sur Dal.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                return true;
+            }
+            
+            /*
+            public bool ChargerCases(int x, int y, int tour, int phase)
+            {
+                Cursor oldCursor = Cursor.Current;
+                Don donneesSource;
+                try
+                {
+                    Cursor.Current = Cursors.WaitCursor;
+                    if (!Dal.ChargerCases(x, y, tour, phase, out donneesSource))
+                    {
+                        return false;
+                    }
+                    // Ne marche pas erreur : <target>.ID_CASE and <source>.ID_CASE have conflicting properties: DataType property mismatch.
+                    //Donnees.TAB_CASEDataTable tableCases = ConvertToTypedDataTable<Donnees.TAB_CASEDataTable>(donneesSource.Tables["TAB_CASE"]);
+                    m_donnees.TAB_CASE.Merge(((Donnees)donneesSource).TAB_CASE, false);
+                    //
+
+                    //mise à jour de l'index
+                    for (int i = 0; i < donneesSource.Tables["TAB_CASE"].Rows.Count; i++)
+                    {
+                        //TAB_CASERow ligneCase = (TAB_CASERow)donneesSource.Tables["TAB_CASE"].Rows[i];
+                        DataRow ligneCaseSource = donneesSource.Tables["TAB_CASE"].Rows[i];
+                        TAB_CASERow ligneCase = m_donnees.TAB_CASE.AddTAB_CASERow(
+                            ligneCaseSource["ID_CASE"], 
+                            ligneCaseSource["ID_MODELE_TERRAIN"], 
+                            ligneCaseSource["I_X"], 
+                            ligneCaseSource["I_Y"],
+                            string.Empty == ligneCaseSource["ID_PROPRIETAIRE"] ? -1 : ligneCaseSource["ID_PROPRIETAIRE"],
+                            string.Empty == ligneCaseSource["ID_NOUVEAU_PROPRIETAIRE"] ? -1 : ligneCaseSource["ID_NOUVEAU_PROPRIETAIRE"],
+                            ligneCaseSource["ID_MODELE_TERRAIN_SI_OCCUPE"],
+                            string.Empty == ligneCaseSource["I_COUT"] ? -1 : ligneCaseSource["I_COUT"]);
+
+                        if (string.Empty == ligneCaseSource["ID_PROPRIETAIRE"]) ligneCase.SetID_PROPRIETAIRENull();
+                        if (string.Empty == ligneCaseSource["ID_NOUVEAU_PROPRIETAIRE"]) ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
+                        if (string.Empty == ligneCaseSource["I_COUT"]) ligneCase.SetI_COUTNull();
+                        m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
+                    }
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Cursor.Current = oldCursor;
+                    MessageBox.Show("Erreur sur Dal.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+*/
             public TAB_CASERow[] CasesCadre(int xCaseHautGauche, int yCaseHautGauche, int xCaseBasDroite, int yCaseBasDroite)
             {
                 //note, je ne vérifie pas que les coordonnées du cadre sont bien entre 0 et largeur/hauteur, je considère que cela a été fait dans le calcul de ces valeurs
@@ -1290,12 +1494,14 @@ namespace vaoc
 
         internal bool SauvegarderPartie(string nomFichier)
         {
-            if (0 == TAB_PARTIE.Count)
+            if (0 == TAB_JEU.Count)
             {
                 //possible sur une nouvelle partie
                 return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, true);
             }
 
+            //Mise à jour de la version du fichier pour de futures mise à jour
+            TAB_JEU[0].I_VERSION = 6;
             return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true);
         }
 
@@ -1310,7 +1516,49 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
             if (!SauvegarderCases()) { return false; }
+            //ChargerToutesLesCases();//pour test
+            if(0==iPhase)
+            {
+                Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+            }
             return Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
+        }
+
+        internal bool ChargerToutesLesCases()
+        {
+            if (0 == TAB_PARTIE.Count || 0 == TAB_JEU.Count)
+            {
+                return true;
+            }
+            //int iTour, iPhase;
+            //iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+            //iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+
+            for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
+            {
+                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
+                {
+                    //on vérifie que le chargement n'a pas déjà été fait
+                    string requete = string.Format("I_X={0} AND I_Y={1}",x, y);
+                    Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                    if (listeCases.Count() >0) 
+                    { 
+                        continue; //cases déjà chargées
+                    }
+                    if (!ChargerCases(x, y)) { return false; }
+                }
+            }
+            return true;
+        }
+
+        internal bool ChargerCases(int x, int y)
+        {
+            if (!this.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+            { 
+                return false; 
+            }
+
+            return true;
         }
 
         internal bool SauvegarderCases()
@@ -1323,20 +1571,20 @@ namespace vaoc
             iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
             iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
 
-            for(int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x+=1000)
+            for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
-                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += 1000)
+                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
                 {
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
-                        x, x + 1000, y, y + 1000);
+                        x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    if (0==listeCases.Count()) { return true; }
-                    Donnees baseCases = new Donnees();
-                    for (int i=0; i< listeCases.Count();i++)
+                    if (0 == listeCases.Count()) { continue; }
+                    Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
+                    for (int i = 0; i < listeCases.Count(); i++)
                     {
-                        baseCases.TAB_CASE.ImportRow(listeCases[i]);
+                        baseCases.ImportRow(listeCases[i]);
                     }
-                    if (!Dal.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
+                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
                 }
             }
             return true;

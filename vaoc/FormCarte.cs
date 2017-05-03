@@ -421,12 +421,12 @@ namespace vaoc
                     pixelColor.R, pixelColor.G, pixelColor.B);
                 throw new Exception(message);
             }
-            
+
             //creation de la case
-            Donnees.TAB_CASERow ligneCase=m_tableCase.AddTAB_CASERow(
-                idCase,
-                resModeleTerrain[0].ID_MODELE_TERRAIN, 
-                x, y,-1,-1, -1,
+            Donnees.TAB_CASERow ligneCase = m_tableCase.AddTAB_CASERow(
+                m_tableCase.XY_Vers_ID_CASE(x, y),
+                resModeleTerrain[0].ID_MODELE_TERRAIN,
+                x, y, -1, -1, -1,
                 int.MaxValue);
             ligneCase.SetID_MODELE_TERRAIN_SI_OCCUPENull();
             ligneCase.SetID_PROPRIETAIRENull();

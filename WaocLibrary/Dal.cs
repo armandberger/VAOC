@@ -127,47 +127,6 @@ namespace WaocLib
             return true;
         }
 
-        public static string nomRepertoireCases()
-        {
-            return string.Format("{0}cases\\", Constantes.repertoireDonnees);
-        }
-
-        static public bool SauvegarderCases(DataSet donnees, int x, int y, int tour, int phase)
-        {
-            Cursor oldCursor = Cursor.Current;
-            try
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                string repertoire = nomRepertoireCases();
-                if (!Directory.Exists(repertoire))
-                {
-                    Directory.CreateDirectory(repertoire);
-                }
-                string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
-                    repertoire, x, y, tour, phase);
-
-                if (File.Exists(nomfichier))
-                {
-                    File.Delete(nomfichier);
-                }
-                ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
-                ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
-                StreamWriter ecrivain = new StreamWriter(fichier.Open());
-                donnees.WriteXml(ecrivain);
-                ecrivain.Close();
-                fichierZip.Dispose();
-                //donnees.WriteXml(nomfichier);
-                Cursor.Current = oldCursor;
-            }
-            catch (Exception e)
-            {
-                Cursor.Current = oldCursor;
-                MessageBox.Show("Erreur sur SauvegarderCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
-        }
-
         static public bool ChargerPartie(string nomfichier, DataSet donneesSource)
         {
             Cursor oldCursor = Cursor.Current;
@@ -242,7 +201,6 @@ namespace WaocLib
             return true;
         }
 
-        #region trajets
         static public bool ChargerTrajet(int idTrajet, out List<int> listeCase)
         {
             return ChargerTrajet(idTrajet, "", out listeCase);
@@ -347,6 +305,95 @@ namespace WaocLib
         {
             return nomRepertoireTrajet(idTrajet, tipe) + string.Format("\\trajet{0}{1}.xml", idTrajet.ToString("000000"), tipe);
         }
-        #endregion
+        /*
+        public static string nomRepertoireCases()
+        {
+            return string.Format("{0}cases\\", Constantes.repertoireDonnees);
+        }
+
+        private static string NomFichierCases(int x, int y, int tour, int phase, string repertoire)
+        {
+            string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                repertoire, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
+                            (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, phase);
+            return nomfichier;
+        }
+
+        static public bool SauvegarderCases(DataSet donnees, int x, int y, int tour, int phase)
+        {
+            Cursor oldCursor = Cursor.Current;
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                string repertoire = nomRepertoireCases();
+                if (!Directory.Exists(repertoire))
+                {
+                    Directory.CreateDirectory(repertoire);
+                }
+                string nomfichier = NomFichierCases(x, y, tour, phase, repertoire); ;
+
+                if (File.Exists(nomfichier))
+                {
+                    File.Delete(nomfichier);
+                }
+                ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
+                ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
+                StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                donnees.WriteXml(ecrivain);
+                ecrivain.Close();
+                fichierZip.Dispose();
+                //donnees.WriteXml(nomfichier);
+                Cursor.Current = oldCursor;
+            }
+            catch (Exception e)
+            {
+                Cursor.Current = oldCursor;
+                MessageBox.Show("Erreur sur SauvegarderCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
+        static public bool ChargerCases(int x, int y, int tour, int phase, out DataSet donneesSource)
+        {
+            Cursor oldCursor = Cursor.Current;
+            donneesSource = new DataSet();
+            try
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                string repertoire = nomRepertoireCases();
+                string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+                
+                //on recherche le dernier fichier sauvegardé sur les cases
+                int phaserecherche = phase;
+                while (!File.Exists(nomfichier) && phaserecherche >= 0)
+                {
+                    nomfichier = NomFichierCases(x, y, tour, phaserecherche, repertoire);
+                    phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                }
+                if (phase < 0) 
+                {
+                    Cursor.Current = oldCursor;
+                    MessageBox.Show(string.Format("Erreur sur ChargerCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
+                        x, y, tour, phase)
+                        , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false; 
+                }
+
+                ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
+                ZipArchiveEntry fichier = fichierZip.Entries[0];
+                donneesSource.ReadXml(fichier.Open());
+                fichierZip.Dispose();
+                Cursor.Current = oldCursor;
+            }
+            catch (Exception e)
+            {
+                Cursor.Current = oldCursor;
+                MessageBox.Show("Erreur sur Dal.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+         * */
     }
 }

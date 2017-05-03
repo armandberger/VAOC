@@ -11,6 +11,9 @@ namespace WaocLib
         public const string CST_CLEFDEREGISTRE = "SOFTWARE\\WAOC\\VAOC";
         public const int CST_IDNULL = -1;//utilisé uniquement pour les échanges avec la form principale
         public const string CST_TRAJET_VILLE = "V";
+        public const int CST_TAILLE_BLOC_CASES = 100;
+        public const int CST_SAUVEGARDE_ECART_PHASES = 10;
+
         /// <summary>
         /// Le trajet n'est occupé par aucune nation
         /// </summary>

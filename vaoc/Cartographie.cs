@@ -313,10 +313,8 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 int x = 0, y = 0;
 
-                lignePolice =
-Donnees.m_donnees.TAB_POLICE.FindByID_POLICE(ligneNom.ID_POLICE);
-                ligneCase =
-Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNom.ID_CASE);
+                lignePolice = Donnees.m_donnees.TAB_POLICE.FindByID_POLICE(ligneNom.ID_POLICE);
+                ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNom.ID_CASE);
                 if (null == ligneCase)
                 {
                     //possible en construction de cartes quand on repart d'un existant
@@ -324,8 +322,7 @@ Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNom.ID_CASE);
                     messageErreur += string.Format("Case {0} de la ville {1} introuvable\r\n", ligneNom.ID_CASE, ligneNom.S_NOM);
                     continue;
                 }
-                brosse = new
-SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I_BLEU));
+                brosse = new SolidBrush(Color.FromArgb(lignePolice.I_ROUGE, lignePolice.I_VERT, lignePolice.I_BLEU));
                 if (lignePolice.B_BARRE)
                 {
                     stylePolice |= FontStyle.Strikeout;

@@ -299,7 +299,7 @@ namespace vaoc
                  *********************************/
                     LogFile.Notifier("Mise à jour des propriétaires des cases");
                     MiseAJourProprietaires();
-                    if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % 10) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                    if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                     {
                         Donnees.m_donnees.SauvegarderPartie(fichierCourant);
                     }

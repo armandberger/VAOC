@@ -913,7 +913,7 @@ namespace vaoc
             {
                 string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
                     repertoire, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
-                                (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, phase);
+                                (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, phase - (phase % Constantes.CST_SAUVEGARDE_ECART_PHASES));
                 return nomfichier;
             }
 
@@ -984,8 +984,6 @@ namespace vaoc
             {
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
-                TAB_CASERow ligneCase;
-                int i;
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -994,12 +992,20 @@ namespace vaoc
 
                     //on recherche le dernier fichier sauvegardé sur les cases
                     int phaserecherche = phase;
-                    while (!File.Exists(nomfichier) && phaserecherche >= 0)
+                    int tourrecherche = tour;
+                    while (!File.Exists(nomfichier) && tourrecherche >= 0)
                     {
-                        nomfichier = NomFichierCases(x, y, tour, phaserecherche, repertoire);
                         phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                        if (phaserecherche < 0)
+                        {
+                            phaserecherche = m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+                            tourrecherche--;
+                        }
+                        nomfichier = NomFichierCases(x, y, tourrecherche, phaserecherche, repertoire);
+                        Debug.WriteLine("ChargerCases, test sur le fichier " + nomfichier);
                     }
-                    if (phase < 0)
+
+                    if (tourrecherche < 0)
                     {
                         Cursor.Current = oldCursor;
                         MessageBox.Show(string.Format("Erreur sur ChargerCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
@@ -1016,9 +1022,9 @@ namespace vaoc
                     this.Merge(donneesSource, false);
                     //mise à jour de l'index
                     Debug.WriteLine("ChargerCases :" + this.Count);
-                    for (i = debutNouvellesLignes; i < this.Count; i++)
+                    for (int i = debutNouvellesLignes; i < this.Count; i++)
                     {
-                        ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
+                        TAB_CASERow ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
                     Cursor.Current = oldCursor;
@@ -1026,12 +1032,12 @@ namespace vaoc
                 catch (Exception e)
                 {
                     Cursor.Current = oldCursor;
-                    MessageBox.Show("Erreur sur Dal.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erreur sur TABCASEDataTables.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
                 return true;
             }
-            
+
             /*
             public bool ChargerCases(int x, int y, int tour, int phase)
             {

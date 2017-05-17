@@ -136,10 +136,6 @@ namespace vaoc
             }
         }
 
-        public static void AfficherQG(Bitmap imageSource)
-        {
-        }
-
         public static void AfficherArriveeDepart(Bitmap imageSource, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseArrivee, Color couleur, int taillePinceau)
         {
             Graphics graph = Graphics.FromImage(imageSource);

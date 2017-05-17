@@ -1726,10 +1726,6 @@ namespace vaoc
             {
                 Cartographie.AfficherUnites((Bitmap)ImageCarte.Image);//ajout des unités
             }
-            if (toolStripAfficherQG.CheckState == CheckState.Checked)
-            {
-                Cartographie.AfficherQG((Bitmap)ImageCarte.Image);//ajout des QG
-            }
             if (toolStripAfficherVilles.CheckState == CheckState.Checked)
             {
                 Cartographie.AfficherNoms((Bitmap)ImageCarte.Image);//ajout des noms de villes
@@ -2334,6 +2330,25 @@ namespace vaoc
 
         private void toolStripAfficherUnites_Click(object sender, EventArgs e)
         {
+            //on s'assure que toutes les cases des unités sont bien chargées
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (lignePion.B_DETRUIT)
+                { continue; }
+
+                //juste pour "forcer" le chargmement des cases si besoin
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+
+                if (null == ligneOrdre)
+                {
+                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                }
+                else
+                {
+                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                }
+            }
             ConstruireImageCarte();
         }
 

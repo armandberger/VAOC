@@ -69,8 +69,14 @@ namespace vaoc
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panelImage = new System.Windows.Forms.Panel();
+            this.ImageCarte = new WaocLib.VaocPictureBox();
             this.menuPrincipal = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.fichiersRecentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -116,16 +122,14 @@ namespace vaoc
             this.repriseDeDonnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripCarte = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.toolStripAfficherVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripAfficherUnites = new System.Windows.Forms.ToolStripButton();
-            this.toolStripAfficherQG = new System.Windows.Forms.ToolStripButton();
             this.toolStripAfficherBatailles = new System.Windows.Forms.ToolStripButton();
             this.toolStripAffichierTopographie = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripZoomPlus = new System.Windows.Forms.ToolStripButton();
             this.toolStripZoomMoins = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripPlusCourtChemin = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPontEndommage = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReparerPont = new System.Windows.Forms.ToolStripButton();
@@ -134,12 +138,7 @@ namespace vaoc
             this.toolStripButtonTrajets = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
-            this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ouvrirToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.imprimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ImageCarte = new WaocLib.VaocPictureBox();
+            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -147,9 +146,9 @@ namespace vaoc
             this.panelInformation.SuspendLayout();
             this.panelTestPlusCourtChemin.SuspendLayout();
             this.panelImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.menuPrincipal.SuspendLayout();
             this.toolStripCarte.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog
@@ -548,6 +547,20 @@ namespace vaoc
             this.panelImage.Size = new System.Drawing.Size(386, 521);
             this.panelImage.TabIndex = 3;
             // 
+            // ImageCarte
+            // 
+            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
+            this.ImageCarte.Name = "ImageCarte";
+            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
+            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
+            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+            this.ImageCarte.TabIndex = 3;
+            this.ImageCarte.TabStop = false;
+            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
+            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
+            // 
             // menuPrincipal
             // 
             this.menuPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -576,6 +589,56 @@ namespace vaoc
             this.fichierToolStripMenuItem.Name = "fichierToolStripMenuItem";
             this.fichierToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
             this.fichierToolStripMenuItem.Text = "&Fichier";
+            // 
+            // nouveauToolStripMenuItem
+            // 
+            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
+            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
+            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.nouveauToolStripMenuItem.Text = "&Nouveau";
+            this.nouveauToolStripMenuItem.Click += new System.EventHandler(this.nouveauToolStripMenuItem_Click);
+            // 
+            // ouvrirToolStripMenuItem
+            // 
+            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
+            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
+            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
+            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
+            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.saveToolStripMenuItem.Text = "&Sauvegarder";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // saveasToolStripMenuItem
+            // 
+            this.saveasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveasToolStripMenuItem.Image")));
+            this.saveasToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
+            this.saveasToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.saveasToolStripMenuItem.Text = "s&Auvegarder Sous..";
+            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
+            // 
+            // imprimerToolStripMenuItem
+            // 
+            this.imprimerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("imprimerToolStripMenuItem.Image")));
+            this.imprimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
+            this.imprimerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.imprimerToolStripMenuItem.Text = "&Imprimer";
+            this.imprimerToolStripMenuItem.Click += new System.EventHandler(this.imprimerToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -920,7 +983,6 @@ namespace vaoc
             this.toolStripCarte.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripAfficherVilles,
             this.toolStripAfficherUnites,
-            this.toolStripAfficherQG,
             this.toolStripAfficherBatailles,
             this.toolStripAffichierTopographie,
             this.toolStripSeparator3,
@@ -941,24 +1003,6 @@ namespace vaoc
             this.toolStripCarte.TabIndex = 6;
             this.toolStripCarte.Text = "Barre d\'outils";
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
-            // 
-            // backgroundTraitement
-            // 
-            this.backgroundTraitement.WorkerReportsProgress = true;
-            this.backgroundTraitement.WorkerSupportsCancellation = true;
-            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
-            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
-            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
-            // 
             // toolStripAfficherVilles
             // 
             this.toolStripAfficherVilles.CheckOnClick = true;
@@ -973,9 +1017,7 @@ namespace vaoc
             // 
             // toolStripAfficherUnites
             // 
-            this.toolStripAfficherUnites.Checked = true;
             this.toolStripAfficherUnites.CheckOnClick = true;
-            this.toolStripAfficherUnites.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripAfficherUnites.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripAfficherUnites.Image = global::vaoc.Properties.Resources.voirUnites;
             this.toolStripAfficherUnites.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -983,19 +1025,6 @@ namespace vaoc
             this.toolStripAfficherUnites.Size = new System.Drawing.Size(23, 22);
             this.toolStripAfficherUnites.Text = "Afficher/Effacer Unités";
             this.toolStripAfficherUnites.Click += new System.EventHandler(this.toolStripAfficherUnites_Click);
-            // 
-            // toolStripAfficherQG
-            // 
-            this.toolStripAfficherQG.Checked = true;
-            this.toolStripAfficherQG.CheckOnClick = true;
-            this.toolStripAfficherQG.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripAfficherQG.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripAfficherQG.Image = global::vaoc.Properties.Resources.voirQG;
-            this.toolStripAfficherQG.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripAfficherQG.Name = "toolStripAfficherQG";
-            this.toolStripAfficherQG.Size = new System.Drawing.Size(23, 22);
-            this.toolStripAfficherQG.Tag = "Afficher / Effacer QG";
-            this.toolStripAfficherQG.Text = "Afficher / Effacer QG";
             // 
             // toolStripAfficherBatailles
             // 
@@ -1022,6 +1051,11 @@ namespace vaoc
             this.toolStripAffichierTopographie.Text = "voir carte topographique";
             this.toolStripAffichierTopographie.Click += new System.EventHandler(this.toolStripButtonAffichierTopographie_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripZoomPlus
             // 
             this.toolStripZoomPlus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -1043,6 +1077,11 @@ namespace vaoc
             this.toolStripZoomMoins.Tag = "Zoom -";
             this.toolStripZoomMoins.Text = "Zoom -";
             this.toolStripZoomMoins.Click += new System.EventHandler(this.toolStripButtonZoomMoins_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripPlusCourtChemin
             // 
@@ -1131,69 +1170,13 @@ namespace vaoc
             this.toolStripButtonMemoire.Text = "Afficher les cases chargées";
             this.toolStripButtonMemoire.Click += new System.EventHandler(this.toolStripButtonMemoire_Click);
             // 
-            // nouveauToolStripMenuItem
+            // backgroundTraitement
             // 
-            this.nouveauToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("nouveauToolStripMenuItem.Image")));
-            this.nouveauToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.nouveauToolStripMenuItem.Name = "nouveauToolStripMenuItem";
-            this.nouveauToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.nouveauToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.nouveauToolStripMenuItem.Text = "&Nouveau";
-            this.nouveauToolStripMenuItem.Click += new System.EventHandler(this.nouveauToolStripMenuItem_Click);
-            // 
-            // ouvrirToolStripMenuItem
-            // 
-            this.ouvrirToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("ouvrirToolStripMenuItem.Image")));
-            this.ouvrirToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ouvrirToolStripMenuItem.Name = "ouvrirToolStripMenuItem";
-            this.ouvrirToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.ouvrirToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.ouvrirToolStripMenuItem.Text = "&Ouvrir";
-            this.ouvrirToolStripMenuItem.Click += new System.EventHandler(this.ouvrirToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveToolStripMenuItem.Image")));
-            this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.saveToolStripMenuItem.Text = "&Sauvegarder";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveasToolStripMenuItem
-            // 
-            this.saveasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveasToolStripMenuItem.Image")));
-            this.saveasToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
-            this.saveasToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.saveasToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.saveasToolStripMenuItem.Text = "s&Auvegarder Sous..";
-            this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
-            // 
-            // imprimerToolStripMenuItem
-            // 
-            this.imprimerToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("imprimerToolStripMenuItem.Image")));
-            this.imprimerToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.imprimerToolStripMenuItem.Name = "imprimerToolStripMenuItem";
-            this.imprimerToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.imprimerToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.imprimerToolStripMenuItem.Text = "&Imprimer";
-            this.imprimerToolStripMenuItem.Click += new System.EventHandler(this.imprimerToolStripMenuItem_Click);
-            // 
-            // ImageCarte
-            // 
-            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
-            this.ImageCarte.Name = "ImageCarte";
-            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
-            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
-            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            this.ImageCarte.TabIndex = 3;
-            this.ImageCarte.TabStop = false;
-            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
-            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
+            this.backgroundTraitement.WorkerReportsProgress = true;
+            this.backgroundTraitement.WorkerSupportsCancellation = true;
+            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
+            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
+            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
             // FormPrincipale
             // 
@@ -1220,11 +1203,11 @@ namespace vaoc
             this.panelTestPlusCourtChemin.ResumeLayout(false);
             this.panelTestPlusCourtChemin.PerformLayout();
             this.panelImage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.menuPrincipal.ResumeLayout(false);
             this.menuPrincipal.PerformLayout();
             this.toolStripCarte.ResumeLayout(false);
             this.toolStripCarte.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1260,7 +1243,6 @@ namespace vaoc
         private System.Windows.Forms.ToolStrip toolStripCarte;
         private System.Windows.Forms.ToolStripButton toolStripAfficherVilles;
         private System.Windows.Forms.ToolStripButton toolStripAfficherUnites;
-        private System.Windows.Forms.ToolStripButton toolStripAfficherQG;
         private System.Windows.Forms.ToolStripButton toolStripZoomPlus;
         private System.Windows.Forms.ToolStripButton toolStripZoomMoins;
         private System.Windows.Forms.ToolStripMenuItem policeDeCaractèresToolStripMenuItem;

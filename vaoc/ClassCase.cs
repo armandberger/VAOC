@@ -198,7 +198,7 @@ namespace vaoc
                     {
                         //il faut supprimer tous les trajets du bloc et les recalculer pour tenir des évolutions du modèle du terrain
                         //une destruction de ponton entraine un recalcul global de tous les trajets du bloc
-                        if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc))
+                        if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc, false))
                         {
                             message = string.Format("ConstruirePonton: Erreur fatale sur RecalculCheminPCCBloc bloc X={0} Y={1}", bloc.xBloc, bloc.yBloc);
                             Debug.WriteLine(message);
@@ -304,7 +304,7 @@ namespace vaoc
                         {
                             //il faut supprimer tous les trajets du bloc et les recalculer pour tenir des évolutions du modèle du terrain
                             //une destruction de ponton entraine un recalcul global de tous les trajets du bloc
-                            if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc))
+                            if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc, false))
                             {
                                 message = string.Format("EndommagerReparerPont: Erreur fatale sur RecalculCheminPCCBloc bloc X={0} Y={1}", bloc.xBloc, bloc.yBloc);
                                 Debug.WriteLine(message);

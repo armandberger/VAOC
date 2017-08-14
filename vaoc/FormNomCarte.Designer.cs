@@ -259,7 +259,7 @@ namespace vaoc
             this.textBoxVictoire.MaxLength = 5;
             this.textBoxVictoire.Name = "textBoxVictoire";
             this.textBoxVictoire.Size = new System.Drawing.Size(60, 20);
-            this.textBoxVictoire.TabIndex = 0;
+            this.textBoxVictoire.TabIndex = 5;
             this.textBoxVictoire.Text = "0";
             this.textBoxVictoire.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 

@@ -195,7 +195,7 @@ namespace vaoc
             //vérifie que les conditions sont requises pour un PCC
             if (tailleBloc < 10 || tailleBloc > 60)
             {
-                MessageBox.Show("Tous les auteurs recommandent une taille de bloc entre 10 et 60. La valeur indiquée est " + this.textBoxBlocPCC.Text, "PCC Hierarchique", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("Tous les auteurs recommandent une taille de bloc entre 10 et 60. La valeur indiquée est " + this.textBoxBlocPCC.Text, "FormHPA", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
@@ -233,8 +233,14 @@ namespace vaoc
                     }
                 }
             }
-            
+
             //lancement du traitement
+            //on commence par charger toutes les cases, de toute façon on en aura besoin et sinon cela crée un verrou d'attente énorme sur le chargement
+            if (!Donnees.m_donnees.ChargerToutesLesCases())
+            {
+                MessageBox.Show("buttonPCC_Click : erreur dans Donnees.m_donnees.ChargerToutesLesCases()", "FormHPA", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                return;
+            }
             this.buttonValider.Enabled = false;
             this.buttonPCC.Text = "Arrêt";
             m_oldcurseur = Cursor;

@@ -816,19 +816,14 @@ namespace vaoc
             {
                 m_listeIndex = Array.CreateInstance(typeof(int), maxX, maxY);
 
-                if (0 == this.Count)
+                for (int x = 0; x < maxX; x++) for (int y = 0; y < maxY; y++) { m_listeIndex.SetValue(-1, x, y); }
+
+                for (int i = 0; i < this.Count; i++)
                 {
-                    for (int x=0; x < maxX; x++) for (int y=0; y < maxY; y++) { m_listeIndex.SetValue(-1, x, y); }
-                }
-                else
-                {
-                    for (int i = 0; i < this.Count; i++)
+                    TAB_CASERow ligneCase = this[i];
+                    if (ligneCase.I_X < maxX && ligneCase.I_Y < maxY)
                     {
-                        TAB_CASERow ligneCase = this[i];
-                        if (ligneCase.I_X < maxX && ligneCase.I_Y < maxY)
-                        {
-                            m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
-                        }
+                        m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
                 }
                 return true;
@@ -978,7 +973,50 @@ namespace vaoc
                             ID_CASE})));
                 }
                 return retour;
-            }            
+            }
+
+            internal bool ChargerDonnneesCases(ref Donnees.TAB_CASEDataTable donneesSource, int x, int y, int tour, int phase)
+            {
+                try
+                {
+                    string repertoire = nomRepertoireCases();
+                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+
+                    //on recherche le dernier fichier sauvegardé sur les cases
+                    int phaserecherche = phase;
+                    int tourrecherche = tour;
+                    while (!File.Exists(nomfichier) && tourrecherche >= 0)
+                    {
+                        phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                        if (phaserecherche < 0)
+                        {
+                            phaserecherche = m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+                            tourrecherche--;
+                        }
+                        nomfichier = NomFichierCases(x, y, tourrecherche, phaserecherche, repertoire);
+                        Debug.WriteLine("ChargerCases, test sur le fichier " + nomfichier);
+                    }
+
+                    if (tourrecherche < 0)
+                    {
+                        MessageBox.Show(string.Format("Erreur sur ChargerDonnneesCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
+                            x, y, tour, phase)
+                            , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return false;
+                    }
+
+                    ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
+                    ZipArchiveEntry fichier = fichierZip.Entries[0];
+                    donneesSource.ReadXml(fichier.Open());//m_donnees.TAB_CASE.ReadXml(fichier.Open()); ne marche pas mais je ne sais pas pourquoi !
+                    fichierZip.Dispose();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Erreur sur TABCASEDataTables.ChargerDonnneesCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                return true;
+            }
 
             internal bool ChargerCases(int x, int y, int tour, int phase)
             {
@@ -1018,15 +1056,39 @@ namespace vaoc
                     ZipArchiveEntry fichier = fichierZip.Entries[0];
                     donneesSource.ReadXml(fichier.Open());
                     fichierZip.Dispose();
+
+                    DateTime timeStart;
+                    TimeSpan perf;
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+
+                    timeStart = DateTime.Now;
                     int debutNouvellesLignes = this.Count;
-                    this.Merge(donneesSource, false);
+                    //Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); -> prends beaucoup trop de temps, >50 secondes quand la table est déjà très chargée
+                    foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
+                    {
+                        Donnees.m_donnees.TAB_CASE.ImportRow(ligneCasePlus);
+                        //Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(
+                        //    ligneCasePlus.ID_CASE,
+                        //    ligneCasePlus.ID_MODELE_TERRAIN,
+                        //    ligneCasePlus.I_X,
+                        //    ligneCasePlus.I_Y,
+                        //    ligneCasePlus.ID_PROPRIETAIRE,
+                        //    ligneCasePlus.ID_NOUVEAU_PROPRIETAIRE,
+                        //    ligneCasePlus.ID_MODELE_TERRAIN_SI_OCCUPE,
+                        //    ligneCasePlus.I_COUT);
+                    }
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds,x,y));
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     //mise à jour de l'index
-                    Debug.WriteLine("ChargerCases :" + this.Count);
+                    timeStart = DateTime.Now;
                     for (int i = debutNouvellesLignes; i < this.Count; i++)
                     {
                         TAB_CASERow ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;
                 }
                 catch (Exception e)
@@ -1265,6 +1327,11 @@ namespace vaoc
                 }
 
                 return resCase;
+            }
+
+            internal void SetValueIndex(int i, int i_X, int i_Y)
+            {
+                m_listeIndex.SetValue(i, i_X, i_Y);
             }
         }
 
@@ -1523,11 +1590,14 @@ namespace vaoc
 
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
-            if (!SauvegarderCases()) { return false; }
             //ChargerToutesLesCases();//pour test
-            if(0==iPhase)
+            //if(0==iPhase)
+            //{
+            //    Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+            //}
+            if (0 != iPhase)
             {
-                Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+                if (!SauvegarderCases()) { return false; }
             }
             return Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
         }
@@ -1541,21 +1611,42 @@ namespace vaoc
             //int iTour, iPhase;
             //iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
             //iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
-
+            Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
+            Cursor oldCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            Donnees.m_donnees.TAB_CASE.Clear();
             for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
-                {
-                    //on vérifie que le chargement n'a pas déjà été fait
+                {;
+                    //on vérifie que le chargement n'a pas déjà été fait ->appelé uniquement en génération de cartes
+                    /*
                     string requete = string.Format("I_X={0} AND I_Y={1}",x, y);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
                     if (listeCases.Count() >0) 
                     { 
                         continue; //cases déjà chargées
                     }
-                    if (!ChargerCases(x, y)) { return false; }
+                    */
+                    //if (!ChargerCases(x, y)) { return false; }
+                    //if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref Donnees.m_donnees.tableTAB_CASE, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; } -> ne marche pas mais je ne sais pas pourquoi !
+                    if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)){ return false; }
                 }
             }
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+            //int debutNouvellesLignes = Donnees.m_donnees.TAB_CASE.Count;
+            Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); 
+            //perf = DateTime.Now - timeStart;
+            //Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            //mise à jour de l'index
+            //timeStart = DateTime.Now;
+            for (int i = 0 /*debutNouvellesLignes*/; i < Donnees.m_donnees.TAB_CASE.Count; i++)
+            {
+                TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
+                Donnees.m_donnees.TAB_CASE.SetValueIndex(i, ligneCase.I_X, ligneCase.I_Y);
+            }
+            Cursor.Current = oldCursor;
             return true;
         }
 

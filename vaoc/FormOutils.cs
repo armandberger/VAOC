@@ -345,7 +345,7 @@ namespace vaoc
                 this.listBoxImport.Items.Clear();
 
                 donneesImport.Clear();
-                donneesImport.ReadXml(textBoxChoixFichierImport.Text);
+                Dal.ChargerPartie(textBoxChoixFichierImport.Text, donneesImport);
                 foreach (DataTable table in donneesImport.Tables)
                 {
                     this.listBoxImport.Items.Add(table.TableName + " : " + table.Rows.Count.ToString() + " lignes");

@@ -239,24 +239,83 @@ namespace vaoc
             Donnees.m_donnees.TAB_PCC_CASE_BLOCS.Clear();
             Donnees.m_donnees.TAB_PCC_COUTS.Clear();
             Donnees.m_donnees.TAB_PCC_VILLES_INUTILE.Clear();
-             * */
-            /*
-           int i = 0;
-           while (i< Donnees.m_donnees.TAB_MESSAGE.Count())
-           {
-               Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
-               if (ligneMessage.ID_PION_EMETTEUR == 3389 && ligneMessage.ID_MESSAGE > 5927)
-               {
-                   ligneMessage.Delete();
-               }
-               else
-               {
-                   i++;
-               }
-           }
-           */
+            Donnees.m_donnees.TAB_PCC_VILLES.Clear();
+           /*
+          int i = 0;
+          while (i< Donnees.m_donnees.TAB_MESSAGE.Count())
+          {
+              Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+              if (ligneMessage.ID_PION_EMETTEUR == 3389 && ligneMessage.ID_MESSAGE > 5927)
+              {
+                  ligneMessage.Delete();
+              }
+              else
+              {
+                  i++;
+              }
+          }
+          */
             #endregion
 
+            #region correction ciblée de la carte
+            /*
+            //pour créer les listeindex, sinon crash au chargement
+            Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);//optimisation mémoire
+            //Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
+            List<Donnees.TAB_CASERow> listeCasesModif = new List<Donnees.TAB_CASERow>();
+            int x = 1938, y = 594;
+            Donnees.m_donnees.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            listeCasesModif.Add(Donnees.m_donnees.TAB_CASE.FindByXY(x, y));
+
+            x = 1939;
+            if(null == Donnees.m_donnees.TAB_CASE.FindByXY(x, y))
+            {
+                Donnees.m_donnees.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            }
+            listeCasesModif.Add(Donnees.m_donnees.TAB_CASE.FindByXY(x, y));
+
+            x = 1940;
+            if (null == Donnees.m_donnees.TAB_CASE.FindByXY(x, y))
+            {
+                Donnees.m_donnees.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            }
+            listeCasesModif.Add(Donnees.m_donnees.TAB_CASE.FindByXY(x, y));
+            AStar etoile = new AStar();
+            List<Bloc> listeBlocsARecomposer = new List<Bloc>();
+            ClassHPAStarCreation hpaStarCreation = new ClassHPAStarCreation(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
+            hpaStarCreation.InitialisationIdTrajet();
+            foreach (Donnees.TAB_CASERow ligneCaseModif in listeCasesModif)
+            {
+                ligneCaseModif.ID_MODELE_TERRAIN = 59;
+
+                List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(ligneCaseModif.I_X, ligneCaseModif.I_Y);
+                foreach (Bloc bloc in listeBlocs)
+                {
+                    if (!listeBlocsARecomposer.Contains(bloc))
+                    {
+                        listeBlocsARecomposer.Add(new Bloc(bloc.xBloc, bloc.yBloc));
+                    }
+                }
+            }
+            foreach (Bloc bloc in listeBlocsARecomposer)
+            {
+                //il faut supprimer tous les trajets du bloc et les recalculer pour tenir des évolutions du modèle du terrain
+                //une destruction de ponton entraine un recalcul global de tous les trajets du bloc
+                if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc, true))
+                {
+                    string message = string.Format("Correctifs: Erreur fatale sur RecalculCheminPCCBloc bloc X={0} Y={1}", bloc.xBloc, bloc.yBloc);
+                    Debug.WriteLine(message);
+                    MessageBox.Show(message, "Correctif", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
+            // Il faut recalculer la table d'optimisation HPA
+            Donnees.m_donnees.TAB_PCC_COUTS.Initialisation();
+            */
+            #endregion
+
+            /*
             foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
             {
                 if (ligneOrdre.ID_ORDRE < 0) { ligneOrdre.ID_ORDRE = -ligneOrdre.ID_ORDRE; }
@@ -273,6 +332,7 @@ namespace vaoc
             {
                 if (!lignePion.IsID_PION_REMPLACENull() && 0==lignePion.ID_PION_REMPLACE) { lignePion.SetID_PION_REMPLACENull(); }
             }
+            */
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
             //    lignePion.SetID_BATAILLENull();

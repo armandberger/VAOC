@@ -47,12 +47,13 @@ namespace vaoc
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.buttonControleCoins = new System.Windows.Forms.Button();
             this.labelAvisTailleBloc = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(579, 122);
+            this.buttonValider.Location = new System.Drawing.Point(579, 129);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 2;
@@ -124,7 +125,7 @@ namespace vaoc
             // 
             // textBoxBlocPCC
             // 
-            this.textBoxBlocPCC.Location = new System.Drawing.Point(79, 127);
+            this.textBoxBlocPCC.Location = new System.Drawing.Point(79, 134);
             this.textBoxBlocPCC.Name = "textBoxBlocPCC";
             this.textBoxBlocPCC.Size = new System.Drawing.Size(42, 20);
             this.textBoxBlocPCC.TabIndex = 38;
@@ -134,7 +135,7 @@ namespace vaoc
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(15, 130);
+            this.label10.Location = new System.Drawing.Point(15, 137);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(58, 13);
             this.label10.TabIndex = 37;
@@ -142,7 +143,7 @@ namespace vaoc
             // 
             // buttonPCC
             // 
-            this.buttonPCC.Location = new System.Drawing.Point(135, 124);
+            this.buttonPCC.Location = new System.Drawing.Point(135, 131);
             this.buttonPCC.Name = "buttonPCC";
             this.buttonPCC.Size = new System.Drawing.Size(157, 23);
             this.buttonPCC.TabIndex = 39;
@@ -196,7 +197,7 @@ namespace vaoc
             // 
             // buttonControleCoins
             // 
-            this.buttonControleCoins.Location = new System.Drawing.Point(362, 124);
+            this.buttonControleCoins.Location = new System.Drawing.Point(362, 131);
             this.buttonControleCoins.Name = "buttonControleCoins";
             this.buttonControleCoins.Size = new System.Drawing.Size(157, 23);
             this.buttonControleCoins.TabIndex = 44;
@@ -206,17 +207,27 @@ namespace vaoc
             // 
             // labelAvisTailleBloc
             // 
-            this.labelAvisTailleBloc.Location = new System.Drawing.Point(15, 162);
+            this.labelAvisTailleBloc.Location = new System.Drawing.Point(15, 169);
             this.labelAvisTailleBloc.Name = "labelAvisTailleBloc";
             this.labelAvisTailleBloc.Size = new System.Drawing.Size(639, 54);
             this.labelAvisTailleBloc.TabIndex = 45;
             this.labelAvisTailleBloc.Text = resources.GetString("labelAvisTailleBloc.Text");
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(247, 106);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(346, 13);
+            this.label3.TabIndex = 46;
+            this.label3.Text = "note : en version parallèle, l\'increment se fait ligne Ybloc par ligne Ybloc.";
+            // 
             // FormHPA
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(666, 225);
+            this.ClientSize = new System.Drawing.Size(666, 232);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.labelAvisTailleBloc);
             this.Controls.Add(this.buttonControleCoins);
             this.Controls.Add(this.labelYbloc);
@@ -264,5 +275,6 @@ namespace vaoc
         private System.ComponentModel.BackgroundWorker backgroundTraitement;
         private System.Windows.Forms.Button buttonControleCoins;
         private System.Windows.Forms.Label labelAvisTailleBloc;
+        private System.Windows.Forms.Label label3;
     }
 }

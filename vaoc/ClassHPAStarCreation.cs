@@ -355,8 +355,10 @@ namespace vaoc
             int i;
             int coutMin = int.MaxValue;
             int terrainMin = -1;
+            int i_lgpcc;
             try
             {
+                i_lgpcc = Math.Max(CST_LGPCC, tailleBloc / 5);
                 //recherche du terrain avec le cout minimum sur la ligne
                 for (i = debut; i < fin + 1; i++)//+1 car frontière commune avec le voisin
                 {
@@ -386,7 +388,7 @@ namespace vaoc
                     if (terrainMin == ligneCase.ID_MODELE_TERRAIN)
                     {
                         //case de sortie possible
-                        if (0 == nbCasesContinue || nbCasesContinue > CST_LGPCC)
+                        if (0 == nbCasesContinue || nbCasesContinue > i_lgpcc)
                         {
                             //LogFile.Notifier(string.Format("Point x={0}, y={1}, id={2}", ligneCase.I_X, ligneCase.I_Y, ligneCase.ID_CASE));
                             nbCases++;
@@ -536,12 +538,12 @@ namespace vaoc
                     while (j < listeCases.Length)
                     {
                         ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j].ID_CASE);
-                        if (ligneCaseDepart.I_X == ligneCaseArrivee.I_X || ligneCaseDepart.I_Y == ligneCaseArrivee.I_Y)
-                        {
-                        //    j++;//pas de trajets entre deux points sur la même ligne
-                        //    continue;
-                            //Debug.WriteLine("meme ligne");
-                        }
+                        //if (ligneCaseDepart.I_X == ligneCaseArrivee.I_X || ligneCaseDepart.I_Y == ligneCaseArrivee.I_Y)
+                        //{
+                        //    //    j++;//pas de trajets entre deux points sur la même ligne
+                        //    //    continue;
+                        //    //Debug.WriteLine("meme ligne");
+                        //}
                         string requete = string.Format("ID_CASE_DEBUT={0} AND ID_CASE_FIN={1} AND I_BLOCX={2} AND I_BLOCY={3}",
                             ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, xBloc, yBloc);
                         //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);//pour éviter toute modification durant la requete
@@ -777,32 +779,44 @@ namespace vaoc
         /// </summary>
         /// <param name="xBloc">position en x du bloc</param>
         /// <param name="yBloc">position en y du bloc</param>
+        /// <param name="bCorrection">true s'il s'agit d'une correction definitive de la carte, false sinon (par une action d'un joueur, réversible)</param>
         /// <returns>true si OK, false si KO</returns>
-        public bool RecalculCheminPCCBloc(int xBloc, int yBloc)
+        public bool RecalculCheminPCCBloc(int xBloc, int yBloc, bool bCorrection)
         {
             //on supprime tous les chemins du bloc courant
             string requete = string.Format("I_BLOCX={0} AND I_BLOCY={1}", xBloc, yBloc);
             Donnees.TAB_PCC_COUTSRow[] listeTrajets = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
             foreach (Donnees.TAB_PCC_COUTSRow trajet in listeTrajets)
             {
-                if (trajet.B_CREATION)
+                if (bCorrection)
                 {
-                    //si c'est un trajet crée lors d'une précédente modification, il faut simplement le supprimer
-                    Dal.SupprimerTrajet(trajet.ID_TRAJET, "");
+                    if (null== m_etoileParallele)
+                    {
+                        m_etoileParallele = new AStar[NB_TACHES];
+                        for (int i = 0; i < NB_TACHES; i++) { m_etoileParallele[i] = new AStar(); }
+                    }
                 }
                 else
                 {
-                    //si c'est un trajet jamais modifié, il faut le déplacer dans les trajets "supprimés"
-                    Donnees.m_donnees.TAB_PCC_COUTS_SUPPRIME.AddTAB_PCC_COUTS_SUPPRIMERow(
-                        trajet.I_BLOCX, 
-                        trajet.I_BLOCY, 
-                        trajet.ID_CASE_DEBUT, 
-                        trajet.ID_CASE_FIN, 
-                        trajet.I_COUT, 
-                        trajet.ID_TRAJET, 
-                        trajet.I_COUT_INITIAL);
+                    if (trajet.B_CREATION)
+                    {
+                        //si c'est un trajet crée lors d'une précédente modification, il faut simplement le supprimer
+                        Dal.SupprimerTrajet(trajet.ID_TRAJET, "");
+                    }
+                    else
+                    {
+                        //si c'est un trajet jamais modifié, il faut le déplacer dans les trajets "supprimés"
+                        Donnees.m_donnees.TAB_PCC_COUTS_SUPPRIME.AddTAB_PCC_COUTS_SUPPRIMERow(
+                            trajet.I_BLOCX,
+                            trajet.I_BLOCY,
+                            trajet.ID_CASE_DEBUT,
+                            trajet.ID_CASE_FIN,
+                            trajet.I_COUT,
+                            trajet.ID_TRAJET,
+                            trajet.I_COUT_INITIAL);
+                    }
                 }
-                //dans les deux cas on supprime le trajet en base
+                //dans tous les cas on supprime le trajet en base
                 trajet.Delete();
             }
 

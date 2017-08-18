@@ -24,6 +24,9 @@ namespace vaoc
             List<NomDePont> liste = new List<NomDePont>();
             List<Donnees.TAB_CASERow> casesVoisines = new List<Donnees.TAB_CASERow>();
 
+            // on charge toutes les cases qui ne seraient pas encore chargées
+            Donnees.m_donnees.ChargerToutesLesCases();
+
             //string requete = ;
             //Donnees.TAB_CASERow[] listeCasesPonts = (Donnees.TAB_CASERow[]) Donnees.m_donnees.TAB_CASE.Select(requete).ToList<Donnees.TAB_CASERow>;
             List<Donnees.TAB_CASERow> listeCasesPont = (from Case in Donnees.m_donnees.TAB_CASE

@@ -1591,10 +1591,10 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 6;
             //ChargerToutesLesCases();//pour test
-            //if(0==iPhase)
-            //{
-            //    Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
-            //}
+            if (0 == iPhase)
+            {
+                Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+            }
             if (0 != iPhase)
             {
                 if (!SauvegarderCases()) { return false; }
@@ -1619,15 +1619,13 @@ namespace vaoc
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
                 {;
-                    //on vérifie que le chargement n'a pas déjà été fait ->appelé uniquement en génération de cartes
-                    /*
+                    //on vérifie que le chargement n'a pas déjà été fait ->appelé uniquement en génération de cartes, faux, appeler pour les noms de ponts par exemple
                     string requete = string.Format("I_X={0} AND I_Y={1}",x, y);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
                     if (listeCases.Count() >0) 
                     { 
                         continue; //cases déjà chargées
                     }
-                    */
                     //if (!ChargerCases(x, y)) { return false; }
                     //if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref Donnees.m_donnees.tableTAB_CASE, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; } -> ne marche pas mais je ne sais pas pourquoi !
                     if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)){ return false; }

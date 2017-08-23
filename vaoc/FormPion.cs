@@ -207,6 +207,7 @@ namespace vaoc
                     ligneGrid.Cells["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"].Value = lignePion.IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() ? -1 : lignePion.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
                     ligneGrid.Cells["I_VICTOIRE"].Value = lignePion.IsI_VICTOIRENull() ? -1 : lignePion.I_VICTOIRE;
                 }
+                dataGridViewPions.Sort(dataGridViewPions.Columns["ID_PION"], ListSortDirection.Ascending);
             }
         }
         #endregion

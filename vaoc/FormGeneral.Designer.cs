@@ -471,20 +471,18 @@ namespace vaoc
             this.labelNomCarte.AutoSize = true;
             this.labelNomCarte.Location = new System.Drawing.Point(592, 225);
             this.labelNomCarte.Name = "labelNomCarte";
-            this.labelNomCarte.Size = new System.Drawing.Size(100, 13);
+            this.labelNomCarte.Size = new System.Drawing.Size(0, 13);
             this.labelNomCarte.TabIndex = 46;
             this.labelNomCarte.Tag = "nom de la carte principale";
-            this.labelNomCarte.Text = "nom du fichier carte";
             // 
             // labelNomCarteZoom
             // 
             this.labelNomCarteZoom.AutoSize = true;
             this.labelNomCarteZoom.Location = new System.Drawing.Point(610, 294);
             this.labelNomCarteZoom.Name = "labelNomCarteZoom";
-            this.labelNomCarteZoom.Size = new System.Drawing.Size(100, 13);
+            this.labelNomCarteZoom.Size = new System.Drawing.Size(0, 13);
             this.labelNomCarteZoom.TabIndex = 48;
             this.labelNomCarteZoom.Tag = "nom de la carte principale";
-            this.labelNomCarteZoom.Text = "nom du fichier carte";
             // 
             // buttonImageCarteZoom
             // 
@@ -501,10 +499,9 @@ namespace vaoc
             this.labelNomCarteGris.AutoSize = true;
             this.labelNomCarteGris.Location = new System.Drawing.Point(615, 378);
             this.labelNomCarteGris.Name = "labelNomCarteGris";
-            this.labelNomCarteGris.Size = new System.Drawing.Size(100, 13);
+            this.labelNomCarteGris.Size = new System.Drawing.Size(0, 13);
             this.labelNomCarteGris.TabIndex = 50;
             this.labelNomCarteGris.Tag = "nom de la carte principale";
-            this.labelNomCarteGris.Text = "nom du fichier carte";
             // 
             // buttonImageCarteGris
             // 
@@ -622,10 +619,9 @@ namespace vaoc
             this.labelNomCarteTopographique.AutoSize = true;
             this.labelNomCarteTopographique.Location = new System.Drawing.Point(615, 421);
             this.labelNomCarteTopographique.Name = "labelNomCarteTopographique";
-            this.labelNomCarteTopographique.Size = new System.Drawing.Size(100, 13);
+            this.labelNomCarteTopographique.Size = new System.Drawing.Size(0, 13);
             this.labelNomCarteTopographique.TabIndex = 62;
             this.labelNomCarteTopographique.Tag = "nom de la carte principale";
-            this.labelNomCarteTopographique.Text = "nom du fichier carte";
             // 
             // comboBoxID_JEU
             // 

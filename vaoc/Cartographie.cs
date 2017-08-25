@@ -61,7 +61,7 @@ namespace vaoc
             }
             catch (Exception ex)
             {
-                LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE, ex.Message));
+                LogFile.Notifier(string.Format("ChargerLesFichiers Erreur {1} au chargement de l'image S_NOM_CARTE_HISTORIQUE: {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE, ex.Message));
                 return false;
             }
             try
@@ -74,7 +74,7 @@ namespace vaoc
             }
             catch (Exception ex)
             {
-                LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS, ex.Message));
+                LogFile.Notifier(string.Format("ChargerLesFichiers Erreur {1} au chargement de l'image S_NOM_CARTE_GRIS : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS, ex.Message));
                 return false;
             }
             try
@@ -87,7 +87,7 @@ namespace vaoc
             }
             catch (Exception ex)
             {
-                LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM, ex.Message));
+                LogFile.Notifier(string.Format("ChargerLesFichiers Erreur {1} au chargement de l'image S_NOM_CARTE_ZOOM : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM, ex.Message));
                 //return false; c'est possible maintenant, de ne pas avoir de carte zoom
             }
             try
@@ -100,7 +100,7 @@ namespace vaoc
             }
             catch (Exception ex)
             {
-                LogFile.Notifier(string.Format("Erreur {1} au chargement de l'image : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE, ex.Message));
+                LogFile.Notifier(string.Format("ChargerLesFichiers Erreur {1} au chargement de l'image S_NOM_CARTE_TOPOGRAPHIQUE : {0}", Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE, ex.Message));
                 return false;
             }
             m_rapportZoom = (null != m_imageCarteZoom) ? (float)m_imageCarteZoom.Width / (float)m_imageCarteHistorique.Width : 1;

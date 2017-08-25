@@ -1022,15 +1022,19 @@ namespace vaoc
             {
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
+                string repertoire, nomfichier;
+                int i=0, phaserecherche, tourrecherche, debutNouvellesLignes;
+                TAB_CASERow ligneCase;
+
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    string repertoire = nomRepertoireCases();
-                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+                    repertoire = nomRepertoireCases();
+                    nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
 
                     //on recherche le dernier fichier sauvegardé sur les cases
-                    int phaserecherche = phase;
-                    int tourrecherche = tour;
+                    phaserecherche = phase;
+                    tourrecherche = tour;
                     while (!File.Exists(nomfichier) && tourrecherche >= 0)
                     {
                         phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
@@ -1062,7 +1066,7 @@ namespace vaoc
                     Monitor.Enter(Donnees.m_donnees.TAB_CASE);
 
                     timeStart = DateTime.Now;
-                    int debutNouvellesLignes = this.Count;
+                    debutNouvellesLignes = this.Count;
                     //Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); -> prends beaucoup trop de temps, >50 secondes quand la table est déjà très chargée
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
@@ -1079,14 +1083,14 @@ namespace vaoc
                     }
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds,x,y));
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     //mise à jour de l'index
                     timeStart = DateTime.Now;
-                    for (int i = debutNouvellesLignes; i < this.Count; i++)
+                    for (i = debutNouvellesLignes; i < this.Count; i++)
                     {
-                        TAB_CASERow ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
+                        ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;

@@ -627,12 +627,23 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             //string message;
             //int i = 0;
 
-            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
-            foreach (Donnees.TAB_PIONRow ligneP in Donnees.m_donnees.TAB_PION)
+            try
             {
-                liste.Add(ligneP);
+                List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+                foreach (Donnees.TAB_PIONRow ligneP in Donnees.m_donnees.TAB_PION)
+                {
+                    liste.Add(ligneP);
+                }
+                Parallel.ForEach(liste, item => item.PlacerStatique());
             }
-            Parallel.ForEach(liste, item => item.PlacerStatique());
+            catch (Exception ex)
+            {
+                string message = string.Format("exception PlacerLesUnitesStatiquesParallele {3} : {0} : {1} :{2}", 
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message, 
+                       ex.StackTrace, ex.GetType().ToString());
+                MessageBox.Show(message);
+                return false;
+            }
             return true;
         }
 

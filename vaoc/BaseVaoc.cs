@@ -886,16 +886,20 @@ namespace vaoc
                         {
                             if (!m_donnees.ChargerCases(x, y))
                             {
-                                return null;
+                                string message = string.Format("TrouveCase m_donnees.ChargerCases ne trouve pas de valeurs pour x={0} et y={1}", x, y);
+                                throw new Exception(message);
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
                         return this[index];
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    return null;
+                    MessageBox.Show("Erreur sur TABCASEDataTables.FindByXY :" + ex.Message + ex.StackTrace, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string message = string.Format("TrouveCase m_donnees.ChargerCases tombe en exception x={0} et y={1} : {2}, {3}",
+                        x, y, ex.Message, ex.StackTrace);
+                    throw new Exception(message);
                 }
             }
 
@@ -1095,11 +1099,11 @@ namespace vaoc
                     Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     Cursor.Current = oldCursor;
-                    MessageBox.Show("Erreur sur TABCASEDataTables.ChargerCases :" + e.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    MessageBox.Show("Erreur sur TABCASEDataTables.ChargerCases :" + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    throw ex;//tres grave en fait
                 }
                 return true;
             }
@@ -1259,6 +1263,70 @@ namespace vaoc
                 return resCase;
             }
 
+            public Node[] CasesVoisines(Node source)
+            {
+                int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;
+                int hauteur = m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1;
+                Node[] resCase;
+
+                int[] x = new int[8];
+                int[] y = new int[8];
+                int nb_points = 0;
+                if (source.I_X > 0 && source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_X > 0 && source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+                if (source.I_X < largeur && source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+                if (source.I_X < largeur && source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_X > 0)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y;
+                }
+                if (source.I_X < largeur)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y;
+                }
+                if (source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+                resCase = new Node[nb_points];
+                for (int i = 0; i < nb_points; i++)
+                {
+                    resCase[i] = new Node(FindByXY(x[i], y[i]));
+                }
+
+                if (0 == resCase.Length)
+                {
+                    string message = string.Format("CasesVoisines ne trouve aucun node pour x={0} et y={1}", source.I_X, source.I_Y);
+                    throw new Exception(message);
+                }
+
+                return resCase;
+            }
+
             public IList<Donnees.TAB_CASERow> CasesVoisinesInBloc(TAB_CASERow source, int xBloc, int yBloc, int tailleBloc)
             {
                 IList<Donnees.TAB_CASERow> resCase;
@@ -1321,6 +1389,80 @@ namespace vaoc
                     {
                         Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);
                         resCase.Add(ligneCase);
+                    }
+                }
+
+                if (0 == resCase.Count)
+                {
+                    string message = string.Format("CasesVoisinesInBloc ne trouve aucun voisin pour x={0} et y={1}", source.I_X, source.I_Y);
+                    throw new Exception(message);
+                }
+
+                return resCase;
+            }
+
+            public IList<Node> CasesVoisinesInBloc(Node source, int xBloc, int yBloc, int tailleBloc)
+            {
+                IList<Node> resCase;
+                int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;
+                int hauteur = m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1;
+                int xmin = xBloc * tailleBloc;
+                int xmax = xmin + tailleBloc;
+                int ymin = yBloc * tailleBloc;
+                int ymax = ymin + tailleBloc;
+
+                int[] x = new int[8];
+                int[] y = new int[8];
+                int nb_points = 0;
+                if (source.I_X > 0 && source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_X > 0 && source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+                if (source.I_X < largeur && source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+                if (source.I_X < largeur && source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_X > 0)
+                {
+                    x[nb_points] = source.I_X - 1;
+                    y[nb_points++] = source.I_Y;
+                }
+                if (source.I_X < largeur)
+                {
+                    x[nb_points] = source.I_X + 1;
+                    y[nb_points++] = source.I_Y;
+                }
+                if (source.I_Y > 0)
+                {
+                    x[nb_points] = source.I_X;
+                    y[nb_points++] = source.I_Y - 1;
+                }
+                if (source.I_Y < hauteur)
+                {
+                    x[nb_points] = source.I_X;
+                    y[nb_points++] = source.I_Y + 1;
+                }
+
+                resCase = new List<Node>();
+                for (int i = 0; i < nb_points; i++)
+                {
+                    if (x[i] >= xmin && x[i] <= xmax && y[i] >= ymin && y[i] <= ymax)
+                    //if (x[i] >= xmin && x[i] < xmax && y[i] >= ymin && y[i] < ymax)
+                    {
+                        Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);
+                        resCase.Add(new Node(ligneCase));
                     }
                 }
 
@@ -1573,23 +1715,28 @@ namespace vaoc
 
         internal bool SauvegarderPartie(string nomFichier)
         {
-            if (0 == TAB_JEU.Count)
-            {
-                //possible sur une nouvelle partie
-                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, true);
-            }
+            //if (0 == TAB_JEU.Count)
+            //{
+            //    //possible sur une nouvelle partie
+            //    return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, true);
+            //}
 
-            //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 6;
+            ////Mise à jour de la version du fichier pour de futures mise à jour
+            //TAB_JEU[0].I_VERSION = 6;
             return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true);
         }
 
         internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur)
         {
+            bool retour;
+
             if (0 == TAB_JEU.Count)
             {
                 //possible sur une nouvelle partie
-                return Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, bSuperieur);
+                Monitor.Enter(Donnees.m_donnees);
+                retour=Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, bSuperieur);
+                Monitor.Exit(Donnees.m_donnees);
+                return retour;
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
@@ -1603,7 +1750,12 @@ namespace vaoc
             {
                 if (!SauvegarderCases()) { return false; }
             }
-            return Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
+
+            Monitor.Enter(Donnees.m_donnees);
+            retour=Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
+            Monitor.Exit(Donnees.m_donnees);
+            return retour;
+
         }
 
         internal bool ChargerToutesLesCases()
@@ -1678,13 +1830,15 @@ namespace vaoc
                 {
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
                         x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    if (0 == listeCases.Count()) { continue; }
+                    if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE); continue; }
                     Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
                     for (int i = 0; i < listeCases.Count(); i++)
                     {
                         baseCases.ImportRow(listeCases[i]);
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                     if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
                 }
             }

@@ -191,40 +191,6 @@ namespace vaoc
             graph.Dispose();
         }
 
-        public static void AfficherChemin(Bitmap imageSource, List<LigneCASE> chemin, Color couleur, int taillePinceau)
-        {
-            Graphics graph = Graphics.FromImage(imageSource);
-            int x1, y1;
-
-            Pen stylo = new Pen(couleur, taillePinceau);
-            //stylo.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-            //stylo.DashOffset = 5;
-            //System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
-            x1 = y1 = -1;
-            //LogFile.CreationLogFile("C:\\Users\\Public\\Documents\\vaoc\\poudre_et_biere\\test.log");
-            foreach (LigneCASE noeud in chemin)
-            {
-                if (x1 == -1 || y1 == -1)
-                {
-                    x1 = noeud.I_X;
-                    y1 = noeud.I_Y;
-                }
-                else
-                {
-                    if (Math.Abs(x1 - noeud.I_X) <= 1 && Math.Abs(y1 - noeud.I_Y) <= 1)
-                    {
-                        //path.AddLine(x1, y1, noeud.I_X, noeud.I_Y);
-                        graph.DrawRectangle(stylo, noeud.I_X, noeud.I_Y, 1, 1);//trace avec des points, permet de voir s'il en manque
-                    }
-                    x1 = noeud.I_X;
-                    y1 = noeud.I_Y;
-                    LogFile.Notifier("AfficherChemin x=" + x1 + " y=" + y1);
-                }
-            }
-            //graph.DrawPath(stylo, path);
-            graph.Dispose();
-        }
-
         public static void AfficherUnites(Constantes.MODELESCARTE modele)
         {
             Bitmap imageSource = GetImage(modele);
@@ -635,6 +601,18 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                     liste.Add(ligneP);
                 }
                 Parallel.ForEach(liste, item => item.PlacerStatique());
+            }
+            catch (AggregateException ae)
+            {
+                string messageEX = string.Empty;
+                foreach (var exAE in ae.InnerExceptions)
+                {
+                    messageEX += string.Format("exceptionAE PlacerLesUnitesStatiquesParallele {3} : {0} : {1} :{2}",
+                           exAE.Message, (null == exAE.InnerException) ? "sans inner exception" : exAE.InnerException.Message,
+                           exAE.StackTrace, exAE.GetType().ToString());
+                }
+                MessageBox.Show(messageEX);
+                return false;
             }
             catch (Exception ex)
             {

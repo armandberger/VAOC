@@ -89,6 +89,7 @@ namespace WaocLib
             Cursor oldCursor = Cursor.Current;
             try
             {
+                
                 return SauvegarderPartie(NomFichierTourPhase(nomfichier, tour, phase, bSuperieur), donnees);
             }
             catch (Exception e)

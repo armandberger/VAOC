@@ -743,26 +743,37 @@ namespace vaoc
             /// <param name="ligneCase">Case à partir de laquelle l'unité fait son observation (en tête de son mouvement typiquement), null si à l'arrêt </param>
             public bool MessageEnnemiObserve(Donnees.TAB_CASERow ligneCase)
             {
-                bool bRetour = true;
-
-                //si un ennemi apparait ou disparait, il faut envoyer un message
-                if (this.estCombattifQG(true, true))
+                try
                 {
-                    bool bObservable = this.EnnemiObservable(ligneCase);
-                    if (bObservable != this.B_ENNEMI_OBSERVABLE)
+                    bool bRetour = true;
+
+                    //si un ennemi apparait ou disparait, il faut envoyer un message
+                    if (this.estCombattifQG(true, true))
                     {
-                        if (bObservable)
+                        bool bObservable = this.EnnemiObservable(ligneCase);
+                        if (bObservable != this.B_ENNEMI_OBSERVABLE)
                         {
-                            bRetour = ClassMessager.EnvoyerMessage(this, ligneCase, ClassMessager.MESSAGES.MESSAGE_ENNEMI_OBSERVE);
+                            if (bObservable)
+                            {
+                                bRetour = ClassMessager.EnvoyerMessage(this, ligneCase, ClassMessager.MESSAGES.MESSAGE_ENNEMI_OBSERVE);
+                            }
+                            else
+                            {
+                                bRetour = ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE);
+                            }
+                            this.B_ENNEMI_OBSERVABLE = bObservable;
                         }
-                        else
-                        {
-                            bRetour = ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE);
-                        }
-                        this.B_ENNEMI_OBSERVABLE = bObservable;
                     }
+                    return bRetour;
                 }
-                return bRetour;
+                catch (Exception ex)
+                {
+                    string messageEX = string.Format("exception ClassPion.MessageEnnemiObserve {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    LogFile.Notifier(messageEX);
+                    throw ex;
+                }
             }
 
             /// <summary>
@@ -1091,6 +1102,7 @@ namespace vaoc
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
                     }
                     if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
@@ -1110,6 +1122,7 @@ namespace vaoc
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
                         throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
                     }
                     if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
@@ -3887,60 +3900,71 @@ namespace vaoc
                 //string requete;
                 int[] listeCaseEspace = null;
 
-                if (IDcase < 0)
+                try
                 {
-                    message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, erreur demande de placement de pion sur une IDcase incorrect)", S_NOM, ID_PION, IDcase);
-                    return LogFile.Notifier(message, out messageErreur);
-                }
-                //calcul de l'encombrement
-                encombrement = CalculerEncombrement(ligneNation, effectifInfanterie, effectifCavalerie, effectifArtillerie, false);
-
-                message = string.Format("PlacementPion : pion ID={0} iInf={1} iCav={2} iArt={3} encombrement={4} en IDcase={5}",
-                    ID_PION, effectifInfanterie, effectifCavalerie, effectifArtillerie, encombrement, IDcase);
-                LogFile.Notifier(message, out messageErreur);
-
-                //maintenant y'a plus qu'à trouver de la place...
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(IDcase);
-                if (null == ligneCase)
-                {
-                    message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de placement en base)", S_NOM, ID_PION, IDcase);
-                    return LogFile.Notifier(message, out messageErreur);
-                }
-
-                if (encombrement <= 1)
-                {
-                    //cas des unités sans effectifs ou première case de mouvement
-                    nbplacesOccupes = 0;
-                    if (!RequisitionCase(ligneCase, false, ref nbplacesOccupes)) { return false; }
-                }
-                else
-                {
-                    AstarTerrain[] tableCoutsMouvementsTerrain;
-                    //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
-                    //if (!m_etoile.SearchSpace(ligneCase, encombrement, tableCoutsMouvementsTerrain, DataSetCoutDonnees.m_donnees.TAB_JEU[0].I_ECHELLE, out message))
-                    if (!RechercheEspace(depart, ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out tableCoutsMouvementsTerrain, out listeCaseEspace, out message))
+                    if (IDcase < 0)
                     {
-                        LogFile.Notifier(message, out messageErreur);
-                        message = string.Format("PlacementPion :{0}(ID={1} encombrement={2}, Impossible de trouver l'espace necessaire au pion)",
-                            S_NOM, ID_PION, encombrement);
+                        message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, erreur demande de placement de pion sur une IDcase incorrect)", S_NOM, ID_PION, IDcase);
+                        return LogFile.Notifier(message, out messageErreur);
+                    }
+                    //calcul de l'encombrement
+                    encombrement = CalculerEncombrement(ligneNation, effectifInfanterie, effectifCavalerie, effectifArtillerie, false);
+
+                    message = string.Format("PlacementPion : pion ID={0} iInf={1} iCav={2} iArt={3} encombrement={4} en IDcase={5}",
+                        ID_PION, effectifInfanterie, effectifCavalerie, effectifArtillerie, encombrement, IDcase);
+                    LogFile.Notifier(message, out messageErreur);
+
+                    //maintenant y'a plus qu'à trouver de la place...
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(IDcase);
+                    if (null == ligneCase)
+                    {
+                        message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de placement en base)", S_NOM, ID_PION, IDcase);
                         return LogFile.Notifier(message, out messageErreur);
                     }
 
-                    i = 0;
-                    nbplacesOccupes = 0;
-                    while (i < listeCaseEspace.Length && nbplacesOccupes < encombrement)
+                    if (encombrement <= 1)
                     {
-                        Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCaseEspace[i]);
+                        //cas des unités sans effectifs ou première case de mouvement
+                        nbplacesOccupes = 0;
+                        if (!RequisitionCase(ligneCase, false, ref nbplacesOccupes)) { return false; }
+                    }
+                    else
+                    {
+                        AstarTerrain[] tableCoutsMouvementsTerrain;
+                        //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
+                        //if (!m_etoile.SearchSpace(ligneCase, encombrement, tableCoutsMouvementsTerrain, DataSetCoutDonnees.m_donnees.TAB_JEU[0].I_ECHELLE, out message))
+                        if (!RechercheEspace(depart, ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out tableCoutsMouvementsTerrain, out listeCaseEspace, out message))
+                        {
+                            LogFile.Notifier(message, out messageErreur);
+                            message = string.Format("PlacementPion :{0}(ID={1} encombrement={2}, Impossible de trouver l'espace necessaire au pion)",
+                                S_NOM, ID_PION, encombrement);
+                            return LogFile.Notifier(message, out messageErreur);
+                        }
 
-                        if (!RequisitionCase(ligneOccupation, false, ref nbplacesOccupes)) { return false; }
-                        i++;
+                        i = 0;
+                        nbplacesOccupes = 0;
+                        while (i < listeCaseEspace.Length && nbplacesOccupes < encombrement)
+                        {
+                            Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCaseEspace[i]);
+
+                            if (!RequisitionCase(ligneOccupation, false, ref nbplacesOccupes)) { return false; }
+                            i++;
+                        }
+                        if (nbplacesOccupes < encombrement)
+                        {
+                            message = string.Format("ALERTE PlacementPion : impossible de placer les effectifs PION={0}({1}) nbplacesOccupes={2}<encombrement={3}",
+                                S_NOM, ID_PION, nbplacesOccupes, encombrement);
+                            LogFile.Notifier(message, out messageErreur);
+                        }
                     }
-                    if (nbplacesOccupes < encombrement)
-                    {
-                        message = string.Format("ALERTE PlacementPion : impossible de placer les effectifs PION={0}({1}) nbplacesOccupes={2}<encombrement={3}",
-                            S_NOM, ID_PION, nbplacesOccupes, encombrement);
-                        LogFile.Notifier(message, out messageErreur);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    string messageEX = string.Format("exception PlacementPion {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    LogFile.Notifier(messageEX);
+                    throw ex;
                 }
                 return true;
             }
@@ -3949,34 +3973,45 @@ namespace vaoc
             {
                 string messageErreur, message;
 
-                if (B_DETRUIT) { return true; }
-                if (!enMouvement /*estStatique*/)
+                try
                 {
-                    Donnees.TAB_NATIONRow ligneNation = nation;
-                    if (null == ligneNation)
+                    if (B_DETRUIT) { return true; }
+                    if (!enMouvement /*estStatique*/)
                     {
-                        message = string.Format("PlacerStatique :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", S_NOM, ID_PION);
+                        Donnees.TAB_NATIONRow ligneNation = nation;
+                        if (null == ligneNation)
+                        {
+                            message = string.Format("PlacerStatique :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", S_NOM, ID_PION);
+                            return LogFile.Notifier(message, out messageErreur);
+                        }
+
+                        /**** -> on ne replace plus une unité en bivouac si son mouvement est inactif, avec du bol, ça va marcher juste avec ça !!!
+                        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                        if (null != ligneOrdre && ligneOrdre.I_EFFECTIF_DEPART != lignePion.effectifTotalEnMouvement)
+                        {
+                            //unité avec des effectifs ayant comméncé un mouvement mais qui est ponctuellement statique car l'ordre de mouvement est hors des créneaux horaires
+                            if (!PlacerPionEnBivouac(lignePion, ligneOrdre, ligneNation)) { return false; }
+                        }
+                        *****/
+
+                        if (!MessageEnnemiObserve(null)) { return false; }
+
+                        //placer l'unité sur la carte
+                        PlacementPion(ligneNation, true);
+                    }
+                    else
+                    {
+                        message = string.Format("{0}(ID={1}, unité non statique)", S_NOM, ID_PION);
                         return LogFile.Notifier(message, out messageErreur);
                     }
-
-                    /**** -> on ne replace plus une unité en bivouac si son mouvement est inactif, avec du bol, ça va marcher juste avec ça !!!
-                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
-                    if (null != ligneOrdre && ligneOrdre.I_EFFECTIF_DEPART != lignePion.effectifTotalEnMouvement)
-                    {
-                        //unité avec des effectifs ayant comméncé un mouvement mais qui est ponctuellement statique car l'ordre de mouvement est hors des créneaux horaires
-                        if (!PlacerPionEnBivouac(lignePion, ligneOrdre, ligneNation)) { return false; }
-                    }
-                    *****/
-
-                    if (!MessageEnnemiObserve(null)) { return false; }
-
-                    //placer l'unité sur la carte
-                    PlacementPion(ligneNation, true);
                 }
-                else
+                catch (Exception ex)
                 {
-                    message = string.Format("{0}(ID={1}, unité non statique)", S_NOM, ID_PION);
-                    return LogFile.Notifier(message, out messageErreur);
+                    string messageEX = string.Format("exception PlacerStatique {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    LogFile.Notifier(messageEX);//ne marche si une exception est lancé semble-t-il...
+                    throw ex;
                 }
                 return true;
             }

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Collections.Generic;
 using WaocLib;
 using System.Threading;
+using System.Windows.Forms;
 //using System.Linq.Expressions;
 
 
@@ -59,13 +60,13 @@ namespace vaoc
 	/// </summary>
 	public class AStar
 	{
-		SortableList _Open, _Closed;
-		Track _LeafToGoBackUp;
-		int _NbIterations = -1;
+		private SortableList _Open, _Closed;
+		private Track _LeafToGoBackUp;
+		private int _NbIterations = -1;
 
         public const int CST_COUTMAX = Int32.MaxValue;
         public const int CST_PLUSIEURSNATION = Int32.MaxValue;
-		SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
+		private SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
         //public static long SearchIdModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
@@ -83,7 +84,7 @@ namespace vaoc
         private int m_espace;//espace recherché
         private int m_espaceTrouve;//nombre d'espace trouvé
         private int m_idNation;//nation autorisé à se déplacer sur le parcours
-        private Donnees.TAB_CASERow m_cible = null;//private static Donnees.TAB_CASERow _Target = null; de Track
+        private Node m_cible = null;//private static Donnees.TAB_CASERow _Target = null; de Track
 
         #region constantes
         public const char CST_CHEMIN='C';
@@ -259,7 +260,7 @@ namespace vaoc
 			if ( StartNode==null || EndNode==null ) throw new ArgumentNullException();
 			_Closed.Clear();
 			_Open.Clear();
-            m_cible = EndNode;
+            m_cible = new Node(EndNode);
             m_xBlocEnd = EndNode.I_X / m_tailleBloc; ;
             m_yBlocEnd = EndNode.I_Y / m_tailleBloc; ;
             xminBlocEnd = m_xBlocEnd * m_tailleBloc;
@@ -465,9 +466,10 @@ namespace vaoc
 
         private void Propagate(Track TrackToPropagate)
 		{
-            foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
-			{
-                if (CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
+            //foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
+            foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
+                {
+                    if (CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
                 {
                     continue;//case intraversable
                 }
@@ -605,7 +607,7 @@ namespace vaoc
             {
                 if (null != T.EndNode)
                 {
-                    Path.Insert(0, T.EndNode);
+                    Path.Insert(0, Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNode.ID_CASE));
                     /*
                     Debug.WriteLine(string.Format("GoBackUpNodes ajout de T.EndNode : ID={0}({1},{2}) ",
                         T.EndNode.ID_CASE, T.EndNode.I_X, T.EndNode.I_Y
@@ -720,8 +722,8 @@ namespace vaoc
                     //sommes nous sur le bloc de destination
                     if (trackSource.EndNode.I_X >= xminBlocEnd && trackSource.EndNode.I_X <= xmaxBlocEnd && trackSource.EndNode.I_Y >= yminBlocEnd && trackSource.EndNode.I_Y <= ymaxBlocEnd)
                     {
-                        IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
-                        foreach (Donnees.TAB_CASERow ligneCase in tableCases)
+                        IList<Node> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, m_xBlocEnd, m_yBlocEnd, m_tailleBloc);
+                        foreach (Node ligneCase in tableCases)
                         {
                             /* debug 
                             Debug.WriteLine(string.Format("CasesVoisinesHPA bordure ajout de la case : ID={0}({1},{2}) ",
@@ -771,8 +773,8 @@ namespace vaoc
                             {
                                 //possible si l'on demarre d'une case de bordure qui n'est pas un point de liaison par exemple
                                 //ou que le point final est sur une bordure
-                                IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, trackSource.blocX, trackSource.blocY, m_tailleBloc);
-                                foreach (Donnees.TAB_CASERow ligneCase in tableCases)
+                                IList<Node> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisinesInBloc(trackSource.EndNode, trackSource.blocX, trackSource.blocY, m_tailleBloc);
+                                foreach (Node ligneCase in tableCases)
                                 {
                                     /* debug 
                                     Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
@@ -787,8 +789,8 @@ namespace vaoc
                 else
                 {
                     //on est pas sur une frontière, on revient à une case voisine de points
-                    IList<Donnees.TAB_CASERow> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisines(trackSource.EndNode);
-                    foreach (Donnees.TAB_CASERow ligneCase in tableCases)
+                    IList<Node> tableCases = Donnees.m_donnees.TAB_CASE.CasesVoisines(trackSource.EndNode);
+                    foreach (Node ligneCase in tableCases)
                     {
                         /* debug
                         Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de la case : ID={0}({1},{2}) ",
@@ -948,7 +950,7 @@ namespace vaoc
                 //    return AStar.CST_COUTMAX;//trajet intraversable
                 //}
                 Donnees.TAB_CASERow caseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
-                return Cout(caseSource, trackDestination.EndNode);
+                return Cout(new Node(caseSource), trackDestination.EndNode);
             }
             throw new NotSupportedException("Erreur : Cout pour HPA non défini");//normalement, on ne devrait jamais arriver là
         }
@@ -1024,6 +1026,58 @@ namespace vaoc
             return retour;
         }
 
+        public int Cout(Node caseSource, Node caseFinale)
+        {
+            int retour = -1;
+
+            try
+            {
+                if (m_idNation >= 0)
+                {
+                    if (caseFinale.ID_NOUVEAU_PROPRIETAIRE.HasValue && caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
+                    {
+                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE.Value);
+                        if (lignePionProprietaire.idNation != m_idNation)
+                        {
+                            return AStar.CST_COUTMAX;//case intraversable
+                        }
+                    }
+                    if (caseFinale.ID_PROPRIETAIRE.HasValue && caseFinale.ID_PROPRIETAIRE >= 0)
+                    {
+                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE.Value);
+                        if (lignePionProprietaire.idNation != m_idNation)
+                        {
+                            return AStar.CST_COUTMAX;//case intraversable
+                        }
+                    }
+                }
+
+                if (caseSource.I_X == caseFinale.I_X || caseSource.I_Y == caseFinale.I_Y)
+                {
+                    //ligne droite
+                    retour = m_nombrePixelParCase * m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].cout;
+                }
+                else
+                {
+                    //diagonale
+                    retour = (int)(m_nombrePixelParCase * SQRT2 * m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].cout);
+                }
+
+                if (retour <= 0)
+                {
+                    return CST_COUTMAX;//case intraversable
+                }
+            }
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception Cout : Compare1 {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                MessageBox.Show(messageEX);
+            }
+            return retour;
+        }
+
         /// <summary>
         /// Renvoie le cout des cases hors route
         /// </summary>
@@ -1034,7 +1088,12 @@ namespace vaoc
         {
             return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
         }
-        
+
+        public int HorsRoute(Node caseSource, Node caseFinale)
+        {
+            return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
+        }
+
         /// <summary>
         /// Recherche toutes les cases avec un cout de mouvement minimum autour d'un point donné. Les cases déjà occupées ne sont pas considérées
         /// lors du calcul de coût mais uniquement lors de la recherche de cases disponibles.
@@ -1105,193 +1164,6 @@ namespace vaoc
                 //}
             }
             return bEspaceFound;
-        }
-
-        private void InitializeSpace0(Donnees.TAB_CASERow ligneCase)
-        {
-            if (ligneCase == null) throw new ArgumentNullException();
-            _Closed.Clear();//on utilise pas la liste mais...
-            m_cible = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
-            //Track.tailleBloc = m_tailleBloc;
-            _Open.Clear();
-            _Open.Add(new Track(ligneCase, m_tailleBloc));
-            _NbIterations = 0;
-            m_espaceTrouve = 0;
-            _LeafToGoBackUp = null;//on utilise pas la variable mais...
-
-            foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
-            {
-                ligne.I_COUT = CST_COUTMAX;
-            }
-            ligneCase.I_COUT = 0;
-        }
-
-        private bool NextSpaceStep0()
-        {
-            //if (!Initialized) throw new InvalidOperationException("You must initialize AStar before launching the algorithm.");
-            if (_Open.Count == 0)
-            {
-                return false;//c'est fini
-            }
-            if (m_espaceTrouve > m_espace * 3)
-            {
-                return false; //c'est bon on a la zone (et un peu plus des fois que certaines cases seraient occupées)
-            }
-            _NbIterations++;
-
-            int IndexMin = _Open.IndexOfMinCout();
-            Track BestTrack = (Track)_Open[IndexMin];//on repart toujours du moins couteux
-            //Track BestTrack = (Track)_Open.ValueOfCout(IndexMin);
-
-            _Open.Remove(BestTrack);
-            PropagateSpace(BestTrack);
-            //traces de Debug
-            //foreach (Track noeud in _Open)
-            //{
-            //    Debug.WriteLine(string.Format("Open : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
-            //}
-            //foreach (Track noeud in _Closed)
-            //{
-            //    Debug.WriteLine(string.Format("Close : X:{0} Y:{1} C:{2}", noeud.EndNode.I_X, noeud.EndNode.I_Y, noeud.Cost));
-            //}
-            //Debug.WriteLine("");
-            if (_NbIterations % 10000 == 0)
-            {
-                Debug.WriteLine("NextSpaceStep BestTrack.Cost=" + BestTrack.Cost.ToString() + " BestTrack.EndNode.ID_CASE=" + BestTrack.EndNode.ID_CASE.ToString());
-                Debug.WriteLine("_Open.Count=" + _Open.Count.ToString() /*+ "_Open.CountCout=" + _Open.CountCout.ToString()*/);
-                Debug.WriteLine("_Closed.Count=" + _Closed.Count.ToString() /*+ "_Closed.CountCout=" + _Closed.CountCout.ToString()*/);
-            }
-            return _Open.Count > 0;
-        }
-
-        private void PropagateSpace0(Track TrackToPropagate)
-        {
-            //DateTime timeStart;
-            //TimeSpan perf;
-
-            //timeStart = DateTime.Now;
-            foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
-            {
-                if (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY)
-                {
-                    continue;
-                }
-
-                int cout = Cout(TrackToPropagate.EndNode, A);
-                if (cout != CST_COUTMAX)
-                {
-                    //DateTime timeStart2 = DateTime.Now;
-                    ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))
-                    if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
-                    {
-                        if (A.I_COUT == AStar.CST_COUTMAX) m_espaceTrouve++;//on vient de trouver une case de plus
-                        A.I_COUT = TrackToPropagate.EndNode.I_COUT + cout;
-                        if (A.I_COUT < 0)
-                        {
-                            Debug.WriteLine("AStar.PropagateSpace cout négatif !!!");
-                        }
-                        //if (A.I_X==100 && A.I_Y==100)
-                        //{
-                        //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
-                        //        A.I_COUT, cout, TrackToPropagate.EndNode.I_X, TrackToPropagate.EndNode.I_Y, TrackToPropagate.EndNode.I_COUT));
-                        //}
-                        Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
-                        _Open.Add(Successor);
-                    }
-                }
-                //perf = DateTime.Now - timeStart2;
-                //Debug.WriteLine(string.Format("AStar.PropagateSpace interne en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-            }
-            //perf = DateTime.Now - timeStart;
-            //Debug.WriteLine(string.Format("AStar.PropagateSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-        }
-
-        /// <summary>
-        /// met à jour les nations controllant les différents trajets
-        /// ceci afin que les trajets ne puissent pas être empruntés par des nations qui ne les controllent pas (cas des ravitaillement par dépôt)
-        /// </summary>
-        /// <returns>true si Ok, false si KO</returns>
-        public bool InitialisationProprietaireTrajet0()
-        {
-            List<int> listeCases;
-            foreach (Donnees.TAB_PCC_COUTSRow lignePCCCout in Donnees.m_donnees.TAB_PCC_COUTS)
-            {
-                lignePCCCout.SetID_NATIONNull();//par défaut, ça n'appartient à personne
-                //on charge le trajet correspondant
-                if (!Dal.ChargerTrajet(lignePCCCout.ID_TRAJET, out listeCases)) {return false;}
-                int i=0;
-                int proprio = -1;
-                while (i < listeCases.Count)
-                {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[i]);
-                    if (null == ligneCase) { return false; }
-
-                    if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull() && ligneCase.ID_NOUVEAU_PROPRIETAIRE >= 0)
-                    {
-                        if (proprio < 0)
-                        {
-                            proprio = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                        }
-                        else
-                        {
-                            if (proprio != ligneCase.ID_NOUVEAU_PROPRIETAIRE)
-                            {
-                                lignePCCCout.ID_NATION = CST_PLUSIEURSNATION; //plusieurs proprietaires
-                                break;//cela ne sert à rien de continuer
-                            }
-                        }
-                    }
-                    if (!ligneCase.IsID_PROPRIETAIRENull() && ligneCase.ID_PROPRIETAIRE >= 0)
-                    {
-                        if (proprio < 0)
-                        {
-                            proprio = ligneCase.ID_PROPRIETAIRE;
-                        }
-                        else
-                        {
-                            if (proprio != ligneCase.ID_PROPRIETAIRE)
-                            {
-                                lignePCCCout.ID_NATION = CST_PLUSIEURSNATION; //plusieurs proprietaires
-                                break;//cela ne sert à rien de continuer
-                            }
-                        }
-                    }
-                    i++;
-                }
-            }
-
-            return true;
-        }
-
-        internal void CalculModeleMouvementsPion(out AstarTerrainOBJ[] tableCoutsMouvementsTerrain)
-        {
-            bool bRoutier, bHorsRoute;
-            bRoutier = bHorsRoute = false;
-            //int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
-            int maxNumeroModeleTerrain = BD.Base.ModeleTerrain.MaxID;
-            tableCoutsMouvementsTerrain = new AstarTerrainOBJ[maxNumeroModeleTerrain + 1];
-            // par défaut on initialise les valeurs à "impassable"
-            for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
-            {
-                tableCoutsMouvementsTerrain[i] = new AstarTerrainOBJ();
-                tableCoutsMouvementsTerrain[i].cout = AStar.CST_COUTMAX;
-                tableCoutsMouvementsTerrain[i].route = false;
-            }
-
-            //recherche des vrais valeurs et des plus mauvaises valeurs suivant les effectifs présents
-            foreach (LigneMODELE_TERRAIN ligneterrain in BD.Base.ModeleTerrain)
-            {
-                // Toutes les cases coutent la même chose dans ce jeu, le terrain influe seulement sur la vitesse de l'unité (voir CalculVitesseMouvementPion)
-                //dans le cas où l'on ne veut que les "routes", les modèles non routiers restent en impassables
-                if ((!bRoutier && !bHorsRoute) ||
-                    (bRoutier && ligneterrain.B_CIRCUIT_ROUTIER) ||
-                    (bHorsRoute && ligneterrain.ID_MODELE_TERRAIN != 60 /*!ligneterrain.B_CIRCUIT_ROUTIER*/))
-                {
-                    int coutCase = Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].CoutCase(ligneterrain.ID_MODELE_TERRAIN);
-                    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].cout = coutCase;
-                    tableCoutsMouvementsTerrain[ligneterrain.ID_MODELE_TERRAIN].route = ligneterrain.B_CIRCUIT_ROUTIER;
-                }
-            }
         }
 
         internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
@@ -1553,65 +1425,76 @@ namespace vaoc
             //DataSetCoutDonnees.TAB_CASERow[] retour;
             listeCaseEspace = new List<Donnees.TAB_CASERow>();
 
-            erreur = string.Empty;
-            Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
-            m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
-            m_nombrePixelParCase = nombrePixelParCase;
-            //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
-            //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
-            m_minX = 0;
-            m_minY = 0;
-            m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
-            m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
-            m_espace = espace * 3;//on triple l'espace recherché, une grande partie pouvant déjà être occupée par d'autres unités.
-            m_idNation = idNation;
-
-            bEspaceFound = false;
-            while (!bEspaceFound)
+            try
             {
-                //recherche des coûts à partir de la case source
-                timeStart = DateTime.Now;
-                InitializeSpace(ligneCase);
-                if (m_espace <= 1)
-                {
-                    return true;
-                }
-                //m_minX= Math.Max(0, ligneCase.I_X-espace);
-                //m_minY= Math.Max(0, ligneCase.I_Y-espace);
-                //m_maxX= Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, ligneCase.I_X+espace);
-                //m_maxY = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE, ligneCase.I_Y + espace);
+                erreur = string.Empty;
+                Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
+                m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
+                m_nombrePixelParCase = nombrePixelParCase;
+                //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
+                //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
+                m_minX = 0;
+                m_minY = 0;
+                m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
+                m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+                m_espace = espace * 3;//on triple l'espace recherché, une grande partie pouvant déjà être occupée par d'autres unités.
+                m_idNation = idNation;
 
-                while (NextSpaceStep()) { }
-                perf = DateTime.Now - timeStart;
-                Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-
-                int i = 0;
-                while(i < _Closed.Count)
+                bEspaceFound = false;
+                while (!bEspaceFound)
                 {
-                    Track caseEspace = (Track)_Closed.ValueOfCout(i++);
-                    //test qui suit inutile, de toute façon les CST_COUTMAX ne sont pas ajoutées dans le Closed
-                    //if (caseEspace.Cost == AStar.CST_COUTMAX)
-                    //{ 
-                    //    break; //on ne renvoie pas dans la liste les cases intraversables 
+                    //recherche des coûts à partir de la case source
+                    timeStart = DateTime.Now;
+                    InitializeSpace(ligneCase);
+                    if (m_espace <= 1)
+                    {
+                        return true;
+                    }
+                    //m_minX= Math.Max(0, ligneCase.I_X-espace);
+                    //m_minY= Math.Max(0, ligneCase.I_Y-espace);
+                    //m_maxX= Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, ligneCase.I_X+espace);
+                    //m_maxY = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE, ligneCase.I_Y + espace);
+
+                    while (NextSpaceStep()) { }
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+                    int i = 0;
+                    while (i < _Closed.Count)
+                    {
+                        Track caseEspace = (Track)_Closed.ValueOfCout(i++);
+                        //test qui suit inutile, de toute façon les CST_COUTMAX ne sont pas ajoutées dans le Closed
+                        //if (caseEspace.Cost == AStar.CST_COUTMAX)
+                        //{ 
+                        //    break; //on ne renvoie pas dans la liste les cases intraversables 
+                        //}
+                        listeCaseEspace.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(caseEspace.EndNode.ID_CASE));
+                    }
+                    //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
+                    /*
+                    requete = string.Format("I_COUT<{0}", CST_COUTMAX);
+                    listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
+                    if (listeCaseEspace.Count() < m_espace)
+                    {
+                        erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
+                        Debug.WriteLine(erreur);
+                        // on double l'espace et on recommence, en fait ça sert pas à grand chose a priori
+                        //m_espace *= 2;
+                    }
+                     * */
+                    //else
+                    //{
+                    bEspaceFound = true;
                     //}
-                    listeCaseEspace.Add(caseEspace.EndNode);
                 }
-                //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
-                /*
-                requete = string.Format("I_COUT<{0}", CST_COUTMAX);
-                listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
-                if (listeCaseEspace.Count() < m_espace)
-                {
-                    erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
-                    Debug.WriteLine(erreur);
-                    // on double l'espace et on recommence, en fait ça sert pas à grand chose a priori
-                    //m_espace *= 2;
-                }
-                 * */
-                //else
-                //{
-                bEspaceFound = true;
-                //}
+            }
+            catch (Exception ex)
+            {
+                string message = string.Format("AStar.SearchSpace {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                LogFile.Notifier(message);
+                throw ex;
             }
             return bEspaceFound;
         }
@@ -1620,7 +1503,7 @@ namespace vaoc
         {
             if (ligneCase == null) throw new ArgumentNullException();
             _Closed.Clear();//on utilise pas la liste mais...
-            m_cible = ligneCase;//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
+            m_cible = new Node(ligneCase);//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
             //Track.tailleBloc = m_tailleBloc;
             _Open.Clear();
             _Open.Add(new Track(ligneCase, m_tailleBloc));
@@ -1686,7 +1569,7 @@ namespace vaoc
             //TimeSpan perf;
 
             //timeStart = DateTime.Now;
-            foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
+            foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
             {
                 //BEA, je ne vois plus l'intéret du test qui suit, effectivement, le test est déjà fait dans CasesVoisines
                 //if (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY)
@@ -1699,14 +1582,14 @@ namespace vaoc
                 {
                     //DateTime timeStart2 = DateTime.Now;
                     ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))
-                    if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
-                    {
-                        if (A.I_COUT == AStar.CST_COUTMAX) m_espaceTrouve++;//on vient de trouver une case de plus
-                        A.I_COUT = TrackToPropagate.EndNode.I_COUT + cout;
-                        if (A.I_COUT < 0)
-                        {
-                            Debug.WriteLine("AStar.PropagateSpace cout négatif !!!");
-                        }
+                    //if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
+                    //{
+                        m_espaceTrouve++;//on vient de trouver une case de plus
+                        //A.I_COUT = TrackToPropagate.EndNode.I_COUT + cout;
+                        //if (A.I_COUT < 0)
+                        //{
+                        //    Debug.WriteLine("AStar.PropagateSpace cout négatif !!!");
+                        //}
                         //if (A.I_X==100 && A.I_Y==100)
                         //{
                         //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
@@ -1714,7 +1597,7 @@ namespace vaoc
                         //}
                         Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
                         _Open.Add(Successor);
-                    }
+                    //}
                 }
                 //perf = DateTime.Now - timeStart2;
                 //Debug.WriteLine(string.Format("AStar.PropagateSpace interne en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));

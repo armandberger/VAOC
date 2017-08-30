@@ -29,7 +29,8 @@ namespace vaoc
         private static long idGlobal = 0;
         private int m_tailleBloc = 0;
 
-        public Donnees.TAB_CASERow EndNode;
+        //public Donnees.TAB_CASERow EndNode; -> pas utilisable en multi-threading, la valeur peut changer durant le traitement
+        public Node EndNode;
         public Donnees.TAB_PCC_COUTSRow EndNodeHPA;
         public Track Queue;
 
@@ -41,7 +42,7 @@ namespace vaoc
         private int _OutRoad;
         public int OutRoad { get { return _OutRoad; } }
 
-        public bool Succeed(Donnees.TAB_CASERow cible) { if (null==EndNodeHPA) return (EndNode == cible); else return (EndNodeHPA.ID_CASE_FIN == cible.ID_CASE); } 
+        public bool Succeed(Node cible) { if (null==EndNodeHPA) return (EndNode.ID_CASE == cible.ID_CASE); else return (EndNodeHPA.ID_CASE_FIN == cible.ID_CASE); } 
 
         public long Id { get; set; }
         public int blocX { get; set; }
@@ -54,7 +55,7 @@ namespace vaoc
             _OutRoad = 0;
             _NbArcsVisited = 0;
 			Queue = null;
-			EndNode = GraphNode;
+			EndNode = new Node(GraphNode);
             EndNodeHPA = null;
             m_tailleBloc = taillebloc;
             blocX = (0 == EndNode.I_X % m_tailleBloc) ? (EndNode.I_X / m_tailleBloc) - 1 : EndNode.I_X / m_tailleBloc;
@@ -76,29 +77,7 @@ namespace vaoc
             Id = idGlobal++;
         }
 
-        //public Track(Track PreviousTrack, Donnees.TAB_PCC_COUTSRow ligneCout)
-        //{
-        //    //if (_Target == null) throw new InvalidOperationException("You must specify a target Node for the Track class.");
-        //    Queue = PreviousTrack;
-
-        //    //if (null == Queue.EndNodeHPA)
-        //    //{
-        //    //    _Cost = Queue.Cost;//passage d'une case frontière a une case de zone
-        //    //}
-        //    //else
-        //    //{
-        //        _Cost = Queue.Cost + ligneCout.I_COUT;
-        //    //}
-            
-        //    _NbArcsVisited = Queue._NbArcsVisited + 1;
-        //    EndNode = null;
-        //    EndNodeHPA = ligneCout;
-        //    blocX = EndNodeHPA.I_BLOCX;
-        //    blocY = EndNodeHPA.I_BLOCY;
-        //    Id = idGlobal++;
-        //}
-
-        public Track(Track PreviousTrack, Donnees.TAB_CASERow caseFinale, AStar etoile)
+        public Track(Track PreviousTrack, Node caseFinale, AStar etoile)
 		{
             //if (_Target==null) throw new InvalidOperationException("You must specify a target Node for the Track class.");
 			Queue = PreviousTrack;
@@ -110,8 +89,9 @@ namespace vaoc
             else
             {
                 Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Queue.EndNodeHPA.ID_CASE_FIN);
-                _Cost = Queue.Cost + etoile.Cout(ligneCaseSource, caseFinale);
-                _OutRoad = Queue.OutRoad + etoile.HorsRoute(ligneCaseSource, caseFinale);
+                Node noeud = new Node(ligneCaseSource);
+                _Cost = Queue.Cost + etoile.Cout(noeud, caseFinale);
+                _OutRoad = Queue.OutRoad + etoile.HorsRoute(noeud, caseFinale);
             }
 			_NbArcsVisited = Queue._NbArcsVisited + 1;
 			EndNode = caseFinale;

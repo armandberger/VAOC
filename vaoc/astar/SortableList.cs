@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace vaoc
 {
@@ -373,13 +374,23 @@ namespace vaoc
         public int IndexOf(Track O, Equality AreEqual)
 		{
             int Result = -1;
-            if (_IsSorted)
+            try
             {
-                Result = _List.BinarySearch(O, _Comparer);
-                while (Result > 0 && AreEqual(_List[Result - 1],O)) Result--; // We want to point at the FIRST occurence
+                if (_IsSorted)
+                {
+                    Result = _List.BinarySearch(O, _Comparer);
+                    while (Result > 0 && AreEqual(_List[Result - 1], O)) Result--; // We want to point at the FIRST occurence
+                }
+                else Result = _List.IndexOf(O);
+                //Debug.WriteLineIf(Result > 0, "IndexOf>0");
             }
-            else Result = _List.IndexOf(O);
-            //Debug.WriteLineIf(Result > 0, "IndexOf>0");
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception SortableList : IndexOf {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                MessageBox.Show(messageEX);
+            }
             return Result;
 
             //for (int i = 0; i < _List.Count; i++)
@@ -396,16 +407,16 @@ namespace vaoc
             }
 			return -1;
              * */
-		}
-        
+        }
+
         /// <summary>
-		/// Idem IndexOf(object), but with a start index and a specified equality function
-		/// </summary>
-		/// <param name="O">The object to locate.</param>
-		/// <param name="Start">The index for start position.</param>
-		/// <param name="AreEqual">Equality function to use for the search.</param>
-		/// <returns></returns>
-		public int IndexOf(object O, int Start, Equality AreEqual)
+        /// Idem IndexOf(object), but with a start index and a specified equality function
+        /// </summary>
+        /// <param name="O">The object to locate.</param>
+        /// <param name="Start">The index for start position.</param>
+        /// <param name="AreEqual">Equality function to use for the search.</param>
+        /// <returns></returns>
+        public int IndexOf(object O, int Start, Equality AreEqual)
 		{
 			if ( Start<0 || Start>=_List.Count ) throw new ArgumentException("Start index must belong to [0; Count-1].");
 			for (int i=Start; i<_List.Count; i++)
@@ -617,13 +628,24 @@ namespace vaoc
             public int Compare(object a, object b)
             {
                 int valA, valB;
-                //Monitor.Enter(a);
-                valA = (null != ((Track)a).EndNode) ? ((Track)a).EndNode.ID_CASE : ((Track)a).EndNodeHPA.ID_CASE_FIN;
-                //Monitor.Exit(a);
-                //Monitor.Enter(b);
-                valB = (null != ((Track)b).EndNode) ? ((Track)b).EndNode.ID_CASE : ((Track)b).EndNodeHPA.ID_CASE_FIN;
-                //Monitor.Exit(b);
-                return valA - valB;
+                try
+                {
+                    //Monitor.Enter(a);
+                    valA = (null != ((Track)a).EndNode) ? ((Track)a).EndNode.ID_CASE : ((Track)a).EndNodeHPA.ID_CASE_FIN;
+                    //Monitor.Exit(a);
+                    //Monitor.Enter(b);
+                    valB = (null != ((Track)b).EndNode) ? ((Track)b).EndNode.ID_CASE : ((Track)b).EndNodeHPA.ID_CASE_FIN;
+                    //Monitor.Exit(b);
+                    return valA - valB;
+                }
+                catch (Exception ex)
+                {
+                    string messageEX = string.Format("exception SortableList : Compare1 {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    MessageBox.Show(messageEX);
+                }
+                return 0;
             }
         }
 
@@ -636,7 +658,18 @@ namespace vaoc
             /// </summary>
             public int Compare(object a, object b)
             {
-                return (int)(((Track)a).Cost - ((Track)b).Cost);
+                try
+                {
+                    return (int)(((Track)a).Cost - ((Track)b).Cost);
+                }
+                catch (Exception ex)
+                {
+                    string messageEX = string.Format("exception Compare2 : IndexOf {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    MessageBox.Show(messageEX);
+                }
+                return 0;
             }
         }
 

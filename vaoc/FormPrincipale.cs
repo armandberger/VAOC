@@ -29,12 +29,10 @@ namespace vaoc
         protected Donnees.TAB_CASERow m_departPlusCourtChemin;
         protected Donnees.TAB_CASERow m_arriveePlusCourtChemin;
         protected AStar m_etoileHPA;
-        protected AStarOBJ m_etoileOBJ;
         protected DateTime m_dateDebut;
         protected bool m_modification;
         protected List<Donnees.TAB_CASERow> m_cheminPCC;
         protected List<Donnees.TAB_CASERow> m_cheminHPA;
-        protected List<LigneCASE> m_cheminHPA_O;        
         protected List<Donnees.TAB_CASERow> m_cheminVille;
         protected List<Donnees.TAB_CASERow> m_cheminHorsRoute;
         protected List<Donnees.TAB_CASERow> m_cheminSelection;
@@ -1892,10 +1890,6 @@ namespace vaoc
                 {
                     Cartographie.AfficherChemin((Bitmap)ImageCarte.Image, m_cheminHPA, Color.DeepSkyBlue, 1);//chemin parcouru par une unité
                 }
-                if (null != m_cheminHPA_O && m_cheminHPA_O.Count > 0)
-                {
-                    Cartographie.AfficherChemin((Bitmap)ImageCarte.Image, m_cheminHPA_O, Color.Orange, 1);//chemin parcouru par une unité
-                }                
             }
 
             if (null != m_lignePionSelection)
@@ -2935,36 +2929,6 @@ namespace vaoc
                         m_cheminHPA = m_etoileHPA.PathByNodes;
                     }
                     /* */
-                    #endregion
-
-                    #region version DataObjectHPA
-                    //maintenant on compare avec la version HPA
-                    //Donnees.m_donnees.TAB_PCC_COUTS.Initialisation(); -> deja fait au chargement
-                    if (null != BD.Base.Pion)
-                    {
-                        if (null == m_etoileOBJ) m_etoileOBJ = new AStarOBJ();
-                        AstarTerrainOBJ[] tableCoutsMouvementsTerrainOBJ;
-                        m_etoileOBJ.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrainOBJ);
-                        timeStart = DateTime.Now;
-                        LigneCASE departCase = BD.Base.Case.TrouveParID_CASE(m_departPlusCourtChemin.ID_CASE);
-
-                        LigneCASE arriveeCase = BD.Base.Case.TrouveParID_CASE(m_arriveePlusCourtChemin.ID_CASE);
-
-                        if (!m_etoileOBJ.SearchPathHPA(departCase, arriveeCase, tableCoutsMouvementsTerrainOBJ))
-                        {
-                            MessageBox.Show(string.Format("Il n'y a aucun chemin possible entre les points {0}:{1},{2} -> {3}:{4},{5}",
-                                m_departPlusCourtChemin.ID_CASE, m_departPlusCourtChemin.I_X, m_departPlusCourtChemin.I_Y,
-                                m_arriveePlusCourtChemin.ID_CASE, m_arriveePlusCourtChemin.I_X, m_arriveePlusCourtChemin.I_Y),
-                                "AStarHPA", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else
-                        {
-                            perf = DateTime.Now - timeStart;
-                            labelInformationTempsPasse.Text += string.Format("\r\n HPA OBJ: {0} min {1} sec {2} mil cout:{3}", perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal);
-
-                            m_cheminHPA_O = m_etoileOBJ.PathByNodes;
-                        }
-                    }
                     #endregion
 
                     #region version ville

@@ -79,13 +79,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="astar\Arc.cs" />
     <Compile Include="astar\AStar.cs" />
-    <Compile Include="astar\AStarOBJ.cs" />
     <Compile Include="astar\Node.cs" />
-    <Compile Include="astar\SortableListOBJ.cs" />
     <Compile Include="astar\SortableList.cs" />
-    <Compile Include="astar\TrackOBJ.cs" />
     <Compile Include="astar\Track.cs" />
     <Compile Include="BaseVaoc.cs">
       <DependentUpon>BaseVaoc.xsd</DependentUpon>
@@ -101,31 +97,6 @@
     <Compile Include="ClassHPAStarCreation.cs" />
     <Compile Include="ClassNation.cs" />
     <Compile Include="ClassPion.cs" />
-    <Compile Include="ClassTraitementHeureOBJ.cs" />
-    <Compile Include="data\Base.cs" />
-    <Compile Include="data\LigneBATAILLE.cs" />
-    <Compile Include="data\LigneMODELE_MOUVEMENT.cs" />
-    <Compile Include="data\LigneMODELE_PION.cs" />
-    <Compile Include="data\LigneMODELE_TERRAIN.cs" />
-    <Compile Include="data\LigneMOUVEMENT_COUT.cs" />
-    <Compile Include="data\LigneORDRE.cs" />
-    <Compile Include="data\LigneMESSAGE.cs" />
-    <Compile Include="data\LignePARTIE.cs" />
-    <Compile Include="data\LignePION.cs" />
-    <Compile Include="data\TableBATAILLE.cs" />
-    <Compile Include="data\TableMESSAGE.cs" />
-    <Compile Include="data\TableORDRE.cs" />
-    <Compile Include="data\TablePARTIE.cs" />
-    <Compile Include="data\TableJEU.cs" />
-    <Compile Include="data\LigneJEU.cs" />
-    <Compile Include="data\TableCASE.cs" />
-    <Compile Include="data\LigneCASE.cs" />
-    <Compile Include="data\LignePCC_COUTS.cs" />
-    <Compile Include="data\TableMODELE_MOUVEMENT.cs" />
-    <Compile Include="data\TableMODELE_TERRAIN.cs" />
-    <Compile Include="data\TableMOUVEMENT_COUT.cs" />
-    <Compile Include="data\TablePCC_COUTS.cs" />
-    <Compile Include="data\TablePION.cs" />
     <Compile Include="FormMessageAncien.cs">
       <SubType>Form</SubType>
     </Compile>

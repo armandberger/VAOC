@@ -899,7 +899,7 @@ namespace vaoc
                     MessageBox.Show("Erreur sur TABCASEDataTables.FindByXY :" + ex.Message + ex.StackTrace, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     string message = string.Format("TrouveCase m_donnees.ChargerCases tombe en exception x={0} et y={1} : {2}, {3}",
                         x, y, ex.Message, ex.StackTrace);
-                    throw new Exception(message);
+                    throw new Exception(message); //peut visiblement arriver sur certains mouvements de souris, mieux vaut que cela ne crash pas tout
                 }
             }
 

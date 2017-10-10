@@ -4808,8 +4808,9 @@ namespace vaoc
              */
             //Donnees.TAB_CASERow ligneCaseD = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
             string requete = "(ID_PROPRIETAIRE IS NOT NULL) OR (ID_NOUVEAU_PROPRIETAIRE IS NOT NULL)";
-            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
             Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+            //le resultat du select peut être modifié par un chargement case qui provoque un crash
+            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
             for (int l=0; l<changeRows.Count(); l++)
             {
                 //Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);

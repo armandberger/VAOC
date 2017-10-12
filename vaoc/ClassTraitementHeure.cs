@@ -407,10 +407,6 @@ namespace vaoc
                 //suppression des tables d'optimisation
                 //Cartographie.NettoyageBase();, bof, finalement, ça sert aussi pour générer les fichiers web ensuite alors autant les garder
 
-                //dernière sauvegarde pour demarrer au tour suivant
-                Donnees.m_donnees.SauvegarderPartie(fichierCourant);
-                travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
-                
                 //génération des fichiers web et sql
                 //on vient de terminer un tour, on lance la génération des fichiers web et sql
                 ClassTraitementWeb web = new ClassTraitementWeb(fichierCourant);
@@ -425,6 +421,10 @@ namespace vaoc
                     LogFile.Notifier("Erreur durant la génération des fichiers SQL :" + messageErreur);
                     return false;
                 }
+
+                //dernière sauvegarde pour demarrer au tour suivant
+                Donnees.m_donnees.SauvegarderPartie(fichierCourant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
+                travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
 
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas

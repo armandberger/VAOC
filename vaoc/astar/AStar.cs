@@ -1073,7 +1073,8 @@ namespace vaoc
                 string messageEX = string.Format("exception Cout : Compare1 {3} : {0} : {1} :{2}",
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
-                MessageBox.Show(messageEX);
+                LogFile.Notifier(messageEX);
+                throw ex;
             }
             return retour;
         }

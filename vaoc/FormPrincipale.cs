@@ -2783,12 +2783,24 @@ namespace vaoc
         /// <param name="e"></param>
         private void ImageCarte_MouseMove(object sender, MouseEventArgs e)
         {
-            Donnees.TAB_CASERow ligneCase;
+            bool bTrouveCase = false;
+            Donnees.TAB_CASERow ligneCase = null;
             int clicX = (int)Math.Round(e.X / m_zoom, 0);
             int clicY = (int)Math.Round(e.Y / m_zoom, 0);
 
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(clicX, clicY);
-            if (null != ligneCase)
+            if (Donnees.m_donnees.TAB_JEU.Count > 0)
+            {
+                if (clicX >= 0 && clicY >= 0 && clicX < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE && clicY < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE)
+                {
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(clicX, clicY);
+                    if (null != ligneCase)
+                    {
+                        bTrouveCase = true;
+                    }
+                }
+            }
+
+            if (bTrouveCase)
             {
                 MiseAJourInformationCase(ligneCase);
             }

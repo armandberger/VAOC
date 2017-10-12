@@ -65,6 +65,7 @@ namespace WaocLib
     
     public class FabricantDeFilm
     {
+        /*
         private FileInfo[] m_listeFichiers;
         private AviWriter m_aw;
         private int m_traitement;//traitement principal

@@ -250,6 +250,7 @@ namespace vaoc
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
         {
+            /*
             FabricantDeFilm cineaste = new FabricantDeFilm();
             BackgroundWorker travailleur = sender as BackgroundWorker;
             string erreurTraitement = string.Empty;
@@ -290,6 +291,7 @@ namespace vaoc
                 travailleur.CancelAsync();
                 MessageBox.Show(ex.Message);
             }
+            */
         }
 
         private void FinTraitement(string strErreur)

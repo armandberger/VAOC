@@ -7,6 +7,8 @@ namespace WaocLib
 {
     public class AviWriter
     {
+
+        /*
         //public static readonly int streamtypeVIDEO = mmioFOURCC('v', 'i', 'd', 's');
         public const UInt32 ICMF_CHOOSE_KEYFRAME = 0x0001;
         public const UInt32 ICMF_CHOOSE_DATARATE = 0x0002;
@@ -163,7 +165,7 @@ namespace WaocLib
             stride_ = bmpDat.Stride;
             bmp_.UnlockBits(bmpDat);
             AVIFileInit();
-            //int hr = AVIFileOpenW(ref pfile_, fileName, 4097 /* OF_WRITE | OF_CREATE (winbase.h) */, 0);
+            //int hr = AVIFileOpenW(ref pfile_, fileName, 4097 // OF_WRITE | OF_CREATE (winbase.h) //, 0);
             int hr = AVIFileOpen(out pfile_, fileName, OF_WRITE | OF_CREATE, IntPtr.Zero);
             if (hr != 0)
             {
@@ -379,5 +381,6 @@ namespace WaocLib
         //private UInt32 fccHandler_ = 808810089;// IV50
         //1145656899;  // CVID
         private Bitmap bmp_;
+*/
     }
 }

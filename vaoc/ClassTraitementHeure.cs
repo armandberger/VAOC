@@ -136,6 +136,7 @@ namespace vaoc
             //iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
             //List<ClassDataPartie> liste = iWeb.ListeParties(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
             //nbTourExecutes = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - liste[0].I_TOUR;
+            Donnees.m_donnees.ChargerToutesLesCases();//uniquement pour test, BEA
             bTourSuivant = true;
             while (bTourSuivant)
             {
@@ -301,7 +302,7 @@ namespace vaoc
                     MiseAJourProprietaires();
                     if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                     {
-                        Donnees.m_donnees.SauvegarderPartie(fichierCourant);
+                        //Donnees.m_donnees.SauvegarderPartie(fichierCourant); -> prend quand même près de dix minutes !
                     }
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;

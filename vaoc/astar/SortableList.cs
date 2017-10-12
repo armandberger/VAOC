@@ -389,7 +389,8 @@ namespace vaoc
                 string messageEX = string.Format("exception SortableList : IndexOf {3} : {0} : {1} :{2}",
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
-                MessageBox.Show(messageEX);
+                Debug.WriteLine(messageEX);
+                throw ex;
             }
             return Result;
 
@@ -644,8 +645,8 @@ namespace vaoc
                            ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                            ex.StackTrace, ex.GetType().ToString());
                     MessageBox.Show(messageEX);
+                    throw ex;
                 }
-                return 0;
             }
         }
 

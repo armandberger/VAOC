@@ -1032,6 +1032,7 @@ namespace vaoc
 
                 try
                 {
+                    LogFile.Notifier(string.Format("ChargerCases x={0}, y={1}", x, y));
                     Cursor.Current = Cursors.WaitCursor;
                     repertoire = nomRepertoireCases();
                     nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
@@ -1054,8 +1055,10 @@ namespace vaoc
                     if (tourrecherche < 0)
                     {
                         Cursor.Current = oldCursor;
-                        MessageBox.Show(string.Format("Erreur sur ChargerCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
-                            x, y, tour, phase)
+                        string messageErreur = string.Format("Erreur sur ChargerCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
+                            x, y, tour, phase);
+                        LogFile.Notifier(messageErreur);
+                        MessageBox.Show(messageErreur
                             , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
@@ -1072,6 +1075,7 @@ namespace vaoc
                     timeStart = DateTime.Now;
                     debutNouvellesLignes = this.Count;
                     //Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); -> prends beaucoup trop de temps, >50 secondes quand la table est déjà très chargée
+                    Debug.WriteLine(string.Format("ChargerCases x={0}, y={1}", x, y));
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
                         Donnees.m_donnees.TAB_CASE.ImportRow(ligneCasePlus);
@@ -1102,7 +1106,9 @@ namespace vaoc
                 catch (Exception ex)
                 {
                     Cursor.Current = oldCursor;
-                    MessageBox.Show("Erreur sur TABCASEDataTables.ChargerCases :" + ex.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    string messageErreur = "Erreur sur TABCASEDataTables.ChargerCases :" + ex.Message;
+                    LogFile.Notifier(messageErreur);
+                    MessageBox.Show(messageErreur, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     throw ex;//tres grave en fait
                 }
                 return true;

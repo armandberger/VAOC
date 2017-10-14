@@ -627,7 +627,7 @@ namespace vaoc
                         //si les deux pions sont séparés de moins d'un kilomètre, on ajoute les lignes dans la table
                         Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion2.ID_CASE);
                         double dist = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCase2.I_X, ligneCase2.I_Y);
-                        if (dist <= 1)
+                        if (dist <= 1* Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {
                             requete = string.Format("INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ({0}, {1}, {2});",
                                                     idPartie,

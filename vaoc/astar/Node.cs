@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace vaoc
 {
@@ -25,14 +27,26 @@ namespace vaoc
 
         public Node(Donnees.TAB_CASERow ligneCase)
         {
-            m_idcase = ligneCase.ID_CASE;
-            m_x = ligneCase.I_X;
-            m_y = ligneCase.I_Y;
-            m_modeleTerrain = ligneCase.ID_MODELE_TERRAIN;
-            m_proprietaire = (ligneCase.IsID_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_PROPRIETAIRE;
-            m_nouveauProprietaire = (ligneCase.IsID_NOUVEAU_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+            try
+            {
+                m_idcase = ligneCase.ID_CASE;
+                m_x = ligneCase.I_X;
+                m_y = ligneCase.I_Y;
+                m_modeleTerrain = ligneCase.ID_MODELE_TERRAIN;
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE);//de fait quand id_proprietaire est affecté durant la lecture sur la même case, des fois ça crash, pas vraiment thread safe...
+                m_proprietaire = (ligneCase.IsID_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_PROPRIETAIRE;
+                m_nouveauProprietaire = (ligneCase.IsID_NOUVEAU_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            }
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception Node {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                Debug.WriteLine(messageEX);
+                throw ex;
+            }
         }
-
     }
 }
 

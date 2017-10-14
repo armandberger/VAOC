@@ -1310,11 +1310,15 @@ namespace vaoc
 
                 //recherche le modèle du pion
                 requete = string.Format("ID_MODELE_PION={0}", this.ID_MODELE_PION);
+                Monitor.Enter(m_donnees.TAB_MODELE_PION); //select n'est pas thread safe
                 TAB_MODELE_PIONRow[] resModelePion = (TAB_MODELE_PIONRow[])m_donnees.TAB_MODELE_PION.Select(requete);
+                Monitor.Exit(m_donnees.TAB_MODELE_PION);
 
                 //recherche l'aptitude fournie en paramètre
                 requete = string.Format("S_NOM='{0}'", nomAptitude);
+                Monitor.Enter(m_donnees.TAB_APTITUDES);
                 TAB_APTITUDESRow[] resAptitude = (TAB_APTITUDESRow[])m_donnees.TAB_APTITUDES.Select(requete);
+                Monitor.Exit(m_donnees.TAB_APTITUDES);
 
                 //recherche si le modele de pion possède l'aptitude demandée
                 if (0 == resModelePion.Count() || 0 == resAptitude.Count())
@@ -1322,7 +1326,9 @@ namespace vaoc
                     return false;
                 }
                 requete = string.Format("ID_MODELE_PION={0} AND ID_APTITUDE={1}", resModelePion[0].ID_MODELE_PION, resAptitude[0].ID_APTITUDE);
+                Monitor.Enter(m_donnees.TAB_APTITUDES_PION);
                 TAB_APTITUDES_PIONRow[] resAptitudesPion = (TAB_APTITUDES_PIONRow[])m_donnees.TAB_APTITUDES_PION.Select(requete);
+                Monitor.Exit(m_donnees.TAB_APTITUDES_PION);
                 if (null == resAptitudesPion || 0 == resAptitudesPion.Length)
                 {
                     return false;

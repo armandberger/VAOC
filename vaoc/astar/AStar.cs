@@ -466,38 +466,49 @@ namespace vaoc
 
         private void Propagate(Track TrackToPropagate)
 		{
-            //foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
-            foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
+            try
+            {
+                //foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
+                foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
                 {
                     if (CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
-                {
-                    continue;//case intraversable
+                    {
+                        continue;//case intraversable
+                    }
+                    if ((m_minX != m_maxX) && (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY))
+                    {
+                        continue;
+                    }
+                    Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
+                    int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
+                    if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
+                    int PosNO = _Open.IndexOf(Successor, SameNodesReached);
+                    if (PosNO >= 0 && Successor.Cost >= ((Track)_Open[PosNO]).Cost) continue;
+                    if (PosNF >= 0)
+                    {
+                        _Closed.RemoveAt(PosNF);
+                    }
+                    if (PosNO >= 0)
+                    {
+                        _Open.RemoveAt(PosNO);
+                    }
+                    _Open.Add(Successor);
                 }
-                if ((m_minX!=m_maxX) && (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY))
-                {
-                    continue;
-                }
-                Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
-				int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
-				if ( PosNF>=0 && Successor.Cost>=((Track)_Closed[PosNF]).Cost ) continue;
-                int PosNO = _Open.IndexOf(Successor, SameNodesReached);
-                if (PosNO >= 0 && Successor.Cost >= ((Track)_Open[PosNO]).Cost) continue;
-                if (PosNF >= 0)
-                {
-                    _Closed.RemoveAt(PosNF);
-                }
-                if (PosNO >= 0)
-                {
-                    _Open.RemoveAt(PosNO);
-                }
-				_Open.Add(Successor);
-			}
-		}
+            }
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception Propagate {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                LogFile.Notifier(messageEX);
+                throw ex;
+            }
+        }
 
-		/// <summary>
-		/// To know if the search has been initialized.
-		/// </summary>
-		public bool Initialized { get { return _NbIterations>=0; } }
+        /// <summary>
+        /// To know if the search has been initialized.
+        /// </summary>
+        public bool Initialized { get { return _NbIterations>=0; } }
 
 		/// <summary>
 		/// To know if the search has been started.

@@ -1485,6 +1485,12 @@ namespace vaoc
             {
                 m_listeIndex.SetValue(i, i_X, i_Y);
             }
+
+            internal void ViderLaTable()
+            {
+                Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+                for (int x=0; x<Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
+            }
         }
 
         /*
@@ -1750,7 +1756,7 @@ namespace vaoc
             //ChargerToutesLesCases();//pour test
             if (0 == iPhase)
             {
-                Donnees.m_donnees.TAB_CASE.Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
+                Donnees.m_donnees.TAB_CASE.ViderLaTable();
             }
             if (0 != iPhase)
             {

@@ -417,14 +417,19 @@ namespace vaoc
 
         public static bool CaseVersCompas(Donnees.TAB_CASERow ligneCaseSource, Donnees.TAB_CASERow ligneCaseDestination, out COMPAS direction)
         {
+            return CaseVersCompas(ligneCaseSource.I_X, ligneCaseSource.I_Y, ligneCaseDestination.I_X, ligneCaseDestination.I_Y, out direction);
+        }
+
+        public static bool CaseVersCompas(int CaseSourceX, int CaseSourceY, int CaseDestinationX, int CaseDestinationY, out COMPAS direction)
+        {
             direction = COMPAS.CST_INDETERMINE;
             double angle;
 
             //recherche de la direction générale
-            angle = Constantes.AngleOfView(ligneCaseSource.I_X, ligneCaseSource.I_Y,
-                                        ligneCaseDestination.I_X, ligneCaseDestination.I_Y,
-                                        ligneCaseSource.I_X+100, ligneCaseSource.I_Y);
-            if (ligneCaseSource.I_Y > ligneCaseDestination.I_Y)
+            angle = Constantes.AngleOfView(CaseSourceX, CaseSourceY,
+                                        CaseDestinationX, CaseDestinationY,
+                                        CaseSourceX+100, CaseSourceY);
+            if (CaseSourceY > CaseDestinationY)
             {
                 if (angle < 22.5)
                 {
@@ -541,7 +546,7 @@ namespace vaoc
             direction = COMPAS.CST_INDETERMINE;
             distance = int.MaxValue;
             double dist;
-            Donnees.TAB_CASERow ligneCaseLieu=null;
+            int x=-1, y=-1;
 
             Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(id_case);
             if (null == ligneCaseSource)
@@ -552,21 +557,17 @@ namespace vaoc
             for (int l=0; l<Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
                 Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
-                if (null == ligneCase)
-                {
-                    return false;
-                }
                 if (bSansPont && ligneNomCarte.S_NOM.ToUpper().Contains("PONT"))
                 {
                     continue;
                 }
-                dist = Constantes.Distance(ligneCaseSource.I_X, ligneCaseSource.I_Y, ligneCase.I_X, ligneCase.I_Y) / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+                dist = Constantes.Distance(ligneCaseSource.I_X, ligneCaseSource.I_Y, ligneNomCarte.I_X, ligneNomCarte.I_Y) / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                 if (dist < (double)distance)
                 {
                     distance = (decimal)Convert.ToInt32(dist*10)/10;
                     id_lieu = ligneNomCarte.ID_NOM;
-                    ligneCaseLieu = ligneCase;
+                    x = ligneNomCarte.I_X;
+                    y = ligneNomCarte.I_Y;
                 }
             }
             //if (distance > 0)
@@ -575,7 +576,7 @@ namespace vaoc
             //}
             if (id_lieu >= 0 && distance >= 0)
             {
-                return CaseVersCompas(ligneCaseLieu, ligneCaseSource, out direction);
+                return CaseVersCompas(x, y, ligneCaseSource.I_X, ligneCaseSource.I_Y, out direction);
             }
             return false;///aucun de lieu de trouvé, normalement impossible
         }

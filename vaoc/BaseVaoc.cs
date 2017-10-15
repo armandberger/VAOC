@@ -14,6 +14,7 @@ namespace vaoc
 {
     partial class Donnees
     {
+
         #region variables
         public static Donnees m_donnees;
         #endregion
@@ -958,7 +959,7 @@ namespace vaoc
             public void ID_CASE_Vers_XY(int idcase, out int x, out int y)
             {
                 y = idcase % m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
-                x = (idcase-y) / m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+                x = (idcase - y) / m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
             }
 
             //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -970,7 +971,7 @@ namespace vaoc
                             ID_CASE})));
                 if (null == retour)
                 {
-                    int x,y;
+                    int x, y;
                     m_donnees.TAB_CASE.ID_CASE_Vers_XY(ID_CASE, out x, out y);
                     ChargerCases(x, y, m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE);
                     retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
@@ -1027,7 +1028,7 @@ namespace vaoc
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
                 string repertoire, nomfichier;
-                int i=0, phaserecherche, tourrecherche, debutNouvellesLignes;
+                int i = 0, phaserecherche, tourrecherche, debutNouvellesLignes;
                 TAB_CASERow ligneCase;
 
                 try
@@ -1090,7 +1091,7 @@ namespace vaoc
                         //    ligneCasePlus.I_COUT);
                     }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds,x,y));
+                    Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     //mise à jour de l'index
                     timeStart = DateTime.Now;
                     for (i = debutNouvellesLignes; i < this.Count; i++)
@@ -1271,66 +1272,76 @@ namespace vaoc
 
             public Node[] CasesVoisines(Node source)
             {
-                int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;
-                int hauteur = m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1;
-                Node[] resCase;
+                try
+                {
+                    int largeur = m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1;
+                    int hauteur = m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1;
+                    Node[] resCase;
 
-                int[] x = new int[8];
-                int[] y = new int[8];
-                int nb_points = 0;
-                if (source.I_X > 0 && source.I_Y > 0)
-                {
-                    x[nb_points] = source.I_X - 1;
-                    y[nb_points++] = source.I_Y - 1;
-                }
-                if (source.I_X > 0 && source.I_Y < hauteur)
-                {
-                    x[nb_points] = source.I_X - 1;
-                    y[nb_points++] = source.I_Y + 1;
-                }
-                if (source.I_X < largeur && source.I_Y < hauteur)
-                {
-                    x[nb_points] = source.I_X + 1;
-                    y[nb_points++] = source.I_Y + 1;
-                }
-                if (source.I_X < largeur && source.I_Y > 0)
-                {
-                    x[nb_points] = source.I_X + 1;
-                    y[nb_points++] = source.I_Y - 1;
-                }
-                if (source.I_X > 0)
-                {
-                    x[nb_points] = source.I_X - 1;
-                    y[nb_points++] = source.I_Y;
-                }
-                if (source.I_X < largeur)
-                {
-                    x[nb_points] = source.I_X + 1;
-                    y[nb_points++] = source.I_Y;
-                }
-                if (source.I_Y > 0)
-                {
-                    x[nb_points] = source.I_X;
-                    y[nb_points++] = source.I_Y - 1;
-                }
-                if (source.I_Y < hauteur)
-                {
-                    x[nb_points] = source.I_X;
-                    y[nb_points++] = source.I_Y + 1;
-                }
-                resCase = new Node[nb_points];
-                for (int i = 0; i < nb_points; i++)
-                {
-                    resCase[i] = new Node(FindByXY(x[i], y[i]));
-                }
+                    int[] x = new int[8];
+                    int[] y = new int[8];
+                    int nb_points = 0;
+                    if (source.I_X > 0 && source.I_Y > 0)
+                    {
+                        x[nb_points] = source.I_X - 1;
+                        y[nb_points++] = source.I_Y - 1;
+                    }
+                    if (source.I_X > 0 && source.I_Y < hauteur)
+                    {
+                        x[nb_points] = source.I_X - 1;
+                        y[nb_points++] = source.I_Y + 1;
+                    }
+                    if (source.I_X < largeur && source.I_Y < hauteur)
+                    {
+                        x[nb_points] = source.I_X + 1;
+                        y[nb_points++] = source.I_Y + 1;
+                    }
+                    if (source.I_X < largeur && source.I_Y > 0)
+                    {
+                        x[nb_points] = source.I_X + 1;
+                        y[nb_points++] = source.I_Y - 1;
+                    }
+                    if (source.I_X > 0)
+                    {
+                        x[nb_points] = source.I_X - 1;
+                        y[nb_points++] = source.I_Y;
+                    }
+                    if (source.I_X < largeur)
+                    {
+                        x[nb_points] = source.I_X + 1;
+                        y[nb_points++] = source.I_Y;
+                    }
+                    if (source.I_Y > 0)
+                    {
+                        x[nb_points] = source.I_X;
+                        y[nb_points++] = source.I_Y - 1;
+                    }
+                    if (source.I_Y < hauteur)
+                    {
+                        x[nb_points] = source.I_X;
+                        y[nb_points++] = source.I_Y + 1;
+                    }
+                    resCase = new Node[nb_points];
+                    for (int i = 0; i < nb_points; i++)
+                    {
+                        resCase[i] = new Node(FindByXY(x[i], y[i]));
+                    }
 
-                if (0 == resCase.Length)
-                {
-                    string message = string.Format("CasesVoisines ne trouve aucun node pour x={0} et y={1}", source.I_X, source.I_Y);
-                    throw new Exception(message);
+                    if (0 == resCase.Length)
+                    {
+                        string message = string.Format("CasesVoisines ne trouve aucun node pour x={0} et y={1}", source.I_X, source.I_Y);
+                        throw new Exception(message);
+                    }
+                    return resCase;
                 }
-
-                return resCase;
+                catch (Exception ex)
+                {
+                    string message = string.Format("TAB_CASEDataTable.CasesVoisines {3} : {0} : {1} :{2}",
+                           ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                           ex.StackTrace, ex.GetType().ToString());
+                    LogFile.Notifier(message);
+                    throw ex;
+                }
             }
 
             public IList<Donnees.TAB_CASERow> CasesVoisinesInBloc(TAB_CASERow source, int xBloc, int yBloc, int tailleBloc)
@@ -1489,7 +1500,7 @@ namespace vaoc
             internal void ViderLaTable()
             {
                 Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
-                for (int x=0; x<Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
+                for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
             }
         }
 
@@ -1746,13 +1757,13 @@ namespace vaoc
             {
                 //possible sur une nouvelle partie
                 Monitor.Enter(Donnees.m_donnees);
-                retour=Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, bSuperieur);
+                retour = Dal.SauvegarderPartie(nomFichier, 0, 0, Donnees.m_donnees, bSuperieur);
                 Monitor.Exit(Donnees.m_donnees);
                 return retour;
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 6;
+            TAB_JEU[0].I_VERSION = 7;
             //ChargerToutesLesCases();//pour test
             if (0 == iPhase)
             {
@@ -1764,7 +1775,7 @@ namespace vaoc
             }
 
             Monitor.Enter(Donnees.m_donnees);
-            retour=Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
+            retour = Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
             Monitor.Exit(Donnees.m_donnees);
             return retour;
 
@@ -1786,22 +1797,23 @@ namespace vaoc
             for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
-                {;
+                {
+                    ;
                     //on vérifie que le chargement n'a pas déjà été fait ->appelé uniquement en génération de cartes, faux, appeler pour les noms de ponts par exemple
-                    string requete = string.Format("I_X={0} AND I_Y={1}",x, y);
+                    string requete = string.Format("I_X={0} AND I_Y={1}", x, y);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    if (listeCases.Count() >0) 
-                    { 
+                    if (listeCases.Count() > 0)
+                    {
                         continue; //cases déjà chargées
                     }
                     //if (!ChargerCases(x, y)) { return false; }
                     //if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref Donnees.m_donnees.tableTAB_CASE, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; } -> ne marche pas mais je ne sais pas pourquoi !
-                    if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)){ return false; }
+                    if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; }
                 }
             }
             Monitor.Enter(Donnees.m_donnees.TAB_CASE);
             //int debutNouvellesLignes = Donnees.m_donnees.TAB_CASE.Count;
-            Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); 
+            Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false);
             //perf = DateTime.Now - timeStart;
             //Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
             Monitor.Exit(Donnees.m_donnees.TAB_CASE);
@@ -1819,8 +1831,8 @@ namespace vaoc
         internal bool ChargerCases(int x, int y)
         {
             if (!this.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
-            { 
-                return false; 
+            {
+                return false;
             }
 
             return true;
@@ -2102,6 +2114,22 @@ namespace vaoc
                     ligneMeteo.I_NB_TOURS_AGGRAVATION = 0;
                 }
                 TAB_PARTIE[0].I_NB_METEO_SUCCESSIVE = 0;
+            }
+            #endregion
+
+            #region version 6
+            if (TAB_JEU[0].I_VERSION < 7)
+            {
+                for (int l = 0; l < Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
+                {
+                    Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                    if (null != ligneCase)
+                    {
+                        ligneNomCarte.I_X = ligneCase.I_X;
+                        ligneNomCarte.I_Y = ligneCase.I_Y;
+                    }
+                }
             }
 
             #endregion

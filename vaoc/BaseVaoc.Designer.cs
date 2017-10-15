@@ -3889,13 +3889,6 @@ namespace vaoc {
                 return rowTAB_CASERow;
             }
             
-            //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            //[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            //public TAB_CASERow FindByID_CASE(int ID_CASE) {
-            //    return ((TAB_CASERow)(this.Rows.Find(new object[] {
-            //                ID_CASE})));
-            //}
-            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
@@ -6219,6 +6212,10 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnS_NOM_INDEX;
             
+            private global::System.Data.DataColumn columnI_X;
+            
+            private global::System.Data.DataColumn columnI_Y;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_NOMS_CARTEDataTable() {
@@ -6414,6 +6411,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_XColumn {
+                get {
+                    return this.columnI_X;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_YColumn {
+                get {
+                    return this.columnI_Y;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -6468,7 +6481,9 @@ namespace vaoc {
                         int I_MATERIEL_RENFORT, 
                         int I_RAVITAILLEMENT_RENFORT, 
                         bool B_PONT, 
-                        string S_NOM_INDEX) {
+                        string S_NOM_INDEX, 
+                        int I_X, 
+                        int I_Y) {
                 TAB_NOMS_CARTERow rowTAB_NOMS_CARTERow = ((TAB_NOMS_CARTERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -6490,7 +6505,9 @@ namespace vaoc {
                         I_MATERIEL_RENFORT,
                         I_RAVITAILLEMENT_RENFORT,
                         B_PONT,
-                        S_NOM_INDEX};
+                        S_NOM_INDEX,
+                        I_X,
+                        I_Y};
                 rowTAB_NOMS_CARTERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_NOMS_CARTERow);
                 return rowTAB_NOMS_CARTERow;
@@ -6540,6 +6557,8 @@ namespace vaoc {
                 this.columnI_RAVITAILLEMENT_RENFORT = base.Columns["I_RAVITAILLEMENT_RENFORT"];
                 this.columnB_PONT = base.Columns["B_PONT"];
                 this.columnS_NOM_INDEX = base.Columns["S_NOM_INDEX"];
+                this.columnI_X = base.Columns["I_X"];
+                this.columnI_Y = base.Columns["I_Y"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6585,6 +6604,10 @@ namespace vaoc {
                 base.Columns.Add(this.columnB_PONT);
                 this.columnS_NOM_INDEX = new global::System.Data.DataColumn("S_NOM_INDEX", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnS_NOM_INDEX);
+                this.columnI_X = new global::System.Data.DataColumn("I_X", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_X);
+                this.columnI_Y = new global::System.Data.DataColumn("I_Y", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_Y);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_NOM}, true));
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("TAB_NOMS_CARTEKeyCase", new global::System.Data.DataColumn[] {
@@ -23015,6 +23038,38 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_X {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_NOMS_CARTE.I_XColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_X\' dans la table \'TAB_NOMS_CARTE\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_NOMS_CARTE.I_XColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_Y {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_NOMS_CARTE.I_YColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_Y\' dans la table \'TAB_NOMS_CARTE\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_NOMS_CARTE.I_YColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_CASENull() {
                 return this.IsNull(this.tableTAB_NOMS_CARTE.ID_CASEColumn);
             }
@@ -23239,6 +23294,30 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetS_NOM_INDEXNull() {
                 this[this.tableTAB_NOMS_CARTE.S_NOM_INDEXColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_XNull() {
+                return this.IsNull(this.tableTAB_NOMS_CARTE.I_XColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_XNull() {
+                this[this.tableTAB_NOMS_CARTE.I_XColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_YNull() {
+                return this.IsNull(this.tableTAB_NOMS_CARTE.I_YColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_YNull() {
+                this[this.tableTAB_NOMS_CARTE.I_YColumn] = global::System.Convert.DBNull;
             }
         }
         

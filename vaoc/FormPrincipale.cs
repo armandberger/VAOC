@@ -3123,53 +3123,50 @@ namespace vaoc
             fNomCarte.id_nom = Constantes.CST_IDNULL;
             int id_case = Constantes.CST_IDNULL;
             int i = 0;
-            Donnees.TAB_CASERow ligneCase;
+            Donnees.TAB_CASERow ligneCase = null;
             Donnees.TAB_NOMS_CARTERow ligneNomCarte;
 
             //recherche d'un nom de carte déjà existant à proximité
             while (i < Donnees.m_donnees.TAB_NOMS_CARTE.Rows.Count && Constantes.CST_IDNULL == id_case)
             {
-                ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_CASE);
-                if (null != ligneCase)
+                if (Constantes.Distance(clicX, clicY, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_X, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_Y) < Properties.Settings.Default.distanceRechercheNom)
                 {
-                    if (Constantes.Distance(clicX, clicY, ligneCase.I_X, ligneCase.I_Y) < Properties.Settings.Default.distanceRechercheNom)
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_CASE);
+                    id_case = ligneCase.ID_CASE;
+                    fNomCarte.id_nom = Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_NOM;
+                    fNomCarte.victoire = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_VICTOIRE;
+                    fNomCarte.id_police = Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_POLICE;
+                    //fNomCarte.nom = Donnees.m_donnees.TAB_NOMS_CARTE[i].S_NOM; recherche faite dans la FormNomCarte
+                    fNomCarte.chanceRenfort  = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_CHANCE_RENFORT;
+                    fNomCarte.position = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_POSITION;
+                    fNomCarte.hopital = Donnees.m_donnees.TAB_NOMS_CARTE[i].B_HOPITAL;
+                    fNomCarte.prison = Donnees.m_donnees.TAB_NOMS_CARTE[i].B_PRISON;
+                    fNomCarte.infanterie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_INFANTERIE_RENFORT;
+                    fNomCarte.cavalerie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_CAVALERIE_RENFORT;
+                    fNomCarte.artillerie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_ARTILLERIE_RENFORT;
+                    fNomCarte.moral = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_MORAL_RENFORT;
+                    fNomCarte.materiel = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_MATERIEL_RENFORT;
+                    fNomCarte.ravitaillement = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_RAVITAILLEMENT_RENFORT;
+                    fNomCarte.modelePionRenfort = Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_MODELE_PION_RENFORTNull() ? null : Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_MODELE_PION_RENFORT);
+                    if (Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_PION_PROPRIETAIRE_RENFORTNull())
                     {
-                        id_case = ligneCase.ID_CASE;
-                        fNomCarte.id_nom = Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_NOM;
-                        fNomCarte.victoire = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_VICTOIRE;
-                        fNomCarte.id_police = Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_POLICE;
-                        //fNomCarte.nom = Donnees.m_donnees.TAB_NOMS_CARTE[i].S_NOM; recherche faite dans la FormNomCarte
-                        fNomCarte.chanceRenfort  = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_CHANCE_RENFORT;
-                        fNomCarte.position = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_POSITION;
-                        fNomCarte.hopital = Donnees.m_donnees.TAB_NOMS_CARTE[i].B_HOPITAL;
-                        fNomCarte.prison = Donnees.m_donnees.TAB_NOMS_CARTE[i].B_PRISON;
-                        fNomCarte.infanterie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_INFANTERIE_RENFORT;
-                        fNomCarte.cavalerie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_CAVALERIE_RENFORT;
-                        fNomCarte.artillerie = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_ARTILLERIE_RENFORT;
-                        fNomCarte.moral = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_MORAL_RENFORT;
-                        fNomCarte.materiel = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_MATERIEL_RENFORT;
-                        fNomCarte.ravitaillement = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_RAVITAILLEMENT_RENFORT;
-                        fNomCarte.modelePionRenfort = Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_MODELE_PION_RENFORTNull() ? null : Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_MODELE_PION_RENFORT);
-                        if (Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_PION_PROPRIETAIRE_RENFORTNull())
-                        {
-                            fNomCarte.pionProprietaireRenfort = null;
-                        }
-                        else
-                        {
-                            fNomCarte.pionProprietaireRenfort = Donnees.m_donnees.TAB_PION.FindByID_PION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_PION_PROPRIETAIRE_RENFORT);
-                        }
+                        fNomCarte.pionProprietaireRenfort = null;
+                    }
+                    else
+                    {
+                        fNomCarte.pionProprietaireRenfort = Donnees.m_donnees.TAB_PION.FindByID_PION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_PION_PROPRIETAIRE_RENFORT);
+                    }
 
-                        if (Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_NATION_CONTROLENull())
-                        {
-                            fNomCarte.proprietaire = null;
-                        }
-                        else
-                        {
-                            fNomCarte.proprietaire = Donnees.m_donnees.TAB_NATION.FindByID_NATION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_NATION_CONTROLE);
-                        }
+                    if (Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_NATION_CONTROLENull())
+                    {
+                        fNomCarte.proprietaire = null;
+                    }
+                    else
+                    {
+                        fNomCarte.proprietaire = Donnees.m_donnees.TAB_NATION.FindByID_NATION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_NATION_CONTROLE);
                     }
                 }
-
+                
                 i++;
             }
 
@@ -3273,7 +3270,9 @@ namespace vaoc
                             fNomCarte.materiel,
                             fNomCarte.ravitaillement,
                             false,
-                            fNomCarte.nom
+                            fNomCarte.nom,
+                            ligneCase.I_X,
+                            ligneCase.I_Y
                             );
                         ligneNomCarte.SetID_NATION_CONTROLENull();
                         if (null == fNomCarte.pionProprietaireRenfort) ligneNomCarte.SetID_PION_PROPRIETAIRE_RENFORTNull();
@@ -3535,7 +3534,9 @@ namespace vaoc
                             0,                                //int I_MATERIEL_RENFORT,
                             0,                                //int I_RAVITAILLEMENT_RENFORT,
                             true,//bool B_PONT
-                            nom.S_NOM_INDEX
+                            nom.S_NOM_INDEX,
+                            nom.I_X,
+                            nom.I_Y
                             );
                         ligneNomCarte.SetID_NATION_CONTROLENull();
                         //ligneNomCarte.SetID_MODELE_PION_RENFORTNull(); -> affiche toujours un résultat dans la liste déroulante

@@ -85,7 +85,7 @@ namespace vaoc
                     }
                     nom = string.Format(chaineFormat, ligneNomCarte.S_NOM, Math.Round(distance), strDirection);
                 }
-                liste.Add(new NomDePont(nom, nomIndexWeb, listeCasesPont[i].ID_CASE));
+                liste.Add(new NomDePont(nom, nomIndexWeb, listeCasesPont[i].ID_CASE, listeCasesPont[i].I_X, listeCasesPont[i].I_Y));
 
                 //on retire de la liste toutes les autres cases faisant partie du même pont
                 casesVoisines.Clear();
@@ -141,7 +141,9 @@ namespace vaoc
         public string S_NOM { get; set; }
         public string S_NOM_INDEX { get; set; }
         public int ID_CASE { get; set; }
-        public NomDePont(string nom, string nomIndex, int idCase) { S_NOM = nom;  S_NOM_INDEX = nomIndex;  ID_CASE = idCase; }
+        public NomDePont(string nom, string nomIndex, int idCase, int x, int y) { S_NOM = nom;  S_NOM_INDEX = nomIndex;  ID_CASE = idCase; I_X = x;  I_Y = y; }
+        public int I_X { get; set; }
+        public int I_Y { get; set; }
     }
 
 }

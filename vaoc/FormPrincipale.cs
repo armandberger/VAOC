@@ -131,6 +131,7 @@ namespace vaoc
             //Debug.WriteLine("ajout de 1000000 cases en memoire ko=" + (memoireApres - memoireAvant) / 1024);
 
             memoireAvant = GC.GetTotalMemory(false);
+            Constantes.repertoireDonnees = filename;
             if (Donnees.m_donnees.ChargerPartie(filename))
             {
                 memoireApres = GC.GetTotalMemory(false);//taille mémoire utilisée par le garbage collector en octets
@@ -142,7 +143,6 @@ namespace vaoc
                 Donnees.m_donnees.TAB_PCC_COUTS.Initialisation();
 
                 curFileName = filename;
-                Constantes.repertoireDonnees = curFileName;
                 m_modification = false;
 
                 Correctifs();

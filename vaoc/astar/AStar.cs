@@ -1428,14 +1428,14 @@ namespace vaoc
         /// <param name="idNation"></param>
         /// <param name="listeCaseEspace>liste des cases du parcours, ordonnées par I_COUT</param>
         /// <returns>true si OK, false si KO</returns>
-        internal bool SearchSpace(Donnees.TAB_CASERow ligneCase, int espace, AstarTerrain[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out List<Donnees.TAB_CASERow> listeCaseEspace, out string erreur)
+        internal bool SearchSpace(Donnees.TAB_CASERow ligneCase, int espace, AstarTerrain[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out List<int> listeCaseEspace, out string erreur)
         {
             DateTime timeStart;
             TimeSpan perf;
             //string requete;
             bool bEspaceFound;
             //DataSetCoutDonnees.TAB_CASERow[] retour;
-            listeCaseEspace = new List<Donnees.TAB_CASERow>();
+            listeCaseEspace = new List<int>();
 
             try
             {
@@ -1480,7 +1480,7 @@ namespace vaoc
                         //{ 
                         //    break; //on ne renvoie pas dans la liste les cases intraversables 
                         //}
-                        listeCaseEspace.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(caseEspace.EndNode.ID_CASE));
+                        listeCaseEspace.Add(caseEspace.EndNode.ID_CASE);
                     }
                     //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
                     /*

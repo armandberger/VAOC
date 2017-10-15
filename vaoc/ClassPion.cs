@@ -3026,7 +3026,7 @@ namespace vaoc
             /// <param name="listeCaseEspace>liste des cases du parcours, ordonnées par I_COUT</param>
             /// <param name="erreur">message d'erreur</param>
             /// <returns>true si OK, false si KO</returns>
-            internal bool RechercheEspace(bool depart, Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out int[] listeIDCaseEspace, out string erreur)
+            internal bool RechercheEspace(bool depart, Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeIDCaseEspace, out string erreur)
             {
                 string requete, message, messageErreur;
                 char typeEspace;
@@ -3036,7 +3036,7 @@ namespace vaoc
                 timeStart = DateTime.Now;
                 tableCoutsMouvementsTerrain = null;
                 erreur = string.Empty;
-                List <Donnees.TAB_CASERow> listeCaseEspace = null;
+                //List <Donnees.TAB_CASERow> listeCaseEspace = null;
                 listeIDCaseEspace = null;
 
                 if (null == ligneCaseDepart)
@@ -3093,7 +3093,7 @@ namespace vaoc
                 etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
-                if (!etoile.SearchSpace(ligneCaseDepart, espace, tableCoutsMouvementsTerrain, nombrePixelParCase, nation.ID_NATION, out listeCaseEspace, out erreur))
+                if (!etoile.SearchSpace(ligneCaseDepart, espace, tableCoutsMouvementsTerrain, nombrePixelParCase, nation.ID_NATION, out listeIDCaseEspace, out erreur))
                 {
                     erreur = string.Format("{0}(ID={1}, erreur sur SearchPath dans RechercheEspace idDepart={2})",
                         S_NOM, ID_PION, ligneCaseDepart.ID_CASE);
@@ -3102,13 +3102,13 @@ namespace vaoc
                 }
                 perf = DateTime.Now - timeStart;
                 message = string.Format("RechercheEspace : nouveau en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-
+                /*
                 int nbCaseEspace = listeCaseEspace.Count;
                 listeIDCaseEspace = new int[nbCaseEspace];
                 for (int i = 0; i < nbCaseEspace; i++)
                 {
                     listeIDCaseEspace[i] = listeCaseEspace[i].ID_CASE;
-                }
+                }*/
                 //stockage de l'espace en table
                 /*
                 Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
@@ -3904,7 +3904,7 @@ namespace vaoc
                 int i, nbplacesOccupes;
                 string message, messageErreur;
                 //string requete;
-                int[] listeCaseEspace = null;
+                List<int> listeCaseEspace = null;
 
                 try
                 {
@@ -3949,7 +3949,7 @@ namespace vaoc
 
                         i = 0;
                         nbplacesOccupes = 0;
-                        while (i < listeCaseEspace.Length && nbplacesOccupes < encombrement)
+                        while (i < listeCaseEspace.Count && nbplacesOccupes < encombrement)
                         {
                             Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCaseEspace[i]);
 

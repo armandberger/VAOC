@@ -892,7 +892,8 @@ namespace vaoc
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
-                        return this[index];
+                        TAB_CASERow retourLigne = this[index];
+                        return retourLigne;
                     }
                 }
                 catch (Exception ex)
@@ -1324,7 +1325,8 @@ namespace vaoc
                     resCase = new Node[nb_points];
                     for (int i = 0; i < nb_points; i++)
                     {
-                        resCase[i] = new Node(FindByXY(x[i], y[i]));
+                        Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);//avec le find en direct, on a un crash d'accès !
+                        resCase[i] = new Node(ligneCase);
                     }
 
                     if (0 == resCase.Length)
@@ -2120,6 +2122,7 @@ namespace vaoc
             #region version 6
             if (TAB_JEU[0].I_VERSION < 7)
             {
+                Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
                 for (int l = 0; l < Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
                 {
                     Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];

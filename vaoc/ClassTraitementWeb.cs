@@ -142,7 +142,8 @@ namespace vaoc
             #region fichiers des unités
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
-                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.IsID_PION_PROPRIETAIRENull() ? -1 : lignePion.ID_PION_PROPRIETAIRE);
+                //Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.IsID_PION_PROPRIETAIRENull() ? -1 : lignePion.ID_PION_PROPRIETAIRE);
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
 
                 //il faut générer un fichier avec la position courante à tous les tours
                 //et ne fournir au joueur que celui correspondant à celle du dernier message reçu

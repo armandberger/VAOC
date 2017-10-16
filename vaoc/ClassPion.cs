@@ -3341,7 +3341,7 @@ namespace vaoc
             internal bool InterceptionMessage(Donnees.TAB_PIONRow lignePionEnnemi)
             {
                 string message;
-                if (IsB_INTERCEPTIONNull() || !B_INTERCEPTION)
+                if (!B_INTERCEPTION)
                 {
                     //il n'y a encore jamais eut de tentative d'interception, cette tentative ne peut arriver qu'une seule fois.
                     if (Constantes.JetDeDes(1) == 1)

@@ -1220,7 +1220,7 @@ namespace vaoc
             {
                 bMessageDirect = false;
                 if (//null != Donnees.m_donnees.TAB_ROLE.TrouvePion(lignePionEmetteur.ID_PION) || //le pion emetteur est un joueur, mais un joueur n'écrit pas toujours en direct a un autre joueur !
-                    lignePionEmetteur.IsID_PION_PROPRIETAIRENull() ||
+                    //lignePionEmetteur.IsID_PION_PROPRIETAIRENull() ||
                     //lignePionEmetteur.ID_PION_PROPRIETAIRE == lignePionEmetteur.ID_PION || //29/10/2012, comprend pas déjà couvert par PionVoitPion je pense et, problème, quel que soit le destinataire d'un message envoyé par un général en chef arrive toujours immédiatement puisqu'il est son propre chef !
                     (!lignePionDestinataire.IsID_BATAILLENull() && !lignePionEmetteur.IsID_BATAILLENull() &&
                         lignePionDestinataire.ID_BATAILLE>0 && lignePionEmetteur.ID_BATAILLE>0 &&

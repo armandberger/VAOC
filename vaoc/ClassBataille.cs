@@ -72,7 +72,7 @@ namespace vaoc
                     }
 
                     LogFile.Notifier("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow");
-                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS);
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         ID_BATAILLE, lignePion.ID_PION, ligneModele.ID_NATION, false, bEnDefense,
                         lignePion.I_INFANTERIE,
@@ -90,18 +90,18 @@ namespace vaoc
                         -1
                     ))
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
+                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                         message = string.Format("AjouterPionDansLaBataille : impossible d'ajouter le pion {0} à la bataille {1}", lignePion.ID_PION, ID_BATAILLE);
                         LogFile.Notifier(message, out messageErreur);
                         return false;//problème à l'ajout
                     }
                     lignePion.ID_BATAILLE = ID_BATAILLE;
-                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
 
                     //il faut terminer tout ordre en cours d'execution par l'unité et placer l'unité dans la case courante du combat
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = ligneCaseCombat.ID_CASE;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.PlacerStatique();
 
@@ -248,9 +248,9 @@ namespace vaoc
 
                 //desengagement de toutes les unités
                 requete = string.Format("ID_BATAILLE={0}", ID_BATAILLE);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow[] resPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 for (int l=0; l<resPion.Count(); l++)
                 {
                     Donnees.TAB_PIONRow lignePion = resPion[l];
@@ -372,8 +372,8 @@ namespace vaoc
                     if (lignePion.B_DETRUIT) { continue; }
                     //si l'unité n'a aucune position dans le champ de bataille, cela ne sert à rien de la bouger !
                     var listeCasesOccupees = from Case in listeCasesBataille
-                                             where (!Case.IsID_PROPRIETAIRENull() && Case.ID_PROPRIETAIRE == lignePion.ID_PION)
-                                             || (!Case.IsID_NOUVEAU_PROPRIETAIRENull() && Case.ID_NOUVEAU_PROPRIETAIRE == lignePion.ID_PION)
+                                             where (Constantes.NULLENTIER != Case.ID_PROPRIETAIRE && Case.ID_PROPRIETAIRE == lignePion.ID_PION)
+                                             || (Constantes.NULLENTIER != Case.ID_NOUVEAU_PROPRIETAIRE && Case.ID_NOUVEAU_PROPRIETAIRE == lignePion.ID_PION)
                                              select Case;
                     if (0 == listeCasesOccupees.Count()) { continue; }
 
@@ -1339,9 +1339,9 @@ namespace vaoc
                 //Un ordre de retraite a-t-il été donné à ce tour ? ou à un autre ? En fait, il ne peut y avoir qu'une retraite sur une bataille !
                 string requete = string.Format("ID_BATAILLE={0} AND  I_ORDRE_TYPE={1}",
                     ID_BATAILLE, Constantes.ORDRES.RETRAITE);
-                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 Donnees.TAB_ORDRERow[] resOrdreRetraite = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 if (resOrdreRetraite.Length > 0)
                 {
                     message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Un ordre de retraite a été donné sur cette bataille.",
@@ -2386,7 +2386,7 @@ namespace vaoc
                     //l'unité fuit automatiquement vers son chef
                     lignePionFuite.SupprimerTousLesOrdres();
                     Donnees.TAB_PIONRow lignePionChef = lignePionFuite.proprietaire;
-                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         -1,//ID_ORDRE_TRANSMIS
                         -1,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
@@ -2424,7 +2424,7 @@ namespace vaoc
                     ligneOrdre.SetID_CIBLENull();
                     ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
                     ligneOrdre.SetI_ENGAGEMENTNull();
-                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 }
                 else
                 {

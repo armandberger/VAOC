@@ -64,8 +64,6 @@ namespace vaoc
 		private Track _LeafToGoBackUp;
 		private int _NbIterations = -1;
 
-        public const int CST_COUTMAX = Int32.MaxValue;
-        public const int CST_PLUSIEURSNATION = Int32.MaxValue;
 		private SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
@@ -416,7 +414,7 @@ namespace vaoc
             IList<Track> liste = CasesVoisinesHPA(TrackToPropagate); 
             foreach (Track A in liste)
             {
-                if (CST_COUTMAX == Cout(TrackToPropagate, A))
+                if (Constantes.CST_COUTMAX == Cout(TrackToPropagate, A))
                 {
                     Debug.Write("X");
                     continue;//case intraversable
@@ -471,7 +469,7 @@ namespace vaoc
                 //foreach (Donnees.TAB_CASERow A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
                 foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
                 {
-                    if (CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
+                    if (Constantes.CST_COUTMAX == Cout(TrackToPropagate.EndNode, A))
                     {
                         continue;//case intraversable
                     }
@@ -754,9 +752,9 @@ namespace vaoc
                         {
                             string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",
                                 trackSource.EndNode.ID_CASE, bloc.xBloc, bloc.yBloc);
-                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
+                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS.Rows.SyncRoot);
                             Donnees.TAB_PCC_COUTSRow[] lignesCout = (Donnees.TAB_PCC_COUTSRow[])Donnees.m_donnees.TAB_PCC_COUTS.Select(requete);
-                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);
+                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS.Rows.SyncRoot);
                             if (null != lignesCout && lignesCout.Length > 0)
                             {
                                 /*
@@ -932,7 +930,7 @@ namespace vaoc
                 //    "Cout : trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNodeHPA.ID_CASE_DEBUT");
                 if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
                 {
-                    return AStar.CST_COUTMAX;//trajet intraversable
+                    return Constantes.CST_COUTMAX;//trajet intraversable
                 }
                 return trackDestination.EndNodeHPA.I_COUT;
             }
@@ -981,20 +979,23 @@ namespace vaoc
 
             if (m_idNation >= 0)
             {
-                if (!caseFinale.IsID_NOUVEAU_PROPRIETAIRENull() && caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
+                int IdNouveauProprietaire = caseFinale.ID_NOUVEAU_PROPRIETAIRE;//pour éviter une modification dans le multithreading
+                if ((Constantes.NULLENTIER!=IdNouveauProprietaire) && IdNouveauProprietaire >= 0)
                 {
                     Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE);
                     if (lignePionProprietaire.idNation != m_idNation)
                     {
-                        return AStar.CST_COUTMAX;//case intraversable
+                        return Constantes.CST_COUTMAX;//case intraversable
                     }
                 }
-                if (!caseFinale.IsID_PROPRIETAIRENull() && caseFinale.ID_PROPRIETAIRE >= 0)
+
+                int IdProprietaire = caseFinale.ID_PROPRIETAIRE;//pour éviter une modification dans le multithreading
+                if ((Constantes.NULLENTIER != IdProprietaire) && IdProprietaire >= 0)
                 {
                     Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE);
                     if (lignePionProprietaire.idNation != m_idNation)
                     {
-                        return AStar.CST_COUTMAX;//case intraversable
+                        return Constantes.CST_COUTMAX;//case intraversable
                     }
                 }
             }
@@ -1032,7 +1033,7 @@ namespace vaoc
             //Debug.WriteLine(string.Format("AStar.Cout en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
             if (retour <= 0)
             {
-                return CST_COUTMAX;//case intraversable
+                return Constantes.CST_COUTMAX;//case intraversable
             }
             return retour;
         }
@@ -1050,7 +1051,7 @@ namespace vaoc
                         Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE.Value);
                         if (lignePionProprietaire.idNation != m_idNation)
                         {
-                            return AStar.CST_COUTMAX;//case intraversable
+                            return Constantes.CST_COUTMAX;//case intraversable
                         }
                     }
                     if (caseFinale.ID_PROPRIETAIRE.HasValue && caseFinale.ID_PROPRIETAIRE >= 0)
@@ -1058,7 +1059,7 @@ namespace vaoc
                         Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE.Value);
                         if (lignePionProprietaire.idNation != m_idNation)
                         {
-                            return AStar.CST_COUTMAX;//case intraversable
+                            return Constantes.CST_COUTMAX;//case intraversable
                         }
                     }
                 }
@@ -1076,7 +1077,7 @@ namespace vaoc
 
                 if (retour <= 0)
                 {
-                    return CST_COUTMAX;//case intraversable
+                    return Constantes.CST_COUTMAX;//case intraversable
                 }
             }
             catch (Exception ex)
@@ -1159,10 +1160,10 @@ namespace vaoc
                 Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                 //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
-                requete = string.Format("I_COUT<{0}", CST_COUTMAX);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                requete = string.Format("I_COUT<{0}", Constantes.CST_COUTMAX);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 if (listeCaseEspace.Count() < m_espace)
                 {
                     erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
@@ -1196,7 +1197,7 @@ namespace vaoc
             for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
             {
                 tableCoutsMouvementsTerrain[i] = new AstarTerrain();
-                tableCoutsMouvementsTerrain[i].cout = AStar.CST_COUTMAX;
+                tableCoutsMouvementsTerrain[i].cout = Constantes.CST_COUTMAX;
                 tableCoutsMouvementsTerrain[i].route = false;
             }
 
@@ -1276,9 +1277,9 @@ namespace vaoc
             {
                 requete = string.Format("ID_PION={0}", lignePion.ID_PION);
                 tri = "I_ORDRE";
-                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                 parcoursExistant = (Donnees.TAB_PARCOURSRow[])Donnees.m_donnees.TAB_PARCOURS.Select(requete, tri);
-                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
 
                 if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
                 {
@@ -1372,12 +1373,12 @@ namespace vaoc
                 //destruction de tout autre parcours précédent
                 if (null != parcoursExistant)
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                     foreach (Donnees.TAB_PARCOURSRow ligneParcours in parcoursExistant)
                     {
                         ligneParcours.Delete();
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                     //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                     //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
                 }
@@ -1394,7 +1395,7 @@ namespace vaoc
                 int casePrecedente = -1;
                 if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                     i = 0;
                     foreach (Donnees.TAB_CASERow ligneCase in chemin)
                     {
@@ -1407,7 +1408,7 @@ namespace vaoc
                     }
                     //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                     //Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
-                    Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                 }
             }
 
@@ -1590,7 +1591,7 @@ namespace vaoc
                 //}
 
                 int cout = Cout(TrackToPropagate.EndNode, A);
-                if (cout != CST_COUTMAX)
+                if (cout != Constantes.CST_COUTMAX)
                 {
                     //DateTime timeStart2 = DateTime.Now;
                     ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))

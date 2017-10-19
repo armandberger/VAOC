@@ -112,9 +112,9 @@ namespace vaoc
                             Convert.ToInt32((ligne.Cells["I_VICTOIRE"].Value))
                             );
                         if (lignePion.ID_BATAILLE < 0) lignePion.SetID_BATAILLENull();
-                        if (lignePion.I_TOUR_SANS_RAVITAILLEMENT < 0) lignePion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
+                        if (lignePion.I_TOUR_SANS_RAVITAILLEMENT < 0) lignePion.I_TOUR_SANS_RAVITAILLEMENT=0;
                         if (lignePion.I_ZONE_BATAILLE < 0) lignePion.SetI_ZONE_BATAILLENull();
-                        if (lignePion.I_TOUR_CONVOI_CREE < 0) lignePion.SetI_TOUR_CONVOI_CREENull();
+                        if (lignePion.I_TOUR_CONVOI_CREE < 0) lignePion.I_TOUR_CONVOI_CREE=0;
                         if (lignePion.ID_PION_REMPLACE < 0) lignePion.SetID_PION_REMPLACENull();
                         if (lignePion.I_TOUR_BLESSURE < 0) lignePion.SetI_TOUR_BLESSURENull();
                         if (lignePion.ID_LIEU_RATTACHEMENT < 0) lignePion.SetID_LIEU_RATTACHEMENTNull();
@@ -171,7 +171,7 @@ namespace vaoc
                     ligneGrid.Cells["I_NB_HEURES_COMBAT"].Value = lignePion.I_NB_HEURES_COMBAT;                    
                     ligneGrid.Cells["ID_CASE"].Value = lignePion.ID_CASE;
                     ligneGrid.Cells["ID_BATAILLE"].Value = lignePion.IsID_BATAILLENull() ? -1 : lignePion.ID_BATAILLE;
-                    ligneGrid.Cells["I_TOUR_SANS_RAVITAILLEMENT"].Value = lignePion.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : lignePion.I_TOUR_SANS_RAVITAILLEMENT;
+                    ligneGrid.Cells["I_TOUR_SANS_RAVITAILLEMENT"].Value = lignePion.I_TOUR_SANS_RAVITAILLEMENT;
                     ligneGrid.Cells["I_ZONE_BATAILLE"].Value = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
                     ligneGrid.Cells["I_TOUR_RETRAITE_RESTANT"].Value = lignePion.IsI_TOUR_RETRAITE_RESTANTNull() ? 0 : lignePion.I_TOUR_RETRAITE_RESTANT;
                     ligneGrid.Cells["I_TOUR_FUITE_RESTANT"].Value = lignePion.I_TOUR_FUITE_RESTANT;
@@ -187,7 +187,7 @@ namespace vaoc
                     ligneGrid.Cells["B_CAVALERIE_LOURDE"].Value = lignePion.B_CAVALERIE_LOURDE;
                     ligneGrid.Cells["B_GARDE"].Value = lignePion.B_GARDE;
                     ligneGrid.Cells["B_VIEILLE_GARDE"].Value = lignePion.B_VIEILLE_GARDE;
-                    ligneGrid.Cells["I_TOUR_CONVOI_CREE"].Value = lignePion.IsI_TOUR_CONVOI_CREENull() ? 0 : lignePion.I_TOUR_CONVOI_CREE;
+                    ligneGrid.Cells["I_TOUR_CONVOI_CREE"].Value = lignePion.I_TOUR_CONVOI_CREE;
                     ligneGrid.Cells["I_SOLDATS_RAVITAILLES"].Value = lignePion.I_SOLDATS_RAVITAILLES;
                     ligneGrid.Cells["I_NB_HEURES_FORTIFICATION"].Value = lignePion.I_NB_HEURES_FORTIFICATION;
                     ligneGrid.Cells["I_NIVEAU_FORTIFICATION"].Value = lignePion.I_NIVEAU_FORTIFICATION;

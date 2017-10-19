@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using WaocLib;
 
 namespace vaoc
 {
@@ -136,9 +137,10 @@ namespace vaoc
                     }
                 }
             }
-            if (!lignePionRemplace.IsID_PION_REMPLACENull() && lignePionRemplace.ID_PION_REMPLACE > 0)
+            int IdPionRemplace = lignePionRemplace.ID_PION_REMPLACE;
+            if ((Constantes.NULLENTIER != IdPionRemplace) && (IdPionRemplace > 0))
             {
-                Donnees.TAB_PIONRow lignePionRemplaceSuite = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePionRemplace.ID_PION_REMPLACE);
+                Donnees.TAB_PIONRow lignePionRemplaceSuite = Donnees.m_donnees.TAB_PION.FindByID_PION(IdPionRemplace);
                 AjouterMessagesEnvoyés(lignePionSource, lignePionRemplaceSuite);
             }
         }

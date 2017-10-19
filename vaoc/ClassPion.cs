@@ -104,11 +104,11 @@ namespace vaoc
                 //être incrementé automatiquement à cause de la bascule des pions de TAB_RENFORT vers TAB_PION
                 LogFile.Notifier("AjouterPion:AddTAB_PIONRow");
                 string tri = "ID_PION DESC";
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 TAB_PIONRow[] resCout = (TAB_PIONRow[])Select(string.Empty, tri);
                 if (0 == resCout.Length)
                 {
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return null;
                 }
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
@@ -176,7 +176,7 @@ namespace vaoc
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return rowTAB_PIONRow;
             }
         }
@@ -193,9 +193,9 @@ namespace vaoc
                 {
                     //on recherche le pion de remplacement
                     string requete = string.Format("ID_PION_REMPLACE = {0}", ID_PION);
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     TAB_PIONRow[] resPions = (TAB_PIONRow[])m_donnees.TAB_PION.Select(requete);
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (resPions.Length <= 0)
                     {
                         return null;
@@ -211,11 +211,12 @@ namespace vaoc
             {
                 get
                 {
-                    if (IsID_PION_REMPLACENull())
+                    int IdPionRemplace = ID_PION_REMPLACE;
+                    if (Constantes.NULLENTIER == IdPionRemplace)
                     {
                         return null;
                     }
-                    return Donnees.m_donnees.TAB_PION.FindByID_PION(ID_PION_REMPLACE);
+                    return Donnees.m_donnees.TAB_PION.FindByID_PION(IdPionRemplace);
                 }
             }
 
@@ -379,7 +380,8 @@ namespace vaoc
             {
                 get
                 {
-                    return this.IsID_PION_ESCORTENull() ? null : m_donnees.TAB_PION.FindByID_PION(ID_PION_ESCORTE);
+                    int idPionEscorte = ID_PION_ESCORTE;
+                    return (Constantes.NULLENTIER == idPionEscorte) ? null : m_donnees.TAB_PION.FindByID_PION(idPionEscorte);
                 }
             }
 
@@ -789,13 +791,13 @@ namespace vaoc
                 }
                 //lignePion.SupprimerTousLesOrdres(); si on fait cela, les ordres ne seront plus visibles sur le web
                 //si l'unité a des effectifs sur carte, il faut les supprimer pour avoir un affichage correcte après la bataille
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 if (!estQG && !estMessager && !estPatrouille)
                 {
                     string requete = string.Format("(ID_PROPRIETAIRE= {0}) OR (ID_NOUVEAU_PROPRIETAIRE={0})", ID_PION);
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     foreach (Donnees.TAB_CASERow ligneChange in changeRows)
                     {
                         Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
@@ -809,17 +811,19 @@ namespace vaoc
                     Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
                     if (null != ligne)
                     {
-                        if (!ligne.IsID_PROPRIETAIRENull() && (ligne.ID_PROPRIETAIRE == ID_PION))
+                        int IdProprietaire = ligne.ID_PROPRIETAIRE;
+                        if ((Constantes.NULLENTIER != IdProprietaire) && (IdProprietaire == ID_PION))
                         {
                             ligne.SetID_PROPRIETAIRENull();
                         }
-                        if (!ligne.IsID_NOUVEAU_PROPRIETAIRENull() && (ligne.ID_NOUVEAU_PROPRIETAIRE == ID_PION))
+                        int IdNouveauProprietaire = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                        if ((Constantes.NULLENTIER != IdNouveauProprietaire) && (IdNouveauProprietaire == ID_PION))
                         {
                             ligne.SetID_NOUVEAU_PROPRIETAIRENull();
                         }
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
             /// <summary>
@@ -832,10 +836,10 @@ namespace vaoc
 
             public void DetruirePion()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 B_DETRUIT = true;
                 I_MORAL = 0; //ainsi, les blessés légers d'une bataille sont mis automatiquement en bléssés graves (sinon, l'unité pourrait "renaitre" post bataille)
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 DetruireEspacePion();
             }
 
@@ -1085,53 +1089,55 @@ namespace vaoc
                 TAB_MODELE_PIONRow ligneModeleAdversaire;
                 TAB_PIONRow lignePionAdversaire;
 
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                if (!ligneCase.IsID_PROPRIETAIRENull())
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdProprietaire)
                 {
-                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
+                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdProprietaire);
                     if (null == lignePionAdversaire)
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         return false; //cas possible si j'ai détruit une unité manuellement
                     }
                     if (lignePionAdversaire.B_DETRUIT)
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         return false;
                     }
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
                     }
                     if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
                     {
                         if (bCombattif)
                         {
-                            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                             return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
                         }
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         return true;
                     }
                 }
-                if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
+                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdNouveauProprietaire)
                 {
-                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_NOUVEAU_PROPRIETAIRE);
+                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdNouveauProprietaire);
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
                     }
                     if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 return false;
             }
 
@@ -1184,9 +1190,10 @@ namespace vaoc
                 {
                     throw new Exception("TAB_PIONRow.rechercheEnnemi impossible de trouver le modèle du pion source");
                 }
-                if (!ligneCase.IsID_PROPRIETAIRENull())
+                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdProprietaire)
                 {
-                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
+                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdProprietaire);
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
@@ -1197,9 +1204,10 @@ namespace vaoc
                         return lignePionAdversaire;
                     }
                 }
-                if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
+                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdNouveauProprietaire)
                 {
-                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_NOUVEAU_PROPRIETAIRE);
+                    lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdNouveauProprietaire);
                     ligneModeleAdversaire = lignePionAdversaire.modelePion;
                     if (null == ligneModeleAdversaire)
                     {
@@ -1271,9 +1279,10 @@ namespace vaoc
                 {
                     throw new Exception("TAB_PIONRow.estAmi impossible de trouver le modèle du pion source");
                 }
-                if (!ligneCase.IsID_PROPRIETAIRENull())
+                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdProprietaire)
                 {
-                    lignePionOccupe = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
+                    lignePionOccupe = m_donnees.tableTAB_PION.FindByID_PION(IdProprietaire);
                     if (null == lignePionOccupe)
                     {
                         return false; //cas possible si j'ai détruit une unité manuellement
@@ -1288,9 +1297,10 @@ namespace vaoc
                         return true;
                     }
                 }
-                if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
+                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdNouveauProprietaire)
                 {
-                    lignePionOccupe = m_donnees.tableTAB_PION.FindByID_PION(ligneCase.ID_NOUVEAU_PROPRIETAIRE);
+                    lignePionOccupe = m_donnees.tableTAB_PION.FindByID_PION(IdNouveauProprietaire);
                     ligneModeleOccupe = lignePionOccupe.modelePion;
                     if (null == ligneModeleOccupe)
                     {
@@ -1310,15 +1320,15 @@ namespace vaoc
 
                 //recherche le modèle du pion
                 requete = string.Format("ID_MODELE_PION={0}", this.ID_MODELE_PION);
-                Monitor.Enter(m_donnees.TAB_MODELE_PION); //select n'est pas thread safe
+                Monitor.Enter(m_donnees.TAB_MODELE_PION.Rows.SyncRoot); //select n'est pas thread safe
                 TAB_MODELE_PIONRow[] resModelePion = (TAB_MODELE_PIONRow[])m_donnees.TAB_MODELE_PION.Select(requete);
-                Monitor.Exit(m_donnees.TAB_MODELE_PION);
+                Monitor.Exit(m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
 
                 //recherche l'aptitude fournie en paramètre
                 requete = string.Format("S_NOM='{0}'", nomAptitude);
-                Monitor.Enter(m_donnees.TAB_APTITUDES);
+                Monitor.Enter(m_donnees.TAB_APTITUDES.Rows.SyncRoot);
                 TAB_APTITUDESRow[] resAptitude = (TAB_APTITUDESRow[])m_donnees.TAB_APTITUDES.Select(requete);
-                Monitor.Exit(m_donnees.TAB_APTITUDES);
+                Monitor.Exit(m_donnees.TAB_APTITUDES.Rows.SyncRoot);
 
                 //recherche si le modele de pion possède l'aptitude demandée
                 if (0 == resModelePion.Count() || 0 == resAptitude.Count())
@@ -1326,9 +1336,9 @@ namespace vaoc
                     return false;
                 }
                 requete = string.Format("ID_MODELE_PION={0} AND ID_APTITUDE={1}", resModelePion[0].ID_MODELE_PION, resAptitude[0].ID_APTITUDE);
-                Monitor.Enter(m_donnees.TAB_APTITUDES_PION);
+                Monitor.Enter(m_donnees.TAB_APTITUDES_PION.Rows.SyncRoot);
                 TAB_APTITUDES_PIONRow[] resAptitudesPion = (TAB_APTITUDES_PIONRow[])m_donnees.TAB_APTITUDES_PION.Select(requete);
-                Monitor.Exit(m_donnees.TAB_APTITUDES_PION);
+                Monitor.Exit(m_donnees.TAB_APTITUDES_PION.Rows.SyncRoot);
                 if (null == resAptitudesPion || 0 == resAptitudesPion.Length)
                 {
                     return false;
@@ -1402,23 +1412,23 @@ namespace vaoc
                 requete = (idordre == -1) ? string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL", ID_PION) :
                                           string.Format("ID_PION={0} AND ID_ORDRE< {1} AND I_TOUR_FIN IS NULL", ID_PION, idordre);
                 TAB_ORDRERow[] resOrdres = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
-                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 foreach (TAB_ORDRERow ligneOrdre in resOrdres)
                 {
                     ligneOrdre.I_TOUR_FIN = m_donnees.tableTAB_PARTIE[0].I_TOUR;
                     ligneOrdre.I_PHASE_FIN = m_donnees.tableTAB_PARTIE[0].I_PHASE;
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //m_donnees.TAB_ORDRE.AcceptChanges();
 
                 //suppression des parcours en mémoire car l'unité devient statiques
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 m_donnees.TAB_ESPACE.SupprimerEspacePion(ID_PION);
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
-                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                 m_donnees.TAB_PARCOURS.SupprimerParcoursPion(ID_PION);
-                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
 
                 return true;
             }
@@ -2567,7 +2577,7 @@ namespace vaoc
                     return null;
                 }
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow lignePionRemplacant = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -2592,7 +2602,7 @@ namespace vaoc
                     0,//int I_NB_PHASES_MARCHE_NUIT,
                     0,//int I_NB_HEURES_COMBAT,
                     ID_CASE,
-                    -1,//I_TOUR_SANS_RAVITAILLEMENT,
+                    0,//I_TOUR_SANS_RAVITAILLEMENT,
                     -1,//int ID_BATAILLE,
                     -1,//int I_ZONE_BATAILLE,
                     I_TOUR_RETRAITE_RESTANT,
@@ -2609,7 +2619,7 @@ namespace vaoc
                     B_CAVALERIE_LOURDE,
                     B_GARDE,
                     B_VIEILLE_GARDE,
-                    -1,//I_TOUR_CONVOI_CREE,
+                    0,//I_TOUR_CONVOI_CREE,
                     -1,//ID_DEPOT_SOURCE
                     I_SOLDATS_RAVITAILLES,
                     I_NB_HEURES_FORTIFICATION,
@@ -2641,7 +2651,7 @@ namespace vaoc
                 else
                 {
                     lignePionRemplacant.ID_BATAILLE = ID_BATAILLE;
-                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS); 
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot); 
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         lignePionRemplacant.ID_BATAILLE, lignePionRemplacant.ID_PION, lignePionRemplacant.nation.ID_NATION, false, false /*bEnDefense*/,
                         lignePionRemplacant.I_INFANTERIE,
@@ -2659,11 +2669,11 @@ namespace vaoc
                         -1 // I_ZONE_BATAILLE_ENGAGEMENT
                     ))
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
+                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                         LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_BATAILLE_PIONSRow");
                         return null;
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS);
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
 
                     //le chef blessé n'est plus engagé (considéré en retraite)
                     Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ID_PION, ID_BATAILLE);
@@ -2713,9 +2723,7 @@ namespace vaoc
                 lignePionRemplacant.SetID_LIEU_RATTACHEMENTNull();
                 lignePionRemplacant.SetID_PION_ESCORTENull();
                 lignePionRemplacant.SetID_DEPOT_SOURCENull();
-                lignePionRemplacant.SetI_TOUR_SANS_RAVITAILLEMENTNull();
-                lignePionRemplacant.SetI_TOUR_CONVOI_CREENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return lignePionRemplacant;
             }
 
@@ -2747,7 +2755,7 @@ namespace vaoc
                 }
 
                 //copie de l'ancien chef comme nouveau pion, blessé
-                Monitor.Enter(Donnees.m_donnees.TAB_PION); 
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                 Donnees.TAB_PIONRow ligneAncienPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -2772,7 +2780,7 @@ namespace vaoc
                     0,//int I_NB_PHASES_MARCHE_NUIT,
                     0,//int I_NB_HEURES_COMBAT,
                     ID_CASE,
-                    -1,//I_TOUR_SANS_RAVITAILLEMENT,
+                    0,//I_TOUR_SANS_RAVITAILLEMENT,
                     -1,//int ID_BATAILLE,
                     -1,//int I_ZONE_BATAILLE,
                     I_TOUR_RETRAITE_RESTANT,
@@ -2789,7 +2797,7 @@ namespace vaoc
                     B_CAVALERIE_LOURDE,
                     B_GARDE,
                     B_VIEILLE_GARDE,
-                    -1,//I_TOUR_CONVOI_CREE,
+                    0,//I_TOUR_CONVOI_CREE,
                     -1,//ID_DEPOT_SOURCE
                     I_SOLDATS_RAVITAILLES,
                     I_NB_HEURES_FORTIFICATION,
@@ -2812,7 +2820,7 @@ namespace vaoc
 
                 if (null == ligneAncienPion)
                 {
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION); 
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                     LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_PIONRow");
                     return null;
                 }
@@ -2850,9 +2858,7 @@ namespace vaoc
                 ligneAncienPion.SetID_LIEU_RATTACHEMENTNull();
                 ligneAncienPion.SetID_PION_ESCORTENull();
                 ligneAncienPion.SetID_DEPOT_SOURCENull();
-                ligneAncienPion.SetI_TOUR_SANS_RAVITAILLEMENTNull();
-                ligneAncienPion.SetI_TOUR_CONVOI_CREENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION); 
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
 
                 return ligneAncienPion;
             }
@@ -2984,9 +2990,9 @@ namespace vaoc
                 string requete;
 
                 requete = string.Format("ID_MODELE_PION={0}", ID_MODELE_PION);
-                Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
                 Donnees.TAB_MODELE_PIONRow[] resModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
 
                 requete = string.Format("ID_MODELE_MOUVEMENT={0}", resModelePion[0].ID_MODELE_MOUVEMENT);
                 Donnees.TAB_MODELE_MOUVEMENTRow[] resModeleMouvement = (Donnees.TAB_MODELE_MOUVEMENTRow[])Donnees.m_donnees.TAB_MODELE_MOUVEMENT.Select(requete);
@@ -3050,9 +3056,9 @@ namespace vaoc
                 //existe-il déjà un chemin pour le pion sur le trajet demandé ? BEA, vérifier, si cela se trouve c'est devenu aussi rapide de refaire le calcul à chaque fois
                 requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", ID_PION, typeEspace);
                 /* Note : en traitement parallèle, il semblerait que locker/rechercher les données de TAB_ESPACE prennent plus de temps que de refaire le calcul
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE); 
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot); 
                 Donnees.TAB_ESPACERow[] parcoursExistant = (Donnees.TAB_ESPACERow[])Donnees.m_donnees.TAB_ESPACE.Select(requete, "I_COUT");
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE); 
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot); 
 
                 if (parcoursExistant.Length > 5000)
                 {
@@ -3080,12 +3086,12 @@ namespace vaoc
                 //suppression de l'ancien espace
                 if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                     for (int i = 0; i < parcoursExistant.Length; i++)
                     {
                         Donnees.m_donnees.TAB_ESPACE.RemoveTAB_ESPACERow(parcoursExistant[i]);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 }
                 */
                 //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
@@ -3111,7 +3117,7 @@ namespace vaoc
                 }*/
                 //stockage de l'espace en table
                 /*
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 for (int i = 0; i < nbCaseEspace; i++)
                 {
                     Donnees.m_donnees.TAB_ESPACE.AddTAB_ESPACERow(ID_PION,
@@ -3119,7 +3125,7 @@ namespace vaoc
                                                                             listeCaseEspace[i].ID_CASE,
                                                                             listeCaseEspace[i].I_COUT);
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                  * */
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
@@ -3259,7 +3265,7 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePionConvoi = null;
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PION); 
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                 lignePionConvoi = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     -1,//idModeleCONVOI,
                     lignePionProprietaire.ID_PION,
@@ -3267,7 +3273,9 @@ namespace vaoc
                     -1,
                     "",//nomConvoi,
                     0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
-                    ID_CASE, 0, 0, -1,
+                    ID_CASE,
+                    0, //I_TOUR_SANS_RAVITAILLEMENT
+                    0, -1,
                     0,//I_TOUR_RETRAITE_RESTANT
                     0, false, false, false, false, false,
                     false,//B_ENNEMI_OBSERVABLE
@@ -3301,7 +3309,6 @@ namespace vaoc
                 lignePionConvoi.SetID_NOUVEAU_PION_PROPRIETAIRENull();
                 lignePionConvoi.SetI_ZONE_BATAILLENull();
                 lignePionConvoi.SetID_BATAILLENull();
-                lignePionConvoi.SetI_TOUR_SANS_RAVITAILLEMENTNull();
                 lignePionConvoi.SetID_LIEU_RATTACHEMENTNull();
                 lignePionConvoi.SetID_PION_ESCORTENull();
 
@@ -3334,7 +3341,7 @@ namespace vaoc
                         }
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_PION); 
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                 return lignePionConvoi;
             }
 
@@ -3384,15 +3391,15 @@ namespace vaoc
                     if (enMouvement || ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
                     {
                         //Une unité en mouvement étant la seule à surchargée une route, son occupation est prioritaire par rapport à une unité fixe
-                        Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         ligneCase.ID_NOUVEAU_PROPRIETAIRE = ID_PION;
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
                     nbplaces++;
                     if (estMessager || estPatrouille || estDepot /*|| lignePion.estConvoi || lignePion.estPontonnier*/) { return true; }
                     //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille
-                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
                     foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                     {
                         if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
@@ -3402,7 +3409,7 @@ namespace vaoc
                             ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
                         }
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
                 }
                 else
                 {
@@ -3437,8 +3444,11 @@ namespace vaoc
                     || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false)))
                 {
                     //unites combattantes standard, création d'une bataille
-                    string proprio = ligneCase.IsID_PROPRIETAIRENull() ? "null" : ligneCase.ID_PROPRIETAIRE.ToString();
-                    string nouveauProprio = ligneCase.IsID_NOUVEAU_PROPRIETAIRENull() ? "null" : ligneCase.ID_NOUVEAU_PROPRIETAIRE.ToString();
+                    int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                    string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
+                    int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                    string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
+
                     message = string.Format("RequisitionCase-NouvelleBataille: entre les poins ID_PION={0} et ID_PION={1} ou ID_PION={2} sur ID_CASE:{3}",
                         ID_PION, proprio, nouveauProprio, ligneCase.ID_CASE);
                     LogFile.Notifier(message);
@@ -3738,9 +3748,9 @@ namespace vaoc
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
                 idNationCaptureur = lignePionEnnemi.idNation;
                 requete = "C_NIVEAU_HIERARCHIQUE = 'A'";
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //on garde le premier QG de la bonne nationalité
                 foreach (Donnees.TAB_PIONRow lignePion in lignesPion)
@@ -4294,6 +4304,129 @@ namespace vaoc
                     return (null != ligneOrdre);
                 }
             }
+
+            internal bool IsID_NOUVEAU_PION_PROPRIETAIRENull()
+            {
+                return this.ID_NOUVEAU_PION_PROPRIETAIRE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_ANCIEN_PION_PROPRIETAIRENull()
+            {
+                return this.ID_ANCIEN_PION_PROPRIETAIRE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsC_NIVEAU_HIERARCHIQUENull()
+            {
+                return this.C_NIVEAU_HIERARCHIQUE == Constantes.NULLCHAR;
+            }
+
+            internal void SetID_ANCIEN_PION_PROPRIETAIRENull()
+            {
+                this.ID_ANCIEN_PION_PROPRIETAIRE = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_NOUVEAU_PION_PROPRIETAIRENull()
+            {
+                this.ID_NOUVEAU_PION_PROPRIETAIRE = Constantes.NULLENTIER;
+            }
+
+            /******************** Nouveaux *********************/
+            internal bool IsID_DEPOT_SOURCENull()
+            {
+                return this.ID_DEPOT_SOURCE == Constantes.NULLENTIER;
+            }
+
+            internal void SetID_DEPOT_SOURCENull()
+            {
+                this.ID_DEPOT_SOURCE = Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_PION_REMPLACENull()
+            {
+                return this.ID_PION_REMPLACE == Constantes.NULLENTIER;
+            }
+
+            internal void SetID_PION_REMPLACENull()
+            {
+                this.ID_PION_REMPLACE = Constantes.NULLENTIER;
+            }
+
+            //todo
+            internal bool IsID_BATAILLENull()
+            {
+                return this.ID_BATAILLE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsI_TOUR_BLESSURENull()
+            {
+                return this.I_TOUR_BLESSURE == Constantes.NULLENTIER;
+            }
+
+            internal void SetI_TOUR_BLESSURENull()
+            {
+                this.I_TOUR_BLESSURE = Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_LIEU_RATTACHEMENTNull()
+            {
+                return this.ID_LIEU_RATTACHEMENT == Constantes.NULLENTIER;
+            }
+
+            internal void SetID_LIEU_RATTACHEMENTNull()
+            {
+                this.ID_LIEU_RATTACHEMENT = Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_PION_ESCORTENull()
+            {
+                return this.ID_PION_ESCORTE == Constantes.NULLENTIER;
+            }
+
+            internal void SetID_PION_ESCORTENull()
+            {
+                this.ID_PION_ESCORTE = Constantes.NULLENTIER;
+            }
+
+            internal bool IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
+            {
+                return this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT == Constantes.NULLENTIER;
+            }
+
+            internal void SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
+            {
+                this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Constantes.NULLENTIER;
+            }
+
+            internal bool IsI_VICTOIRENull()
+            {
+                return this.I_VICTOIRE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsI_ZONE_BATAILLENull()
+            {
+                return this.I_ZONE_BATAILLE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsI_TOUR_RETRAITE_RESTANTNull()
+            {
+                return this.I_TOUR_RETRAITE_RESTANT == Constantes.NULLENTIER;
+            }
+
+            internal void SetID_BATAILLENull()
+            {
+                this.ID_BATAILLE = Constantes.NULLENTIER;
+            }
+
+            internal void SetI_ZONE_BATAILLENull()
+            {
+                this.I_ZONE_BATAILLE = Constantes.NULLENTIER;
+            }
+
+            //internal void SetI_TOUR_CONVOI_CREENull()
+            //{
+            //    this.I_TOUR_CONVOI_CREE = Constantes.NULLENTIER;
+            //}
+
         }
     }
 }

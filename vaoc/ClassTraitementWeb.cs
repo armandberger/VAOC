@@ -211,12 +211,13 @@ namespace vaoc
                         GenererFichierPion(repertoireTour, lignePion, ligneMessage, lignePion.ID_PION_PROPRIETAIRE);
                     }
 
-                    if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
+                    int IdAncienProprietaire = lignePion.ID_ANCIEN_PION_PROPRIETAIRE;
+                    if (Constantes.NULLENTIER != IdAncienProprietaire)
                     {
                         //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
-                        GenererFichierPion(repertoireTour, lignePion, ligneMessage, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                        ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, IdAncienProprietaire);
+                        GenererFichierPion(repertoireTour, lignePion, ligneMessage, IdAncienProprietaire);
                     }
                 }
 

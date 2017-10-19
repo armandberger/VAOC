@@ -782,13 +782,13 @@ namespace vaoc
                 }
                 else
                 {
-
-                    if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
+                    int IdAncienProprietaire = lignePion.ID_ANCIEN_PION_PROPRIETAIRE;
+                    if (Constantes.NULLENTIER != IdAncienProprietaire)
                     {
                         //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
-                        requete = GenereLignePion(lignePion, idPartie, lignePion.ID_ANCIEN_PION_PROPRIETAIRE, ligneMessage);
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, IdAncienProprietaire);
+                        requete = GenereLignePion(lignePion, idPartie, IdAncienProprietaire, ligneMessage);
                     }
                     else
                     {
@@ -991,7 +991,7 @@ namespace vaoc
                                     lignePion.I_MATERIEL,
                                     lignePion.I_RAVITAILLEMENT,
                                     lignePion.I_NIVEAU_FORTIFICATION,
-                                    lignePion.IsI_TOUR_CONVOI_CREENull() ? 0 : lignePion.I_TOUR_CONVOI_CREE,//40
+                                    lignePion.I_TOUR_CONVOI_CREE,//40
                                     lignePion.IsID_DEPOT_SOURCENull() ? -1 : lignePion.ID_DEPOT_SOURCE,
                                     lignePion.B_CAVALERIE_DE_LIGNE ? 1 : 0,
                                     lignePion.B_CAVALERIE_LOURDE ? 1 : 0,
@@ -1003,7 +1003,7 @@ namespace vaoc
                                     bConvoi,
                                     bRenfort,//50
                                     bQG,
-                                    lignePion.IsI_SOLDATS_RAVITAILLESNull() ? 0 : lignePion.I_SOLDATS_RAVITAILLES,
+                                    lignePion.I_SOLDATS_RAVITAILLES,
                                     lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE
                                     );
             return requete;

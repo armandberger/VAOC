@@ -2226,7 +2226,7 @@ namespace vaoc
             {
                 labelInformationTerrain.Text = "Terrain:xxxxxxxxx";
             }
-            labelCoutTerrain.Text = ligneCase.IsI_COUTNull() ? "Cout:?" : "Cout:" + ligneCase.I_COUT.ToString();
+            labelCoutTerrain.Text = (Constantes.CST_COUTMAX == ligneCase.I_COUT) ? "Cout:?" : "Cout:" + ligneCase.I_COUT.ToString();
             if (ligneCase.EstInnocupe())
             {
                 labelProprietaire.Text = "Propriétaire: ?";

@@ -17,7 +17,66 @@ namespace Traitement
         static void Main(string[] args)
         {
             //ConversionImage();
-            ConversionBaseNull();
+            //ConversionBaseNull();
+            ConversionFichiersCasesNull();
+        }
+
+        private static void ConversionFichiersCasesNull()
+        {
+            const int NULLENTIER = -int.MaxValue;
+            const int CST_COUTMAX = Int32.MaxValue;
+            int compteur = 0;
+            string[] listefichiers;
+
+            try
+            {
+                Console.WriteLine("conversion des cases");
+                Donnees.TAB_CASEDataTable donneesSource = new Donnees.TAB_CASEDataTable();
+                Console.WriteLine("fin de la conversion des cases");
+                listefichiers = Directory.GetFiles("C:\\berlin\\cases");
+                foreach (string nomfichier in listefichiers)
+                {
+                    compteur++;
+                    Console.WriteLine(string.Format("conversion de {0}, {1}/{2}",nomfichier, compteur, listefichiers.Count()));
+                    ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
+                    ZipArchiveEntry fichier = fichierZip.Entries[0];
+                    fichier.ExtractToFile("C:\\berlin\\test.xml",true);
+                    donneesSource.Rows.Clear();
+                    donneesSource.ReadXml(fichier.Open());//m_donnees.TAB_CASE.ReadXml(fichier.Open()); ne marche pas mais je ne sais pas pourquoi !
+                    fichierZip.Dispose();
+
+                    foreach (Donnees.TAB_CASERow ligneCase in donneesSource)
+                    {
+                        if (ligneCase.IsID_MODELE_TERRAINNull()) { ligneCase.ID_MODELE_TERRAIN = NULLENTIER; }
+                        if (ligneCase.IsID_MODELE_TERRAIN_SI_OCCUPENull()) { ligneCase.ID_MODELE_TERRAIN_SI_OCCUPE = NULLENTIER; }
+                        if (ligneCase.IsID_NOUVEAU_PROPRIETAIRENull()) { ligneCase.ID_NOUVEAU_PROPRIETAIRE = NULLENTIER; }
+                        if (ligneCase.IsID_PROPRIETAIRENull()) { ligneCase.ID_PROPRIETAIRE = NULLENTIER; }
+                        if (ligneCase.IsI_COUTNull()) { ligneCase.I_COUT = CST_COUTMAX; }
+                        if (ligneCase.IsI_XNull()) { ligneCase.I_X = NULLENTIER; }
+                        if (ligneCase.IsI_YNull()) { ligneCase.I_Y = NULLENTIER; }
+                    }
+
+                    File.Delete(nomfichier);
+                    fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
+                    fichier = fichierZip.CreateEntry(nomfichier);
+                    StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                    donneesSource.WriteXml(ecrivain);
+                    ecrivain.Close();
+                    fichierZip.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                if (null != ex.InnerException)
+                {
+                    Console.WriteLine("Exception :" + ex.Message + " : " + ex.InnerException.Message);
+                }
+                else
+                {
+                    Console.WriteLine("Exception :" + ex.Message + " : sans détail");
+                }
+            }
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -30,9 +89,10 @@ namespace Traitement
                 const int NULLENTIER = -int.MaxValue;
                 const string NULLCHAINE = "NAZE";
                 const char NULLCHAR = '?';
-                const int CST_COUTMAX = Int32.MaxValue;
-                string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
-                string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
+                //string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3.vaoc";
+                string nomfichierSource = "C:\\berlin\\berlin_printemps_6.vaoc";
+                //string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
+                string nomfichierDestination = "C:\\berlin\\berlin_printemps_corrige_6.vaoc";
 
                 Donnees m_base = new Donnees();
                 Constantes.repertoireDonnees = nomfichierSource;

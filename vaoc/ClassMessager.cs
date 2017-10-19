@@ -1219,12 +1219,14 @@ namespace vaoc
             else
             {
                 bMessageDirect = false;
+                int IdBatailleEmetteur = lignePionEmetteur.ID_BATAILLE;
+                int IdBatailleDestinataire = lignePionDestinataire.ID_BATAILLE;
                 if (//null != Donnees.m_donnees.TAB_ROLE.TrouvePion(lignePionEmetteur.ID_PION) || //le pion emetteur est un joueur, mais un joueur n'écrit pas toujours en direct a un autre joueur !
                     //lignePionEmetteur.IsID_PION_PROPRIETAIRENull() ||
                     //lignePionEmetteur.ID_PION_PROPRIETAIRE == lignePionEmetteur.ID_PION || //29/10/2012, comprend pas déjà couvert par PionVoitPion je pense et, problème, quel que soit le destinataire d'un message envoyé par un général en chef arrive toujours immédiatement puisqu'il est son propre chef !
-                    (!lignePionDestinataire.IsID_BATAILLENull() && !lignePionEmetteur.IsID_BATAILLENull() &&
-                        lignePionDestinataire.ID_BATAILLE>0 && lignePionEmetteur.ID_BATAILLE>0 &&
-                        lignePionDestinataire.ID_BATAILLE == lignePionEmetteur.ID_BATAILLE) || 
+                    ((Constantes.NULLENTIER != IdBatailleEmetteur) && (Constantes.NULLENTIER != IdBatailleDestinataire) &&
+                        IdBatailleDestinataire > 0 && IdBatailleEmetteur > 0 &&
+                        IdBatailleDestinataire == IdBatailleEmetteur) || 
                     PionVoitPion(lignePionEmetteur, lignePionDestinataire) ||
                     (typeMessage == MESSAGES.MESSAGE_RENFORT))//  || (typeMessage == MESSAGES.MESSAGE_POSITION) -> pas une bonne idée, ce message peut être utilisé autrement qu'en mode direct
                     //|| (0 == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR && 0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))//au début, les joueurs peuvent se parler librement, gerer directement par le web
@@ -1233,7 +1235,7 @@ namespace vaoc
                 }
             }
 
-            int iTourSansRavitaillement = lignePionEmetteur.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? 0 : lignePionEmetteur.I_TOUR_SANS_RAVITAILLEMENT;
+            int iTourSansRavitaillement = lignePionEmetteur.I_TOUR_SANS_RAVITAILLEMENT;
             int iTourBlessure = lignePionEmetteur.IsI_TOUR_BLESSURENull() ? 0 : lignePionEmetteur.I_TOUR_BLESSURE;
             if (bMessageDirect)
             {
@@ -1265,7 +1267,7 @@ namespace vaoc
                 }
 
                 //Le message est directement visible, le destinataire est un joueur 
-                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 Donnees.TAB_MESSAGERow ligneMessageDirect = Donnees.m_donnees.TAB_MESSAGE.AjouterMessage(
                     lignePionEmetteur.ID_PION,
                     lignePionDestinataire.ID_PION,
@@ -1300,24 +1302,26 @@ namespace vaoc
                     lignePionEmetteur.C_NIVEAU_DEPOT
                     );
                 //important de séparer id_bataille et i_zone_bataille, car au début i_zone_bataille et null mais le pion est bien en bataille !
-                if (lignePionEmetteur.IsID_BATAILLENull())
+                int IdBataille = lignePionEmetteur.ID_BATAILLE;
+                if (Constantes.NULLENTIER == IdBataille)
                 {
                     ligneMessageDirect.SetID_BATAILLENull();
                 }
                 else
                 {
-                    ligneMessageDirect.ID_BATAILLE = lignePionEmetteur.ID_BATAILLE;
+                    ligneMessageDirect.ID_BATAILLE = IdBataille;
                 }
 
-                if (lignePionEmetteur.IsI_ZONE_BATAILLENull())
+                int iZoneBataille = lignePionEmetteur.I_ZONE_BATAILLE;
+                if (Constantes.NULLENTIER == iZoneBataille)
                 {
                     ligneMessageDirect.SetI_ZONE_BATAILLENull();
                 }
                 else
                 {
-                    ligneMessageDirect.I_ZONE_BATAILLE = lignePionEmetteur.I_ZONE_BATAILLE;
+                    ligneMessageDirect.I_ZONE_BATAILLE = iZoneBataille;
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
+                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 ClassTraitementHeure.ReceptionMessageTransfert(lignePionEmetteur, ligneMessageDirect);
                 LogFile.Notifier(string.Format("CreerMessager: envoi d'un message direct {0} au pion ID={1}", phrase, lignePionDestinataire.ID_PION));
             }
@@ -1356,7 +1360,7 @@ namespace vaoc
                 if (null!=lignePionMessager)
                 {
                     //il faut ajouter le message 
-                    Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                     Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.AjouterMessage(
                         lignePionEmetteur.ID_PION,
                         lignePionMessager.ID_PION,
@@ -1393,26 +1397,29 @@ namespace vaoc
                     ligneMessage.SetI_TOUR_ARRIVEENull();
                     ligneMessage.SetI_PHASE_ARRIVEENull();
                     //important de séparer id_bataille et i_zone_bataille, car au début i_zone_bataille et null mais le pion est bien en bataille !
-                    if (lignePionEmetteur.IsID_BATAILLENull())
+                    int IdBataille = lignePionEmetteur.ID_BATAILLE;
+                    if (Constantes.NULLENTIER == IdBataille)
                     {
                         ligneMessage.SetID_BATAILLENull();
                     }
                     else
                     {
-                        ligneMessage.ID_BATAILLE = lignePionEmetteur.ID_BATAILLE;
+                        ligneMessage.ID_BATAILLE = IdBataille;
                     }
-                    if (lignePionEmetteur.IsI_ZONE_BATAILLENull())
+
+                    int iZoneBataille = lignePionEmetteur.I_ZONE_BATAILLE;
+                    if (Constantes.NULLENTIER == iZoneBataille)
                     {
                         ligneMessage.SetI_ZONE_BATAILLENull();
                     }
                     else
                     {
-                        ligneMessage.I_ZONE_BATAILLE = lignePionEmetteur.I_ZONE_BATAILLE;
+                        ligneMessage.I_ZONE_BATAILLE = iZoneBataille;
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
 
                     //et maintenant, un ordre de mouvement
-                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         -1,//id_ordre_transmis
                         -1,//id_ordre_suivant
@@ -1450,7 +1457,7 @@ namespace vaoc
                     ligneOrdre.SetID_NOM_DESTINATIONNull();
                     ligneOrdre.SetID_CIBLENull();
                     ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
-                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     LogFile.Notifier(string.Format("CreerMessager: envoi d'un message indirect \"{0}\" ID={2} au pion ID={1} par le messager ID={3}", 
                         phrase, lignePionDestinataire.ID_PION, ligneMessage.ID_MESSAGE, lignePionMessager.ID_PION));
                 }
@@ -1465,15 +1472,17 @@ namespace vaoc
             // Dans le cas d'un message envoyé par une unités en bataille et que le destinataire n'est pas le chef de la bataille
             // le message est également envoyé en copie au chef de la bataille en mode direct
             // à condition que l'unité ne soit pas elle même un chef
-            if (!lignePionEmetteur.IsID_BATAILLENull() && !lignePionEmetteur.estJoueur)
+            int IdBatailleEmetteur2 = lignePionEmetteur.ID_BATAILLE;
+            if ((Constantes.NULLENTIER != IdBatailleEmetteur2) && !lignePionEmetteur.estJoueur)
             {
-                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePionEmetteur.ID_BATAILLE);
-                if (!ligneBataille.IsID_LEADER_012Null() &&
-                     ligneBataille.ID_LEADER_012 >= 0 &&
-                    (ligneModelePion.ID_NATION == ligneBataille.ID_NATION_012) && 
-                    (lignePionDestinataire.ID_PION!=ligneBataille.ID_LEADER_012))
+                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(IdBatailleEmetteur2);
+                int idLeader012 = ligneBataille.ID_LEADER_012;
+                if ((Constantes.NULLENTIER!=idLeader012) &&
+                     idLeader012 >= 0 &&
+                    (ligneModelePion.ID_NATION == ligneBataille.ID_NATION_012) &&
+                    (lignePionDestinataire.ID_PION != idLeader012))
                 {
-                    Donnees.TAB_PIONRow ligneNouveauPionDestinataire= Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataille.ID_LEADER_012);
+                    Donnees.TAB_PIONRow ligneNouveauPionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(idLeader012);
                     if (!EnvoyerMessage(lignePionEmetteur,ligneNouveauPionDestinataire, typeMessage, phrase, true))
                     {
                         return false;
@@ -1539,7 +1548,7 @@ namespace vaoc
             if (idModeleMESSAGER >= 0)
             {
                 //on a trouvé le modèle, il faut créer le pion associé
-                Monitor.Enter(Donnees.m_donnees.TAB_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePionMessager = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     idModeleMESSAGER,
                     lignePionEmetteur.ID_PION, //lignePionEmetteur.ID_PION_PROPRIETAIRE, ne peut pas être bon, des fois, c'est "0" le propriétaire
@@ -1547,7 +1556,9 @@ namespace vaoc
                     -1,
                     "Messager du " + lignePionEmetteur.S_NOM,
                     0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
-                    lignePionEmetteur.ID_CASE, 0, 0, -1,
+                    lignePionEmetteur.ID_CASE,
+                    0, //I_TOUR_SANS_RAVITAILLEMENT
+                    0, -1,
                     0, //I_TOUR_RETRAITE_RESTANT
                     0, false, false, false, false, false,
                     false,//B_ENNEMI_OBSERVABLE
@@ -1581,11 +1592,10 @@ namespace vaoc
                 lignePionMessager.SetID_NOUVEAU_PION_PROPRIETAIRENull();
                 lignePionMessager.SetI_ZONE_BATAILLENull();
                 lignePionMessager.SetID_BATAILLENull();
-                lignePionMessager.SetI_TOUR_SANS_RAVITAILLEMENTNull();
                 lignePionMessager.SetID_LIEU_RATTACHEMENTNull();
                 lignePionMessager.SetID_PION_ESCORTENull();
                 lignePionMessager.SetID_DEPOT_SOURCENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION);
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             return lignePionMessager;
@@ -1718,7 +1728,7 @@ namespace vaoc
                 LogFile.Notifier(string.Format("GenererPhrase l'unité ID={0} n'a pas d'ordre courant", lignePion.ID_PION));
             }
 
-            int iTourSansRavitaillement = lignePion.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? 0 : lignePion.I_TOUR_SANS_RAVITAILLEMENT;
+            int iTourSansRavitaillement = lignePion.I_TOUR_SANS_RAVITAILLEMENT;
             ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
             if (null == ligneModeleTerrainDestination)
             {

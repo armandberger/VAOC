@@ -427,11 +427,10 @@ namespace vaoc
                 m_tableCase.XY_Vers_ID_CASE(x, y),
                 resModeleTerrain[0].ID_MODELE_TERRAIN,
                 x, y, -1, -1, -1,
-                int.MaxValue);
+                Constantes.CST_COUTMAX);
             ligneCase.SetID_MODELE_TERRAIN_SI_OCCUPENull();
             ligneCase.SetID_PROPRIETAIRENull();
             ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
-            //ligneCase.SetID_NOMNull();
             return true;
         }
 
@@ -479,7 +478,7 @@ namespace vaoc
             SortedList<Int32, int> liste = new SortedList<Int32, int>();
 
             //analyse de toutes les cases voisines pour trouver le modèle de terrain approprié
-            Monitor.Enter(Donnees.m_donnees.TAB_MODELE_TERRAIN);
+            Monitor.Enter(Donnees.m_donnees.TAB_MODELE_TERRAIN.Rows.SyncRoot);
             foreach (Donnees.TAB_CASERow ligneVoisin in tableCase.CasesVoisines(ligneCase))
             {
                 //si la case voisine est elle-même inutilisable si occupée, on n'en tient pas compte
@@ -502,7 +501,7 @@ namespace vaoc
                     }                       
                 }
             }
-            Monitor.Exit(Donnees.m_donnees.TAB_MODELE_TERRAIN);
+            Monitor.Exit(Donnees.m_donnees.TAB_MODELE_TERRAIN.Rows.SyncRoot);
 
             //maintenant on affecte le modèle le plus souvent rencontré
             Monitor.Enter(m_tableCaseTraitement);

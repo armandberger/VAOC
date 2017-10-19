@@ -13,8 +13,11 @@ namespace WaocLib
         public const string CST_TRAJET_VILLE = "V";
         public const int CST_TAILLE_BLOC_CASES = 100;
         public const int CST_SAUVEGARDE_ECART_PHASES = 10;
-        public const int ENTIERNULL = -int.MaxValue;
-        public const string CHAINENULL = "NULL";
+        public const int NULLENTIER = -int.MaxValue;
+        public const string NULLCHAINE = "NAZE";
+        public const char NULLCHAR = '?';
+        public const int CST_COUTMAX = Int32.MaxValue;
+        public const int CST_PLUSIEURSNATION = Int32.MaxValue;
 
         /// <summary>
         /// Le trajet n'est occupé par aucune nation

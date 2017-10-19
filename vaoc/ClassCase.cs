@@ -79,14 +79,14 @@ namespace vaoc
             public bool EstOccupeeOuBloqueParEnnemi(TAB_PIONRow lignePion, bool enMouvement)
             {
                 // je stocke les variables pour libérer la table le plus rapidement possible
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 bool isProprietaireNull = IsID_PROPRIETAIRENull();
                 bool isNouveauProprietaireNull = IsID_NOUVEAU_PROPRIETAIRENull();
                 int? idProprietaire = null;
                 if (!isProprietaireNull) idProprietaire = ID_PROPRIETAIRE;
                 int? idNouveauProprietaire = null;
                 if (!isNouveauProprietaireNull) idNouveauProprietaire = ID_NOUVEAU_PROPRIETAIRE;
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 if (!isProprietaireNull)
                 {
                     if ((lignePion.ID_PION == idProprietaire) && isNouveauProprietaireNull)
@@ -125,13 +125,15 @@ namespace vaoc
             {
                 TAB_PIONRow lignePion = null;
 
-                if (!IsID_NOUVEAU_PROPRIETAIRENull())
+                int IdProprietaire = this.ID_PROPRIETAIRE;
+                int IdNouveauProprietaire = this.ID_NOUVEAU_PROPRIETAIRE;
+                if (Constantes.NULLENTIER != IdNouveauProprietaire)
                 {
-                    lignePion = m_donnees.TAB_PION.FindByID_PION(this.ID_NOUVEAU_PROPRIETAIRE);
+                    lignePion = m_donnees.TAB_PION.FindByID_PION(IdNouveauProprietaire);
                 }
-                if (null == lignePion && !IsID_PROPRIETAIRENull())
+                if (null == lignePion && (Constantes.NULLENTIER != IdProprietaire))
                 {
-                    lignePion = m_donnees.TAB_PION.FindByID_PION(this.ID_PROPRIETAIRE);
+                    lignePion = m_donnees.TAB_PION.FindByID_PION(IdProprietaire);
                 }
                 return lignePion;
             }
@@ -252,9 +254,9 @@ namespace vaoc
                         //si la case n'a pas déjà été modifiée, on l'ajoute dans la liste des cases modifiée
                         if (null == Donnees.m_donnees.TAB_CASE_MODIFICATION.FindByID_CASE(ligneCasePont.ID_CASE))
                         {
-                            Monitor.Enter(Donnees.m_donnees.TAB_CASE_MODIFICATION); 
+                            Monitor.Enter(Donnees.m_donnees.TAB_CASE_MODIFICATION.Rows.SyncRoot); 
                             Donnees.m_donnees.TAB_CASE_MODIFICATION.AddTAB_CASE_MODIFICATIONRow(ligneCasePont.ID_CASE, ligneCasePont.ID_MODELE_TERRAIN);
-                            Monitor.Exit(Donnees.m_donnees.TAB_CASE_MODIFICATION);
+                            Monitor.Exit(Donnees.m_donnees.TAB_CASE_MODIFICATION.Rows.SyncRoot);
                         }
 
                         //dans quels blocs se trouve-t-on ?
@@ -393,6 +395,36 @@ namespace vaoc
                     tailleDuPontOuGue = listeCasesVoisines.Count();
                 }
                 return ligneCasePontGue;
+            }
+
+            internal void SetID_MODELE_TERRAIN_SI_OCCUPENull()
+            {
+                this.ID_MODELE_TERRAIN_SI_OCCUPE = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_PROPRIETAIRENull()
+            {
+                this.ID_PROPRIETAIRE = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_NOUVEAU_PROPRIETAIRENull()
+            {
+                this.ID_NOUVEAU_PROPRIETAIRE = Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_NOUVEAU_PROPRIETAIRENull()
+            {
+                return this.ID_NOUVEAU_PROPRIETAIRE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_PROPRIETAIRENull()
+            {
+                return this.ID_PROPRIETAIRE == Constantes.NULLENTIER;
+            }
+
+            internal bool IsID_MODELE_TERRAIN_SI_OCCUPENull()
+            {
+                return this.ID_MODELE_TERRAIN_SI_OCCUPE == Constantes.NULLENTIER;
             }
         }
     }

@@ -720,7 +720,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
 
             //la case ou l'une des unités fait-elle déjà partie d'une ou plusieurs bataille ?
             nouvelleBataille = true;
-            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE);
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
                 if (!ligneBataille.IsI_TOUR_FINNull()) { continue; }
@@ -734,7 +734,8 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 }
                 else
                 {
-                    if (!lignePion.IsID_BATAILLENull() && lignePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                    int IdBataille = lignePion.ID_BATAILLE;
+                    if ((Constantes.NULLENTIER != IdBataille) && IdBataille == ligneBataille.ID_BATAILLE)
                     {
                         if (lignePionEnnemi.IsID_BATAILLENull())
                         {
@@ -742,7 +743,8 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                             nouvelleBataille = false;
                         }
                     }
-                    if (!lignePionEnnemi.IsID_BATAILLENull() && lignePionEnnemi.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                    IdBataille = lignePionEnnemi.ID_BATAILLE;
+                    if ((Constantes.NULLENTIER != IdBataille) && IdBataille == ligneBataille.ID_BATAILLE)
                     {
                         if (lignePion.IsID_BATAILLENull())
                         {
@@ -752,7 +754,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                     }
                 }
             }
-            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE);
+            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
 
             //si les unités ne sont dans aucune bataille, il faut la créer
             if (nouvelleBataille)
@@ -824,8 +826,10 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                     lignePion = ligneCaseZone.TrouvePionSurCase();
                     if (null == lignePion)
                     {
-                        string proprio = ligneCaseZone.IsID_PROPRIETAIRENull() ? "null" : ligneCaseZone.ID_PROPRIETAIRE.ToString();
-                        string nouveauProprio = ligneCaseZone.IsID_NOUVEAU_PROPRIETAIRENull() ? "null" : ligneCaseZone.ID_NOUVEAU_PROPRIETAIRE.ToString();
+                        int IdProprietaire = ligneCaseZone.ID_PROPRIETAIRE;
+                        string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
+                        int IdNouveauProprietaire = ligneCaseZone.ID_NOUVEAU_PROPRIETAIRE;
+                        string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
                         message = string.Format("CreationBataille : erreur FindByID_PION introuvable sur {0} ou {1}", proprio, nouveauProprio);
                         LogFile.Notifier(message, out messageErreur);
                         return null;
@@ -880,8 +884,11 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                     lignePion = ligneCaseZone.TrouvePionSurCase();
                     if (null == lignePion)
                     {
-                        string proprio = ligneCaseZone.IsID_PROPRIETAIRENull() ? "null" : ligneCaseZone.ID_PROPRIETAIRE.ToString();
-                        string nouveauProprio = ligneCaseZone.IsID_NOUVEAU_PROPRIETAIRENull() ? "null" : ligneCaseZone.ID_NOUVEAU_PROPRIETAIRE.ToString();
+                        int IdProprietaire = ligneCaseZone.ID_PROPRIETAIRE;
+                        string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
+                        int IdNouveauProprietaire = ligneCaseZone.ID_NOUVEAU_PROPRIETAIRE;
+                        string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
+                        
                         message = string.Format("CreationBataille : erreur FindByID_PION introuvable sur {0} ou {1}", proprio, nouveauProprio);
                         LogFile.Notifier(message, out messageErreur);
                         return null;
@@ -1117,7 +1124,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             }
             #endregion
 
-            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE); 
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot); 
             ligneBataille = Donnees.m_donnees.TAB_BATAILLE.AddTAB_BATAILLERow(
                                     Donnees.m_donnees.TAB_BATAILLE.ProchainID_BATAILLE,
                                     nomBataille,
@@ -1159,7 +1166,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             }
             ligneBataille.SetI_TOUR_FINNull();
             ligneBataille.SetI_PHASE_FINNull();
-            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE); 
+            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot); 
 
             //ajout des pions et leaders présents dans la bataille
             //foreach (DataSetCoutDonnees.TAB_PIONRow lignePion in DataSetCoutDonnees.m_donnees.TAB_PION) -> pas possible car on ajouter des pions en cas d'envoie de message dans AjouterPionDansLaBataille

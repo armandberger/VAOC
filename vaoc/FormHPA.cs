@@ -485,8 +485,8 @@ namespace vaoc
                             ligneCaseArrivee.ID_CASE, ligneCaseArrivee.I_X, ligneCaseArrivee.I_Y,
                             xBloc, yBloc, i));
                         //dans ce cas on ajouter un chemin de coût maximum
-                        Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, AStar.CST_COUTMAX, -1, AStar.CST_COUTMAX, false, -1);
-                        Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, AStar.CST_COUTMAX, -1, AStar.CST_COUTMAX, false, -1);
+                        Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, Constantes.CST_COUTMAX, -1, Constantes.CST_COUTMAX, false, -1);
+                        Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, Constantes.CST_COUTMAX, -1, Constantes.CST_COUTMAX, false, -1);
                     }
                     else
                     {

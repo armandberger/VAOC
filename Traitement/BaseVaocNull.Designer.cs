@@ -10,8 +10,6 @@
 
 #pragma warning disable 1591
 
-using System;
-
 namespace Traitement {
     
     
@@ -3951,7 +3949,6 @@ namespace Traitement {
                                 this.columnI_Y}, false));
                 this.columnID_CASE.AllowDBNull = false;
                 this.columnID_CASE.Unique = true;
-                this.columnID_MODELE_TERRAIN.AllowDBNull = false;
                 this.columnID_MODELE_TERRAIN_SI_OCCUPE.Caption = "ID_MODELE_TERRAIN";
             }
             
@@ -4076,11 +4073,6 @@ namespace Traitement {
                 }
                 xs.Add(dsSchema);
                 return type;
-            }
-
-            internal void SetValueIndex(int i, int i_X, int i_Y)
-            {
-                throw new NotImplementedException();
             }
         }
         
@@ -21249,7 +21241,13 @@ namespace Traitement {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_MODELE_TERRAIN {
                 get {
-                    return ((int)(this[this.tableTAB_CASE.ID_MODELE_TERRAINColumn]));
+                    try {
+                        return ((int)(this[this.tableTAB_CASE.ID_MODELE_TERRAINColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_MODELE_TERRAIN\' dans la table \'TAB_CASE\' est DBNull" +
+                                ".", e);
+                    }
                 }
                 set {
                     this[this.tableTAB_CASE.ID_MODELE_TERRAINColumn] = value;
@@ -21352,6 +21350,18 @@ namespace Traitement {
                 set {
                     this[this.tableTAB_CASE.I_COUTColumn] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsID_MODELE_TERRAINNull() {
+                return this.IsNull(this.tableTAB_CASE.ID_MODELE_TERRAINColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetID_MODELE_TERRAINNull() {
+                this[this.tableTAB_CASE.ID_MODELE_TERRAINColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

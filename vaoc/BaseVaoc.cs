@@ -41,21 +41,21 @@ namespace vaoc
 
                 //recherche le modèle du pion
                 requete = string.Format("ID_MODELE_PION={0}", this.ID_MODELE_PION);
-                Monitor.Enter(m_donnees.TAB_MODELE_PION);
+                Monitor.Enter(m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
                 TAB_MODELE_PIONRow[] resModelePion = (TAB_MODELE_PIONRow[])m_donnees.TAB_MODELE_PION.Select(requete);
-                Monitor.Exit(m_donnees.TAB_MODELE_PION);
+                Monitor.Exit(m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
 
                 //recherche l'aptitude fournie en paramètre
                 requete = string.Format("S_NOM='{0}'", nomAptitude);
-                Monitor.Enter(m_donnees.TAB_APTITUDES);
+                Monitor.Enter(m_donnees.TAB_APTITUDES.Rows.SyncRoot);
                 TAB_APTITUDESRow[] resAptitude = (TAB_APTITUDESRow[])m_donnees.TAB_APTITUDES.Select(requete);
-                Monitor.Exit(m_donnees.TAB_APTITUDES);
+                Monitor.Exit(m_donnees.TAB_APTITUDES.Rows.SyncRoot);
 
                 //recherche si le modele de pion possède l'aptitude demandée
                 requete = string.Format("ID_MODELE_PION={0} AND ID_APTITUDE={1}", resModelePion[0].ID_MODELE_PION, resAptitude[0].ID_APTITUDE);
-                Monitor.Enter(m_donnees.TAB_APTITUDES_PION);
+                Monitor.Enter(m_donnees.TAB_APTITUDES_PION.Rows.SyncRoot);
                 TAB_APTITUDES_PIONRow[] resAptitudesPion = (TAB_APTITUDES_PIONRow[])m_donnees.TAB_APTITUDES_PION.Select(requete);
-                Monitor.Exit(m_donnees.TAB_APTITUDES_PION);
+                Monitor.Exit(m_donnees.TAB_APTITUDES_PION.Rows.SyncRoot);
                 if (null == resAptitudesPion || 0 == resAptitudesPion.Length)
                 {
                     return false;
@@ -180,9 +180,9 @@ namespace vaoc
             {
                 string requete = string.Format("I_BLOCX={0} AND I_BLOCY={1}",
                     xBloc, yBloc);
-                Monitor.Enter(this);
+                Monitor.Enter(this.Rows.SyncRoot);
                 TAB_PCC_CASE_BLOCSRow[] resCase = (TAB_PCC_CASE_BLOCSRow[])Select(requete);
-                Monitor.Exit(this);
+                Monitor.Exit(this.Rows.SyncRoot);
                 return resCase;
             }
         }
@@ -193,13 +193,13 @@ namespace vaoc
             {
                 string requete = string.Format("ID_PION={0}", id_pion);
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS);
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
             }
         }
 
@@ -219,39 +219,39 @@ namespace vaoc
 
                 //remplacement par les nouvelles lignes
                 string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", id_pion, typeEspaceSource);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 System.Data.DataRow[] lignesARemplacer = Select(requete);
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
                 foreach (TAB_ESPACERow ligne in lignesARemplacer)
                 {
                     ligne.C_TYPE = typeEspaceDestination;
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
             }
 
             public void SupprimerEspacePion(int id_pion, char typeEspace)
             {
                 string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", id_pion, typeEspace);
 
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
             }
 
             public void SupprimerEspacePion(int id_pion)
             {
                 string requete = string.Format("ID_PION={0}", id_pion);
 
-                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
                 System.Data.DataRow[] lignesASupprimer = Select(requete);
                 foreach (System.Data.DataRow ligne in lignesASupprimer)
                 {
                     ligne.Delete();
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE);
+                Monitor.Exit(Donnees.m_donnees.TAB_ESPACE.Rows.SyncRoot);
             }
         }
 
@@ -415,9 +415,9 @@ namespace vaoc
                         C_NIVEAU_DEPOT
                 };
                 rowTAB_MESSAGERow.ItemArray = columnValuesArray;
-                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE);
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 this.Rows.Add(rowTAB_MESSAGERow);
-                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE);
+                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 return rowTAB_MESSAGERow;
             }
         }
@@ -757,7 +757,7 @@ namespace vaoc
             /// <returns>cout minimum, -1 si non trouvé</returns>
             public int CoutMinimum()
             {
-                int cout = int.MaxValue;
+                int cout = Constantes.CST_COUTMAX;
                 foreach (TAB_MOUVEMENT_COUTRow ligneMouvementCout in Rows)
                 {
                     if (ligneMouvementCout.I_COUT > 0)
@@ -765,7 +765,7 @@ namespace vaoc
                         cout = Math.Min(cout, ligneMouvementCout.I_COUT);
                     }
                 }
-                if (cout == int.MaxValue)
+                if (cout == Constantes.CST_COUTMAX)
                 {
                     cout = -1;
                 }
@@ -788,7 +788,7 @@ namespace vaoc
                 m_listeCasesCoutNonMax.Clear();
                 foreach (Donnees.TAB_CASERow ligne in this)
                 {
-                    ligne.I_COUT = AStar.CST_COUTMAX;
+                    ligne.I_COUT = Constantes.CST_COUTMAX;
                 }
             }
 
@@ -797,7 +797,7 @@ namespace vaoc
                 foreach (int index in m_listeCasesCoutNonMax)
                 {
                     Donnees.TAB_CASERow ligne = this[index];
-                    ligne.I_COUT = AStar.CST_COUTMAX;
+                    ligne.I_COUT = Constantes.CST_COUTMAX;
                 }
                 m_listeCasesCoutNonMax.Clear();
             }
@@ -860,14 +860,15 @@ namespace vaoc
             /// <returns>case trouvée, null si la case n'existe pas</returns>
             public TAB_CASERow FindByXY(int x, int y)
             {
+                int index;
                 try
                 {
                     if (null == m_listeIndex)
                     {
                         string requete = string.Format("I_X={0} AND I_Y={1}", x, y);
-                        Monitor.Enter(m_donnees.TAB_CASE);
+                        Monitor.Enter(m_donnees.TAB_CASE.Rows.SyncRoot);
                         TAB_CASERow[] resCase = (TAB_CASERow[])Select(requete);
-                        Monitor.Exit(m_donnees.TAB_CASE);
+                        Monitor.Exit(m_donnees.TAB_CASE.Rows.SyncRoot);
                         if (0 == resCase.Length)
                         {
                             return null;
@@ -882,7 +883,7 @@ namespace vaoc
                     }
                     else
                     {
-                        int index = (int)m_listeIndex.GetValue(x, y);
+                        index = (int)m_listeIndex.GetValue(x, y);
                         if (index < 0)
                         {
                             if (!m_donnees.ChargerCases(x, y))
@@ -892,7 +893,9 @@ namespace vaoc
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
+                        Monitor.Enter(this.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon
                         TAB_CASERow retourLigne = this[index];
+                        Monitor.Exit(this.Rows.SyncRoot);
                         return retourLigne;
                     }
                 }
@@ -1072,7 +1075,7 @@ namespace vaoc
 
                     DateTime timeStart;
                     TimeSpan perf;
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
 
                     timeStart = DateTime.Now;
                     debutNouvellesLignes = this.Count;
@@ -1100,7 +1103,7 @@ namespace vaoc
                         ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     perf = DateTime.Now - timeStart;
                     Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;
@@ -1179,9 +1182,9 @@ namespace vaoc
 
                 /* Note : La méthode ci-dessous est clairement plus rapide sur une petite carte (testée sur une carte 1152x648, à vérifier sur une grande carte
                 requete = string.Format("I_X>={0} AND I_Y>={1} AND I_X<={2} AND I_Y<={3}", xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 Donnees.TAB_CASERow[] resCase = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 */
 
                 return resCase;
@@ -1813,12 +1816,12 @@ namespace vaoc
                     if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; }
                 }
             }
-            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             //int debutNouvellesLignes = Donnees.m_donnees.TAB_CASE.Count;
             Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false);
             //perf = DateTime.Now - timeStart;
             //Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
-            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             //mise à jour de l'index
             //timeStart = DateTime.Now;
             for (int i = 0 /*debutNouvellesLignes*/; i < Donnees.m_donnees.TAB_CASE.Count; i++)
@@ -1856,7 +1859,7 @@ namespace vaoc
                 {
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
                         x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
                     if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE); continue; }
                     Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
@@ -1864,7 +1867,7 @@ namespace vaoc
                     {
                         baseCases.ImportRow(listeCases[i]);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
                 }
             }
@@ -1969,7 +1972,7 @@ namespace vaoc
                     lignePion.B_CAVALERIE_LOURDE = false;
                     lignePion.B_GARDE = false;
                     lignePion.B_VIEILLE_GARDE = false;
-                    lignePion.SetI_TOUR_CONVOI_CREENull();
+                    lignePion.I_TOUR_CONVOI_CREE = 0;
                     lignePion.I_SOLDATS_RAVITAILLES = 0;
                     lignePion.I_NB_HEURES_FORTIFICATION = 0;
                     lignePion.I_NIVEAU_FORTIFICATION = 0;

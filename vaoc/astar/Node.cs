@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using WaocLib;
 
 namespace vaoc
 {
@@ -33,10 +34,12 @@ namespace vaoc
                 m_x = ligneCase.I_X;
                 m_y = ligneCase.I_Y;
                 m_modeleTerrain = ligneCase.ID_MODELE_TERRAIN;
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE);//de fait quand id_proprietaire est affecté durant la lecture sur la même case, des fois ça crash, pas vraiment thread safe...
-                m_proprietaire = (ligneCase.IsID_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_PROPRIETAIRE;
-                m_nouveauProprietaire = (ligneCase.IsID_NOUVEAU_PROPRIETAIRENull()) ? (int?)null : ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+                //Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//DBNull is not thread safe...
+                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                m_proprietaire = (Constantes.NULLENTIER != IdProprietaire) ? (int?)null : IdProprietaire;
+                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                m_nouveauProprietaire = (Constantes.NULLENTIER != IdNouveauProprietaire) ? (int?)null : IdNouveauProprietaire;
+                //Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
             catch (Exception ex)
             {

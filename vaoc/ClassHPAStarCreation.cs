@@ -350,7 +350,7 @@ namespace vaoc
             //recherche des points avec le cout min sur les entrées
             //on recherche le coût pour ce terrain en prenant pour base la première météo et n'importe quel modèle de mouvement
             int i;
-            int coutMin = int.MaxValue;
+            int coutMin = Constantes.CST_COUTMAX;
             int terrainMin = -1;
             int i_lgpcc;
             try
@@ -391,7 +391,7 @@ namespace vaoc
                             nbCases++;
                             nbCasesContinue = 0;
                             //ajout des cases dans le bloc courant et dans le bloc x+1,y ou le bloc x,y+1
-                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_CASE_BLOCS);
+                            Monitor.Enter(Donnees.m_donnees.TAB_PCC_CASE_BLOCS.Rows.SyncRoot);
                             if (null == Donnees.m_donnees.TAB_PCC_CASE_BLOCS.FindByID_CASEI_BLOCXI_BLOCY(ligneCase.ID_CASE, xBloc, yBloc))
                                 Donnees.m_donnees.TAB_PCC_CASE_BLOCS.AddTAB_PCC_CASE_BLOCSRow(ligneCase.ID_CASE, xBloc, yBloc);
 
@@ -440,7 +440,7 @@ namespace vaoc
                                         Donnees.m_donnees.TAB_PCC_CASE_BLOCS.AddTAB_PCC_CASE_BLOCSRow(ligneCase.ID_CASE, xBloc + 1, yBloc + 1);
                                 }
                             }
-                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_CASE_BLOCS);
+                            Monitor.Exit(Donnees.m_donnees.TAB_PCC_CASE_BLOCS.Rows.SyncRoot);
                         }
                         nbCasesContinue++;
                     }

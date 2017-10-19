@@ -36,6 +36,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,11 +46,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseVaocNull.cs">
+      <DependentUpon>BaseVaocNull.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BaseVaocNull.Designer.cs">
+      <DependentUpon>BaseVaocNull.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="BaseVaocNull.xsc">
+      <DependentUpon>BaseVaocNull.xsd</DependentUpon>
+    </None>
+    <None Include="BaseVaocNull.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BaseVaocNull.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="BaseVaocNull.xss">
+      <DependentUpon>BaseVaocNull.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WaocLibrary\WaocLib.csproj">
+      <Project>{9585ac78-b64e-4a65-b358-4c6b77bfae50}</Project>
+      <Name>WaocLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

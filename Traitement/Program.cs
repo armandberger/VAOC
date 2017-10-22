@@ -17,8 +17,8 @@ namespace Traitement
         static void Main(string[] args)
         {
             //ConversionImage();
-            //ConversionBaseNull();
-            ConversionFichiersCasesNull();
+            ConversionBaseNull();
+            //ConversionFichiersCasesNull();
         }
 
         private static void ConversionFichiersCasesNull()
@@ -89,10 +89,10 @@ namespace Traitement
                 const int NULLENTIER = -int.MaxValue;
                 const string NULLCHAINE = "NAZE";
                 const char NULLCHAR = '?';
-                //string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3.vaoc";
-                string nomfichierSource = "C:\\berlin\\berlin_printemps_6.vaoc";
-                //string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_3_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
-                string nomfichierDestination = "C:\\berlin\\berlin_printemps_corrige_6.vaoc";
+                string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps.vaoc";
+                //string nomfichierSource = "C:\\berlin\\berlin_printemps_6.vaoc";
+                string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
+                //string nomfichierDestination = "C:\\berlin\\berlin_printemps_corrige_6.vaoc";
 
                 Donnees m_base = new Donnees();
                 Constantes.repertoireDonnees = nomfichierSource;

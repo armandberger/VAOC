@@ -1504,8 +1504,10 @@ namespace vaoc
 
             internal void ViderLaTable()
             {
+                Monitor.Enter(this.Rows.SyncRoot);
                 Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
                 for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
+                Monitor.Exit(this.Rows.SyncRoot);
             }
         }
 
@@ -1770,13 +1772,13 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 7;
             //ChargerToutesLesCases();//pour test
+            if (0 != iTour)
+            {
+                if (!SauvegarderCases()) { return false; }
+            }
             if (0 == iPhase)
             {
                 Donnees.m_donnees.TAB_CASE.ViderLaTable();
-            }
-            if (0 != iPhase)
-            {
-                if (!SauvegarderCases()) { return false; }
             }
 
             Monitor.Enter(Donnees.m_donnees);
@@ -1798,7 +1800,7 @@ namespace vaoc
             Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
             Cursor oldCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
-            Donnees.m_donnees.TAB_CASE.Clear();
+            m_donnees.TAB_CASE.ViderLaTable();
             for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)

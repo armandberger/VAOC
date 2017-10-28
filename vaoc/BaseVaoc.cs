@@ -893,7 +893,7 @@ namespace vaoc
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
-                        Monitor.Enter(this.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon
+                        Monitor.Enter(this.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon, des fois il ne trouve plus la valeur d'une colonne
                         TAB_CASERow retourLigne = this[index];
                         Monitor.Exit(this.Rows.SyncRoot);
                         return retourLigne;
@@ -1743,7 +1743,7 @@ namespace vaoc
             m_donnees.TAB_PARCOURS.Clear();
         }
 
-        internal bool SauvegarderPartie(string nomFichier)
+        internal bool SauvegarderPartie(string nomFichier, bool bConserverCases)
         {
             //if (0 == TAB_JEU.Count)
             //{
@@ -1753,10 +1753,10 @@ namespace vaoc
 
             ////Mise à jour de la version du fichier pour de futures mise à jour
             //TAB_JEU[0].I_VERSION = 6;
-            return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true);
+            return SauvegarderPartie(nomFichier, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE, true, bConserverCases);
         }
 
-        internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur)
+        internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur, bool bConserverCases)
         {
             bool retour;
 
@@ -1772,13 +1772,16 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 7;
             //ChargerToutesLesCases();//pour test
-            if (0 != iTour)
+            if (!bConserverCases)
             {
-                if (!SauvegarderCases()) { return false; }
-            }
-            if (0 == iPhase)
-            {
-                Donnees.m_donnees.TAB_CASE.ViderLaTable();
+                if (0 != iTour)
+                {
+                    if (!SauvegarderCases()) { return false; }
+                }
+                if (0 == iPhase)
+                {
+                    Donnees.m_donnees.TAB_CASE.ViderLaTable();
+                }
             }
 
             Monitor.Enter(Donnees.m_donnees);
@@ -1805,7 +1808,6 @@ namespace vaoc
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
                 {
-                    ;
                     //on vérifie que le chargement n'a pas déjà été fait ->appelé uniquement en génération de cartes, faux, appeler pour les noms de ponts par exemple
                     string requete = string.Format("I_X={0} AND I_Y={1}", x, y);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
@@ -1854,23 +1856,29 @@ namespace vaoc
             int iTour, iPhase;
             iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
             iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+            Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
 
             for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
                 for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
                         x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE); continue; }
-                    Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
+                    Debug.WriteLine(requete + " : " + listeCases.Count());
+                    if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
                     for (int i = 0; i < listeCases.Count(); i++)
                     {
-                        baseCases.ImportRow(listeCases[i]);
+                        if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison
+                        {
+                            baseCases.ImportRow(listeCases[i]);
+                        }
+                        
                     }
+                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ;  return false; }
+                    baseCases.Rows.Clear();
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { return false; }
                 }
             }
             return true;

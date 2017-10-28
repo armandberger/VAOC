@@ -302,7 +302,7 @@ namespace vaoc
                     MiseAJourProprietaires();
                     if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                     {
-                        //Donnees.m_donnees.SauvegarderPartie(fichierCourant); -> prend quand même près de dix minutes !
+                        //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
                     }
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
@@ -422,10 +422,6 @@ namespace vaoc
                     return false;
                 }
 
-                //dernière sauvegarde pour demarrer au tour suivant
-                Donnees.m_donnees.SauvegarderPartie(fichierCourant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
-                travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
-
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas
                 if (bFinDePartie 
@@ -524,6 +520,11 @@ namespace vaoc
                     }
                 }
                 #endregion
+
+                //dernière sauvegarde pour demarrer au tour suivant
+                Donnees.m_donnees.SauvegarderPartie(fichierCourant, bTourSuivant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
+                travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
+
                 nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;//le nombre de phases peut juste différer au premier tour, pas aux suivants
             }
             return true;

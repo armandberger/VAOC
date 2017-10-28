@@ -27,7 +27,7 @@ namespace WaocLib
 
         public bool EnvoyerMessage(string adresseCourriel, string titre, string texte)
         {
-            if (null == m_clientCourriel) { return false; }
+            if (null == m_clientCourriel || string.Empty == adresseCourriel) { return false; }
             MailMessage courriel = new MailMessage("vaoc@free.fr", adresseCourriel);
 
             courriel.Subject = titre;

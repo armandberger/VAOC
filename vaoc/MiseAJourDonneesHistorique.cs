@@ -81,7 +81,7 @@ namespace vaoc
                     {
                         Donnees.m_donnees.TAB_VIDEO.Clear();
                         Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
-                        Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false);
+                        Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false, false);
                         //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
                     }
                 }

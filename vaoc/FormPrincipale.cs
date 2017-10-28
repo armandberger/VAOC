@@ -1194,7 +1194,7 @@ namespace vaoc
         {
             m_modification = false;
             //Mise à jour de la version du fichier pour de future mise à jour
-            return Donnees.m_donnees.SauvegarderPartie(nomFichier);
+            return Donnees.m_donnees.SauvegarderPartie(nomFichier, false);
         }
 
         /// <summary>
@@ -2498,7 +2498,7 @@ namespace vaoc
                 {
                     MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                    Donnees.m_donnees.SauvegarderPartie(fichierCourant);
+                    Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);
                 }
             }            
         }

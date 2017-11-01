@@ -619,6 +619,8 @@ namespace vaoc
             }
             */
 
+            #region suppression des anciens ordres, pas facile a suivre ensuite
+            /*
             i = 0;
             while (i < Donnees.m_donnees.TAB_ORDRE.Count())
             {
@@ -694,7 +696,8 @@ namespace vaoc
                     i++;
                 }
             }
-
+            */
+            #endregion
             /* complexe aussi sur les pions, quand on remonte sur proprietaire dans sauvegardeMesage de ClassVaocWebFichier, il faut des fois être sur un ancien des fois non et pas possible
              *  a priori de faire un cast automatique entre les deix
             i = 0;

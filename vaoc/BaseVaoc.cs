@@ -1083,9 +1083,10 @@ namespace vaoc
                     Debug.WriteLine(string.Format("ChargerCases x={0}, y={1}", x, y));
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
-                        //si je retrouve la même ligne avant l'intertion,je sors !
-                        if (null == m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y))
+                        //si je retrouve la même ligne avant l'intertion,je sors ! C'est possible si deux process differents veulent voir en même temps une case non chargée
+                        if ((int) m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y) > 0)
                         {
+                            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                             return true;
                         }
                         Donnees.m_donnees.TAB_CASE.ImportRow(ligneCasePlus);

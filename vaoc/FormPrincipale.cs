@@ -188,6 +188,41 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region test a priori absurde sur la copie de cases
+            /*
+            Donnees.TAB_CASEDataTable tableTestSource = new Donnees.TAB_CASEDataTable();
+            try
+            {
+                Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(0, 1, 0, 0, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.CST_COUTMAX);
+                //tableTestSource.AddTAB_CASERow(0, 1, 0, 0, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.CST_COUTMAX);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            try
+            {
+                Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(0, 1, 0, 0, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.CST_COUTMAX);
+                //tableTestSource.AddTAB_CASERow(0, 1, 0, 0, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.CST_COUTMAX);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            try
+            {
+                Donnees.TAB_CASEDataTable tableTest = new Donnees.TAB_CASEDataTable();
+                tableTest.AddTAB_CASERow(0, 1, 0, 0, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.CST_COUTMAX);
+                Donnees.m_donnees.TAB_CASE.ImportRow(tableTest[0]);
+                //tableTestSource.ImportRow(tableTest[0]);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            */
+            #endregion
+
             #region reaffectation des des points de victoire d'après le dernier tour chargé sur la table video
             //Donnees.TAB_VIDEORow[] lignesVideoVictoire = (Donnees.TAB_VIDEORow[]) Donnees.m_donnees.TAB_VIDEO.Select("I_VICTOIRE>0 AND I_TOUR=0" );//+ Donnees.m_donnees.TAB_PARTIE[0].I_TOUR
             //if (lignesVideoVictoire.Count()>0)
@@ -439,7 +474,7 @@ namespace vaoc
                     phrase));
             }
              * */
-            # region correctif pour ajout de données
+            #region correctif pour ajout de données
 
             //Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(498);
             //ligneOrdre.ID_CASE_DEPART = 4402341;

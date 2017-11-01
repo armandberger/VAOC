@@ -233,6 +233,7 @@ namespace vaoc
                     if (!ExecuterMouvementAvecEffectifsEnParallele())
                     {
                         messageErreur = "Erreur durant le traitement ExecuterMouvementAvecEffectifsEnParallele";
+                        LogFile.Notifier(messageErreur);
                         return false;
                     }
                     perf = DateTime.Now - timeStart;
@@ -267,6 +268,7 @@ namespace vaoc
                     if (!ExecuterMouvementSansEffectifsEnParallele())
                     {
                         messageErreur = "Erreur durant le traitement ExecuterMouvementSansEffectifsEnParallele";
+                        LogFile.Notifier(messageErreur);
                         return false;
                     }
                     perf = DateTime.Now - timeStart;
@@ -289,7 +291,11 @@ namespace vaoc
                     }
                     */
 
-                    ExecuterActionHorsMouvementEnParallele();
+                    if (!ExecuterActionHorsMouvementEnParallele())
+                    {
+                        LogFile.Notifier("Erreur : ExecuterActionHorsMouvementEnParallele renvoie false");
+                        return false;
+                    }
                     #endregion
 
                     /************* rendre actif l'ordre suivant
@@ -302,7 +308,7 @@ namespace vaoc
                     MiseAJourProprietaires();
                     if ((0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES) && (0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                     {
-                        //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
+                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
                     }
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;

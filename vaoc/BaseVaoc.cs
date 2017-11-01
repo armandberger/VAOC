@@ -893,9 +893,9 @@ namespace vaoc
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
-                        Monitor.Enter(this.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon, des fois il ne trouve plus la valeur d'une colonne
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon, des fois il ne trouve plus la valeur d'une colonne
                         TAB_CASERow retourLigne = this[index];
-                        Monitor.Exit(this.Rows.SyncRoot);
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         return retourLigne;
                     }
                 }
@@ -1076,13 +1076,18 @@ namespace vaoc
                     DateTime timeStart;
                     TimeSpan perf;
                     Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-
+                    //importrow duplicate les cases sans vérifier aucune contrainte.
                     timeStart = DateTime.Now;
                     debutNouvellesLignes = this.Count;
                     //Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); -> prends beaucoup trop de temps, >50 secondes quand la table est déjà très chargée
                     Debug.WriteLine(string.Format("ChargerCases x={0}, y={1}", x, y));
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
+                        //si je retrouve la même ligne avant l'intertion,je sors !
+                        if (null == m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y))
+                        {
+                            return true;
+                        }
                         Donnees.m_donnees.TAB_CASE.ImportRow(ligneCasePlus);
                         //Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(
                         //    ligneCasePlus.ID_CASE,
@@ -1504,10 +1509,10 @@ namespace vaoc
 
             internal void ViderLaTable()
             {
-                Monitor.Enter(this.Rows.SyncRoot);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
                 for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
-                Monitor.Exit(this.Rows.SyncRoot);
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
         }
 

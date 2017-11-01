@@ -139,8 +139,8 @@ namespace WaocLib
             {
                 Cursor.Current = Cursors.WaitCursor;
                 donneesSource.Clear();
-                foreach (DataTable table in donneesSource.Tables)
-                    table.BeginLoadData();//accelère le chargement en retirant les constructions d'index, etc.
+                //foreach (DataTable table in donneesSource.Tables)
+                //    table.BeginLoadData();//accelère le chargement en retirant les constructions d'index, etc.
                 try
                 {
                     ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
@@ -155,12 +155,11 @@ namespace WaocLib
                 }
                 foreach (DataTable table in donneesSource.Tables)
                     Debug.WriteLine(table.TableName + " : "+table.Rows.Count.ToString());
-                //DataTable tableTest = donneesSource.Tables[1];
-                //tableTest.EndLoadData();
                 bool bException = false;
                 Exception derniereErreur = new Exception();//le new juste pour eviter le warning de non affectation
                 foreach (DataTable table in donneesSource.Tables)
                 {
+                    /*
                     DataRow[] rowErrors = table.GetErrors();
 
                     Debug.WriteLine(table.TableName + "Errors:"+ rowErrors.Length);
@@ -175,18 +174,18 @@ namespace WaocLib
                                 + ":" + rowErrors[i].GetColumnError(col));
                         }
                     }
-
+                    */
                     Debug.WriteLine("EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString());
                     try
                     {
-                        table.EndLoadData();
+                        //table.EndLoadData(); -> Gros problème, ne rétablit pas les contraintes, on peut donc ensuite insérer des données en double
                     }
                     catch (Exception e)
                     {
                         Debug.WriteLine("Exception sur EndLoadData:" + table.TableName + " : " + table.Rows.Count.ToString() + " = " + e.Message);
                         derniereErreur = e;
                         bException = true;
-                    }
+                    }                    
                 }
                 if (bException)
                 {

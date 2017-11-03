@@ -74,9 +74,12 @@ namespace vaoc
             //fichier standard historique
             largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE);
             hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE);
-            for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+            //for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+            //il faut la carte soit un multiple parfait de la taille web sinon cela s'affiche mal sur internet
+            for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB); i++)
             {
-                for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB); j++)
+                //for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
                 {
                     rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
                             j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB,
@@ -95,9 +98,11 @@ namespace vaoc
             {
                 largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE) * Constantes.CST_FACTEUR_ZOOM;
                 hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE) * Constantes.CST_FACTEUR_ZOOM;
-                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+                //for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+                //il faut la carte soit un multiple parfait de la taille web sinon cela s'affiche mal sur internet
+                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB); i++)
                 {
-                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB); j++)
                     {
                         rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM,
                                 j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB / Constantes.CST_FACTEUR_ZOOM,
@@ -115,9 +120,11 @@ namespace vaoc
             {
                 largeur = Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM);
                 hauteur = Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM);
-                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB) + 1; i++)
+                //il faut la carte soit un multiple parfait de la taille web sinon cela s'affiche mal sur internet
+                //for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB); i++)
+                for (i = 0; i < (largeur / Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB); i++)
                 {
-                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB) + 1; j++)
+                    for (j = 0; j < (hauteur / Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB); j++)
                     {
                         rect = new Rectangle(i * Donnees.m_donnees.TAB_PARTIE[0].I_LARGEUR_CARTE_ZOOM_WEB,
                                 j * Donnees.m_donnees.TAB_PARTIE[0].I_HAUTEUR_CARTE_ZOOM_WEB,

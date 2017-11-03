@@ -953,7 +953,7 @@ namespace vaoc
                                     "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53});",
                                     lignePion.ID_PION,//0
                                     idPartie,
-                                    (null == ligneMessage) || (!lignePion.IsI_TOUR_BLESSURENull() && lignePion.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
+                                    (!lignePion.IsI_TOUR_BLESSURENull() && lignePion.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
                                     lignePion.ID_MODELE_PION,
                                     Constantes.ChaineSQL(lignePion.S_NOM),
                                     iInfanterie,//5

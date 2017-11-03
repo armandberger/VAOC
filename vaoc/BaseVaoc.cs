@@ -1876,7 +1876,7 @@ namespace vaoc
                     if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
                     for (int i = 0; i < listeCases.Count(); i++)
                     {
-                        if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison
+                        //if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison lié à endloaddata qui est bugué
                         {
                             baseCases.ImportRow(listeCases[i]);
                         }

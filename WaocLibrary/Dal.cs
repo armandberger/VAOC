@@ -107,7 +107,7 @@ namespace WaocLib
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                Monitor.Enter(donnees);//au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
+                //Monitor.Enter(donnees);//au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash ->marche pas ce lock
                 if (File.Exists(nomfichier))
                 {
                     File.Delete(nomfichier);
@@ -119,7 +119,7 @@ namespace WaocLib
                 ecrivain.Close();
                 fichierZip.Dispose();
                 //donnees.WriteXml(nomfichier);
-                Monitor.Exit(donnees);
+                //Monitor.Exit(donnees);
                 Cursor.Current = oldCursor;
             }
             catch (Exception e)

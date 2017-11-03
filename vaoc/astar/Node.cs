@@ -28,6 +28,8 @@ namespace vaoc
 
         public Node(Donnees.TAB_CASERow ligneCase)
         {
+            int IdProprietaire;
+            int IdNouveauProprietaire;
             try
             {
                 m_idcase = ligneCase.ID_CASE;
@@ -35,9 +37,9 @@ namespace vaoc
                 m_y = ligneCase.I_Y;
                 m_modeleTerrain = ligneCase.ID_MODELE_TERRAIN;
                 //Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//DBNull is not thread safe...
-                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                IdProprietaire = ligneCase.ID_PROPRIETAIRE;
                 m_proprietaire = (Constantes.NULLENTIER != IdProprietaire) ? (int?)null : IdProprietaire;
-                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
                 m_nouveauProprietaire = (Constantes.NULLENTIER != IdNouveauProprietaire) ? (int?)null : IdNouveauProprietaire;
                 //Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }

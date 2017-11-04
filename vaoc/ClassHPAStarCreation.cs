@@ -603,8 +603,8 @@ namespace vaoc
                             //timeStart = DateTime.Now;
                             //Monitor.Enter(Donnees.m_donnees.TAB_PCC_COUTS);
                             _rwPCCCOUT.EnterWriteLock();
-                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, -1);
-                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, -1);
+                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseArrivee.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, Constantes.NULLENTIER);
+                            Donnees.m_donnees.TAB_PCC_COUTS.AddTAB_PCC_COUTSRow(xBloc, yBloc, ligneCaseArrivee.ID_CASE, ligneCaseDepart.ID_CASE, etoile.CoutGlobal, numeroTrajet, etoile.CoutGlobal, bCreation, Constantes.NULLENTIER);
                             _rwPCCCOUT.ExitWriteLock();
                             nbTrajets++;
                             //Monitor.Exit(Donnees.m_donnees.TAB_PCC_COUTS);

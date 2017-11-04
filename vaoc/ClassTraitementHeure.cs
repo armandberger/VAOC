@@ -310,7 +310,7 @@ namespace vaoc
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
+                        //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
@@ -545,8 +545,8 @@ namespace vaoc
         private void AmeliorationsPerformances()
         {
             #region Backup des messages, ordres et pions détruits ou passés
-            int i = 0;
             /* Retrait de l'optimisation sur les messages, en effets, certains pouvant être crées sur le web d'autres par l'interface, cela crée des bugs d'identifiants.
+            int i = 0;
             while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];

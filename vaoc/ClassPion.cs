@@ -2131,7 +2131,7 @@ namespace vaoc
                         return false;
                     }
 
-                    decimal distanceRavitaillement = (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;//distance en km
+                    decimal distanceRavitaillement = (null==chemin) ? Constantes.CST_COUTMAX : (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;//distance en km
                     int pourcentageRavitaillement = 0;
                     int colonneKilometreTable = -1;
                     bool ravitaillementDirect = false;

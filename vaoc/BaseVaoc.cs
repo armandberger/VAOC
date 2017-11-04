@@ -1084,7 +1084,7 @@ namespace vaoc
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
                         //si je retrouve la même ligne avant l'intertion,je sors ! C'est possible si deux process differents veulent voir en même temps une case non chargée
-                        if ((int) m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y) > 0)
+                        if ((int)m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y) > 0)
                         {
                             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                             return true;
@@ -1880,9 +1880,9 @@ namespace vaoc
                         {
                             baseCases.ImportRow(listeCases[i]);
                         }
-                        
+
                     }
-                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ;  return false; }
+                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
                     baseCases.Rows.Clear();
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 }
@@ -1916,11 +1916,12 @@ namespace vaoc
                     if (ligneMessage.IsID_CASE_FINNull()) { ligneMessage.ID_CASE_FIN = ligneMessage.ID_CASE; }
                 }
 
-                foreach (TAB_PCC_COUTSRow trajet in TAB_PCC_COUTS)
-                {
-                    if (trajet.IsB_CREATIONNull()) { trajet.B_CREATION = false; }
-                    if (trajet.IsI_COUT_INITIALNull()) { trajet.I_COUT_INITIAL = trajet.I_COUT; }
-                }
+                //cas devenu impossible avec la suppression des DBNUlls de la table
+                //foreach (TAB_PCC_COUTSRow trajet in TAB_PCC_COUTS)
+                //{
+                //    if (trajet.IsB_CREATIONNull()) { trajet.B_CREATION = false; }
+                //    if (trajet.IsI_COUT_INITIALNull()) { trajet.I_COUT_INITIAL = trajet.I_COUT; }
+                //}
 
                 #region correctif sur les nations pour les messagers, et les messagers patrouilles */
                 foreach (TAB_PIONRow lignePion in TAB_PION)

@@ -928,7 +928,7 @@ namespace vaoc
                 //bloc vers bloc
                 //Debug.WriteLineIf(trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
                 //    "Cout : trackSource.EndNodeHPA.ID_CASE_FIN != trackDestination.EndNodeHPA.ID_CASE_DEBUT");
-                if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
+                if (m_idNation >= 0 && (Constantes.NULLENTIER != trackDestination.EndNodeHPA.ID_NATION) && (trackDestination.EndNodeHPA.ID_NATION != m_idNation))
                 {
                     return Constantes.CST_COUTMAX;//trajet intraversable
                 }

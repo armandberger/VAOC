@@ -87,12 +87,12 @@ namespace Traitement
             try
             {
                 const int NULLENTIER = -int.MaxValue;
-                const string NULLCHAINE = "NAZE";
+                //const string NULLCHAINE = "NAZE";
                 const char NULLCHAR = '?';
-                string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps.vaoc";
-                //string nomfichierSource = "C:\\berlin\\berlin_printemps_6.vaoc";
-                string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
-                //string nomfichierDestination = "C:\\berlin\\berlin_printemps_corrige_6.vaoc";
+                //string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps.vaoc";
+                string nomfichierSource = "C:\\berlin\\berlin_printemps_19_23_90.vaoc";
+                //string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
+                string nomfichierDestination = "C:\\berlin\\berlin_printemps_19_23_90_corrige_16.vaoc";
 
                 Donnees m_base = new Donnees();
                 Constantes.repertoireDonnees = nomfichierSource;
@@ -152,6 +152,17 @@ namespace Traitement
                     if (ligneCase.IsI_YNull()) { ligneCase.I_Y = NULLENTIER; }
                 }
                 */
+
+                foreach (Donnees.TAB_PCC_COUTSRow ligneCout in m_base.TAB_PCC_COUTS)
+                {
+                    if (ligneCout.IsB_CREATIONNull()) { ligneCout.B_CREATION = false; }
+                    if (ligneCout.IsID_NATIONNull() || (!ligneCout.IsID_NATIONNull() && ligneCout.ID_NATION<0)) { ligneCout.ID_NATION = NULLENTIER; }
+                    if (ligneCout.IsID_TRAJETNull()) { ligneCout.ID_TRAJET = NULLENTIER; }
+                    if (ligneCout.IsI_BLOCXNull()) { ligneCout.I_BLOCX = NULLENTIER; }
+                    if (ligneCout.IsI_BLOCYNull()) { ligneCout.I_BLOCY = NULLENTIER; }
+                    if (ligneCout.IsI_COUTNull()) { ligneCout.I_COUT = NULLENTIER; }
+                    if (ligneCout.IsI_COUT_INITIALNull()) { ligneCout.I_COUT_INITIAL = ligneCout.I_COUT; }
+                }
                 Console.WriteLine("sauvegarde finale");
                 Dal.SauvegarderPartie(nomfichierDestination, m_base.TAB_PARTIE[0].I_TOUR, m_base.TAB_PARTIE[0].I_PHASE, m_base, true);
                 Console.WriteLine("Conversion terminée :" + nomfichierDestination);

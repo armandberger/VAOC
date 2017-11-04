@@ -10,6 +10,8 @@
 
 #pragma warning disable 1591
 
+using System;
+
 namespace vaoc {
     
     
@@ -3889,7 +3891,6 @@ namespace vaoc {
                 return rowTAB_CASERow;
             }
             
-          
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
@@ -14007,11 +14008,18 @@ namespace vaoc {
                 base.Columns.Add(this.columnB_CREATION);
                 this.columnID_NATION = new global::System.Data.DataColumn("ID_NATION", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnID_NATION);
+                this.columnI_BLOCX.AllowDBNull = false;
+                this.columnI_BLOCY.AllowDBNull = false;
                 this.columnID_CASE_DEBUT.AllowDBNull = false;
                 this.columnID_CASE_DEBUT.Caption = "ID_CASE";
                 this.columnID_CASE_FIN.AllowDBNull = false;
                 this.columnID_CASE_FIN.Caption = "ID_CASE";
+                this.columnI_COUT.AllowDBNull = false;
+                this.columnID_TRAJET.AllowDBNull = false;
+                this.columnI_COUT_INITIAL.AllowDBNull = false;
+                this.columnB_CREATION.AllowDBNull = false;
                 this.columnB_CREATION.DefaultValue = ((bool)(false));
+                this.columnID_NATION.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -28819,12 +28827,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_BLOCX {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.I_BLOCXColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_BLOCX\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.I_BLOCXColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.I_BLOCXColumn] = value;
@@ -28835,12 +28838,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_BLOCY {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.I_BLOCYColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_BLOCY\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.I_BLOCYColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.I_BLOCYColumn] = value;
@@ -28873,12 +28871,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_COUT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.I_COUTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_COUT\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.I_COUTColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.I_COUTColumn] = value;
@@ -28889,12 +28882,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_TRAJET {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.ID_TRAJETColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_TRAJET\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.ID_TRAJETColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.ID_TRAJETColumn] = value;
@@ -28905,13 +28893,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_COUT_INITIAL {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.I_COUT_INITIALColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_COUT_INITIAL\' dans la table \'TAB_PCC_COUTS\' est DBNu" +
-                                "ll.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.I_COUT_INITIALColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.I_COUT_INITIALColumn] = value;
@@ -28922,12 +28904,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool B_CREATION {
                 get {
-                    try {
-                        return ((bool)(this[this.tableTAB_PCC_COUTS.B_CREATIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_CREATION\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((bool)(this[this.tableTAB_PCC_COUTS.B_CREATIONColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.B_CREATIONColumn] = value;
@@ -28938,100 +28915,11 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_NATION {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PCC_COUTS.ID_NATIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_NATION\' dans la table \'TAB_PCC_COUTS\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PCC_COUTS.ID_NATIONColumn]));
                 }
                 set {
                     this[this.tableTAB_PCC_COUTS.ID_NATIONColumn] = value;
                 }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_BLOCXNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.I_BLOCXColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_BLOCXNull() {
-                this[this.tableTAB_PCC_COUTS.I_BLOCXColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_BLOCYNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.I_BLOCYColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_BLOCYNull() {
-                this[this.tableTAB_PCC_COUTS.I_BLOCYColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_COUTNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.I_COUTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_COUTNull() {
-                this[this.tableTAB_PCC_COUTS.I_COUTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_TRAJETNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.ID_TRAJETColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_TRAJETNull() {
-                this[this.tableTAB_PCC_COUTS.ID_TRAJETColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_COUT_INITIALNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.I_COUT_INITIALColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_COUT_INITIALNull() {
-                this[this.tableTAB_PCC_COUTS.I_COUT_INITIALColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsB_CREATIONNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.B_CREATIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetB_CREATIONNull() {
-                this[this.tableTAB_PCC_COUTS.B_CREATIONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_NATIONNull() {
-                return this.IsNull(this.tableTAB_PCC_COUTS.ID_NATIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_NATIONNull() {
-                this[this.tableTAB_PCC_COUTS.ID_NATIONColumn] = global::System.Convert.DBNull;
             }
         }
         

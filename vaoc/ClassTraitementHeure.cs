@@ -3154,7 +3154,7 @@ namespace vaoc
                 ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
 
                 //Un depôt de niveau A n'a t-il fait aucun ravitaillement direct depuis une semaine
-                if ('A' == ligneDepot.C_NIVEAU_DEPOT && 
+                if (/*'A' == ligneDepot.C_NIVEAU_DEPOT && */
                     ((ligneDepot.IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() && 24*7 < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                     || (ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT + 24*7 < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)))
                 {
@@ -3164,6 +3164,7 @@ namespace vaoc
                 }
 
                 //Le dépôt est-il épuisé ?
+                /* -> trop sévère et incontrollable, je traite tout comme pour les dépots de type 'A'
                 if (ligneDepot.I_SOLDATS_RAVITAILLES >= Constantes.tableLimiteRavitaillementDepot[ligneDepotTable])
                 {
                     //le dépôt perd un niveau, s'il est de type 'D' il est détruit
@@ -3197,6 +3198,7 @@ namespace vaoc
                         }
                     }
                 }
+                */
                 ++i;
             }
             return true;

@@ -219,6 +219,7 @@ namespace vaoc
             if (null == imageSource) return; // possible si fichier zoom non renseigné, car trop lourd pour être chargé
             graph = Graphics.FromImage(imageSource);
 
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             foreach (Donnees.TAB_CASERow noeud in Donnees.m_donnees.TAB_CASE)
             {
                 if (noeud.I_X < xCaseHautGauche || noeud.I_X > xCaseBasDroite) { continue; }
@@ -254,6 +255,7 @@ namespace vaoc
                     }
                 }
             }
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             graph.Dispose();
         }
 

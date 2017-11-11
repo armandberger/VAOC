@@ -2093,350 +2093,360 @@ namespace vaoc
             bEnDanger = false;
             bAmiCombattif = false;
 
-            Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-            if (null == ligneModelePion)
+            try
             {
-                return false;
-            }
-
-            Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
-            lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
-
-            Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-
-            Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
-            //dans le cas d'une patrouille, sur 2-4 (2d6) elle ne voit pas l'ennemi même s'il existe
-            if (typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT || Constantes.JetDeDes(2) > 5)
-            {
-                //on recherche toutes les unités visibles, et on se préparent à calculer le barycentre de leur position
-
-                for (int l=0; l<ligneCaseVues.Count(); l++)
+                Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                if (null == ligneModelePion)
                 {
-                    Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
-                    if (!ligneCaseVue.IsID_PROPRIETAIRENull() && ligneCaseVue.ID_PROPRIETAIRE!=lignePion.ID_PION)
-                    {
-                        if (unitesVisibles.ContainsKey(ligneCaseVue.ID_PROPRIETAIRE))
-                        {
-                            Barycentre bar = unitesVisibles[ligneCaseVue.ID_PROPRIETAIRE];
-                            bar.x += ligneCaseVue.I_X;
-                            bar.y += ligneCaseVue.I_Y;
-                            bar.nb++;
-                            //unitesVisibles[ligneCaseVue.ID_PROPRIETAIRE] = bar;//peut-être pas utile, si bouge la reference
-                        }
-                        else
-                        {
-                            Barycentre bar = new Barycentre();
-                            bar.x = ligneCaseVue.I_X;
-                            bar.y = ligneCaseVue.I_Y;
-                            bar.nb = 1;
-                            unitesVisibles.Add(ligneCaseVue.ID_PROPRIETAIRE, bar);
-                        }
-                    }
+                    return false;
                 }
 
-                //il est possible qu'une unité ne soit pas visible car n'ayant trouvée aucune case pour se placer, on ajoute donc toute unité dont l'emplacement est dans la zone de vue
-                for (int l=0; l<Donnees.m_donnees.TAB_PION.Count; l++)
+                Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
+                lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+
+                Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+
+                Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
+                //dans le cas d'une patrouille, sur 2-4 (2d6) elle ne voit pas l'ennemi même s'il existe
+                if (typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT || Constantes.JetDeDes(2) > 5)
                 {
-                    Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
-                    if (lignePionVue.B_DETRUIT) { continue; }
-                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVue.ID_CASE);
-                    if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
+                    //on recherche toutes les unités visibles, et on se préparent à calculer le barycentre de leur position
+
+                    for (int l = 0; l < ligneCaseVues.Count(); l++)
                     {
-                        if (lignePionVue.ID_PION!=lignePion.ID_PION && !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
+                        Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
+                        if (!ligneCaseVue.IsID_PROPRIETAIRENull() && ligneCaseVue.ID_PROPRIETAIRE != lignePion.ID_PION)
                         {
-                            Barycentre bar = new Barycentre();
-                            bar.x += ligneCasePion.I_X;
-                            bar.y += ligneCasePion.I_Y;
-                            bar.nb = 1;
-                            unitesVisibles.Add(lignePionVue.ID_PION, bar);
-                        }
-                    }
-                }
-
-                unitesEnvironnantes += "<UL>";
-                foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
-                {
-                    Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION.FindByID_PION(unite.Key);
-
-                    if (null == lignePionVoisin || lignePionVoisin.B_DETRUIT) { continue; }//note, null possible si j'ai détruit manuellement une unité
-                    if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
-
-                    if (!bAmiCombattif && lignePionVoisin.estCombattif)
-                    {
-                        if (lignePionVoisin.nation == lignePion.nation)
-                        {
-                            bAmiCombattif = true;
-                            bEnDanger = false;//il y a un ami pour le "protéger"
-                        }
-                        else
-                        {
-                            bEnDanger = true;
-                        }
-                    }
-
-                    Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindByXY(unite.Value.x / unite.Value.nb, unite.Value.y / unite.Value.nb);
-                    Donnees.TAB_NATIONRow ligneNationVoisin = lignePionVoisin.nation;
-                    CaseVersZoneGeographique(ligneCaseVoisin.ID_CASE, out NomZoneGeographique);
-                    unitesEnvironnantes += "<LI>";
-                    //if (string.Empty != unitesEnvironnantes)
-                    //{
-                    //    unitesEnvironnantes += ", ";
-                    //}
-                    femminin = "";
-                    if (lignePionVoisin.estQG)
-                    {
-                        nomType = "un état-major";
-
-                        if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
-                            && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
-                            || Constantes.JetDeDes(1) > 5)
-                        {
-                            nomType += (Constantes.DebuteParUneVoyelle(lignePionVoisin.S_NOM)) ? " de l'" : " du ";
-                            nomType += lignePionVoisin.S_NOM;
-                        }
-                    }
-                    else
-                    {
-                        if (lignePionVoisin.estPatrouille)
-                        {
-                            nomType = "une patrouille";
-                            femminin = "e";
-                        }
-                        else
-                        {
-                            if (lignePionVoisin.estMessager)
+                            if (unitesVisibles.ContainsKey(ligneCaseVue.ID_PROPRIETAIRE))
                             {
-                                nomType = "un aide de camp";
+                                Barycentre bar = unitesVisibles[ligneCaseVue.ID_PROPRIETAIRE];
+                                bar.x += ligneCaseVue.I_X;
+                                bar.y += ligneCaseVue.I_Y;
+                                bar.nb++;
+                                //unitesVisibles[ligneCaseVue.ID_PROPRIETAIRE] = bar;//peut-être pas utile, si bouge la reference
                             }
                             else
                             {
-                                if (lignePionVoisin.estDepot)
+                                Barycentre bar = new Barycentre();
+                                bar.x = ligneCaseVue.I_X;
+                                bar.y = ligneCaseVue.I_Y;
+                                bar.nb = 1;
+                                unitesVisibles.Add(ligneCaseVue.ID_PROPRIETAIRE, bar);
+                            }
+                        }
+                    }
+
+                    //il est possible qu'une unité ne soit pas visible car n'ayant trouvée aucune case pour se placer, on ajoute donc toute unité dont l'emplacement est dans la zone de vue
+                    for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
+                    {
+                        Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
+                        if (lignePionVue.B_DETRUIT) { continue; }
+                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVue.ID_CASE);
+                        if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
+                        {
+                            if (lignePionVue.ID_PION != lignePion.ID_PION && !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
+                            {
+                                Barycentre bar = new Barycentre();
+                                bar.x += ligneCasePion.I_X;
+                                bar.y += ligneCasePion.I_Y;
+                                bar.nb = 1;
+                                unitesVisibles.Add(lignePionVue.ID_PION, bar);
+                            }
+                        }
+                    }
+
+                    unitesEnvironnantes += "<UL>";
+                    foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
+                    {
+                        Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION.FindByID_PION(unite.Key);
+
+                        if (null == lignePionVoisin || lignePionVoisin.B_DETRUIT) { continue; }//note, null possible si j'ai détruit manuellement une unité
+                        if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
+
+                        if (!bAmiCombattif && lignePionVoisin.estCombattif)
+                        {
+                            if (lignePionVoisin.nation == lignePion.nation)
+                            {
+                                bAmiCombattif = true;
+                                bEnDanger = false;//il y a un ami pour le "protéger"
+                            }
+                            else
+                            {
+                                bEnDanger = true;
+                            }
+                        }
+
+                        Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindByXY(unite.Value.x / unite.Value.nb, unite.Value.y / unite.Value.nb);
+                        Donnees.TAB_NATIONRow ligneNationVoisin = lignePionVoisin.nation;
+                        CaseVersZoneGeographique(ligneCaseVoisin.ID_CASE, out NomZoneGeographique);
+                        unitesEnvironnantes += "<LI>";
+                        //if (string.Empty != unitesEnvironnantes)
+                        //{
+                        //    unitesEnvironnantes += ", ";
+                        //}
+                        femminin = "";
+                        if (lignePionVoisin.estQG)
+                        {
+                            nomType = "un état-major";
+
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
+                                && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
+                                || Constantes.JetDeDes(1) > 5)
+                            {
+                                nomType += (Constantes.DebuteParUneVoyelle(lignePionVoisin.S_NOM)) ? " de l'" : " du ";
+                                nomType += lignePionVoisin.S_NOM;
+                            }
+                        }
+                        else
+                        {
+                            if (lignePionVoisin.estPatrouille)
+                            {
+                                nomType = "une patrouille";
+                                femminin = "e";
+                            }
+                            else
+                            {
+                                if (lignePionVoisin.estMessager)
                                 {
-                                    nomType = "un dépôt";
+                                    nomType = "un aide de camp";
                                 }
                                 else
                                 {
-                                    if (lignePionVoisin.estConvoi)
+                                    if (lignePionVoisin.estDepot)
                                     {
-                                        nomType = "un convoi";
+                                        nomType = "un dépôt";
                                     }
                                     else
                                     {
-                                        if (lignePionVoisin.estPontonnier)
+                                        if (lignePionVoisin.estConvoi)
                                         {
-                                            nomType = "des pontonniers";
+                                            nomType = "un convoi";
                                         }
                                         else
                                         {
-                                            if (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION)
+                                            if (lignePionVoisin.estPontonnier)
                                             {
-                                                nomType = lignePionVoisin.S_NOM;
+                                                nomType = "des pontonniers";
                                             }
                                             else
                                             {
-                                                nomType = "une formation";
+                                                if (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION)
+                                                {
+                                                    nomType = lignePionVoisin.S_NOM;
+                                                }
+                                                else
+                                                {
+                                                    nomType = "une formation";
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (0 == lignePionVoisin.I_INFANTERIE && 0 == lignePionVoisin.I_CAVALERIE && 0 == lignePionVoisin.I_ARTILLERIE)
-                    {
-                        if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI  && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
-                            || Constantes.JetDeDes(1) > 2)
+                        if (0 == lignePionVoisin.I_INFANTERIE && 0 == lignePionVoisin.I_CAVALERIE && 0 == lignePionVoisin.I_ARTILLERIE)
+                        {
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
+                                || Constantes.JetDeDes(1) > 2)
+                            {
+                                if (lignePion.nation.ID_NATION == ligneNationVoisin.ID_NATION)
+                                {
+                                    //unitées de la même nation que l'observateur, on indique le proprietaire plutôt que la nationalité, on remonte jusqu'à ce que l'on trouve un joueur
+                                    unitesEnvironnantes += nomType;
+                                    unitesEnvironnantes += lignePionVoisin.ChaineAppartenance();
+                                    //unitesEnvironnantes += string.Format(" situé{1} à {0}  avec des effectifs de ", NomZoneGeographique, femminin);
+                                    unitesEnvironnantes += string.Format(" situé{1} à {0}", NomZoneGeographique, femminin);
+                                }
+                                else
+                                {
+                                    string formatChaine = (Constantes.DebuteParUneVoyelle(ligneNationVoisin.S_NOM)) ? "{0} de l'{1} situé{3} à {2}" : "{0} de la {1} situé{3} à {2}";
+                                    unitesEnvironnantes +=
+                                        string.Format(formatChaine,
+                                        nomType,
+                                        ligneNationVoisin.S_NOM,
+                                        NomZoneGeographique,
+                                        femminin);
+                                }
+                            }
+                            else
+                            {
+                                unitesEnvironnantes +=
+                                    string.Format("Une unité située à {0}",
+                                    NomZoneGeographique);
+                            }
+                        }
+                        else
                         {
                             if (lignePion.nation.ID_NATION == ligneNationVoisin.ID_NATION)
                             {
                                 //unitées de la même nation que l'observateur, on indique le proprietaire plutôt que la nationalité, on remonte jusqu'à ce que l'on trouve un joueur
                                 unitesEnvironnantes += nomType;
                                 unitesEnvironnantes += lignePionVoisin.ChaineAppartenance();
-                                //unitesEnvironnantes += string.Format(" situé{1} à {0}  avec des effectifs de ", NomZoneGeographique, femminin);
                                 unitesEnvironnantes += string.Format(" situé{1} à {0}", NomZoneGeographique, femminin);
                             }
                             else
                             {
-                                string formatChaine = (Constantes.DebuteParUneVoyelle(ligneNationVoisin.S_NOM)) ? "{0} de l'{1} situé{3} à {2}" : "{0} de la {1} situé{3} à {2}";
+                                string formatChaine = (Constantes.DebuteParUneVoyelle(ligneNationVoisin.S_NOM)) ? "{0} arborant le drapeau de l'{1} " : "{0} arborant le drapeau de la {1} ";
                                 unitesEnvironnantes +=
                                     string.Format(formatChaine,
                                     nomType,
-                                    ligneNationVoisin.S_NOM,
-                                    NomZoneGeographique,
-                                    femminin);
+                                    ligneNationVoisin.S_NOM);
                             }
-                        }
-                        else
-                        {
-                            unitesEnvironnantes +=
-                                string.Format("Une unité située à {0}",
-                                NomZoneGeographique);
-                        }
-                    }
-                    else
-                    {
-                        if (lignePion.nation.ID_NATION == ligneNationVoisin.ID_NATION)
-                        {
-                            //unitées de la même nation que l'observateur, on indique le proprietaire plutôt que la nationalité, on remonte jusqu'à ce que l'on trouve un joueur
-                            unitesEnvironnantes += nomType;
-                            unitesEnvironnantes += lignePionVoisin.ChaineAppartenance();
-                            unitesEnvironnantes += string.Format(" situé{1} à {0}", NomZoneGeographique, femminin);
-                        }
-                        else
-                        {
-                            string formatChaine = (Constantes.DebuteParUneVoyelle(ligneNationVoisin.S_NOM)) ? "{0} arborant le drapeau de l'{1} " : "{0} arborant le drapeau de la {1} ";
-                            unitesEnvironnantes +=
-                                string.Format(formatChaine,
-                                nomType,
-                                ligneNationVoisin.S_NOM);
-                        }
-                        unitesEnvironnantes += " avec des effectifs de ";
+                            unitesEnvironnantes += " avec des effectifs de ";
 
-                        int ecartInfanterie = 0, ecartCavalerie = 0, ecartArtillerie = 0;
+                            int ecartInfanterie = 0, ecartCavalerie = 0, ecartArtillerie = 0;
 
-                        if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI 
-                            && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
-                            || Constantes.JetDeDes(1) > 5)
-                        {
-                            //rien, les chiffres donnés sont exacts
-                        }
-                        else
-                        {
-                            // Il y a une erreur comprise entre et % dans les estimations 
-                            ecartInfanterie = lignePionVoisin.infanterie + lignePionVoisin.infanterie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
-                            ecartCavalerie = lignePionVoisin.cavalerie + lignePionVoisin.cavalerie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
-                            ecartArtillerie = lignePionVoisin.artillerie + lignePionVoisin.artillerie * (Constantes.JetDeDes(2) - 7) / 10 + 10 * (Constantes.JetDeDes(1) - 3) / 10;
-                        }
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
+                                && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
+                                || Constantes.JetDeDes(1) > 5)
+                            {
+                                //rien, les chiffres donnés sont exacts
+                            }
+                            else
+                            {
+                                // Il y a une erreur comprise entre et % dans les estimations 
+                                ecartInfanterie = lignePionVoisin.infanterie + lignePionVoisin.infanterie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
+                                ecartCavalerie = lignePionVoisin.cavalerie + lignePionVoisin.cavalerie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
+                                ecartArtillerie = lignePionVoisin.artillerie + lignePionVoisin.artillerie * (Constantes.JetDeDes(2) - 7) / 10 + 10 * (Constantes.JetDeDes(1) - 3) / 10;
+                            }
 
-                        if (lignePionVoisin.infanterie + ecartInfanterie > 0)
-                        {
-                            int estimationInfanterie = (lignePionVoisin.infanterie + ecartInfanterie < 100) ? lignePionVoisin.infanterie + ecartInfanterie : (int)Math.Round((decimal)(lignePionVoisin.infanterie + ecartInfanterie)/100) * 100;
-                            unitesEnvironnantes += estimationInfanterie.ToString() + " fantassins";
-                        }
-                        if (lignePionVoisin.cavalerie + ecartCavalerie > 0)
-                        {
                             if (lignePionVoisin.infanterie + ecartInfanterie > 0)
                             {
-                                if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                                int estimationInfanterie = (lignePionVoisin.infanterie + ecartInfanterie < 100) ? lignePionVoisin.infanterie + ecartInfanterie : (int)Math.Round((decimal)(lignePionVoisin.infanterie + ecartInfanterie) / 100) * 100;
+                                unitesEnvironnantes += estimationInfanterie.ToString() + " fantassins";
+                            }
+                            if (lignePionVoisin.cavalerie + ecartCavalerie > 0)
+                            {
+                                if (lignePionVoisin.infanterie + ecartInfanterie > 0)
                                 {
-                                    unitesEnvironnantes += ", ";
+                                    if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                                    {
+                                        unitesEnvironnantes += ", ";
+                                    }
+                                    else
+                                    {
+                                        unitesEnvironnantes += " et ";
+                                    }
                                 }
-                                else
+                                int estimationCavalerie = (lignePionVoisin.cavalerie + ecartCavalerie < 100) ? lignePionVoisin.cavalerie + ecartCavalerie : (int)Math.Round((decimal)(lignePionVoisin.cavalerie + ecartCavalerie) / 100) * 100;
+                                unitesEnvironnantes += estimationCavalerie.ToString() + " cavaliers";
+                            }
+                            if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                            {
+                                if ((lignePionVoisin.infanterie + ecartInfanterie) > 0 || (lignePionVoisin.cavalerie + ecartCavalerie) > 0)
                                 {
                                     unitesEnvironnantes += " et ";
                                 }
+                                unitesEnvironnantes += (lignePionVoisin.artillerie + ecartArtillerie).ToString() + " canons";
                             }
-                            int estimationCavalerie = (lignePionVoisin.cavalerie + ecartCavalerie < 100) ? lignePionVoisin.cavalerie + ecartCavalerie : (int)Math.Round((decimal)(lignePionVoisin.cavalerie + ecartCavalerie) / 100) * 100;
-                            unitesEnvironnantes += estimationCavalerie.ToString() + " cavaliers";
+                            unitesEnvironnantes += string.Format(" située{0} à {1}", femminin, NomZoneGeographique);
                         }
-                        if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+
+                        //ajout de la direction du mouvement prise par l'unité
+                        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionVoisin.ID_PION);
+                        if (null == ligneOrdre)
                         {
-                            if ((lignePionVoisin.infanterie + ecartInfanterie)> 0 || (lignePionVoisin.cavalerie + ecartCavalerie)> 0)
+                            unitesEnvironnantes += " à l'arrêt";
+                        }
+                        else
+                        {
+                            switch (ligneOrdre.I_ORDRE_TYPE)
                             {
-                                unitesEnvironnantes += " et ";
+                                case Constantes.ORDRES.MOUVEMENT:
+                                case Constantes.ORDRES.MESSAGE:
+                                case Constantes.ORDRES.PATROUILLE:
+                                    COMPAS direction;
+                                    CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);
+                                    unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false); ;
+                                    break;
+                                case Constantes.ORDRES.COMBAT:
+                                    unitesEnvironnantes += " au combat";
+                                    break;
+                                case Constantes.ORDRES.RETRAITE:
+                                case Constantes.ORDRES.RETRAIT:
+                                    unitesEnvironnantes += " en retraite";
+                                    break;
+                                case Constantes.ORDRES.CONSTRUIRE_PONTON:
+                                    unitesEnvironnantes += " construisant un ponton";
+                                    break;
+                                case Constantes.ORDRES.ENDOMMAGER_PONT:
+                                    unitesEnvironnantes += " endommageant un pont";
+                                    break;
+                                case Constantes.ORDRES.REPARER_PONT:
+                                    unitesEnvironnantes += " réparant un pont";
+                                    break;
+                                case Constantes.ORDRES.ARRET:
+                                case Constantes.ORDRES.TRANSFERER:
+                                case Constantes.ORDRES.GENERERCONVOI:
+                                case Constantes.ORDRES.RENFORCER:
+                                case Constantes.ORDRES.ETABLIRDEPOT:
+                                case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                                    unitesEnvironnantes += " à l'arrêt";
+                                    break;
+                                case Constantes.ORDRES.SEFORTIFIER:
+                                    unitesEnvironnantes += " construisant des fortifications";
+                                    break;
+                                default:
+                                    LogFile.Notifier("PionsEnvironnants Ordre inconnu reçu");
+                                    unitesEnvironnantes += "inconnu";
+                                    break;
                             }
-                            unitesEnvironnantes += (lignePionVoisin.artillerie + ecartArtillerie).ToString() + " canons";
                         }
-                        unitesEnvironnantes += string.Format(" située{0} à {1}", femminin, NomZoneGeographique);
+                        unitesEnvironnantes += ".</LI>";
                     }
-
-                    //ajout de la direction du mouvement prise par l'unité
-                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionVoisin.ID_PION);
-                    if (null == ligneOrdre)
-                    {
-                        unitesEnvironnantes += " à l'arrêt";
-                    }
-                    else
-                    {
-                        switch (ligneOrdre.I_ORDRE_TYPE)
-                        {
-                            case Constantes.ORDRES.MOUVEMENT:
-                            case Constantes.ORDRES.MESSAGE:
-                            case Constantes.ORDRES.PATROUILLE:
-                                COMPAS direction;
-                                CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);                                
-                                unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false);;
-                                break;
-                            case Constantes.ORDRES.COMBAT:
-                                unitesEnvironnantes += " au combat";
-                                break;
-                            case Constantes.ORDRES.RETRAITE:
-                            case Constantes.ORDRES.RETRAIT:
-                                unitesEnvironnantes += " en retraite";
-                                break;
-                            case Constantes.ORDRES.CONSTRUIRE_PONTON:
-                                unitesEnvironnantes += " construisant un ponton";
-                                break;
-                            case Constantes.ORDRES.ENDOMMAGER_PONT:
-                                unitesEnvironnantes += " endommageant un pont";
-                                break;
-                            case Constantes.ORDRES.REPARER_PONT:
-                                unitesEnvironnantes += " réparant un pont";
-                                break;
-                            case Constantes.ORDRES.ARRET:
-                            case Constantes.ORDRES.TRANSFERER:
-                            case Constantes.ORDRES.GENERERCONVOI:
-                            case Constantes.ORDRES.RENFORCER:
-                            case Constantes.ORDRES.ETABLIRDEPOT:
-                            case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
-                                unitesEnvironnantes += " à l'arrêt";
-                                break;
-                            case Constantes.ORDRES.SEFORTIFIER:
-                                unitesEnvironnantes += " construisant des fortifications";
-                                break;
-                            default:
-                                LogFile.Notifier("PionsEnvironnants Ordre inconnu reçu");
-                                unitesEnvironnantes += "inconnu";
-                                break;
-                        }
-                    }
-                    unitesEnvironnantes += ".</LI>";
                 }
-            }
 
-            unitesEnvironnantes += "</UL>";
-            if (0 == unitesVisibles.Count)
-            {
-                CaseVersZoneGeographique(lignePion.ID_CASE, out NomZoneGeographique);
-                unitesEnvironnantes = string.Format("Aucune unité présente à {0} km autour de {1}", lignePion.vision, NomZoneGeographique);
-            }
-
-            //Ajout des informations d'état sur les ponts/gués environnants.
-            bool bPontOuGuet = false;
-            Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
-            for (int l=0; l<ligneCaseVues.Count(); l++)
-            {
-                Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
-                Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
-                if (ligneModeleTerrain.B_PONT || ligneModeleTerrain.B_PONTON)
+                unitesEnvironnantes += "</UL>";
+                if (0 == unitesVisibles.Count)
                 {
-                    //cette case fait-elle partie d'un pont déjà indiqué ?
-                    if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
-                    {
-                        //si la case est trouvé on recherche toutes les cases de même type contigues
-                        List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
-                        listeCasesVoisines.Add(ligneCaseVue);
-                        ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
-                        for (int ll=0; ll<listeCasesVoisines.Count; ll++)
-                        {
-                            Donnees.TAB_CASERow ligneCasePont = listeCasesVoisines[ll];
-                            listePonts.Add(ligneCasePont.ID_CASE, ligneCasePont);
-                        }
-                        if (!bPontOuGuet) 
-                        {
-                            unitesEnvironnantes += "<UL>";//avec un <br/> en plus cela fait un trop gros espace
-                            bPontOuGuet = true;
-                        }
+                    CaseVersZoneGeographique(lignePion.ID_CASE, out NomZoneGeographique);
+                    unitesEnvironnantes = string.Format("Aucune unité présente à {0} km autour de {1}", lignePion.vision, NomZoneGeographique);
+                }
 
-                        CaseVersZoneGeographique(ligneCaseVue.ID_CASE, out NomZoneGeographique);
-                        //unitesEnvironnantes += "<LI>" + PremiereCaseMajuscule(ligneModeleTerrain.S_NOM) + " situé à " + NomZoneGeographique + ".</LI>";
-                        unitesEnvironnantes += "<LI>Un " + ligneModeleTerrain.S_NOM + " situé à " + NomZoneGeographique + ".</LI>";
+                //Ajout des informations d'état sur les ponts/gués environnants.
+                bool bPontOuGuet = false;
+                Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
+                for (int l = 0; l < ligneCaseVues.Count(); l++)
+                {
+                    Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
+                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
+                    if (ligneModeleTerrain.B_PONT || ligneModeleTerrain.B_PONTON)
+                    {
+                        //cette case fait-elle partie d'un pont déjà indiqué ?
+                        if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
+                        {
+                            //si la case est trouvé on recherche toutes les cases de même type contigues
+                            List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
+                            listeCasesVoisines.Add(ligneCaseVue);
+                            ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
+                            for (int ll = 0; ll < listeCasesVoisines.Count; ll++)
+                            {
+                                Donnees.TAB_CASERow ligneCasePont = listeCasesVoisines[ll];
+                                listePonts.Add(ligneCasePont.ID_CASE, ligneCasePont);
+                            }
+                            if (!bPontOuGuet)
+                            {
+                                unitesEnvironnantes += "<UL>";//avec un <br/> en plus cela fait un trop gros espace
+                                bPontOuGuet = true;
+                            }
+
+                            CaseVersZoneGeographique(ligneCaseVue.ID_CASE, out NomZoneGeographique);
+                            //unitesEnvironnantes += "<LI>" + PremiereCaseMajuscule(ligneModeleTerrain.S_NOM) + " situé à " + NomZoneGeographique + ".</LI>";
+                            unitesEnvironnantes += "<LI>Un " + ligneModeleTerrain.S_NOM + " situé à " + NomZoneGeographique + ".</LI>";
+                        }
                     }
                 }
+                if (bPontOuGuet) { unitesEnvironnantes += "</UL>"; }
+                if (lignePion.estAuCombat) { bEnDanger = false; } //on est jamais en danger au combat c'est bien connu 
             }
-            if (bPontOuGuet) { unitesEnvironnantes += "</UL>"; }
-            if (lignePion.estAuCombat) { bEnDanger = false; } //on est jamais en danger au combat c'est bien connu 
-
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception PionsEnvironnants {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                LogFile.Notifier(messageEX);
+                throw ex;
+            }
             return true;
         }
 

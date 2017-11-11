@@ -594,15 +594,22 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
         {
             //string message;
             //int i = 0;
-
             try
             {
                 List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
-                foreach (Donnees.TAB_PIONRow ligneP in Donnees.m_donnees.TAB_PION)
+                foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
                 {
-                    liste.Add(ligneP);
+                    if (!lignePion.B_DETRUIT)
+                    {
+                        liste.Add(lignePion);
+                    }
                 }
-                Parallel.ForEach(liste, item => item.PlacerStatique());
+                //Parallel.ForEach(liste, item => item.PlacerStatique());
+                ParallelLoopResult result = Parallel.ForEach(liste, (item, loopstate) =>
+                {
+                    if (!item.PlacerStatique()) loopstate.Break();
+                });
+                return result.IsCompleted;
             }
             catch (AggregateException ae)
             {
@@ -624,7 +631,6 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 MessageBox.Show(message);
                 return false;
             }
-            return true;
         }
 
         internal static bool PlacerLesUnitesStatiques()
@@ -660,6 +666,8 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             bool nouvelleBataille;
             Donnees.TAB_PIONRow lignePionEnnemi;
 
+            try
+            { 
             message = string.Format("NouvelleBataille : en idCASE={0}", ligneCaseBataille.ID_CASE);
             LogFile.Notifier(message, out messageErreur);
 
@@ -693,11 +701,13 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             }
 
             // on vérifie si les deux unités sont déjà engageables dans le même combat non terminé
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
             var result = from BataillePionUn in Donnees.m_donnees.TAB_BATAILLE_PIONS
                          from BataillePionDeux in Donnees.m_donnees.TAB_BATAILLE_PIONS
                          from Bataille in Donnees.m_donnees.TAB_BATAILLE
-                         where Bataille.IsI_TOUR_FINNull() 
-                            && (BataillePionUn.ID_PION == lignePion.ID_PION) 
+                         where Bataille.IsI_TOUR_FINNull()
+                            && (BataillePionUn.ID_PION == lignePion.ID_PION)
                             && (BataillePionDeux.ID_PION == lignePionEnnemi.ID_PION)
                             && BataillePionUn.ID_BATAILLE == BataillePionDeux.ID_BATAILLE
                             && Bataille.ID_BATAILLE == BataillePionDeux.ID_BATAILLE
@@ -717,12 +727,13 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 message = string.Format("NouvelleBataille : les deux unités id={0} et id={1} sont déjà engagées dans la bataille {2}",
                 lignePion.ID_PION, lignePionEnnemi.ID_PION, idBataille.ToString());
                 LogFile.Notifier(message, out messageErreur);
-                return true;//pas vraiment une erreur, juste curieux
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+                return true;//pas vraiment une erreur, juste curieux, tout à fait possible en execution parallele, les unités pouvant créer la bataille en même temps
             }
 
             //la case ou l'une des unités fait-elle déjà partie d'une ou plusieurs bataille ?
             nouvelleBataille = true;
-            Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
                 if (!ligneBataille.IsI_TOUR_FINNull()) { continue; }
@@ -756,7 +767,6 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                     }
                 }
             }
-            Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
 
             //si les unités ne sont dans aucune bataille, il faut la créer
             if (nouvelleBataille)
@@ -766,7 +776,18 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 ligneNouvelleBataille.AjouterPionDansLaBataille(lignePion, ligneCaseBataille, true);
             }
 
-            return true;
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception NouvelleBataille {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                MessageBox.Show(messageEX);
+                return false;
+            }
         }
 
         /// <summary>

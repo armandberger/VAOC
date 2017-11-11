@@ -2967,7 +2967,7 @@ namespace vaoc
                     List<Donnees.TAB_CASERow> chemin;
                     double cout, coutHorsRoute;
 
-                    if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
+                    if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
                         out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
                             MessageBox.Show(string.Format("Il n'y a aucun chemin possible entre les points {0}:{1},{2} -> {3}:{4},{5}", 

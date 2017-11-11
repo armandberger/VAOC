@@ -459,13 +459,16 @@ namespace vaoc
             /// <returns>ordre Web, null si aucun</returns>
             public TAB_ORDRERow OrdreWeb(int ID_ORDREWEB)
             {
+                TAB_ORDRERow ligneOrdreRetour = null;
                 string requete = string.Format("ID_ORDRE_WEB={0}", ID_ORDREWEB);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete);
-                if (0 == resOrdre.Length)
+                if (0 != resOrdre.Length)
                 {
-                    return null;
+                    ligneOrdreRetour = resOrdre[0];
                 }
-                return resOrdre[0];
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
             }
 
 
@@ -476,6 +479,7 @@ namespace vaoc
             /// <returns>ordre de mouvement du pion, null si aucun</returns>
             public TAB_ORDRERow Mouvement(int ID_PION)
             {
+                TAB_ORDRERow ligneOrdreRetour = null;
                 //string requete = string.Format("ID_PION={0} AND I_ORDRE_TYPE = {1}  AND I_TOUR_FIN IS NOT NULL AND I_PHASE_FIN IS NOT NULL", ID_PION, CST_ORDRE_MOUVEMENT);
                 //quand l'ordre est terminé d'execution, I_TOUR_FIN et I_PHASE_FIN sont renseignés
                 string tri = "ID_ORDRE";
@@ -491,17 +495,17 @@ namespace vaoc
                  */
                 //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de mouvement
                 string requete = string.Format("(ID_PION={0}) AND (I_TOUR_FIN IS NULL) AND (I_PHASE_FIN IS NULL)", ID_PION);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
-                if (0 == resOrdre.Length)
+                if (0 != resOrdre.Length)
                 {
-                    //resOrdre = (TAB_ORDRERow[])Select("ID_PION=31", tri);
-                    return null;
+                    if ((resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MESSAGE) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.PATROUILLE))
+                    {
+                        ligneOrdreRetour = resOrdre[0];
+                    }
                 }
-                if ((resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MESSAGE) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.PATROUILLE))
-                {
-                    return resOrdre[0];
-                }
-                return null;//l'ordre actif n'est pas un ordre de mouvement
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
             }
 
             /// <summary>
@@ -511,14 +515,17 @@ namespace vaoc
             /// <returns>ordre de mouvement du pion, null si aucun</returns>
             public TAB_ORDRERow SeFortifier(int ID_PION)
             {
+                TAB_ORDRERow ligneOrdreRetour = null;
                 string tri = "ID_ORDRE";
                 string requete = string.Format("(ID_PION={0}) AND (I_ORDRE_TYPE={1})", ID_PION, Constantes.ORDRES.SEFORTIFIER);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
-                if (0 == resOrdre.Length)
+                if (0 != resOrdre.Length)
                 {
-                    return null;
+                    ligneOrdreRetour = resOrdre[0];
                 }
-                return resOrdre[0];
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
             }
 
             /// <summary>
@@ -528,14 +535,17 @@ namespace vaoc
             /// <returns>ordre courant du pion, null si aucun</returns>
             public TAB_ORDRERow Courant(int ID_PION)
             {
+                TAB_ORDRERow ligneOrdreRetour = null;
                 string requete = string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL", ID_PION);
                 string tri = "ID_ORDRE";
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
-                if (0 == resOrdre.Length)
+                if (0 != resOrdre.Length)
                 {
-                    return null;
+                    ligneOrdreRetour = resOrdre[0];
                 }
-                return resOrdre[0];
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
             }
 
             /// <summary>
@@ -545,14 +555,17 @@ namespace vaoc
             /// <returns>ordre courant du pion, null si aucun</returns>
             public TAB_ORDRERow Premier(int ID_PION)
             {
+                TAB_ORDRERow ligneOrdreRetour = null;
                 string requete = string.Format("ID_PION={0}", ID_PION);
                 string tri = "ID_ORDRE";
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);                
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
-                if (0 == resOrdre.Length)
+                if (0 != resOrdre.Length)
                 {
-                    return null;
+                    ligneOrdreRetour = resOrdre[0];
                 }
-                return resOrdre[0];
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
             }
         }
 

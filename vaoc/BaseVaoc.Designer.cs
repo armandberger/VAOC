@@ -10,8 +10,6 @@
 
 #pragma warning disable 1591
 
-using System;
-
 namespace vaoc {
     
     
@@ -11340,10 +11338,32 @@ namespace vaoc {
                 this.columnID_ORDRE.AutoIncrementSeed = 1;
                 this.columnID_ORDRE.AllowDBNull = false;
                 this.columnID_ORDRE.Unique = true;
+                this.columnID_ORDRE_TRANSMIS.AllowDBNull = false;
+                this.columnID_ORDRE_SUIVANT.AllowDBNull = false;
+                this.columnID_ORDRE_WEB.AllowDBNull = false;
                 this.columnI_ORDRE_TYPE.AllowDBNull = false;
+                this.columnID_PION.AllowDBNull = false;
+                this.columnID_CASE_DEPART.AllowDBNull = false;
+                this.columnI_EFFECTIF_DEPART.AllowDBNull = false;
                 this.columnI_EFFECTIF_DEPART.Caption = "I_TYPE";
+                this.columnID_CASE_DESTINATION.AllowDBNull = false;
                 this.columnID_CASE_DESTINATION.Caption = "ID_CASE_ARRIVEE_RENFORT";
+                this.columnID_NOM_DESTINATION.AllowDBNull = false;
+                this.columnI_EFFECTIF_DESTINATION.AllowDBNull = false;
                 this.columnI_EFFECTIF_DESTINATION.Caption = "I_TYPE";
+                this.columnI_TOUR_DEBUT.AllowDBNull = false;
+                this.columnI_PHASE_DEBUT.AllowDBNull = false;
+                this.columnI_TOUR_FIN.AllowDBNull = false;
+                this.columnI_PHASE_FIN.AllowDBNull = false;
+                this.columnID_MESSAGE.AllowDBNull = false;
+                this.columnID_DESTINATAIRE.AllowDBNull = false;
+                this.columnID_CIBLE.AllowDBNull = false;
+                this.columnID_DESTINATAIRE_CIBLE.AllowDBNull = false;
+                this.columnID_BATAILLE.AllowDBNull = false;
+                this.columnI_ZONE_BATAILLE.AllowDBNull = false;
+                this.columnI_HEURE_DEBUT.AllowDBNull = false;
+                this.columnI_DUREE.AllowDBNull = false;
+                this.columnI_ENGAGEMENT.AllowDBNull = false;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -26582,13 +26602,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_ORDRE_TRANSMIS {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_TRANSMISColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_ORDRE_TRANSMIS\' dans la table \'TAB_ORDRE\' est DBNul" +
-                                "l.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_TRANSMISColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_ORDRE_TRANSMISColumn] = value;
@@ -26599,13 +26613,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_ORDRE_SUIVANT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_SUIVANTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_ORDRE_SUIVANT\' dans la table \'TAB_ORDRE\' est DBNull" +
-                                ".", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_SUIVANTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_ORDRE_SUIVANTColumn] = value;
@@ -26616,12 +26624,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_ORDRE_WEB {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_WEBColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_ORDRE_WEB\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_ORDRE_WEBColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_ORDRE_WEBColumn] = value;
@@ -26643,12 +26646,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_PION {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_PIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_PION\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_PIONColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_PIONColumn] = value;
@@ -26659,12 +26657,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_CASE_DEPART {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_CASE_DEPARTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_CASE_DEPART\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_CASE_DEPARTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_CASE_DEPARTColumn] = value;
@@ -26675,13 +26668,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_EFFECTIF_DEPART {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_EFFECTIF_DEPARTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_EFFECTIF_DEPART\' dans la table \'TAB_ORDRE\' est DBNul" +
-                                "l.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_EFFECTIF_DEPARTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_EFFECTIF_DEPARTColumn] = value;
@@ -26692,13 +26679,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_CASE_DESTINATION {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_CASE_DESTINATIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_CASE_DESTINATION\' dans la table \'TAB_ORDRE\' est DBN" +
-                                "ull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_CASE_DESTINATIONColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_CASE_DESTINATIONColumn] = value;
@@ -26709,13 +26690,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_NOM_DESTINATION {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_NOM_DESTINATIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_NOM_DESTINATION\' dans la table \'TAB_ORDRE\' est DBNu" +
-                                "ll.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_NOM_DESTINATIONColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_NOM_DESTINATIONColumn] = value;
@@ -26726,13 +26701,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_EFFECTIF_DESTINATION {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_EFFECTIF_DESTINATIONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_EFFECTIF_DESTINATION\' dans la table \'TAB_ORDRE\' est " +
-                                "DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_EFFECTIF_DESTINATIONColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_EFFECTIF_DESTINATIONColumn] = value;
@@ -26743,12 +26712,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_TOUR_DEBUT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_TOUR_DEBUTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_DEBUT\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_TOUR_DEBUTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_TOUR_DEBUTColumn] = value;
@@ -26759,12 +26723,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_PHASE_DEBUT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_PHASE_DEBUTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PHASE_DEBUT\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_PHASE_DEBUTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_PHASE_DEBUTColumn] = value;
@@ -26775,12 +26734,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_TOUR_FIN {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_TOUR_FINColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_FIN\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_TOUR_FINColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_TOUR_FINColumn] = value;
@@ -26791,12 +26745,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_PHASE_FIN {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_PHASE_FINColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PHASE_FIN\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_PHASE_FINColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_PHASE_FINColumn] = value;
@@ -26807,12 +26756,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_MESSAGE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_MESSAGEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_MESSAGE\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_MESSAGEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_MESSAGEColumn] = value;
@@ -26823,13 +26767,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_DESTINATAIRE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_DESTINATAIREColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_DESTINATAIRE\' dans la table \'TAB_ORDRE\' est DBNull." +
-                                "", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_DESTINATAIREColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_DESTINATAIREColumn] = value;
@@ -26840,12 +26778,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_CIBLE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_CIBLEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_CIBLE\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_CIBLEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_CIBLEColumn] = value;
@@ -26856,13 +26789,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_DESTINATAIRE_CIBLE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_DESTINATAIRE_CIBLEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_DESTINATAIRE_CIBLE\' dans la table \'TAB_ORDRE\' est D" +
-                                "BNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_DESTINATAIRE_CIBLEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_DESTINATAIRE_CIBLEColumn] = value;
@@ -26873,12 +26800,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int ID_BATAILLE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.ID_BATAILLEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_BATAILLE\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.ID_BATAILLEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.ID_BATAILLEColumn] = value;
@@ -26889,13 +26811,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_ZONE_BATAILLE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_ZONE_BATAILLEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ZONE_BATAILLE\' dans la table \'TAB_ORDRE\' est DBNull." +
-                                "", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_ZONE_BATAILLEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_ZONE_BATAILLEColumn] = value;
@@ -26906,12 +26822,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_HEURE_DEBUT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_HEURE_DEBUTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_HEURE_DEBUT\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_HEURE_DEBUTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_HEURE_DEBUTColumn] = value;
@@ -26922,12 +26833,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_DUREE {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_DUREEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_DUREE\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_DUREEColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_DUREEColumn] = value;
@@ -26938,280 +26844,11 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public int I_ENGAGEMENT {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_ORDRE.I_ENGAGEMENTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT\' dans la table \'TAB_ORDRE\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_ORDRE.I_ENGAGEMENTColumn]));
                 }
                 set {
                     this[this.tableTAB_ORDRE.I_ENGAGEMENTColumn] = value;
                 }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_ORDRE_TRANSMISNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_ORDRE_TRANSMISColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_ORDRE_TRANSMISNull() {
-                this[this.tableTAB_ORDRE.ID_ORDRE_TRANSMISColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_ORDRE_SUIVANTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_ORDRE_SUIVANTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_ORDRE_SUIVANTNull() {
-                this[this.tableTAB_ORDRE.ID_ORDRE_SUIVANTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_ORDRE_WEBNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_ORDRE_WEBColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_ORDRE_WEBNull() {
-                this[this.tableTAB_ORDRE.ID_ORDRE_WEBColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_PIONNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_PIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_PIONNull() {
-                this[this.tableTAB_ORDRE.ID_PIONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_CASE_DEPARTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_CASE_DEPARTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_CASE_DEPARTNull() {
-                this[this.tableTAB_ORDRE.ID_CASE_DEPARTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_EFFECTIF_DEPARTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_EFFECTIF_DEPARTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_EFFECTIF_DEPARTNull() {
-                this[this.tableTAB_ORDRE.I_EFFECTIF_DEPARTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_CASE_DESTINATIONNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_CASE_DESTINATIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_CASE_DESTINATIONNull() {
-                this[this.tableTAB_ORDRE.ID_CASE_DESTINATIONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_NOM_DESTINATIONNull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_NOM_DESTINATIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_NOM_DESTINATIONNull() {
-                this[this.tableTAB_ORDRE.ID_NOM_DESTINATIONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_EFFECTIF_DESTINATIONNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_EFFECTIF_DESTINATIONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_EFFECTIF_DESTINATIONNull() {
-                this[this.tableTAB_ORDRE.I_EFFECTIF_DESTINATIONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_TOUR_DEBUTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_TOUR_DEBUTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_TOUR_DEBUTNull() {
-                this[this.tableTAB_ORDRE.I_TOUR_DEBUTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_PHASE_DEBUTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_PHASE_DEBUTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_PHASE_DEBUTNull() {
-                this[this.tableTAB_ORDRE.I_PHASE_DEBUTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_TOUR_FINNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_TOUR_FINColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_TOUR_FINNull() {
-                this[this.tableTAB_ORDRE.I_TOUR_FINColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_PHASE_FINNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_PHASE_FINColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_PHASE_FINNull() {
-                this[this.tableTAB_ORDRE.I_PHASE_FINColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_MESSAGENull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_MESSAGEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_MESSAGENull() {
-                this[this.tableTAB_ORDRE.ID_MESSAGEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_DESTINATAIRENull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_DESTINATAIREColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_DESTINATAIRENull() {
-                this[this.tableTAB_ORDRE.ID_DESTINATAIREColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_CIBLENull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_CIBLEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_CIBLENull() {
-                this[this.tableTAB_ORDRE.ID_CIBLEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_DESTINATAIRE_CIBLENull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_DESTINATAIRE_CIBLEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_DESTINATAIRE_CIBLENull() {
-                this[this.tableTAB_ORDRE.ID_DESTINATAIRE_CIBLEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsID_BATAILLENull() {
-                return this.IsNull(this.tableTAB_ORDRE.ID_BATAILLEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetID_BATAILLENull() {
-                this[this.tableTAB_ORDRE.ID_BATAILLEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_ZONE_BATAILLENull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_ZONE_BATAILLEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_ZONE_BATAILLENull() {
-                this[this.tableTAB_ORDRE.I_ZONE_BATAILLEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_HEURE_DEBUTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_HEURE_DEBUTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_HEURE_DEBUTNull() {
-                this[this.tableTAB_ORDRE.I_HEURE_DEBUTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_DUREENull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_DUREEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_DUREENull() {
-                this[this.tableTAB_ORDRE.I_DUREEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsI_ENGAGEMENTNull() {
-                return this.IsNull(this.tableTAB_ORDRE.I_ENGAGEMENTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetI_ENGAGEMENTNull() {
-                this[this.tableTAB_ORDRE.I_ENGAGEMENTColumn] = global::System.Convert.DBNull;
             }
         }
         

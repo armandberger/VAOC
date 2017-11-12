@@ -2197,6 +2197,7 @@ namespace vaoc
                                           && (0 == Pion.I_ZONE_BATAILLE || 1 == Pion.I_ZONE_BATAILLE || 2 == Pion.I_ZONE_BATAILLE)
                                           select Pion.ID_PION;
                  * */
+                Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);                
                 var resultComplet = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
                                     from Pion in Donnees.m_donnees.TAB_PION
                                     where (BataillePion.ID_PION == Pion.ID_PION)
@@ -2292,6 +2293,7 @@ namespace vaoc
                     }
                 }
 
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 for (i = 0; i < 6; i++)
                 {
                     if (valeurTactique[i] >= 0)
@@ -2388,42 +2390,30 @@ namespace vaoc
                     Donnees.TAB_PIONRow lignePionChef = lignePionFuite.proprietaire;
                     Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
-                        -1,//ID_ORDRE_TRANSMIS
-                        -1,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
-                        -1,///ID_ORDRE_WEB
+                        Constantes.NULLENTIER,//ID_ORDRE_TRANSMIS
+                        Constantes.NULLENTIER,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
+                        Constantes.NULLENTIER,///ID_ORDRE_WEB
                         Constantes.ORDRES.MOUVEMENT,
                         lignePionFuite.ID_PION,
                         lignePionFuite.ID_CASE,
                         lignePionFuite.I_INFANTERIE + lignePionFuite.I_CAVALERIE + lignePionFuite.I_ARTILLERIE,
                         lignePionChef.ID_CASE,
-                        -1,//id ville de destination
+                        Constantes.NULLENTIER,//id ville de destination
                         0,//I_EFFECTIF_DESTINATION
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
                         Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
-                        -1,//I_TOUR_FIN
-                        -1,//I_PHASE_FIN
-                        -1,//ID_MESSAGE
-                        -1,//ID_DESTINATAIRE
-                        -1,//ID_CIBLE
-                        -1,//ID_DESTINATAIRE_CIBLE
-                        -1,//null
-                        -1,//I_ZONE_BATAILLE
+                        Constantes.NULLENTIER,//I_TOUR_FIN
+                        Constantes.NULLENTIER,//I_PHASE_FIN
+                        Constantes.NULLENTIER,//ID_MESSAGE
+                        Constantes.NULLENTIER,//ID_DESTINATAIRE
+                        Constantes.NULLENTIER,//ID_CIBLE
+                        Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                        Constantes.NULLENTIER,//ID_BATAILLE
+                        Constantes.NULLENTIER,//I_ZONE_BATAILLE
                         Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_HEURE_DEBUT
                         Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL - Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_DUREE
-                        -1//I_ENGAGEMENT
+                        Constantes.NULLENTIER//I_ENGAGEMENT
                         );//ID_BATAILLE
-                    ligneOrdre.SetID_ORDRE_TRANSMISNull();
-                    ligneOrdre.SetID_ORDRE_SUIVANTNull();
-                    ligneOrdre.SetID_ORDRE_WEBNull();
-                    ligneOrdre.SetID_MESSAGENull();
-                    ligneOrdre.SetID_DESTINATAIRENull();
-                    ligneOrdre.SetID_BATAILLENull();
-                    ligneOrdre.SetI_TOUR_FINNull();
-                    ligneOrdre.SetI_PHASE_FINNull();
-                    ligneOrdre.SetID_NOM_DESTINATIONNull();
-                    ligneOrdre.SetID_CIBLENull();
-                    ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
-                    ligneOrdre.SetI_ENGAGEMENTNull();
                     Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 }
                 else

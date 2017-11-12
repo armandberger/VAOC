@@ -558,7 +558,7 @@ namespace vaoc
                 TAB_ORDRERow ligneOrdreRetour = null;
                 string requete = string.Format("ID_PION={0}", ID_PION);
                 string tri = "ID_ORDRE";
-                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);                
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
                 if (0 != resOrdre.Length)
                 {
@@ -571,6 +571,18 @@ namespace vaoc
 
         partial class TAB_ORDRERow
         {
+            
+            public bool IsI_TOUR_FINNull() { return (Constantes.NULLENTIER == this.I_TOUR_FIN); }
+            public bool IsI_PHASE_FINNull() { return (Constantes.NULLENTIER == this.I_PHASE_FIN); }
+            public bool IsI_HEURE_DEBUTNull() { return (Constantes.NULLENTIER == this.I_HEURE_DEBUT); }
+            public bool IsI_DUREENull() { return (Constantes.NULLENTIER == this.I_DUREE); }
+            public bool IsID_ORDRE_SUIVANTNull() { return (Constantes.NULLENTIER == this.ID_ORDRE_SUIVANT); }
+            public bool IsID_CASE_DESTINATIONNull() { return (Constantes.NULLENTIER == this.ID_CASE_DESTINATION); }
+            public bool IsID_CIBLENull() { return (Constantes.NULLENTIER == this.ID_CIBLE); }
+            public bool IsID_ORDRE_TRANSMISNull() { return (Constantes.NULLENTIER == this.ID_ORDRE_TRANSMIS); }
+            public bool IsID_MESSAGENull() { return (Constantes.NULLENTIER == this.ID_MESSAGE); }
+            public bool IsID_DESTINATAIRENull() { return (Constantes.NULLENTIER == this.ID_DESTINATAIRE); }
+
             /// <summary>
             /// renvoie l'ordre suivant de l'ordre courant
             /// </summary>
@@ -614,6 +626,36 @@ namespace vaoc
                     if (this.IsID_MESSAGENull()) { return null; }
                     return m_donnees.TAB_MESSAGE.FindByID_MESSAGE(this.ID_MESSAGE);
                 }
+            }
+
+            internal void SetID_CIBLENull()
+            {
+                this.ID_CIBLE = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_DESTINATAIRE_CIBLENull()
+            {
+                this.ID_DESTINATAIRE_CIBLE = Constantes.NULLENTIER; ;
+            }
+
+            internal void SetID_NOM_DESTINATIONNull()
+            {
+                this.ID_NOM_DESTINATION = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_ORDRE_TRANSMISNull()
+            {
+                this.ID_ORDRE_TRANSMIS = Constantes.NULLENTIER;
+            }
+
+            internal void SetID_ORDRE_SUIVANTNull()
+            {
+                this.ID_ORDRE_SUIVANT = Constantes.NULLENTIER;
+            }
+
+            internal void SetI_ENGAGEMENTNull()
+            {
+                this.I_ENGAGEMENT = Constantes.NULLENTIER;
             }
         }
 

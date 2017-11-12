@@ -1421,42 +1421,29 @@ namespace vaoc
                     //et maintenant, un ordre de mouvement
                     Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
-                        -1,//id_ordre_transmis
-                        -1,//id_ordre_suivant
-                        -1,
+                        Constantes.NULLENTIER,//id_ordre_transmis
+                        Constantes.NULLENTIER,//id_ordre_suivant
+                        Constantes.NULLENTIER,
                         Constantes.ORDRES.MESSAGE,
                         lignePionMessager.ID_PION,
                         lignePionMessager.ID_CASE,
                         0,//I_EFFECTIF_DEPART
                         (idCaseDestination.HasValue) ? idCaseDestination.Value : lignePionDestinataire.ID_CASE,
-                        -1,//id nom destination
+                        Constantes.NULLENTIER,//id nom destination
                         0,//I_EFFECTIF_DESTINATION
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
                         Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
-                        0,//I_TOUR_FIN
-                        0,//I_PHASE_FIN
+                        Constantes.NULLENTIER,//I_TOUR_FIN
+                        Constantes.NULLENTIER,//I_PHASE_FIN
                         ligneMessage.ID_MESSAGE,
                         lignePionDestinataire.ID_PION,
-                        -1,//ID_CIBLE
-                        -1,//ID_DESTINATAIRE_CIBLE
-                        -1,//ID_BATAILLE
-                        -1,//I_ZONE_BATAILLE
-                        0,//I_HEURE_DEBUT
-                        24,//I_DUREE
-                        0);//I_ENGAGEMENT
-                    ligneOrdre.SetID_ORDRE_TRANSMISNull();
-                    ligneOrdre.SetID_ORDRE_SUIVANTNull();
-                    ligneOrdre.SetID_ORDRE_WEBNull();
-                    ligneOrdre.SetID_BATAILLENull();
-                    //ligneOrdre.SetI_TOUR_DEBUTNull();
-                    //ligneOrdre.SetI_PHASE_DEBUTNull();
-                    ligneOrdre.SetI_TOUR_FINNull();
-                    ligneOrdre.SetI_PHASE_FINNull();
-                    ligneOrdre.SetI_HEURE_DEBUTNull();
-                    ligneOrdre.SetI_DUREENull();
-                    ligneOrdre.SetID_NOM_DESTINATIONNull();
-                    ligneOrdre.SetID_CIBLENull();
-                    ligneOrdre.SetID_DESTINATAIRE_CIBLENull();
+                        Constantes.NULLENTIER,//ID_CIBLE
+                        Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                        Constantes.NULLENTIER,//ID_BATAILLE
+                        Constantes.NULLENTIER,//I_ZONE_BATAILLE
+                        Constantes.NULLENTIER,//I_HEURE_DEBUT
+                        Constantes.NULLENTIER,//I_DUREE
+                        Constantes.NULLENTIER);//I_ENGAGEMENT
                     Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                     LogFile.Notifier(string.Format("CreerMessager: envoi d'un message indirect \"{0}\" ID={2} au pion ID={1} par le messager ID={3}", 
                         phrase, lignePionDestinataire.ID_PION, ligneMessage.ID_MESSAGE, lignePionMessager.ID_PION));

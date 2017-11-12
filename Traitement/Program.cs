@@ -90,14 +90,41 @@ namespace Traitement
                 //const string NULLCHAINE = "NAZE";
                 const char NULLCHAR = '?';
                 //string nomfichierSource = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps.vaoc";
-                string nomfichierSource = "C:\\berlin\\berlin_printemps_19_23_90.vaoc";
+                string nomfichierSource = "C:\\berlin\\berlin_printemps_33.vaoc";
                 //string nomfichierDestination = "C:\\Users\\Public\\Documents\\vaoc\\1813\\berlin_printemps_converti.vaoc"; //"C:\\berlin\\berlin_printemps_3.vaoc";
-                string nomfichierDestination = "C:\\berlin\\berlin_printemps_19_23_90_corrige_16.vaoc";
+                string nomfichierDestination = "C:\\berlin\\berlin_printemps_33.vaoc";
 
                 Donnees m_base = new Donnees();
                 Constantes.repertoireDonnees = nomfichierSource;
                 Console.WriteLine("Charger la partie :"+nomfichierSource);
                 Dal.ChargerPartie(nomfichierSource, m_base);
+                Console.WriteLine("Conversion des ordres");
+                foreach (Donnees.TAB_ORDRERow ligneOrdre in m_base.TAB_ORDRE)
+                {
+                    if (ligneOrdre.IsID_BATAILLENull()) { ligneOrdre.ID_BATAILLE = NULLENTIER; }
+                    if (ligneOrdre.IsID_CASE_DEPARTNull()) { ligneOrdre.ID_CASE_DEPART = NULLENTIER; }
+                    if (ligneOrdre.IsID_CASE_DESTINATIONNull()) { ligneOrdre.ID_CASE_DESTINATION = NULLENTIER; }
+                    if (ligneOrdre.IsID_CIBLENull()) { ligneOrdre.ID_CIBLE = NULLENTIER; }
+                    if (ligneOrdre.IsID_DESTINATAIRENull()) { ligneOrdre.ID_DESTINATAIRE = NULLENTIER; }
+                    if (ligneOrdre.IsID_DESTINATAIRE_CIBLENull()) { ligneOrdre.ID_DESTINATAIRE_CIBLE = NULLENTIER; }
+                    if (ligneOrdre.IsID_MESSAGENull()) { ligneOrdre.ID_MESSAGE = NULLENTIER; }
+                    if (ligneOrdre.IsID_NOM_DESTINATIONNull()) { ligneOrdre.ID_NOM_DESTINATION = NULLENTIER; }
+                    if (ligneOrdre.IsID_ORDRE_SUIVANTNull()) { ligneOrdre.ID_ORDRE_SUIVANT = NULLENTIER; }
+                    if (ligneOrdre.IsID_ORDRE_TRANSMISNull()) { ligneOrdre.ID_ORDRE_TRANSMIS = NULLENTIER; }
+                    if (ligneOrdre.IsID_ORDRE_WEBNull()) { ligneOrdre.ID_ORDRE_WEB = NULLENTIER; }
+                    if (ligneOrdre.IsID_PIONNull()) { ligneOrdre.ID_PION = NULLENTIER; }
+                    if (ligneOrdre.IsI_DUREENull()) { ligneOrdre.I_DUREE = NULLENTIER; }
+                    if (ligneOrdre.IsI_EFFECTIF_DEPARTNull()) { ligneOrdre.I_EFFECTIF_DEPART = NULLENTIER; }
+                    if (ligneOrdre.IsI_EFFECTIF_DESTINATIONNull()) { ligneOrdre.I_EFFECTIF_DESTINATION = NULLENTIER; }
+                    if (ligneOrdre.IsI_ENGAGEMENTNull()) { ligneOrdre.I_ENGAGEMENT = NULLENTIER; }
+                    if (ligneOrdre.IsI_HEURE_DEBUTNull()) { ligneOrdre.I_HEURE_DEBUT = NULLENTIER; }
+                    if (ligneOrdre.IsI_PHASE_DEBUTNull()) { ligneOrdre.I_PHASE_DEBUT = NULLENTIER; }
+                    if (ligneOrdre.IsI_PHASE_FINNull()) { ligneOrdre.I_PHASE_FIN = NULLENTIER; }
+                    if (ligneOrdre.IsI_TOUR_DEBUTNull()) { ligneOrdre.I_TOUR_DEBUT = NULLENTIER; }
+                    if (ligneOrdre.IsI_TOUR_FINNull()) { ligneOrdre.I_TOUR_FIN = NULLENTIER; }
+                    if (ligneOrdre.IsI_ZONE_BATAILLENull()) { ligneOrdre.I_ZONE_BATAILLE = NULLENTIER; }
+                }
+
                 Console.WriteLine("Conversion des pions");
                 foreach (Donnees.TAB_PIONRow lignePion in m_base.TAB_PION)
                 {

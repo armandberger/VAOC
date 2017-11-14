@@ -841,10 +841,20 @@ namespace vaoc
             public void InitialisationListeCaseNonCoutMax()
             {
                 m_listeCasesCoutNonMax.Clear();
-                foreach (Donnees.TAB_CASERow ligne in this)
+                //foreach (Donnees.TAB_CASERow ligne in this)
+                //{
+                //    ligne.I_COUT = Constantes.CST_COUTMAX;
+                //}
+
+                string requete = string.Format("I_COUT<>{0}", Constantes.CST_COUTMAX);
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                for (int l = 0; l < changeRows.Count(); l++)
                 {
+                    Donnees.TAB_CASERow ligne = changeRows[l];
                     ligne.I_COUT = Constantes.CST_COUTMAX;
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
             public void ReinitialisationListeCasesNonCoutMax()

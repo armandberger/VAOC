@@ -12,7 +12,7 @@ namespace WaocLib
     /// <summary>
     /// Creates a GIF using .Net GIF encoding and additional animation headers.
     /// </summary>
-    class GifAnime : IDisposable
+    public class GifAnime : IDisposable
     {
         #region Fields
         const long SourceGlobalColorInfoPosition = 10,

@@ -26,6 +26,20 @@ namespace vaoc
             m_repertoireSource = fichierCourant.Substring(0, positionPoint);
         }
 
+        private string RepertoireTour()
+        {
+            string repertoireTour = string.Format("{0}\\{1}_{2}_{3}",
+                m_repertoireSource,
+                Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
+                Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""),
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+            if (!Directory.Exists(repertoireTour))
+            {
+                Directory.CreateDirectory(repertoireTour);
+            }
+            return repertoireTour;
+        }
+
         public bool GenerationWeb()
         {
             string repertoireTour, repertoireCarte, repertoireHistorique;
@@ -37,15 +51,7 @@ namespace vaoc
 
             LogFile.Notifier("Début de GenerationWeb");
             //création du repertoire dedié au tour
-            repertoireTour = string.Format("{0}\\{1}_{2}_{3}",
-                m_repertoireSource, 
-                Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ",""),
-                Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""),
-                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
-            if (!Directory.Exists(repertoireTour))
-            {
-                Directory.CreateDirectory(repertoireTour);
-            }
+            repertoireTour = RepertoireTour();
 
             //création du repertoire dans lequel on met la carte générale            
             repertoireCarte = string.Format("{0}\\{1}_{2}_carte",
@@ -232,74 +238,16 @@ namespace vaoc
             #endregion
 
             #region fichiers de vue des joueurs
-            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            if (!GenerationWebFichiersRoles(false))
             {
-                LogFile.Notifier(string.Format("Images pour le rôle ID_ROLE={0} : {1}",
-                    ligneRole.ID_ROLE, ligneRole.S_NOM));
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
-                if (null == lignePion)
-                {
-                    //le pion arrive peut-être en renfort mais on le signale quand même.
-                    LogFile.Notifier(string.Format("Impossible de trouver le pion ID_PION={0} pour le rôle ID_ROLE={1}. Ce pion arrive en renfort ?",
-                        ligneRole.ID_PION, ligneRole.ID_ROLE));
-                }
-                else
-                {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-                    Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
-                    {
-                        vision = ligneModelePion.I_VISION_NUIT;
-                    }
-                    else
-                    {
-                        vision = ligneModelePion.I_VISION_JOUR;
-                    }
-                    visionGris = 2 * Math.Max(ligneModelePion.I_VISION_NUIT, ligneModelePion.I_VISION_JOUR);
+                LogFile.Notifier("Erreur dans GenerationWebFichiersRoles");
+                return false;
+            }
 
-                    //fichier standard du role (historique)
-                    nomfichier = string.Format("{0}\\carterole_{1}.png",
-                        repertoireTour,
-                        ligneRole.ID_ROLE);
-                    rect = new Rectangle(ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
-                            ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
-                            vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2,
-                            vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2);
-                    rectGris = new Rectangle(ligneCase.I_X - visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
-                            ligneCase.I_Y - visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
-                            visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2,
-                            visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2);
-                    if (!Cartographie.FichierGrise(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, rectGris)) { return false; }
-
-                    //fichier topographique
-                    nomfichier = string.Format("{0}\\carterole_{1}_topographie.png",
-                        repertoireTour,
-                        ligneRole.ID_ROLE);
-                    if (!Cartographie.FichierGrise(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, rectGris)) { return false; }
-
-                    //fichier zoom
-                    nomfichier = string.Format("{0}\\carterole_{1}_zoom.png",
-                        repertoireTour,
-                        ligneRole.ID_ROLE);
-                    if (null == Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
-                    {
-                        //cas d'un fichier trop gros pour être chargé
-                        Cartographie.AfficherUnitesZoom(nomfichier,
-                                                        Math.Max(0, ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
-                                                        Math.Max(0, ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
-                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
-                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
-                                                        );
-                    }
-                    else
-                    {
-                        rect = new Rectangle((int)(Cartographie.rapportZoom * (ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
-                                 (int)(Cartographie.rapportZoom * (ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
-                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2),
-                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2));
-                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
-                    }
-                }
+            if (!GenerationWebFilmRoles())
+            {
+                LogFile.Notifier("Erreur dans GenerationWebFilmRoles");
+                return false;
             }
             #endregion
 
@@ -351,6 +299,143 @@ namespace vaoc
             //Donnees.m_donnees.NettoyageBase();
 
             LogFile.Notifier("Fin de GenerationWeb");
+            return true;
+        }
+
+        /// <summary>
+        /// Crée un fichier gif d'animation  pour chaque rôle
+        /// </summary>
+        /// <returns>true = Ok, false = KO</returns>
+        private bool GenerationWebFilmRoles()
+        {
+            string nomfichier;
+            string repertoireTour = RepertoireTour();
+            int nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+
+            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            {
+                LogFile.Notifier(string.Format("GenerationWebFilmRoles : Film pour le rôle ID_ROLE={0} : {1}",
+                    ligneRole.ID_ROLE, ligneRole.S_NOM));
+                GifAnime gif = new GifAnime(string.Format("{0}\\filmrole_{1}_zoom.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE));
+                for (int phase=0; phase <nbPhases; phase += Constantes.CST_SAUVEGARDE_ECART_PHASES)
+                {
+                    //fichier zoom
+                    nomfichier = string.Format("{0}\\carterole_{1}_{2}_zoom.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE,
+                        phase);
+                    if (File.Exists(nomfichier))
+                    {
+                        Bitmap im = new Bitmap(nomfichier);
+                        gif.WriteFrame(im);
+                    }
+                    else
+                    {
+                        LogFile.Notifier(string.Format("GenerationWebFilmRoles : pas d'image de film le rôle ID_ROLE={0} : {1} : {2}",
+                            ligneRole.ID_ROLE, ligneRole.S_NOM, nomfichier));
+                    }
+                }
+                gif.Dispose();
+            }
+            return true;
+        }
+
+        public bool GenerationWebFichiersRoles(bool bAvecPhase)
+        {
+            string nomfichier;
+            Rectangle rect, rectGris;
+            int vision, visionGris;
+            string repertoireTour = RepertoireTour();
+
+            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            {
+                LogFile.Notifier(string.Format("GenerationWebFichiersRoles : Images pour le rôle ID_ROLE={0} : {1}",
+                    ligneRole.ID_ROLE, ligneRole.S_NOM));
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                if (null == lignePion)
+                {
+                    //le pion arrive peut-être en renfort mais on le signale quand même.
+                    LogFile.Notifier(string.Format("GenerationWebFichiersRoles : Impossible de trouver le pion ID_PION={0} pour le rôle ID_ROLE={1}. Ce pion arrive en renfort ?",
+                        ligneRole.ID_PION, ligneRole.ID_ROLE));
+                }
+                else
+                {
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    {
+                        vision = ligneModelePion.I_VISION_NUIT;
+                    }
+                    else
+                    {
+                        vision = ligneModelePion.I_VISION_JOUR;
+                    }
+                    visionGris = 2 * Math.Max(ligneModelePion.I_VISION_NUIT, ligneModelePion.I_VISION_JOUR);
+
+                    //fichier standard du role (historique)
+                    nomfichier = (bAvecPhase) ?
+                        string.Format("{0}\\carterole_{1}_{2}.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE,
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                        :
+                        string.Format("{0}\\carterole_{1}.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE);
+                    rect = new Rectangle(ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                            ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                            vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2,
+                            vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2);
+                    rectGris = new Rectangle(ligneCase.I_X - visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                            ligneCase.I_Y - visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                            visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2,
+                            visionGris * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2);
+                    if (!Cartographie.FichierGrise(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, rectGris)) { return false; }
+
+                    //fichier topographique
+                    nomfichier = (bAvecPhase) ?
+                        string.Format("{0}\\carterole_{1}_{2}_topographie.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE,
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                        :
+                        string.Format("{0}\\carterole_{1}_topographie.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE);
+                    if (!Cartographie.FichierGrise(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, rectGris)) { return false; }
+
+                    //fichier zoom
+                    nomfichier = (bAvecPhase) ?
+                        string.Format("{0}\\carterole_{1}_{2}_zoom.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE,
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                        : 
+                        string.Format("{0}\\carterole_{1}_zoom.png",
+                        repertoireTour,
+                        ligneRole.ID_ROLE);
+                    if (null == Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
+                    {
+                        //cas d'un fichier trop gros pour être chargé
+                        Cartographie.AfficherUnitesZoom(nomfichier,
+                                                        Math.Max(0, ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Max(0, ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCase.I_X + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE),
+                                                        Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1, ligneCase.I_Y + vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                                                        );
+                    }
+                    else
+                    {
+                        rect = new Rectangle((int)(Cartographie.rapportZoom * (ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
+                                 (int)(Cartographie.rapportZoom * (ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
+                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2),
+                                (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2));
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                    }
+                }
+            }
             return true;
         }
 

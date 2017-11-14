@@ -399,17 +399,23 @@ namespace vaoc
 
             internal void SetID_MODELE_TERRAIN_SI_OCCUPENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 this.ID_MODELE_TERRAIN_SI_OCCUPE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
             internal void SetID_PROPRIETAIRENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 this.ID_PROPRIETAIRE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
             internal void SetID_NOUVEAU_PROPRIETAIRENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 this.ID_NOUVEAU_PROPRIETAIRE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
             internal bool IsID_NOUVEAU_PROPRIETAIRENull()

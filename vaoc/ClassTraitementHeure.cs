@@ -312,6 +312,13 @@ namespace vaoc
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        
+                        ClassTraitementWeb webRoles = new ClassTraitementWeb(fichierCourant);
+                        if (!webRoles.GenerationWebFichiersRoles(true))
+                        {
+                            LogFile.Notifier("Erreur durant la génération des fichiers roles Web. Consultez le fichier de log");
+                            return false;
+                        }
                     }
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;

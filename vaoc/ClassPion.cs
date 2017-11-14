@@ -1361,8 +1361,10 @@ namespace vaoc
                     return true;
                 }
                 this.I_DISTANCE_A_PARCOURIR = 0;
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 if (!ligneOrdre.IsID_ORDRE_SUIVANTNull() && ligneOrdre.ID_ORDRE_SUIVANT >= 0)
                 {
                     //on recherche que le nouvel ordre et on indique que le nouvel ordre vient de demarrer
@@ -1378,11 +1380,13 @@ namespace vaoc
                     }
                     else
                     {
+                        Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                         ligneOrdreSuivant.ID_PION = this.ID_PION;
                         ligneOrdreSuivant.ID_CASE_DEPART = this.ID_CASE;
                         ligneOrdreSuivant.I_TOUR_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                         ligneOrdreSuivant.I_PHASE_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                         ligneOrdreSuivant.I_EFFECTIF_DEPART = this.effectifTotalEnMouvement;
+                        Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
 
                         if (bEnvoieMessageSiOrdreSuivant)
                         {
@@ -1410,9 +1414,9 @@ namespace vaoc
 
                 //recherche les ordres existants
                 requete = (idordre == -1) ? string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL", ID_PION) :
-                                          string.Format("ID_PION={0} AND ID_ORDRE< {1} AND I_TOUR_FIN IS NULL", ID_PION, idordre);
-                TAB_ORDRERow[] resOrdres = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
+                                          string.Format("ID_PION={0} AND ID_ORDRE< {1} AND I_TOUR_FIN = {2}", ID_PION, idordre, Constantes.NULLENTIER);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                TAB_ORDRERow[] resOrdres = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
                 foreach (TAB_ORDRERow ligneOrdre in resOrdres)
                 {
                     ligneOrdre.I_TOUR_FIN = m_donnees.tableTAB_PARTIE[0].I_TOUR;
@@ -1546,7 +1550,7 @@ namespace vaoc
                 // et qui ne soient pas encore affecté (id_pion = -1)
                 //requete = string.Format("I_TYPE={0} AND ID_PION_EMETTEUR={1} AND I_TOUR_ARRIVEE IS NOT NULL", Constantes.ORDRES.PATROUILLE, ID_PION);
                 //TAB_MESSAGERow[] resMessages = (TAB_MESSAGERow[])m_donnees.TAB_MESSAGE.Select(requete);
-                requete = string.Format("I_ORDRE_TYPE={0} AND ID_DESTINATAIRE={1} AND ID_PION=-1 AND I_TOUR_FIN IS NULL", Constantes.ORDRES.PATROUILLE, ID_PION);
+                requete = string.Format("I_ORDRE_TYPE={0} AND ID_DESTINATAIRE={1} AND ID_PION = {2} AND I_TOUR_FIN = {2}", Constantes.ORDRES.PATROUILLE, ID_PION, Constantes.NULLENTIER);
                 TAB_ORDRERow[] resMessages = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
                 if (resMessages.Count() > 0)
                 {

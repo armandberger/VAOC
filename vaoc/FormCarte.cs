@@ -219,7 +219,7 @@ namespace vaoc
                         //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                         //tableCase.AcceptChanges();//on valide les ajouts du traitement précédent
                         labelTraitement.Text = "cases de remplacement";
-                        m_tableCaseTraitement = (Donnees.TAB_CASERow[])m_tableCase.Select("ID_MODELE_TERRAIN_SI_OCCUPE IS NULL");
+                        m_tableCaseTraitement = (Donnees.TAB_CASERow[])m_tableCase.Select(string.Format("ID_MODELE_TERRAIN_SI_OCCUPE = {0}", Constantes.NULLENTIER));
                         progressBar.Maximum = m_imageCarte.Width;//m_tableCaseTraitement.Length;
                         m_dateDebut = DateTime.Now;
                         buttonGeneration.Text = "Arrêt";

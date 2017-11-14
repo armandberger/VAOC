@@ -2197,7 +2197,8 @@ namespace vaoc
                                           && (0 == Pion.I_ZONE_BATAILLE || 1 == Pion.I_ZONE_BATAILLE || 2 == Pion.I_ZONE_BATAILLE)
                                           select Pion.ID_PION;
                  * */
-                Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);                
+                Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 var resultComplet = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
                                     from Pion in Donnees.m_donnees.TAB_PION
                                     where (BataillePion.ID_PION == Pion.ID_PION)
@@ -2293,6 +2294,7 @@ namespace vaoc
                     }
                 }
 
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 for (i = 0; i < 6; i++)
                 {

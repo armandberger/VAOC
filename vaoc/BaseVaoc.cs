@@ -494,7 +494,7 @@ namespace vaoc
                 }
                  */
                 //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de mouvement
-                string requete = string.Format("(ID_PION={0}) AND (I_TOUR_FIN IS NULL) AND (I_PHASE_FIN IS NULL)", ID_PION);
+                string requete = string.Format("(ID_PION={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1})", ID_PION, Constantes.NULLENTIER);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
                 if (0 != resOrdre.Length)
@@ -536,7 +536,7 @@ namespace vaoc
             public TAB_ORDRERow Courant(int ID_PION)
             {
                 TAB_ORDRERow ligneOrdreRetour = null;
-                string requete = string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL", ID_PION);
+                string requete = string.Format("ID_PION={0} AND I_TOUR_FIN = {1} AND I_PHASE_FIN = {1}", ID_PION, Constantes.NULLENTIER);
                 string tri = "ID_ORDRE";
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);

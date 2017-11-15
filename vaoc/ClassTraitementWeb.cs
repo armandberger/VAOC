@@ -26,13 +26,13 @@ namespace vaoc
             m_repertoireSource = fichierCourant.Substring(0, positionPoint);
         }
 
-        private string RepertoireTour()
+        private string RepertoireTour(int decalageTour)
         {
             string repertoireTour = string.Format("{0}\\{1}_{2}_{3}",
                 m_repertoireSource,
                 Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
                 Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""),
-                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + decalageTour);
             if (!Directory.Exists(repertoireTour))
             {
                 Directory.CreateDirectory(repertoireTour);
@@ -51,7 +51,7 @@ namespace vaoc
 
             LogFile.Notifier("Début de GenerationWeb");
             //création du repertoire dedié au tour
-            repertoireTour = RepertoireTour();
+            repertoireTour = RepertoireTour(0);
 
             //création du repertoire dans lequel on met la carte générale            
             repertoireCarte = string.Format("{0}\\{1}_{2}_carte",
@@ -309,21 +309,22 @@ namespace vaoc
         private bool GenerationWebFilmRoles()
         {
             string nomfichier;
-            string repertoireTour = RepertoireTour();
+            string repertoireTourSource = RepertoireTour(-1);
+            string repertoireTourDestination = RepertoireTour(0);
             int nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
 
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
                 LogFile.Notifier(string.Format("GenerationWebFilmRoles : Film pour le rôle ID_ROLE={0} : {1}",
                     ligneRole.ID_ROLE, ligneRole.S_NOM));
-                GifAnime gif = new GifAnime(string.Format("{0}\\filmrole_{1}_zoom.png",
-                        repertoireTour,
+                GifAnime gif = new GifAnime(string.Format("{0}\\filmrole_{1}_zoom.gif",
+                        repertoireTourDestination,
                         ligneRole.ID_ROLE));
                 for (int phase=0; phase <nbPhases; phase += Constantes.CST_SAUVEGARDE_ECART_PHASES)
                 {
                     //fichier zoom
                     nomfichier = string.Format("{0}\\carterole_{1}_{2}_zoom.png",
-                        repertoireTour,
+                        repertoireTourSource,
                         ligneRole.ID_ROLE,
                         phase);
                     if (File.Exists(nomfichier))
@@ -347,7 +348,7 @@ namespace vaoc
             string nomfichier;
             Rectangle rect, rectGris;
             int vision, visionGris;
-            string repertoireTour = RepertoireTour();
+            string repertoireTour = RepertoireTour(0);
 
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {

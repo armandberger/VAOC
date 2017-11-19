@@ -66,10 +66,12 @@ namespace vaoc
             }
             try
             {
-                if ((null == m_imageCarteGris || bForcage) && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_GRISNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS.Length > 0)
+                //dorénavant on prend la même carte que la carte historique
+                if (null == m_imageCarteGris || bForcage) /*&& !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_GRISNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS.Length > 0)*/
                 {
                     if (null != m_imageCarteGris) { m_imageCarteGris.Dispose(); }
-                    m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS);
+                    //m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS);
+                    m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
                 }
             }
             catch (Exception ex)
@@ -475,13 +477,13 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 return false;
             }
             RecadrerRect(imageSource, ref rect);
-            if (null == m_imageCarteGris)
-            {
-                RecadrerRect(imageSource, ref rectGris);
-                imageFinale = new Bitmap(rectGris.Width, rectGris.Height, imageSource.PixelFormat);
+            //if (null == m_imageCarteGris)
+            //{
+                RecadrerRect(m_imageCarteGris, ref rectGris);
+                imageFinale = new Bitmap(rectGris.Width, rectGris.Height, m_imageCarteGris.PixelFormat);
                 graph = Graphics.FromImage(imageFinale);
                 //première copie
-                graph.DrawImage(imageSource, 0, 0, rectGris, GraphicsUnit.Pixel);
+                graph.DrawImage(m_imageCarteGris, 0, 0, rectGris, GraphicsUnit.Pixel);
                 for (int x = 0; x < rectGris.Width; x++ )
                 {
                     for (int y = 0; y < rectGris.Height; y++)
@@ -498,6 +500,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 }
                 //recopie des pixels non grisés
                 graph.DrawImage(imageSource, rect.X - rectGris.X, rect.Y - rectGris.Y, rect, GraphicsUnit.Pixel);
+            /*
             }
             else
             {
@@ -527,6 +530,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 graph.DrawImage(m_imageCarteGris, 0, 0, rectGris, GraphicsUnit.Pixel);
                 graph.DrawImage(imageSource, rect.X - rectGris.X, rect.Y - rectGris.Y, rect, GraphicsUnit.Pixel);
             }
+            */
             //sauvegarde
             imageFinale.Save(nomFichierFinal, ImageFormat.Png);
 

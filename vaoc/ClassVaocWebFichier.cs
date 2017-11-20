@@ -662,11 +662,10 @@ namespace vaoc
             {
                 int bPont = (ligneNom.B_PONT) ? 1 : 0;
                 string nomCarte = (ligneNom.IsS_NOM_INDEXNull() || ligneNom.S_NOM_INDEX == string.Empty) ? ligneNom.S_NOM : ligneNom.S_NOM_INDEX;
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNom.ID_CASE);
                 requete = string.Format("INSERT INTO `tab_vaoc_noms_carte` (`ID_NOM`, `ID_PARTIE`, `S_NOM`, `I_X`, `I_Y`, `B_PONT`) VALUES ({0}, {1}, '{2}', {3}, {4}, {5});",
                                         ligneNom.ID_NOM, idPartie, 
-                                        Constantes.ChaineSQL(ligneNom.S_NOM), 
-                                        ligneCase.I_X, ligneCase.I_Y, bPont);
+                                        Constantes.ChaineSQL(ligneNom.S_NOM),
+                                        ligneNom.I_X, ligneNom.I_Y, bPont);
                 AjouterLigne(requete);
             }
 

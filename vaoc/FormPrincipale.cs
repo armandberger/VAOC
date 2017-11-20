@@ -2419,6 +2419,11 @@ namespace vaoc
 
         private void toolStripAfficherUnites_Click(object sender, EventArgs e)
         {
+            AfficherUnites();
+        }
+
+        private void AfficherUnites()
+        {
             //on s'assure que toutes les cases des unités sont bien chargées
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
@@ -2503,8 +2508,12 @@ namespace vaoc
 
         private void creationInternetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //on remet à jour la carte avant de generer les fichiers
-            ConstruireImageCarte();
+            if (!toolStripAfficherUnites.Checked)
+            {
+                //on remet à jour la carte avant de generer les fichiers
+                toolStripAfficherUnites.Checked = true;
+                AfficherUnites();
+            }
             ClassTraitementWeb web = new ClassTraitementWeb(fichierCourant);
             if (!web.GenerationWeb())
             {

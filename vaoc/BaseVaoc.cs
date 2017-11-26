@@ -359,6 +359,7 @@ namespace vaoc
                         char C_NIVEAU_DEPOT
                 )
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 if (id_messageGlobal < 0)
                 {
                     //recherche du plus grand identifiant
@@ -415,7 +416,6 @@ namespace vaoc
                         C_NIVEAU_DEPOT
                 };
                 rowTAB_MESSAGERow.ItemArray = columnValuesArray;
-                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 this.Rows.Add(rowTAB_MESSAGERow);
                 Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 return rowTAB_MESSAGERow;

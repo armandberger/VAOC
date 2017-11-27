@@ -3459,16 +3459,15 @@ namespace vaoc
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                message = string.Format("{0}, ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
+                message = string.Format("{0},ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
                     lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR, vitesse);
                 LogFile.Notifier(message, out messageErreur);
             }
             if (lignePion.I_DISTANCE_A_PARCOURIR <= 0)
             {
                 //faire avancer l'unité si celle-ci n'est pas arrivé à destination
-                message = string.Format("{0}(ID={1}, en mouvement, aucune troupe à destination)", lignePion.S_NOM, lignePion.ID_PION);
-                LogFile.Notifier(message, out messageErreur);
-                message = string.Format("ExecuterMouvementSansEffectif :ligneOrdre.ID_ORDRE={0} ligneOrdre.I_EFFECTIF_DEPART={1}", ligneOrdre.ID_ORDRE, ligneOrdre.I_EFFECTIF_DEPART);
+                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif :  ligneOrdre.ID_ORDRE={2} ligneOrdre.I_EFFECTIF_DEPART={3}",
+                    lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, ligneOrdre.I_EFFECTIF_DEPART);
                 LogFile.Notifier(message, out messageErreur);
 
                 //on l'avance d'une case de plus
@@ -3479,7 +3478,7 @@ namespace vaoc
                 {
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
-                        message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementSansEffectif :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
+                        message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementSansEffectif :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                         LogFile.Notifier(message, out messageErreur);
                         return false;
                     }
@@ -3494,7 +3493,8 @@ namespace vaoc
                     message = string.Format("ExecuterMouvementSansEffectif : SearchPath longueur={0}", m_etoile.PathByNodes.Length);
                      * */
 
-                    message = string.Format("ExecuterMouvementSansEffectif : SearchPath longueur={0} de {1} à {2}", chemin.Count, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
+                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} de {3} à {4}",
+                        lignePion.S_NOM, lignePion.ID_PION, chemin.Count, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
                     LogFile.Notifier(message, out messageErreur);
 
                     //recherche de la case sur le trajet
@@ -3507,7 +3507,7 @@ namespace vaoc
                         lignePionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
                         if (null == lignePionDestinataire)
                         {
-                            message = string.Format("{0}(ID={1}, ExecuterMouvementSansEffectif I pas de destinataire ID_ORDRE:{2})",
+                            message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif I pas de destinataire ID_ORDRE:{2})",
                                 lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE);
                             LogFile.Notifier(message, out messageErreur);
                             return false;
@@ -3521,7 +3521,7 @@ namespace vaoc
                             {
                                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                                 {
-                                    message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif changement en visuel: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
+                                    message = string.Format("{0},ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif changement en visuel: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                                     LogFile.Notifier(message);
                                     return false;
                                 }
@@ -3574,7 +3574,7 @@ namespace vaoc
                 //est on est arrivé à destination ?
                 if (lignePion.ID_CASE==ligneOrdre.ID_CASE_DESTINATION)
                 {
-                    message = string.Format("{0}(ID={1}, fin du mouvement, complètement arrivée)", lignePion.S_NOM, lignePion.ID_PION);
+                    message = string.Format("{0},ID={1}, fin du mouvement, complètement arrivée)", lignePion.S_NOM, lignePion.ID_PION);
                     LogFile.Notifier(message, out messageErreur);
 
                     bool bOrdreTermine = true;
@@ -3907,7 +3907,7 @@ namespace vaoc
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
             if (null == ligneCase)
             {
-                message = string.Format("ExecuterMouvementSansEffectif : impossible de trouver la case courante ID={0}", lignePion.ID_CASE);
+                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : impossible de trouver la case courante ID={2}", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
                 LogFile.Notifier(message, out messageErreur);
                 return false;
             }
@@ -3917,8 +3917,8 @@ namespace vaoc
                 lignePion.RequisitionCase(ligneCase, true, ref nbPlacesOccupees);//note : tous les cas de rencontre entre pions sont gérés dans cette méthode
                 //ligneCase.ID_NOUVEAU_PROPRIETAIRE = lignePion.ID_PION;
 
-                message = string.Format("ExecuterMouvementSansEffectif : pion en ID={0} X={1} Y={2}",
-                    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y);
+                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : pion en ID={2} X={3} Y={4}",
+                    lignePion.S_NOM, lignePion.ID_PION, ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y);
                 LogFile.Notifier(message, out messageErreur);
             }
 
@@ -4188,17 +4188,17 @@ namespace vaoc
             int i, j, id_case_finale, id_case_source;
 
             //faire avancer l'unité si celle-ci n'est pas arrivé à destination
-            message = string.Format("{0}(ID={1}, en ExecuterMouvementAvecEffectifForcesEnRoute, aucune troupe à destination)", lignePion.S_NOM, lignePion.ID_PION);
+            message = string.Format("{0},ID={1}, en ExecuterMouvementAvecEffectifForcesEnRoute, aucune troupe à destination)", lignePion.S_NOM, lignePion.ID_PION);
             LogFile.Notifier(message, out messageErreur);
 
             //on calcule combien de cases occupe le pion
             lignePion.CalculerRepartitionEffectif(lignePion.effectifTotalEnMouvement,
                 out iInfanterie, out iCavalerie, out iArtillerie);
-            message = string.Format("ExecuterMouvementAvecEffectifForcesEnRoute :effectif: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
+            message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute :effectif: i={2} c={3} a={4}", lignePion.S_NOM, lignePion.ID_PION, iInfanterie, iCavalerie, iArtillerie);
             LogFile.Notifier(message, out messageErreur);
 
             encombrement = lignePion.CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
-            message = string.Format("ExecuterMouvementAvecEffectifForcesEnRoute : encombrement={0}", encombrement);
+            message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute : encombrement={2}", lignePion.S_NOM, lignePion.ID_PION, encombrement);
             LogFile.Notifier(message, out messageErreur);
 
             id_case_source = lignePion.ID_CASE;
@@ -4209,7 +4209,7 @@ namespace vaoc
             AStar etoile = new AStar();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
             {
-                message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementAvecEffectifForcesEnRoute: {2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
+                message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementAvecEffectifForcesEnRoute: {2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                 LogFile.Notifier(message, out messageErreur);
                 return false;
             }
@@ -4225,14 +4225,14 @@ namespace vaoc
             }
             if (i >= chemin.Count)
             {
-                message = string.Format("{0}(ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute: impossible de trouver la position du pion sur le parcours !)", 
+                message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute: impossible de trouver la position du pion sur le parcours !)", 
                     lignePion.S_NOM, lignePion.ID_PION);
                 LogFile.Notifier(message, out messageErreur);
                 return false;
             }
             //le général avance d'une case et il est sur la dernière case de la colonne
             id_case_finale = chemin[++i].ID_CASE;
-            message = string.Format("ExecuterMouvementAvecEffectifForcesEnRoute : pion en {0}({1},{2})", chemin[i].ID_CASE, chemin[i].I_X, chemin[i].I_Y);
+            message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute : pion en {2}({3},{4})",lignePion.S_NOM, lignePion.ID_PION, chemin[i].ID_CASE, chemin[i].I_X, chemin[i].I_Y);
             LogFile.Notifier(message, out messageErreur);
 
             // On place les troupes sur le chemin
@@ -4253,7 +4253,7 @@ namespace vaoc
             {
                 lignePion.CalculerRepartitionEffectif(1, out iInfanterie, out iCavalerie, out iArtillerie);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterie + iCavalerie + iArtillerie;
-                message = string.Format("ExecuterMouvementAvecEffectif : premiers effectifs à destination: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
+                message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectif : premiers effectifs à destination: i={2} c={3} a={4}", lignePion.S_NOM, lignePion.ID_PION, iInfanterie, iCavalerie, iArtillerie);
                 LogFile.Notifier(message, out messageErreur);
 
                 //Est-ce que l'on voit un ennemi en arrivant sur cette nouvelle case ? Si oui, message

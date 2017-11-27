@@ -179,13 +179,13 @@ namespace vaoc
             //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
             //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
 
-            Debug.WriteLine(string.Format("Début de AStar.SearchPath de {0} à {1}", StartNode.ID_CASE, EndNode.ID_CASE));
+            //Debug.WriteLine(string.Format("Début de AStar.SearchPath de {0} à {1}", StartNode.ID_CASE, EndNode.ID_CASE));
             m_idNation = -1;
             timeStart = DateTime.Now;
             Initialize(StartNode, EndNode);
 			while ( NextStep() ) {}
             perf = DateTime.Now-timeStart;
-            Debug.WriteLine(string.Format("AStar.SearchPath en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+            //Debug.WriteLine(string.Format("AStar.SearchPath en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
             return PathFound;
 		}
 
@@ -1295,13 +1295,14 @@ namespace vaoc
                             chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE));
                         }
                         perf = DateTime.Now - timeStart;
-                        message = string.Format("RechercheChemin : existant en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
+                        message = string.Format("{0},ID={1}, RechercheChemin : existant en {2} minutes, {3} secondes, {4} millisecondes, lg={5}", 
+                            lignePion.S_NOM, lignePion.ID_PION, perf.Minutes, perf.Seconds, perf.Milliseconds, parcoursExistant.Length);
                         LogFile.Notifier(message, out messageErreur);
                         return true;
                     }
                     //sinon, ce n'est pas le même chemin, il faut donc le recalculer
-                    message = string.Format("RechercheChemin unité avec effectif: différent parcours existant allant de {0} à {1}, chemin demandé de {2} à {3}",
-                        parcoursExistant[0].ID_CASE, parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
+                    message = string.Format("{0},ID={1}, RechercheChemin unité avec effectif: différent parcours existant allant de {2} à {3}, chemin demandé de {4} à {5}",
+                        lignePion.S_NOM, lignePion.ID_PION, parcoursExistant[0].ID_CASE, parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
                         ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
                     LogFile.Notifier(message, out messageErreur);
                     //}
@@ -1352,8 +1353,8 @@ namespace vaoc
             }
 
             //calcul du nouveau parcours
-            message = string.Format("RechercheChemin : SearchPath de {0} ({1},{2}) à {3} ({4},{5})",
-                ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
+            message = string.Format("{0},ID={1}, RechercheChemin : SearchPath de {2} ({3},{4}) à {5} ({6},{7})",
+                lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
             LogFile.Notifier(message, out messageErreur);
             this.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain, idNation);
             if (!this.PathFound)
@@ -1361,12 +1362,12 @@ namespace vaoc
                 //en mode ravitaillement, il peut être normal de ne pas trouver de chemin vers un dépôt
                 if (tipePacours != Constantes.TYPEPARCOURS.RAVITAILLEMENT)
                 {
-                    erreur = string.Format("{0}(ID={1}, erreur sur SearchPath dans RechercheChemin idDepart={2}, idDestination={3})",
+                    erreur = string.Format("{0},ID={1}, erreur sur SearchPath dans RechercheChemin idDepart={2}, idDestination={3})",
                         lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
                     LogFile.Notifier(erreur, out messageErreur);
                     return false;
                 }
-                LogFile.Notifier("RechercheChemin : aucun chemin trouvé");
+                LogFile.Notifier(string.Format("{0},ID={1}, RechercheChemin : aucun chemin trouvé", lignePion.S_NOM, lignePion.ID_PION));
             }
             else
             {
@@ -1441,7 +1442,7 @@ namespace vaoc
             try
             {
                 erreur = string.Empty;
-                Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
+                //Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
                 m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
                 m_nombrePixelParCase = nombrePixelParCase;
                 //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
@@ -1470,7 +1471,7 @@ namespace vaoc
 
                     while (NextSpaceStep()) { }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    //Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                     int i = 0;
                     while (i < _Closed.Count)

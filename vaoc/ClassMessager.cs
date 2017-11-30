@@ -1712,6 +1712,8 @@ namespace vaoc
             }
             else
             {
+                //possible dans le cas d'un ordre d'arrêt, il n'y a plus d'ordre courant
+                CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographiqueOrdre);
                 LogFile.Notifier(string.Format("GenererPhrase l'unité ID={0} n'a pas d'ordre courant", lignePion.ID_PION));
             }
 

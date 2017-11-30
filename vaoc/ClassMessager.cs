@@ -1355,8 +1355,11 @@ namespace vaoc
                 //        var result = from Modele in Donnees.m_donnees.TAB_MODELE_PION
                 //                     where Modele.ID_MODELE_PION==idmodele
                 //                     select Modele.ID_MODELE_PION;
-
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                //dans de rares cas, le destinataire peut bouger entre la création du messager et celle de l'ordre ce qui provoque des erreurs de mouvement
                 lignePionMessager = CreerMessager(lignePionEmetteur);
+                int id_Case_Destination = (idCaseDestination.HasValue) ? idCaseDestination.Value : lignePionDestinataire.ID_CASE;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (null!=lignePionMessager)
                 {
                     //il faut ajouter le message 
@@ -1428,7 +1431,7 @@ namespace vaoc
                         lignePionMessager.ID_PION,
                         lignePionMessager.ID_CASE,
                         0,//I_EFFECTIF_DEPART
-                        (idCaseDestination.HasValue) ? idCaseDestination.Value : lignePionDestinataire.ID_CASE,
+                        id_Case_Destination,
                         Constantes.NULLENTIER,//id nom destination
                         0,//I_EFFECTIF_DESTINATION
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT

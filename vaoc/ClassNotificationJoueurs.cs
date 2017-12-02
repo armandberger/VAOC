@@ -344,6 +344,9 @@ namespace vaoc
                 texte.AppendLine("</div><br/>");
             }
 
+            //date limite pour le prochain tour
+            texte.AppendLine("<div><b>Date limite de remise des ordres : " + Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR.ToString("F") + "</b></div>");
+
             //Rappel de l'adresse du jeu
             texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> vos troupes attendent vos ordres au <a href=\"http://vaoc.free.fr/\">camp de rassemblement.</a></div>");
 

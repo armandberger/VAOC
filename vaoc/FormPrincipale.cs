@@ -1396,7 +1396,7 @@ namespace vaoc
                 {
                     general.nbPointsTotalVictoire = Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE;
                 }
-                if (!Donnees.m_donnees.TAB_PARTIE[0].IsS_NOMNull())
+                if (Constantes.NULLCHAINE != Donnees.m_donnees.TAB_PARTIE[0].S_NOM)
                 {
                     general.nomPartie = Donnees.m_donnees.TAB_PARTIE[0].S_NOM;
                 }
@@ -2533,6 +2533,8 @@ namespace vaoc
             if (formMessageArbitre.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE = formMessageArbitre.textBoxMessage.Text;
+                Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR = formMessageArbitre.dateEtHeure.Value;
+
                 ClassNotificationJoueurs notification = new ClassNotificationJoueurs(fichierCourant);
                 if (!notification.NotificationJoueurs())
                 {

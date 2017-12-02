@@ -125,6 +125,10 @@ namespace vaoc
         {
             string titre;
             StringBuilder texte;
+
+            //on met à jour la date de rendu
+            Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR = dateEtHeure.Value;
+
             //chargement du message de notification dans le Navigateur embarqué
             Donnees.TAB_ROLERow ligneRole = (Donnees.TAB_ROLERow) listBoxRoles.SelectedItem;
             if (!notification.NotificationRole(ligneRole, Convert.ToInt32(textBoxDernierNotification.Text), out titre, out texte))
@@ -137,5 +141,6 @@ namespace vaoc
             }
 
         }
+
     }
 }

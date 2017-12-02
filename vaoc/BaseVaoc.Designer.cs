@@ -3245,6 +3245,10 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_NB_TOTAL_VICTOIRE;
             
+            private global::System.Data.DataColumn columnDT_PROCHAINTOUR;
+            
+            private static System.DateTime columnDT_PROCHAINTOUR_defaultValue = global::System.DateTime.Parse("2000-01-01T00:00:00");
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_PARTIEDataTable() {
@@ -3424,6 +3428,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn DT_PROCHAINTOURColumn {
+                get {
+                    return this.columnDT_PROCHAINTOUR;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3477,7 +3489,8 @@ namespace vaoc {
                         bool FL_DEMARRAGE, 
                         int I_TOUR_NOTIFICATION, 
                         int I_NB_METEO_SUCCESSIVE, 
-                        int I_NB_TOTAL_VICTOIRE) {
+                        int I_NB_TOTAL_VICTOIRE, 
+                        System.DateTime DT_PROCHAINTOUR) {
                 TAB_PARTIERow rowTAB_PARTIERow = ((TAB_PARTIERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PARTIE,
@@ -3497,7 +3510,8 @@ namespace vaoc {
                         FL_DEMARRAGE,
                         I_TOUR_NOTIFICATION,
                         I_NB_METEO_SUCCESSIVE,
-                        I_NB_TOTAL_VICTOIRE};
+                        I_NB_TOTAL_VICTOIRE,
+                        DT_PROCHAINTOUR};
                 rowTAB_PARTIERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PARTIERow);
                 return rowTAB_PARTIERow;
@@ -3545,6 +3559,7 @@ namespace vaoc {
                 this.columnI_TOUR_NOTIFICATION = base.Columns["I_TOUR_NOTIFICATION"];
                 this.columnI_NB_METEO_SUCCESSIVE = base.Columns["I_NB_METEO_SUCCESSIVE"];
                 this.columnI_NB_TOTAL_VICTOIRE = base.Columns["I_NB_TOTAL_VICTOIRE"];
+                this.columnDT_PROCHAINTOUR = base.Columns["DT_PROCHAINTOUR"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3586,10 +3601,15 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_NB_METEO_SUCCESSIVE);
                 this.columnI_NB_TOTAL_VICTOIRE = new global::System.Data.DataColumn("I_NB_TOTAL_VICTOIRE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_NB_TOTAL_VICTOIRE);
+                this.columnDT_PROCHAINTOUR = new global::System.Data.DataColumn("DT_PROCHAINTOUR", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnDT_PROCHAINTOUR);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PARTIE}, true));
                 this.columnID_PARTIE.AllowDBNull = false;
                 this.columnID_PARTIE.Unique = true;
+                this.columnS_NOM.AllowDBNull = false;
+                this.columnDT_PROCHAINTOUR.AllowDBNull = false;
+                this.columnDT_PROCHAINTOUR.DefaultValue = ((System.DateTime)(TAB_PARTIEDataTable.columnDT_PROCHAINTOUR_defaultValue));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -20806,12 +20826,7 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public string S_NOM {
                 get {
-                    try {
-                        return ((string)(this[this.tableTAB_PARTIE.S_NOMColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_NOM\' dans la table \'TAB_PARTIE\' est DBNull.", e);
-                    }
+                    return ((string)(this[this.tableTAB_PARTIE.S_NOMColumn]));
                 }
                 set {
                     this[this.tableTAB_PARTIE.S_NOMColumn] = value;
@@ -21070,6 +21085,17 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.DateTime DT_PROCHAINTOUR {
+                get {
+                    return ((global::System.DateTime)(this[this.tableTAB_PARTIE.DT_PROCHAINTOURColumn]));
+                }
+                set {
+                    this[this.tableTAB_PARTIE.DT_PROCHAINTOURColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsID_JEUNull() {
                 return this.IsNull(this.tableTAB_PARTIE.ID_JEUColumn);
             }
@@ -21078,18 +21104,6 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetID_JEUNull() {
                 this[this.tableTAB_PARTIE.ID_JEUColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsS_NOMNull() {
-                return this.IsNull(this.tableTAB_PARTIE.S_NOMColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetS_NOMNull() {
-                this[this.tableTAB_PARTIE.S_NOMColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

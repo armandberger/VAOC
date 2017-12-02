@@ -312,6 +312,7 @@ namespace vaoc
             string repertoireTourSource = RepertoireTour(-1);
             string repertoireTourDestination = RepertoireTour(0);
             int nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+            int tour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR-1;
 
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
@@ -330,7 +331,9 @@ namespace vaoc
                     if (File.Exists(nomfichier))
                     {
                         Bitmap im = new Bitmap(nomfichier);
+                        AjouterHeure(im, ClassMessager.DateHeure(tour, phase).ToShortTimeString());
                         gif.WriteFrame(im);
+                        im.Dispose();
                     }
                     else
                     {
@@ -341,6 +344,40 @@ namespace vaoc
                 gif.Dispose();
             }
             return true;
+        }
+
+        private void AjouterHeure(Bitmap im, string heure)
+        {
+            Graphics G;
+            SizeF tailleTexte;
+            float taillePolice;
+            const float ecartTaillePolice = 2;
+            const string nomPolice = "Arial";
+            Font police;
+
+            G = Graphics.FromImage(im);
+            G.PageUnit = GraphicsUnit.Pixel;
+            //bandeau avec texte
+            tailleTexte = new SizeF(0, 0);
+            taillePolice = 6;
+            while (tailleTexte.Height < im.Height / 5)
+            {
+                taillePolice += ecartTaillePolice;
+                police = new Font(nomPolice, taillePolice, FontStyle.Bold);
+                tailleTexte = G.MeasureString("08:36", police);
+            }
+
+            police = new Font(nomPolice, taillePolice - ecartTaillePolice, FontStyle.Bold);
+            tailleTexte = G.MeasureString(heure, police);
+
+            int w = im.Width;
+            int h = im.Height;
+            G.FillRectangle(Brushes.White,
+                new Rectangle((w - (int)tailleTexte.Width) / 2, h - (int)tailleTexte.Height, (int)tailleTexte.Width, (int)tailleTexte.Height)
+                );
+
+            G.DrawString(heure, police, Brushes.Black, (w - (int)tailleTexte.Width) / 2, h - (int)tailleTexte.Height);
+            G.Dispose();
         }
 
         public bool GenerationWebFichiersRoles(bool bAvecPhase)

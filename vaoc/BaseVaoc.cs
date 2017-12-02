@@ -571,7 +571,7 @@ namespace vaoc
 
         partial class TAB_ORDRERow
         {
-            
+
             public bool IsI_TOUR_FINNull() { return (Constantes.NULLENTIER == this.I_TOUR_FIN); }
             public bool IsI_PHASE_FINNull() { return (Constantes.NULLENTIER == this.I_PHASE_FIN); }
             public bool IsI_HEURE_DEBUTNull() { return (Constantes.NULLENTIER == this.I_HEURE_DEBUT); }

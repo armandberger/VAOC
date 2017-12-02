@@ -37,6 +37,8 @@
             this.listBoxRoles = new System.Windows.Forms.ListBox();
             this.labelDernierNotification = new System.Windows.Forms.Label();
             this.textBoxDernierNotification = new System.Windows.Forms.TextBox();
+            this.dateEtHeure = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewUtilisateur)).BeginInit();
             this.SuspendLayout();
             // 
@@ -123,6 +125,25 @@
             this.textBoxDernierNotification.Size = new System.Drawing.Size(100, 20);
             this.textBoxDernierNotification.TabIndex = 14;
             // 
+            // dateEtHeure
+            // 
+            this.dateEtHeure.Checked = false;
+            this.dateEtHeure.CustomFormat = "dd/MM/yyyy HH:mm";
+            this.dateEtHeure.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dateEtHeure.Location = new System.Drawing.Point(344, 7);
+            this.dateEtHeure.Name = "dateEtHeure";
+            this.dateEtHeure.Size = new System.Drawing.Size(134, 20);
+            this.dateEtHeure.TabIndex = 15;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(222, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(116, 13);
+            this.label1.TabIndex = 16;
+            this.label1.Text = "Date du prochain tour :";
+            // 
             // FormMessageArbitre
             // 
             this.AcceptButton = this.buttonOK;
@@ -131,6 +152,8 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.buttonAnnuler;
             this.ClientSize = new System.Drawing.Size(1182, 640);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.dateEtHeure);
             this.Controls.Add(this.textBoxDernierNotification);
             this.Controls.Add(this.labelDernierNotification);
             this.Controls.Add(this.listBoxRoles);
@@ -163,5 +186,7 @@
         private System.Windows.Forms.ListBox listBoxRoles;
         private System.Windows.Forms.Label labelDernierNotification;
         private System.Windows.Forms.TextBox textBoxDernierNotification;
+        public System.Windows.Forms.DateTimePicker dateEtHeure;
+        private System.Windows.Forms.Label label1;
     }
 }

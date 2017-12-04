@@ -4252,7 +4252,9 @@ namespace vaoc
             if (i >= chemin.Count)
             {
                 lignePion.CalculerRepartitionEffectif(1, out iInfanterie, out iCavalerie, out iArtillerie);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterie + iCavalerie + iArtillerie;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectif : premiers effectifs à destination: i={2} c={3} a={4}", lignePion.S_NOM, lignePion.ID_PION, iInfanterie, iCavalerie, iArtillerie);
                 LogFile.Notifier(message, out messageErreur);
 
@@ -4287,6 +4289,7 @@ namespace vaoc
                 else
                 {
                     //List<Donnees.TAB_CASERow> chemin;
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (0==i || chemin[i].I_X == chemin[i-1].I_X || chemin[i].I_Y == chemin[i-1].I_Y)
                     {
                         //ligne droite
@@ -4297,6 +4300,7 @@ namespace vaoc
                         //diagonale
                         lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (!lignePion.RequisitionCase(chemin[i-1], true, ref nbplacesOccupes)) { return false; }
                 }
 
@@ -4304,7 +4308,9 @@ namespace vaoc
                 //dans le cas inverse, on lui affecte bien la nouvelle case lié à son déplacement
                 if (id_case_source == lignePion.ID_CASE && coutCase>0)
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = id_case_finale;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;

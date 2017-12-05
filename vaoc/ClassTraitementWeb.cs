@@ -26,13 +26,18 @@ namespace vaoc
             m_repertoireSource = fichierCourant.Substring(0, positionPoint);
         }
 
-        private string RepertoireTour(int decalageTour)
+        private string RepertoireTour()
+        {
+            return RepertoireTour(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+        }
+
+        private string RepertoireTour(int tour)
         {
             string repertoireTour = string.Format("{0}\\{1}_{2}_{3}",
                 m_repertoireSource,
                 Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
                 Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""),
-                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + decalageTour);
+                tour);
             if (!Directory.Exists(repertoireTour))
             {
                 Directory.CreateDirectory(repertoireTour);
@@ -51,7 +56,7 @@ namespace vaoc
 
             LogFile.Notifier("Début de GenerationWeb");
             //création du repertoire dedié au tour
-            repertoireTour = RepertoireTour(0);
+            repertoireTour = RepertoireTour();
 
             //création du repertoire dans lequel on met la carte générale            
             repertoireCarte = string.Format("{0}\\{1}_{2}_carte",
@@ -309,10 +314,11 @@ namespace vaoc
         private bool GenerationWebFilmRoles()
         {
             string nomfichier;
-            string repertoireTourSource = RepertoireTour(-1);
-            string repertoireTourDestination = RepertoireTour(0);
+            string repertoireTourSource;
+            string repertoireTourDestination = RepertoireTour();
             int nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
-            int tour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR-1;
+            //int tour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR-1;
+            int itourDebut = (Constantes.NULLENTIER == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION) ? 1 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
 
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
@@ -321,24 +327,28 @@ namespace vaoc
                 GifAnime gif = new GifAnime(string.Format("{0}\\filmrole_{1}_zoom.gif",
                         repertoireTourDestination,
                         ligneRole.ID_ROLE));
-                for (int phase=0; phase <nbPhases; phase += Constantes.CST_SAUVEGARDE_ECART_PHASES)
+                for (int tour = itourDebut; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour++)
                 {
-                    //fichier zoom
-                    nomfichier = string.Format("{0}\\carterole_{1}_{2}_zoom.png",
-                        repertoireTourSource,
-                        ligneRole.ID_ROLE,
-                        phase);
-                    if (File.Exists(nomfichier))
+                    repertoireTourSource = RepertoireTour(tour);
+                    for (int phase = 0; phase < nbPhases; phase += Constantes.CST_SAUVEGARDE_ECART_PHASES)
                     {
-                        Bitmap im = new Bitmap(nomfichier);
-                        AjouterHeure(im, ClassMessager.DateHeure(tour, phase).ToShortTimeString());
-                        gif.WriteFrame(im);
-                        im.Dispose();
-                    }
-                    else
-                    {
-                        LogFile.Notifier(string.Format("GenerationWebFilmRoles : pas d'image de film le rôle ID_ROLE={0} : {1} : {2}",
-                            ligneRole.ID_ROLE, ligneRole.S_NOM, nomfichier));
+                        //fichier zoom
+                        nomfichier = string.Format("{0}\\carterole_{1}_{2}_zoom.png",
+                            repertoireTourSource,
+                            ligneRole.ID_ROLE,
+                            phase);
+                        if (File.Exists(nomfichier))
+                        {
+                            Bitmap im = new Bitmap(nomfichier);
+                            AjouterHeure(im, ClassMessager.DateHeure(tour, phase).ToShortTimeString());
+                            gif.WriteFrame(im);
+                            im.Dispose();
+                        }
+                        else
+                        {
+                            LogFile.Notifier(string.Format("GenerationWebFilmRoles : pas d'image de film le rôle ID_ROLE={0} : {1} : {2}",
+                                ligneRole.ID_ROLE, ligneRole.S_NOM, nomfichier));
+                        }
                     }
                 }
                 gif.Dispose();
@@ -385,7 +395,7 @@ namespace vaoc
             string nomfichier;
             Rectangle rect, rectGris;
             int vision, visionGris;
-            string repertoireTour = RepertoireTour(0);
+            string repertoireTour = RepertoireTour();
 
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {

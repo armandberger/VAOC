@@ -4600,7 +4600,9 @@ namespace vaoc
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(Donnees.m_donnees.TAB_JEU[0].ID_MODELE_TERRAIN_DEPLOIEMENT);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
                 int coutCase = ligneModelePion.CoutCase(ligneModeleTerrain.ID_MODELE_TERRAIN);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.I_DISTANCE_A_PARCOURIR += coutCase;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //recherche du plus court chemin
                 //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
@@ -4660,7 +4662,9 @@ namespace vaoc
                 iInfanterieDestination += iInfanterie;
                 iCavalerieDestination += iCavalerie;
                 iArtillerieDestination += iArtillerie;
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterieDestination + iCavalerieDestination + iArtillerieDestination;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
 
                 if (ligneOrdre.I_EFFECTIF_DESTINATION >= lignePion.effectifTotalEnMouvement)
                 {
@@ -4688,9 +4692,11 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
                 }
                 if (i > 0)
-                { 
+                {
                     //la dernière place occupée, devient la "position" du pion, c'est à dire de son général, en queue de colonne
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = chemin[i].ID_CASE;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 //placement des effectifs à destination sur la carte
                 lignePion.PlacementPion(ligneOrdre.ID_CASE_DESTINATION, ligneNation, false, ligneOrdre.I_EFFECTIF_DESTINATION);

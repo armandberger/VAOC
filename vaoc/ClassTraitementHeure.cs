@@ -3493,13 +3493,19 @@ namespace vaoc
                     message = string.Format("ExecuterMouvementSansEffectif : SearchPath longueur={0}", m_etoile.PathByNodes.Length);
                      * */
 
-                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} de {3} à {4}",
-                        lignePion.S_NOM, lignePion.ID_PION, chemin.Count, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
+                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} de {3}({4},{5}) à {6}({7},{8})",
+                        lignePion.S_NOM, lignePion.ID_PION, chemin.Count, 
+                        ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y,
+                        ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
                     LogFile.Notifier(message, out messageErreur);
 
                     //recherche de la case sur le trajet
                     int pos = 0;
                     while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;
+
+                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} position={3}",
+                        lignePion.S_NOM, lignePion.ID_PION, chemin.Count, pos);
+                    LogFile.Notifier(message, out messageErreur);
 
                     //on vérifie si l'unité ne croise pas son destinataire en visuel et qui aurait bougé
                     if (lignePion.estMessager)

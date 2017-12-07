@@ -3532,9 +3532,11 @@ namespace vaoc
                                     return false;
                                 }
                                 pos = 0;
+                                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                 ligneOrdre.ID_CASE_DESTINATION = lignePionDestinataire.ID_CASE;
                                 ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;//sinon le trajet recalculé ne passe pas obligatoirement par la case courante
                                 ligneOrdre.SetID_NOM_DESTINATIONNull();//première ville destinatrice du message, sans valeur maintenant
+                                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                             }
                         }
                     }
@@ -3560,6 +3562,7 @@ namespace vaoc
 
                             lignePion.ID_CASE = chemin[pos + 1].ID_CASE;
 
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             if (chemin[pos + 1].I_X == chemin[pos].I_X || chemin[pos + 1].I_Y == chemin[pos].I_Y)
                             {
                                 //ligne droite
@@ -3570,6 +3573,7 @@ namespace vaoc
                                 //diagonale
                                 lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                             }
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
 
                         //si l'unité emprunte un gué, on envoie un message d'alerte

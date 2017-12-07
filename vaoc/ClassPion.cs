@@ -4326,12 +4326,16 @@ namespace vaoc
 
             internal void SetID_ANCIEN_PION_PROPRIETAIRENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_ANCIEN_PION_PROPRIETAIRE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal void SetID_NOUVEAU_PION_PROPRIETAIRENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_NOUVEAU_PION_PROPRIETAIRE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             /******************** Nouveaux *********************/
@@ -4342,7 +4346,9 @@ namespace vaoc
 
             internal void SetID_DEPOT_SOURCENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_DEPOT_SOURCE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_PION_REMPLACENull()
@@ -4352,7 +4358,9 @@ namespace vaoc
 
             internal void SetID_PION_REMPLACENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_PION_REMPLACE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             //todo
@@ -4378,7 +4386,9 @@ namespace vaoc
 
             internal void SetID_LIEU_RATTACHEMENTNull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_LIEU_RATTACHEMENT = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_PION_ESCORTENull()
@@ -4388,7 +4398,9 @@ namespace vaoc
 
             internal void SetID_PION_ESCORTENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_PION_ESCORTE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
@@ -4398,7 +4410,9 @@ namespace vaoc
 
             internal void SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsI_VICTOIRENull()
@@ -4418,12 +4432,16 @@ namespace vaoc
 
             internal void SetID_BATAILLENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_BATAILLE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal void SetI_ZONE_BATAILLENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_ZONE_BATAILLE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             //internal void SetI_TOUR_CONVOI_CREENull()

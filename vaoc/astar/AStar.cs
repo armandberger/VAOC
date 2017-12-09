@@ -1279,7 +1279,6 @@ namespace vaoc
                 tri = "I_ORDRE";
                 Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                 parcoursExistant = (Donnees.TAB_PARCOURSRow[])Donnees.m_donnees.TAB_PARCOURS.Select(requete, tri);
-                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
 
                 if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
                 {
@@ -1295,6 +1294,7 @@ namespace vaoc
                             chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE));
                         }
                         perf = DateTime.Now - timeStart;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                         message = string.Format("{0},ID={1}, RechercheChemin : existant en {2} minutes, {3} secondes, {4} millisecondes, lg={5}", 
                             lignePion.S_NOM, lignePion.ID_PION, perf.Minutes, perf.Seconds, perf.Milliseconds, parcoursExistant.Length);
                         LogFile.Notifier(message, out messageErreur);
@@ -1344,6 +1344,7 @@ namespace vaoc
                     Donnees.m_donnees.TAB_PARCOURS.AcceptChanges();
                      * */
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
             }
 
             if (tipePacours == Constantes.TYPEPARCOURS.RAVITAILLEMENT)

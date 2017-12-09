@@ -3568,9 +3568,12 @@ namespace vaoc
                         else
                         {
 
-                            lignePion.ID_CASE = chemin[pos + 1].ID_CASE;
-
                             Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            lignePion.ID_CASE = chemin[pos + 1].ID_CASE;
+                            message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif nouvelle case={2}, position={3})",
+                                lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE, pos);
+                            LogFile.Notifier(message, out messageErreur);
+
                             if (chemin[pos + 1].I_X == chemin[pos].I_X || chemin[pos + 1].I_Y == chemin[pos].I_Y)
                             {
                                 //ligne droite
@@ -3793,7 +3796,7 @@ namespace vaoc
                                                     0, 0,
                                                     0, 0,
                                                     0,//I_FATIGUE
-                                                    100,//I_MORAL
+                                                    100,//I_MORAL, le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
                                                     100,//I_MORAL_MAX
                                                     0, 0, 0,
                                                     'Z',//C_NIVEAU_HIERACHIQUE
@@ -4995,7 +4998,9 @@ namespace vaoc
                     string.Format("Test {0} n°{1}", idNation, i),
                     iInfanterie, iInfanterie,
                     iCavalerie, iCavalerie,
-                    iArtillerie, iArtillerie, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
+                    iArtillerie, iArtillerie, 0, 
+                    100, //I_MORAL : le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    100, 0, 0, 0, 'Z', 0, 0, 0, 0,
                     idCase,
                     0, //I_TOUR_SANS_RAVITAILLEMENT
                     0, -1,

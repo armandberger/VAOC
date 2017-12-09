@@ -763,7 +763,9 @@ namespace vaoc
                             {
                                 bRetour = ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE);
                             }
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             this.B_ENNEMI_OBSERVABLE = bObservable;
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                     }
                     return bRetour;
@@ -2999,7 +3001,9 @@ namespace vaoc
                 Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
 
                 requete = string.Format("ID_MODELE_MOUVEMENT={0}", resModelePion[0].ID_MODELE_MOUVEMENT);
+                Monitor.Enter(Donnees.m_donnees.TAB_MODELE_MOUVEMENT.Rows.SyncRoot);
                 Donnees.TAB_MODELE_MOUVEMENTRow[] resModeleMouvement = (Donnees.TAB_MODELE_MOUVEMENTRow[])Donnees.m_donnees.TAB_MODELE_MOUVEMENT.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_MODELE_MOUVEMENT.Rows.SyncRoot);
                 if (0 == I_INFANTERIE && 0 == I_CAVALERIE && 0 == I_ARTILLERIE)
                 {
                     //unités sans effectif
@@ -3276,7 +3280,10 @@ namespace vaoc
                     -1,
                     -1,
                     "",//nomConvoi,
-                    0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 
+                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    0, 0, 0, 'Z', 0, 0, 0, 0,
                     ID_CASE,
                     0, //I_TOUR_SANS_RAVITAILLEMENT
                     0, -1,

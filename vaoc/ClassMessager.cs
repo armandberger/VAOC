@@ -1545,7 +1545,10 @@ namespace vaoc
                     -1,
                     -1,
                     "Messager du " + lignePionEmetteur.S_NOM,
-                    0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 0, 'Z', 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0, 0, 
+                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    0, 0, 0, 'Z', 0, 0, 0, 0,
                     lignePionEmetteur.ID_CASE,
                     0, //I_TOUR_SANS_RAVITAILLEMENT
                     0, -1,

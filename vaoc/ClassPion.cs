@@ -4021,7 +4021,9 @@ namespace vaoc
                         }
                         *****/
 
-                        if (!MessageEnnemiObserve(null)) { return false; }
+                        //if (!MessageEnnemiObserve(null)) { return false; } Pourquoi null ? Impossible de m'en rappeler !
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                        if (!MessageEnnemiObserve(ligneCase)) { return false; }
 
                         //placer l'unité sur la carte
                         PlacementPion(ligneNation, true);

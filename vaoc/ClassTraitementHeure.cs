@@ -2698,7 +2698,7 @@ namespace vaoc
                         Constantes.NULLENTIER,//ordre.ID_PION,
                         lignePion.ID_CASE,
                         0,//i_effectif_depart lignePion.I_INFANTERIE + lignePion.I_CAVALERIE +lignePion.I_ARTILLERIE,
-                        Constantes.NULLENTIER,//ID_CASE_DESTINATION
+                        lignePion.ID_CASE,//ID_CASE_DESTINATION, parfois utilisé dans certains messages
                         ordre.ID_NOM_LIEU,
                         0,//i_effectif_destination
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,

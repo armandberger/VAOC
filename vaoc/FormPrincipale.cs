@@ -145,8 +145,6 @@ namespace vaoc
                 curFileName = filename;
                 m_modification = false;
 
-                Correctifs();
-
                 if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
                     && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE.Length > 0)
                 {
@@ -155,6 +153,7 @@ namespace vaoc
                 }
                 MiseAJourTitreFenetre();
                 MiseAJourListeUnites();
+                Correctifs();
             }
             else
             {
@@ -380,16 +379,17 @@ namespace vaoc
             //    lignePion.SetID_PION_ESCORTENull();
             //}
 
-            /*
-             * Donnees.TAB_PIONRow lignePionCorrectif;
-            lignePionCorrectif = Donnees.m_donnees.TAB_PION.FindByID_PION(128);
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4101900);
+            /* 
+            Donnees.TAB_PIONRow lignePionCorrectif;
+            lignePionCorrectif = Donnees.m_donnees.TAB_PION.FindByID_PION(207);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(3480428);
             for (int i = 0; i < 100; i++)
             {
                 String test;
                 bool btest;
                 ClassMessager.PionsEnvironnants(lignePionCorrectif, ClassMessager.MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI, ligneCase, out test, out btest);
-            }*/
+            }
+            */
 
             //recherche de tous les points dans le bloc
             //int[] des = new int[6];

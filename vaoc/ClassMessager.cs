@@ -2300,9 +2300,9 @@ namespace vaoc
                             else
                             {
                                 // Il y a une erreur comprise entre et % dans les estimations 
-                                ecartInfanterie = lignePionVoisin.infanterie + lignePionVoisin.infanterie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
-                                ecartCavalerie = lignePionVoisin.cavalerie + lignePionVoisin.cavalerie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
-                                ecartArtillerie = lignePionVoisin.artillerie + lignePionVoisin.artillerie * (Constantes.JetDeDes(2) - 7) / 10 + 10 * (Constantes.JetDeDes(1) - 3) / 10;
+                                ecartInfanterie = lignePionVoisin.infanterie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
+                                ecartCavalerie = lignePionVoisin.cavalerie * (Constantes.JetDeDes(2) - 7) / 10 + 1000 * (Constantes.JetDeDes(1) - 3) / 10;
+                                ecartArtillerie = lignePionVoisin.artillerie * (Constantes.JetDeDes(2) - 7) / 10 + 10 * (Constantes.JetDeDes(1) - 3) / 10;
                             }
 
                             if (lignePionVoisin.infanterie + ecartInfanterie > 0)

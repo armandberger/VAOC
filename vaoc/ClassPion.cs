@@ -4074,21 +4074,21 @@ namespace vaoc
                 //recherche du plus court chemin
                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
-                    message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans PlacerPionEnRoute: {2})", S_NOM, ID_PION, messageErreur);
+                    message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans PlacerPionEnRoute: {2})", S_NOM, ID_PION, messageErreur);
                     LogFile.Notifier(message, out messageErreur);
                     return false;
                 }
-                message = string.Format("PlacerPionEnRoute : SearchPath longueur={0}", chemin.Count);
+                message = string.Format("PlacerPionEnRoute : {0},ID={1}, SearchPath longueur={2}", S_NOM, ID_PION, chemin.Count);
                 LogFile.Notifier(message, out messageErreur);
 
                 if (ligneOrdre.I_EFFECTIF_DESTINATION > 0)
                 {
                     #region Pion à destination
                     //l'unité est arrivée, il faut donc "écouler" les éléments qui ne sont pas encore arrivés s'il y en a
-                    message = string.Format("\r\n{0}(PlacerPionEnRoute : ID={1}, en mouvement, une partie des troupes à destination)", S_NOM, ID_PION);
+                    message = string.Format("PlacerPionEnRoute : {0},ID={1} en mouvement, une partie des troupes à destination)", S_NOM, ID_PION);
                     LogFile.Notifier(message, out messageErreur);
 
-                    message = string.Format("PlacerPionEnRoute :ligneOrdre.I_EFFECTIF_DESTINATION={0}", ligneOrdre.I_EFFECTIF_DESTINATION);
+                    message = string.Format("PlacerPionEnRoute : {0},ID={1}, ligneOrdre.I_EFFECTIF_DESTINATION={2}", S_NOM, ID_PION, ligneOrdre.I_EFFECTIF_DESTINATION);
                     LogFile.Notifier(message, out messageErreur);
                     if (ligneOrdre.I_EFFECTIF_DESTINATION <= effectifTotalEnMouvement)
                     {
@@ -4098,7 +4098,8 @@ namespace vaoc
                         //effectifs actuellement à l'arrivée
                         CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
                                                     out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
-                        message = string.Format("PlacerPionEnRoute :effectif à destination :i={0} c={1} a={2}",
+                        message = string.Format("PlacerPionEnRoute : {0},ID={1}, effectif à destination :i={2} c={3} a={4}",
+                                                S_NOM, ID_PION,
                                                 iInfanterieDestination, iCavalerieDestination, iArtillerieDestination);
                         LogFile.Notifier(message, out messageErreur);
 
@@ -4113,7 +4114,7 @@ namespace vaoc
                                 true,
                                 out iInfanterieRoute, out iCavalerieRoute, out iArtillerieRoute))
                         {
-                            message = string.Format("PlacerPionEnRoute :{0}(ID={1}, erreur CalculerEffectif sur la route renvoie false)", S_NOM, ID_PION);
+                            message = string.Format("PlacerPionEnRoute :{0}, ID={1}, erreur CalculerEffectif sur la route renvoie false)", S_NOM, ID_PION);
                             LogFile.Notifier(message, out messageErreur);
                             return false;
                         }
@@ -4148,9 +4149,9 @@ namespace vaoc
                                 return false;
                             }
                         }
-                        message = string.Format("PlacerPionEnRoute :encombrement sur route={0}", encombrement);
+                        message = string.Format("PlacerPionEnRoute :{0},ID={1},encombrement sur route={2}", S_NOM, ID_PION, encombrement);
                         LogFile.Notifier(message, out messageErreur);
-                        message = string.Format("PlacerPionEnRoute :effectif destination={0}", ligneOrdre.I_EFFECTIF_DESTINATION);
+                        message = string.Format("PlacerPionEnRoute {0},ID={1},:effectif destination={2}", S_NOM, ID_PION, ligneOrdre.I_EFFECTIF_DESTINATION);
                         LogFile.Notifier(message, out messageErreur);
 
                         if (rechercheIdCase)
@@ -4176,7 +4177,7 @@ namespace vaoc
                             }
                             if (nbplacesOccupes < encombrement)
                             {
-                                message = string.Format("ALERTE PlacerPionEnRoute : impossible de placer les effectifs encore en route PION={0}({1}) nbplacesOccupes={2}<encombrement={3}",
+                                message = string.Format("ALERTE PlacerPionEnRoute : impossible de placer les effectifs encore en route PION={0}, {1}) nbplacesOccupes={2}<encombrement={3}",
                                     S_NOM, ID_PION, nbplacesOccupes, encombrement);
                                 LogFile.Notifier(message, out messageErreur);
                             }
@@ -4187,7 +4188,8 @@ namespace vaoc
                             //placer les effectifs encore au point de départ
                             if (ligneOrdre.I_EFFECTIF_DEPART > 0)
                             {
-                                message = string.Format("PlacerPionEnRoute :effectif depart={0} i={1}, c={2}, a={3}",
+                                message = string.Format("PlacerPionEnRoute : {0},ID={1}, effectif depart={2} i={3}, c={4}, a={5}",
+                                    S_NOM, ID_PION,
                                     ligneOrdre.I_EFFECTIF_DEPART,
                                     infanterie - iInfanterieDestination - iInfanterieRoute,
                                     cavalerie - iCavalerieDestination - iCavalerieRoute,

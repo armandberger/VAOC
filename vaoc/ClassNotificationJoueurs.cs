@@ -211,7 +211,7 @@ namespace vaoc
                         sOrdreCourant = DescriptifOrdreEnCours(lignePion, ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
                     }
                     string libelleFatigue, libelleMoral, /*libelleMoralMax, */LibelleMateriel, LibelleRavitaillement;
-                    if (lignePion.estQG || lignePion.estConvoi)
+                    if (lignePion.estQG || lignePion.estConvoi || lignePion.estDepot)
                     {
                         libelleFatigue = "N/A";
                         libelleMoral = "N/A ";

@@ -71,7 +71,8 @@ namespace vaoc
                         bEnDefense = !lignePion.OrdreActif(ligneOrdre);
                     }
 
-                    LogFile.Notifier("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow");
+                    LogFile.Notifier(string.Format("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow {0},{1}", 
+                        lignePion.S_NOM, lignePion.ID_PION));
                     Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         ID_BATAILLE, lignePion.ID_PION, ligneModele.ID_NATION, false, bEnDefense,
@@ -95,15 +96,15 @@ namespace vaoc
                         LogFile.Notifier(message, out messageErreur);
                         return false;//problème à l'ajout
                     }
-                    lignePion.ID_BATAILLE = ID_BATAILLE;
                     Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    lignePion.ID_BATAILLE = ID_BATAILLE;
 
                     //il faut terminer tout ordre en cours d'execution par l'unité et placer l'unité dans la case courante du combat
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = ligneCaseCombat.ID_CASE;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.PlacerStatique();
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //il faut envoyer un message au propriétaire de l'unité pour indiquer cet ajout
                     ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE, this);

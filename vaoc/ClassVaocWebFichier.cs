@@ -842,28 +842,23 @@ namespace vaoc
             }
             if (null == ligneMessage)
             {
-                //if (Donnees.m_donnees.TAB_PARTIE[0].IsID_VICTOIRENull() || Donnees.m_donnees.TAB_PARTIE[0].ID_VICTOIRE < 0)
+                //si le chef n'a reçu aucun message, il ne doit pas voir l'unité, exemple, en combat, nouvelle unité de blessés
+                return string.Empty;
+
+                //bDetruit = 0;
+
+                //if (lignePion.I_CAVALERIE > 0)
                 //{
-                //    bDetruit = 0;
+                //    iPatrouillesMax = Math.Max(1, lignePion.I_CAVALERIE / 1000);
+                //    //il faut retrancher les patrouilles déjà en cours de mission
+                //    int iPatrouillesEnCours = lignePion.nombrePatrouillesEnCours();
+                //    iPatrouillesDisponibles = (iPatrouillesMax <= iPatrouillesEnCours) ? 0 : iPatrouillesMax - iPatrouillesEnCours;
                 //}
                 //else
                 //{
-                //    bDetruit = (ligneMessage.B_DETRUIT) ? 1 : 0;//cas improbable où la partie serait terminée sans que le pion n'est reçu un seul message -> test impossible, ligneMessage est NULL
+                //    iPatrouillesDisponibles = 0;
+                //    iPatrouillesMax = 0;
                 //}
-                bDetruit = 0;
-
-                if (lignePion.I_CAVALERIE > 0)
-                {
-                    iPatrouillesMax = Math.Max(1, lignePion.I_CAVALERIE / 1000);
-                    //il faut retrancher les patrouilles déjà en cours de mission
-                    int iPatrouillesEnCours = lignePion.nombrePatrouillesEnCours();
-                    iPatrouillesDisponibles = (iPatrouillesMax <= iPatrouillesEnCours) ? 0 : iPatrouillesMax - iPatrouillesEnCours;
-                }
-                else
-                {
-                    iPatrouillesDisponibles = 0;
-                    iPatrouillesMax = 0;
-                }
             }
             else
             {

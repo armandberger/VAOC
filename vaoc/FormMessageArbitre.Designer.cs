@@ -132,7 +132,7 @@
             this.dateEtHeure.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dateEtHeure.Location = new System.Drawing.Point(344, 7);
             this.dateEtHeure.Name = "dateEtHeure";
-            this.dateEtHeure.Size = new System.Drawing.Size(134, 20);
+            this.dateEtHeure.Size = new System.Drawing.Size(155, 20);
             this.dateEtHeure.TabIndex = 15;
             // 
             // label1

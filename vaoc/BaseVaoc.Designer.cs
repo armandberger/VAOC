@@ -3247,6 +3247,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnDT_PROCHAINTOUR;
             
+            private global::System.Data.DataColumn columnS_HOST_SITEWEB;
+            
             private static System.DateTime columnDT_PROCHAINTOUR_defaultValue = global::System.DateTime.Parse("2000-01-01T00:00:00");
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3436,6 +3438,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn S_HOST_SITEWEBColumn {
+                get {
+                    return this.columnS_HOST_SITEWEB;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3490,7 +3500,8 @@ namespace vaoc {
                         int I_TOUR_NOTIFICATION, 
                         int I_NB_METEO_SUCCESSIVE, 
                         int I_NB_TOTAL_VICTOIRE, 
-                        System.DateTime DT_PROCHAINTOUR) {
+                        System.DateTime DT_PROCHAINTOUR, 
+                        string S_HOST_SITEWEB) {
                 TAB_PARTIERow rowTAB_PARTIERow = ((TAB_PARTIERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PARTIE,
@@ -3511,7 +3522,8 @@ namespace vaoc {
                         I_TOUR_NOTIFICATION,
                         I_NB_METEO_SUCCESSIVE,
                         I_NB_TOTAL_VICTOIRE,
-                        DT_PROCHAINTOUR};
+                        DT_PROCHAINTOUR,
+                        S_HOST_SITEWEB};
                 rowTAB_PARTIERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PARTIERow);
                 return rowTAB_PARTIERow;
@@ -3560,6 +3572,7 @@ namespace vaoc {
                 this.columnI_NB_METEO_SUCCESSIVE = base.Columns["I_NB_METEO_SUCCESSIVE"];
                 this.columnI_NB_TOTAL_VICTOIRE = base.Columns["I_NB_TOTAL_VICTOIRE"];
                 this.columnDT_PROCHAINTOUR = base.Columns["DT_PROCHAINTOUR"];
+                this.columnS_HOST_SITEWEB = base.Columns["S_HOST_SITEWEB"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3603,6 +3616,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_NB_TOTAL_VICTOIRE);
                 this.columnDT_PROCHAINTOUR = new global::System.Data.DataColumn("DT_PROCHAINTOUR", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDT_PROCHAINTOUR);
+                this.columnS_HOST_SITEWEB = new global::System.Data.DataColumn("S_HOST_SITEWEB", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_HOST_SITEWEB);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PARTIE}, true));
                 this.columnID_PARTIE.AllowDBNull = false;
@@ -3610,6 +3625,8 @@ namespace vaoc {
                 this.columnS_NOM.AllowDBNull = false;
                 this.columnDT_PROCHAINTOUR.AllowDBNull = false;
                 this.columnDT_PROCHAINTOUR.DefaultValue = ((System.DateTime)(TAB_PARTIEDataTable.columnDT_PROCHAINTOUR_defaultValue));
+                this.columnS_HOST_SITEWEB.AllowDBNull = false;
+                this.columnS_HOST_SITEWEB.DefaultValue = ((string)("vaoc.free.fr"));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -21091,6 +21108,17 @@ namespace vaoc {
                 }
                 set {
                     this[this.tableTAB_PARTIE.DT_PROCHAINTOURColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string S_HOST_SITEWEB {
+                get {
+                    return ((string)(this[this.tableTAB_PARTIE.S_HOST_SITEWEBColumn]));
+                }
+                set {
+                    this[this.tableTAB_PARTIE.S_HOST_SITEWEBColumn] = value;
                 }
             }
             

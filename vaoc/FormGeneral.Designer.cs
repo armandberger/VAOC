@@ -94,6 +94,8 @@ namespace vaoc
             this.textBoxNbPtsVictoire = new System.Windows.Forms.TextBox();
             this.buttonSuppressionZoom = new System.Windows.Forms.Button();
             this.buttonSuppressionGris = new System.Windows.Forms.Button();
+            this.textBoxSiteWeb = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeureInitiale)).BeginInit();
             this.SuspendLayout();
             // 
@@ -392,7 +394,7 @@ namespace vaoc
             // 
             // buttonTestMessagerie
             // 
-            this.buttonTestMessagerie.Location = new System.Drawing.Point(733, 160);
+            this.buttonTestMessagerie.Location = new System.Drawing.Point(733, 184);
             this.buttonTestMessagerie.Name = "buttonTestMessagerie";
             this.buttonTestMessagerie.Size = new System.Drawing.Size(61, 20);
             this.buttonTestMessagerie.TabIndex = 17;
@@ -402,7 +404,7 @@ namespace vaoc
             // 
             // textBoxTestMessagerie
             // 
-            this.textBoxTestMessagerie.Location = new System.Drawing.Point(595, 160);
+            this.textBoxTestMessagerie.Location = new System.Drawing.Point(595, 184);
             this.textBoxTestMessagerie.MaxLength = 255;
             this.textBoxTestMessagerie.Name = "textBoxTestMessagerie";
             this.textBoxTestMessagerie.Size = new System.Drawing.Size(132, 20);
@@ -412,7 +414,7 @@ namespace vaoc
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(416, 160);
+            this.label19.Location = new System.Drawing.Point(416, 184);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(66, 13);
             this.label19.TabIndex = 38;
@@ -720,11 +722,30 @@ namespace vaoc
             this.buttonSuppressionGris.UseVisualStyleBackColor = true;
             this.buttonSuppressionGris.Click += new System.EventHandler(this.buttonSuppressionGris_Click);
             // 
+            // textBoxSiteWeb
+            // 
+            this.textBoxSiteWeb.Location = new System.Drawing.Point(596, 158);
+            this.textBoxSiteWeb.MaxLength = 255;
+            this.textBoxSiteWeb.Name = "textBoxSiteWeb";
+            this.textBoxSiteWeb.Size = new System.Drawing.Size(199, 20);
+            this.textBoxSiteWeb.TabIndex = 77;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(417, 159);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(51, 13);
+            this.label30.TabIndex = 78;
+            this.label30.Text = "Site Web";
+            // 
             // FormGeneral
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(831, 531);
+            this.Controls.Add(this.textBoxSiteWeb);
+            this.Controls.Add(this.label30);
             this.Controls.Add(this.buttonSuppressionGris);
             this.Controls.Add(this.buttonSuppressionZoom);
             this.Controls.Add(this.textBoxNbPtsVictoire);
@@ -868,5 +889,7 @@ namespace vaoc
         private System.Windows.Forms.TextBox textBoxNbPtsVictoire;
         private System.Windows.Forms.Button buttonSuppressionZoom;
         private System.Windows.Forms.Button buttonSuppressionGris;
+        private System.Windows.Forms.TextBox textBoxSiteWeb;
+        private System.Windows.Forms.Label label30;
     }
 }

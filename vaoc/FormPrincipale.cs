@@ -1412,6 +1412,7 @@ namespace vaoc
                 {
                     general.utilisateurMessagerie = Donnees.m_donnees.TAB_PARTIE[0].S_HOST_UTILISATEUR;
                 }
+                general.siteWeb = Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB;
                 if (Donnees.m_donnees.TAB_PARTIE[0].IsID_METEO_INITIALENull())
                 {
                     general.meteo = 0;
@@ -1570,6 +1571,7 @@ namespace vaoc
                 lignePartie.S_HOST_COURRIEL = general.hostMessagerie;
                 lignePartie.S_HOST_MOTDEPASSE = general.motDePasseMessagerie;
                 lignePartie.S_HOST_UTILISATEUR = general.utilisateurMessagerie;
+                lignePartie.S_HOST_SITEWEB = general.siteWeb;
                 lignePartie.I_LARGEUR_CARTE_ZOOM_WEB = general.largeurCarteZoomWeb;
                 lignePartie.I_HAUTEUR_CARTE_ZOOM_WEB = general.hauteurCarteZoomWeb;
                 lignePartie.FL_DEMARRAGE = fl_demmarage;
@@ -2542,6 +2544,24 @@ namespace vaoc
                 }
                 else
                 {
+                    //on met à jour la date du prochain tour
+                    try
+                    {
+                        string url = string.Format("http://{0}/vaocservicemiseajour.php?id_partie={1}&date_prochaintour={2}",
+                            Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
+                            Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
+                            Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
+                        WebRequest request = HttpWebRequest.Create(url);
+                        WebResponse response = request.GetResponse();
+                        StreamReader reader = new StreamReader(response.GetResponseStream());
+                        string responseText = reader.ReadToEnd();
+                    }
+                    catch(Exception exWeb)
+                    {
+                        MessageBox.Show("Erreur durant l'envoi de la date de mise à jour. Tout est correct sinon"+exWeb.Message, 
+                            "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
                     MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                     Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);

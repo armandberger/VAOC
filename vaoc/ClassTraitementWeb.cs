@@ -382,9 +382,9 @@ namespace vaoc
 
             int w = im.Width;
             int h = im.Height;
-            G.FillRectangle(Brushes.White,
-                new Rectangle((w - (int)tailleTexte.Width) / 2, h - (int)tailleTexte.Height, (int)tailleTexte.Width, (int)tailleTexte.Height)
-                );
+            //G.FillRectangle(Brushes.White,
+            //    new Rectangle((w - (int)tailleTexte.Width) / 2, h - (int)tailleTexte.Height, (int)tailleTexte.Width, (int)tailleTexte.Height)
+            //    );
 
             G.DrawString(heure, police, Brushes.Black, (w - (int)tailleTexte.Width) / 2, h - (int)tailleTexte.Height);
             G.Dispose();

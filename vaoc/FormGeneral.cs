@@ -195,6 +195,18 @@ namespace vaoc
             }
         }
 
+        public string siteWeb
+        {
+            get
+            {
+                return textBoxSiteWeb.Text;
+            }
+            set
+            {
+                textBoxSiteWeb.Text = value;
+            }
+        }
+
         public string motDePasseMessagerie
         {
             get

@@ -1228,6 +1228,12 @@ namespace vaoc
         private bool SauvegarderPartie(string nomFichier)
         {
             m_modification = false;
+            //il faut remettre tous les chemins à null, toutes les cases étant vidées, cela provoque un crash sur sélection d'un pion sinon ensuite
+            m_cheminHorsRoute = null;
+            m_cheminPCC = null;
+            m_cheminVille = null;
+            m_cheminHPA = null;
+
             //Mise à jour de la version du fichier pour de future mise à jour
             return Donnees.m_donnees.SauvegarderPartie(nomFichier, false);
         }

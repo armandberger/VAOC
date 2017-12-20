@@ -324,7 +324,7 @@ namespace vaoc
                         }
                     }
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 25 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                          //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                          Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -1276,7 +1276,8 @@ namespace vaoc
                     }
                     break;
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
-                    if (ligneOrdre.I_PHASE_DEBUT == phase && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_CONVOI_CREE) >24)
+                    if (ligneOrdre.I_PHASE_DEBUT == phase && 
+                        ((ligneOrdre.I_TOUR_DEBUT== Donnees.m_donnees.TAB_PARTIE[0].I_TOUR) || (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_CONVOI_CREE) >24))
                     {
                         //on créer un nouveau convoi de type ravitaillement
                         Donnees.TAB_PIONRow lignePionConvoi = lignePion.CreerConvoi(lignePion.proprietaire, false /*bBlesses*/, false /*bPrisonniers*/, false /*bRenfort*/);

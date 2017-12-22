@@ -187,6 +187,9 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //bug meteo
+            //Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = 0;
+
             #region test a priori absurde sur la copie de cases
             /*
             Donnees.TAB_CASEDataTable tableTestSource = new Donnees.TAB_CASEDataTable();

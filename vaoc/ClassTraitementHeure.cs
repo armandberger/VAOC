@@ -324,7 +324,7 @@ namespace vaoc
                         }
                     }
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 25 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                          //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                          Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -1277,7 +1277,7 @@ namespace vaoc
                     break;
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
                     if (ligneOrdre.I_PHASE_DEBUT == phase && 
-                        ((ligneOrdre.I_TOUR_DEBUT== Donnees.m_donnees.TAB_PARTIE[0].I_TOUR) || (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_CONVOI_CREE) >24))
+                        ((lignePion.I_TOUR_CONVOI_CREE<=0) || (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - 7) >24))
                     {
                         //on créer un nouveau convoi de type ravitaillement
                         Donnees.TAB_PIONRow lignePionConvoi = lignePion.CreerConvoi(lignePion.proprietaire, false /*bBlesses*/, false /*bPrisonniers*/, false /*bRenfort*/);
@@ -3326,11 +3326,12 @@ namespace vaoc
             //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
             int recuperationFantassin = nbTrainardsInfanterie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
             int recuperationCavalerie = nbTrainardsCavalerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
+            int recuperationArtillerie = nbTrainardsArtillerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
 
             // effectif reel = effectif theorique - (effectif theorique * fatigue /100)
             // donc fatigue = (effectif theorique - effectif reel) * 100 / effectif theorique
-            int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
-            int effectifReel = recuperationFantassin + recuperationCavalerie + (effectifTheorique * lignePion.I_FATIGUE / 100);
+            int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE;
+            int effectifReel = recuperationFantassin + recuperationCavalerie + +recuperationArtillerie+ (effectifTheorique * lignePion.I_FATIGUE / 100);
             int fatigue = (effectifTheorique - effectifTheorique) * 100 / effectifTheorique;
             diffatigue = lignePion.I_FATIGUE - fatigue;
             lignePion.I_FATIGUE = fatigue;

@@ -367,6 +367,8 @@ namespace vaoc
                                     return false;
                                 }
                             }
+                            //on en profite aussi pour voir si l'unité n'a pas rejoint un hopital ou une prison
+                            if (lignePion.ArriveeSurPrisonOuHopital()) { return false; }
                         }
                     }
                     i++;

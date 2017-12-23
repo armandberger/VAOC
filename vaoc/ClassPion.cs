@@ -2888,6 +2888,30 @@ namespace vaoc
                 }
                 PlacementPion(ligneNation, true);
 
+                if (!ArriveeSurPrisonOuHopital()) { return false; }
+
+                //si l'unité est arrivée à une prison ou un hopital, un message est envoyée et l'unitée est marquée
+                //détruite, inutile donc d'envoyer un nouveau message
+                if (!B_DETRUIT)
+                {
+                    //envoyer un messager pour prévenir de l'arrivée complète
+                    if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_ARRIVE_A_DESTINATION))
+                    {
+                        message = string.Format("ArriveADestination  : erreur lors de l'envoi d'un message pour indiquer qu'une unité arrive à destination");
+                        LogFile.Notifier(message);
+                        return false;
+                    }
+                }
+
+                // l'ordre de mouvement est terminé
+                this.TerminerOrdre(ligneOrdre, true, false);
+
+                return true;
+            }
+
+            public bool ArriveeSurPrisonOuHopital()
+            {
+                string message;
                 if (this.estPrisonniers)
                 {
                     //si le convoi termine son mouvement à coté d'une case de prison, les prisonniers sont mis en prison et l'escorte est disponible comme renfort
@@ -2963,7 +2987,7 @@ namespace vaoc
                             ID_LIEU_RATTACHEMENT = ligneHopital.ID_NOM;
                             I_TOUR_BLESSURE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                             this.DetruirePion();//on fait comme si le pion était détruit sinon il va rester actif partout !
-                            //on envoie le message après ,sinon le pion reste visible (non détruit)
+                                                //on envoie le message après ,sinon le pion reste visible (non détruit)
                             if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_BLESSES_ARRIVE_A_DESTINATION))
                             {
                                 message = string.Format("ExecuterMouvementSansEffectif  : erreur lors de l'envoi d'un message pour indiquer qu'un convoi de blessés arrive à un hopital");
@@ -2972,21 +2996,7 @@ namespace vaoc
                             }
                         }
                     }
-                    else
-                    {
-                        //envoyer un messager pour prévenir de l'arrivée complète
-                        if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_ARRIVE_A_DESTINATION))
-                        {
-                            message = string.Format("ArriveADestination  : erreur lors de l'envoi d'un message pour indiquer qu'une unité arrive à destination");
-                            LogFile.Notifier(message);
-                            return false;
-                        }
-                    }
                 }
-
-                // l'ordre de mouvement est terminé
-                this.TerminerOrdre(ligneOrdre, true, false);
-
                 return true;
             }
 

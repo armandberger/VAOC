@@ -326,10 +326,10 @@ namespace vaoc
 
                     if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
-                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
-                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                         Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
-                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
@@ -345,6 +345,7 @@ namespace vaoc
                     if (!ligneBataille.EffectuerBataille(out m_bFinDeBataille))
                     {
                         messageErreur = "Erreur durant le traitement EffectuerBataille";
+                        LogFile.Notifier(messageErreur);
                         return false;
                     }
                 }
@@ -368,7 +369,7 @@ namespace vaoc
                                 }
                             }
                             //on en profite aussi pour voir si l'unité n'a pas rejoint un hopital ou une prison
-                            if (lignePion.ArriveeSurPrisonOuHopital()) { return false; }
+                            if (!lignePion.ArriveeSurPrisonOuHopital()) { return false; }
                         }
                     }
                     i++;

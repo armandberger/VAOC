@@ -4465,6 +4465,11 @@ namespace vaoc
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
+            internal string NomDeLaPatrouille()
+            {
+                return "Patrouille du " + S_NOM;
+            }
+
             //internal void SetI_TOUR_CONVOI_CREENull()
             //{
             //    this.I_TOUR_CONVOI_CREE = Constantes.NULLENTIER;

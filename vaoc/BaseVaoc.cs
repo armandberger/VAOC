@@ -453,6 +453,22 @@ namespace vaoc
             //}
 
             /// <summary>
+            /// Renvoie tous les ordres d'envoie de patrouilles mais non encore reçues par l'unite finale
+            /// </summary>
+            /// <param name="ID_PION">Pion proprietaire de la patrouille</param>
+            /// <returns>liste des ordres de patrouilles</returns>
+            public TAB_ORDRERow[] PatrouillesNonEnvoyees(int ID_PION)
+            {
+                string tri = "ID_ORDRE";
+                //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de mouvement
+                string requete = string.Format("(ID_DESTINATAIRE={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1}) AND I_ORDRE_TYPE = {2}", ID_PION, Constantes.NULLENTIER, Constantes.ORDRES.PATROUILLE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return resOrdre;
+            }
+
+            /// <summary>
             ///  Renvoi l'ordre correspondant à un identifiant du web
             /// </summary>
             /// <param name="ID_ORDREWEB">identifiant de l'ordre du web</param>

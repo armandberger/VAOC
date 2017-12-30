@@ -277,6 +277,7 @@ namespace vaoc
                 bool bPremierePatrouille = true;
                 foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
                 {
+                    string sDateDepart, sDestination;
                     //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
                     if (lignePion.estMessager || lignePion.estPatrouille) continue;
 
@@ -286,15 +287,6 @@ namespace vaoc
                     {
                         if (lignePatrouille.estPatrouille && !lignePatrouille.B_DETRUIT && lignePatrouille.ID_PION != lignePion.ID_PION)
                         {
-                            if (bPremierePatrouille)
-                            {
-                                bPremierePatrouille = false;
-                                texte.AppendLine("<div><b>Patrouilles :</b></div>");
-                                texte.AppendLine(string.Format("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\"><tr bgcolor=\"DarkGrey\"><th>{0}</th><th>{1}</th><th>{2}</th></tr>",
-                                    "Division", "Départ", "Destination"));
-                            }
-                            numLigne++;
-                            string sDateDepart, sDestination;
                             //pour avoir l'heure de départ, je cherche le premier ordre, pas l'ordre courant
                             Donnees.TAB_ORDRERow ligneOrdrePremier = Donnees.m_donnees.TAB_ORDRE.Premier(lignePatrouille.ID_PION);
 
@@ -312,19 +304,24 @@ namespace vaoc
                             int idCaseOrigine;
                             ClassMessager.ZoneGeographiqueVersCase(lignePatrouille, OrdreOrigine.I_DISTANCE,
                                 ClassMessager.DirectionOrdreVersCompas(OrdreOrigine.I_DIRECTION),
-                                OrdreOrigine.ID_NOM_LIEU, 
+                                OrdreOrigine.ID_NOM_LIEU,
                                 out idCaseOrigine);
                             ClassMessager.CaseVersZoneGeographique(idCaseOrigine, out sDestination);
 
-                            string format = (0 == numLigne % 3) ? " bgcolor=\"LightGrey\"" : "";
-                            texte.AppendLine(string.Format("<tr {0}><td>{1}</td><td>{2}</td><td>{3}</td></tr>",
-                                format,
-                                lignePion.S_NOM,
-                                sDateDepart,
-                                sDestination
-                                ));
+                            NouvelleLignePatrouille(texte, ref numLigne, ref bPremierePatrouille, 
+                                                    lignePion.S_NOM, sDateDepart, sDestination);
                         }
                     }
+                    //liste des ordres de patrouilles, non encore reçues par l'unité finale (patrouille non encore générées)
+                    Donnees.TAB_ORDRERow[] resOrdrePatrouilles = Donnees.m_donnees.TAB_ORDRE.PatrouillesNonEnvoyees(lignePion.ID_PION);
+                    foreach (Donnees.TAB_ORDRERow ligneOrdrePatrouille in resOrdrePatrouilles)
+                    {
+                        sDateDepart = ClassMessager.DateHeure(ligneOrdrePatrouille.I_TOUR_DEBUT, ligneOrdrePatrouille.I_PHASE_DEBUT, false);
+                        ClassMessager.CaseVersZoneGeographique(ligneOrdrePatrouille.ID_CASE_DESTINATION, out sDestination);
+                        NouvelleLignePatrouille(texte, ref numLigne, ref bPremierePatrouille, lignePion.NomDeLaPatrouille(), 
+                            sDateDepart, sDestination);
+                    }
+
                 }
                 if (bPremierePatrouille)
                 {
@@ -355,6 +352,25 @@ namespace vaoc
 
             texte.AppendLine("</html>");
             return true;
+        }
+
+        private static void NouvelleLignePatrouille(StringBuilder texte, ref int numLigne, ref bool bPremierePatrouille, string nomPion, string sDateDepart, string sDestination)
+        {
+            if (bPremierePatrouille)
+            {
+                bPremierePatrouille = false;
+                texte.AppendLine("<div><b>Patrouilles :</b></div>");
+                texte.AppendLine(string.Format("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\"><tr bgcolor=\"DarkGrey\"><th>{0}</th><th>{1}</th><th>{2}</th></tr>",
+                    "Division", "Départ", "Destination"));
+            }
+            numLigne++;
+            string format = (0 == numLigne % 3) ? " bgcolor=\"LightGrey\"" : "";
+            texte.AppendLine(string.Format("<tr {0}><td>{1}</td><td>{2}</td><td>{3}</td></tr>",
+                format,
+                nomPion,
+                sDateDepart,
+                sDestination
+                ));
         }
 
         private static string DescriptifOrdreEnCours(Donnees.TAB_PIONRow lignePion, int tour, int phase)

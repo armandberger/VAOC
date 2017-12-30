@@ -3796,7 +3796,7 @@ namespace vaoc
                                                     lignePionDestinataire.ID_PION, //ID_PION_PROPRIETAIRE
                                                     -1,//ID_NOUVEAU_PION_PROPRIETAIRE,
                                                     -1,//ID_ANCIEN_PION_PROPRIETAIRE
-                                                    "Patrouille du " + lignePionDestinataire.S_NOM,
+                                                    lignePionDestinataire.NomDeLaPatrouille(),
                                                     0, 0,//I_INFANTERIE
                                                     0, 0,
                                                     0, 0,

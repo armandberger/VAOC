@@ -2378,6 +2378,14 @@ namespace vaoc
                 //message pour prévenir du désengagement
                 if (lignePionFuite.effectifTotal > 0)
                 {
+                    //mise à jour dans la table des pions au combat pour l'affichage de fin de partie et les messages
+                    ligneBataillePions.B_RETRAITE = true;
+                    ligneBataillePions.I_INFANTERIE_FIN = lignePionFuite.I_INFANTERIE;
+                    ligneBataillePions.I_CAVALERIE_FIN = lignePionFuite.I_CAVALERIE;
+                    ligneBataillePions.I_ARTILLERIE_FIN = lignePionFuite.I_ARTILLERIE;
+                    ligneBataillePions.I_MORAL_FIN = lignePionFuite.I_MORAL;
+                    ligneBataillePions.I_FATIGUE_FIN = lignePionFuite.I_FATIGUE;
+
                     if (!ClassMessager.EnvoyerMessage(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_AU_COMBAT,
                             ligneBataillePions.I_INFANTERIE_DEBUT - ligneBataillePions.I_INFANTERIE_FIN,
                             ligneBataillePions.I_CAVALERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN,
@@ -2431,14 +2439,6 @@ namespace vaoc
                     }
                     //lignePionFuite.Delete();
                 }
-                //mise à jour dans la table des pions au combat pour l'affichage de fin de partie
-                ligneBataillePions.B_RETRAITE = true;
-                ligneBataillePions.I_INFANTERIE_FIN = lignePionFuite.I_INFANTERIE;
-                ligneBataillePions.I_CAVALERIE_FIN = lignePionFuite.I_CAVALERIE;
-                ligneBataillePions.I_ARTILLERIE_FIN = lignePionFuite.I_ARTILLERIE;
-                ligneBataillePions.I_MORAL_FIN = lignePionFuite.I_MORAL;
-                ligneBataillePions.I_FATIGUE_FIN = lignePionFuite.I_FATIGUE;
-
                 //desengagement du combat
                 //lignePionFuite.SetID_BATAILLENull(); l'unité ne quitte définitivement le combat que lorsque la fuite est terminée
                 //lignePionFuite.SetI_ZONE_BATAILLENull();, à ne pas faire car la zone est encore utile pour calculer les pertes par secteur

@@ -190,9 +190,9 @@ namespace vaoc
                         //le dernier message est en fait le plus récent
                         if (ligneMessage.B_DETRUIT) { continue; }
                         ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
-                        iInfanterie = ligneMessage.I_INFANTERIE;
-                        iCavalerie = ligneMessage.I_CAVALERIE;
-                        iArtillerie = ligneMessage.I_ARTILLERIE;
+                        iInfanterie = (int)Math.Round((decimal)ligneMessage.I_INFANTERIE * (100 - ligneMessage.I_FATIGUE) / 100);
+                        iCavalerie = (int)Math.Round((decimal)ligneMessage.I_CAVALERIE * (100 - ligneMessage.I_FATIGUE) / 100);
+                        iArtillerie = (int)Math.Round((decimal)ligneMessage.I_ARTILLERIE * (100 - ligneMessage.I_FATIGUE) / 100);
                         iFatigue = ligneMessage.I_FATIGUE;
                         if (!ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull())
                         {

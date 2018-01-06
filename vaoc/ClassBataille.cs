@@ -308,7 +308,11 @@ namespace vaoc
                 //ne pas le faire car on doit le garder pour savoir si, en fin de journée, l'unité s'est bien reposée
                 //DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[] resBataillePions=(DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[])DataSetCoutDonnees.m_donnees.TAB_BATAILLE_PIONS.Select(requete);
                 //foreach (DataSetCoutDonnees.TAB_BATAILLE_PIONSRow lignePionBataille in resBataillePions) { lignePionBataille.Delete(); }
-                bFinDeBataille = true;
+                if (this.ID_LEADER_012>=0 || this.ID_LEADER_345>=0)
+                {
+                    //c'est une fin de bataille necessitant un arrêt du tour en cours que si un leader un présent
+                    bFinDeBataille = true;
+                }
                 return true;
             }
 

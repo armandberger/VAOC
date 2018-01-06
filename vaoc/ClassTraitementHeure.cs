@@ -487,7 +487,7 @@ namespace vaoc
                     }
                     if (m_bFinDeBataille)
                     {
-                        LogFile.Notifier("Fin de tour :si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir");
+                        LogFile.Notifier("Fin de tour :si une bataille vient de se terminer, avec un leader dirigeant la bataille,on ne continue pas pour laisser au vaincu le temps de s'enfuir et d'être poursuivi");
                     }
                     bTourSuivant = false;
                 }

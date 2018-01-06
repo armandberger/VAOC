@@ -26,7 +26,7 @@ namespace vaoc
         //public static Donnees.TAB_CASERow Target { set { _Target = value; } get { return _Target; } }
         //public static Donnees.TAB_PCC_COUTSRow Target { set { _TargetHPA = value; } get { return _TargetHPA; } }
 
-        private static long idGlobal = 0;
+        //private static long idGlobal = 0;
         private int m_tailleBloc = 0;
 
         //public Donnees.TAB_CASERow EndNode; -> pas utilisable en multi-threading, la valeur peut changer durant le traitement
@@ -44,7 +44,7 @@ namespace vaoc
 
         public bool Succeed(Node cible) { if (null==EndNodeHPA) return (EndNode.ID_CASE == cible.ID_CASE); else return (EndNodeHPA.ID_CASE_FIN == cible.ID_CASE); } 
 
-        public long Id { get; set; }
+        //public long Id { get; set; }
         public int blocX { get; set; }
         public int blocY { get; set; }
 
@@ -60,7 +60,7 @@ namespace vaoc
             m_tailleBloc = taillebloc;
             blocX = (0 == EndNode.I_X % m_tailleBloc) ? (EndNode.I_X / m_tailleBloc) - 1 : EndNode.I_X / m_tailleBloc;
             blocY = (0 == EndNode.I_Y % m_tailleBloc) ? (EndNode.I_Y / m_tailleBloc) - 1 : EndNode.I_Y / m_tailleBloc;
-            Id = idGlobal++;
+            //Id = idGlobal++;
         }
 
         public Track(Donnees.TAB_PCC_COUTSRow GraphNode)
@@ -74,7 +74,7 @@ namespace vaoc
             EndNodeHPA = GraphNode;
             blocX = EndNodeHPA.I_BLOCX;
             blocY = EndNodeHPA.I_BLOCY;
-            Id = idGlobal++;
+            //Id = idGlobal++;
         }
 
         public Track(Track PreviousTrack, Node caseFinale, AStar etoile)
@@ -97,7 +97,7 @@ namespace vaoc
 			EndNode = caseFinale;
             blocX = PreviousTrack.blocX;
             blocY = PreviousTrack.blocY;
-            Id = idGlobal++;
+            //Id = idGlobal++;
         }
 
         public Track(Track PreviousTrack, Track NextTrack, AStar etoile)
@@ -129,7 +129,7 @@ namespace vaoc
             EndNodeHPA = NextTrack.EndNodeHPA;
             blocX = NextTrack.blocX;
             blocY = NextTrack.blocY;
-            Id = idGlobal++;
+            //Id = idGlobal++;
         }
         
         public int CompareTo(object Objet)

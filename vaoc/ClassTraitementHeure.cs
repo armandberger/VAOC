@@ -3659,9 +3659,11 @@ namespace vaoc
                                     message = string.Format("{0}(ID={1}, ExecuterMouvementSansEffectif le destinataire a bougé ID_ORDRE:{2} de {3} vers {4})",
                                         lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, ligneOrdre.ID_CASE_DESTINATION, lignePionDestinataire.ID_CASE);
                                     LogFile.Notifier(message, out messageErreur);
+                                    Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                     ligneOrdre.ID_CASE_DESTINATION = lignePionDestinataire.ID_CASE;
                                     ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;//sinon le trajet recalculé ne passe pas obligatoirement par la case courante
                                     ligneOrdre.SetID_NOM_DESTINATIONNull();//première ville destinatrice du message, sans valeur maintenant
+                                    Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                     bOrdreTermine = false; //finallement, l'ordre n'est pas terminé
                                 }
                             }
@@ -3683,9 +3685,11 @@ namespace vaoc
                                             lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, lignePionDestinataire.ID_PION);
                                         LogFile.Notifier(message, out messageErreur);
 
+                                        Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                                         ligneMessage.I_TOUR_ARRIVEE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                                         ligneMessage.I_PHASE_ARRIVEE = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                                         ligneMessage.ID_PION_PROPRIETAIRE = lignePionDestinataire.ID_PION;
+                                        Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
 
                                         ReceptionMessageTransfert(ligneMessage.emetteur, ligneMessage);
                                         lignePion.DetruirePion();//le messager est devenu inutile
@@ -3702,10 +3706,12 @@ namespace vaoc
                                             lignePionNouveauDestinataire.S_NOM);
                                         LogFile.Notifier(message, out messageErreur);
 
+                                        Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                         ligneOrdre.ID_DESTINATAIRE = lignePionNouveauDestinataire.ID_PION;
                                         ligneOrdre.ID_CASE_DESTINATION = lignePionNouveauDestinataire.ID_CASE;
                                         ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;//sinon le trajet recalculé ne passe pas obligatoirement par la case courante
                                         ligneOrdre.SetID_NOM_DESTINATIONNull();//première ville destinatrice du message, sans valeur maintenant
+                                        Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                         bOrdreTermine = false;//finallement, l'ordre n'est pas terminé                                                
                                     }
                                 }
@@ -3860,10 +3866,12 @@ namespace vaoc
                                                 return false;
                                             }
                                             //on lui affecte l'ordre correspondant
+                                            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                             ligneOrdreNouveau.ID_PION = lignePionPatrouille.ID_PION;
                                             ligneOrdreNouveau.ID_CASE_DEPART = lignePionDestinataire.ID_CASE;
                                             ligneOrdreNouveau.I_TOUR_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                                             ligneOrdreNouveau.I_PHASE_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                                            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                                             bOrdreTermine = false;
 
                                             tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_PATROUILLE_RECU;
@@ -3997,9 +4005,11 @@ namespace vaoc
                 }
             }
             Donnees.m_donnees.TAB_PARCOURS.SupprimerParcoursPion(lignePion.ID_PION);
+            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
             ligneOrdre.I_EFFECTIF_DEPART = lignePion.effectifTotalEnMouvement;
             ligneOrdre.I_EFFECTIF_DESTINATION = 0;
             ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;
+            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
             Donnees.TAB_CASERow ligneCaseDepart = lignePion.CaseCourante();
             AStar etoile = new AStar();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -4115,18 +4125,22 @@ namespace vaoc
             //activer le nouvel ordre (s'il y en a un ! Mais, normalement, il y en a toujours un)
             if (null != ligneOrdreNouveau)
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdreNouveau.ID_PION = lignePionDestinataire.ID_PION;
                 ligneOrdreNouveau.ID_CASE_DEPART = lignePionDestinataire.ID_CASE;
                 ligneOrdreNouveau.I_TOUR_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 ligneOrdreNouveau.I_PHASE_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                 ligneOrdreNouveau.I_EFFECTIF_DEPART = lignePionDestinataire.effectifTotalEnMouvement;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
 
                 //si le nouvel ordre est un ordre de mouvement ou de combat, la fortification de campagne est détruite
                 if (ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.COMBAT ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.RETRAITE)
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePionDestinataire.I_NIVEAU_FORTIFICATION = 0;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;

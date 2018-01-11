@@ -1280,7 +1280,7 @@ namespace vaoc
                     break;
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
                     if (ligneOrdre.I_PHASE_DEBUT == phase && 
-                        ((lignePion.I_TOUR_CONVOI_CREE<=0) || (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - 7) >24))
+                        ((lignePion.I_TOUR_CONVOI_CREE<=0) || (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_CONVOI_CREE) >=24))
                     {
                         //on créer un nouveau convoi de type ravitaillement
                         Donnees.TAB_PIONRow lignePionConvoi = lignePion.CreerConvoi(lignePion.proprietaire, false /*bBlesses*/, false /*bPrisonniers*/, false /*bRenfort*/);
@@ -3900,12 +3900,14 @@ namespace vaoc
                                         lignePion.S_NOM, lignePion.ID_PION, ligneOrdreNouveau.ID_ORDRE, ligneOrdreNouveau.I_ORDRE_TYPE, lignePionDestinataire.S_NOM, lignePionDestinataire.ID_PION);
                                     LogFile.Notifier(message, out messageErreur);
 
+                                    lignePion.TerminerOrdre(ligneOrdre, false, false);
                                     lignePion.DetruirePion();//le messager d'origine est devenu inutile
                                 }
                             }
                         }
                         else
                         {
+                            lignePion.TerminerOrdre(ligneOrdre, false, false);
                             lignePion.DetruirePion();//le messager d'origine est devenu inutile
                         }
                     }

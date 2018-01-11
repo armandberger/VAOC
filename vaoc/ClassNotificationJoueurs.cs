@@ -318,7 +318,7 @@ namespace vaoc
                     {
                         sDateDepart = ClassMessager.DateHeure(ligneOrdrePatrouille.I_TOUR_DEBUT, ligneOrdrePatrouille.I_PHASE_DEBUT, false);
                         ClassMessager.CaseVersZoneGeographique(ligneOrdrePatrouille.ID_CASE_DESTINATION, out sDestination);
-                        NouvelleLignePatrouille(texte, ref numLigne, ref bPremierePatrouille, lignePion.NomDeLaPatrouille(), 
+                        NouvelleLignePatrouille(texte, ref numLigne, ref bPremierePatrouille, lignePion.S_NOM, 
                             sDateDepart, sDestination);
                     }
 

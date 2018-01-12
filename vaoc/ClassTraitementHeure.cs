@@ -1950,11 +1950,13 @@ namespace vaoc
                                     //Il n'y a plus assez de blessés pour constituer une unité de renforts suffisants
                                     lignePionBlesses.I_INFANTERIE = 0;
                                     lignePionBlesses.I_CAVALERIE = 0;
+                                    lignePionBlesses.I_ARTILLERIE = 0;
                                 }
                                 else
                                 {
                                     lignePionBlesses.I_INFANTERIE = lignePionBlesses.I_INFANTERIE / 2;
                                     lignePionBlesses.I_CAVALERIE = lignePionBlesses.I_CAVALERIE / 2;
+                                    lignePionBlesses.I_ARTILLERIE = lignePionBlesses.I_ARTILLERIE / 2;
                                 }
                             }
                             Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
@@ -2949,39 +2951,36 @@ namespace vaoc
             {
                 if (ligneNomCarte.B_HOPITAL  && !ligneNomCarte.IsID_NATION_CONTROLENull())
                 {
-                    //création d'un pion fictif ayant pour effectif, les effectifs de l'hopital pour envoyer un rapport de situation.
-                    Donnees.TAB_PIONRow lignePionLeader = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
-                    //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
-                    Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
-                    lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
-                    lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                    int iBlessesInfanterie = 0;
+                    int iBlessesCavalerie = 0;
+                    int iBlessesArtillerie = 0;
 
                     //Le nombre de blessés soignés par unité est égale à (50% + La valeur de I_GUERISON dans TAB_NATION + d3 avec (1: -10%, 2: 0, 3: +10)/4 
-                    int pourcentGuerison =  50 + ligneNomCarte.nation.I_GUERISON + (1 - (Constantes.JetDeDes(1)-1)/2)*10;
-                    LogFile.Notifier("SoinsAuxBlesses : soins aux blessés sur l'hopital "+ligneNomCarte.S_NOM+" avec un pourcentage de "+pourcentGuerison+" %");
+                    int pourcentGuerison = 50 + ligneNomCarte.nation.I_GUERISON + (1 - (Constantes.JetDeDes(1) - 1) / 2) * 10;
+                    LogFile.Notifier("SoinsAuxBlesses : soins aux blessés sur l'hopital " + ligneNomCarte.S_NOM + " avec un pourcentage de " + pourcentGuerison + " %");
 
                     //recherche de toutes les unités rattachés à ce nom
-                    string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
+                    string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    for(int l=0; l<lignesPionResultat.Count(); l++)
+                    for (int l = 0; l < lignesPionResultat.Count(); l++)
                     {
                         Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
-                        if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal>0))
+                        if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal > 0))
                         {
                             //cela fait-il une semaine que l'unité a rejoint l'hopital
                             int nbToursHopital = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_BLESSURE;
                             //if (true) //BEA pour test
-                            if (nbToursHopital >0 && (0 == nbToursHopital % (24*7)))
+                            if (nbToursHopital > 0 && (0 == nbToursHopital % (24 * 7)))
                             {
-                                int iInfanterieRenfort=0, iCavalerieRenfort=0;
-                                iInfanterieRenfort=lignePion.I_INFANTERIE*pourcentGuerison/100;
-                                iCavalerieRenfort=lignePion.I_CAVALERIE*pourcentGuerison/100;
-                                if (iInfanterieRenfort+iCavalerieRenfort <= Constantes.CST_TAILLE_MINIMUM_UNITE)
+                                int iInfanterieRenfort = 0, iCavalerieRenfort = 0;
+                                iInfanterieRenfort = lignePion.I_INFANTERIE * pourcentGuerison / 100;
+                                iCavalerieRenfort = lignePion.I_CAVALERIE * pourcentGuerison / 100;
+                                if (iInfanterieRenfort + iCavalerieRenfort <= Constantes.CST_TAILLE_MINIMUM_UNITE)
                                 {
                                     //Toute l'unité est soignée d'un coup (pour éviter d'avoir des unités de très peu de soldats à gérer)
-                                    iInfanterieRenfort=lignePion.I_INFANTERIE;
-                                    iCavalerieRenfort=lignePion.I_CAVALERIE;
+                                    iInfanterieRenfort = lignePion.I_INFANTERIE;
+                                    iCavalerieRenfort = lignePion.I_CAVALERIE;
                                 }
                                 Donnees.TAB_NATIONRow ligneNation = lignePion.nation;
                                 Donnees.TAB_PIONRow lignePionCommandantEnChef = ligneNation.commandantEnChef;
@@ -3005,22 +3004,37 @@ namespace vaoc
                                     string message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_BLESSES_SOIGNES dans SoinsAuxBlesses", lignePionRenfort.S_NOM, lignePionRenfort.ID_PION);
                                     LogFile.Notifier(message);
                                     return false;
-                                }                                
+                                }
                             }
                             // pour le rapport d'effectifs
-                            lignePionRapport.I_INFANTERIE += lignePion.I_INFANTERIE;
-                            lignePionRapport.I_CAVALERIE += lignePion.I_CAVALERIE;
-                            lignePionRapport.I_ARTILLERIE += lignePion.I_ARTILLERIE;
+                            iBlessesInfanterie += lignePion.I_INFANTERIE;
+                            iBlessesCavalerie += lignePion.I_CAVALERIE;
+                            iBlessesArtillerie += lignePion.I_ARTILLERIE;
+                        }
+                    }
+                    //création d'un pion fictif ayant pour effectif, les effectifs de l'hopital pour envoyer un rapport de situation.
+                    IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
+                    foreach (Donnees.TAB_PIONRow lignePionLeader in listeLeaders)
+                    {
+                        //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
+                        Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                        lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
+                        lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                        // pour le rapport d'effectifs
+                        lignePionRapport.I_INFANTERIE = iBlessesInfanterie;
+                        lignePionRapport.I_CAVALERIE += iBlessesCavalerie;
+                        lignePionRapport.I_ARTILLERIE += iBlessesArtillerie;
+
+                        //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
+                        lignePionRapport.DetruirePion();
+                        if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
+                        {
+                            LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            return false;
                         }
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                    //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
-                    lignePionRapport.DetruirePion();
-                    if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
-                    {
-                        LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
-                        return false;
-                    }
                 }
             }
             return true;
@@ -3032,36 +3046,51 @@ namespace vaoc
             {
                 if (ligneNomCarte.B_PRISON && !ligneNomCarte.IsID_NATION_CONTROLENull())
                 {
-                    //création d'un pion fictif ayant pour effectif, les effectifs de la prison pour envoyer un rapport de situation.
-                    int idModeleMESSAGER = Donnees.m_donnees.TAB_MODELE_PION.RechercherModele(ligneNomCarte.ID_NATION_CONTROLE, "MESSAGER");//il faut bien choisir un modèle
-
-                    Donnees.TAB_PIONRow lignePionLeader = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
-                    //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
-                    Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
-                    lignePionRapport.S_NOM = "Prison de " + ligneNomCarte.S_NOM;
-                    lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                    int iPrisonniersInfanterie = 0;
+                    int iPrisonniersCavalerie = 0;
+                    int iPrisonniersArtillerie = 0;
 
                     //recherche de toutes les unités rattachés à ce nom
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     string requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    for (int l=0; l<lignesPionResultat.Count(); l++)
+                    for (int l = 0; l < lignesPionResultat.Count(); l++)
                     {
                         Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
                         if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal > 0))
                         {
                             // pour le rapport d'effectifs
-                            lignePionRapport.I_INFANTERIE += lignePion.I_INFANTERIE;
-                            lignePionRapport.I_CAVALERIE += lignePion.I_CAVALERIE;
-                            lignePionRapport.I_ARTILLERIE += lignePion.I_ARTILLERIE;
+                            iPrisonniersInfanterie += lignePion.I_INFANTERIE;
+                            iPrisonniersCavalerie += lignePion.I_CAVALERIE;
+                            iPrisonniersArtillerie += lignePion.I_ARTILLERIE;
                         }
                     }
-                    //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
-                    lignePionRapport.DetruirePion();
-                    if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
+
+                    //création d'un pion fictif ayant pour effectif, les effectifs de la prison pour envoyer un rapport de situation.
+                    if (iPrisonniersInfanterie + iPrisonniersCavalerie + iPrisonniersArtillerie > 0)
                     {
-                        LogFile.Notifier("RapportDesPrisons : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_PRISON");
-                        return false;
+                        IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
+                        foreach (Donnees.TAB_PIONRow lignePionLeader in listeLeaders)
+                        {
+                            //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
+                            Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                            lignePionRapport.S_NOM = "Prison de " + ligneNomCarte.S_NOM;
+                            lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                            lignePionRapport.I_INFANTERIE = iPrisonniersInfanterie;
+                            lignePionRapport.I_CAVALERIE = iPrisonniersCavalerie;
+                            lignePionRapport.I_ARTILLERIE = iPrisonniersArtillerie;
+
+                            //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
+                            lignePionRapport.DetruirePion();
+                            if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
+                            {
+                                LogFile.Notifier("RapportDesPrisons : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_PRISON");
+                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                return false;
+                            }
+                        }
                     }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;

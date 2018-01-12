@@ -14,9 +14,10 @@ namespace vaoc
             /// recherche le leader de la nation
             /// </summary>
             /// <returns>renvoi le pion correspondant</returns>
-            public TAB_PIONRow CommandantEnChef(int idNation)
+            public IEnumerable<TAB_PIONRow> CommandantEnChef(int idNation)
             {
                 //le leader, c'est celui qui est propriétaire de lui-même
+                //ils peuvent être plusieurs si les nations sont alliés
                 //recherche du pion
                 var result = from pionLeader in
                                  (from lignePion in Donnees.m_donnees.TAB_PION
@@ -33,7 +34,7 @@ namespace vaoc
                     return null;
                 }
 
-                return result.ElementAt(0);
+                return result;
             }
         }
 

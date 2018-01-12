@@ -3480,10 +3480,22 @@ namespace vaoc
                 //un poin patrouille ET message est une patrouille sur le retour, elle n'envoit pas deux rapports !
                 if (estPatrouille && !estMessager && (lignePionEnnemi.estCombattif || lignePionEnnemi.estPatrouille))
                 {
+                    //on prévient l'unité du contact de la patrouille
+                    if (!ClassMessager.EnvoyerMessage(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_CONTACT_PATROUILLE_ENNEMIE))
+                    {
+                        LogFile.Notifier("Rencontre : erreur I lors de l'envoi d'un message MESSAGE_CONTACT_PATROUILLE_ENNEMIE");
+                        return false;
+                    }
                     return RapportDePatrouille();//si on continue, le message de la patrouille peut être directement intercepté
                 }
                 if (lignePionEnnemi.estPatrouille && !lignePionEnnemi.estMessager && (estCombattif || estPatrouille))
                 {
+                    //on prévient l'unité du contact de la patrouille
+                    if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_CONTACT_PATROUILLE_ENNEMIE))
+                    {
+                        LogFile.Notifier("Rencontre : erreur II lors de l'envoi d'un message MESSAGE_CONTACT_PATROUILLE_ENNEMIE");
+                        return false;
+                    }
                     return lignePionEnnemi.RapportDePatrouille();//si on continue, le message de la patrouille peut être directement intercepté
                 }
                 #endregion

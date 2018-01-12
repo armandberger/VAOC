@@ -282,8 +282,12 @@ namespace vaoc
             //ex : En tant qu'aide de camp du {1}, je dois vous annoncer avec une profonde tristesse que celui vient de mourrir à mes pieds, frappé en plein coeur par une balle ennemie.
             MESSAGE_RAPPORT_PRISON = 86,
             //En tant que directeur de la prison de {2}, les effectifs des goeles sont de {5} soldats d'infanterie et {7} soldats de cavalerie. 
-            MESSAGE_RAPPORT_HOPITAL = 87
+            MESSAGE_RAPPORT_HOPITAL = 87,
             //En tant que médecin général responsable de l'hopital de {2}, j'informe que je soigne actuellement dans mes services {5} fantassins et {7} cavaliers.
+            MESSAGE_CONTACT_PATROUILLE_ENNEMIE = 88
+            //Une patrouille ennemie a été observé autour de la {1}. Elle est rapidement repartie sans que nous puissions intervenir.
+            //Une patrouille ennemie est entrée en contact à {2}. Quelques tirs bien ajustés, l'on rapidement mise en fuite.
+            //Quelques cavaliers, sans doute une patrouille, ont affrontés nos soldats à {2}. Dès le premier sang versés, ils se sont tous évanouis dans la nature...
         }
         /*
                DateHeure(true), //0

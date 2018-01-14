@@ -3689,6 +3689,13 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             internal bool CaptureConvoiBlessesPrisonniers(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
+                bool bEnDanger;
+                string message;
+
+                //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, out message, out bEnDanger);
+                if (!bEnDanger) { return true; }
+
                 //if (lignePion.estDepot) -> pas un bon test, c'est un convoi à ce moment là, pas un dépôt
                 if (estConvoiDeRavitaillement)
                 {
@@ -3775,6 +3782,11 @@ namespace vaoc
                 int idNouveauPionProprietaire;
                 string requete, message;
                 int idNationCaptureur;
+                bool bEnDanger;
+
+                //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, out message, out bEnDanger);
+                if (!bEnDanger) { return true; }
 
                 // Un dépôt capturé est réduit d'un niveau (règle avancé) et capturé
                 // s'il était au dernier niveau possible, le dépôt est détruit.

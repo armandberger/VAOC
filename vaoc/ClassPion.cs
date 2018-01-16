@@ -3419,18 +3419,21 @@ namespace vaoc
 
                     nbplaces++;
                     if (estMessager || estPatrouille || estDepot /*|| lignePion.estConvoi || lignePion.estPontonnier*/) { return true; }
-                    //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille
-                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
-                    foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                    //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille, uniquement de jour
+                    if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {
-                        if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
-                        if (ligneCase.I_X <= ligneBataille.I_X_CASE_BAS_DROITE && ligneCase.I_Y <= ligneBataille.I_Y_CASE_BAS_DROITE &&
-                            ligneCase.I_X >= ligneBataille.I_X_CASE_HAUT_GAUCHE && ligneCase.I_Y >= ligneBataille.I_Y_CASE_HAUT_GAUCHE)
+                        Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+                        foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                         {
-                            ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
+                            if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
+                            if (ligneCase.I_X <= ligneBataille.I_X_CASE_BAS_DROITE && ligneCase.I_Y <= ligneBataille.I_Y_CASE_BAS_DROITE &&
+                                ligneCase.I_X >= ligneBataille.I_X_CASE_HAUT_GAUCHE && ligneCase.I_Y >= ligneBataille.I_Y_CASE_HAUT_GAUCHE)
+                            {
+                                ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
+                            }
                         }
+                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
                 }
                 else
                 {

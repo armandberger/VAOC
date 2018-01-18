@@ -3014,8 +3014,10 @@ namespace vaoc
                     }
                     //création d'un pion fictif ayant pour effectif, les effectifs de l'hopital pour envoyer un rapport de situation.
                     IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
-                    foreach (Donnees.TAB_PIONRow lignePionLeader in listeLeaders)
+                    int i = 0;
+                    while (i<listeLeaders.Count())
                     {
+                        Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
                         //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
                         Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
                         lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
@@ -3033,6 +3035,7 @@ namespace vaoc
                             Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             return false;
                         }
+                        i++;
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
@@ -3070,8 +3073,10 @@ namespace vaoc
                     if (iPrisonniersInfanterie + iPrisonniersCavalerie + iPrisonniersArtillerie > 0)
                     {
                         IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
-                        foreach (Donnees.TAB_PIONRow lignePionLeader in listeLeaders)
+                        int i = 0;
+                        while (i<listeLeaders.Count())
                         {
+                            Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
                             //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
                             Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
                             lignePionRapport.S_NOM = "Prison de " + ligneNomCarte.S_NOM;
@@ -3088,6 +3093,7 @@ namespace vaoc
                                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
+                            i++;
                         }
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);

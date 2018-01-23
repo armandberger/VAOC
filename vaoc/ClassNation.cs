@@ -20,12 +20,11 @@ namespace vaoc
                 //ils peuvent être plusieurs si les nations sont alliés
                 //recherche du pion
                 var result = from pionLeader in
-                                 (from lignePion in Donnees.m_donnees.TAB_PION
-                                  join ModelePion in Donnees.m_donnees.TAB_MODELE_PION
-                                  on lignePion.ID_MODELE_PION equals ModelePion.ID_MODELE_PION
-                                  join nation in Donnees.m_donnees.TAB_NATION
-                                  on ModelePion.ID_NATION equals idNation
-                                  select lignePion)
+                                                 (from lignePion in Donnees.m_donnees.TAB_PION
+                                                  join ModelePion in Donnees.m_donnees.TAB_MODELE_PION
+                                                  on lignePion.ID_MODELE_PION equals ModelePion.ID_MODELE_PION
+                                                  where ModelePion.ID_NATION == idNation
+                                                  select lignePion)
                              where pionLeader.ID_PION == pionLeader.ID_PION_PROPRIETAIRE
                              select pionLeader;
 

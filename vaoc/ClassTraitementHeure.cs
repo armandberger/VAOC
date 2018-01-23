@@ -52,6 +52,13 @@ namespace vaoc
             //TestCreation();
             AmeliorationsPerformances();
 
+            //IEnumerable<Donnees.TAB_PIONRow> test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
+            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
+            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
+            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
+            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
+            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
+
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
             Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];

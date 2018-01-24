@@ -3020,29 +3020,33 @@ namespace vaoc
                         }
                     }
                     //création d'un pion fictif ayant pour effectif, les effectifs de l'hopital pour envoyer un rapport de situation.
-                    IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
-                    int i = 0;
-                    while (i<listeLeaders.Count())
+                    //uniquement s'il y a des blessés
+                    if (iBlessesInfanterie + iBlessesCavalerie + iBlessesArtillerie > 0)
                     {
-                        Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
-                        //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
-                        Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
-                        lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
-                        lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
-                        // pour le rapport d'effectifs
-                        lignePionRapport.I_INFANTERIE = iBlessesInfanterie;
-                        lignePionRapport.I_CAVALERIE += iBlessesCavalerie;
-                        lignePionRapport.I_ARTILLERIE += iBlessesArtillerie;
-
-                        //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
-                        lignePionRapport.DetruirePion();
-                        if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
+                        IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
+                        int i = 0;
+                        while (i < listeLeaders.Count())
                         {
-                            LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                            return false;
+                            Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
+                            //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
+                            Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                            lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
+                            lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                            // pour le rapport d'effectifs
+                            lignePionRapport.I_INFANTERIE = iBlessesInfanterie;
+                            lignePionRapport.I_CAVALERIE = iBlessesCavalerie;
+                            lignePionRapport.I_ARTILLERIE = iBlessesArtillerie;
+
+                            //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
+                            lignePionRapport.DetruirePion();
+                            if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
+                            {
+                                LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
+                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                return false;
+                            }
+                            i++;
                         }
-                        i++;
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }

@@ -3484,7 +3484,7 @@ namespace vaoc
                 if (estPatrouille && !estMessager && (lignePionEnnemi.estCombattif || lignePionEnnemi.estPatrouille))
                 {
                     //on prévient l'unité du contact de la patrouille si elle est repérée
-                    if (Constantes.JetDeDes(2)>=6)
+                     if (Constantes.JetDeDes(2)>=6)
                     {
                         if (!ClassMessager.EnvoyerMessage(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_CONTACT_PATROUILLE_ENNEMIE))
                         {

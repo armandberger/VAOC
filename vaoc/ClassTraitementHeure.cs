@@ -3247,6 +3247,12 @@ namespace vaoc
                                 ligneOrdre.I_EFFECTIF_DESTINATION = lignePion.effectifTotalEnMouvement;
                             }
                         }
+
+                        //affection à zéro avant l'envoi des messages, sinon, cela trouble les joueurs
+                        lignePion.I_NB_PHASES_MARCHE_JOUR = 0;
+                        lignePion.I_NB_PHASES_MARCHE_NUIT = 0;
+                        lignePion.I_NB_HEURES_COMBAT = 0;
+                        lignePion.I_NB_HEURES_FORTIFICATION = 0;
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_BILAN_ACTION, diffmoral, diffatigue))
                         {
                             message = string.Format("FinDuJour : erreur lors de l'envoi d'un message MESSAGE_BILAN_ACTION");
@@ -3272,6 +3278,12 @@ namespace vaoc
                                 return false;
                             }
                         }
+
+                        //affection à zéro avant l'envoi des messages, sinon, cela trouble les joueurs
+                        lignePion.I_NB_PHASES_MARCHE_JOUR = 0;
+                        lignePion.I_NB_PHASES_MARCHE_NUIT = 0;
+                        lignePion.I_NB_HEURES_COMBAT = 0;
+                        lignePion.I_NB_HEURES_FORTIFICATION = 0;
 
                         if (diffatigue > 0 && diffmoral > 0)
                         {
@@ -3313,10 +3325,6 @@ namespace vaoc
                             }
                         }
                     }
-                    lignePion.I_NB_PHASES_MARCHE_JOUR = 0;
-                    lignePion.I_NB_PHASES_MARCHE_NUIT = 0;
-                    lignePion.I_NB_HEURES_COMBAT = 0;
-                    lignePion.I_NB_HEURES_FORTIFICATION = 0;
                 }
                 ++i;
             }

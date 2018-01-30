@@ -293,7 +293,7 @@ namespace vaoc
             #endregion
 
             #region correction ciblée de la carte
-            /*
+            /* C'est revenu après plusieurs tours !!!*/
             //pour créer les listeindex, sinon crash au chargement
             Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);//optimisation mémoire
             //Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
@@ -347,7 +347,7 @@ namespace vaoc
 
             // Il faut recalculer la table d'optimisation HPA
             Donnees.m_donnees.TAB_PCC_COUTS.Initialisation();
-            */
+            /**/
             #endregion
 
             /*

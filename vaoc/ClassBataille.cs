@@ -1800,7 +1800,7 @@ namespace vaoc
                 {
                     if (des[i] > 0)
                     {
-                        message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}%", i, score[i], des[i], pertesMoral[i], pertesEffectifs[i]);
+                        message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}", i, score[i], des[i], pertesMoral[i], pertesEffectifs[i]);
                         LogFile.Notifier(message, out messageErreur);
 
                         if (!CalculDesPertesAuCombatParSecteur(i + 3, lignePionsEnBataille345, i, lignePionsEnBataille012, pertesMoral[i], pertesEffectifs[i]))
@@ -1813,7 +1813,7 @@ namespace vaoc
 
                     if (des[i + 3] > 0)
                     {
-                        message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}%", i, score[i + 3], des[i + 3], pertesMoral[i + 3], pertesEffectifs[i + 3]);
+                        message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}", i, score[i + 3], des[i + 3], pertesMoral[i + 3], pertesEffectifs[i + 3]);
                         LogFile.Notifier(message, out messageErreur);
 
                         if (!CalculDesPertesAuCombatParSecteur(i, lignePionsEnBataille012, i + 3, lignePionsEnBataille345, pertesMoral[i + 3], pertesEffectifs[i + 3]))
@@ -2310,9 +2310,9 @@ namespace vaoc
                         des[i] += Math.Max(1, valeurTactique[i]);
                         LogFile.Notifier(string.Format("RecherchePionsEnBatailleParZone valeurTactique sur zone={0} = {1}", i, valeurTactique[i]));
                     }
-                    if (presenceCavalerieDeLigne[i]) { des[i] += 1; }
+                    if (presenceCavalerieDeLigne[i] && !presenceCavalerieLourde[i]) { des[i] += 1; }
                     if (presenceCavalerieLourde[i]) { des[i] += 2; }
-                    if (presenceGarde[i]) { des[i] += 2; }
+                    if (presenceGarde[i] && !presenceVieilleGarde[i]) { des[i] += 2; }
                     if (presenceVieilleGarde[i]) { des[i] += 3; }
                 }
 

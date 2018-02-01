@@ -120,6 +120,9 @@ namespace vaoc
             this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statistiquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repriseDeDonnéesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.actuelsAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.anciensActuelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripCarte = new System.Windows.Forms.ToolStrip();
             this.toolStripAfficherVilles = new System.Windows.Forms.ToolStripButton();
@@ -882,7 +885,10 @@ namespace vaoc
             this.testsToolStripMenuItem,
             this.outilsToolStripMenuItem,
             this.statistiquesToolStripMenuItem,
-            this.repriseDeDonnéesToolStripMenuItem});
+            this.repriseDeDonnéesToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.actuelsAnciensToolStripMenuItem,
+            this.anciensActuelsToolStripMenuItem});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.actionsToolStripMenuItem.Text = "&Actions";
@@ -969,6 +975,25 @@ namespace vaoc
             this.repriseDeDonnéesToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             this.repriseDeDonnéesToolStripMenuItem.Text = "&Reprise de Données";
             this.repriseDeDonnéesToolStripMenuItem.Click += new System.EventHandler(this.repriseDeDonnéesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(203, 6);
+            // 
+            // actuelsAnciensToolStripMenuItem
+            // 
+            this.actuelsAnciensToolStripMenuItem.Name = "actuelsAnciensToolStripMenuItem";
+            this.actuelsAnciensToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.actuelsAnciensToolStripMenuItem.Text = "Actuels->Anciens";
+            this.actuelsAnciensToolStripMenuItem.Click += new System.EventHandler(this.actuelsAnciensToolStripMenuItem_Click);
+            // 
+            // anciensActuelsToolStripMenuItem
+            // 
+            this.anciensActuelsToolStripMenuItem.Name = "anciensActuelsToolStripMenuItem";
+            this.anciensActuelsToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            this.anciensActuelsToolStripMenuItem.Text = "Anciens->Actuels";
+            this.anciensActuelsToolStripMenuItem.Click += new System.EventHandler(this.anciensActuelsToolStripMenuItem_Click);
             // 
             // AProposToolStripMenuItem
             // 
@@ -1324,6 +1349,9 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem repriseDeDonnéesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem donneesVidéoToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonMemoire;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem actuelsAnciensToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem anciensActuelsToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

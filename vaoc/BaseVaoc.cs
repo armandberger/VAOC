@@ -317,7 +317,9 @@ namespace vaoc
                 //immédiatement
                 string requete = string.Format("ID_PION_EMETTEUR={0} AND I_TYPE={1}", id_pion, (int)i_type);
                 string tri = "I_TOUR_DEPART DESC, I_PHASE_DEPART DESC";
+                Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 TAB_MESSAGERow[] resMessage = (TAB_MESSAGERow[])Select(requete, tri);
+                Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
                 if (0 == resMessage.Length)
                 {
                     return null;
@@ -715,7 +717,9 @@ namespace vaoc
                         this.ID_MODELE_MOUVEMENT,
                         Donnees.m_donnees.TAB_PARTIE[0].ID_METEO,
                         ID_MODELE_TERRAIN);
+                Monitor.Enter(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 Donnees.TAB_MOUVEMENT_COUTRow[] resCout = (Donnees.TAB_MOUVEMENT_COUTRow[])Donnees.m_donnees.TAB_MOUVEMENT_COUT.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 return resCout[0].I_COUT;
             }
 
@@ -741,7 +745,9 @@ namespace vaoc
                         this.ID_MODELE_MOUVEMENT,
                         Donnees.m_donnees.TAB_PARTIE[0].ID_METEO,
                         ID_MODELE_TERRAIN);
+                Monitor.Enter(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 Donnees.TAB_MOUVEMENT_COUTRow[] resCout = (Donnees.TAB_MOUVEMENT_COUTRow[])Donnees.m_donnees.TAB_MOUVEMENT_COUT.Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 return resCout[0].I_COUT;
             }
         }
@@ -809,7 +815,9 @@ namespace vaoc
             {
                 string requete = string.Format("ID_MODELE_MOUVEMENT={0} AND ID_MODELE_TERRAIN={1} AND ID_METEO={2}",
                     idModeleMouvement, idModeleTerrain, idMeteo);
+                Monitor.Enter(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 TAB_MOUVEMENT_COUTRow[] resCout = (TAB_MOUVEMENT_COUTRow[])Select(requete);
+                Monitor.Exit(Donnees.m_donnees.TAB_MOUVEMENT_COUT.Rows.SyncRoot);
                 if (0 == resCout.Length)
                 {
                     return -1;

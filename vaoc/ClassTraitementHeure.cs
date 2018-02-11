@@ -1089,12 +1089,14 @@ namespace vaoc
                         lignePion.SupprimerTousLesOrdres();//normallement déjà fait lors de l'engagement en bataille, mais bon...
 
                         //Mise à jour l'engagement et la zone d'engagement
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.I_ZONE_BATAILLE = ligneOrdre.I_ZONE_BATAILLE;
                         lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         lignePionBataille.B_ENGAGEE = true;
                         //pour les presentations de fin de partie
                         lignePionBataille.B_ENGAGEMENT = true;
                         lignePionBataille.I_ZONE_BATAILLE_ENGAGEMENT = lignePion.I_ZONE_BATAILLE;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //l'ordre est terminé
                         lignePion.TerminerOrdre(ligneOrdre, false, true);
                     }
@@ -1104,7 +1106,9 @@ namespace vaoc
                     if (ligneOrdre.I_PHASE_DEBUT == phase)
                     {
                         //Mise à jour l'engagement et la zone d'engagement
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.SetI_ZONE_BATAILLENull();
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //il ne faut pas remettre I_ZONE_BATAILLE_ENGAGEMENT à blanc car c'est pour l'historique
                         //lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         //lignePionBataille.SetI_ZONE_BATAILLE_ENGAGEMENTNull();
@@ -1117,10 +1121,12 @@ namespace vaoc
                     if (ligneOrdre.I_PHASE_DEBUT == phase)
                     {
                         //lignePion.I_TOUR_FUITE_RESTANT = 2; -> seulement pour les unités en déroute
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.I_TOUR_RETRAITE_RESTANT = 2; // même chose que I_TOUR_FUITE_RESTANT mais tu peux donner des ordres
                         lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         lignePionBataille.B_ENGAGEE = false;
                         lignePion.SetI_ZONE_BATAILLENull();
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //l'ordre est terminé
                         lignePion.TerminerOrdre(ligneOrdre, false, true);
                     }
@@ -1137,17 +1143,20 @@ namespace vaoc
                     //s'il s'agit d'un dépôt de niveau 'D', il se transforme en convoi
                     if ('D' == lignePion.C_NIVEAU_DEPOT)
                     {
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.S_NOM = "Convoi de ravitaillement";
                         int idModeleCONVOI = Donnees.m_donnees.TAB_MODELE_PION.RechercherModele(lignePion.modelePion.ID_NATION, "CONVOI");
 
                         if (idModeleCONVOI >= 0)
                         {
                             lignePion.ID_MODELE_PION = idModeleCONVOI;
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                         else
                         {
                             message = string.Format("ExecuterOrdreHorsMouvement : {0},ID={1}, impossible de trouver le modèle de convoi de la nation", lignePion.S_NOM, lignePion.ID_PION);
                             LogFile.Notifier(message);
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             return false;
                         }
                     }
@@ -1161,8 +1170,10 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionConvoi.C_NIVEAU_DEPOT = 'D';
                         lignePionConvoi.ID_DEPOT_SOURCE = lignePion.ID_PION;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le nouveau convoi est disponible
                         if (!ClassMessager.EnvoyerMessage(lignePionConvoi, ClassMessager.MESSAGES.MESSAGE_GENERATION_CONVOI))
@@ -1173,11 +1184,13 @@ namespace vaoc
                         }
 
                         //on réduit le niveau du dépôt actuel et on note la date de création du dépot
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (lignePion.C_NIVEAU_DEPOT != 'A')
                         {
                             lignePion.C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
                         }
                         lignePion.I_TOUR_CONVOI_CREE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     }
 
                     //l'ordre est terminé
@@ -1205,11 +1218,13 @@ namespace vaoc
                     if (lignePion.estConvoiDeRavitaillement)
                     {
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (lignePionARenforcer.C_NIVEAU_DEPOT != 'A')
                         {
                             lignePionARenforcer.C_NIVEAU_DEPOT--;// 'A' c'est le meilleur, 'D' le pire
                             lignePionARenforcer.I_SOLDATS_RAVITAILLES = 0;//pas bien clair dans les règles mais cela me semble logique
                         }
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait
                         if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT))
@@ -1225,6 +1240,7 @@ namespace vaoc
                         int effectifsARenforcer = lignePionARenforcer.effectifTotal;
                         int effectifsRenforts = lignePion.effectifTotal;
                         int effectifsFinaux = effectifsARenforcer+effectifsRenforts;
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionARenforcer.I_EXPERIENCE = (lignePionARenforcer.I_EXPERIENCE * effectifsARenforcer + lignePion.I_EXPERIENCE * effectifsRenforts) / effectifsFinaux;
                         
                         int variationFatigue = lignePionARenforcer.I_FATIGUE;
@@ -1239,6 +1255,7 @@ namespace vaoc
                         lignePionARenforcer.I_INFANTERIE += lignePion.I_INFANTERIE;
                         lignePionARenforcer.I_CAVALERIE += lignePion.I_CAVALERIE;
                         lignePionARenforcer.I_ARTILLERIE += lignePion.I_ARTILLERIE;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait
                         if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_UNITE, 0, variationFatigue))
@@ -1261,7 +1278,9 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_MODELE_PION = idModeleDEPOT;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //changer le nom du pion
                     string nomDepot;
@@ -1271,12 +1290,14 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.S_NOM = nomDepot;
 
                     //supprimer tous les ordres suivants (un dépôt ne peut pas recevoir d'ordre à part création de convoi, ce qui n'aurait pas de sens ici).
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.I_SOLDATS_RAVITAILLES = 0;
                     lignePion.C_NIVEAU_DEPOT = 'D';
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //envoyer un message annonçant la création du dépôt
                     if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ETABLIRDEPOT))
@@ -1298,8 +1319,10 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionConvoi.C_NIVEAU_DEPOT = 'D';
                         lignePionConvoi.ID_DEPOT_SOURCE = lignePion.ID_PION;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le nouveau convoi est disponible
                         if (!ClassMessager.EnvoyerMessage(lignePionConvoi, ClassMessager.MESSAGES.MESSAGE_GENERATION_CONVOI))

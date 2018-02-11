@@ -462,8 +462,10 @@ namespace vaoc
             public TAB_ORDRERow[] PatrouillesNonEnvoyees(int ID_PION)
             {
                 string tri = "ID_ORDRE";
-                //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de mouvement
-                string requete = string.Format("(ID_DESTINATAIRE={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1}) AND I_ORDRE_TYPE = {2}", ID_PION, Constantes.NULLENTIER, Constantes.ORDRES.PATROUILLE);
+                //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de patrouille
+                //note : correctif le 11/02/2018 avec ajout de ID_PION, sinon l'ordre est valide, c'est celui executé par la patrouille en cours
+                string requete = string.Format("(ID_PION={0}) AND (ID_DESTINATAIRE={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1}) AND I_ORDRE_TYPE = {2}", 
+                    ID_PION, Constantes.NULLENTIER, Constantes.ORDRES.PATROUILLE);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
                 Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);

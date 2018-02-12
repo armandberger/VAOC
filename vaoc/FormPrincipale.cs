@@ -190,6 +190,26 @@ namespace vaoc
             //bug meteo
             //Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = 0;
 
+            #region correction sur des ordres de mouvements présents en double !
+            /*
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                string requete = string.Format("ID_PION={0} AND I_TOUR_FIN = {1} AND ID_DESTINATAIRE = {1}", lignePion.ID_PION, Constantes.NULLENTIER);
+                Donnees.TAB_ORDRERow[] resOrdres = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete,"ID_ORDRE");
+                if (resOrdres.Count() > 1)
+                {
+                    lignePion.DetruireEspacePion();                    
+                    for(int i=0; i<resOrdres.Count()-1; i++)
+                    {
+                        resOrdres[i].I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                        resOrdres[i].I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                    }
+                    resOrdres[resOrdres.Count() - 1].ID_CASE_DEPART = lignePion.ID_CASE;
+                }
+            }
+            */
+            #endregion
+
             #region test a priori absurde sur la copie de cases
             /*
             Donnees.TAB_CASEDataTable tableTestSource = new Donnees.TAB_CASEDataTable();
@@ -293,7 +313,7 @@ namespace vaoc
             #endregion
 
             #region correction ciblée de la carte
-            /* C'est revenu après plusieurs tours !!!*/
+            /* C'est revenu après plusieurs tours !!! -> mais ça fait un crash si phase <>0
             //pour créer les listeindex, sinon crash au chargement
             Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);//optimisation mémoire
             //Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
@@ -347,7 +367,7 @@ namespace vaoc
 
             // Il faut recalculer la table d'optimisation HPA
             Donnees.m_donnees.TAB_PCC_COUTS.Initialisation();
-            /**/
+            */
             #endregion
 
             /*

@@ -1415,7 +1415,7 @@ namespace vaoc
                 string requete;
 
                 //recherche les ordres existants
-                requete = (idordre == -1) ? string.Format("ID_PION={0} AND I_TOUR_FIN IS NULL", ID_PION) :
+                requete = (idordre == -1) ? string.Format("ID_PION={0} AND I_TOUR_FIN = {1}", ID_PION, Constantes.NULLENTIER) :
                                           string.Format("ID_PION={0} AND ID_ORDRE< {1} AND I_TOUR_FIN = {2}", ID_PION, idordre, Constantes.NULLENTIER);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdres = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);

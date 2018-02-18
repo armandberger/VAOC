@@ -2007,6 +2007,7 @@ namespace vaoc
                                 lignePionPrisonniers.S_NOM = "Renforts de " + lignePionPrisonniers.S_NOM;
                                 lignePionPrisonniers.I_MATERIEL = 0; //on le laisse pas de matériel aux prisonniers en prison :-)
                                 lignePionPrisonniers.B_DETRUIT = false;
+                                lignePionPrisonniers.B_RENFORT = true;
 
                                 //envoie d'un message pour prévenir de cette libération
                                 if (!ClassMessager.EnvoyerMessage(lignePionPrisonniers, ClassMessager.MESSAGES.MESSAGE_PRISONNIER_LIBERE))

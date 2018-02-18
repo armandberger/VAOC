@@ -52,6 +52,11 @@ namespace vaoc
         private void FormMessageArbitre_Load(object sender, EventArgs e)
         {
             Redimensionner();
+
+            // on met à jour la date/heure du prochain tour
+            DateTime dateCourante = DateTime.Now;
+            dateEtHeure.Value = new DateTime(dateCourante.Year, dateCourante.Month, dateCourante.Day, dateCourante.Hour, 0, 0);
+
             //Au chargement si un joueur semble ONR on met une popup d'alerte
             string message = string.Empty;
             List<ClassDataUtilisateur> liste = (List<ClassDataUtilisateur>)dataGridViewUtilisateur.DataSource;

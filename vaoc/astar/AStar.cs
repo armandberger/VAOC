@@ -673,7 +673,51 @@ namespace vaoc
             }
 			return Path;
 		}
+        /*
+        private List<LigneCASE> GoBackUpNodes(Track T)
+        {
+            int Nb = T.NbArcsVisited, j;
+            List<LigneCASE> Path = new List<LigneCASE>();
+            List<int> listeCases;
 
+            for (int i = Nb; i >= 0; i--, T = T.Queue)
+            {
+                if (null != T.EndNode)
+                {
+                    Path.Insert(0, new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNode.ID_CASE)));
+                }
+                else
+                {
+                    if (Dal.ChargerTrajet(T.EndNodeHPA.ID_TRAJET, out listeCases))
+                    {
+                        if (listeCases[0] == T.EndNodeHPA.ID_CASE_FIN)
+                        {
+                            j = 0;
+                            while (j < listeCases.Count)
+                            {
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
+                                Path.Insert(0, new LigneCASE(ligneCase));
+                            }
+                        }
+                        else
+                        {
+                            j = listeCases.Count - 1;
+                            while (j >= 0)
+                            {
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j--]);
+                                Path.Insert(0, new LigneCASE(ligneCase));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Astar : GoBackUpNodes : erreur sur Dal.ChargerTrajet pour idtrajet=" + T.EndNodeHPA.ID_TRAJET.ToString());
+                    }
+                }
+            }
+            return Path;
+        }
+        */
         /// <summary>
         /// Retire toute boucle qui pourrait se produire dans le trajet et qui empèche un pion d'arrive à sa destination
         /// En effet, on recherche sa position dans le parcours à chaque fois
@@ -684,6 +728,37 @@ namespace vaoc
         {
             if (null == chemin) { return null; }
             List<Donnees.TAB_CASERow> cheminRetour = new List<Donnees.TAB_CASERow>();
+            int i = 0;
+            while (i < chemin.Count)
+            {
+                //on regarde, si avant,on passe après par la même case, si oui, on part de ce point
+                int j = i + 1;
+                while (j < chemin.Count && chemin[i] != chemin[j]) j++;
+                cheminRetour.Add(chemin[i]);
+                if (j < chemin.Count)
+                {
+                    //on a trouvé une case équivalente, on repart de là
+                    i = j + 1;
+                }
+                else
+                {
+                    //on ne passe pas deux fois par cette case
+                    i++;
+                }
+            }
+            return cheminRetour;
+        }
+
+        /// <summary>
+        /// Retire toute boucle qui pourrait se produire dans le trajet et qui empèche un pion d'arrive à sa destination
+        /// En effet, on recherche sa position dans le parcours à chaque fois
+        /// </summary>
+        /// <param name="chemin"></param>
+        /// <returns></returns>
+        public List<LigneCASE> ParcoursOptimise(List<LigneCASE> chemin)
+        {
+            if (null == chemin) { return null; }
+            List<LigneCASE> cheminRetour = new List<LigneCASE>();
             int i = 0;
             while (i < chemin.Count)
             {

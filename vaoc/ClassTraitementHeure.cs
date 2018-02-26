@@ -1561,9 +1561,6 @@ namespace vaoc
         /// <returns>OK=true, KO=false</returns>
         private bool NouvelleHeure(bool bPartieCommence, out bool bRenfort)
         {
-            string message, messageErreur;
-            string requete;
-
             LogFile.Notifier("Debut nouvelle heure");
             bRenfort = false;
 
@@ -1897,17 +1894,37 @@ namespace vaoc
             }
             #endregion
 
-            #region Contrôle des villes avec points de victoire ou hopital ou prison
+            if (!ControleDesVilles()) { return false; }
+
+            LogFile.Notifier("Fin nouvelle heure");
+
+            return true;
+        }
+
+        /// <summary>
+        /// Contrôle des villes avec points de victoire ou hopital ou prison
+        /// </summary>
+        /// <returns>true si ok, false si ko</returns>
+        private bool ControleDesVilles()
+        {
+            string message, messageErreur;
+            string requete;
             int idNation0 = -1, idNation1 = -1;
             int[] zone = new int[2];
+            List<Donnees.TAB_PIONRow> listePionControle0 = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> listePionControle1 = new List<Donnees.TAB_PIONRow>();
+            LogFile.Notifier("Debut ControleDesVilles");
+
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 Donnees.TAB_PIONRow lignePion;
                 Donnees.TAB_MODELE_PIONRow ligneModelePion;
+                listePionControle0.Clear();
+                listePionControle1.Clear();
                 if (ligneNomCarte.I_VICTOIRE > 0 || ligneNomCarte.B_HOPITAL || ligneNomCarte.B_PRISON)
                 {
                     Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
-                    //on regarde qui contrôle la zone à un kilomètre alentour
+                    //on regarde qui contrôle la zone à CST_RECHERCHE_ZONE_VICTOIRE kilomètres alentour
                     #region calcul du cadre de recherche
                     int xCaseHautGauche = ligneCase.I_X - Constantes.CST_RECHERCHE_ZONE_VICTOIRE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                     int yCaseHautGauche = ligneCase.I_Y - Constantes.CST_RECHERCHE_ZONE_VICTOIRE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
@@ -1922,7 +1939,7 @@ namespace vaoc
                     Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                     zone[0] = zone[1] = 0;
-                    for (int l=0; l< lignesCaseRecherche.Count(); l++)
+                    for (int l = 0; l < lignesCaseRecherche.Count(); l++)
                     {
                         Donnees.TAB_CASERow ligneCaseRecherche = lignesCaseRecherche[l];
                         if (!ligneCaseRecherche.EstInnocupe()) //.ID_PROPRIETAIRE. != DataSetCoutDonnees.CST_AUCUNPROPRIETAIRE)
@@ -1930,12 +1947,8 @@ namespace vaoc
                             lignePion = ligneCaseRecherche.TrouvePionSurCase();
                             if (null == lignePion)
                             {
-                                int IdProprietaire = ligneCaseRecherche.ID_PROPRIETAIRE;
-                                string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
-                                int IdNouveauProprietaire = ligneCaseRecherche.ID_NOUVEAU_PROPRIETAIRE;
-                                string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
-                                
-                                message = string.Format("NouvelleHeure : erreur FindByID_PION introuvable sur {0} ou {1}", proprio, nouveauProprio);
+                                message = string.Format("ControleDesVilles : erreur FindByID_PION introuvable sur {0} ou {1}",
+                                    ligneCaseRecherche.ID_PROPRIETAIRE.ToString(), ligneCaseRecherche.ID_NOUVEAU_PROPRIETAIRE.ToString());
                                 LogFile.Notifier(message, out messageErreur);
                                 return false;
                             }
@@ -1943,7 +1956,7 @@ namespace vaoc
                             ligneModelePion = lignePion.modelePion;
                             if (null == ligneModelePion)
                             {
-                                message = string.Format("NouvelleHeure : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
+                                message = string.Format("ControleDesVilles : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
                                 LogFile.Notifier(message, out messageErreur);
                                 return false;
                             }
@@ -1953,27 +1966,42 @@ namespace vaoc
                             {
                                 idNation0 = ligneModelePion.ID_NATION;
                                 zone[0]++;
+                                if (null==listePionControle0.Find(x => x==lignePion)) { listePionControle0.Add(lignePion); }
                             }
                             else
                             {
                                 idNation1 = ligneModelePion.ID_NATION;
                                 zone[1]++;
+                                if (null == listePionControle1.Find(x => x == lignePion)) { listePionControle1.Add(lignePion); }
                             }
                         }
                     }
 
                     // alors, qui contrôle la zone ?
-                    int nationControle = (zone[0] > zone[1]) ? idNation0 : idNation1;
+                    //il faut au moins 2 fois plus de présence pour dominer une zone
+                    int nationControle = -1;
+                    if (zone[0] > 2 * zone[1])
+                    {
+                        nationControle = idNation0;
+                    }
+                    else
+                    {
+                        if (zone[1] > 2 * zone[0])
+                        {
+                            nationControle = idNation1;
+                        }
+                    }
+                    if (nationControle < 0) { continue; }
 
-                    if (nationControle>=0 && !ligneNomCarte.IsID_NATION_CONTROLENull() && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
+                    if (nationControle >= 0 && !ligneNomCarte.IsID_NATION_CONTROLENull() && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
                     {
                         //Quand un hopital est capturé, la moitié des blessés "disparaissent", ceux qui restent ne sont soignés que s'ils sont "libérés"
                         if (ligneNomCarte.B_HOPITAL)
                         {
-                            requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}",ligneNomCarte.ID_NOM);
+                            requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                             Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            for (int l=0; l<lignesPionResultat.Count(); l++)
+                            for (int l = 0; l < lignesPionResultat.Count(); l++)
                             {
                                 Donnees.TAB_PIONRow lignePionBlesses = lignesPionResultat[l];
                                 if (lignePionBlesses.effectifTotal / 2 < Constantes.CST_TAILLE_MINIMUM_UNITE)
@@ -1994,13 +2022,17 @@ namespace vaoc
                         }
 
                         //Quand une prison change de camp, les prisonniers deviennent des renforts
+                        Random de = new Random();
                         if (ligneNomCarte.B_PRISON)
                         {
                             requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                             Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            for (int l=0; l<lignesPionResultat.Count(); l++)
+                            for (int l = 0; l < lignesPionResultat.Count(); l++)
                             {
+                                //on tire au hasard le pion qui a fait la libération
+                                Donnees.TAB_PIONRow lignePionLiberateur = (nationControle == idNation0) ? listePionControle0.ElementAt(de.Next(0,listePionControle0.Count)) : listePionControle1.ElementAt(de.Next(0,listePionControle1.Count));
+
                                 Donnees.TAB_PIONRow lignePionPrisonniers = lignesPionResultat[l];
                                 lignePionPrisonniers.B_PRISONNIERS = false;
                                 lignePionPrisonniers.SetID_LIEU_RATTACHEMENTNull();
@@ -2008,11 +2040,13 @@ namespace vaoc
                                 lignePionPrisonniers.I_MATERIEL = 0; //on le laisse pas de matériel aux prisonniers en prison :-)
                                 lignePionPrisonniers.B_DETRUIT = false;
                                 lignePionPrisonniers.B_RENFORT = true;
+                                lignePionPrisonniers.ID_MODELE_PION = lignePionLiberateur.ID_MODELE_PION;
+                                lignePionPrisonniers.ID_PION_PROPRIETAIRE = lignePionLiberateur.ID_PION_PROPRIETAIRE;
 
                                 //envoie d'un message pour prévenir de cette libération
                                 if (!ClassMessager.EnvoyerMessage(lignePionPrisonniers, ClassMessager.MESSAGES.MESSAGE_PRISONNIER_LIBERE))
                                 {
-                                    message = string.Format("NouvelleHeure : erreur sur l'envoi de message pour MESSAGE_PRISONNIER_LIBERE {0}:{1}", lignePionPrisonniers.S_NOM, lignePionPrisonniers.ID_PION);
+                                    message = string.Format("ControleDesVilles : erreur sur l'envoi de message pour MESSAGE_PRISONNIER_LIBERE {0}:{1}", lignePionPrisonniers.S_NOM, lignePionPrisonniers.ID_PION);
                                     LogFile.Notifier(message, out messageErreur);
                                     return false;
                                 }
@@ -2024,10 +2058,7 @@ namespace vaoc
                     if (nationControle >= 0) { ligneNomCarte.ID_NATION_CONTROLE = nationControle; }
                 }
             }
-            #endregion
-
-            LogFile.Notifier("Fin nouvelle heure");
-
+            LogFile.Notifier("Fin ControleDesVilles");
             return true;
         }
 

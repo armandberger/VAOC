@@ -121,7 +121,7 @@ namespace vaoc
             /// Renvoie le pion occupant une case
             /// </summary>
             /// <returns>ligne du pion occupant la case</returns>
-            public TAB_PIONRow TrouvePionSurCase()
+            public Donnees.TAB_PIONRow TrouvePionSurCase()
             {
                 TAB_PIONRow lignePion = null;
 

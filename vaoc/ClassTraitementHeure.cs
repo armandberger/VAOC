@@ -1980,13 +1980,13 @@ namespace vaoc
                     // alors, qui contrôle la zone ?
                     //il faut au moins 2 fois plus de présence pour dominer une zone
                     int nationControle = -1;
-                    if (zone[0] > 2 * zone[1])
+                    if (zone[0] > 3 * zone[1])
                     {
                         nationControle = idNation0;
                     }
                     else
                     {
-                        if (zone[1] > 2 * zone[0])
+                        if (zone[1] > 3 * zone[0])
                         {
                             nationControle = idNation1;
                         }

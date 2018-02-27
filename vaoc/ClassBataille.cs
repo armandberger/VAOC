@@ -355,7 +355,7 @@ namespace vaoc
             {
                 double cout, coutHorsRoute;
                 AstarTerrain[] tableCoutsMouvementsTerrain;
-                List<Donnees.TAB_CASERow> chemin;
+                List<LigneCASE> chemin;
                 string message, messageErreur;
                 int i;
                 AStar etoile = new AStar();

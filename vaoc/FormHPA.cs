@@ -494,7 +494,7 @@ namespace vaoc
                         m_idTrajet++;
                         k = 0;
                         listeCasesTrajet.Clear();
-                        List<Donnees.TAB_CASERow> trajet = m_etoile.PathByNodes;
+                        List<LigneCASE> trajet = m_etoile.PathByNodes;
                         while (k < trajet.Count)
                         {
                             //Donnees.m_donnees.TAB_PCC_TRAJET.AddTAB_PCC_TRAJETRow(m_idTrajet, trajet[k].ID_CASE, k);

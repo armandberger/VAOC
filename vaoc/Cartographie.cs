@@ -159,6 +159,27 @@ namespace vaoc
             graph.Dispose();
         }
 
+        public static void AfficherArriveeDepart(Bitmap imageSource, LigneCASE ligneCaseDepart, LigneCASE ligneCaseArrivee, Color couleur, int taillePinceau)
+        {
+            Graphics graph = Graphics.FromImage(imageSource);
+            Pen stylo = new Pen(couleur, taillePinceau);
+
+            if (null != ligneCaseDepart)
+            {
+                Point[] triangle = new Point[3];
+                triangle[0] = new Point(ligneCaseDepart.I_X, ligneCaseDepart.I_Y - 10);
+                triangle[1] = new Point(ligneCaseDepart.I_X + 10, ligneCaseDepart.I_Y + 10);
+                triangle[2] = new Point(ligneCaseDepart.I_X - 10, ligneCaseDepart.I_Y + 10);
+                graph.DrawPolygon(stylo, triangle);
+            }
+
+            if (null != ligneCaseArrivee)
+            {
+                graph.DrawEllipse(stylo, ligneCaseArrivee.I_X - 10, ligneCaseArrivee.I_Y - 10, 20, 20);
+            }
+            graph.Dispose();
+        }
+
         public static void AfficherChemin(Bitmap imageSource, List<Donnees.TAB_CASERow> chemin, Color couleur, int taillePinceau)
         {
             Graphics graph = Graphics.FromImage(imageSource);
@@ -171,6 +192,36 @@ namespace vaoc
             x1 = y1 = -1;
             //LogFile.CreationLogFile("C:\\Users\\Public\\Documents\\vaoc\\poudre_et_biere\\test.log");
             foreach (Donnees.TAB_CASERow noeud in chemin)
+            {
+                if (x1 == -1 || y1 == -1)
+                {
+                    x1 = noeud.I_X;
+                    y1 = noeud.I_Y;
+                }
+                else
+                {
+                    if (Math.Abs(x1 - noeud.I_X) <= 1 && Math.Abs(y1 - noeud.I_Y) <= 1)
+                    {
+                        //path.AddLine(x1, y1, noeud.I_X, noeud.I_Y);
+                        graph.DrawRectangle(stylo, noeud.I_X, noeud.I_Y, 1, 1);//trace avec des points, permet de voir s'il en manque
+                    }
+                    x1 = noeud.I_X;
+                    y1 = noeud.I_Y;
+                    LogFile.Notifier("AfficherChemin x=" + x1 + " y=" + y1);
+                }
+            }
+            //graph.DrawPath(stylo, path);
+            graph.Dispose();
+        }
+
+        public static void AfficherChemin(Bitmap imageSource, List<LigneCASE> chemin, Color couleur, int taillePinceau)
+        {
+            Graphics graph = Graphics.FromImage(imageSource);
+            int x1, y1;
+
+            Pen stylo = new Pen(couleur, taillePinceau);
+            x1 = y1 = -1;
+            foreach (LigneCASE noeud in chemin)
             {
                 if (x1 == -1 || y1 == -1)
                 {

@@ -1978,7 +1978,7 @@ namespace vaoc
                     }
 
                     // alors, qui contrôle la zone ?
-                    //il faut au moins 2 fois plus de présence pour dominer une zone
+                    //il faut au moins 3 fois plus de présence pour dominer une zone
                     int nationControle = -1;
                     if (zone[0] > 3 * zone[1])
                     {
@@ -3553,7 +3553,7 @@ namespace vaoc
             string messageErreur, message;
             decimal vitesse;
             AstarTerrain[] tableCoutsMouvementsTerrain;
-            List<Donnees.TAB_CASERow> chemin;
+            List<LigneCASE> chemin;
             //Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
             Donnees.TAB_PIONRow lignePionDestinataire = null;
             Donnees.TAB_PIONRow lignePionNouveauDestinataire;
@@ -3616,15 +3616,27 @@ namespace vaoc
                     message = string.Format("ExecuterMouvementSansEffectif : SearchPath longueur={0}", m_etoile.PathByNodes.Length);
                      * */
 
-                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} de {3}({4},{5}) à {6}({7},{8})",
+                    message = string.Format("{0},ID={1}, ID_CASE={9}, ExecuterMouvementSansEffectif : SearchPath longueur={2} de {3}({4},{5}) à {6}({7},{8})",
                         lignePion.S_NOM, lignePion.ID_PION, chemin.Count, 
                         ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y,
-                        ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
+                        ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y, lignePion.ID_CASE);
                     LogFile.Notifier(message, out messageErreur);
 
                     //recherche de la case sur le trajet
                     int pos = 0;
-                    while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;
+                    while (chemin[pos].ID_CASE != lignePion.ID_CASE && pos<chemin.Count) pos++;
+                    if (pos==chemin.Count)
+                    {
+                        //ne doit jamais arrivé, bug de parallelisme quelque part
+                        for(pos=0; pos<chemin.Count;pos++)
+                        {
+                            message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath pos={2} : {3}({4},{5})",
+                                lignePion.S_NOM, lignePion.ID_PION, pos, chemin[pos].ID_CASE, chemin[pos].I_X, chemin[pos].I_Y);
+                            LogFile.Notifier(message, out messageErreur);
+                        }
+                        throw new Exception("Erreur sur calcul de position dans ExecuterMouvementSansEffectif");
+                    }
+
 
                     message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : SearchPath longueur={2} position={3}",
                         lignePion.S_NOM, lignePion.ID_PION, chemin.Count, pos);
@@ -4104,7 +4116,7 @@ namespace vaoc
             string message, messageErreur;
             AstarTerrain[] tableCoutsMouvementsTerrain;
             double cout, coutHorsRoute;
-            List<Donnees.TAB_CASERow> chemin;
+            List<LigneCASE> chemin;
 
             //a-t-on déjà envoyé un message pour prévenir mon supérieur recemment ?                            
             Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION, ClassMessager.MESSAGES.MESSAGE_CHEMIN_IMPRATICABLE);
@@ -4336,7 +4348,7 @@ namespace vaoc
             int iCavalerie, iInfanterie, iArtillerie;
             double cout, coutHorsRoute;
             AstarTerrain[] tableCoutsMouvementsTerrain;
-            List<Donnees.TAB_CASERow> chemin;
+            List<LigneCASE> chemin;
             int i, j, id_case_finale, id_case_source;
 
             //faire avancer l'unité si celle-ci n'est pas arrivé à destination
@@ -4468,6 +4480,11 @@ namespace vaoc
             return true;
         }
 
+        private bool CalculCoutCase(Donnees.TAB_PIONRow lignePion, Donnees.TAB_MODELE_PIONRow ligneModelePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDestination, LigneCASE ligneCaseChemin, out int coutCase, out bool bBlocageParUnite)
+        {
+            return CalculCoutCase(lignePion, ligneModelePion, ligneOrdre, ligneCaseDestination, Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseChemin.ID_CASE), out coutCase, out bBlocageParUnite);
+        }
+
         private bool CalculCoutCase(Donnees.TAB_PIONRow lignePion, Donnees.TAB_MODELE_PIONRow ligneModelePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_CASERow ligneCaseChemin, out int coutCase, out bool bBlocageParUnite)
         {
             coutCase = -1;
@@ -4559,7 +4576,7 @@ namespace vaoc
             int iCavalerie, iInfanterie, iArtillerie;
             double cout, coutHorsRoute;
             AstarTerrain[] tableCoutsMouvementsTerrain;
-            List<Donnees.TAB_CASERow> chemin;
+            List<LigneCASE> chemin;
             int i;
 
             //faire avancer l'unité si celle-ci n'est pas arrivé à destination
@@ -4718,7 +4735,7 @@ namespace vaoc
             int iCavalerieRoute, iInfanterieRoute, iArtillerieRoute;
             double cout, coutHorsRoute;
             AstarTerrain[] tableCoutsMouvementsTerrain;
-            List<Donnees.TAB_CASERow> chemin;
+            List<LigneCASE> chemin;
             int i;
 
             if (!lignePion.MessageEnnemiObserve(ligneCaseDestination)) { return false; }

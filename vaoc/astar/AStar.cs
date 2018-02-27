@@ -533,7 +533,8 @@ namespace vaoc
 
 		private void CheckSearchHasEnded()
 		{
-			if ( !SearchEnded ) throw new InvalidOperationException("You cannot get a result unless the search has ended.");
+            //si on renvoit un parcours il dit que la recherche n'est pas terminée (même pas commencée en fait)
+			//if ( !SearchEnded ) throw new InvalidOperationException("You cannot get a result unless the search has ended.");
 		}
 
 		/// <summary>
@@ -592,6 +593,7 @@ namespace vaoc
             }
         }
 
+        /*
         /// <summary>
 		/// Gets the array of nodes representing the found path.
 		/// </summary>
@@ -617,23 +619,19 @@ namespace vaoc
                 if (null != T.EndNode)
                 {
                     Path.Insert(0, Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNode.ID_CASE));
-                    /*
-                    Debug.WriteLine(string.Format("GoBackUpNodes ajout de T.EndNode : ID={0}({1},{2}) ",
-                        T.EndNode.ID_CASE, T.EndNode.I_X, T.EndNode.I_Y
-                        ));
-                     * */
+                    //Debug.WriteLine(string.Format("GoBackUpNodes ajout de T.EndNode : ID={0}({1},{2}) ",
+                    //    T.EndNode.ID_CASE, T.EndNode.I_X, T.EndNode.I_Y
+                    //    ));
                 }
                 else
                 {
-                    /*
-                    Donnees.TAB_CASERow lDebug1, lDebug2;
-                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_DEBUT);
-                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_FIN);
-                    Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCout : ID={0}({1},{2}) -> ID={3}({4},{5}) ",
-                        lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y,
-                        lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y
-                        ));
-                     * */
+                    //Donnees.TAB_CASERow lDebug1, lDebug2;
+                    //lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_DEBUT);
+                    //lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_FIN);
+                    //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCout : ID={0}({1},{2}) -> ID={3}({4},{5}) ",
+                    //    lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y,
+                    //    lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y
+                    //    ));
                     if (Dal.ChargerTrajet(T.EndNodeHPA.ID_TRAJET, out listeCases))
                     {
                         if (listeCases[0] == T.EndNodeHPA.ID_CASE_FIN)
@@ -643,11 +641,9 @@ namespace vaoc
                             {
                                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
                                 Path.Insert(0, ligneCase);
-                                /*
-                                Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
-                                    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
-                                    ));
-                                 * */
+                                //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
+                                //    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
+                                //    ));
                             }
                         }
                         else
@@ -657,11 +653,9 @@ namespace vaoc
                             {
                                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j--]);
                                 Path.Insert(0, ligneCase);
-                                /*
-                                Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
-                                    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
-                                    ));
-                                 * */
+                                //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
+                                //    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
+                                //    ));
                             }
                         }
                     }
@@ -673,7 +667,21 @@ namespace vaoc
             }
 			return Path;
 		}
-        /*
+        */
+        /// <summary>
+		/// Gets the array of nodes representing the found path.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">You cannot get a result unless the search has ended.</exception>
+        public List<LigneCASE> PathByNodes
+        {
+            get
+            {
+                CheckSearchHasEnded();
+                if (!PathFound) return null;
+                return ParcoursOptimise(GoBackUpNodes(_LeafToGoBackUp));
+            }
+        }
+
         private List<LigneCASE> GoBackUpNodes(Track T)
         {
             int Nb = T.NbArcsVisited, j;
@@ -717,7 +725,7 @@ namespace vaoc
             }
             return Path;
         }
-        */
+        
         /// <summary>
         /// Retire toute boucle qui pourrait se produire dans le trajet et qui empèche un pion d'arrive à sa destination
         /// En effet, on recherche sa position dans le parcours à chaque fois
@@ -1306,6 +1314,21 @@ namespace vaoc
             }
         }
 
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, LigneCASE ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        {
+            return RechercheChemin(tipePacours, lignePion,
+                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDepart.ID_CASE),
+                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDestination.ID_CASE),
+                ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
+        }
+
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        {
+            return RechercheChemin(tipePacours, lignePion,
+                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDepart.ID_CASE),
+                ligneCaseDestination,
+                ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
+        }
         /// <summary>
         /// Recherche d'un trajet pour une unité sur la carte
         /// </summary>
@@ -1320,7 +1343,7 @@ namespace vaoc
         /// <param name="tableCoutsMouvementsTerrain">table du cout de mouvement des cases suivant l'unité et la météo</param>
         /// <param name="erreur">message d'erreur</param>
         /// <returns>true si ok, false si ko</returns>
-        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<Donnees.TAB_CASERow> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
             string requete, message, messageErreur, tri;
             int i;
@@ -1363,10 +1386,10 @@ namespace vaoc
                         && (ligneCaseDestination.ID_CASE == parcoursExistant[parcoursExistant.Length - 1].ID_CASE))
                     {
                         //on renvoie le chemin existant
-                        chemin = new List<Donnees.TAB_CASERow>(parcoursExistant.Length);
+                        chemin = new List<LigneCASE>(parcoursExistant.Length);
                         for (i = 0; i < parcoursExistant.Length; i++)
                         {
-                            chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE));
+                            chemin.Add(new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE)));
                         }
                         perf = DateTime.Now - timeStart;
                         Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
@@ -1474,7 +1497,7 @@ namespace vaoc
                 {
                     Monitor.Enter(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                     i = 0;
-                    foreach (Donnees.TAB_CASERow ligneCase in chemin)
+                    foreach (LigneCASE ligneCase in chemin)
                     {
                         if (casePrecedente != ligneCase.ID_CASE)
                         {

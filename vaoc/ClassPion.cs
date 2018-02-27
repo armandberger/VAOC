@@ -1362,7 +1362,9 @@ namespace vaoc
                     //Il n'y a pas d'ordre à terminer en fait
                     return true;
                 }
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_DISTANCE_A_PARCOURIR = 0;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
@@ -2078,7 +2080,7 @@ namespace vaoc
             public bool RavitaillementUnite(out bool bUniteRavitaillee, out decimal meilleurDistanceRavitaillement, out string depotRavitaillement)
             {
                 string message, messageErreur;
-                List<Donnees.TAB_CASERow> chemin;
+                List<LigneCASE> chemin;
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 double cout, coutHorsRoute;
                 Donnees.TAB_PIONRow ligneMeilleurDepot = null;
@@ -2288,7 +2290,7 @@ namespace vaoc
             /// <param name="ligneNation">nation de l'unité</param>
             /// <param name="chemin">chemin du pion</param>
             /// <returns>position relative dans le parcours</returns>
-            public int CalculPionPositionRelativeAvancement(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation, out List<Donnees.TAB_CASERow> chemin)
+            public int CalculPionPositionRelativeAvancement(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation, out List<LigneCASE> chemin)
             {
                 string message, messageErreur;
                 decimal encombrementRoute = 0, encombrementArrivee = 0, encombrementTotal;
@@ -2418,7 +2420,7 @@ namespace vaoc
             public bool PlacerPionEnBivouac(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation)
             {
                 string message;
-                List<Donnees.TAB_CASERow> chemin;
+                List<LigneCASE> chemin;
                 int nouvellePosition = 0;
 
                 if (null == ligneOrdre || null == ligneNation)
@@ -2874,10 +2876,14 @@ namespace vaoc
                 //les derniers viennent d'arriver
                 string message = string.Format("{0}(ID={1}, en mouvement, les derniers sont arrivés)", S_NOM, ID_PION);
                 LogFile.Notifier(message);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_EFFECTIF_DEPART = 0;
                 ligneOrdre.I_EFFECTIF_DESTINATION = this.effectifTotalEnMouvement;
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 ID_CASE = ligneOrdre.ID_CASE_DESTINATION;
                 I_DISTANCE_A_PARCOURIR = 0;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //placer l'unité sur la carte
                 //la zone d'arrivée devient la zone de depart pour le placement des troupes
                 Donnees.m_donnees.TAB_ESPACE.DeplacerEspacePion(ID_PION, AStar.CST_DESTINATION);
@@ -2927,6 +2933,7 @@ namespace vaoc
                     }
                     else
                     {
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         ID_LIEU_RATTACHEMENT = lignePrison.ID_NOM;
 
                         //Maintenant on crée le pion de renfort venant de l'escorte
@@ -2943,6 +2950,7 @@ namespace vaoc
                         pionRenfort.I_FATIGUE = I_FATIGUE;//même fatigue que l'unité d'origine
                         pionRenfort.I_MATERIEL = I_MATERIEL_ESCORTE;
                         pionRenfort.I_RAVITAILLEMENT = I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qu'ils escortaient
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on supprimer le pion prisonniers d'origine
                         //on fait comme si le pion de prisonniers source était détruit sinon il va rester actif partout !
@@ -2984,8 +2992,10 @@ namespace vaoc
                         }
                         else
                         {
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             ID_LIEU_RATTACHEMENT = ligneHopital.ID_NOM;
                             I_TOUR_BLESSURE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             this.DetruirePion();//on fait comme si le pion était détruit sinon il va rester actif partout !
                                                 //on envoie le message après ,sinon le pion reste visible (non détruit)
                             if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_BLESSES_ARRIVE_A_DESTINATION))
@@ -3398,6 +3408,18 @@ namespace vaoc
             /// <param name="enMouvement">true si la case à requisitionner est fait par des hommes en mouvement</param>
             /// <param name="nbplaces">nombres de places déjà occupées par le pion, incrémentée automatiquement</param>
             /// <returns>true si ok, false si ko</returns>
+            public bool RequisitionCase(LigneCASE ligneCase, bool enMouvement, ref int nbplaces)
+            {
+                return RequisitionCase(m_donnees.TAB_CASE.FindByID_CASE(ligneCase.ID_CASE), enMouvement, ref nbplaces);
+            }
+
+            /// <summary>
+            /// Tentative de prise d'occupation d'une case par une unité
+            /// </summary>
+            /// <param name="ligneCase">Case à occuper</param>
+            /// <param name="enMouvement">true si la case à requisitionner est fait par des hommes en mouvement</param>
+            /// <param name="nbplaces">nombres de places déjà occupées par le pion, incrémentée automatiquement</param>
+            /// <returns>true si ok, false si ko</returns>
             public bool RequisitionCase(Donnees.TAB_CASERow ligneCase, bool enMouvement, ref int nbplaces)
             {
                 if (!ligneCase.EstOccupeeOuBloqueParEnnemi(this, enMouvement)/* || lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG || lignePion.estDepot*/)
@@ -3665,11 +3687,13 @@ namespace vaoc
 
                 //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                 //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 ID_ANCIEN_PION_PROPRIETAIRE = ID_PION_PROPRIETAIRE;
                 ID_PION_PROPRIETAIRE = idPionNouveauProprietaire;
                 //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                 //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
                 ID_NOUVEAU_PION_PROPRIETAIRE = idPionNouveauProprietaire;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT))
                 {
@@ -3708,15 +3732,19 @@ namespace vaoc
                     {
                         return DestructionAuContact(lignePionEnnemi);
                     }
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
                 }
                 if (estBlesses)
                 {
                     //Le convoi devient un convoi de prisonniers
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_BLESSES = false;
                     B_PRISONNIERS = true;
                     S_NOM = "Prisonniers de " + S_NOM;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     CreerEscorte(lignePionEnnemi, this);
                 }
                 else
@@ -3731,6 +3759,7 @@ namespace vaoc
                         }
 
                         //Le convoi devient un convoi de renfort, il n'y a plus d'escorte
+                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         B_PRISONNIERS = false;
                         B_RENFORT = true;
                         I_INFANTERIE_ESCORTE = 0;
@@ -3738,6 +3767,7 @@ namespace vaoc
                         I_MATERIEL_ESCORTE = 0;
                         SetID_PION_ESCORTENull();
                         S_NOM = "Renfort de " + S_NOM;
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     }
                 }
                 //le pion change maintenant de proprietaire, celui-ci est affecté au proprietaire du pion de capture
@@ -3797,12 +3827,12 @@ namespace vaoc
                 {
                     return DestructionAuContact(lignePionEnnemi);
                 }
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
 
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
                 idNationCaptureur = lignePionEnnemi.idNation;
                 requete = "C_NIVEAU_HIERARCHIQUE = 'A'";
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
@@ -3855,6 +3885,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePionProprietaire = lignePionQuiCapture.proprietaire;
                 Donnees.TAB_PIONRow lignePionPrisonniers = lignePionQuiCapture.CreerConvoi(lignePionProprietaire, false /*bBlesses */ , true /* bPrisonniers */ , false /* bRenfort*/);
                 //lignePionPrisonniers.S_NOM = "Prisonniers de " + lignePionQuiCapture.S_NOM;
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (estPrisonniers)
                 {
                     //l'unité capturée est elle-même un convoi de prisonniers
@@ -3881,6 +3912,7 @@ namespace vaoc
                 lignePionPrisonniers.I_MATERIEL = 0; // on ne laisse pas de matériel aux prisonniers
                 lignePionPrisonniers.I_RAVITAILLEMENT = lignePionQuiCapture.I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qui les capture
                 lignePionPrisonniers.ID_PION_PROPRIETAIRE = lignePionProprietaire.ID_PION;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 CreerEscorte(lignePionQuiCapture, lignePionPrisonniers);
                 //note : le message de la capture est fait dans "capturePion" en amont
                 return lignePionPrisonniers;
@@ -3893,12 +3925,14 @@ namespace vaoc
                 // creation de l'escorte du convoi de prisonniers, c'est à dire réduction des effectifs correspondants de l'unité qui capture
                 // on prélève en priorité des fantassins pour escorter des prisonniers, et, en deuxième choix des cavaliers
                 int nbEscorte = (lignePionPrisonniers.I_INFANTERIE + lignePionPrisonniers.I_CAVALERIE) / 10;
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePionPrisonniers.I_INFANTERIE_ESCORTE = (lignePionQuiCapture.I_INFANTERIE > nbEscorte) ? nbEscorte : lignePionQuiCapture.I_INFANTERIE;
                 nbEscorte -= lignePionPrisonniers.I_INFANTERIE_ESCORTE;
                 lignePionPrisonniers.I_CAVALERIE_ESCORTE = (lignePionQuiCapture.I_CAVALERIE > nbEscorte) ? nbEscorte : lignePionQuiCapture.I_CAVALERIE;
                 lignePionPrisonniers.I_MATERIEL_ESCORTE = lignePionQuiCapture.I_MATERIEL;
                 lignePionQuiCapture.I_INFANTERIE -= lignePionPrisonniers.I_INFANTERIE_ESCORTE;
                 lignePionQuiCapture.I_CAVALERIE -= lignePionPrisonniers.I_CAVALERIE_ESCORTE;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (lignePionQuiCapture.effectifTotal <= 0)
                 {
                     //tout le pion d'origine passe en escorte, cela ne devrait pas arrivée souvent j'espère !
@@ -4102,7 +4136,7 @@ namespace vaoc
                 int iCavalerieDestination, iInfanterieDestination, iArtillerieDestination;
                 int iCavalerieRoute, iInfanterieRoute, iArtillerieRoute;
                 AstarTerrain[] tableCoutsMouvementsTerrain;
-                List<Donnees.TAB_CASERow> chemin;
+                List<LigneCASE> chemin;
                 int i,j;
                 int nbplacesOccupes;
                 double cout, coutHorsRoute;

@@ -14,6 +14,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Microsoft.Win32;
+using vaoc;
 using WaocLib;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -26,17 +27,17 @@ namespace vaoc
 
         //protected DataSetCoutDonnees DataSetCoutDonnees.m_donnees; mis en static dans BaseVaoc
         protected decimal m_zoom;//niveau de zoom sur l'image
-        protected Donnees.TAB_CASERow m_departPlusCourtChemin;
-        protected Donnees.TAB_CASERow m_arriveePlusCourtChemin;
+        protected LigneCASE m_departPlusCourtChemin;
+        protected LigneCASE m_arriveePlusCourtChemin;
         protected AStar m_etoileHPA;
         protected DateTime m_dateDebut;
         protected bool m_modification;
         protected List<Donnees.TAB_CASERow> m_cheminPCC;
-        protected List<Donnees.TAB_CASERow> m_cheminHPA;
+        protected List<LigneCASE> m_cheminHPA;
         protected List<Donnees.TAB_CASERow> m_cheminVille;
         protected List<Donnees.TAB_CASERow> m_cheminHorsRoute;
-        protected List<Donnees.TAB_CASERow> m_cheminSelection;
-        protected List<Donnees.TAB_CASERow> m_cheminVerifierTrajet;
+        protected List<LigneCASE> m_cheminSelection;
+        protected List<LigneCASE> m_cheminVerifierTrajet;
         protected Cursor m_ancienCurseur;
         protected Donnees.TAB_PIONRow m_lignePionSelection;
         protected int m_nbBatailles;
@@ -2675,7 +2676,7 @@ namespace vaoc
                         this.buttonVerifierTrajet.Enabled = true;
                         this.buttonRecalculTrajet.Enabled = true;
                         int dx=-1, dy=-1;
-                        foreach (Donnees.TAB_CASERow ligneC in m_cheminSelection)
+                        foreach (LigneCASE ligneC in m_cheminSelection)
                         {
                             Debug.WriteLine(string.Format("selection = {0}, {1}", ligneC.I_X, ligneC.I_Y));
                             if ((dx > 0 && Math.Abs(dx - ligneC.I_X) > 1) || (dy > 0 && Math.Abs(dy - ligneC.I_Y) > 1))
@@ -2925,16 +2926,16 @@ namespace vaoc
             #region test plus court chemin
             if (toolStripPlusCourtChemin.CheckState == CheckState.Checked)
             {
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(2383);
 
                 if (MouseButtons.Left == e.Button)
                 {
-                    m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
+                    m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(931, 180);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(378, 720);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(622, 577);
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4373903);
-                    //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4430052);
+                    m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(7232577));
                     labelDepartX.Text = Convert.ToString(m_departPlusCourtChemin.I_X);
                     labelDepartY.Text = Convert.ToString(m_departPlusCourtChemin.I_Y);
                     labelDepartIDCASE.Text = Convert.ToString(m_departPlusCourtChemin.ID_CASE);
@@ -2943,10 +2944,10 @@ namespace vaoc
                 }
                 else
                 {
-                    m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
+                    m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(933, 180);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(1596, 561);
-                    //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4606596);
+                    m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(3515734));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(661, 560);
                     //ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(120);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4431204);//bug potentiel empéchant de trouver un chemin pour aller jusqu'à cette case
@@ -3024,7 +3025,7 @@ namespace vaoc
                     //}
                     //if (!m_etoileHPA.SearchPathHPA(m_departPlusCourtChemin, m_arriveePlusCourtChemin, tableCoutsMouvementsTerrain, -1))
                     string messageErreur;
-                    List<Donnees.TAB_CASERow> chemin;
+                    List<LigneCASE> chemin;
                     double cout, coutHorsRoute;
 
                     if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
@@ -3041,6 +3042,8 @@ namespace vaoc
                         labelInformationTempsPasse.Text += string.Format("\r\n HPA : {0} min {1} sec {2} mil cout:{3}", perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal);
                         m_cheminHPA = m_etoileHPA.PathByNodes;
                     }
+                    int pos = 0;
+                    while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;                    
                     /* */
                     #endregion
 

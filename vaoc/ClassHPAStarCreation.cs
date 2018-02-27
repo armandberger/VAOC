@@ -583,7 +583,7 @@ namespace vaoc
                             k = 0;
                             listeCasesTrajet.Clear();
                             //LogFile.Notifier(string.Format("etoile n°={0} m_idTrajet={1}", numeroTache, m_idTrajet));
-                            List<Donnees.TAB_CASERow> trajet = etoile.PathByNodes;
+                            List<LigneCASE> trajet = etoile.PathByNodes;
                             while (k < trajet.Count)
                             {
                                 //Donnees.m_donnees.TAB_PCC_TRAJET.AddTAB_PCC_TRAJETRow(m_idTrajet, trajet[k].ID_CASE, k);

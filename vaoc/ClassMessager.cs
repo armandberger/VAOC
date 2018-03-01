@@ -1326,7 +1326,8 @@ namespace vaoc
                     ligneMessageDirect.I_ZONE_BATAILLE = iZoneBataille;
                 }
                 Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
-                ClassTraitementHeure.ReceptionMessageTransfert(lignePionEmetteur, ligneMessageDirect);
+                //s'il s'agit d'un message de transfert, les effets doivent être traitées immédiatement car l'ordre ne sera jamais "reçu"
+                lignePionEmetteur.ReceptionMessageTransfert(ligneMessageDirect);
                 LogFile.Notifier(string.Format("CreerMessager: envoi d'un message direct {0} au pion ID={1}", phrase, lignePionDestinataire.ID_PION));
             }
             else

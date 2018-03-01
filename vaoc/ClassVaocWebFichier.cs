@@ -781,13 +781,12 @@ namespace vaoc
                 }
                 else
                 {
-                    int IdAncienProprietaire = lignePion.ID_ANCIEN_PION_PROPRIETAIRE;
-                    if (Constantes.NULLENTIER != IdAncienProprietaire)
+                    if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
                     {
                         //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, IdAncienProprietaire);
-                        requete = GenereLignePion(lignePion, idPartie, IdAncienProprietaire, ligneMessage);
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                        requete = GenereLignePion(lignePion, idPartie, lignePion.ID_ANCIEN_PION_PROPRIETAIRE, ligneMessage);
                     }
                     else
                     {

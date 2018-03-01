@@ -331,7 +331,7 @@ namespace vaoc
                         }
                     }
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 60 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -3813,7 +3813,7 @@ namespace vaoc
                                         ligneMessage.ID_PION_PROPRIETAIRE = lignePionDestinataire.ID_PION;
                                         Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
 
-                                        ReceptionMessageTransfert(ligneMessage.emetteur, ligneMessage);
+                                        ligneMessage.emetteur.ReceptionMessageTransfert(ligneMessage);
                                         lignePion.DetruirePion();//le messager est devenu inutile
                                     }
                                     else
@@ -4081,23 +4081,6 @@ namespace vaoc
             }
 
             return true;
-        }
-
-        public static void ReceptionMessageTransfert(Donnees.TAB_PIONRow lignePionDestinataire, Donnees.TAB_MESSAGERow ligneMessage)
-        {
-            //cas particulier des transferts d'unités ou celui là ne devient effectif qu'à la reception de l'information
-            if (ligneMessage.I_TYPE == (int)ClassMessager.MESSAGES.MESSAGE_A_PERDU_TRANSFERT)
-            {
-                //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
-                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                lignePionDestinataire.SetID_ANCIEN_PION_PROPRIETAIRENull();
-            }
-            if (ligneMessage.I_TYPE == (int)ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT)
-            {
-                //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
-                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                lignePionDestinataire.SetID_NOUVEAU_PION_PROPRIETAIRENull();
-            }
         }
 
         /// <summary>

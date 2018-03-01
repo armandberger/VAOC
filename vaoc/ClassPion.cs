@@ -3665,6 +3665,27 @@ namespace vaoc
                 return true;
             }
 
+            public void ReceptionMessageTransfert(Donnees.TAB_MESSAGERow ligneMessage)
+            {
+                //cas particulier des transferts d'unités ou celui là ne devient effectif qu'à la reception de l'information
+                if (ligneMessage.I_TYPE == (int)ClassMessager.MESSAGES.MESSAGE_A_PERDU_TRANSFERT)
+                {
+                    //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
+                    //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    SetID_ANCIEN_PION_PROPRIETAIRENull();
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                }
+                if (ligneMessage.I_TYPE == (int)ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT)
+                {
+                    //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
+                    //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    SetID_NOUVEAU_PION_PROPRIETAIRENull();
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                }
+            }
+
             /// <summary>
             /// Changement de propriétaire pour le pion
             /// </summary>
@@ -3677,6 +3698,15 @@ namespace vaoc
             {
                 string message;
 
+                //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
+                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                ID_ANCIEN_PION_PROPRIETAIRE = ID_PION_PROPRIETAIRE;
+                //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
+                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
+                ID_NOUVEAU_PION_PROPRIETAIRE = idPionNouveauProprietaire;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+
                 //prévenir l'ancier proprietaire du transfert
                 if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_A_PERDU_TRANSFERT))
                 {
@@ -3685,14 +3715,8 @@ namespace vaoc
                     return false;
                 }
 
-                //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
-                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                ID_ANCIEN_PION_PROPRIETAIRE = ID_PION_PROPRIETAIRE;
                 ID_PION_PROPRIETAIRE = idPionNouveauProprietaire;
-                //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
-                //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                ID_NOUVEAU_PION_PROPRIETAIRE = idPionNouveauProprietaire;
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT))

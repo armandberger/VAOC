@@ -2935,7 +2935,7 @@ namespace vaoc
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(378, 720);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(622, 577);
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4373903);
-                    m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(7232577));
+                    //m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(7232577));
                     labelDepartX.Text = Convert.ToString(m_departPlusCourtChemin.I_X);
                     labelDepartY.Text = Convert.ToString(m_departPlusCourtChemin.I_Y);
                     labelDepartIDCASE.Text = Convert.ToString(m_departPlusCourtChemin.ID_CASE);
@@ -2947,7 +2947,7 @@ namespace vaoc
                     m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(933, 180);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(1596, 561);
-                    m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(3515734));
+                    //m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(3515734));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(661, 560);
                     //ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(120);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4431204);//bug potentiel empéchant de trouver un chemin pour aller jusqu'à cette case

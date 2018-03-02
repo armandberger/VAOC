@@ -3042,8 +3042,8 @@ namespace vaoc
                         labelInformationTempsPasse.Text += string.Format("\r\n HPA : {0} min {1} sec {2} mil cout:{3}", perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal);
                         m_cheminHPA = m_etoileHPA.PathByNodes;
                     }
-                    int pos = 0;
-                    while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;                    
+                    //int pos = 0;
+                    //while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;                    
                     /* */
                     #endregion
 

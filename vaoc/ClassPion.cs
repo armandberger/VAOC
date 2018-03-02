@@ -3542,43 +3542,66 @@ namespace vaoc
                 }
                 #endregion
 
-                #region un depot rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
                 if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
                 {
+                    //la capture n'est possible que si aucun pion ami combattif n'est visible
+                    bool bEnDanger;
+                    #region un depot rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
                     if (estDepot && lignePionEnnemi.estCombattif)
                     {
-                        if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
+                        }
                     }
                     if (lignePionEnnemi.estDepot && estCombattif)
                     {
-                        if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
+                        }
                     }
-                }
-                #endregion
+                    #endregion
 
-                #region un convoi rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
-                //aucune des deux unités ne doit être en fuite ou en retraite (pris en compte est l'appel à estCombattif)
-                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-                {
+                    #region un convoi rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
+                    //aucune des deux unités ne doit être en fuite ou en retraite (pris en compte est l'appel à estCombattif)
                     if ((estConvoi || estBlesses || estPrisonniers) && lignePionEnnemi.estCombattif)
                     {
-                        if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
+                        }
                     }
                     if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers) && estCombattif)
                     {
-                        if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this, ligneCase)) return false;
+                        }
                     }
 
                     if (estPontonnier && lignePionEnnemi.estCombattif)
                     {
-                        if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
+                        }
                     }
                     if (lignePionEnnemi.estPontonnier && estCombattif)
                     {
-                        if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION, ligneCase)) return false;
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        if (bEnDanger)
+                        {
+                            if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION, ligneCase)) return false;
+                        }
                     }
+                    #endregion
                 }
-                #endregion
                 return true;
             }
 

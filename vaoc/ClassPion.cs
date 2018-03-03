@@ -987,6 +987,38 @@ namespace vaoc
                 TerminerOrdre(ligneOrdre, false, false);
             }
 
+            public string DescriptifOrdreEnCours(int tour, int phase)
+            {
+                string sOrdreCourant, requete;
+                //recherche de l'ordre courant de l'unité au moment du dernier message
+                //requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND I_PHASE_DEBUT<={2} AND ((I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL) OR (I_TOUR_FIN>{1} AND I_PHASE_FIN>{2}))",
+                //    lignePion.ID_PION, ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
+                //string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN IS NULL) OR (I_TOUR_FIN>{1}))", lignePion.ID_PION, tour);
+                requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN = {3}) OR (I_TOUR_FIN>{1}) OR (I_TOUR_FIN={1} AND I_PHASE_FIN>{2}))",
+                                             this.ID_PION, tour, phase, Constantes.NULLENTIER);
+                Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "ID_ORDRE");
+                if (0 == resOrdre.Length)
+                {
+                    sOrdreCourant = "aucun ordre";
+                }
+                else
+                {
+                    sOrdreCourant = string.Empty;
+                    int o = 0;
+                    while (sOrdreCourant == string.Empty && o < resOrdre.Length)
+                    {
+                        //c'est seulement si l'ordre est dans le même tour que le message que la valeur de la phase intervient
+                        if ((resOrdre[o].I_TOUR_DEBUT != tour) ||
+                            (resOrdre[o].I_PHASE_DEBUT <= phase && (resOrdre[o].IsI_PHASE_FINNull() || resOrdre[o].I_PHASE_FIN > phase)))
+                        {
+                            sOrdreCourant = ClassMessager.MessageDecrivantUnOrdre(resOrdre[o], false);
+                        }
+                        o++;
+                    }
+                }
+                return sOrdreCourant;
+            }
+
             /// <summary>
             /// indique si l'ordre de l'unité est dans le créneau actif en ce moment
             /// </summary>

@@ -929,6 +929,7 @@ namespace vaoc
             int iFatigue = (null == ligneMessage) ? lignePion.I_FATIGUE : ligneMessage.I_FATIGUE;
             int iMoral = (null == ligneMessage) ? lignePion.I_MORAL : ligneMessage.I_MORAL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
+            string sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
 
             requete = string.Format(
                                     "INSERT INTO `tab_vaoc_pion` (`ID_PION`, `ID_PARTIE`, `ID_PION_PROPRIETAIRE`, `ID_MODELE_PION`, `S_NOM`, `I_INFANTERIE`, " +
@@ -939,11 +940,11 @@ namespace vaoc
                                     "`B_FUITE_AU_COMBAT`, `B_REDITION_RAVITAILLEMENT`, `B_DEPOT`, `B_PONTONNIER`," +
                                     "`I_MATERIEL`, `I_RAVITAILLEMENT`, `I_NIVEAU_FORTIFICATION`, " +
                                     "`I_TOUR_CONVOI_CREE`, `ID_DEPOT_SOURCE`, `B_CAVALERIE_DE_LIGNE`, `B_CAVALERIE_LOURDE`, `B_GARDE`, `B_VIEILLE_GARDE`," +
-                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`" +
-                                    ") VALUES " +
+                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`," +
+                                    "`S_ORDRE_COURANT`) VALUES " +
                                     "({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+
-                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53});",
+                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}');",
                                     lignePion.ID_PION,//0
                                     idPartie,
                                     (!lignePion.IsI_TOUR_BLESSURENull() && lignePion.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
@@ -997,7 +998,8 @@ namespace vaoc
                                     bRenfort,//50
                                     bQG,
                                     lignePion.I_SOLDATS_RAVITAILLES,
-                                    lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE
+                                    lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE,
+                                    Constantes.ChaineSQL(sOrdreCourant)
                                     );
             return requete;
         }

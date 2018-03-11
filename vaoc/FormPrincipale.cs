@@ -2926,7 +2926,7 @@ namespace vaoc
             #region test plus court chemin
             if (toolStripPlusCourtChemin.CheckState == CheckState.Checked)
             {
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(2383);
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(0);
 
                 if (MouseButtons.Left == e.Button)
                 {

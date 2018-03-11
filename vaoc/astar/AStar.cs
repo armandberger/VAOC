@@ -1387,10 +1387,12 @@ namespace vaoc
                     {
                         //on renvoie le chemin existant
                         chemin = new List<LigneCASE>(parcoursExistant.Length);
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//BEA, normalement inutile mais ça crash avec un id_case non accessible
                         for (i = 0; i < parcoursExistant.Length; i++)
                         {
                             chemin.Add(new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE)));
                         }
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//BEA, normalement inutile mais ça crash avec un id_case non accessible
                         perf = DateTime.Now - timeStart;
                         Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                         message = string.Format("{0},ID={1}, RechercheChemin : existant en {2} minutes, {3} secondes, {4} millisecondes, lg={5}", 

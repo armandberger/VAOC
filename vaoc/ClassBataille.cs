@@ -318,6 +318,7 @@ namespace vaoc
 
             /// <summary>
             ///tous les pions dans la zone de bataille des battus mais non engagées, on un temps de retraite pour éviter de redéclencher immédiatement un combat sur d'autres unités
+            ///// correction -> prendre même les non engagées sinon les engagées se retrouvent "coincées" dans la zone et ne peuvent pas sortir
             ///il faut prendre toutes les zones dans la zone, pas seulement celles dans la bataille car les unités avec 0 de moral ne sont pas incluses et cela reprovoque une fin de
             ///bataille juste après la fin de l'autre si plusieures unités à 0 de moral sont dans la zone.
             /// </summary>
@@ -332,14 +333,14 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePionEnBataille = Donnees.m_donnees.TAB_PION[i++];
                     if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.nation.ID_NATION!= idNation 
-                        || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0
+                        //|| lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0 ->reprendre le compte à zéro, peu importe qu'elle soit déjà en retraite
                         || lignePionEnBataille.estMessager || lignePionEnBataille.estQG || lignePionEnBataille.estConvoi) { continue; }
 
                     Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionEnBataille.ID_CASE);
                     if (ligneCasePionBataille.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCasePionBataille.I_Y >= I_Y_CASE_HAUT_GAUCHE 
                         && ligneCasePionBataille.I_X <= I_X_CASE_BAS_DROITE && ligneCasePionBataille.I_Y <= I_Y_CASE_BAS_DROITE)
                     {
-                        lignePionEnBataille.I_TOUR_RETRAITE_RESTANT = 2;
+                        lignePionEnBataille.I_TOUR_RETRAITE_RESTANT = 2 +1;//+1 car on fait une fin de combat au tour T,phase 100, si le combat reprend à T+2,phase 0, cela ne laisse en fait qu'une heure de retraite
                     }
                 }
             }

@@ -1122,7 +1122,7 @@ namespace vaoc
                     {
                         //lignePion.I_TOUR_FUITE_RESTANT = 2; -> seulement pour les unités en déroute
                         Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                        lignePion.I_TOUR_RETRAITE_RESTANT = 2; // même chose que I_TOUR_FUITE_RESTANT mais tu peux donner des ordres
+                        lignePion.I_TOUR_RETRAITE_RESTANT = 2 +1; // même chose que I_TOUR_FUITE_RESTANT mais tu peux donner des ordres, //+1 car on fait une fin de combat au tour T,phase 100, si le combat reprend à T+2,phase 0, cela ne laisse en fait qu'une heure de retraite
                         lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         lignePionBataille.B_ENGAGEE = false;
                         lignePion.SetI_ZONE_BATAILLENull();

@@ -134,6 +134,7 @@ namespace vaoc
                     idCaseDebut = lignePion.ID_CASE;
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
+                if (idCaseDebut < 0) idCaseDebut = lignePion.ID_CASE;//possible si pas d'ordre en cours
                 Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
                     lignePion.nation.ID_NATION,

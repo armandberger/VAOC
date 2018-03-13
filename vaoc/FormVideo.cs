@@ -161,7 +161,7 @@ namespace vaoc
             for (int j=0; j<Donnees.m_donnees.TAB_VIDEO.Count; j++)
             {
                 Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[j];
-                if (ligneVideo.ID_PION < 0) 
+                if (ligneVideo.ID_PION < 0 || ligneVideo.ID_CASE<0) 
                 { 
                     continue; //case comptant seulement pour les points de victoire
                 }

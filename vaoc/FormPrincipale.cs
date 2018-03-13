@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,14 +9,9 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using Microsoft.Win32;
-using vaoc;
 using WaocLib;
-using System.Runtime.Serialization.Formatters.Binary;
-
 
 namespace vaoc
 {

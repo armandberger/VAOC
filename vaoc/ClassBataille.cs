@@ -137,6 +137,8 @@ namespace vaoc
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 Donnees.TAB_PIONRow[] lignePionsCombattifBataille012;
                 Donnees.TAB_PIONRow[] lignePionsCombattifBataille345;
+                Donnees.TAB_PIONRow[] lignePionsEnBatailleRetraite012;
+                Donnees.TAB_PIONRow[] lignePionsEnBatailleRetraite345;
                 string requete;
                 bool bVictoire012 = true, bVictoire345 = true;
 
@@ -212,10 +214,22 @@ namespace vaoc
                     && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT >= 2))
                 {
                     //un des deux camps a remporté le combat, il engage une poursuite sur le vaincu
+                    int[] desRetraite;
+                    int[] effectifsRetraite;
+                    int[] canonsRetraite;
+                    int nbUnitesRetraite012 = 0, nbUnitesRetraite345 = 0;
+                    if (!RecherchePionsEnBataille(out nbUnitesRetraite012, out nbUnitesRetraite345, out desRetraite, out effectifsRetraite, out canonsRetraite,
+                        out lignePionsEnBatailleRetraite012, out lignePionsEnBatailleRetraite345, null /*engagement*/, false/*combattif*/, true/*QG*/))
+                    {
+                        message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille III");
+                        LogFile.Notifier(message, out messageErreur);
+                    }
+
+
                     if (nbUnites012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
-                        SortieDuChampDeBataille(lignePionsEnBataille345);
+                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille012);
@@ -228,7 +242,7 @@ namespace vaoc
                     else
                     {
                         Poursuite( ID_LEADER_345, lignePionsEnBataille345, ID_LEADER_012, lignePionsEnBataille012);
-                        SortieDuChampDeBataille(lignePionsEnBataille012);
+                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite012);
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille345);

@@ -818,7 +818,7 @@ namespace vaoc
                         if (null == lignePionPerte || lignePionPerte.B_DETRUIT || lignePionPerte.estQG || lignePionPerte.effectifTotal <= 0) { continue; }
                         if (lignePionPerte.I_CAVALERIE > 0)
                         {
-                            int perteLocale = Math.Min(lignePionPerte.I_CAVALERIE, (lignePionPerte.Moral <= 0) ? Math.Max(0, lignePionPerte.I_CAVALERIE - 2 * Constantes.CST_PAS_DE_PERTES) : Math.Max(0, lignePionPerte.I_CAVALERIE - Constantes.CST_PAS_DE_PERTES));
+                            int perteLocale = Math.Min(lignePionPerte.I_CAVALERIE, (lignePionPerte.Moral <= 0) ? Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_CAVALERIE) : Math.Min(Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_CAVALERIE));
                             if (listePertesCavalerie.ContainsKey(lignePionPerte.ID_PION))
                             {
                                 listePertesCavalerie[lignePionPerte.ID_PION] = (int)listePertesCavalerie[lignePionPerte.ID_PION] + perteLocale;
@@ -839,7 +839,7 @@ namespace vaoc
                             //une perte en infanterie coute le double d'une perte en cavalerie
                             if (lignePionPerte.I_INFANTERIE > 0)
                             {
-                                int perteLocale = Math.Min(lignePionPerte.I_INFANTERIE, (lignePionPerte.Moral <= 0) ? Math.Max(0, lignePionPerte.I_INFANTERIE - 4 * Constantes.CST_PAS_DE_PERTES) : Math.Max(0, lignePionPerte.I_INFANTERIE - 2 * Constantes.CST_PAS_DE_PERTES));
+                                int perteLocale = Math.Min(lignePionPerte.I_INFANTERIE, (lignePionPerte.Moral <= 0) ? Math.Min(4 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_INFANTERIE) : Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_INFANTERIE));
                                 if (listePertesInfanterie.ContainsKey(lignePionPerte.ID_PION))
                                 {
                                     listePertesInfanterie[lignePionPerte.ID_PION] = (int)listePertesInfanterie[lignePionPerte.ID_PION] + perteLocale;
@@ -2226,7 +2226,7 @@ namespace vaoc
                                     && (BataillePion.ID_NATION == idNation)
                                     && (BataillePion.ID_BATAILLE == idBataille)
                                     && !Pion.B_DETRUIT
-                                    select new rechercheQG { idPion = Pion.ID_PION, bEngagee = BataillePion.B_ENGAGEE, izoneEngagement = Pion.IsI_ZONE_BATAILLENull() ? -1 : Pion.I_ZONE_BATAILLE };
+                                    select new rechercheQG { idPion = Pion.ID_PION, bEngagee = BataillePion.B_ENGAGEMENT, izoneEngagement = Pion.IsI_ZONE_BATAILLENull() ? -1 : Pion.I_ZONE_BATAILLE };
 
                 IEnumerable<int> resultPionsBataille;
                 if (null == bEngagement)
@@ -2240,7 +2240,7 @@ namespace vaoc
                     if (bEngagement == true)
                     {
                         resultPionsBataille = from resultatPion in resultComplet
-                                              where (resultatPion.bEngagee == bEngagement) && resultatPion.izoneEngagement >= 0
+                                              where (resultatPion.bEngagee == bEngagement) // && resultatPion.izoneEngagement >= 0 -> si on garde ce test, on ne trouve aucune unité engagée au moment de la retaire car la zone d'engagement est remise à null
                                               select resultatPion.idPion;
                     }
                     else

@@ -929,6 +929,7 @@ namespace vaoc
             int iFatigue = (null == ligneMessage) ? lignePion.I_FATIGUE : ligneMessage.I_FATIGUE;
             int iMoral = (null == ligneMessage) ? lignePion.I_MORAL : ligneMessage.I_MORAL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
+            char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
             string sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
 
             requete = string.Format(
@@ -993,7 +994,7 @@ namespace vaoc
                                     lignePion.B_VIEILLE_GARDE ? 1 : 0,//45
                                     lignePion.B_BLESSES ? 1 : 0,
                                     lignePion.B_PRISONNIERS ? 1 : 0,
-                                    lignePion.C_NIVEAU_DEPOT,
+                                    cNiveauDepot,
                                     bConvoi,
                                     bRenfort,//50
                                     bQG,

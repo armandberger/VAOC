@@ -1129,17 +1129,17 @@ namespace vaoc
             {
                 if (m_idNation >= 0)
                 {
-                    if (caseFinale.ID_NOUVEAU_PROPRIETAIRE.HasValue && caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
+                    if (caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
                     {
-                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE.Value);
+                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE);
                         if (lignePionProprietaire.idNation != m_idNation)
                         {
                             return Constantes.CST_COUTMAX;//case intraversable
                         }
                     }
-                    if (caseFinale.ID_PROPRIETAIRE.HasValue && caseFinale.ID_PROPRIETAIRE >= 0)
+                    if (caseFinale.ID_PROPRIETAIRE >= 0)
                     {
-                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE.Value);
+                        Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE);
                         if (lignePionProprietaire.idNation != m_idNation)
                         {
                             return Constantes.CST_COUTMAX;//case intraversable
@@ -1405,6 +1405,7 @@ namespace vaoc
                         lignePion.S_NOM, lignePion.ID_PION, parcoursExistant[0].ID_CASE, parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
                         ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
                     LogFile.Notifier(message, out messageErreur);
+
                     //}
                     /* 14/05/2015, cela ne sert surement plus à rien les unités sans effectif suivent la même règle que les autres maintenant
                     else

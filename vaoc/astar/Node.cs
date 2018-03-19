@@ -15,15 +15,15 @@ namespace vaoc
         private int m_x;
         private int m_y;
         private int m_modeleTerrain;
-        private int? m_proprietaire;
-        private int? m_nouveauProprietaire;
+        private int m_proprietaire;
+        private int m_nouveauProprietaire;
 
         public int ID_CASE { get { return m_idcase; } }
         public int I_X { get { return m_x; } }
         public int I_Y { get { return m_y; } }
         public int ID_MODELE_TERRAIN { get { return m_modeleTerrain; } }
-        public int? ID_PROPRIETAIRE { get { return m_proprietaire; } }
-        public int? ID_NOUVEAU_PROPRIETAIRE { get { return m_nouveauProprietaire; } }
+        public int ID_PROPRIETAIRE { get { return m_proprietaire; } }
+        public int ID_NOUVEAU_PROPRIETAIRE { get { return m_nouveauProprietaire; } }
         
 
         public Node(Donnees.TAB_CASERow ligneCase)
@@ -38,9 +38,9 @@ namespace vaoc
                 m_modeleTerrain = ligneCase.ID_MODELE_TERRAIN;
                 //Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//DBNull is not thread safe...
                 IdProprietaire = ligneCase.ID_PROPRIETAIRE;
-                m_proprietaire = (Constantes.NULLENTIER != IdProprietaire) ? (int?)null : IdProprietaire;
+                m_proprietaire = IdProprietaire;
                 IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                m_nouveauProprietaire = (Constantes.NULLENTIER != IdNouveauProprietaire) ? (int?)null : IdNouveauProprietaire;
+                m_nouveauProprietaire = IdNouveauProprietaire;
                 //Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
             catch (Exception ex)

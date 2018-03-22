@@ -620,7 +620,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante()+1)%24))//+1 car execution en phase 100
                     {
                         if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
                         {
@@ -664,7 +664,7 @@ namespace vaoc
                 int i;
 
                 //aucune poursuite si la bataille se termine à la tombée de la nuit
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
                 {
                     message = string.Format("Poursuite : {0} aucune poursuite à cause de la nuit", S_NOM);
                     LogFile.Notifier(message);
@@ -1347,7 +1347,7 @@ namespace vaoc
                     return true;//on ne fait le combat que toutes les deux heures
                 }
 
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
                 {
                     //pas de combat la nuit
                     message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
@@ -1650,7 +1650,7 @@ namespace vaoc
                 else
                 {
                     //La bataille continue seulement s'il ne fait pas nuit
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
                     {
                         //pas de combat la nuit
                         message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Fin de la bataille à cause de l'arrivée de la nuit.",

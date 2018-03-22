@@ -3518,19 +3518,23 @@ namespace vaoc
                 {
                     return true;
                 }
-                if ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
-                    || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false)))
+                //une unité d'artillerie ne peut jamais, a elle seule, déclenchée une bataille
+                if (!estArtillerie && !lignePionEnnemi.estArtillerie)
                 {
-                    //unites combattantes standard, création d'une bataille
-                    int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
-                    string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
-                    int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                    string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
+                    if ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
+                        || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false)))
+                    {
+                        //unites combattantes standard, création d'une bataille
+                        int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                        string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
+                        int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                        string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
 
-                    message = string.Format("RequisitionCase-NouvelleBataille: entre les poins ID_PION={0} et ID_PION={1} ou ID_PION={2} sur ID_CASE:{3}",
-                        ID_PION, proprio, nouveauProprio, ligneCase.ID_CASE);
-                    LogFile.Notifier(message);
-                    return Cartographie.NouvelleBataille(ligneCase, this);
+                        message = string.Format("RequisitionCase-NouvelleBataille: entre les poins ID_PION={0} et ID_PION={1} ou ID_PION={2} sur ID_CASE:{3}",
+                            ID_PION, proprio, nouveauProprio, ligneCase.ID_CASE);
+                        LogFile.Notifier(message);
+                        return Cartographie.NouvelleBataille(ligneCase, this);
+                    }
                 }
 
                 #region Une patrouille, elle indique la présence de l'ennemi et se transforme en messager.
@@ -3579,20 +3583,34 @@ namespace vaoc
                     //la capture n'est possible que si aucun pion ami combattif n'est visible
                     bool bEnDanger;
                     #region un depot rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
-                    if (estDepot && lignePionEnnemi.estCombattif)
+                    if ((estDepot || estArtillerie) && lignePionEnnemi.estCombattif)
                     {
                         ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
                         if (bEnDanger)
                         {
-                            if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
+                            if (estDepot)
+                            {
+                                if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
+                            }
+                            if (estArtillerie)
+                            {
+                                if (!CapturePion(lignePionEnnemi, lignePionEnnemi.proprietaire.ID_PION, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
+                            }                            
                         }
                     }
-                    if (lignePionEnnemi.estDepot && estCombattif)
+                    if ((lignePionEnnemi.estDepot || lignePionEnnemi.estArtillerie) && estCombattif)
                     {
                         ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
                         if (bEnDanger)
                         {
-                            if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
+                            if (estDepot)
+                            {
+                                if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
+                            }
+                            if (estArtillerie)
+                            {
+                                if (!lignePionEnnemi.CapturePion(this, this.proprietaire.ID_PION, string.Empty, this.nation.ID_NATION, ligneCase)) return false;
+                            }
                         }
                     }
                     #endregion
@@ -3649,7 +3667,7 @@ namespace vaoc
                     return false;
                 }
 
-                //le depôt change de proprietaire
+                //le pion change de proprietaire
                 if (!TransfertPion(idNouveauPionProprietaire))
                 {
                     message = string.Format("CapturePion  : erreur lors du transfert de pion");
@@ -3668,7 +3686,7 @@ namespace vaoc
                 int idModelePionCaptureur = -1;
                 if (string.Empty == aptitude)
                 {
-                    //Dans ce cas (prisonniers ou blessés) ils ont le même type que l'unité qui fait la capture
+                    //Dans ce cas (prisonniers ou blessés ou artillerie) ils ont le même type que l'unité qui fait la capture
                     idModelePionCaptureur = lignePionEnnemi.ID_MODELE_PION;
                 }
                 else

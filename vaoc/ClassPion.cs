@@ -3404,7 +3404,13 @@ namespace vaoc
                         }
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                if (bBlesses || bPrisonniers)
+                {
+                    //on en profite aussi pour voir si l'unité n'est pas sur un hopital ou une prison
+                    lignePionConvoi.ArriveeSurPrisonOuHopital();
+                }
+
                 return lignePionConvoi;
             }
 
@@ -4012,6 +4018,9 @@ namespace vaoc
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 CreerEscorte(lignePionQuiCapture, lignePionPrisonniers);
                 //note : le message de la capture est fait dans "capturePion" en amont
+
+                //on en profite aussi pour voir si l'unité n'est pas sur un hopital ou une prison
+                lignePionPrisonniers.ArriveeSurPrisonOuHopital();
                 return lignePionPrisonniers;
             }
 

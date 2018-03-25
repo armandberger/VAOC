@@ -376,7 +376,7 @@ namespace vaoc
                                 }
                             }
                             //on en profite aussi pour voir si l'unité n'a pas rejoint un hopital ou une prison
-                            if (!lignePion.ArriveeSurPrisonOuHopital()) { return false; }
+                            //if (!lignePion.ArriveeSurPrisonOuHopital()) { return false; } -> ne pas le faire là, car sinon, un convoi de prisonniers s'arrête dès qu'il rencontre une prison, déplacée à la création de colonne de prisonniers ou de blessés
                         }
                     }
                     i++;

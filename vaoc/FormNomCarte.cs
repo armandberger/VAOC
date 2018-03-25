@@ -238,6 +238,12 @@ namespace vaoc
             get { return this.checkBoxHopital.Checked; }
         }
 
+        public bool creationDeDepots
+        {
+            set { this.checkBoxCreationDepot.Checked = value; }
+            get { return this.checkBoxCreationDepot.Checked; }
+        }
+
         public int chanceRenfort
         {
             set { textBoxPourcentArriveeRenfort.Text = value.ToString(); }

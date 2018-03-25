@@ -76,6 +76,7 @@ namespace vaoc
             this.label20 = new System.Windows.Forms.Label();
             this.listBoxBlesses = new System.Windows.Forms.ListBox();
             this.listBoxPrisonniers = new System.Windows.Forms.ListBox();
+            this.checkBoxCreationDepot = new System.Windows.Forms.CheckBox();
             this.groupBoxNom.SuspendLayout();
             this.groupBoxRenfort.SuspendLayout();
             this.SuspendLayout();
@@ -110,7 +111,7 @@ namespace vaoc
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(177, 518);
+            this.buttonAnnuler.Location = new System.Drawing.Point(177, 558);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 7;
@@ -120,7 +121,7 @@ namespace vaoc
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(15, 518);
+            this.buttonValider.Location = new System.Drawing.Point(15, 558);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 5;
@@ -164,7 +165,7 @@ namespace vaoc
             // buttonSupprimer
             // 
             this.buttonSupprimer.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimer.Location = new System.Drawing.Point(96, 518);
+            this.buttonSupprimer.Location = new System.Drawing.Point(96, 558);
             this.buttonSupprimer.Name = "buttonSupprimer";
             this.buttonSupprimer.Size = new System.Drawing.Size(75, 23);
             this.buttonSupprimer.TabIndex = 6;
@@ -393,7 +394,7 @@ namespace vaoc
             this.groupBoxRenfort.Controls.Add(this.label14);
             this.groupBoxRenfort.Controls.Add(this.label11);
             this.groupBoxRenfort.Controls.Add(this.label12);
-            this.groupBoxRenfort.Location = new System.Drawing.Point(15, 317);
+            this.groupBoxRenfort.Location = new System.Drawing.Point(15, 357);
             this.groupBoxRenfort.Name = "groupBoxRenfort";
             this.groupBoxRenfort.Size = new System.Drawing.Size(749, 178);
             this.groupBoxRenfort.TabIndex = 4;
@@ -518,7 +519,7 @@ namespace vaoc
             // checkBoxPrison
             // 
             this.checkBoxPrison.AutoSize = true;
-            this.checkBoxPrison.Location = new System.Drawing.Point(30, 213);
+            this.checkBoxPrison.Location = new System.Drawing.Point(30, 253);
             this.checkBoxPrison.Name = "checkBoxPrison";
             this.checkBoxPrison.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxPrison.Size = new System.Drawing.Size(55, 17);
@@ -529,7 +530,7 @@ namespace vaoc
             // checkBoxHopital
             // 
             this.checkBoxHopital.AutoSize = true;
-            this.checkBoxHopital.Location = new System.Drawing.Point(438, 216);
+            this.checkBoxHopital.Location = new System.Drawing.Point(438, 256);
             this.checkBoxHopital.Name = "checkBoxHopital";
             this.checkBoxHopital.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkBoxHopital.Size = new System.Drawing.Size(59, 17);
@@ -540,7 +541,7 @@ namespace vaoc
             // buttonSupprimerTout
             // 
             this.buttonSupprimerTout.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimerTout.Location = new System.Drawing.Point(540, 518);
+            this.buttonSupprimerTout.Location = new System.Drawing.Point(540, 558);
             this.buttonSupprimerTout.Name = "buttonSupprimerTout";
             this.buttonSupprimerTout.Size = new System.Drawing.Size(224, 23);
             this.buttonSupprimerTout.TabIndex = 20;
@@ -571,7 +572,7 @@ namespace vaoc
             this.listBoxBlesses.DisplayMember = "nomListeEffectifs";
             this.listBoxBlesses.FormattingEnabled = true;
             this.listBoxBlesses.HorizontalScrollbar = true;
-            this.listBoxBlesses.Location = new System.Drawing.Point(504, 213);
+            this.listBoxBlesses.Location = new System.Drawing.Point(504, 253);
             this.listBoxBlesses.Name = "listBoxBlesses";
             this.listBoxBlesses.Size = new System.Drawing.Size(260, 95);
             this.listBoxBlesses.TabIndex = 34;
@@ -581,10 +582,21 @@ namespace vaoc
             this.listBoxPrisonniers.DisplayMember = "nomListeEffectifs";
             this.listBoxPrisonniers.FormattingEnabled = true;
             this.listBoxPrisonniers.HorizontalScrollbar = true;
-            this.listBoxPrisonniers.Location = new System.Drawing.Point(131, 216);
+            this.listBoxPrisonniers.Location = new System.Drawing.Point(131, 256);
             this.listBoxPrisonniers.Name = "listBoxPrisonniers";
             this.listBoxPrisonniers.Size = new System.Drawing.Size(286, 95);
             this.listBoxPrisonniers.TabIndex = 35;
+            // 
+            // checkBoxCreationDepot
+            // 
+            this.checkBoxCreationDepot.AutoSize = true;
+            this.checkBoxCreationDepot.Location = new System.Drawing.Point(29, 230);
+            this.checkBoxCreationDepot.Name = "checkBoxCreationDepot";
+            this.checkBoxCreationDepot.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.checkBoxCreationDepot.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxCreationDepot.TabIndex = 36;
+            this.checkBoxCreationDepot.Text = "Création de dépôts autorisé";
+            this.checkBoxCreationDepot.UseVisualStyleBackColor = true;
             // 
             // FormNomCarte
             // 
@@ -592,7 +604,8 @@ namespace vaoc
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonAnnuler;
-            this.ClientSize = new System.Drawing.Size(776, 553);
+            this.ClientSize = new System.Drawing.Size(776, 590);
+            this.Controls.Add(this.checkBoxCreationDepot);
             this.Controls.Add(this.listBoxPrisonniers);
             this.Controls.Add(this.listBoxBlesses);
             this.Controls.Add(this.label20);
@@ -681,5 +694,6 @@ namespace vaoc
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.ListBox listBoxBlesses;
         private System.Windows.Forms.ListBox listBoxPrisonniers;
+        private System.Windows.Forms.CheckBox checkBoxCreationDepot;
     }
 }

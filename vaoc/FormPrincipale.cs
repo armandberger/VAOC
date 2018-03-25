@@ -3370,7 +3370,8 @@ namespace vaoc
                             false,
                             fNomCarte.nom,
                             ligneCase.I_X,
-                            ligneCase.I_Y
+                            ligneCase.I_Y,
+                            fNomCarte.creationDeDepots
                             );
                         ligneNomCarte.SetID_NATION_CONTROLENull();
                         if (null == fNomCarte.pionProprietaireRenfort) ligneNomCarte.SetID_PION_PROPRIETAIRE_RENFORTNull();
@@ -3634,7 +3635,8 @@ namespace vaoc
                             true,//bool B_PONT
                             nom.S_NOM_INDEX,
                             nom.I_X,
-                            nom.I_Y
+                            nom.I_Y,
+                            false//bool B_CREATION_DEPOT
                             );
                         ligneNomCarte.SetID_NATION_CONTROLENull();
                         //ligneNomCarte.SetID_MODELE_PION_RENFORTNull(); -> affiche toujours un résultat dans la liste déroulante

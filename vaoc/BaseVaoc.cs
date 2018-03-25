@@ -464,7 +464,7 @@ namespace vaoc
                 string tri = "ID_ORDRE";
                 //On cherche l'ordre actuellement actif s'il existe, on vérifie qu'il s'agit bien d'un ordre de patrouille
                 //note : correctif le 11/02/2018 avec ajout de ID_PION, sinon l'ordre est valide, c'est celui executé par la patrouille en cours
-                string requete = string.Format("(ID_PION={0}) AND (ID_DESTINATAIRE={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1}) AND I_ORDRE_TYPE = {2}", 
+                string requete = string.Format("(ID_PION={0}) AND (ID_DESTINATAIRE={0}) AND (I_TOUR_FIN = {1}) AND (I_PHASE_FIN = {1}) AND I_ORDRE_TYPE = {2}",
                     ID_PION, Constantes.NULLENTIER, Constantes.ORDRES.PATROUILLE);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
@@ -1867,7 +1867,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 7;
+            TAB_JEU[0].I_VERSION = 8;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases)
             {
@@ -2243,6 +2243,19 @@ namespace vaoc
                         ligneNomCarte.I_X = ligneCase.I_X;
                         ligneNomCarte.I_Y = ligneCase.I_Y;
                     }
+                }
+            }
+
+            #endregion
+
+            #region version 8
+            if (TAB_JEU[0].I_VERSION < 8)
+            {
+                Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
+                for (int l = 0; l < Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
+                {
+                    Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
+                    ligneNomCarte.B_CREATION_DEPOT = false;
                 }
             }
 

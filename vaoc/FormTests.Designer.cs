@@ -35,6 +35,7 @@
             this.textBoxFormats = new System.Windows.Forms.TextBox();
             this.buttonCasesNoms = new System.Windows.Forms.Button();
             this.buttonMessageTexteFictif = new System.Windows.Forms.Button();
+            this.buttonHopitaux = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -99,12 +100,23 @@
             this.buttonMessageTexteFictif.UseVisualStyleBackColor = true;
             this.buttonMessageTexteFictif.Click += new System.EventHandler(this.buttonMessageTexteFictif_Click);
             // 
+            // buttonHopitaux
+            // 
+            this.buttonHopitaux.Location = new System.Drawing.Point(538, 12);
+            this.buttonHopitaux.Name = "buttonHopitaux";
+            this.buttonHopitaux.Size = new System.Drawing.Size(211, 23);
+            this.buttonHopitaux.TabIndex = 8;
+            this.buttonHopitaux.Text = "Cases des hôpitaux/Prisons/Dépôts";
+            this.buttonHopitaux.UseVisualStyleBackColor = true;
+            this.buttonHopitaux.Click += new System.EventHandler(this.buttonHopitaux_Click);
+            // 
             // FormTests
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 612);
+            this.Controls.Add(this.buttonHopitaux);
             this.Controls.Add(this.buttonMessageTexteFictif);
             this.Controls.Add(this.buttonCasesNoms);
             this.Controls.Add(this.textBoxFormats);
@@ -128,5 +140,6 @@
         private System.Windows.Forms.TextBox textBoxFormats;
         private System.Windows.Forms.Button buttonCasesNoms;
         private System.Windows.Forms.Button buttonMessageTexteFictif;
+        private System.Windows.Forms.Button buttonHopitaux;
     }
 }

@@ -3246,6 +3246,7 @@ namespace vaoc
                     fNomCarte.materiel = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_MATERIEL_RENFORT;
                     fNomCarte.ravitaillement = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_RAVITAILLEMENT_RENFORT;
                     fNomCarte.modelePionRenfort = Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_MODELE_PION_RENFORTNull() ? null : Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_MODELE_PION_RENFORT);
+                    fNomCarte.creationDeDepots = Donnees.m_donnees.TAB_NOMS_CARTE[i].B_CREATION_DEPOT;
                     if (Donnees.m_donnees.TAB_NOMS_CARTE[i].IsID_PION_PROPRIETAIRE_RENFORTNull())
                     {
                         fNomCarte.pionProprietaireRenfort = null;
@@ -3313,6 +3314,7 @@ namespace vaoc
                         ligneNomCarte.I_MORAL_RENFORT = fNomCarte.moral;
                         ligneNomCarte.I_MATERIEL_RENFORT = fNomCarte.materiel;
                         ligneNomCarte.I_RAVITAILLEMENT_RENFORT = fNomCarte.ravitaillement;
+                        ligneNomCarte.B_CREATION_DEPOT = fNomCarte.creationDeDepots;
                         if (null == fNomCarte.modelePionRenfort)
                         {
                             ligneNomCarte.SetID_MODELE_PION_RENFORTNull();

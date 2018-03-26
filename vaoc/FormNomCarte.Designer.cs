@@ -593,9 +593,9 @@ namespace vaoc
             this.checkBoxCreationDepot.Location = new System.Drawing.Point(29, 230);
             this.checkBoxCreationDepot.Name = "checkBoxCreationDepot";
             this.checkBoxCreationDepot.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBoxCreationDepot.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxCreationDepot.Size = new System.Drawing.Size(161, 17);
             this.checkBoxCreationDepot.TabIndex = 36;
-            this.checkBoxCreationDepot.Text = "Création de dépôts autorisé";
+            this.checkBoxCreationDepot.Text = "Création de dépôts autorisée";
             this.checkBoxCreationDepot.UseVisualStyleBackColor = true;
             // 
             // FormNomCarte

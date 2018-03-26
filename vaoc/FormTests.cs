@@ -205,5 +205,45 @@ namespace vaoc
             }
                         );
         }
+
+        /// <summary>
+        /// affiche toutes les cases d'hopitaux de la carte par ordre alphabetique
+        /// </summary>
+        private void buttonHopitaux_Click(object sender, EventArgs e)
+        {
+            Donnees.TAB_NOMS_CARTERow[] liste;
+            bool bPremier;
+            textBoxResultat.Text = string.Empty;
+
+            textBoxResultat.Text += string.Format("Hôpitaux :\r\n");
+            bPremier = true;
+            liste = (Donnees.TAB_NOMS_CARTERow[])Donnees.m_donnees.TAB_NOMS_CARTE.Select("B_HOPITAL=true", "S_NOM");
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in liste)
+            {
+                if (bPremier) { bPremier = false; } else { textBoxResultat.Text += ", "; }
+                textBoxResultat.Text += ligneNomCarte.S_NOM;
+            }
+            textBoxResultat.Text += ".\r\n\r\n";
+
+            textBoxResultat.Text += string.Format("Prisons :\r\n");
+            bPremier = true;
+            liste = (Donnees.TAB_NOMS_CARTERow[])Donnees.m_donnees.TAB_NOMS_CARTE.Select("B_PRISON=true", "S_NOM");
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in liste)
+            {
+                if (bPremier) { bPremier = false; } else { textBoxResultat.Text += ", "; }
+                textBoxResultat.Text += ligneNomCarte.S_NOM;
+            }
+            textBoxResultat.Text += ".\r\n\r\n";
+
+            textBoxResultat.Text += string.Format("Création de dépôts possible :\r\n");
+            bPremier = true;
+            liste = (Donnees.TAB_NOMS_CARTERow[])Donnees.m_donnees.TAB_NOMS_CARTE.Select("B_CREATION_DEPOT=true", "S_NOM");
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in liste)
+            {
+                if (bPremier) { bPremier = false; } else { textBoxResultat.Text += ", "; }
+                textBoxResultat.Text += ligneNomCarte.S_NOM;
+            }
+            textBoxResultat.Text += ".";
+        }
     }
 }

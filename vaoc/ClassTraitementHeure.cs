@@ -1198,6 +1198,42 @@ namespace vaoc
                     break;
                 case Constantes.ORDRES.RENFORCER:
                     //L'unité se fusionne avec une autre pour la renforcer, il s'agit soit de renforts soit d'un ravitaillement de dépôt
+                    Donnees.TAB_PIONRow lignePionARenforcer = ligneOrdre.cible;
+                    if (null == lignePionARenforcer)
+                    {
+                        message = string.Format("{0},ID={1}, erreur sur Constantes.ORDRES.RENFORCER dans ExecuterOrdreHorsMouvement, le pion à renforcer n'est pas indiqué dans la cible", lignePion.S_NOM, lignePion.ID_PION);
+                        LogFile.Notifier(message);
+                        return false;
+                    }
+                    //dans le cas d'un convoi de ravitaillement sur un dépôt de type 'B' il faut s'assurer qu'il est sur une ville où les dépôts de type 'A' sont autorisés avant de faire l'ordre
+                    if (lignePion.estConvoiDeRavitaillement && lignePionARenforcer.C_NIVEAU_DEPOT == 'B')
+                    {
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                        double distanceCreationDepot = double.MaxValue;
+                        foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+                        {
+                            if (ligneNomCarte.B_CREATION_DEPOT)
+                            {
+                                double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneNomCarte.I_X, ligneNomCarte.I_Y);
+                                if (distance < distanceCreationDepot) distanceCreationDepot = distance;
+                            }
+                        }
+                        if (distanceCreationDepot <= Constantes.CST_DISTANCE_CREATION_DEPOT_A * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                        {
+                            //tout va bien, on continue
+                        }
+                        else
+                        {
+                            //on prévient le joueur qu'il ne peut pas créer de dépôt A à cet emplacement et on ne fait rien d'autre
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_CREATION_DEPOT_IMPOSSIBLE))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
+                            break;//on ne fait pas la suite
+                        }
+                    }
 
                     //on indique au joueur que le renfort est arrivé (et, comme ça, il sait aussi que l'unité est détruite !)
                     lignePion.DetruirePion();
@@ -1208,13 +1244,6 @@ namespace vaoc
                         return false;
                     }
 
-                    Donnees.TAB_PIONRow lignePionARenforcer = ligneOrdre.cible;
-                    if (null == lignePionARenforcer)
-                    {
-                        message = string.Format("{0},ID={1}, erreur sur Constantes.ORDRES.RENFORCER dans ExecuterOrdreHorsMouvement, le pion à renforcer n'est pas indiqué dans la cible", lignePion.S_NOM, lignePion.ID_PION);
-                        LogFile.Notifier(message);
-                        return false;
-                    }
                     if (lignePion.estConvoiDeRavitaillement)
                     {
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
@@ -1222,8 +1251,8 @@ namespace vaoc
                         if (lignePionARenforcer.C_NIVEAU_DEPOT != 'A')
                         {
                             lignePionARenforcer.C_NIVEAU_DEPOT--;// 'A' c'est le meilleur, 'D' le pire
-                            lignePionARenforcer.I_SOLDATS_RAVITAILLES = 0;//pas bien clair dans les règles mais cela me semble logique
                         }
+                        lignePionARenforcer.I_SOLDATS_RAVITAILLES = 0;//pas bien clair dans les règles mais cela me semble logique
                         Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait

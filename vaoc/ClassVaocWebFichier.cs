@@ -791,7 +791,16 @@ namespace vaoc
                     else
                     {
                         Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
-                        requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
+                        if (null == ligneMessage)
+                        {
+                            //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
+                            ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                            requete = GenereLignePion(lignePion, idPartie, -1, ligneMessage);
+                        }
+                        else
+                        {
+                            requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
+                        }
                     }
                 }
                 AjouterLigne(requete);

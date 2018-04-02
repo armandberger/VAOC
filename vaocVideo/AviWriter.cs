@@ -3,12 +3,10 @@ using System.Runtime.InteropServices;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace WaocLib
+namespace vaocVideo
 {
     public class AviWriter
     {
-
-        /*
         //public static readonly int streamtypeVIDEO = mmioFOURCC('v', 'i', 'd', 's');
         public const UInt32 ICMF_CHOOSE_KEYFRAME = 0x0001;
         public const UInt32 ICMF_CHOOSE_DATARATE = 0x0002;
@@ -381,6 +379,5 @@ namespace WaocLib
         //private UInt32 fccHandler_ = 808810089;// IV50
         //1145656899;  // CVID
         private Bitmap bmp_;
-*/
     }
 }

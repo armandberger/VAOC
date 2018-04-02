@@ -3488,10 +3488,11 @@ namespace vaoc
 
         private void genererLeFilmToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormVideo frmVideo = new FormVideo();
-            frmVideo.repertoireSource = Constantes.repertoireDonnees;
-            frmVideo.fichierCourant = this.fichierCourant;
-            frmVideo.Show(this);
+            MessageBox.Show("La génération de vidéo se fait sur un projet séparé car il utilise des méthodes qui ne sont pas 'safe'.", "Generation de Vidéo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            //FormVideo frmVideo = new FormVideo();
+            //frmVideo.repertoireSource = Constantes.repertoireDonnees;
+            //frmVideo.fichierCourant = this.fichierCourant;
+            //frmVideo.Show(this);
         }
 
         private void toolStripButtonTrajetsVilles_Click(object sender, EventArgs e)

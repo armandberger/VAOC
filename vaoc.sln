@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaocLib", "WaocLibrary\Waoc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Traitement", "Traitement\Traitement.csproj", "{79D0AD6F-D240-458D-98C1-0C0204031B7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vaocVideo", "vaocVideo\vaocVideo.csproj", "{C6008F0E-21AC-4747-AB71-111A2C7BF465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{79D0AD6F-D240-458D-98C1-0C0204031B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79D0AD6F-D240-458D-98C1-0C0204031B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79D0AD6F-D240-458D-98C1-0C0204031B7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6008F0E-21AC-4747-AB71-111A2C7BF465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6008F0E-21AC-4747-AB71-111A2C7BF465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6008F0E-21AC-4747-AB71-111A2C7BF465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6008F0E-21AC-4747-AB71-111A2C7BF465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

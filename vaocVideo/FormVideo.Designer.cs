@@ -1,4 +1,4 @@
-﻿namespace vaoc
+﻿namespace vaocVideo
 {
     partial class FormVideo
     {
@@ -54,11 +54,14 @@
             this.label8 = new System.Windows.Forms.Label();
             this.textBoxTailleUnite = new System.Windows.Forms.TextBox();
             this.textBoxEpaisseurUnite = new System.Windows.Forms.TextBox();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonChargerPartie = new System.Windows.Forms.Button();
+            this.textBoxNomPartie = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 437);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 482);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -70,7 +73,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(12, 54);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 13);
             this.label1.TabIndex = 1;
@@ -78,7 +81,7 @@
             // 
             // textBoxRepertoireImages
             // 
-            this.textBoxRepertoireImages.Location = new System.Drawing.Point(163, 35);
+            this.textBoxRepertoireImages.Location = new System.Drawing.Point(163, 80);
             this.textBoxRepertoireImages.Name = "textBoxRepertoireImages";
             this.textBoxRepertoireImages.Size = new System.Drawing.Size(401, 20);
             this.textBoxRepertoireImages.TabIndex = 2;
@@ -87,7 +90,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 69);
+            this.label2.Location = new System.Drawing.Point(12, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(99, 13);
             this.label2.TabIndex = 3;
@@ -95,7 +98,7 @@
             // 
             // textBoxRepertoireVideo
             // 
-            this.textBoxRepertoireVideo.Location = new System.Drawing.Point(163, 97);
+            this.textBoxRepertoireVideo.Location = new System.Drawing.Point(163, 142);
             this.textBoxRepertoireVideo.Name = "textBoxRepertoireVideo";
             this.textBoxRepertoireVideo.Size = new System.Drawing.Size(401, 20);
             this.textBoxRepertoireVideo.TabIndex = 4;
@@ -104,7 +107,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(576, 69);
+            this.label3.Location = new System.Drawing.Point(576, 114);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 5;
@@ -113,7 +116,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(688, 69);
+            this.label4.Location = new System.Drawing.Point(688, 114);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 13);
             this.label4.TabIndex = 6;
@@ -121,7 +124,7 @@
             // 
             // textBoxLargeurBase
             // 
-            this.textBoxLargeurBase.Location = new System.Drawing.Point(579, 97);
+            this.textBoxLargeurBase.Location = new System.Drawing.Point(579, 142);
             this.textBoxLargeurBase.Name = "textBoxLargeurBase";
             this.textBoxLargeurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxLargeurBase.TabIndex = 7;
@@ -129,7 +132,7 @@
             // 
             // textBoxHauteurBase
             // 
-            this.textBoxHauteurBase.Location = new System.Drawing.Point(691, 97);
+            this.textBoxHauteurBase.Location = new System.Drawing.Point(691, 142);
             this.textBoxHauteurBase.Name = "textBoxHauteurBase";
             this.textBoxHauteurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxHauteurBase.TabIndex = 8;
@@ -137,7 +140,7 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(212, 182);
+            this.label5.Location = new System.Drawing.Point(212, 227);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(555, 44);
             this.label5.TabIndex = 9;
@@ -153,7 +156,7 @@
             // 
             // buttonChoixPolice
             // 
-            this.buttonChoixPolice.Location = new System.Drawing.Point(12, 182);
+            this.buttonChoixPolice.Location = new System.Drawing.Point(12, 227);
             this.buttonChoixPolice.Name = "buttonChoixPolice";
             this.buttonChoixPolice.Size = new System.Drawing.Size(178, 20);
             this.buttonChoixPolice.TabIndex = 10;
@@ -164,7 +167,7 @@
             // labelPolice
             // 
             this.labelPolice.Font = new System.Drawing.Font("Gabriola", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPolice.Location = new System.Drawing.Point(15, 226);
+            this.labelPolice.Location = new System.Drawing.Point(15, 271);
             this.labelPolice.Name = "labelPolice";
             this.labelPolice.Size = new System.Drawing.Size(743, 151);
             this.labelPolice.TabIndex = 11;
@@ -172,7 +175,7 @@
             // 
             // buttonRepertoireSource
             // 
-            this.buttonRepertoireSource.Location = new System.Drawing.Point(15, 32);
+            this.buttonRepertoireSource.Location = new System.Drawing.Point(15, 77);
             this.buttonRepertoireSource.Name = "buttonRepertoireSource";
             this.buttonRepertoireSource.Size = new System.Drawing.Size(138, 23);
             this.buttonRepertoireSource.TabIndex = 17;
@@ -182,7 +185,7 @@
             // 
             // buttonRepertoireSortie
             // 
-            this.buttonRepertoireSortie.Location = new System.Drawing.Point(15, 94);
+            this.buttonRepertoireSortie.Location = new System.Drawing.Point(15, 139);
             this.buttonRepertoireSortie.Name = "buttonRepertoireSortie";
             this.buttonRepertoireSortie.Size = new System.Drawing.Size(138, 23);
             this.buttonRepertoireSortie.TabIndex = 18;
@@ -193,7 +196,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(576, 9);
+            this.label6.Location = new System.Drawing.Point(576, 54);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(45, 13);
             this.label6.TabIndex = 20;
@@ -201,7 +204,7 @@
             // 
             // textBoxMasque
             // 
-            this.textBoxMasque.Location = new System.Drawing.Point(579, 35);
+            this.textBoxMasque.Location = new System.Drawing.Point(579, 80);
             this.textBoxMasque.Name = "textBoxMasque";
             this.textBoxMasque.Size = new System.Drawing.Size(188, 20);
             this.textBoxMasque.TabIndex = 21;
@@ -210,7 +213,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 437);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 482);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -221,7 +224,7 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(26, 401);
+            this.progressBar.Location = new System.Drawing.Point(26, 446);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(732, 23);
             this.progressBar.Step = 1;
@@ -238,7 +241,7 @@
             // checkBoxCarteUnites
             // 
             this.checkBoxCarteUnites.AutoSize = true;
-            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 437);
+            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 482);
             this.checkBoxCarteUnites.Name = "checkBoxCarteUnites";
             this.checkBoxCarteUnites.Size = new System.Drawing.Size(113, 17);
             this.checkBoxCarteUnites.TabIndex = 26;
@@ -249,7 +252,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 144);
+            this.label7.Location = new System.Drawing.Point(9, 189);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(153, 13);
             this.label7.TabIndex = 27;
@@ -258,7 +261,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(258, 144);
+            this.label8.Location = new System.Drawing.Point(258, 189);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(144, 13);
             this.label8.TabIndex = 28;
@@ -266,7 +269,7 @@
             // 
             // textBoxTailleUnite
             // 
-            this.textBoxTailleUnite.Location = new System.Drawing.Point(163, 141);
+            this.textBoxTailleUnite.Location = new System.Drawing.Point(163, 186);
             this.textBoxTailleUnite.Name = "textBoxTailleUnite";
             this.textBoxTailleUnite.Size = new System.Drawing.Size(67, 20);
             this.textBoxTailleUnite.TabIndex = 29;
@@ -274,17 +277,45 @@
             // 
             // textBoxEpaisseurUnite
             // 
-            this.textBoxEpaisseurUnite.Location = new System.Drawing.Point(408, 141);
+            this.textBoxEpaisseurUnite.Location = new System.Drawing.Point(408, 186);
             this.textBoxEpaisseurUnite.Name = "textBoxEpaisseurUnite";
             this.textBoxEpaisseurUnite.Size = new System.Drawing.Size(67, 20);
             this.textBoxEpaisseurUnite.TabIndex = 30;
             this.textBoxEpaisseurUnite.Text = "1";
             // 
+            // openFileDialog
+            // 
+            this.openFileDialog.DefaultExt = "vaoc";
+            this.openFileDialog.Filter = "fichiers VAOC |*.vaoc";
+            this.openFileDialog.Title = "Ouvrir un fichier VAOC";
+            // 
+            // buttonChargerPartie
+            // 
+            this.buttonChargerPartie.Location = new System.Drawing.Point(15, 12);
+            this.buttonChargerPartie.Name = "buttonChargerPartie";
+            this.buttonChargerPartie.Size = new System.Drawing.Size(138, 23);
+            this.buttonChargerPartie.TabIndex = 31;
+            this.buttonChargerPartie.Text = "Charger une partie";
+            this.buttonChargerPartie.UseVisualStyleBackColor = true;
+            this.buttonChargerPartie.Click += new System.EventHandler(this.buttonChargerPartie_Click);
+            // 
+            // textBoxNomPartie
+            // 
+            this.textBoxNomPartie.Enabled = false;
+            this.textBoxNomPartie.Location = new System.Drawing.Point(163, 15);
+            this.textBoxNomPartie.Name = "textBoxNomPartie";
+            this.textBoxNomPartie.ReadOnly = true;
+            this.textBoxNomPartie.Size = new System.Drawing.Size(604, 20);
+            this.textBoxNomPartie.TabIndex = 32;
+            this.textBoxNomPartie.Text = "non définie";
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 465);
+            this.ClientSize = new System.Drawing.Size(779, 517);
+            this.Controls.Add(this.textBoxNomPartie);
+            this.Controls.Add(this.buttonChargerPartie);
             this.Controls.Add(this.textBoxEpaisseurUnite);
             this.Controls.Add(this.textBoxTailleUnite);
             this.Controls.Add(this.label8);
@@ -344,6 +375,9 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox textBoxTailleUnite;
         private System.Windows.Forms.TextBox textBoxEpaisseurUnite;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Button buttonChargerPartie;
+        private System.Windows.Forms.TextBox textBoxNomPartie;
     }
 }
 

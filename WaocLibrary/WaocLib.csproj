@@ -68,11 +68,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AviWriter.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="CourrielService.cs" />
     <Compile Include="Dal.cs" />
-    <Compile Include="FabricantDeFilm.cs" />
     <Compile Include="GifAnime.cs" />
     <Compile Include="LecteurXML.cs" />
     <Compile Include="LogFile.cs" />

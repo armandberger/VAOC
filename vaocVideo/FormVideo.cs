@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using WaocLib;
 using System.Diagnostics;
 
-namespace vaoc
+namespace vaocVideo
 {
     public partial class FormVideo : Form
     {
@@ -250,7 +250,6 @@ namespace vaoc
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
         {
-            /*
             FabricantDeFilm cineaste = new FabricantDeFilm();
             BackgroundWorker travailleur = sender as BackgroundWorker;
             string erreurTraitement = string.Empty;
@@ -291,7 +290,6 @@ namespace vaoc
                 travailleur.CancelAsync();
                 MessageBox.Show(ex.Message);
             }
-            */
         }
 
         private void FinTraitement(string strErreur)
@@ -328,9 +326,25 @@ namespace vaoc
 
         private void FormVideo_Load(object sender, EventArgs e)
         {
-            Bitmap fichierImage = (Bitmap)Image.FromFile(m_repertoireSource + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
-            textBoxLargeurBase.Text = fichierImage.Width.ToString();
-            textBoxHauteurBase.Text = fichierImage.Height.ToString();
+            Donnees.m_donnees = new Donnees();
+        }
+
+        private void buttonChargerPartie_Click(object sender, EventArgs e)
+        {
+            //il faut déjà chargé un fichier
+            if (DialogResult.OK == this.openFileDialog.ShowDialog(this))
+            {
+                if (Donnees.m_donnees.ChargerPartie(openFileDialog.FileName))
+                {
+                    this.fichierCourant = openFileDialog.FileName;
+                    this.textBoxNomPartie.Text = fichierCourant;
+                    Constantes.repertoireDonnees = this.fichierCourant;
+                    repertoireSource = Constantes.repertoireDonnees;
+                    Bitmap fichierImage = (Bitmap)Image.FromFile(m_repertoireSource + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
+                    textBoxLargeurBase.Text = fichierImage.Width.ToString();
+                    textBoxHauteurBase.Text = fichierImage.Height.ToString();
+                }
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace WaocLib
+namespace vaocVideo
 {
     public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER};
 
@@ -65,7 +65,6 @@ namespace WaocLib
     
     public class FabricantDeFilm
     {
-        /*
         private FileInfo[] m_listeFichiers;
         private AviWriter m_aw;
         private int m_traitement;//traitement principal

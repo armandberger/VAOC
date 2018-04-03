@@ -336,6 +336,8 @@ namespace vaocVideo
             {
                 if (Donnees.m_donnees.ChargerPartie(openFileDialog.FileName))
                 {
+                    LogFile.CreationLogFile("vaocVideo");
+                    Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
                     this.fichierCourant = openFileDialog.FileName;
                     this.textBoxNomPartie.Text = fichierCourant;
                     Constantes.repertoireDonnees = this.fichierCourant;

@@ -2233,7 +2233,6 @@ namespace vaoc
             #region version 6
             if (TAB_JEU[0].I_VERSION < 7)
             {
-                Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
                 for (int l = 0; l < Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
                 {
                     Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];

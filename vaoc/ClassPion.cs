@@ -1009,7 +1009,7 @@ namespace vaoc
                     {
                         //c'est seulement si l'ordre est dans le même tour que le message que la valeur de la phase intervient
                         if ((resOrdre[o].I_TOUR_DEBUT != tour) ||
-                            (resOrdre[o].I_PHASE_DEBUT <= phase && (resOrdre[o].IsI_PHASE_FINNull() || resOrdre[o].I_PHASE_FIN > phase)))
+                            (resOrdre[o].I_PHASE_DEBUT <= phase && (resOrdre[o].IsI_PHASE_FINNull() || resOrdre[o].I_PHASE_FIN > phase || resOrdre[o].I_TOUR_FIN>tour)))
                         {
                             sOrdreCourant = ClassMessager.MessageDecrivantUnOrdre(resOrdre[o], false);
                         }

@@ -44,9 +44,10 @@ namespace vaocVideo
         private void Redimensionner()
         {
             #region positionnement des boutons annuler et valider
-            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
-            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
-            buttonValider.Top = buttonAnnuler.Top = Height - 3 * buttonValider.Height;
+            //buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
+            //buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width) / 3;
+            //buttonAnnuler.Top = Height - 3 * buttonValider.Height;
+            buttonValider.Top = Height - 3 * buttonValider.Height;
             #endregion
 
             #region positionnement de la grille

@@ -57,13 +57,16 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonChargerPartie = new System.Windows.Forms.Button();
             this.textBoxNomPartie = new System.Windows.Forms.TextBox();
+            this.buttonDonnees = new System.Windows.Forms.Button();
+            this.checkBoxCarteGlobale = new System.Windows.Forms.CheckBox();
+            this.checkBoxFilm = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(163, 482);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(391, 478);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
-            this.buttonCreerFilm.Size = new System.Drawing.Size(75, 23);
+            this.buttonCreerFilm.Size = new System.Drawing.Size(99, 23);
             this.buttonCreerFilm.TabIndex = 0;
             this.buttonCreerFilm.Tag = "Film simple";
             this.buttonCreerFilm.Text = "Creer Film";
@@ -213,7 +216,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(467, 482);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(602, 478);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -309,11 +312,47 @@
             this.textBoxNomPartie.TabIndex = 32;
             this.textBoxNomPartie.Text = "non définie";
             // 
+            // buttonDonnees
+            // 
+            this.buttonDonnees.Enabled = false;
+            this.buttonDonnees.Location = new System.Drawing.Point(683, 478);
+            this.buttonDonnees.Name = "buttonDonnees";
+            this.buttonDonnees.Size = new System.Drawing.Size(75, 23);
+            this.buttonDonnees.TabIndex = 33;
+            this.buttonDonnees.Tag = "";
+            this.buttonDonnees.Text = "Donnees";
+            this.buttonDonnees.UseVisualStyleBackColor = true;
+            this.buttonDonnees.Click += new System.EventHandler(this.buttonDonnees_Click);
+            // 
+            // checkBoxCarteGlobale
+            // 
+            this.checkBoxCarteGlobale.AutoSize = true;
+            this.checkBoxCarteGlobale.Location = new System.Drawing.Point(163, 482);
+            this.checkBoxCarteGlobale.Name = "checkBoxCarteGlobale";
+            this.checkBoxCarteGlobale.Size = new System.Drawing.Size(90, 17);
+            this.checkBoxCarteGlobale.TabIndex = 34;
+            this.checkBoxCarteGlobale.Text = "Carte Globale";
+            this.checkBoxCarteGlobale.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxFilm
+            // 
+            this.checkBoxFilm.AutoSize = true;
+            this.checkBoxFilm.Location = new System.Drawing.Point(260, 482);
+            this.checkBoxFilm.Name = "checkBoxFilm";
+            this.checkBoxFilm.Size = new System.Drawing.Size(44, 17);
+            this.checkBoxFilm.TabIndex = 35;
+            this.checkBoxFilm.Text = "Film";
+            this.checkBoxFilm.UseVisualStyleBackColor = true;
+            this.checkBoxFilm.CheckedChanged += new System.EventHandler(this.checkBoxFilm_CheckedChanged);
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 517);
+            this.Controls.Add(this.checkBoxFilm);
+            this.Controls.Add(this.checkBoxCarteGlobale);
+            this.Controls.Add(this.buttonDonnees);
             this.Controls.Add(this.textBoxNomPartie);
             this.Controls.Add(this.buttonChargerPartie);
             this.Controls.Add(this.textBoxEpaisseurUnite);
@@ -378,6 +417,9 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button buttonChargerPartie;
         private System.Windows.Forms.TextBox textBoxNomPartie;
+        private System.Windows.Forms.Button buttonDonnees;
+        private System.Windows.Forms.CheckBox checkBoxCarteGlobale;
+        private System.Windows.Forms.CheckBox checkBoxFilm;
     }
 }
 

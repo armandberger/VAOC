@@ -42,6 +42,7 @@ namespace vaoc
             bool bTourSuivant;//tant que cela vaut true, on continue l'execution
             int nbTourExecutes;//nombre de tours executés successivement
             bool bRenfort = false;
+            bool bDebutDeNuit = false;
 
             Debug.WriteLine("TraitementHeure");
             messageErreur = "";
@@ -145,6 +146,7 @@ namespace vaoc
             //nbTourExecutes = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - liste[0].I_TOUR;
             //Donnees.m_donnees.ChargerToutesLesCases();//uniquement pour test, BEA -> provoque des crashs si on se déplace sur la carte en même temps, à éviter
             bTourSuivant = true;
+            bDebutDeNuit = Donnees.m_donnees.TAB_PARTIE.Nocturne();
             while (bTourSuivant)
             {
                 m_bFinDeBataille = false;
@@ -481,9 +483,9 @@ namespace vaoc
                     {
                         LogFile.Notifier("Fin de tour :premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres");
                     }
-                    if (nbTourExecutes >= 8)
+                    if (nbTourExecutes >= 8 && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
                     {
-                        LogFile.Notifier("Fin de tour :Pas plus de 8 tours");
+                        LogFile.Notifier("Fin de tour :Pas plus de 8 tours en journée");
                     }
                     if (Donnees.m_donnees.TAB_PARTIE.HeureCourante() == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL)
                     {
@@ -524,10 +526,10 @@ namespace vaoc
                         if (distanceMin < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {
                             //A moins de 30 kilomètres, on ne fait pas plus de deux heures de suite le jour, 4 tours la nuit
-                            if (nbTourExecutes >= 4)
+                            if (nbTourExecutes >= 4 && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
                             {
                                 bTourSuivant = false;
-                                LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit");
+                                LogFile.Notifier("Fin de tour :A moins de 30 kilomètres, on ne fait pas plus de 4 tours la nuit sauf s'il y a déjà eu un tour la nuit");
                             }
                             else
                             {
@@ -548,8 +550,8 @@ namespace vaoc
                         }
                         else
                         {
-                            //A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite
-                            if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4))
+                            //A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite et pas plus d'un tour la nuit
+                            if ((distanceMin < 50 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4) && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
                             {
                                 bTourSuivant = false;
                                 LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");

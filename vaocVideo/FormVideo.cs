@@ -348,5 +348,18 @@ namespace vaocVideo
                 }
             }
         }
+
+        private void buttonDonnees_Click(object sender, EventArgs e)
+        {
+            FormVideoTable fVideoTable = new FormVideoTable();
+
+            fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
+            fVideoTable.ShowDialog();
+        }
+
+        private void checkBoxFilm_CheckedChanged(object sender, EventArgs e)
+        {
+            buttonCreerFilm.Text = (checkBoxFilm.Checked) ? "Créer Film" : "Créer Images";
+        }
     }
 }

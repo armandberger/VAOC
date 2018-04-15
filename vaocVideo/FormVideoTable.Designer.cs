@@ -57,7 +57,6 @@
             this.iVICTOIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataSetCoutDonnees = new vaocVideo.Donnees();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -70,7 +69,7 @@
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 9;
-            this.buttonValider.Text = "Valider";
+            this.buttonValider.Text = "Femer";
             this.buttonValider.UseVisualStyleBackColor = true;
             // 
             // dataGridViewVideo
@@ -263,23 +262,12 @@
             this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
             this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // buttonAnnuler
-            // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(221, 312);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 12;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
-            // 
             // FormVideoTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1458, 383);
-            this.Controls.Add(this.buttonAnnuler);
+            this.ClientSize = new System.Drawing.Size(1284, 383);
             this.Controls.Add(this.dataGridViewVideo);
             this.Controls.Add(this.buttonValider);
             this.Name = "FormVideoTable";
@@ -299,7 +287,6 @@
         private Donnees dataSetCoutDonnees;
         private System.Windows.Forms.BindingSource tABBindingSource;
         private System.Windows.Forms.DataGridView dataGridViewVideo;
-        private System.Windows.Forms.Button buttonAnnuler;
         private System.Windows.Forms.DataGridViewTextBoxColumn iTOURDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDPIONDataGridViewTextBoxColumn;

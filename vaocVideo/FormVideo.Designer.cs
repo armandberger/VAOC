@@ -88,7 +88,7 @@
             this.textBoxRepertoireImages.Name = "textBoxRepertoireImages";
             this.textBoxRepertoireImages.Size = new System.Drawing.Size(401, 20);
             this.textBoxRepertoireImages.TabIndex = 2;
-            this.textBoxRepertoireImages.Text = "C:\\personnel\\Test complet\\video";
+            this.textBoxRepertoireImages.Text = "C:\\Users\\Public\\Documents\\vaoc\\1813";
             // 
             // label2
             // 
@@ -105,7 +105,7 @@
             this.textBoxRepertoireVideo.Name = "textBoxRepertoireVideo";
             this.textBoxRepertoireVideo.Size = new System.Drawing.Size(401, 20);
             this.textBoxRepertoireVideo.TabIndex = 4;
-            this.textBoxRepertoireVideo.Text = "C:\\";
+            this.textBoxRepertoireVideo.Text = "C:\\Users\\Public\\Documents\\vaoc\\1813\\video";
             // 
             // label3
             // 

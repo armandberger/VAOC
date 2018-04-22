@@ -69,6 +69,8 @@ namespace vaocVideo
         private AviWriter m_aw;
         private int m_traitement;//traitement principal
         private bool m_bHistoriqueBataille;
+        private bool m_bCarteGlobale;
+        private bool m_bFilm;
         private string m_repertoireVideo;
         private float m_rapport;
         private List<LieuRemarquable> m_lieuxRemarquables;
@@ -89,6 +91,7 @@ namespace vaocVideo
         private const int BARRE_EPAISSEUR = 3;
         private int m_tailleUnite;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
         private int m_epaisseurUnite;//largeur des traits des unites;
+        private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
 
         public FabricantDeFilm()
         {
@@ -96,8 +99,9 @@ namespace vaocVideo
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
-                                        List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire, int nbImages,
+                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm,
+                                    List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
+                                    List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire, int nbImages,
                                     System.ComponentModel.BackgroundWorker worker)
         {
             try
@@ -110,6 +114,8 @@ namespace vaocVideo
                 m_hauteurMax = 0;
                 m_largeurMax = 0;
                 m_bHistoriqueBataille = bHistoriqueBataille;
+                m_bCarteGlobale = bCarteGlobale;
+                m_bFilm = bFilm;
                 m_repertoireVideo = repertoireVideo;
                 m_lieuxRemarquables = lieuxRemarquables;
                 m_unitesRemarquables = unitesRemarquables;
@@ -144,6 +150,24 @@ namespace vaocVideo
                 {
                     return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué",
                         m_hauteur, m_largeur, m_hauteurMax, m_largeurMax);
+                }
+
+                if (!m_bCarteGlobale)
+                {
+                    //on cherche la taille d'affichage par rapport aux positions extremes des unités sur la carte
+                    m_minX = m_minY = int.MaxValue;
+                    m_maxX = m_maxY = int.MinValue;
+                    foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
+                    {
+                        if (ligneVideo.ID_CASE<0) { continue; }//ca peut arriver visiblement...
+                        //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
+                        int x, y;
+                        Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out x, out y);
+                        m_minX = Math.Min(m_minX, x);
+                        m_minY = Math.Min(m_minY, y);
+                        m_maxX = Math.Max(m_maxX, x);
+                        m_maxY = Math.Max(m_maxY, y);
+                    }
                 }
 
                 //calcul de la hauteur du bandeau = 2 fois la hauteur de la police, et de la largeur du bandeau (au cas où cela dépassererait la largeur min)
@@ -184,8 +208,30 @@ namespace vaocVideo
                     m_hauteur = HauteurOptimale - m_hauteurBandeau;
                 }
 
-                m_aw = new AviWriter();
-                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau);
+                if (m_bFilm)
+                {
+                    m_aw = new AviWriter();
+                    Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau);
+                }
+                else
+                {
+                    if (Directory.Exists(repertoireVideo))
+                    {
+                        //on supprime toutes les images qui pourraient exister d'un précédent traitement
+                        dir = new DirectoryInfo(repertoireVideo);
+                        FileInfo[] listeFichiers = dir.GetFiles(texteMasqueImage, SearchOption.TopDirectoryOnly);
+
+                        foreach (FileInfo fichier in listeFichiers)
+                        {
+                            File.Delete(fichier.FullName);
+                        }
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(repertoireVideo);
+                    }
+                }
+
                 m_traitement = 0;
                 return string.Empty;
             }
@@ -199,7 +245,8 @@ namespace vaocVideo
         {
             try
             {
-                m_aw.Close();
+                if (m_bFilm) { m_aw.Close(); }
+                
                 m_travailleur.ReportProgress(100);
                 return string.Empty;
             }
@@ -331,19 +378,26 @@ namespace vaocVideo
                     }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
-                fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
-                fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
-                BitmapData bmpDat = fichierImage.LockBits(
-                    new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                if (m_bFilm)
+                {
+                    fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
+                    fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
+                    BitmapData bmpDat = fichierImage.LockBits(
+                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
+                    //BitmapData imageCible = new BitmapData();
+                    //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
+                    //m_imageCarte.UnlockBits(imageCible);
+                    //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+                    //imageFinale.Save(nomFichierFinal);
+                    m_aw.AddFrame(bmpDat);
+                    fichierImage.UnlockBits(bmpDat);
+                }
+                else
+                {
+                    fichierImage.Save(m_repertoireVideo + "\\"+"imageVideo_"+m_traitement.ToString("0000")+".png", ImageFormat.Png);
+                }
 
-                //BitmapData imageCible = new BitmapData();
-                //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
-                //m_imageCarte.UnlockBits(imageCible);
-                //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-                //imageFinale.Save(nomFichierFinal);
-                m_aw.AddFrame(bmpDat);
-                fichierImage.UnlockBits(bmpDat);
                 G.Dispose();
                 fichierImage.Dispose();
                 fichierImageSource.Dispose();

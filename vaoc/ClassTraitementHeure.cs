@@ -519,9 +519,22 @@ namespace vaoc
                     if (bTourSuivant)
                     {
                         double distanceMin, distanceMinEnMouvement;
-                        DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement);
-                        LogFile.Notifier(string.Format("Test de tous contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} Distance entre deux unités ennemies en mouvement : {2} ",
-                           nbTourExecutes, distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE));
+                        Donnees.TAB_PIONRow lignePionMin1, lignePionMin2, lignePionMax1, lignePionMax2;
+                        DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement, 
+                                                    out lignePionMin1, out lignePionMin2,
+                                                    out lignePionMax1, out lignePionMax2);
+                        LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : {2} ({7}:{8} <-> {9}:{10})",
+                           nbTourExecutes, 
+                           distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, 
+                           distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                           lignePionMin1.ID_PION,
+                           lignePionMin1.S_NOM,
+                           lignePionMin2.ID_PION,//5
+                           lignePionMin2.S_NOM, 
+                           lignePionMax1.ID_PION,
+                           lignePionMax1.S_NOM, 
+                           lignePionMax2.ID_PION,
+                           lignePionMax2.S_NOM));
 
                         if (distanceMin < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {
@@ -960,8 +973,11 @@ namespace vaoc
             return true;
         }
 
-        private void DistanceMinimaleEntreEnnemis(out double distanceMin, out double distanceMinEnMouvement)
+        private void DistanceMinimaleEntreEnnemis(out double distanceMin, out double distanceMinEnMouvement, 
+            out Donnees.TAB_PIONRow lignePionMin1, out Donnees.TAB_PIONRow lignePionMin2, 
+            out Donnees.TAB_PIONRow lignePionMax1, out Donnees.TAB_PIONRow lignePionMax2)
         {
+            lignePionMin1 = lignePionMin2 = lignePionMax1 = lignePionMax2 = null;
             //on recherche la distance minimale, à vol d'oiseau, entre des unités ennemis (autres que les patrouilles et messagers)
             distanceMin = double.MaxValue;
             distanceMinEnMouvement = double.MaxValue;
@@ -1006,17 +1022,20 @@ namespace vaoc
                         for (int ll= 0; ll < lignesCasesProprietairesTest.Count; ll++)
                         {
                             Donnees.TAB_CASERow ligneCaseTest = lignesCasesProprietairesTest[ll];
+                            Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseTest.ID_PROPRIETAIRE);
                             double distance = Constantes.Distance(ligneCaseBase.I_X, ligneCaseBase.I_Y, ligneCaseTest.I_X, ligneCaseTest.I_Y);
                             if (distance < distanceMin)
                             {
                                 distanceMin = distance;
+                                lignePionMin1 = lignePionBase;
+                                lignePionMin2 = lignePionTest;
                             }
-                            Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseTest.ID_PROPRIETAIRE);
                             if (distance < distanceMinEnMouvement && enMouvementBase && lignePionTest.enMouvement)
                             {
                                 distanceMinEnMouvement = distance;
+                                lignePionMax1 = lignePionBase;
+                                lignePionMax2 = lignePionTest;
                             }
-                            
                         }
                     }
                     j++;

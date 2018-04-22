@@ -14,10 +14,17 @@ namespace vaocVideo
 {
     partial class Donnees
     {
-
         #region variables
         public static Donnees m_donnees;
         #endregion
+
+        partial class TAB_VIDEORow
+        {
+            public int EffectifTotal
+            {
+                get { return I_ARTILLERIE + I_INFANTERIE + I_CAVALERIE; }
+            }
+        }
 
         partial class TAB_NOMS_CARTERow
         {

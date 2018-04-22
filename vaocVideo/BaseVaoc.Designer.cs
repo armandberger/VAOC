@@ -33074,7 +33074,7 @@ namespace vaocVideo {
                     this[this.tableTAB_VIDEO.I_VICTOIREColumn] = value;
                 }
             }
-            
+
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool IsI_TOURNull() {

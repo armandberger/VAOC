@@ -70,7 +70,7 @@ namespace vaocVideo
         {
             if (this.folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                this.textBoxRepertoireVideo.Text = this.folderBrowserDialog.SelectedPath;
+                this.textBoxRepertoireVideo.Text = this.folderBrowserDialog.SelectedPath+"\\video";
             }
         }
 
@@ -312,7 +312,7 @@ namespace vaocVideo
                     Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
                     Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""));
                 this.textBoxRepertoireImages.Text = repertoireHistorique;
-                this.textBoxRepertoireVideo.Text = repertoireHistorique;
+                this.textBoxRepertoireVideo.Text = repertoireHistorique + "\\video";
             }
             else
             {

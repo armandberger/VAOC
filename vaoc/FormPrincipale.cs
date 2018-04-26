@@ -365,6 +365,15 @@ namespace vaoc
             */
             #endregion
 
+            #region Changement de prison
+            /*
+            Donnees.TAB_PIONRow[] lignesPionsPrisons = (Donnees.TAB_PIONRow[]) Donnees.m_donnees.TAB_PION.Select("ID_LIEU_RATTACHEMENT=781");
+            foreach (Donnees.TAB_PIONRow lignePion in lignesPionsPrisons)
+            {
+                lignePion.ID_LIEU_RATTACHEMENT = 140;
+            }
+            */
+            #endregion
             /*
             foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
             {

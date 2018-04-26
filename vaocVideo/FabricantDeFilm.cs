@@ -219,7 +219,7 @@ namespace vaocVideo
                     {
                         //on supprime toutes les images qui pourraient exister d'un précédent traitement
                         dir = new DirectoryInfo(repertoireVideo);
-                        FileInfo[] listeFichiers = dir.GetFiles(texteMasqueImage, SearchOption.TopDirectoryOnly);
+                        FileInfo[] listeFichiers = dir.GetFiles("*.png", SearchOption.TopDirectoryOnly);
 
                         foreach (FileInfo fichier in listeFichiers)
                         {

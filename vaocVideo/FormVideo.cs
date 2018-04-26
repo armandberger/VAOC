@@ -312,14 +312,13 @@ namespace vaocVideo
                     Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
                     Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", ""));
                 this.textBoxRepertoireImages.Text = repertoireHistorique;
-                this.textBoxRepertoireVideo.Text = repertoireHistorique + "\\video";
             }
             else
             {
                 textBoxMasque.Text = Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE;
                 this.textBoxRepertoireImages.Text = m_repertoireSource[m_repertoireSource.Length -1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length-1) : m_repertoireSource;
-                this.textBoxRepertoireVideo.Text = m_repertoireSource[m_repertoireSource.Length - 1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length - 1) : m_repertoireSource;
             }
+            this.textBoxRepertoireVideo.Text = this.textBoxRepertoireImages.Text + "\\video";
         }
 
         private void checkBoxCarteUnites_CheckedChanged(object sender, EventArgs e)
@@ -348,6 +347,7 @@ namespace vaocVideo
                     Bitmap fichierImage = (Bitmap)Image.FromFile(m_repertoireSource + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
                     textBoxLargeurBase.Text = fichierImage.Width.ToString();
                     textBoxHauteurBase.Text = fichierImage.Height.ToString();
+                    buttonDonnees.Enabled = true;
                 }
             }
         }

@@ -62,8 +62,8 @@ namespace vaoc
 
             //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
             int moisEnCours = ClassMessager.DateHeure().Month;
-            Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];
-            Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours];
+            Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours-1];
+            Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours-1];
 
             //On note la dernière fois que l'on a envoyé des messages aux joueurs
             //Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 1 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; -> on ne peut pas le faire là au cas où le tour serait pris en cours de route, déplacé dans la dialogue de notification

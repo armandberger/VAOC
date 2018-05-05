@@ -1625,9 +1625,10 @@ namespace vaoc
                 Donnees.m_donnees.TAB_PARTIE.AddTAB_PARTIERow(lignePartie);
 
                 //On determine l'heure de levée et de coucher du soleil d'après le mois en cours, le calcul se base sur les données de TAB_PARTIE
+                //-> faux, maintenant c'est automatique suivant le mois en cours, et cela peut donc varier à chaque tour -> deplacer dans traitementHeure
                 int moisEnCours = ClassMessager.DateHeure().Month;
-                Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours];
-                Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours];
+                Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours - 1];
+                Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours - 1];
             }
         }
 

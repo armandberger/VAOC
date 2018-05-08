@@ -182,28 +182,65 @@ namespace vaoc
 
         private void Correctifs()
         {
-            //bug meteo
-            //Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = 0;
+            #region controle des parcours
+            //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(4489);
+            //Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+            //AStar star = new AStar();
+            //List<LigneCASE> chemin;
+            //List<LigneCASE> cheminOptimise;
+            //double coutGlobal, couthorsroute;
+            //AstarTerrain[] tableCoutsMouvementsTerrain;
+            //string message;
+            //star.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,
+            //    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART),
+            //    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION),
+            //    ligneOrdre, out chemin, out coutGlobal, out couthorsroute, out tableCoutsMouvementsTerrain, out message);
+            //foreach(LigneCASE l in chemin)
+            //{
+            //    Debug.WriteLine(string.Format("{0}:{1},{2}", l.ID_CASE, l.I_X, l.I_Y));
+            //}
+            //cheminOptimise=star.ParcoursOptimise(chemin);
 
-            #region correction sur des ordres de mouvements présents en double !
-            /*
+            //pour reforcer un calcul de tous les parcours
+            Donnees.m_donnees.TAB_PARCOURS.Clear();
+            AStar star = new AStar();
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
-                string requete = string.Format("ID_PION={0} AND I_TOUR_FIN = {1} AND ID_DESTINATAIRE = {1}", lignePion.ID_PION, Constantes.NULLENTIER);
-                Donnees.TAB_ORDRERow[] resOrdres = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete,"ID_ORDRE");
-                if (resOrdres.Count() > 1)
+                if (lignePion.B_DETRUIT) continue;
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                if (null== ligneOrdre) continue;
+                List<LigneCASE> chemin;
+                double coutGlobal, couthorsroute;
+                AstarTerrain[] tableCoutsMouvementsTerrain;
+                string message;
+                star.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,
+                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART),
+                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION),
+                    ligneOrdre, out chemin, out coutGlobal, out couthorsroute, out tableCoutsMouvementsTerrain, out message);
+                int i = 0;
+                while (i < chemin.Count && chemin[i].ID_CASE != lignePion.ID_CASE) i++;
+                if (i==chemin.Count)
                 {
-                    lignePion.DetruireEspacePion();                    
-                    for(int i=0; i<resOrdres.Count()-1; i++)
+                    //l'unité était sur une position supprimée
+                    //repositionnement au plus prêt
+                    int idcaseposition = -1;
+                    double distanceMax = double.MaxValue;
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    foreach (LigneCASE l in chemin)
                     {
-                        resOrdres[i].I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                        resOrdres[i].I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                        double distance = Constantes.Distance(l.I_X, l.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
+                        if (distance<distanceMax)
+                        {
+                            distanceMax = distance;
+                            idcaseposition = l.ID_CASE;
+                        }
                     }
-                    resOrdres[resOrdres.Count() - 1].ID_CASE_DEPART = lignePion.ID_CASE;
+                    lignePion.ID_CASE = idcaseposition;
                 }
             }
-            */
             #endregion
+            //bug meteo
+            //Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = 0;            
 
             #region test a priori absurde sur la copie de cases
             /*

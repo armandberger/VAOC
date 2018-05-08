@@ -772,7 +772,7 @@ namespace vaoc
             {
                 //on regarde, si avant,on passe après par la même case, si oui, on part de ce point
                 int j = i + 1;
-                while (j < chemin.Count && chemin[i] != chemin[j]) j++;
+                while (j < chemin.Count && chemin[i].ID_CASE != chemin[j].ID_CASE) j++;
                 cheminRetour.Add(chemin[i]);
                 if (j < chemin.Count)
                 {

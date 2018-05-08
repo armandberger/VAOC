@@ -202,6 +202,7 @@ namespace vaoc
             //cheminOptimise=star.ParcoursOptimise(chemin);
 
             //pour reforcer un calcul de tous les parcours
+            /*
             Donnees.m_donnees.TAB_PARCOURS.Clear();
             AStar star = new AStar();
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
@@ -238,6 +239,7 @@ namespace vaoc
                     lignePion.ID_CASE = idcaseposition;
                 }
             }
+            */
             #endregion
             //bug meteo
             //Donnees.m_donnees.TAB_PARTIE[0].ID_METEO = 0;            

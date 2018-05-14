@@ -772,7 +772,7 @@ namespace vaoc
                 }
 
                 requete = string.Empty;
-                if (lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull())
+                if (!lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull())
                 {
                     //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                     //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
@@ -957,7 +957,7 @@ namespace vaoc
                                     "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}');",
                                     lignePion.ID_PION,//0
                                     idPartie,
-                                    (!lignePion.IsI_TOUR_BLESSURENull() && lignePion.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
+                                    (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
                                     lignePion.ID_MODELE_PION,
                                     Constantes.ChaineSQL(lignePion.S_NOM),
                                     iInfanterie,//5

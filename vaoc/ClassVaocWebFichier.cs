@@ -703,7 +703,8 @@ namespace vaoc
 
             foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
             {
-                if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull())
+                if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull() 
+                    && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_PHASE_ARRIVEE!=Constantes.NULLENTIER)
                 {
                     //Il faut indiquer en pion emetteur, le véritable emetteur et non le messager
                     //d'une part parce que l'on se moque d'avoir le nom du messager mais, aussi parce que les messagers

@@ -182,6 +182,28 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region messages non arrivés sur des pions détruits !!!
+            Donnees.TAB_MESSAGERow[] listeMessage= (Donnees.TAB_MESSAGERow[]) Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
+            foreach(Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
+                if (lignePion.B_DETRUIT)
+                {
+                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
+                    if (null == ligneOrdre)
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
+                    }
+                    else
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
+                    }
+                }
+            }
+            #endregion
+
             #region controle des parcours
             //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(4489);
             //Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);

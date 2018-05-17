@@ -1777,13 +1777,13 @@ namespace vaoc
                             {
                                 pertesMoral[i + 3] = 0;
                                 pertesEffectifs[i + 3] = 0;
-                                LogFile.Notifier("i=" + i + " le premier Camp est mis en déroute et n'inflige aucune perte à l'adversaire", out messageErreur);
+                                LogFile.Notifier("i=" + i + " le premier Camp est mis en déroute ou a donner l'ordre de retraite et n'inflige aucune perte à l'adversaire", out messageErreur);
                             }
                             if (bCamp345KO || bRetraite345)
                             {
                                 pertesMoral[i] = 0;
                                 pertesEffectifs[i] = 0;
-                                LogFile.Notifier("i=" + (i + 3) + " le deuxième Camp est mis en déroute et n'inflige aucune perte à l'adversaire", out messageErreur);
+                                LogFile.Notifier("i=" + (i + 3) + " le deuxième Camp est mis en déroute ou a donner l'ordre de retraite et n'inflige aucune perte à l'adversaire", out messageErreur);
                             }
                         }
                     }

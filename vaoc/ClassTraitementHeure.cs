@@ -3506,9 +3506,9 @@ namespace vaoc
             // effectif reel = effectif theorique - (effectif theorique * fatigue /100)
             // donc fatigue = (effectif theorique - effectif reel) * 100 / effectif theorique
             int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE;
-            int effectifReel = recuperationFantassin + recuperationCavalerie + +recuperationArtillerie+ (effectifTheorique * lignePion.I_FATIGUE / 100);
+            int effectifReel = recuperationFantassin + recuperationCavalerie + recuperationArtillerie + lignePion.effectifTotal;
             int fatigue = 100 - (effectifReel * 100 / effectifTheorique);
-            diffatigue = lignePion.I_FATIGUE - fatigue;
+            diffatigue = fatigue - lignePion.I_FATIGUE;
             lignePion.I_FATIGUE = fatigue;
             return true;
         }

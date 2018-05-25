@@ -3452,6 +3452,9 @@ namespace vaoc
             int nbInfanteriePerdus = 0;
             int nbCavaleriePerdus = 0;
             int nbArtilleriePerdus = 0;
+            int recuperationFantassin = 0;
+            int recuperationCavalerie = 0;
+            int recuperationArtillerie = 0;
 
             //modification d'après la météo courante
             diffatigue = -1;
@@ -3484,6 +3487,11 @@ namespace vaoc
                     LogFile.Notifier(message);
                     return false;
                 }
+
+                //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
+                recuperationFantassin = (nbTrainardsInfanterie > 0) ? Math.Max(1, nbTrainardsInfanterie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX) : 0;
+                recuperationCavalerie = (nbTrainardsCavalerie > 0) ? Math.Max(1, nbTrainardsCavalerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX) : 0;
+                recuperationArtillerie = (nbTrainardsArtillerie > 0) ? Math.Max(1, nbTrainardsArtillerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX) : 0;
             }
             else
             {
@@ -3491,12 +3499,12 @@ namespace vaoc
                 nbInfanteriePerdus = nbTrainardsInfanterie * 1 / 10;
                 nbCavaleriePerdus = nbTrainardsCavalerie * 1 / 10;
                 nbArtilleriePerdus = nbTrainardsArtillerie * 1 / 10;
-            }
 
-            //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
-            int recuperationFantassin = nbTrainardsInfanterie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
-            int recuperationCavalerie = nbTrainardsCavalerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
-            int recuperationArtillerie = nbTrainardsArtillerie * lignePion.I_MORAL * 7 / 10 / lignePion.I_MORAL_MAX;
+                //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
+                recuperationFantassin = (nbTrainardsInfanterie > 0) ? Math.Max(1, nbTrainardsInfanterie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
+                recuperationCavalerie = (nbTrainardsCavalerie > 0) ? Math.Max(1, nbTrainardsCavalerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
+                recuperationArtillerie = (nbTrainardsArtillerie > 0) ? Math.Max(1, nbTrainardsArtillerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
+            }
 
             //on retire les blessés et perte des effectifs
             lignePion.I_INFANTERIE -= nbInfanteriePerdus;
@@ -3507,7 +3515,7 @@ namespace vaoc
             // donc fatigue = (effectif theorique - effectif reel) * 100 / effectif theorique
             int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE;
             int effectifReel = recuperationFantassin + recuperationCavalerie + recuperationArtillerie + lignePion.effectifTotal;
-            int fatigue = 100 - (effectifReel * 100 / effectifTheorique);
+            int fatigue = 100 - (int)Math.Round((double)effectifReel * 100 / (double)effectifTheorique);
             diffatigue = fatigue - lignePion.I_FATIGUE;
             lignePion.I_FATIGUE = fatigue;
             return true;

@@ -235,7 +235,7 @@ namespace vaoc
                     Donnees.TAB_ORDRERow ligneORDRE = Donnees.m_donnees.TAB_ORDRE.SeFortifier(ID_PION);
                     if (null != ligneORDRE)
                     {
-                        if (ligneORDRE.IsI_TOUR_FINNull() || ligneORDRE.I_TOUR_FIN +24 > Donnees.m_donnees.TAB_PARTIE.HeureCourante())
+                        if (ligneORDRE.IsI_TOUR_FINNull() || ligneORDRE.I_TOUR_FIN +24 > Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                         {
                             return false;
                         }

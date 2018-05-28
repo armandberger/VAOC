@@ -3516,7 +3516,7 @@ namespace vaoc
             int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE;
             int effectifReel = recuperationFantassin + recuperationCavalerie + recuperationArtillerie + lignePion.effectifTotal;
             int fatigue = 100 - (int)Math.Round((double)effectifReel * 100 / (double)effectifTheorique);
-            diffatigue = fatigue - lignePion.I_FATIGUE;
+            diffatigue = lignePion.I_FATIGUE - fatigue;
             lignePion.I_FATIGUE = fatigue;
             return true;
         }

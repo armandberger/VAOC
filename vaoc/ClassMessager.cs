@@ -960,7 +960,8 @@ namespace vaoc
 
                 //on regarde si le nom trouvé n'existe pas déjà
                 int j = 0;
-                while (!bUtilise && j < Donnees.m_donnees.TAB_PION.Count())
+                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                while (!bUtilise && j < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePionRecherche = Donnees.m_donnees.TAB_PION[j];
                     if (lignePionRecherche.S_NOM.Equals(nomDeDepot)) { bUtilise = true; u++; }

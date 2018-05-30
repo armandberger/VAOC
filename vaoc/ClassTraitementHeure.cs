@@ -361,7 +361,8 @@ namespace vaoc
 
                 // Une unité envoie un message régulièrement, ça rassure le joueur s'il n'est pas proche de ses troupes !
                 i = 0;
-                while (i < Donnees.m_donnees.TAB_PION.Count())
+                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                     if (!lignePion.B_DETRUIT && !lignePion.B_TELEPORTATION)

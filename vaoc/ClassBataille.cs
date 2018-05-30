@@ -343,7 +343,8 @@ namespace vaoc
 
                 Donnees.TAB_CASERow[] lignesCaseBataille = Donnees.m_donnees.TAB_CASE.CasesCadre(this.I_X_CASE_HAUT_GAUCHE, this.I_Y_CASE_HAUT_GAUCHE, this.I_X_CASE_BAS_DROITE, this.I_Y_CASE_BAS_DROITE);
                 int i = 0;
-                while (i < Donnees.m_donnees.TAB_PION.Count)
+                int nbPions = Donnees.m_donnees.TAB_PION.Count;
+                while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePionEnBataille = Donnees.m_donnees.TAB_PION[i++];
                     if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.nation.ID_NATION!= idNation 
@@ -2124,7 +2125,8 @@ namespace vaoc
                 xBataille = (I_X_CASE_BAS_DROITE + I_X_CASE_HAUT_GAUCHE) / 2;
                 yBataille = (I_Y_CASE_BAS_DROITE + I_Y_CASE_HAUT_GAUCHE) / 2;
                 i = 0;
-                while (i < Donnees.m_donnees.TAB_PION.Count())
+                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                     //Pion ne se trouvant pas déjà dans la bataille

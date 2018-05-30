@@ -1649,7 +1649,8 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCasePion;
 
                 i = 0;
-                while (i < Donnees.m_donnees.TAB_PION.Count())
+                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
 

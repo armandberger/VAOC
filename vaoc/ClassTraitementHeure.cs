@@ -1246,13 +1246,14 @@ namespace vaoc
                         }
                         else
                         {
-                            //on prévient le joueur qu'il ne peut pas créer de dépôt A à cet emplacement et on ne fait rien d'autre
+                            //on prévient le joueur qu'il ne peut pas créer de dépôt A à cet emplacement et on ne fait rien d'autre, enfin, si, on arrête l'orde quand même !
                             if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_CREATION_DEPOT_IMPOSSIBLE))
                             {
                                 message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
                                 LogFile.Notifier(message);
                                 return false;
                             }
+                            lignePion.TerminerOrdre(ligneOrdre, false, true);
                             break;//on ne fait pas la suite
                         }
                     }

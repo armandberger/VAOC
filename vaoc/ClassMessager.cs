@@ -1863,6 +1863,9 @@ namespace vaoc
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
                     retour = "alimenter une ligne de ravitaillement";
                     break;
+                case Constantes.ORDRES.REDUIRE_DEPOT:
+                    retour = "réduire un dépôt";
+                    break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");
                     retour = "inconnu";
@@ -2041,6 +2044,13 @@ namespace vaoc
                                 lignePionDestinataire.S_NOM)
                              :
                                 "alimenter une ligne de ravitaillement.";
+                    break;
+                case Constantes.ORDRES.REDUIRE_DEPOT:
+                    retour = avecProprietaire ?
+                                string.Format("{0} réduit le dépôt et génère un convoi.",
+                                lignePionDestinataire.S_NOM)
+                             :
+                                "réduire le dépôt.";
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");
@@ -2386,6 +2396,7 @@ namespace vaoc
                                 case Constantes.ORDRES.RENFORCER:
                                 case Constantes.ORDRES.ETABLIRDEPOT:
                                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                                case Constantes.ORDRES.REDUIRE_DEPOT:
                                     unitesEnvironnantes += " à l'arrêt";
                                     break;
                                 case Constantes.ORDRES.SEFORTIFIER:

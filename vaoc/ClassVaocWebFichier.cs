@@ -460,6 +460,7 @@ namespace vaoc
                     case Constantes.ORDRES.SEFORTIFIER:
                     case Constantes.ORDRES.ETABLIRDEPOT:
                     case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                    case Constantes.ORDRES.REDUIRE_DEPOT:
                         if (lignePion.estQG)
                         {
                             if (null == noeud["ID_PION_DESTINATION"])

@@ -1162,6 +1162,7 @@ namespace vaoc
                 //    lignePion.TerminerOrdre(ligneOrdre, true, false);
                 //    break;
                 case Constantes.ORDRES.GENERERCONVOI:
+                case Constantes.ORDRES.REDUIRE_DEPOT:
                     //s'il s'agit d'un dépôt de niveau 'D', il se transforme en convoi
                     if ('D' == lignePion.C_NIVEAU_DEPOT)
                     {
@@ -1207,8 +1208,16 @@ namespace vaoc
 
                         //on réduit le niveau du dépôt actuel et on note la date de création du dépot
                         Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                        if (lignePion.C_NIVEAU_DEPOT != 'A')
+                        if (ligneOrdre.I_ORDRE_TYPE== Constantes.ORDRES.GENERERCONVOI)
                         {
+                            if (lignePion.C_NIVEAU_DEPOT != 'A')
+                            {
+                                lignePion.C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
+                            }
+                        }
+                        else
+                        {
+                            //on réduit, même le niveau A puisque c'est la demande explicite
                             lignePion.C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
                         }
                         lignePion.I_TOUR_CONVOI_CREE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
@@ -2808,7 +2817,8 @@ namespace vaoc
                 case Constantes.ORDRES.ETABLIRDEPOT:
                 case Constantes.ORDRES.TRANSFERER:
                 case Constantes.ORDRES.ARRET:
-                    #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
+                case Constantes.ORDRES.REDUIRE_DEPOT:
+                #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
                     //ordre qui doit être remis à une unité par un messager
                     //int idPionOrdre = (ordre.I_TYPE == Constantes.ORDRES.TRANSFERER) ? ordre.ID_PION_CIBLE : ordre.ID_PION;
                     ligneOrdreARemettre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
@@ -3963,6 +3973,7 @@ namespace vaoc
                                         case Constantes.ORDRES.RENFORCER:
                                         case Constantes.ORDRES.ETABLIRDEPOT:
                                         case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                                        case Constantes.ORDRES.REDUIRE_DEPOT:
                                             //l'ordre est toujours recevable, même au combat
                                             if (!ChangerOrdreCourant(lignePionDestinataire, ligneOrdreCourant, ligneOrdreNouveau, true)) { return false; }
                                             tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU;
@@ -4230,6 +4241,7 @@ namespace vaoc
                         case Constantes.ORDRES.PATROUILLE:
                         case Constantes.ORDRES.GENERERCONVOI:
                         case Constantes.ORDRES.ETABLIRDEPOT:
+                        case Constantes.ORDRES.REDUIRE_DEPOT:
                             break;
                         case Constantes.ORDRES.COMBAT:
                             if (ligneOrdreCourant.ID_BATAILLE == ligneOrdreNouveau.ID_BATAILLE

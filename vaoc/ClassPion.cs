@@ -1691,75 +1691,76 @@ namespace vaoc
             {
                 string message;
                 Donnees.TAB_CASERow ligneCase;
+                int longueurPont, longueurPonton;
 
                 ligneCasePont = null;
                 if (ligneOrdre.IsID_CASE_DESTINATIONNull())
                 {
                     //on recherche le pont sur lequel on souhaite faire l'action
-                    int longueurPont, longueurPonton;
                     ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
-                    switch (CSTAction)
-                    {
-                        case Constantes.CST_DUREE_ENDOMMAGE_PONT:
-                            //on peut casser un pont ou un ponton avec le même ordre, il faut chercher le plus proche
-                            ligneCasePont = ligneCase.RecherchePontouPonton(true, false, out longueurPont);
-                            Donnees.TAB_CASERow ligneCasePonton = ligneCase.RecherchePontouPonton(false, false, out longueurPonton);
-                            if (null == ligneCasePont && null != ligneCasePonton)
-                            {
-                                //il y a un ponton et pas de pont, on garde le ponton
-                                ligneCasePont = ligneCasePonton;
-                            }
-                            else
-                            {
-                                if (null != ligneCasePont && null != ligneCasePonton)
-                                {
-                                    if (Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePonton.I_X, ligneCasePonton.I_Y) < Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePont.I_X, ligneCasePont.I_Y))
-                                    {
-                                        //le ponton est plus proche que le pont
-                                        ligneCasePont = ligneCasePonton;
-                                        longueurPont = longueurPonton;
-                                    }
-                                }
-                            }
-                            break;
-                        case Constantes.CST_DUREE_REPARER_PONT:
-                            ligneCasePont = ligneCase.RecherchePontouPonton(true, true, out longueurPont);
-                            break;
-                        case Constantes.CST_DUREE_CONSTRUIRE_PONTON:
-                            //un guet c'est un ponton cassé
-                            ligneCasePont = ligneCase.RecherchePontouPonton(false, true, out longueurPont);
-                            break;
-                        default:
-                            message = string.Format("{0}(ID={1}, erreur InitialisationActionPont action demandé inconnue id={2}", S_NOM, ID_PION, CSTAction);
-                            LogFile.Notifier(message);
-                            return false;
-                    }
-
-                    if (null == ligneCasePont)
-                    {
-                        //ça va être dur de faire une action sur un pont qui n'existe pas, l'ordre est inapplicable
-                        if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_PONT_INTROUVABLE))
-                        {
-                            message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_PONT_INTROUVABLE dans InitialisationActionPont", S_NOM, ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
-                        }
-                        //l'ordre est terminé
-                        TerminerOrdre(ligneOrdre, true, false);
-                        return true;
-                    }
-                    else
-                    {
-                        ligneOrdre.ID_CASE_DESTINATION = ligneCasePont.ID_CASE;
-                        // la durée est doublée durant la nuit
-                        //ligneOrdre.I_DUREE = longueurPont * CST_DUREE_DESTRUCTION_PONT;
-                        ligneOrdre.I_DUREE = CalculDureeConstructionGenie(longueurPont, CSTAction, tour);
-                    }
                 }
                 else
                 {
-                    ligneCasePont = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 }
+                switch (CSTAction)
+                {
+                    case Constantes.CST_DUREE_ENDOMMAGE_PONT:
+                        //on peut casser un pont ou un ponton avec le même ordre, il faut chercher le plus proche
+                        ligneCasePont = ligneCase.RecherchePontouPonton(true, false, out longueurPont);
+                        Donnees.TAB_CASERow ligneCasePonton = ligneCase.RecherchePontouPonton(false, false, out longueurPonton);
+                        if (null == ligneCasePont && null != ligneCasePonton)
+                        {
+                            //il y a un ponton et pas de pont, on garde le ponton
+                            ligneCasePont = ligneCasePonton;
+                        }
+                        else
+                        {
+                            if (null != ligneCasePont && null != ligneCasePonton)
+                            {
+                                if (Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePonton.I_X, ligneCasePonton.I_Y) < Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePont.I_X, ligneCasePont.I_Y))
+                                {
+                                    //le ponton est plus proche que le pont
+                                    ligneCasePont = ligneCasePonton;
+                                    longueurPont = longueurPonton;
+                                }
+                            }
+                        }
+                        break;
+                    case Constantes.CST_DUREE_REPARER_PONT:
+                        ligneCasePont = ligneCase.RecherchePontouPonton(true, true, out longueurPont);
+                        break;
+                    case Constantes.CST_DUREE_CONSTRUIRE_PONTON:
+                        //un guet c'est un ponton cassé
+                        ligneCasePont = ligneCase.RecherchePontouPonton(false, true, out longueurPont);
+                        break;
+                    default:
+                        message = string.Format("{0}(ID={1}, erreur InitialisationActionPont action demandé inconnue id={2}", S_NOM, ID_PION, CSTAction);
+                        LogFile.Notifier(message);
+                        return false;
+                }
+
+                if (null == ligneCasePont)
+                {
+                    //ça va être dur de faire une action sur un pont qui n'existe pas, l'ordre est inapplicable
+                    if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_PONT_INTROUVABLE))
+                    {
+                        message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_PONT_INTROUVABLE dans InitialisationActionPont", S_NOM, ID_PION);
+                        LogFile.Notifier(message);
+                        return false;
+                    }
+                    //l'ordre est terminé
+                    TerminerOrdre(ligneOrdre, true, false);
+                    return true;
+                }
+                else
+                {
+                    ligneOrdre.ID_CASE_DESTINATION = ligneCasePont.ID_CASE;
+                    // la durée est doublée durant la nuit
+                    //ligneOrdre.I_DUREE = longueurPont * CST_DUREE_DESTRUCTION_PONT;
+                    ligneOrdre.I_DUREE = CalculDureeConstructionGenie(longueurPont, CSTAction, tour);
+                }
+                
                 return true;
             }
 
@@ -1779,6 +1780,14 @@ namespace vaoc
                     if (null == ligneCasePont)
                     {
                         //on a pas trouvé de pont
+                        //l'ordre est terminé si ce n'est pas déjà le cas
+                        if (ligneOrdre.IsI_TOUR_FINNull())
+                        {
+                            TerminerOrdre(ligneOrdre, true, false);
+                            message = string.Format("{0},ID={1}, ExecuterEndommagerPont: endommagement du pont terminée en {2}:{3},{4} car il n'y a pas de pont",
+                                S_NOM, ID_PION, ligneCasePont.ID_CASE, ligneCasePont.I_X, ligneCasePont.I_Y);
+                            LogFile.Notifier(message);
+                        }
                         return true;
                     }
 
@@ -1813,7 +1822,7 @@ namespace vaoc
                     //bruit du canon liée à l'opération de destruction
                     AlerteBruitEndommagePont(ligneCasePont);
 
-                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE == tour)
+                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE <= tour)
                     {
                         message = string.Format("{0},ID={1}, ExecuterEndommagerPont: début de l'endommagement effectif", S_NOM, ID_PION);
                         LogFile.Notifier(message);
@@ -1867,6 +1876,14 @@ namespace vaoc
                     if (null == ligneCasePont)
                     {
                         //on a pas trouvé de pont
+                        //l'ordre est terminé si ce n'est pas déjà le cas
+                        if (ligneOrdre.IsI_TOUR_FINNull())
+                        {
+                            TerminerOrdre(ligneOrdre, true, false);
+                            message = string.Format("{0},ID={1}, ExecuterEndommagerPont: endommagement du pont terminée en {2}:{3},{4} car il n'y a pas de pont",
+                                S_NOM, ID_PION, ligneCasePont.ID_CASE, ligneCasePont.I_X, ligneCasePont.I_Y);
+                            LogFile.Notifier(message);
+                        }
                         return true;
                     }
 
@@ -1901,7 +1918,7 @@ namespace vaoc
                     //bruit du liée à l'opération de réparation
                     AlerteBruitReparePontConstruitPonton(ligneCasePont);
 
-                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE == tour)
+                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE <= tour)
                     {
                         message = string.Format("{0},ID={1}, ExecuterReparerPont: début de la réparation effective", S_NOM, ID_PION);
                         LogFile.Notifier(message);
@@ -1933,7 +1950,7 @@ namespace vaoc
                 {
                     //rien pour l'instant
                     message = string.Format("{0},ID={1}, ExecuterReparerPont: fin le tour={2}, phase={3}, nous sommes à tour={4}, phase={5}",
-                        S_NOM, ID_PION, ligneOrdre.I_TOUR_DEBUT + Constantes.CST_DUREE_ENDOMMAGE_PONT, ligneOrdre.I_PHASE_DEBUT, tour, phase);
+                        S_NOM, ID_PION, ligneOrdre.I_TOUR_DEBUT + Constantes.CST_DUREE_REPARER_PONT, ligneOrdre.I_PHASE_DEBUT, tour, phase);
                     LogFile.Notifier(message);
                 }
                 return true;

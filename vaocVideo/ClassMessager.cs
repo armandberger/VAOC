@@ -1271,11 +1271,12 @@ namespace vaocVideo
                                 "faire un retrait de la zone de bataille en cours.";
                     break;
                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
+                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DESTINATION, out zoneGeographique);
                     retour = avecProprietaire ?
-                                string.Format("{0} gère actuellement une ligne de ravitaillement permanente.",
-                                lignePionDestinataire.S_NOM)
+                                string.Format("{0} gère actuellement une ligne de ravitaillement permanente vers {1}.",
+                                lignePionDestinataire.S_NOM, zoneGeographique)
                              :
-                                "alimenter une ligne de ravitaillement.";
+                                string.Format("alimenter une ligne de ravitaillement vers {0}.", zoneGeographique);
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");

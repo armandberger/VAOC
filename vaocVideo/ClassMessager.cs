@@ -288,10 +288,12 @@ namespace vaocVideo
             //Une patrouille ennemie a été observé autour de la {1}. Elle est rapidement repartie sans que nous puissions intervenir.
             //Une patrouille ennemie est entrée en contact à {2}. Quelques tirs bien ajustés, l'on rapidement mise en fuite.
             //Quelques cavaliers, sans doute une patrouille, ont affrontés nos soldats à {2}. Dès le premier sang versés, ils se sont tous évanouis dans la nature...
-            MESSAGE_CREATION_DEPOT_IMPOSSIBLE = 89
+            MESSAGE_CREATION_DEPOT_IMPOSSIBLE = 89,
             //Les bâtiments présents à {2} ne permettent pas d'y créer un dépôt de grande taille. Le convoi doit se rendre ailleurs ou constituer un autre dépôt.
             //On ne peut pas créer un dépôt de grande taille ici, le chef du convoi est dans l'incapacité de renforcer le dépôt présent
             //Le dépôt ne peut pas décharger à {2}, il n'y a pas assez de place.
+            MESSAGE_RAVITAILLEMENT_DIRECT = 90,
+            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE = 91
         }
         /*
                DateHeure(true), //0

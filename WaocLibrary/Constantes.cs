@@ -154,6 +154,10 @@ namespace WaocLib
             /// Permet de réduire un depôt de type A en type B avec création d'un convoi, permet ensuite de continuer à le réduire en générant des convois pour le détruire ou le déplacer
             /// </summary>
             public const int REDUIRE_DEPOT = 19;
+            /// <summary>
+            /// Une unité se ravitaille en effectuant un prélevement direct sur le dépôt au risque de le réduire.
+            /// </summary>
+            public const int RAVITAILLEMENT_DIRECT = 20;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

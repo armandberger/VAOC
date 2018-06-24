@@ -293,8 +293,15 @@ namespace vaoc
             //On ne peut pas créer un dépôt de grande taille ici, le chef du convoi est dans l'incapacité de renforcer le dépôt présent
             //Le dépôt ne peut pas décharger à {2}, il n'y a pas assez de place.
             MESSAGE_RAVITAILLEMENT_DIRECT = 90,
-            // ex: La {1} a pu se rééquiper sur le {31}. Le matériel a progréssé de {37} % pour un total de {35} % tandis que le ravitaillement est maintenant à {34} % avec une progression de {36} %.
+            // La {1} a pu se rééquiper sur le {31}. Le matériel a progréssé de {37} % pour un total de {35} % tandis que le ravitaillement est maintenant à {34} % avec une progression de {36} %.
+            // Le temps est {20} et nous avons pu nous ravitailler comme prévu sur le {31}.
+            // Notre matériel est maintenant à {35} % et notre ravitaillement à {34} %  suite au prévelement effectué sur  le {31}.
+            // Le {31} a pu nous fournir de  quoi remplir nos havresacs.
+            // Nos besaces sont maintenant mieux remplies suite à notre passage dans les stocks du {31}.
             MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE = 91
+            //Nous n'avons pas pu nous ravitailler comme vous l'aviez ordonné, soit aucun dépôt n'était présent soit il ne pouvait pas nous ravitailler.
+            //Aucun dépôt n'était disponible pour nous fournir le ravitaillement ou le matériel attendu.
+            //Nous n'avons pas trouvé à notre emplacement un dépôt capable de nous donner quelque chose.
         }
         /*
                DateHeure(true), //0
@@ -1869,6 +1876,9 @@ namespace vaoc
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                     retour = "réduire un dépôt";
                     break;
+                case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                    retour = "se ravitailler en direct sur un dépôt";
+                    break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");
                     retour = "inconnu";
@@ -2055,6 +2065,13 @@ namespace vaoc
                                 lignePionDestinataire.S_NOM)
                              :
                                 "réduire le dépôt.";
+                    break;
+                case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                    retour = avecProprietaire ?
+                                string.Format("{0} se ravitaille en direct sur un dépôt.",
+                                lignePionDestinataire.S_NOM)
+                             :
+                                "se ravitaille en direct sur un dépôt.";
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");
@@ -2401,6 +2418,7 @@ namespace vaoc
                                 case Constantes.ORDRES.ETABLIRDEPOT:
                                 case Constantes.ORDRES.LIGNE_RAVITAILLEMENT:
                                 case Constantes.ORDRES.REDUIRE_DEPOT:
+                                case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                                     unitesEnvironnantes += " à l'arrêt";
                                     break;
                                 case Constantes.ORDRES.SEFORTIFIER:

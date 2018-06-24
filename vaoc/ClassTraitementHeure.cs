@@ -1161,6 +1161,8 @@ namespace vaoc
                 //    Cartographie.TransfertPion(lignePionTransfert, ligneOrdre.ID_DESTINATAIRE_CIBLE);
                 //    lignePion.TerminerOrdre(ligneOrdre, true, false);
                 //    break;
+                case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                    break;
                 case Constantes.ORDRES.GENERERCONVOI:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                     //s'il s'agit d'un dépôt de niveau 'D', il se transforme en convoi
@@ -2818,6 +2820,7 @@ namespace vaoc
                 case Constantes.ORDRES.TRANSFERER:
                 case Constantes.ORDRES.ARRET:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
+                case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                 #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
                     //ordre qui doit être remis à une unité par un messager
                     //int idPionOrdre = (ordre.I_TYPE == Constantes.ORDRES.TRANSFERER) ? ordre.ID_PION_CIBLE : ordre.ID_PION;
@@ -3955,6 +3958,7 @@ namespace vaoc
                                         case Constantes.ORDRES.REPARER_PONT:
                                         case Constantes.ORDRES.CONSTRUIRE_PONTON:
                                         case Constantes.ORDRES.SEFORTIFIER:
+                                        case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                                             //l'ordre n'est recevable que si l'unité n'est pas engagé au combat
                                             //si le pion est déjà engagé en bataille et pas en fuite, l'ordre est refusé
                                             if (!lignePionDestinataire.IsID_BATAILLENull() && 0 == lignePionDestinataire.I_TOUR_FUITE_RESTANT)
@@ -4242,6 +4246,7 @@ namespace vaoc
                         case Constantes.ORDRES.GENERERCONVOI:
                         case Constantes.ORDRES.ETABLIRDEPOT:
                         case Constantes.ORDRES.REDUIRE_DEPOT:
+                        case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                             break;
                         case Constantes.ORDRES.COMBAT:
                             if (ligneOrdreCourant.ID_BATAILLE == ligneOrdreNouveau.ID_BATAILLE

@@ -1162,6 +1162,7 @@ namespace vaoc
                 //    lignePion.TerminerOrdre(ligneOrdre, true, false);
                 //    break;
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                    if (!lignePion.RavitaillementDirect(ligneOrdre, tour, phase)) { return false; }
                     break;
                 case Constantes.ORDRES.GENERERCONVOI:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
@@ -1286,7 +1287,10 @@ namespace vaoc
                         {
                             lignePionARenforcer.C_NIVEAU_DEPOT--;// 'A' c'est le meilleur, 'D' le pire
                         }
-                        lignePionARenforcer.I_SOLDATS_RAVITAILLES = 0;//pas bien clair dans les règles mais cela me semble logique
+
+                        int ligneDepotTable = lignePionARenforcer.C_NIVEAU_DEPOT - 'A';
+                        int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
+                        lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
                         Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait

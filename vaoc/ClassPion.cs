@@ -1556,6 +1556,77 @@ namespace vaoc
                 return false;
             }
 
+            internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase)
+            {
+                string message;
+                int effectifsRavitailles;
+                int meilleurPourcentageRavitaillement;
+                int meilleurPourcentageMateriel;
+                Donnees.TAB_PIONRow ligneDepot = RechercheMeilleurDepotDirect(out effectifsRavitailles, out meilleurPourcentageRavitaillement, out meilleurPourcentageMateriel);
+                if (null == ligneDepot || 0 == effectifsRavitailles)
+                {
+                    if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE))
+                    {
+                        message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE dans RavitaillementDirect", S_NOM, ID_PION);
+                        LogFile.Notifier(message);
+                        return false;
+                    }                    
+                }
+                else
+                {
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    ligneDepot.I_SOLDATS_RAVITAILLES += effectifsRavitailles;
+                    ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                    int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
+                    if (Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] >= ligneDepot.I_SOLDATS_RAVITAILLES)
+                    {
+                        //on ravitaille l'unité et on informe le joueur
+                        if (!ClassMessager.EnvoyerMessage(this, 0, 
+                            meilleurPourcentageRavitaillement - this.I_RAVITAILLEMENT,
+                            meilleurPourcentageMateriel - this.I_MATERIEL, 
+                            ligneDepot.S_NOM, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT dans RavitaillementDirect", S_NOM, ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                        this.I_RAVITAILLEMENT = meilleurPourcentageRavitaillement;
+                        this.I_MATERIEL = meilleurPourcentageMateriel;
+
+                        //Il faut réduire le dépot sauf s'il est de type A auquel cas on ne fait rien 
+                        if ('A' != ligneDepot.C_NIVEAU_DEPOT)
+                        {
+                            if ('D' != ligneDepot.C_NIVEAU_DEPOT)
+                            {
+                                ligneDepot.C_NIVEAU_DEPOT++;
+                                ligneDepot.I_SOLDATS_RAVITAILLES = 0;
+                                if (!ClassMessager.EnvoyerMessage(ligneDepot, ClassMessager.MESSAGES.MESSAGE_DEPOT_REDUIT))
+                                {
+                                    message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_REDUIT dans RavitaillementDirect", ligneDepot.S_NOM, ligneDepot.ID_PION);
+                                    LogFile.Notifier(message);
+                                    return false;
+                                }
+                            }
+                            else
+                            {
+                                //le depot est carrement détruit
+                                if (!ClassMessager.EnvoyerMessage(ligneDepot, ClassMessager.MESSAGES.MESSAGE_DEPOT_DETRUIT))
+                                {
+                                    message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_DETRUIT dans RavitaillementDirect", ligneDepot.S_NOM, ligneDepot.ID_PION);
+                                    LogFile.Notifier(message);
+                                    return false;
+                                }
+                                ligneDepot.DetruirePion();
+                            }
+                        }
+                    }
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                }
+                //l'ordre est terminé
+                TerminerOrdre(ligneOrdre, false, true);
+                return true;
+            }
+
             /// <summary>
             /// renvoie la case courante occupée par le pion
             /// </summary>
@@ -2123,19 +2194,155 @@ namespace vaoc
             }
 
             /// <summary>
-            /// Effectue le ravitaillement d'une unité
+            /// Recherche du meilleur depot assurant un ravitaillement direct
             /// </summary>
-            /// <param name="bUniteRavitaillee">true si l'unité à été ravitaillée, false sinon</param>
-            /// <returns>true si OK, false si KO</returns>
-            public bool RavitaillementUnite(out bool bUniteRavitaillee, out decimal meilleurDistanceRavitaillement, out string depotRavitaillement)
+            /// <param name="meilleurPourcentageRavitaillement">pourcentage assuré par le meilleur depôt</param>
+            /// <returns>Null si ne trouve aucun dépot, le meilleur depôt sinon</returns>
+            public Donnees.TAB_PIONRow RechercheMeilleurDepotDirect(out int effectifsRavitailles, out int meilleurPourcentageRavitaillement, out int meilleurPourcentageMateriel)
             {
                 string message, messageErreur;
                 List<LigneCASE> chemin;
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 double cout, coutHorsRoute;
                 Donnees.TAB_PIONRow ligneMeilleurDepot = null;
+                AStar etoile = new AStar();
+
+                meilleurPourcentageRavitaillement = 0;
+                meilleurPourcentageMateriel = 0;
+                effectifsRavitailles = 0;
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                int besoinEnRavitaillement = this.effectifTotal * (100 - this.I_MATERIEL + 100 - this.I_RAVITAILLEMENT) / 100;
+                foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
+                {
+                    if (!ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
+
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    {
+                        message = string.Format("{0}(ID={1}, erreur sur RechercheMeilleurDepotDirect :{2})", S_NOM, ID_PION, messageErreur);
+                        LogFile.Notifier(message);
+                        return null;
+                    }
+
+                    decimal distanceRavitaillement = (null == chemin) ? Constantes.CST_COUTMAX : (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;//distance en km
+                    //il faut être proche pour pouvoir assurer un ravitaillement direct
+                    if (distanceRavitaillement > Constantes.CST_DISTANCE_DEPOT_RAVITAILLEMENT) { continue; }
+
+                    //Quand une unité est à moins de 1km d’un dépôt et ne bouge pas durant une journée(en repos), 
+                    //elle est automatiquement ravitaillée à 100 % en ravitaillement et matériel, 100 % de ravitaillement 
+                    //dans l’une ou l’autre d’une catégorie équivaut à un soldat complet ravitaillé. 
+                    //Exemple, une unité de 500 soldats se repose à côté d’un dépôt avec 56 % de ravitaillement et 67 % de matériel, 
+                    //elle retire 500 * (1 - 0,56 + 1 - 0,67) = 385 points « équivalents » soldats ravitaillés.
+                    int pourcentageRavitaillement = 0;
+                    int pourcentageMateriel = 0;
+                    int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
+                    int capaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - ligneDepot.I_SOLDATS_RAVITAILLES;
+                    if (0 == capaciteDepot) { continue; } //cas d'un dépôt A saturé
+                    if (besoinEnRavitaillement <= capaciteDepot)
+                    {
+                        pourcentageRavitaillement = 100;
+                        pourcentageMateriel = 100;
+                        effectifsRavitailles = besoinEnRavitaillement;
+                    }
+                    else
+                    {
+                        //Si une unité se présente avec plus de besoin en ravitaillement que la capacité disponible du dépôt, 
+                        //celle - ci est alimentée au prorata de ce qui reste. 
+                        //L’unité sera ravitaillée à 0,56 + (1 - 0,56)*200 / 385 = 79 % en ravitaillement et à 0,67 + (1 - 0,67)*200 / 385 = 84 % en matériel
+                        //(elle pourrait ensuite recevoir, en plus, le ravitaillement standard lié au dépôt).
+                        pourcentageRavitaillement = I_RAVITAILLEMENT + (100 - I_RAVITAILLEMENT) * capaciteDepot / besoinEnRavitaillement;
+                        pourcentageMateriel = I_MATERIEL + (100 - I_MATERIEL) * capaciteDepot / besoinEnRavitaillement;
+                        effectifsRavitailles = capaciteDepot;
+                    }
+
+                    if (pourcentageRavitaillement == meilleurPourcentageRavitaillement && null != ligneMeilleurDepot)
+                    {
+                        //en cas d'égalité on prélève en priorité sur le dépôt le plus petit
+                        if (ligneDepot.C_NIVEAU_DEPOT>ligneMeilleurDepot.C_NIVEAU_DEPOT)
+                        {
+                            ligneMeilleurDepot = ligneDepot;
+                        }
+                    }
+                    else
+                    {
+                        if (pourcentageRavitaillement > meilleurPourcentageRavitaillement)
+                        {
+                            meilleurPourcentageRavitaillement = pourcentageRavitaillement;
+                            meilleurPourcentageMateriel = pourcentageMateriel;
+                            ligneMeilleurDepot = ligneDepot;
+                        }
+                    }
+                }
+                return ligneMeilleurDepot;
+            }
+
+            /// <summary>
+            /// Recherche du meilleur depot, c'est à dire celui qui ravitaille le mieux hors ravitaillement direct
+            /// </summary>
+            /// <param name="meilleurDistanceRavitaillement">distance du meilleur dépôt</param>
+            /// <param name="meilleurPourcentageRavitaillement">pourcentage assuré par le meilleur depôt</param>
+            /// <returns>Null si ne trouve aucun dépot, le meilleur depôt sinon</returns>
+            public Donnees.TAB_PIONRow RechercheMeilleurDepot(out decimal meilleurDistanceRavitaillement, out int meilleurPourcentageRavitaillement)
+            {
+                string message, messageErreur;
+                List<LigneCASE> chemin;
+                AstarTerrain[] tableCoutsMouvementsTerrain;
+                double cout, coutHorsRoute;
+                Donnees.TAB_PIONRow ligneMeilleurDepot = null;
+                AStar etoile = new AStar();
+
+                meilleurDistanceRavitaillement = -1;
+                meilleurPourcentageRavitaillement = 0;
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
+                {
+                    if (!ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
+
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    {
+                        message = string.Format("{0}(ID={1}, erreur sur RechercheMeilleurDepot :{2})", S_NOM, ID_PION, messageErreur);
+                        LogFile.Notifier(message);
+                        return null;
+                    }
+
+                    decimal distanceRavitaillement = (null == chemin) ? Constantes.CST_COUTMAX : (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;//distance en km
+                    int pourcentageRavitaillement = 0;
+                    int colonneKilometreTable = -1;
+                    if (distanceRavitaillement <= 10) { colonneKilometreTable = 0; }
+                    if (distanceRavitaillement > 10 && distanceRavitaillement <= 25) { colonneKilometreTable = 1; }
+                    if (distanceRavitaillement > 25 && distanceRavitaillement <= 50) { colonneKilometreTable = 2; }
+                    if (distanceRavitaillement > 50 && distanceRavitaillement <= 100) { colonneKilometreTable = 3; }
+                    if (distanceRavitaillement > 100 && distanceRavitaillement <= 150) { colonneKilometreTable = 4; }
+                    if (distanceRavitaillement > 150)
+                    {
+                        pourcentageRavitaillement = 0;
+                    }
+                    else
+                    {
+                        int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
+                        pourcentageRavitaillement = Constantes.tableRavitaillementDepot[ligneDepotTable, colonneKilometreTable];
+                    }
+                    if (pourcentageRavitaillement > meilleurPourcentageRavitaillement)
+                    {
+                        meilleurPourcentageRavitaillement = pourcentageRavitaillement;
+                        meilleurDistanceRavitaillement = distanceRavitaillement;
+                        ligneMeilleurDepot = ligneDepot;
+                    }
+                }
+                return ligneMeilleurDepot;
+            }
+
+            /// <summary>
+            /// Effectue le ravitaillement d'une unité
+            /// </summary>
+            /// <param name="bUniteRavitaillee">true si l'unité à été ravitaillée, false sinon</param>
+            /// <returns>true si OK, false si KO</returns>
+            public bool RavitaillementUnite(out bool bUniteRavitaillee, out decimal meilleurDistanceRavitaillement, out string depotRavitaillement)
+            {
+                string message;
+                Donnees.TAB_PIONRow ligneMeilleurDepot = null;
                 int meilleurPourcentageRavitaillement;
-                bool meilleurRavitaillementDirect;
                 Donnees.TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO.FindByID_METEO(Donnees.m_donnees.TAB_PARTIE[0].ID_METEO);
                 Donnees.TAB_NATIONRow ligneNation;
                 AStar etoile = new AStar();
@@ -2170,91 +2377,15 @@ namespace vaoc
                     return true;
                 }
 
-                #region Recherche du meilleur depot, c'est à dire celui qui ravitaille le mieux
-                depotRavitaillement = string.Empty;
-                meilleurPourcentageRavitaillement = 0;
-                meilleurRavitaillementDirect = false;
-
-                foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
-                {
-                    if (!ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
-                    int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
-                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
-                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
-
-                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
-                    {
-                        message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans Ravitaillement :{2})", S_NOM, ID_PION, messageErreur);
-                        LogFile.Notifier(message);
-                        return false;
-                    }
-
-                    decimal distanceRavitaillement = (null==chemin) ? Constantes.CST_COUTMAX : (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;//distance en km
-                    int pourcentageRavitaillement = 0;
-                    int colonneKilometreTable = -1;
-                    bool ravitaillementDirect = false;
-                    if (distanceRavitaillement < Constantes.CST_DISTANCE_DEPOT_RAVITAILLEMENT)
-                    {
-                        //ravitaillement total sur le depôt si celui-ci n'est pas épuisé
-                        //on regarde le pourcentage d'effectifs qui peut encore être ravitaillé.
-                        if (Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - ligneDepot.I_SOLDATS_RAVITAILLES >= this.effectifTotal)
-                        {
-                            pourcentageRavitaillement = 100;
-                            ravitaillementDirect = true;
-                        }
-                        else
-                        {
-                            pourcentageRavitaillement = (Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - ligneDepot.I_SOLDATS_RAVITAILLES) * 100 / this.effectifTotal;
-                            //si le pourcentage est plus bas que le pourcentage par defaut, autant ne pas passer par le mode direct !
-                            if (pourcentageRavitaillement < Constantes.tableRavitaillementDepot[ligneDepotTable, 0])
-                            {
-                                pourcentageRavitaillement = Constantes.tableRavitaillementDepot[ligneDepotTable, 0];
-                            }
-                            else
-                            {
-                                ravitaillementDirect = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (distanceRavitaillement <= 10) { colonneKilometreTable = 0; }
-                        if (distanceRavitaillement > 10 && distanceRavitaillement <= 25) { colonneKilometreTable = 1; }
-                        if (distanceRavitaillement > 25 && distanceRavitaillement <= 50) { colonneKilometreTable = 2; }
-                        if (distanceRavitaillement > 50 && distanceRavitaillement <= 100) { colonneKilometreTable = 3; }
-                        if (distanceRavitaillement > 100 && distanceRavitaillement <= 150) { colonneKilometreTable = 4; }
-                        if (distanceRavitaillement > 150)
-                        {
-                            pourcentageRavitaillement = 0;
-                        }
-                        else
-                        {
-                            pourcentageRavitaillement = Constantes.tableRavitaillementDepot[ligneDepotTable, colonneKilometreTable];
-                        }
-                    }
-                    if (pourcentageRavitaillement > meilleurPourcentageRavitaillement)
-                    {
-                        meilleurPourcentageRavitaillement = pourcentageRavitaillement;
-                        meilleurRavitaillementDirect = ravitaillementDirect;
-                        depotRavitaillement = ligneDepot.S_NOM;
-                        meilleurDistanceRavitaillement = distanceRavitaillement;
-                        ligneMeilleurDepot = ligneDepot;
-                    }
-                }
-                #endregion
+                ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out meilleurPourcentageRavitaillement);
 
                 //modification suivant la météo en cours
                 meilleurPourcentageRavitaillement = Math.Min(100, (int)((decimal)ligneMeteo.I_POURCENT_RAVITAILLEMENT * meilleurPourcentageRavitaillement / (decimal)100));
-                if (depotRavitaillement != string.Empty && meilleurPourcentageRavitaillement > 0)
+                if (null != ligneMeilleurDepot && meilleurPourcentageRavitaillement > 0)
                 {
                     bUniteRavitaillee = true;
                     I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + meilleurPourcentageRavitaillement);
                     I_MATERIEL = Math.Min(100, I_MATERIEL + meilleurPourcentageRavitaillement);
-                    if (meilleurRavitaillementDirect)
-                    {
-                        ligneMeilleurDepot.I_SOLDATS_RAVITAILLES += this.effectifTotal;
-                        ligneMeilleurDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                    }
                     message = string.Format("{0}(ID={1}, Ravitaillement ok, distance 'effective' du dépôt {3} = {2} km)", S_NOM, ID_PION, meilleurDistanceRavitaillement, ligneMeilleurDepot.S_NOM);
                     LogFile.Notifier(message);
                 }

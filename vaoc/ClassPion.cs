@@ -1556,6 +1556,16 @@ namespace vaoc
                 return false;
             }
 
+            public bool estRavitaillableDirect(int tour, int phase)
+            {
+                //on part dela première heure depuis minuit
+                int tourDebut = tour - ClassMessager.DateHeure(tour, phase).Hour;
+                string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT>={1} AND I_PHASE>={2} AND I_TYPE={3}",
+                                                this.ID_PION, tour, phase, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
+                Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
+                return (resOrdre.Count()>0);
+            }
+
             internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase)
             {
                 string message;
@@ -2354,13 +2364,6 @@ namespace vaoc
                 if (!estRavitaillable) { bUniteRavitaillee = true; return true; } //seules les unités combattantes doivent être ravitaillées
                 ligneNation = this.nation;
 
-                #region consommation journaliere
-                //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
-                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
-                //ainsi que 5% de son matériel par heure de combat
-                I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
-                #endregion
-
                 #region fourrage : Vivre sur le terrain
                 //l'unité reprend du ravitaillement en prenant sur le terrain en tenant compte de la météo
                 if (I_RAVITAILLEMENT < ligneNation.I_LIMITE_FOURRAGE)
@@ -2369,12 +2372,24 @@ namespace vaoc
                 }
                 #endregion
 
+                #region consommation journaliere
+                //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
+                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
+                //ainsi que 5% de son matériel par heure de combat
+                I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
+                #endregion
+
                 //si l'unité n'est pas en repos complet, elle ne peut pas se ravitailler à un dépôt
                 if (!reposComplet)
                 {
                     message = string.Format("{0}(ID={1}, l'unité a fait des actions, pas de ravitaillement par dépôt)", S_NOM, ID_PION);
                     LogFile.Notifier(message);
                     return true;
+                }
+
+                if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                {
+                    this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 }
 
                 ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out meilleurPourcentageRavitaillement);

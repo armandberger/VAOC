@@ -1162,7 +1162,10 @@ namespace vaoc
                 //    lignePion.TerminerOrdre(ligneOrdre, true, false);
                 //    break;
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
-                    if (!lignePion.RavitaillementDirect(ligneOrdre, tour, phase)) { return false; }
+                    //if (!lignePion.RavitaillementDirect(ligneOrdre, tour, phase)) { return false; }
+                    //l'ordre est terminé -> en fait, l'ordre est traité dans la partie ravitaillement car il
+                    //faut ne rien faire durant 24 heures pour pouvoir en bénéficier
+                    lignePion.TerminerOrdre(ligneOrdre, false, true);
                     break;
                 case Constantes.ORDRES.GENERERCONVOI:
                 case Constantes.ORDRES.REDUIRE_DEPOT:

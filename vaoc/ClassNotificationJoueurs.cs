@@ -209,6 +209,10 @@ namespace vaoc
                         sDateDernierMessage = ClassMessager.DateHeure(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART, false);
 
                         sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
+                        if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
+                        {
+                            sOrdreCourant += "(ravitaillement direct)";
+                        }
                     }
                     string libelleFatigue, libelleMoral, /*libelleMoralMax, */LibelleMateriel, LibelleRavitaillement;
                     if (lignePion.estQG || lignePion.estConvoi || lignePion.estDepot)

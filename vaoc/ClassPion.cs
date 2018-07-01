@@ -1560,8 +1560,9 @@ namespace vaoc
             {
                 //on part dela première heure depuis minuit
                 int tourDebut = tour - ClassMessager.DateHeure(tour, phase).Hour;
+                int phaseDebut = (tour == tourDebut) ? phase : 0;
                 string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT>={1} AND I_PHASE_DEBUT>={2} AND I_ORDRE_TYPE={3}",
-                                                this.ID_PION, tour, phase, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
+                                                this.ID_PION, tourDebut, phaseDebut, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
                 return (resOrdre.Count()>0);
             }

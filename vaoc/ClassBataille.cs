@@ -1133,37 +1133,39 @@ namespace vaoc
 
                 if (pertesMaterielTotal > 0 || pertesRavitaillementTotal > 0 || pertesArtillerieTotal > 0)
                 {
-                    effectifPoursuivantTotal = artilleriePoursuivantTotal = 0;
+                    effectifPoursuivantTotal = 0;
                     //somme des effectifs pour déterminer la clef de répartition
                     foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
                     {
                         if (lignePion.B_DETRUIT || lignePion.effectifTotal <= 0 || lignePion.Moral <= 0) { continue; }
                         effectifPoursuivantTotal += lignePion.effectifTotal;
-                        artilleriePoursuivantTotal += lignePion.artillerie;
                     }
 
                     //Repartition effective
-                    foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
+                    if (effectifPoursuivantTotal > 0)
                     {
-                        if (lignePion.B_DETRUIT || lignePion.effectifTotal <= 0 || lignePion.Moral <= 0) { continue; }
-                        int canonsButin = pertesArtillerieTotal * lignePion.artillerie / artilleriePoursuivantTotal;
-                        int materielButin = Math.Min(100 - lignePion.I_MATERIEL,
-                            pertesMaterielTotal * 100 / effectifPoursuivantTotal);//il faut passer d'un nombre d'hommes a un pourcentage
-                        int ravitaillementButin = Math.Min(100 - lignePion.I_RAVITAILLEMENT,
-                            pertesRavitaillementTotal * 100 / effectifPoursuivantTotal);//il faut passer d'un nombre d'hommes a un pourcentage
-
-                        lignePion.I_ARTILLERIE += canonsButin;
-                        lignePion.I_MATERIEL += materielButin;
-                        lignePion.I_RAVITAILLEMENT += ravitaillementButin;
-                        message = string.Format("Poursuite : Butin pour {0}:{1} de {2}% en matériel (total {3}%), {4}% en ravitaillement (total {5}%) et {6} canons (total {7} canons)",
-                            lignePion.ID_PION, lignePion.S_NOM, materielButin, lignePion.I_MATERIEL, ravitaillementButin, lignePion.I_RAVITAILLEMENT, canonsButin, lignePion.I_ARTILLERIE);
-
-                        //envoi d'un message pour prévenir de la prise de butin
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, this))
+                        foreach (Donnees.TAB_PIONRow lignePion in lignePionsPoursuivant)
                         {
-                            message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
-                            LogFile.Notifier(message, out messageErreur);
-                            return false;
+                            if (lignePion.B_DETRUIT || lignePion.effectifTotal <= 0 || lignePion.Moral <= 0) { continue; }
+                            int canonsButin = pertesArtillerieTotal * lignePion.effectifTotal / effectifPoursuivantTotal;
+                            int materielButin = Math.Min(100 - lignePion.I_MATERIEL,
+                                pertesMaterielTotal * 100 / effectifPoursuivantTotal);//il faut passer d'un nombre d'hommes a un pourcentage
+                            int ravitaillementButin = Math.Min(100 - lignePion.I_RAVITAILLEMENT,
+                                pertesRavitaillementTotal * 100 / effectifPoursuivantTotal);//il faut passer d'un nombre d'hommes a un pourcentage
+
+                            lignePion.I_ARTILLERIE += canonsButin;
+                            lignePion.I_MATERIEL += materielButin;
+                            lignePion.I_RAVITAILLEMENT += ravitaillementButin;
+                            message = string.Format("Poursuite : Butin pour {0}:{1} de {2}% en matériel (total {3}%), {4}% en ravitaillement (total {5}%) et {6} canons (total {7} canons)",
+                                lignePion.ID_PION, lignePion.S_NOM, materielButin, lignePion.I_MATERIEL, ravitaillementButin, lignePion.I_RAVITAILLEMENT, canonsButin, lignePion.I_ARTILLERIE);
+
+                            //envoi d'un message pour prévenir de la prise de butin
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, this))
+                            {
+                                message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
+                                LogFile.Notifier(message, out messageErreur);
+                                return false;
+                            }
                         }
                     }
                 }

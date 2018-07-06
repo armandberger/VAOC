@@ -1955,13 +1955,46 @@ namespace vaoc
             iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
             Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
 
-            for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
+            if (0 == iTour)
             {
-                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
+                //sauvegarde complète
+                for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
                 {
+                    for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
+                    {
+                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
+                            x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
+                        Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                        Debug.WriteLine(requete + " : " + listeCases.Count());
+                        if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
+                        for (int i = 0; i < listeCases.Count(); i++)
+                        {
+                            //if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison lié à endloaddata qui est bugué
+                            {
+                                baseCases.ImportRow(listeCases[i]);
+                            }
+
+                        }
+                        if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
+                        baseCases.Rows.Clear();
+                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                    }
+                }
+            }
+            else
+            {
+                //on ne sauvegarde que les blocs avec des cases modifiées
+                foreach (Donnees.TAB_CASE_MODIFICATIONRow ligneCaseModifiée in Donnees.m_donnees.TAB_CASE_MODIFICATION)
+                {
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseModifiée.ID_CASE);
+                    int xBloc, yBloc;
+                    ligneCase.BlocCourant(out xBloc, out yBloc);
+                    int x = xBloc * Constantes.CST_TAILLE_BLOC_CASES;
+                    int y = yBloc * Constantes.CST_TAILLE_BLOC_CASES;
                     Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
-                        x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
+                        x, y + Constantes.CST_TAILLE_BLOC_CASES, x, y + Constantes.CST_TAILLE_BLOC_CASES);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
                     Debug.WriteLine(requete + " : " + listeCases.Count());
                     if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }

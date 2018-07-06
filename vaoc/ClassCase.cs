@@ -432,6 +432,12 @@ namespace vaoc
             {
                 return this.ID_MODELE_TERRAIN_SI_OCCUPE == Constantes.NULLENTIER;
             }
-        }
+
+            internal void BlocCourant(out int xBloc, out int yBloc)
+            {
+                xBloc = this.I_X / Constantes.CST_TAILLE_BLOC_CASES;
+                yBloc = this.I_Y / Constantes.CST_TAILLE_BLOC_CASES;
+            }
+        }    
     }
 }

@@ -1588,22 +1588,22 @@ namespace vaoc
                     Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     ligneDepot.I_SOLDATS_RAVITAILLES += effectifsRavitailles;
                     ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                    int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
-                    if (Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] >= ligneDepot.I_SOLDATS_RAVITAILLES)
+                    //on ravitaille l'unité et on informe le joueur
+                    if (!ClassMessager.EnvoyerMessage(this, 0,
+                        meilleurPourcentageRavitaillement - this.I_RAVITAILLEMENT,
+                        meilleurPourcentageMateriel - this.I_MATERIEL,
+                        ligneDepot.S_NOM, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT))
                     {
-                        //on ravitaille l'unité et on informe le joueur
-                        if (!ClassMessager.EnvoyerMessage(this, 0, 
-                            meilleurPourcentageRavitaillement - this.I_RAVITAILLEMENT,
-                            meilleurPourcentageMateriel - this.I_MATERIEL, 
-                            ligneDepot.S_NOM, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT))
-                        {
-                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT dans RavitaillementDirect", S_NOM, ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
-                        }
-                        this.I_RAVITAILLEMENT = meilleurPourcentageRavitaillement;
-                        this.I_MATERIEL = meilleurPourcentageMateriel;
+                        message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT dans RavitaillementDirect", S_NOM, ID_PION);
+                        LogFile.Notifier(message);
+                        return false;
+                    }
+                    this.I_RAVITAILLEMENT = meilleurPourcentageRavitaillement;
+                    this.I_MATERIEL = meilleurPourcentageMateriel;
 
+                    int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
+                    if (ligneDepot.I_SOLDATS_RAVITAILLES >= Constantes.tableLimiteRavitaillementDepot[ligneDepotTable])
+                    {
                         //Il faut réduire le dépot sauf s'il est de type A auquel cas on ne fait rien 
                         if ('A' != ligneDepot.C_NIVEAU_DEPOT)
                         {
@@ -2225,7 +2225,7 @@ namespace vaoc
                 int besoinEnRavitaillement = this.effectifTotal * (100 - this.I_MATERIEL + 100 - this.I_RAVITAILLEMENT) / 100;
                 foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
                 {
-                    if (!ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
+                    if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
                     Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
 
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -2307,7 +2307,7 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
                 foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
                 {
-                    if (!ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
+                    if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
                     Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
 
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))

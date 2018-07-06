@@ -661,7 +661,7 @@ namespace vaoc
                 SortedList listePertesMoral = new SortedList();
                 SortedList listePertesMateriel = new SortedList();
                 SortedList listePertesRavitaillement = new SortedList();
-                int effectifPoursuivantTotal, artilleriePoursuivantTotal;
+                int effectifPoursuivantTotal;
                 int i;
 
                 //aucune poursuite si la bataille se termine à la tombée de la nuit

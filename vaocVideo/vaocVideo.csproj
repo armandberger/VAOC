@@ -58,6 +58,14 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="BaseVideo.cs">
+      <DependentUpon>BaseVideo.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="BaseVideo.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BaseVideo.xsd</DependentUpon>
+    </Compile>
     <Compile Include="ClassMessager.cs" />
     <Compile Include="ClassPion.cs" />
     <Compile Include="FabricantDeFilm.cs" />
@@ -95,11 +103,22 @@
     </None>
     <None Include="BaseVaoc.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>BaseVaoc.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>BaseVaoc1.Designer.cs</LastGenOutput>
     </None>
     <None Include="BaseVaoc.xss">
       <DependentUpon>BaseVaoc.xsd</DependentUpon>
+    </None>
+    <None Include="BaseVideo.xsc">
+      <DependentUpon>BaseVideo.xsd</DependentUpon>
+    </None>
+    <None Include="BaseVideo.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>BaseVideo.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="BaseVideo.xss">
+      <DependentUpon>BaseVideo.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

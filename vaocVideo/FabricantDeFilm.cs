@@ -86,12 +86,17 @@ namespace vaocVideo
         private int m_totalvictoire;
         private int m_nbImages;
         private Font m_police;
+        private bool m_bTravelling;
+
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
         private const int BARRE_EPAISSEUR = 3;
         private int m_tailleUnite;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
         private int m_epaisseurUnite;//largeur des traits des unites;
         private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
+        private BaseVideo m_baseVideo = new BaseVideo();
+
+        // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilm()
         {
@@ -106,6 +111,11 @@ namespace vaocVideo
         {
             try
             {
+                //pour test
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(0, 1700, 1200);
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(10, 1080, 780);
+                bool bTravelling = true;
+
                 SizeF tailleTexte;
                 Graphics G;
                 Bitmap fichierImageSource;
@@ -130,6 +140,7 @@ namespace vaocVideo
                 m_epaisseurUnite = epaisseurUnite;
                 m_travailleur = worker;
                 float largeurTexte, hauteurTexte;
+                m_bTravelling = bTravelling;
 
                 //recherche le nombre d'images et leur taille
                 DirectoryInfo dir = new DirectoryInfo(repertoireImages);
@@ -152,7 +163,7 @@ namespace vaocVideo
                         m_hauteur, m_largeur, m_hauteurMax, m_largeurMax);
                 }
 
-                if (!m_bCarteGlobale)
+                if (!m_bCarteGlobale && !m_bTravelling)
                 {
                     //on cherche la taille d'affichage par rapport aux positions extremes des unités sur la carte
                     m_minX = m_minY = int.MaxValue;
@@ -194,18 +205,27 @@ namespace vaocVideo
                 }
 
                 //calcul de la taille optimale
-                if ((float)m_largeur / largeurOptimale > (float)m_hauteur / (HauteurOptimale - m_hauteurBandeau))
+                if (m_bTravelling)
                 {
-                    //on se cale donc sur la largeur (effort le plus grand)
-                    m_rapport = (float)largeurOptimale / m_largeur;
-                    m_hauteur = (int)(m_hauteur * m_rapport);
+                    m_hauteur = HauteurOptimale - m_hauteurBandeau;
                     m_largeur = largeurOptimale;
+                    m_rapport = 1; // (float)m_hauteur / m_largeur;
                 }
                 else
                 {
-                    m_rapport = (float)(HauteurOptimale - m_hauteurBandeau) / m_hauteur;
-                    m_largeur = (int)(m_largeur * m_rapport);
-                    m_hauteur = HauteurOptimale - m_hauteurBandeau;
+                    if ((float)m_largeur / largeurOptimale > (float)m_hauteur / (HauteurOptimale - m_hauteurBandeau))
+                    {
+                        //on se cale donc sur la largeur (effort le plus grand)
+                        m_rapport = (float)largeurOptimale / m_largeur;
+                        m_hauteur = (int)(m_hauteur * m_rapport);
+                        m_largeur = largeurOptimale;
+                    }
+                    else
+                    {
+                        m_rapport = (float)(HauteurOptimale - m_hauteurBandeau) / m_hauteur;
+                        m_largeur = (int)(m_largeur * m_rapport);
+                        m_hauteur = HauteurOptimale - m_hauteurBandeau;
+                    }
                 }
 
                 if (m_bFilm)
@@ -261,6 +281,9 @@ namespace vaocVideo
             SizeF tailleTexte;
             Graphics G;
             Bitmap fichierImageSource;
+            int xTravelling = 0;
+            int yTravelling = 0;
+
             try
             {
                 Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
@@ -342,7 +365,25 @@ namespace vaocVideo
                 }
 
                 //image de base
-                G.DrawImage(fichierImageSource, m_largeurCote, 0, m_largeur, m_hauteur);
+                if (m_bTravelling)
+                {
+                    string requete = string.Format("I_TOUR<={0}", m_traitement);
+                    BaseVideo.TAB_TRAVELLINGRow[] resultatTravelling = (BaseVideo.TAB_TRAVELLINGRow[])m_baseVideo.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
+                    xTravelling = resultatTravelling[0].I_X - m_largeur / 2;
+                    yTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
+                    //Graphics graph = Graphics.FromImage(imageVideo);
+
+                    G.DrawImage(fichierImageSource, m_largeurCote, 0, new Rectangle(xTravelling, yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
+                    //imageVideo.Save(m_repertoireVideo + "\\" + "test.png", ImageFormat.Png);
+                    //G.DrawImageUnscaledAndClipped(imageVideo, new Rectangle(0,0, m_largeur, m_hauteur));
+                    //graph.Dispose();
+                    //imageVideo.Dispose();
+                }
+                else
+                {
+                    G.DrawImage(fichierImageSource, m_largeurCote, 0, m_largeur, m_hauteur);
+                }
 
                 if (m_bHistoriqueBataille)
                 {
@@ -354,14 +395,14 @@ namespace vaocVideo
                         if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                         {
                             G.DrawRectangle(styloExterieur,
-                                m_largeurCote + ligneLieu.i_X_CASE_HAUT_GAUCHE * m_rapport,
-                                ligneLieu.i_Y_CASE_HAUT_GAUCHE * m_rapport,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE- xTravelling) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
 
                             G.DrawRectangle(styloInterieur,
-                                m_largeurCote + ligneLieu.i_X_CASE_HAUT_GAUCHE * m_rapport,
-                                ligneLieu.i_Y_CASE_HAUT_GAUCHE * m_rapport,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - xTravelling ) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
                         }
@@ -374,7 +415,7 @@ namespace vaocVideo
                         {
                             continue;
                         }
-                        DessineUnite(G, unite);
+                        DessineUnite(G, unite, xTravelling, yTravelling);
                     }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
@@ -417,8 +458,21 @@ namespace vaocVideo
             }
         }
 
-        private void DessineUnite(Graphics G, UniteRemarquable unite)
+        private void DessineUnite(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
         {
+            //si on est pas dans le cadre, inutile de continuer
+            if (m_bTravelling)
+            {
+                if (
+                       ((unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2) < 0
+                    || ((unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2) > m_largeur
+                    || ((unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2) < 0
+                    || ((unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2) > m_hauteur
+                    )
+                {
+                    return;
+                }
+            }
             Pen styloUnite = new Pen((unite.iNation == 0) ? Color.Blue : Color.Red, m_epaisseurUnite);
             Brush brosseUnite = new SolidBrush((unite.iNation == 0) ? Color.Blue : Color.Red);
             switch (unite.tipe)
@@ -426,70 +480,70 @@ namespace vaocVideo
                 case TIPEUNITEVIDEO.INFANTERIE:
                     //barre haut gauche, bas droite
                     G.DrawLine(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + unite.i_X_CASE * m_rapport + m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling ) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
                         );
                     //barre haut droite , bas gauche
                     G.DrawLine(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport + m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling ) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
                         );
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.CAVALERIE:
                     //barre haut gauche, bas droite
                     G.DrawLine(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + unite.i_X_CASE * m_rapport + m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
                         );
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.ARTILLERIE:
                     G.FillEllipse(brosseUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 4,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 4,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 4,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 4,
                         m_tailleUnite/2,
                         m_tailleUnite/2);
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.CONVOI:
                     G.DrawEllipse(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     G.FillPie(brosseUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite,
                         0,180);
                     break;
                 case TIPEUNITEVIDEO.DEPOT:
                     G.FillEllipse(brosseUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
@@ -498,8 +552,8 @@ namespace vaocVideo
                 default:
                     //carre vide
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + unite.i_X_CASE * m_rapport - m_tailleUnite / 2,
-                        unite.i_Y_CASE * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;

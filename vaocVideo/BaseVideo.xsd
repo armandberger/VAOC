@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="BaseVideo" targetNamespace="http://tempuri.org/BaseVideo.xsd" xmlns:mstns="http://tempuri.org/BaseVideo.xsd" xmlns="http://tempuri.org/BaseVideo.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="BaseVideo" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="BaseVideo" msprop:Generator_UserDSName="BaseVideo">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="TAB_TRAVELLING" msprop:Generator_TableClassName="TAB_TRAVELLINGDataTable" msprop:Generator_TableVarName="tableTAB_TRAVELLING" msprop:Generator_TablePropName="TAB_TRAVELLING" msprop:Generator_RowDeletingName="TAB_TRAVELLINGRowDeleting" msprop:Generator_RowChangingName="TAB_TRAVELLINGRowChanging" msprop:Generator_RowEvHandlerName="TAB_TRAVELLINGRowChangeEventHandler" msprop:Generator_RowDeletedName="TAB_TRAVELLINGRowDeleted" msprop:Generator_UserTableName="TAB_TRAVELLING" msprop:Generator_RowChangedName="TAB_TRAVELLINGRowChanged" msprop:Generator_RowEvArgName="TAB_TRAVELLINGRowChangeEvent" msprop:Generator_RowClassName="TAB_TRAVELLINGRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="I_TOUR" msprop:Generator_ColumnVarNameInTable="columnI_TOUR" msprop:Generator_ColumnPropNameInRow="I_TOUR" msprop:Generator_ColumnPropNameInTable="I_TOURColumn" msprop:Generator_UserColumnName="I_TOUR" type="xs:int" minOccurs="0" />
+              <xs:element name="I_X" msprop:Generator_ColumnVarNameInTable="columnI_X" msprop:Generator_ColumnPropNameInRow="I_X" msprop:Generator_ColumnPropNameInTable="I_XColumn" msprop:Generator_UserColumnName="I_X" type="xs:int" minOccurs="0" />
+              <xs:element name="I_Y" msprop:Generator_ColumnVarNameInTable="columnI_Y" msprop:Generator_ColumnPropNameInRow="I_Y" msprop:Generator_ColumnPropNameInTable="I_YColumn" msprop:Generator_UserColumnName="I_Y" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

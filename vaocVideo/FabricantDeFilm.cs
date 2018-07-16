@@ -91,6 +91,7 @@ namespace vaocVideo
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
         private const int BARRE_EPAISSEUR = 3;
+        private const int RATIO_TRAVELLING = 8;
         private int m_tailleUnite;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
         private int m_epaisseurUnite;//largeur des traits des unites;
         private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
@@ -378,13 +379,16 @@ namespace vaocVideo
                     }
                     else
                     {
-                        if ((m_xTravelling != xCentreTravelling) || (m_yTravelling != yCentreTravelling))
+                        if (m_yTravelling != yCentreTravelling)
                         {
                             //on fait un travelling pour approcher la position
-                            m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / 4) ? xCentreTravelling : Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / 4;
-                            m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / 4) ? yCentreTravelling : Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / 4;
+                            m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / RATIO_TRAVELLING) ? xCentreTravelling : m_xTravelling + Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / RATIO_TRAVELLING;
                         }
-
+                        if (m_yTravelling != yCentreTravelling)
+                        {
+                            //on fait un travelling pour approcher la position
+                            m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / RATIO_TRAVELLING) ? yCentreTravelling : m_yTravelling + Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / RATIO_TRAVELLING;
+                        }
                     }
                     //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
                     //Graphics graph = Graphics.FromImage(imageVideo);

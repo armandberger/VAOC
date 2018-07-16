@@ -95,6 +95,8 @@ namespace vaocVideo
         private int m_epaisseurUnite;//largeur des traits des unites;
         private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
         private BaseVideo m_baseVideo = new BaseVideo();
+        private int m_xTravelling = -1;
+        private int m_yTravelling = -1;
 
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
@@ -281,8 +283,6 @@ namespace vaocVideo
             SizeF tailleTexte;
             Graphics G;
             Bitmap fichierImageSource;
-            int xTravelling = 0;
-            int yTravelling = 0;
 
             try
             {
@@ -369,12 +369,27 @@ namespace vaocVideo
                 {
                     string requete = string.Format("I_TOUR<={0}", m_traitement);
                     BaseVideo.TAB_TRAVELLINGRow[] resultatTravelling = (BaseVideo.TAB_TRAVELLINGRow[])m_baseVideo.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
-                    xTravelling = resultatTravelling[0].I_X - m_largeur / 2;
-                    yTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    int xCentreTravelling = resultatTravelling[0].I_X - m_largeur / 2;
+                    int yCentreTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    if (m_xTravelling < 0 || m_yTravelling < 0)
+                    {
+                        m_xTravelling = xCentreTravelling;
+                        m_yTravelling = yCentreTravelling;
+                    }
+                    else
+                    {
+                        if ((m_xTravelling != xCentreTravelling) || (m_yTravelling != yCentreTravelling))
+                        {
+                            //on fait un travelling pour approcher la position
+                            m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / 4) ? xCentreTravelling : Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / 4;
+                            m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / 4) ? yCentreTravelling : Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / 4;
+                        }
+
+                    }
                     //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
                     //Graphics graph = Graphics.FromImage(imageVideo);
 
-                    G.DrawImage(fichierImageSource, m_largeurCote, 0, new Rectangle(xTravelling, yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
+                    G.DrawImage(fichierImageSource, m_largeurCote, 0, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
                     //imageVideo.Save(m_repertoireVideo + "\\" + "test.png", ImageFormat.Png);
                     //G.DrawImageUnscaledAndClipped(imageVideo, new Rectangle(0,0, m_largeur, m_hauteur));
                     //graph.Dispose();
@@ -395,14 +410,14 @@ namespace vaocVideo
                         if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                         {
                             G.DrawRectangle(styloExterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE- xTravelling) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - yTravelling) * m_rapport,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
 
                             G.DrawRectangle(styloInterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - xTravelling ) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - yTravelling) * m_rapport,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
                         }
@@ -415,7 +430,7 @@ namespace vaocVideo
                         {
                             continue;
                         }
-                        DessineUnite(G, unite, xTravelling, yTravelling);
+                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                     }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);

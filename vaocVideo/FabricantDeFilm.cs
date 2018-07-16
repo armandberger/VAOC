@@ -92,6 +92,7 @@ namespace vaocVideo
         private const int BARRE_ECART = 2;
         private const int BARRE_EPAISSEUR = 3;
         private const int RATIO_TRAVELLING = 8;
+        private const string NOM_FICHIER_VIDEO = "video.mp4";
         private int m_tailleUnite;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
         private int m_epaisseurUnite;//largeur des traits des unites;
         private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
@@ -107,7 +108,7 @@ namespace vaocVideo
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm,
+                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
                                     List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire, int nbImages,
                                     System.ComponentModel.BackgroundWorker worker)
@@ -115,9 +116,10 @@ namespace vaocVideo
             try
             {
                 //pour test
-                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(0, 1700, 1200);
-                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(10, 1080, 780);
-                bool bTravelling = true;
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(0, 1700, 1200);//Wittenberg
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(37, 1080, 780);//Magdebourg
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(122, 1660, 1800);//Leipsiz
+                m_baseVideo.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(154, 1770, 1660);//Eilenburg
 
                 SizeF tailleTexte;
                 Graphics G;
@@ -248,6 +250,13 @@ namespace vaocVideo
                         {
                             File.Delete(fichier.FullName);
                         }
+                        //on supprimer également une éventuelle vidéo précédente
+                        listeFichiers = dir.GetFiles(NOM_FICHIER_VIDEO, SearchOption.TopDirectoryOnly);
+
+                        foreach (FileInfo fichier in listeFichiers)
+                        {
+                            File.Delete(fichier.FullName);
+                        }
                     }
                     else
                     {
@@ -269,7 +278,17 @@ namespace vaocVideo
             try
             {
                 if (m_bFilm) { m_aw.Close(); }
-                
+                if (m_bTravelling)
+                {
+                    //on lance la commande DOS de création du film
+                    //string YourApplicationPath = m_repertoireVideo + "\\ffmpeg.exe";
+                    ProcessStartInfo processInfo = new ProcessStartInfo();
+                    processInfo.WindowStyle = ProcessWindowStyle.Normal;
+                    processInfo.FileName = "ffmpeg.exe";
+                    processInfo.WorkingDirectory = m_repertoireVideo; //Path.GetDirectoryName(YourApplicationPath);
+                    processInfo.Arguments = "-framerate 1 -i imageVideo_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p " + NOM_FICHIER_VIDEO;
+                    Process.Start(processInfo);
+                }
                 m_travailleur.ReportProgress(100);
                 return string.Empty;
             }

@@ -228,7 +228,14 @@ namespace vaocVideo
 
         private void buttonOuvrirFilm_Click(object sender, EventArgs e)
         {
-            Process.Start(this.textBoxRepertoireVideo.Text+"\\video.avi");
+            if (this.checkBoxTravelling.Checked)
+            {
+                Process.Start(this.textBoxRepertoireVideo.Text + "\\video.mp4");
+            }
+            else
+            {
+                Process.Start(this.textBoxRepertoireVideo.Text + "\\video.avi");
+            }
         }
 
         private void backgroundTraitement_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -261,7 +268,7 @@ namespace vaocVideo
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
                                         Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
-                                        true, checkBoxCarteGlobale.Checked, checkBoxFilm.Checked, 
+                                        true, checkBoxCarteGlobale.Checked, checkBoxFilm.Checked, checkBoxTravelling.Checked,
                                         m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires,                                         
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);

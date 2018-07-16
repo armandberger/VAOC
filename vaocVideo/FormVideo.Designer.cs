@@ -60,11 +60,12 @@
             this.buttonDonnees = new System.Windows.Forms.Button();
             this.checkBoxCarteGlobale = new System.Windows.Forms.CheckBox();
             this.checkBoxFilm = new System.Windows.Forms.CheckBox();
+            this.checkBoxTravelling = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(391, 478);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(436, 478);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(99, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -345,11 +346,24 @@
             this.checkBoxFilm.UseVisualStyleBackColor = true;
             this.checkBoxFilm.CheckedChanged += new System.EventHandler(this.checkBoxFilm_CheckedChanged);
             // 
+            // checkBoxTravelling
+            // 
+            this.checkBoxTravelling.AutoSize = true;
+            this.checkBoxTravelling.Checked = true;
+            this.checkBoxTravelling.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTravelling.Location = new System.Drawing.Point(310, 482);
+            this.checkBoxTravelling.Name = "checkBoxTravelling";
+            this.checkBoxTravelling.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxTravelling.TabIndex = 36;
+            this.checkBoxTravelling.Text = "Travelling";
+            this.checkBoxTravelling.UseVisualStyleBackColor = true;
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 517);
+            this.Controls.Add(this.checkBoxTravelling);
             this.Controls.Add(this.checkBoxFilm);
             this.Controls.Add(this.checkBoxCarteGlobale);
             this.Controls.Add(this.buttonDonnees);
@@ -420,6 +434,7 @@
         private System.Windows.Forms.Button buttonDonnees;
         private System.Windows.Forms.CheckBox checkBoxCarteGlobale;
         private System.Windows.Forms.CheckBox checkBoxFilm;
+        private System.Windows.Forms.CheckBox checkBoxTravelling;
     }
 }
 

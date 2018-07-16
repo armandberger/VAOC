@@ -1023,7 +1023,7 @@ namespace vaoc
                     {
                         Directory.CreateDirectory(repertoire);
                     }
-                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire); ;
+                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
 
                     if (File.Exists(nomfichier))
                     {
@@ -1994,7 +1994,7 @@ namespace vaoc
                     int y = yBloc * Constantes.CST_TAILLE_BLOC_CASES;
                     Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
-                        x, y + Constantes.CST_TAILLE_BLOC_CASES, x, y + Constantes.CST_TAILLE_BLOC_CASES);
+                        x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
                     Debug.WriteLine(requete + " : " + listeCases.Count());
                     if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }

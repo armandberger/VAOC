@@ -166,9 +166,9 @@ namespace vaocVideo
                     continue; //case comptant seulement pour les points de victoire
                 }
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
-                if (lignePion.estQG || lignePion.estPrisonniers || lignePion.estBlesses)
+                if (lignePion.estQG || lignePion.estPrisonniers || lignePion.estBlesses || lignePion.B_DETRUIT)
                 {
-                    continue; //on n'affiche pas les QG, les prisonniers, les blesses
+                    continue; //on n'affiche pas les QG, les prisonniers, les blesses, les unités détruites
                 }
                 
                 UniteRemarquable unite = new UniteRemarquable();

@@ -203,6 +203,19 @@ namespace vaoc
                 }
             }
             #endregion
+            #region test sur le nom de dépôts
+            //Donnees.TAB_PIONRow ligneTest = Donnees.m_donnees.TAB_PION.FindByID_PION(13);
+            //string nom;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            //nom = ligneTest.CreerConvoi(ligneTest.proprietaire, false, false, false).S_NOM;
+            #endregion
 
             #region controle des parcours
             //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(4489);

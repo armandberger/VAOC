@@ -3564,7 +3564,8 @@ namespace vaoc
                         }
                         else
                         {
-                            lignePionConvoi.S_NOM = "Convoi de ravitaillement du " + S_NOM;//par défaut c'est un convoi de ravitaillement
+                            //par défaut c'est un convoi de ravitaillement
+                            lignePionConvoi.S_NOM = NouveauNomConvoiRavitaillement();
                             lignePionConvoi.ID_MODELE_PION = Donnees.m_donnees.TAB_MODELE_PION.RechercherModele(modelePion.ID_NATION, "CONVOI");
                         }
                     }
@@ -3577,6 +3578,29 @@ namespace vaoc
                 }
 
                 return lignePionConvoi;
+            }
+
+            public string NouveauNomConvoiRavitaillement()
+            {
+                bool bExistant = true;
+                string nom= string.Format("Convoi de ravitaillement du {0}", S_NOM);
+                int iNumero=1;
+
+                while (bExistant)
+                {
+                    int i = 0;
+                    while (i < m_donnees.TAB_PION.Count && m_donnees.TAB_PION[i].S_NOM != nom) i++;
+                    if (i < m_donnees.TAB_PION.Count)
+                    {
+                        iNumero++;
+                        nom = string.Format("Convoi de ravitaillement n°{1} du {0}", S_NOM, iNumero);
+                    }
+                    else
+                    {
+                        bExistant = false;
+                    }
+                }
+                return nom;
             }
 
             internal bool InterceptionMessage(Donnees.TAB_PIONRow lignePionEnnemi)

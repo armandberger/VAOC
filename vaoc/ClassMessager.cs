@@ -1768,11 +1768,11 @@ namespace vaoc
                 nomZoneGeographique,
                 nomBataille, //3, sous la forme "la bataille de...
                 iPertesInfanterie,
-                lignePion.I_INFANTERIE,//5
+                lignePion.infanterie,//.I_INFANTERIE,//5
                 iPertesCavalerie,
-                lignePion.I_CAVALERIE,//7
+                lignePion.cavalerie,//.I_CAVALERIE,//7
                 artilleriePerduOuGagne,
-                lignePion.I_ARTILLERIE,
+                lignePion.artillerie,//.I_ARTILLERIE,
                 moralPerduOuGagne,//10 
                 lignePion.Moral,
                 lignePion.I_MORAL_MAX,//12

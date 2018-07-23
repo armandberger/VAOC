@@ -4235,7 +4235,9 @@ namespace vaoc
             //Si jamais le nouvel ordre est le même que l'ordre courant, on ne fait rien car cela peut avoir des conséquences sur l'ordre en cours
             if ((null != ligneOrdreNouveau) && null != (ligneOrdreCourant))
             {
-                if (ligneOrdreCourant.I_ORDRE_TYPE == ligneOrdreNouveau.I_ORDRE_TYPE)
+                //quand il y a un ordre suivant, on ne cherche pas à vérifier s'il s'agit du même ordre
+                if (ligneOrdreCourant.I_ORDRE_TYPE == ligneOrdreNouveau.I_ORDRE_TYPE 
+                    && ligneOrdreNouveau.IsID_ORDRE_SUIVANTNull())
                 {
                     bool bMemeOrdre = false;
                     switch (ligneOrdreCourant.I_ORDRE_TYPE)

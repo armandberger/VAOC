@@ -182,6 +182,54 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region deplacement des fichiers par repertoie
+            for (int tour=0; tour<=222;tour++)
+            {
+                string repertoireSource = string.Format("{0}cases\\", Constantes.repertoireDonnees, tour);
+                string repertoire = string.Format("{0}cases\\{1:D4}_000\\", Constantes.repertoireDonnees,tour);
+                if (!Directory.Exists(repertoire))
+                {
+                    //création du répertoire
+                    Directory.CreateDirectory(repertoire);
+                }
+                else
+                {
+                    //destruction du contenu
+                    string[] fichiers = Directory.GetFiles(repertoire);
+                    foreach (string fichier in fichiers) File.Delete(fichier);
+                }
+
+                for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
+                {
+                    for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
+                    {
+                        string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                           repertoireSource, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
+                                       (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, 0);
+                        //on recherche le dernier fichier sauvegardé sur les cases
+                        int phaserecherche = 0;
+                        int tourrecherche = tour;
+                        while (!File.Exists(nomfichier) && tourrecherche >= 0)
+                        {
+                            phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                            if (phaserecherche < 0)
+                            {
+                                phaserecherche = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+                                tourrecherche--;
+                            }
+                            nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                                repertoireSource, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
+                                       (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tourrecherche, phaserecherche);
+                        }
+                        string nomfichierDestination = string.Format("{0}{1:D5}_{2:D5}.cases",
+                                repertoire, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
+                                       (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tourrecherche, phaserecherche);
+                        File.Copy(nomfichier, nomfichierDestination);
+                    }
+                }
+            }
+            #endregion
+
             #region messages non arrivés sur des pions détruits !!!
             Donnees.TAB_MESSAGERow[] listeMessage= (Donnees.TAB_MESSAGERow[]) Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
             foreach(Donnees.TAB_MESSAGERow ligneMessage in listeMessage)

@@ -22,7 +22,7 @@ namespace vaocVideo
         {
             public int EffectifTotal
             {
-                get { return I_ARTILLERIE + I_INFANTERIE + I_CAVALERIE; }
+                get { return this.I_ARTILLERIE + this.I_INFANTERIE + this.I_CAVALERIE; }
             }
         }
 

@@ -183,6 +183,7 @@ namespace vaoc
         private void Correctifs()
         {
             #region deplacement des fichiers par repertoie
+            /*
             for (int tour=0; tour<=222;tour++)
             {
                 string repertoireSource = string.Format("{0}cases\\", Constantes.repertoireDonnees, tour);
@@ -228,6 +229,7 @@ namespace vaoc
                     }
                 }
             }
+            */
             #endregion
 
             #region messages non arrivés sur des pions détruits !!!

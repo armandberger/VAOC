@@ -999,16 +999,16 @@ namespace vaoc
                 }
             }
 
-            private string nomRepertoireCases()
+            private string nomRepertoireCases(int tour, int phase)
             {
-                return string.Format("{0}cases\\", Constantes.repertoireDonnees);
+                return string.Format("{0}cases\\{1:D4}_{2:D3}\\", Constantes.repertoireDonnees, tour, phase);
             }
 
-            private string NomFichierCases(int x, int y, int tour, int phase, string repertoire)
+            private string NomFichierCases(int x, int y, string repertoire)
             {
-                string nomfichier = string.Format("{0}{00001}_{00002}_{3}_{4}.cases",
+                string nomfichier = string.Format("{0}{1:D5}_{2:D5}.cases",
                     repertoire, (x / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES,
-                                (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES, tour, phase - (phase % Constantes.CST_SAUVEGARDE_ECART_PHASES));
+                                (y / Constantes.CST_TAILLE_BLOC_CASES) * Constantes.CST_TAILLE_BLOC_CASES);
                 return nomfichier;
             }
 
@@ -1018,12 +1018,12 @@ namespace vaoc
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
-                    string repertoire = nomRepertoireCases();
+                    string repertoire = nomRepertoireCases(tour, phase);
                     if (!Directory.Exists(repertoire))
                     {
                         Directory.CreateDirectory(repertoire);
                     }
-                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+                    string nomfichier = NomFichierCases(x, y, repertoire);
 
                     if (File.Exists(nomfichier))
                     {
@@ -1079,10 +1079,11 @@ namespace vaoc
             {
                 try
                 {
-                    string repertoire = nomRepertoireCases();
-                    string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+                    string repertoire = nomRepertoireCases(tour, phase);
+                    string nomfichier = NomFichierCases(x, y, repertoire);
 
                     //on recherche le dernier fichier sauvegardé sur les cases
+                    /*** plus maintenant, le fichier doit toujours être là !
                     int phaserecherche = phase;
                     int tourrecherche = tour;
                     while (!File.Exists(nomfichier) && tourrecherche >= 0)
@@ -1104,7 +1105,7 @@ namespace vaoc
                             , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
-
+                    */
                     ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
                     ZipArchiveEntry fichier = fichierZip.Entries[0];
                     donneesSource.ReadXml(fichier.Open());//m_donnees.TAB_CASE.ReadXml(fichier.Open()); ne marche pas mais je ne sais pas pourquoi !
@@ -1123,17 +1124,18 @@ namespace vaoc
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
                 string repertoire, nomfichier;
-                int i = 0, phaserecherche, tourrecherche, debutNouvellesLignes;
+                int i = 0, debutNouvellesLignes;
                 TAB_CASERow ligneCase;
 
                 try
                 {
                     LogFile.Notifier(string.Format("ChargerCases x={0}, y={1}", x, y));
                     Cursor.Current = Cursors.WaitCursor;
-                    repertoire = nomRepertoireCases();
-                    nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
+                    repertoire = nomRepertoireCases(tour, phase);
+                    nomfichier = NomFichierCases(x, y, repertoire);
 
                     //on recherche le dernier fichier sauvegardé sur les cases
+                    /*** plus maintenant les fichiers doivent toujours être là
                     phaserecherche = phase;
                     tourrecherche = tour;
                     while (!File.Exists(nomfichier) && tourrecherche >= 0)
@@ -1158,7 +1160,7 @@ namespace vaoc
                             , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
-
+                    */
                     ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
                     ZipArchiveEntry fichier = fichierZip.Entries[0];
                     donneesSource.ReadXml(fichier.Open());

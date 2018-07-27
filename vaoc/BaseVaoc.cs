@@ -1131,6 +1131,7 @@ namespace vaoc
                 {
                     LogFile.Notifier(string.Format("ChargerCases x={0}, y={1}", x, y));
                     Cursor.Current = Cursors.WaitCursor;
+                    phase = 0; //en attendant mieux !
                     repertoire = nomRepertoireCases(tour, phase);
                     nomfichier = NomFichierCases(x, y, repertoire);
 
@@ -1871,7 +1872,7 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 8;
             //ChargerToutesLesCases();//pour test
-            if (!bConserverCases)
+            //if (!bConserverCases) on sauvegarde toujours les cases maintenant
             {
                 if (0 != iTour)
                 {

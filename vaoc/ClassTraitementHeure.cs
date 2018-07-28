@@ -337,7 +337,7 @@ namespace vaoc
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
+                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, false); //-> prend quand même près de dix minutes !
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
@@ -578,7 +578,7 @@ namespace vaoc
                 //dernière sauvegarde pour demarrer au tour suivant
                 //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                Donnees.m_donnees.SauvegarderPartie(fichierCourant, bTourSuivant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
+                Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
 

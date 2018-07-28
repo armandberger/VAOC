@@ -17,6 +17,8 @@ namespace vaoc
 
         #region variables
         public static Donnees m_donnees;
+        public static int m_phaseCases = -1;
+        public static int m_tourCases = -1;
         #endregion
 
         partial class TAB_NOMS_CARTERow
@@ -1068,7 +1070,7 @@ namespace vaoc
                 {
                     int x, y;
                     m_donnees.TAB_CASE.ID_CASE_Vers_XY(ID_CASE, out x, out y);
-                    ChargerCases(x, y, m_donnees.TAB_PARTIE[0].I_TOUR, m_donnees.TAB_PARTIE[0].I_PHASE);
+                    ChargerCases(x, y, m_donnees.TAB_PARTIE[0].I_TOUR_CASES, m_donnees.TAB_PARTIE[0].I_PHASE_CASES);
                     retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
                             ID_CASE})));
                 }
@@ -1136,18 +1138,19 @@ namespace vaoc
                     nomfichier = NomFichierCases(x, y, repertoire);
 
                     //on recherche le dernier fichier sauvegardé sur les cases
-                    /*** plus maintenant les fichiers doivent toujours être là
-                    phaserecherche = phase;
-                    tourrecherche = tour;
+                    int phaserecherche = 0; // phase;
+                    int tourrecherche = tour;
                     while (!File.Exists(nomfichier) && tourrecherche >= 0)
                     {
-                        phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
-                        if (phaserecherche < 0)
-                        {
-                            phaserecherche = m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
-                            tourrecherche--;
-                        }
-                        nomfichier = NomFichierCases(x, y, tourrecherche, phaserecherche, repertoire);
+                        //phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
+                        //if (phaserecherche < 0)
+                        //{
+                        //    phaserecherche = m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
+                        //    tourrecherche--;
+                        //}
+                        tourrecherche--;
+                        repertoire = nomRepertoireCases(tourrecherche, phaserecherche);
+                        nomfichier = NomFichierCases(x, y, repertoire);
                         Debug.WriteLine("ChargerCases, test sur le fichier " + nomfichier);
                     }
 
@@ -1161,7 +1164,6 @@ namespace vaoc
                             , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
-                    */
                     ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
                     ZipArchiveEntry fichier = fichierZip.Entries[0];
                     donneesSource.ReadXml(fichier.Open());
@@ -1872,7 +1874,7 @@ namespace vaoc
             //Mise à jour de la version du fichier pour de futures mise à jour
             TAB_JEU[0].I_VERSION = 8;
             //ChargerToutesLesCases();//pour test
-            //if (!bConserverCases) on sauvegarde toujours les cases maintenant
+            if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
                 if (0 != iTour)
                 {
@@ -1917,7 +1919,7 @@ namespace vaoc
                     }
                     //if (!ChargerCases(x, y)) { return false; }
                     //if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref Donnees.m_donnees.tableTAB_CASE, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; } -> ne marche pas mais je ne sais pas pourquoi !
-                    if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; }
+                    if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES)) { return false; }
                 }
             }
             Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -1939,7 +1941,7 @@ namespace vaoc
 
         internal bool ChargerCases(int x, int y)
         {
-            if (!this.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+            if (!this.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES))
             {
                 return false;
             }
@@ -1958,43 +1960,13 @@ namespace vaoc
             iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
             Donnees.TAB_CASEDataTable baseCases = new Donnees.TAB_CASEDataTable();
 
-            if (0 == iTour)
+            //if (0 == iTour)
+            //{
+            //sauvegarde complète
+            for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
             {
-                //sauvegarde complète
-                for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x += Constantes.CST_TAILLE_BLOC_CASES)
+                for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
                 {
-                    for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y += Constantes.CST_TAILLE_BLOC_CASES)
-                    {
-                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
-                            x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
-                        Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                        Debug.WriteLine(requete + " : " + listeCases.Count());
-                        if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
-                        for (int i = 0; i < listeCases.Count(); i++)
-                        {
-                            //if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison lié à endloaddata qui est bugué
-                            {
-                                baseCases.ImportRow(listeCases[i]);
-                            }
-
-                        }
-                        if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
-                        baseCases.Rows.Clear();
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                    }
-                }
-            }
-            else
-            {
-                //on ne sauvegarde que les blocs avec des cases modifiées
-                foreach (Donnees.TAB_CASE_MODIFICATIONRow ligneCaseModifiée in Donnees.m_donnees.TAB_CASE_MODIFICATION)
-                {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseModifiée.ID_CASE);
-                    int xBloc, yBloc;
-                    ligneCase.BlocCourant(out xBloc, out yBloc);
-                    int x = xBloc * Constantes.CST_TAILLE_BLOC_CASES;
-                    int y = yBloc * Constantes.CST_TAILLE_BLOC_CASES;
                     Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
                         x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
@@ -2014,6 +1986,38 @@ namespace vaoc
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 }
             }
+            m_donnees.TAB_PARTIE[0].I_TOUR_CASES = m_donnees.TAB_PARTIE[0].I_TOUR;
+            m_donnees.TAB_PARTIE[0].I_PHASE_CASES = m_donnees.TAB_PARTIE[0].I_PHASE;
+            //}
+            //else
+            //{
+            //    //on ne sauvegarde que les blocs avec des cases modifiées
+            //    foreach (Donnees.TAB_CASE_MODIFICATIONRow ligneCaseModifiée in Donnees.m_donnees.TAB_CASE_MODIFICATION)
+            //    {
+            //        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseModifiée.ID_CASE);
+            //        int xBloc, yBloc;
+            //        ligneCase.BlocCourant(out xBloc, out yBloc);
+            //        int x = xBloc * Constantes.CST_TAILLE_BLOC_CASES;
+            //        int y = yBloc * Constantes.CST_TAILLE_BLOC_CASES;
+            //        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+            //        string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
+            //            x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
+            //        Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+            //        Debug.WriteLine(requete + " : " + listeCases.Count());
+            //        if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
+            //        for (int i = 0; i < listeCases.Count(); i++)
+            //        {
+            //            //if (i==0 || (listeCases[i].ID_CASE != listeCases[i-1].ID_CASE))//test qui, normalement, devrait être inutile sauf que parfois les Select duplique les lignes pour une inexplicable raison lié à endloaddata qui est bugué
+            //            {
+            //                baseCases.ImportRow(listeCases[i]);
+            //            }
+
+            //        }
+            //        if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
+            //        baseCases.Rows.Clear();
+            //        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+            //    }
+            //}
             return true;
         }
 
@@ -2022,6 +2026,11 @@ namespace vaoc
             if (!WaocLib.Dal.ChargerPartie(filename, this))
             {
                 return false;
+            }
+            if (m_donnees.TAB_PARTIE.Count()>0)
+            {
+                m_donnees.TAB_PARTIE[0].I_TOUR_CASES = m_donnees.TAB_PARTIE[0].I_TOUR;
+                m_donnees.TAB_PARTIE[0].I_PHASE_CASES = m_donnees.TAB_PARTIE[0].I_PHASE;
             }
             return MiseAJourVersion();
         }

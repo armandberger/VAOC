@@ -99,6 +99,7 @@
     <Compile Include="ClassNation.cs" />
     <Compile Include="ClassPion.cs" />
     <Compile Include="dataOBJ\LigneCASE.cs" />
+    <Compile Include="FabricantDeFilm.cs" />
     <Compile Include="FormMessageAncien.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -310,6 +311,12 @@
     <Compile Include="FormPrincipale.Designer.cs">
       <DependentUpon>FormPrincipale.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormVideo.Designer.cs">
+      <DependentUpon>FormVideo.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormVideoTable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -440,6 +447,9 @@
     <EmbeddedResource Include="FormPrincipale.resx">
       <SubType>Designer</SubType>
       <DependentUpon>FormPrincipale.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormVideo.resx">
+      <DependentUpon>FormVideo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormVideoTable.resx">
       <DependentUpon>FormVideoTable.cs</DependentUpon>

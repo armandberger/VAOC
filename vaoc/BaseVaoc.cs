@@ -14,12 +14,19 @@ namespace vaoc
 {
     partial class Donnees
     {
-
         #region variables
         public static Donnees m_donnees;
         public static int m_phaseCases = -1;
         public static int m_tourCases = -1;
         #endregion
+
+        partial class TAB_VIDEORow
+        {
+            public int EffectifTotal
+            {
+                get { return this.I_ARTILLERIE + this.I_INFANTERIE + this.I_CAVALERIE; }
+            }
+        }
 
         partial class TAB_NOMS_CARTERow
         {
@@ -2027,7 +2034,7 @@ namespace vaoc
             {
                 return false;
             }
-            if (m_donnees.TAB_PARTIE.Count()>0)
+            if (m_donnees.TAB_PARTIE.Count() > 0)
             {
                 m_donnees.TAB_PARTIE[0].I_TOUR_CASES = m_donnees.TAB_PARTIE[0].I_TOUR;
                 m_donnees.TAB_PARTIE[0].I_PHASE_CASES = m_donnees.TAB_PARTIE[0].I_PHASE;

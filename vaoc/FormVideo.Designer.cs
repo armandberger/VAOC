@@ -59,11 +59,12 @@
             this.checkBoxCarteGlobale = new System.Windows.Forms.CheckBox();
             this.checkBoxFilm = new System.Windows.Forms.CheckBox();
             this.checkBoxTravelling = new System.Windows.Forms.CheckBox();
+            this.buttonDonneesTravelling = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(436, 478);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(388, 478);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(99, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -215,7 +216,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(602, 478);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(493, 478);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -228,7 +229,7 @@
             // 
             this.progressBar.Location = new System.Drawing.Point(26, 446);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(732, 23);
+            this.progressBar.Size = new System.Drawing.Size(789, 23);
             this.progressBar.Step = 1;
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 25;
@@ -293,13 +294,12 @@
             // 
             // buttonDonnees
             // 
-            this.buttonDonnees.Enabled = false;
-            this.buttonDonnees.Location = new System.Drawing.Point(683, 478);
+            this.buttonDonnees.Location = new System.Drawing.Point(11, 12);
             this.buttonDonnees.Name = "buttonDonnees";
-            this.buttonDonnees.Size = new System.Drawing.Size(75, 23);
+            this.buttonDonnees.Size = new System.Drawing.Size(100, 23);
             this.buttonDonnees.TabIndex = 33;
             this.buttonDonnees.Tag = "";
-            this.buttonDonnees.Text = "Donnees";
+            this.buttonDonnees.Text = "Donnees Video";
             this.buttonDonnees.UseVisualStyleBackColor = true;
             this.buttonDonnees.Click += new System.EventHandler(this.buttonDonnees_Click);
             // 
@@ -336,11 +336,23 @@
             this.checkBoxTravelling.Text = "Travelling";
             this.checkBoxTravelling.UseVisualStyleBackColor = true;
             // 
+            // buttonDonneesTravelling
+            // 
+            this.buttonDonneesTravelling.Location = new System.Drawing.Point(130, 12);
+            this.buttonDonneesTravelling.Name = "buttonDonneesTravelling";
+            this.buttonDonneesTravelling.Size = new System.Drawing.Size(123, 23);
+            this.buttonDonneesTravelling.TabIndex = 37;
+            this.buttonDonneesTravelling.Tag = "";
+            this.buttonDonneesTravelling.Text = "Donnees Travelling";
+            this.buttonDonneesTravelling.UseVisualStyleBackColor = true;
+            this.buttonDonneesTravelling.Click += new System.EventHandler(this.buttonDonneesTravelling_Click);
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 517);
+            this.ClientSize = new System.Drawing.Size(827, 517);
+            this.Controls.Add(this.buttonDonneesTravelling);
             this.Controls.Add(this.checkBoxTravelling);
             this.Controls.Add(this.checkBoxFilm);
             this.Controls.Add(this.checkBoxCarteGlobale);
@@ -409,6 +421,7 @@
         private System.Windows.Forms.CheckBox checkBoxCarteGlobale;
         private System.Windows.Forms.CheckBox checkBoxFilm;
         private System.Windows.Forms.CheckBox checkBoxTravelling;
+        private System.Windows.Forms.Button buttonDonneesTravelling;
     }
 }
 

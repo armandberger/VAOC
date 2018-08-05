@@ -143,10 +143,10 @@ namespace vaoc
             try
             {
                 //pour test
-                Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(0, 1700, 1200);//Wittenberg
-                Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(37, 1080, 780);//Magdebourg
-                Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(122, 1660, 1800);//Leipsiz
-                Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(154, 1770, 1660);//Eilenburg
+                //Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(0, 1700, 1200);//Wittenberg
+                //Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(37, 1080, 780);//Magdebourg
+                //Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(122, 1660, 1800);//Leipsiz
+                //Donnees.m_donnees.TAB_TRAVELLING.AddTAB_TRAVELLINGRow(154, 1770, 1660);//Eilenburg
 
                 SizeF tailleTexte;
                 Graphics G;

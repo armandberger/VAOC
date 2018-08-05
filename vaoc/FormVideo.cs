@@ -363,12 +363,26 @@ namespace vaoc
             FormVideoTable fVideoTable = new FormVideoTable();
 
             fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
-            fVideoTable.ShowDialog();
+            if (fVideoTable.ShowDialog() == DialogResult.OK)
+            {
+                Donnees.m_donnees.TAB_VIDEO.Merge(fVideoTable.tableVideo.Copy(), false);
+            }
         }
 
         private void checkBoxFilm_CheckedChanged(object sender, EventArgs e)
         {
             buttonCreerFilm.Text = (checkBoxFilm.Checked) ? "Créer Film" : "Créer Images";
+        }
+
+        private void buttonDonneesTravelling_Click(object sender, EventArgs e)
+        {
+            FormVideoTravellingTable fVideoTable = new FormVideoTravellingTable();
+
+            fVideoTable.tableTravelling = Donnees.m_donnees.TAB_TRAVELLING;
+            if (fVideoTable.ShowDialog() == DialogResult.OK)
+            {
+                Donnees.m_donnees.TAB_TRAVELLING.Merge(fVideoTable.tableTravelling.Copy(), false);
+            }
         }
     }
 }

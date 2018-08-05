@@ -65,6 +65,10 @@ namespace vaoc
             Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours-1];
             Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours-1];
 
+            //MiseAJourDonneesHistorique majVideo2 = new MiseAJourDonneesHistorique();
+            //majVideo2.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
+            //majVideo2.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
+
             //On note la dernière fois que l'on a envoyé des messages aux joueurs
             //Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 1 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; -> on ne peut pas le faire là au cas où le tour serait pris en cours de route, déplacé dans la dialogue de notification
 
@@ -395,9 +399,9 @@ namespace vaoc
                 //}
 
                 //on met à jour les données pour le film vidéo de fin de partie
-                MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
-                majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
-                majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
+                //MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
+                //majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
+                //majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
 
                 //reconstruction de la carte suite aux batailles éventuelles, pour l'affichage générale
                 message = string.Format("**** Reconstruction carte ****");

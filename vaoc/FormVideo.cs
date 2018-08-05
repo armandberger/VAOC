@@ -124,21 +124,21 @@ namespace vaoc
                          select video.I_VICTOIRE)
                         .Sum();
 
-                    var test1 =
-                        (from video in Donnees.m_donnees.TAB_VIDEO
-                         where (video.I_TOUR == i)
-                            && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                                    && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
-                                    && video.I_VICTOIRE>0)
-                         select video);
+                    //var test1 =
+                    //    (from video in Donnees.m_donnees.TAB_VIDEO
+                    //     where (video.I_TOUR == i)
+                    //        && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                    //                && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
+                    //                && video.I_VICTOIRE>0)
+                    //     select video);
 
-                    var test2 =
-                        (from video in Donnees.m_donnees.TAB_VIDEO
-                         where (video.I_TOUR == i)
-                            && (((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                                    && (false == video.B_DETRUIT && false == video.B_FUITE_AU_COMBAT))
-                                    && video.I_VICTOIRE > 0)
-                         select video);
+                    //var test2 =
+                    //    (from video in Donnees.m_donnees.TAB_VIDEO
+                    //     where (video.I_TOUR == i)
+                    //        && (((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
+                    //                && (false == video.B_DETRUIT && false == video.B_FUITE_AU_COMBAT))
+                    //                && video.I_VICTOIRE > 0)
+                    //     select video);
 
                     EffectifEtVictoire effV = new EffectifEtVictoire();
                     effV.iTour = i;

@@ -163,7 +163,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 95;//BEA, permet de tester une fin de bataille
+                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 100;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -399,9 +399,9 @@ namespace vaoc
                 //}
 
                 //on met à jour les données pour le film vidéo de fin de partie
-                //MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
-                //majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
-                //majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
+                MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
+                majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
+                majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
 
                 //reconstruction de la carte suite aux batailles éventuelles, pour l'affichage générale
                 message = string.Format("**** Reconstruction carte ****");

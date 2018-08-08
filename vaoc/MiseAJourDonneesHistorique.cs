@@ -17,6 +17,7 @@ namespace vaoc
         private bool m_bAvecSauvegarde { get; set; }
         private int m_traitement;//traitement principal
         private int m_nombretours;
+        private int m_debut;
         System.ComponentModel.BackgroundWorker m_travailleur;
         private Donnees.TAB_VIDEODataTable m_tableVideo = null;
 
@@ -26,9 +27,10 @@ namespace vaoc
             {
                 m_fichierSource = fichierSource;
                 m_bAvecSauvegarde = avecSauvegarde;
-                m_nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1;
+                m_nombretours = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1 - debut;
                 m_travailleur = worker;
-                m_traitement = (0==debut) ? 0 : debut-1;//-1 pour reprendre les anciennes données, on reexcute donc le précédent tour
+                m_debut = debut;
+                m_traitement = (0==debut) ? 0 : debut;
                 m_tableVideo = new Donnees.TAB_VIDEODataTable();
                 return string.Empty;
             }
@@ -87,8 +89,8 @@ namespace vaoc
                 }
 
                 m_traitement++;
-                m_travailleur.ReportProgress(m_traitement * 100 / m_nombretours);
-                if (m_traitement == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
+                m_travailleur.ReportProgress((m_traitement-m_debut) * 100 / m_nombretours);
+                if (m_traitement - m_debut >= m_nombretours)
                 {
                     return "Reprise terminée";
                 }

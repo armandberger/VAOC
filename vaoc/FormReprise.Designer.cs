@@ -76,7 +76,7 @@
             this.buttonOK.Size = new System.Drawing.Size(151, 23);
             this.buttonOK.TabIndex = 30;
             this.buttonOK.Tag = "";
-            this.buttonOK.Text = "OK";
+            this.buttonOK.Text = "Fermer";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
             // backgroundTraitement

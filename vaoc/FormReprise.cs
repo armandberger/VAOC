@@ -58,7 +58,7 @@ namespace vaoc
                 }
                 erreurTraitement = majHistorique.Initialisation(this.fichierCourant, 
                                                                 this.checkBoxSauvegarde.Checked,
-                                                                tourDebut, 
+                                                                tourDebut -1, //-1 pour reprendre les anciennes données, on reexcute donc le précédent tour
                                                                 travailleur);
                 if (string.Empty != erreurTraitement)
                 {

@@ -182,7 +182,48 @@ namespace vaoc
 
         private void Correctifs()
         {
-            #region deplacement des fichiers par repertoie
+            #region
+            /*
+            int i = 0;
+            while (i< Donnees.m_donnees.TAB_VIDEO.Count())
+            {
+                Donnees.TAB_VIDEORow ligneV = Donnees.m_donnees.TAB_VIDEO[i++];
+                if (219 !=ligneV.I_TOUR)
+                {
+                    continue;
+                }
+                Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO.AddTAB_VIDEORow(
+                    220,
+                    ligneV.ID_NATION,
+                    ligneV.ID_PION,
+                    ligneV.ID_MODELE_PION,
+                    ligneV.ID_PION_PROPRIETAIRE,
+                    ligneV.S_NOM,
+                    ligneV.I_INFANTERIE,
+                    ligneV.I_INFANTERIE_INITIALE,
+                    ligneV.I_CAVALERIE,
+                    ligneV.I_CAVALERIE_INITIALE,
+                    ligneV.I_ARTILLERIE,
+                    ligneV.I_ARTILLERIE_INITIALE,
+                    ligneV.I_FATIGUE,
+                    ligneV.I_MORAL,
+                    ligneV.ID_CASE,
+                    ligneV.IsID_BATAILLENull() ? -1 : ligneV.ID_BATAILLE,
+                    ligneV.B_DETRUIT,
+                    ligneV.B_FUITE_AU_COMBAT,
+                    ligneV.I_MATERIEL,
+                    ligneV.I_RAVITAILLEMENT,
+                    ligneV.B_BLESSES,
+                    ligneV.B_PRISONNIERS,
+                    ligneV.C_NIVEAU_DEPOT,
+                    ligneV.IsI_VICTOIRENull() ? 0 : ligneV.I_VICTOIRE
+                );
+                if (ligneV.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
+            }
+                */
+            #endregion recupération d'un tour vidéo
+
+            #region deplacement des fichiers par repertoire
             /*
             for (int tour=0; tour<=222;tour++)
             {

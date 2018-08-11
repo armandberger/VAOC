@@ -538,6 +538,46 @@ namespace vaoc
                     return;
                 }
             }
+            //DessineUniteFilaire(G, unite, xTravelling, yTravelling);
+            DessineUniteImage(G, unite, xTravelling, yTravelling);
+        }
+
+        private void DessineUniteImage(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
+        {
+            Image image;
+            switch (unite.tipe)
+            {
+                case TIPEUNITEVIDEO.INFANTERIE:
+                    //barre haut gauche, bas droite
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
+                    break;
+                case TIPEUNITEVIDEO.CAVALERIE:
+                    //barre haut gauche, bas droite
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
+                    break;
+                case TIPEUNITEVIDEO.ARTILLERIE:
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
+                    break;
+                case TIPEUNITEVIDEO.CONVOI:
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.convoi_0) : new Bitmap(vaoc.Properties.Resources.convoi_1);
+                    break;
+                case TIPEUNITEVIDEO.DEPOT:
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.depot_0) : new Bitmap(vaoc.Properties.Resources.depot_1);
+                    break;
+                case TIPEUNITEVIDEO.PONTONNIER:
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.genie_0) : new Bitmap(vaoc.Properties.Resources.genie_1);
+                    break;
+                default:
+                    image = new Bitmap(vaoc.Properties.Resources.zoomMoins);
+                    break;
+            }
+            G.DrawImage(image,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - image.Width/2, 
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - image.Height/2);
+        }
+
+        private void DessineUniteFilaire(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
+        {
             Pen styloUnite = new Pen((unite.iNation == 0) ? Color.Blue : Color.Red, m_epaisseurUnite);
             Brush brosseUnite = new SolidBrush((unite.iNation == 0) ? Color.Blue : Color.Red);
             switch (unite.tipe)
@@ -546,7 +586,7 @@ namespace vaoc
                     //barre haut gauche, bas droite
                     G.DrawLine(styloUnite,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling ) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
                         (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
                         );
@@ -554,7 +594,7 @@ namespace vaoc
                     G.DrawLine(styloUnite,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
                         (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling ) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
                         (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
                         );
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
@@ -583,8 +623,8 @@ namespace vaoc
                     G.FillEllipse(brosseUnite,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 4,
                         (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 4,
-                        m_tailleUnite/2,
-                        m_tailleUnite/2);
+                        m_tailleUnite / 2,
+                        m_tailleUnite / 2);
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
@@ -603,7 +643,7 @@ namespace vaoc
                         (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite,
-                        0,180);
+                        0, 180);
                     break;
                 case TIPEUNITEVIDEO.DEPOT:
                     G.FillEllipse(brosseUnite,
@@ -625,138 +665,138 @@ namespace vaoc
             }
         }
         /*
-        public string CreerFilm(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, string[] texteImages
-                                ,int largeurOptimale, int HauteurOptimale, bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables)
-        {
-            try
-            {
-                SizeF tailleTexte;
-                Graphics G;
-                Bitmap fichierImageSource;
-                int w = int.MaxValue;
-                int h = int.MaxValue;
-                int hmax = 0;
-                int wmax = 0;
-                int hauteurBandeau = 0;
-                float rapport;
+public string CreerFilm(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, string[] texteImages
+                       ,int largeurOptimale, int HauteurOptimale, bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables)
+{
+   try
+   {
+       SizeF tailleTexte;
+       Graphics G;
+       Bitmap fichierImageSource;
+       int w = int.MaxValue;
+       int h = int.MaxValue;
+       int hmax = 0;
+       int wmax = 0;
+       int hauteurBandeau = 0;
+       float rapport;
 
-                //recherche le nombre d'images et leur taille
-                DirectoryInfo dir = new DirectoryInfo(repertoireImages);
-                m_listeFichiers = dir.GetFiles(texteMasqueImage,SearchOption.TopDirectoryOnly);
-                if (0 == m_listeFichiers.Length) {return "le repertoire source ne contient aucune image "+texteMasqueImage;}
+       //recherche le nombre d'images et leur taille
+       DirectoryInfo dir = new DirectoryInfo(repertoireImages);
+       m_listeFichiers = dir.GetFiles(texteMasqueImage,SearchOption.TopDirectoryOnly);
+       if (0 == m_listeFichiers.Length) {return "le repertoire source ne contient aucune image "+texteMasqueImage;}
 
-                Array.Sort(m_listeFichiers, new MyCustomComparer());//tri par nom
-                foreach (FileInfo fichier in m_listeFichiers)
-                {
-                    Bitmap fichierImage = (Bitmap)Image.FromFile(fichier.FullName);
-                    if (wmax < fichierImage.Width) { wmax = fichierImage.Width; }
-                    if (hmax < fichierImage.Height) { hmax = fichierImage.Height; }
-                    if (w > fichierImage.Width) { w = fichierImage.Width; }
-                    if (h > fichierImage.Height) { h = fichierImage.Height; }
-                }
+       Array.Sort(m_listeFichiers, new MyCustomComparer());//tri par nom
+       foreach (FileInfo fichier in m_listeFichiers)
+       {
+           Bitmap fichierImage = (Bitmap)Image.FromFile(fichier.FullName);
+           if (wmax < fichierImage.Width) { wmax = fichierImage.Width; }
+           if (hmax < fichierImage.Height) { hmax = fichierImage.Height; }
+           if (w > fichierImage.Width) { w = fichierImage.Width; }
+           if (h > fichierImage.Height) { h = fichierImage.Height; }
+       }
 
-                if (wmax != w || hmax != h)
-                {
-                    return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué", h,w,hmax,wmax);
-                }
+       if (wmax != w || hmax != h)
+       {
+           return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué", h,w,hmax,wmax);
+       }
 
-                //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
-                if (null != texteImages && texteImages.Length > 0)
-                {
-                    fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
-                    G = Graphics.FromImage(fichierImageSource);
-                    tailleTexte = G.MeasureString("XX", police);
-                    hauteurBandeau = (int)(tailleTexte.Height * 1);
-                    fichierImageSource.Dispose();
-                }
+       //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
+       if (null != texteImages && texteImages.Length > 0)
+       {
+           fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
+           G = Graphics.FromImage(fichierImageSource);
+           tailleTexte = G.MeasureString("XX", police);
+           hauteurBandeau = (int)(tailleTexte.Height * 1);
+           fichierImageSource.Dispose();
+       }
 
-                //calcul de la taille optimale
-                if ((float)w / largeurOptimale > (float)h / (HauteurOptimale - hauteurBandeau))
-                {
-                    //on se cale donc sur la largeur (effort le plus grand)
-                    rapport = (float)largeurOptimale / w;
-                    h = (int)(h * rapport);
-                    w = largeurOptimale;
-                }
-                else
-                {
-                    rapport = (float)(HauteurOptimale - hauteurBandeau) / h;
-                    w = (int)(w * rapport);
-                    h = HauteurOptimale - hauteurBandeau;
-                }
+       //calcul de la taille optimale
+       if ((float)w / largeurOptimale > (float)h / (HauteurOptimale - hauteurBandeau))
+       {
+           //on se cale donc sur la largeur (effort le plus grand)
+           rapport = (float)largeurOptimale / w;
+           h = (int)(h * rapport);
+           w = largeurOptimale;
+       }
+       else
+       {
+           rapport = (float)(HauteurOptimale - hauteurBandeau) / h;
+           w = (int)(w * rapport);
+           h = HauteurOptimale - hauteurBandeau;
+       }
 
-                m_aw = new AviWriter();
-                Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
+       m_aw = new AviWriter();
+       Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
 
-                m_traitement = 0;
-                foreach (FileInfo fichier in m_listeFichiers)
-                {
-                    fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
-                    Bitmap fichierImage = new Bitmap(w, h + hauteurBandeau, fichierImageSource.PixelFormat);
-                    G = Graphics.FromImage(fichierImage);
-                    G.PageUnit = GraphicsUnit.Pixel;
-                    //bandeau avec texte
-                    if (null != texteImages && texteImages.Length > 0)
-                    {
-                        G.FillRectangle(Brushes.White, new Rectangle(0, h, w, hauteurBandeau));
-                        tailleTexte = G.MeasureString(texteImages[m_traitement], police);
-                        G.DrawString(texteImages[m_traitement], police, Brushes.Black, new Rectangle((w - (int)tailleTexte.Width) / 2, h + (hauteurBandeau - (int)tailleTexte.Height) / 2,
-                            w - (w - (int)tailleTexte.Width) / 2, hauteurBandeau - (hauteurBandeau - (int)tailleTexte.Height) / 2));
-                        m_traitement++;
-                    }
+       m_traitement = 0;
+       foreach (FileInfo fichier in m_listeFichiers)
+       {
+           fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
+           Bitmap fichierImage = new Bitmap(w, h + hauteurBandeau, fichierImageSource.PixelFormat);
+           G = Graphics.FromImage(fichierImage);
+           G.PageUnit = GraphicsUnit.Pixel;
+           //bandeau avec texte
+           if (null != texteImages && texteImages.Length > 0)
+           {
+               G.FillRectangle(Brushes.White, new Rectangle(0, h, w, hauteurBandeau));
+               tailleTexte = G.MeasureString(texteImages[m_traitement], police);
+               G.DrawString(texteImages[m_traitement], police, Brushes.Black, new Rectangle((w - (int)tailleTexte.Width) / 2, h + (hauteurBandeau - (int)tailleTexte.Height) / 2,
+                   w - (w - (int)tailleTexte.Width) / 2, hauteurBandeau - (hauteurBandeau - (int)tailleTexte.Height) / 2));
+               m_traitement++;
+           }
 
-                    //image de base
-                    G.DrawImage(fichierImageSource, 0, 0, w, h);
+           //image de base
+           G.DrawImage(fichierImageSource, 0, 0, w, h);
 
-                    if (bHistoriqueBataille)
-                    {
-                        Pen styloExterieur = new Pen(Color.Black, 3);
-                        Pen styloInterieur = new Pen(Color.White, 1);
-                        //on ajoute les batailles s'il y en a
-                        foreach (LieuRemarquable ligneLieu in lieuxRemarquables)
-                        {
-                            if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
-                            {
-                                G.DrawRectangle(styloExterieur,
-                                    ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
-                                    ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
-                                    (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
-                                    (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
+           if (bHistoriqueBataille)
+           {
+               Pen styloExterieur = new Pen(Color.Black, 3);
+               Pen styloInterieur = new Pen(Color.White, 1);
+               //on ajoute les batailles s'il y en a
+               foreach (LieuRemarquable ligneLieu in lieuxRemarquables)
+               {
+                   if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
+                   {
+                       G.DrawRectangle(styloExterieur,
+                           ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
+                           ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
+                           (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
+                           (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
 
-                                G.DrawRectangle(styloInterieur,
-                                    ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
-                                    ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
-                                    (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
-                                    (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
-                            }
-                        }
-                    }
-                    //G.DrawImageUnscaled(fichierImageSource, 0, 0);
-                    fichierImage.Save(repertoireVideo+"\\test.png", ImageFormat.Png);
-                    fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
-                    BitmapData bmpDat = fichierImage.LockBits(
-                      new Rectangle(0, 0, w, h + hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+                       G.DrawRectangle(styloInterieur,
+                           ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
+                           ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
+                           (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
+                           (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
+                   }
+               }
+           }
+           //G.DrawImageUnscaled(fichierImageSource, 0, 0);
+           fichierImage.Save(repertoireVideo+"\\test.png", ImageFormat.Png);
+           fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
+           BitmapData bmpDat = fichierImage.LockBits(
+             new Rectangle(0, 0, w, h + hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
 
-                    //BitmapData imageCible = new BitmapData();
-                    //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
-                    //m_imageCarte.UnlockBits(imageCible);
-                    //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-                    //imageFinale.Save(nomFichierFinal);
-                    m_aw.AddFrame(bmpDat);
-                    fichierImage.UnlockBits(bmpDat);
-                    G.Dispose();
-                    fichierImage.Dispose();
-                    fichierImageSource.Dispose();
-                }
-                m_aw.Close();
-                return string.Empty;
-            }
-            catch (AviWriter.AviException e)
-            {
-                return "AVI Exception in: " + e.ToString();
-            }
-        }
-        */
+           //BitmapData imageCible = new BitmapData();
+           //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
+           //m_imageCarte.UnlockBits(imageCible);
+           //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+           //imageFinale.Save(nomFichierFinal);
+           m_aw.AddFrame(bmpDat);
+           fichierImage.UnlockBits(bmpDat);
+           G.Dispose();
+           fichierImage.Dispose();
+           fichierImageSource.Dispose();
+       }
+       m_aw.Close();
+       return string.Empty;
+   }
+   catch (AviWriter.AviException e)
+   {
+       return "AVI Exception in: " + e.ToString();
+   }
+}
+*/
     }
 }

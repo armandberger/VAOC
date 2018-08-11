@@ -199,6 +199,11 @@ namespace vaoc
                     unite.tipe = TIPEUNITEVIDEO.CAVALERIE;
                     continue;
                 }
+                if (lignePion.estPontonnier)
+                {
+                    unite.tipe = TIPEUNITEVIDEO.PONTONNIER;
+                    continue;
+                }
                 unite.tipe = TIPEUNITEVIDEO.INFANTERIE;                
             }            
 

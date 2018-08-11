@@ -175,4 +175,40 @@
   <data name="memoire" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\memoire.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="artillerie_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\artillerie_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="artillerie_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\artillerie_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cavalerie_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\cavalerie_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="cavalerie_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\cavalerie_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="depot_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\depot_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="depot_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\depot_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="infanterie_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\infanterie_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="infanterie_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\infanterie_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="convoi_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\convoi_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="convoi_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\convoi_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="genie_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\genie_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="genie_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\genie_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

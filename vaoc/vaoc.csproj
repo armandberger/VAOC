@@ -495,8 +495,20 @@
     </Compile>
     <Compile Include="Settings.cs" />
     <Content Include="IconVAOC.ico" />
+    <Content Include="Resources\artillerie_0.png" />
+    <Content Include="Resources\artillerie_1.png" />
     <Content Include="Resources\bullseye-ani.ani" />
     <None Include="Resources\IconVAOC.ico" />
+    <Content Include="Resources\cavalerie_0.png" />
+    <Content Include="Resources\cavalerie_1.png" />
+    <Content Include="Resources\convoi_0.png" />
+    <Content Include="Resources\convoi_1.png" />
+    <Content Include="Resources\depot_0.png" />
+    <Content Include="Resources\depot_1.png" />
+    <Content Include="Resources\genie_0.png" />
+    <Content Include="Resources\genie_1.png" />
+    <Content Include="Resources\infanterie_0.png" />
+    <Content Include="Resources\infanterie_1.png" />
     <Content Include="Resources\memoire.bmp" />
     <Content Include="Resources\pontendommage.bmp" />
     <Content Include="Resources\ponton.bmp" />

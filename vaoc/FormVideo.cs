@@ -174,37 +174,12 @@ namespace vaoc
                 UniteRemarquable unite = new UniteRemarquable();
                 unite.iNation = ligneVideo.ID_NATION;
                 unite.iTour = ligneVideo.I_TOUR;
+                unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
                 //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
                 Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
-                if (lignePion.estConvoiDeRavitaillement)
-                {
-                    unite.tipe = TIPEUNITEVIDEO.CONVOI;
-                    continue;
-                }
-                if (lignePion.estDepot)
-                {
-                    unite.tipe = TIPEUNITEVIDEO.DEPOT;
-                    continue;
-                }
-                if (lignePion.estArtillerie)
-                {
-                    unite.tipe = TIPEUNITEVIDEO.ARTILLERIE;
-                    continue;
-                }
-                if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
-                {
-                    unite.tipe = TIPEUNITEVIDEO.CAVALERIE;
-                    continue;
-                }
-                if (lignePion.estPontonnier)
-                {
-                    unite.tipe = TIPEUNITEVIDEO.PONTONNIER;
-                    continue;
-                }
-                unite.tipe = TIPEUNITEVIDEO.INFANTERIE;                
             }            
 
             /* -> deporté dans un traitement background ci-dessous

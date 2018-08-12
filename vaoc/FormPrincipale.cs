@@ -182,7 +182,56 @@ namespace vaoc
 
         private void Correctifs()
         {
-            #region
+            #region mise à jour des tipes Depot/convoi sur les lignes vidéos
+            /*
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (lignePion.estConvoiDeRavitaillement || lignePion.estDepot)
+                {
+                    //on recherche tous les ordres de mouvements de l'unite
+                    string requeteOrdre = string.Format("(ID_PION={0}) AND I_ORDRE_TYPE = {1}",
+                        lignePion.ID_PION, Constantes.ORDRES.MOUVEMENT);
+                    Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requeteOrdre);
+                    if (resOrdre.Count() > 0)
+                    {
+                        //par défaut, c'est un depot (en fait, cela peut etre un convoi au début mais comme en début de partie
+                        //on a que des depots, ça doit marcher :-)
+                        string requeteVideo = string.Format("ID_PION={0}", lignePion.ID_PION);
+                        Donnees.TAB_VIDEORow[] resVideo = (Donnees.TAB_VIDEORow[])Donnees.m_donnees.TAB_VIDEO.Select(requeteVideo);
+                        foreach (Donnees.TAB_VIDEORow ligneVideo in resVideo)
+                        {
+                            ligneVideo.I_TYPE = (int)TIPEUNITEVIDEO.DEPOT;
+                        }
+
+                        foreach (Donnees.TAB_ORDRERow ligneOrdre in resOrdre)
+                        {
+                            //recherche de toutes les lignes video correspondantes
+                            requeteVideo = string.Format("ID_PION={0} AND I_TOUR>={1} AND I_TOUR<={2}", 
+                                lignePion.ID_PION, 
+                                ligneOrdre.I_TOUR_DEBUT,
+                                ligneOrdre.IsI_TOUR_FINNull() ? Donnees.m_donnees.TAB_PARTIE[0].I_TOUR : ligneOrdre.I_TOUR_FIN);
+                            resVideo = (Donnees.TAB_VIDEORow[])Donnees.m_donnees.TAB_VIDEO.Select(requeteVideo);
+                            foreach (Donnees.TAB_VIDEORow ligneVideo in resVideo)
+                            {
+                                ligneVideo.I_TYPE = (int)TIPEUNITEVIDEO.CONVOI;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string requeteVideo= string.Format("ID_PION={0}",lignePion.ID_PION);
+                        Donnees.TAB_VIDEORow[] resVideo = (Donnees.TAB_VIDEORow[])Donnees.m_donnees.TAB_VIDEO.Select(requeteVideo);
+                        foreach (Donnees.TAB_VIDEORow ligneVideo in resVideo)
+                        {
+                            ligneVideo.I_TYPE = (lignePion.estDepot) ? (int)TIPEUNITEVIDEO.DEPOT : (int)TIPEUNITEVIDEO.CONVOI;
+                        }
+                    }
+                }
+            }
+            */
+            #endregion
+
+            #region reprise d'un tour de données video
             /*
             int i = 0;
             while (i< Donnees.m_donnees.TAB_VIDEO.Count())

@@ -19208,6 +19208,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_VICTOIRE;
             
+            private global::System.Data.DataColumn columnI_TYPE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_VIDEODataTable() {
@@ -19435,6 +19437,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn I_TYPEColumn {
+                get {
+                    return this.columnI_TYPE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -19494,7 +19504,8 @@ namespace vaoc {
                         bool B_BLESSES, 
                         bool B_PRISONNIERS, 
                         char C_NIVEAU_DEPOT, 
-                        int I_VICTOIRE) {
+                        int I_VICTOIRE, 
+                        int I_TYPE) {
                 TAB_VIDEORow rowTAB_VIDEORow = ((TAB_VIDEORow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         I_TOUR,
@@ -19520,7 +19531,8 @@ namespace vaoc {
                         B_BLESSES,
                         B_PRISONNIERS,
                         C_NIVEAU_DEPOT,
-                        I_VICTOIRE};
+                        I_VICTOIRE,
+                        I_TYPE};
                 rowTAB_VIDEORow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_VIDEORow);
                 return rowTAB_VIDEORow;
@@ -19567,6 +19579,7 @@ namespace vaoc {
                 this.columnB_PRISONNIERS = base.Columns["B_PRISONNIERS"];
                 this.columnC_NIVEAU_DEPOT = base.Columns["C_NIVEAU_DEPOT"];
                 this.columnI_VICTOIRE = base.Columns["I_VICTOIRE"];
+                this.columnI_TYPE = base.Columns["I_TYPE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -19620,6 +19633,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnC_NIVEAU_DEPOT);
                 this.columnI_VICTOIRE = new global::System.Data.DataColumn("I_VICTOIRE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_VICTOIRE);
+                this.columnI_TYPE = new global::System.Data.DataColumn("I_TYPE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_TYPE);
                 this.columnI_TOUR.Caption = "I_TOUR_SANS_RAVITAILLEMENT";
                 this.columnID_PION.AllowDBNull = false;
                 this.columnI_FATIGUE.Caption = "ID_CASE_ARRIVEE_RENFORT";
@@ -33473,6 +33488,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public int I_TYPE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_TYPEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TYPE\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_TYPEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsI_TOURNull() {
                 return this.IsNull(this.tableTAB_VIDEO.I_TOURColumn);
             }
@@ -33721,6 +33752,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetI_VICTOIRENull() {
                 this[this.tableTAB_VIDEO.I_VICTOIREColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsI_TYPENull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_TYPEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetI_TYPENull() {
+                this[this.tableTAB_VIDEO.I_TYPEColumn] = global::System.Convert.DBNull;
             }
         }
         

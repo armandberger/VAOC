@@ -161,9 +161,11 @@ namespace vaoc
                     lignePion.B_BLESSES,
                     lignePion.B_PRISONNIERS,
                     lignePion.C_NIVEAU_DEPOT,
-                    lignePion.IsI_VICTOIRENull() ? 0 : lignePion.I_VICTOIRE
+                    lignePion.IsI_VICTOIRENull() ? 0 : lignePion.I_VICTOIRE,
+                    -1
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
+                ligneVideo.I_TYPE = (int) lignePion.tipeVideo(ligneVideo);
             }
 
             foreach( Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
@@ -196,9 +198,9 @@ namespace vaoc
                     false, //lignePion.B_BLESSES,
                     false, //lignePion.B_PRISONNIERS,
                     ' ',//lignePion.C_NIVEAU_DEPOT,
-                    ligneNomCarte.I_VICTOIRE
-                );
-
+                    ligneNomCarte.I_VICTOIRE,
+                    Constantes.NULLENTIER
+                );                
             }
         }
 

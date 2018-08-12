@@ -4836,7 +4836,34 @@ namespace vaoc
             //{
             //    this.I_TOUR_CONVOI_CREE = Constantes.NULLENTIER;
             //}
-
+            public TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
+            {
+                if (estConvoiDeRavitaillement)
+                {
+                    return TIPEUNITEVIDEO.CONVOI;
+                }
+                if (estDepot)
+                {
+                    return TIPEUNITEVIDEO.DEPOT;
+                }
+                if (estArtillerie)
+                {
+                    return TIPEUNITEVIDEO.ARTILLERIE;
+                }
+                if (estPontonnier)
+                {
+                    return TIPEUNITEVIDEO.PONTONNIER;
+                }
+                if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
+                {
+                    return TIPEUNITEVIDEO.CAVALERIE;
+                }
+                if (ligneVideo.I_INFANTERIE_INITIALE > 0)
+                {
+                    return TIPEUNITEVIDEO.INFANTERIE;
+                }
+                return TIPEUNITEVIDEO.AUTRE;
+            }
         }
     }
 }

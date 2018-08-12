@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace vaoc
 {
-    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER};
+    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER, AUTRE};
 
     public class EffectifEtVictoire
     {

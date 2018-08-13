@@ -298,10 +298,14 @@ namespace vaoc
             // Notre matériel est maintenant à {35} % et notre ravitaillement à {34} %  suite au prévelement effectué sur  le {31}.
             // Le {31} a pu nous fournir de  quoi remplir nos havresacs.
             // Nos besaces sont maintenant mieux remplies suite à notre passage dans les stocks du {31}.
-            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE = 91
+            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE = 91,
             //Nous n'avons pas pu nous ravitailler comme vous l'aviez ordonné, soit aucun dépôt n'était présent soit il ne pouvait pas nous ravitailler.
             //Aucun dépôt n'était disponible pour nous fournir le ravitaillement ou le matériel attendu.
             //Nous n'avons pas trouvé à notre emplacement un dépôt capable de nous donner quelque chose.
+            MESSAGE_LIEU_POINT_DE_VICTOIRE = 92
+            //Notre position vient d'être capturée par l'ennemi.
+            //{1} est passée sous le contrôle de l'ennemi, j'ai pris tous les risques pour vous faire parvenir ce message.
+            //Des informations concordantes de différents observateurs indique que {1} n'est plus sous notre autorité.
         }
         /*
                DateHeure(true), //0

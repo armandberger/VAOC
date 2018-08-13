@@ -2129,7 +2129,54 @@ namespace vaoc
                         }
                     }
                     //si la nation change, on modifie la valeur, sinon on garde la valeur par défaut
-                    if (nationControle >= 0) { ligneNomCarte.ID_NATION_CONTROLE = nationControle; }
+                    if (nationControle >= 0 && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
+                    {
+                        if (ligneNomCarte.I_VICTOIRE > 0)
+                        {
+                            //Il faut prévenir tous les "rôles" de l'ancienne nation que la ville change de camp
+                            Monitor.Enter(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+                            var result = from Role in Donnees.m_donnees.TAB_ROLE
+                                         join Pion in Donnees.m_donnees.TAB_PION
+                                         on Role.ID_PION equals Pion.ID_PION
+                                         join Modele in Donnees.m_donnees.TAB_MODELE_PION
+                                         on Pion.ID_MODELE_PION equals Modele.ID_MODELE_PION
+                                         where (Modele.ID_NATION == nationControle)
+                                            && (Pion.B_DETRUIT == false)
+                                         select Pion.ID_PION;
+
+                            foreach (var pion in result)
+                            {
+                                //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
+                                Donnees.TAB_PIONRow lignePionLeader = Donnees.m_donnees.TAB_PION.FindByID_PION(pion);
+                                Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                                lignePionRapport.S_NOM = ligneNomCarte.S_NOM;
+                                lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                                lignePionRapport.I_INFANTERIE = 0;
+                                lignePionRapport.I_CAVALERIE = 0;
+                                lignePionRapport.I_ARTILLERIE = 0;
+
+                                //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
+                                lignePionRapport.DetruirePion();
+                                if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE))
+                                {
+                                    LogFile.Notifier("ControleDesVilles : erreur lors de l'envoi d'un message MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE");
+                                    Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+                                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                    Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+                                    return false;
+                                }
+                            }
+
+                            Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+                        }
+
+                        //la position change de camp
+                        ligneNomCarte.ID_NATION_CONTROLE = nationControle;
+                    }
                 }
             }
             LogFile.Notifier("Fin ControleDesVilles");

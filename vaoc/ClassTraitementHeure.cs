@@ -163,7 +163,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 100;//BEA, permet de tester une fin de bataille
+                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 90;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -2159,9 +2159,9 @@ namespace vaoc
 
                                 //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
                                 lignePionRapport.DetruirePion();
-                                if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE))
+                                if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_LIEU_POINT_DE_VICTOIRE))
                                 {
-                                    LogFile.Notifier("ControleDesVilles : erreur lors de l'envoi d'un message MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE");
+                                    LogFile.Notifier("ControleDesVilles : erreur lors de l'envoi d'un message MESSAGE_LIEU_POINT_DE_VICTOIRE");
                                     Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
                                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
@@ -3216,9 +3216,10 @@ namespace vaoc
                             lignePionRapport.I_CAVALERIE = iBlessesCavalerie;
                             lignePionRapport.I_ARTILLERIE = iBlessesArtillerie;
 
-                            //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités !
+                            //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités ! 
+                            // -> a priori pas le cas, si le pion est détruit avant envoi
                             lignePionRapport.DetruirePion();
-                            if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
+                            if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
                             {
                                 LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
                                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
@@ -3276,8 +3277,9 @@ namespace vaoc
                             lignePionRapport.I_ARTILLERIE = iPrisonniersArtillerie;
 
                             //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
+                            //-> a priori pas le cas, si le pion est détruit avant envoi
                             lignePionRapport.DetruirePion();
-                            if (!ClassMessager.EnvoyerMessageImmediat(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
+                            if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
                             {
                                 LogFile.Notifier("RapportDesPrisons : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_PRISON");
                                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);

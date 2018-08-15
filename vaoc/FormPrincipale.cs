@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using WaocLib;
@@ -182,6 +183,50 @@ namespace vaoc
 
         private void Correctifs()
         {
+            // Test - Il faut prévenir tous les "rôles" de l'ancienne nation que la ville change de camp
+            /*
+            Monitor.Enter(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+            var result = from Role in Donnees.m_donnees.TAB_ROLE
+                         join Pion in Donnees.m_donnees.TAB_PION
+                         on Role.ID_PION equals Pion.ID_PION
+                         join Modele in Donnees.m_donnees.TAB_MODELE_PION
+                         on Pion.ID_MODELE_PION equals Modele.ID_MODELE_PION
+                         where (Modele.ID_NATION == 1)
+                            && (Pion.B_DETRUIT == false)
+                         select Pion.ID_PION;
+
+            Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(211);
+            ligneNomCarte.I_VICTOIRE = 1;
+            ligneNomCarte.ID_NATION_CONTROLE = 0;
+            foreach (var pion in result)
+            {
+                //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
+                Donnees.TAB_PIONRow lignePionLeader = Donnees.m_donnees.TAB_PION.FindByID_PION(pion);
+                Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                lignePionRapport.S_NOM = ligneNomCarte.S_NOM;
+                lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                lignePionRapport.I_INFANTERIE = 0;
+                lignePionRapport.I_CAVALERIE = 0;
+                lignePionRapport.I_ARTILLERIE = 0;
+
+                //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
+                lignePionRapport.DetruirePion();
+                if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_LIEU_POINT_DE_VICTOIRE))
+                {
+                    LogFile.Notifier("ControleDesVilles : erreur lors de l'envoi d'un message MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE");
+                    Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+                }
+            }
+
+            Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
+            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
+            */
+
             #region mise à jour des tipes Depot/convoi sur les lignes vidéos
             /*
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)

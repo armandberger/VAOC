@@ -183,6 +183,11 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region tests
+            //ajout du mode forum pour les pions
+            //ClassVaocWebFichier test = new ClassVaocWebFichier("test.test", false);
+            //test.SauvegardeForum(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
             // Test - Il faut prévenir tous les "rôles" de l'ancienne nation que la ville change de camp
             /*
             Monitor.Enter(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
@@ -226,6 +231,7 @@ namespace vaoc
             Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
             */
+            #endregion
 
             #region mise à jour des tipes Depot/convoi sur les lignes vidéos
             /*

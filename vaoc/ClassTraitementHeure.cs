@@ -1296,8 +1296,9 @@ namespace vaoc
                         }
 
                         int ligneDepotTable = lignePionARenforcer.C_NIVEAU_DEPOT - 'A';
-                        int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
-                        lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
+                        //int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
+                        //lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
+                        lignePionARenforcer.I_SOLDATS_RAVITAILLES += lignePion.I_SOLDATS_RAVITAILLES;
                         Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait
@@ -1369,7 +1370,7 @@ namespace vaoc
 
                     //supprimer tous les ordres suivants (un dépôt ne peut pas recevoir d'ordre à part création de convoi, ce qui n'aurait pas de sens ici).
                     lignePion.SupprimerTousLesOrdres();
-                    lignePion.I_SOLDATS_RAVITAILLES = 0;
+                    //lignePion.I_SOLDATS_RAVITAILLES = 0; -> pour éviter de remettre à zéro un joueur qui ferait convoi -> dépôt -> convoi -> dépôt
                     lignePion.C_NIVEAU_DEPOT = 'D';
                     Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 

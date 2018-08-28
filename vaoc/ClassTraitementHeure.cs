@@ -3534,9 +3534,9 @@ namespace vaoc
 
             //modification d'après la météo courante
             diffatigue = -1;
-            int nbTrainardsInfanterie = lignePion.I_INFANTERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
-            int nbTrainardsCavalerie = lignePion.I_CAVALERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
-            int nbTrainardsArtillerie = lignePion.I_ARTILLERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100;
+            int nbTrainardsInfanterie = (int)Math.Round((decimal)lignePion.I_INFANTERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100);
+            int nbTrainardsCavalerie = (int)Math.Round((decimal)lignePion.I_CAVALERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100);
+            int nbTrainardsArtillerie = (int)Math.Round((decimal)lignePion.I_ARTILLERIE * lignePion.I_FATIGUE * ligneMeteo.I_POURCENT_RALLIEMENT / 100 / 100);
             if ((nbTrainardsInfanterie + nbTrainardsCavalerie) * 2 / 10 >= Constantes.CST_TAILLE_MINIMUM_UNITE || nbTrainardsArtillerie>5)
             {
                 //on constitue une unité de blessés/malades
@@ -3577,9 +3577,9 @@ namespace vaoc
                 nbArtilleriePerdus = nbTrainardsArtillerie * 1 / 10;
 
                 //s'il n'y a que de l'artillerie, l'unité ne doit jamais être fatigué donc pas de recup non plus ! -> si, fatigués comme les autres
-                recuperationFantassin = (nbTrainardsInfanterie > 0) ? Math.Max(1, nbTrainardsInfanterie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
-                recuperationCavalerie = (nbTrainardsCavalerie > 0) ? Math.Max(1, nbTrainardsCavalerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
-                recuperationArtillerie = (nbTrainardsArtillerie > 0) ? Math.Max(1, nbTrainardsArtillerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX) : 0;
+                recuperationFantassin = (nbTrainardsInfanterie > 0) ? Math.Max(1, (int)Math.Round((decimal)nbTrainardsInfanterie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX)) : 0;
+                recuperationCavalerie = (nbTrainardsCavalerie > 0) ? Math.Max(1, (int)Math.Round((decimal)nbTrainardsCavalerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX)) : 0;
+                recuperationArtillerie = (nbTrainardsArtillerie > 0) ? Math.Max(1, (int)Math.Round((decimal)nbTrainardsArtillerie * lignePion.I_MORAL * 9 / 10 / lignePion.I_MORAL_MAX)) : 0;
             }
 
             //on retire les blessés et perte des effectifs

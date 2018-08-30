@@ -3620,7 +3620,7 @@ namespace vaoc
                 //si l'ordre de mouvement n'est pas actif, le pion ne doit pas bouger
                 if (!lignePion.OrdreActif(ligneOrdre))
                 {
-                    lignePion.PlacerPionEnRoute(ligneOrdre, lignePion.nation);
+                    //lignePion.PlacerPionEnRoute(ligneOrdre, lignePion.nation); -> dejà fait dans le placement statique
                     return true;
                 }
 

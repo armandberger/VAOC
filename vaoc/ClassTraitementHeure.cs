@@ -2927,8 +2927,8 @@ namespace vaoc
                             ordre.I_TYPE.ToString()));
 
                         //et maintenant, un ordre de mouvement
-                        id_case_destination = lignePion.ID_CASE; //quand on donne un ordre à une unité, le messager sait où elle est
                         /*
+                        id_case_destination = lignePionDestination.ID_CASE; //quand on donne un ordre à une unité, le messager sait où elle est
                         compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION_DESTINATAIRE);
 
                         if (!ClassMessager.ZoneGeographiqueVersCase(lignePionMessager, ordre.I_DISTANCE_DESTINATAIRE, compas, ordre.ID_NOM_LIEU_DESTINATAIRE, out id_case_destination))

@@ -2726,8 +2726,10 @@ namespace vaoc
         private void AfficherUnites()
         {
             //on s'assure que toutes les cases des unités sont bien chargées
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            int i = 0;
+            while (i< Donnees.m_donnees.TAB_PION.Count()) 
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i++];
                 if (lignePion.B_DETRUIT)
                 { continue; }
 

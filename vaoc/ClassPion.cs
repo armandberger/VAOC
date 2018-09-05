@@ -4371,6 +4371,7 @@ namespace vaoc
             internal bool PlacerStatique()
             {
                 string messageErreur, message;
+                Donnees.TAB_NATIONRow ligneNation;
 
                 try
                 {
@@ -4379,10 +4380,10 @@ namespace vaoc
                     //if (!enMouvement /*estStatique*/)
                     if (null != ligneOrdre)
                     {
-                        Donnees.TAB_NATIONRow ligneNation = nation;
+                        ligneNation = nation;
                         if (null == ligneNation)
                         {
-                            message = string.Format("PlacerStatique :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", S_NOM, ID_PION);
+                            message = string.Format("PlacerStatique, ordre mouvement :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", S_NOM, ID_PION);
                             return LogFile.Notifier(message, out messageErreur);
                         }
 
@@ -4394,28 +4395,34 @@ namespace vaoc
                         }
                         else
                         {
-                            /**** -> on ne replace plus une unité en bivouac si son mouvement est inactif, avec du bol, ça va marcher juste avec ça !!!
-                            Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
-                            if (null != ligneOrdre && ligneOrdre.I_EFFECTIF_DEPART != lignePion.effectifTotalEnMouvement)
-                            {
-                                //unité avec des effectifs ayant comméncé un mouvement mais qui est ponctuellement statique car l'ordre de mouvement est hors des créneaux horaires
-                                if (!PlacerPionEnBivouac(lignePion, ligneOrdre, ligneNation)) { return false; }
-                            }
-                            *****/
-
-                            //if (!MessageEnnemiObserve(null)) { return false; } Pourquoi null ? Impossible de m'en rappeler !
-                            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
-                            if (!MessageEnnemiObserve(ligneCase)) { return false; }
-
-                            //placer l'unité sur la carte
-                            PlacementPion(ligneNation, true);
+                            message = string.Format("{0}(ID={1}, unité non statique)", S_NOM, ID_PION);
+                            return LogFile.Notifier(message, out messageErreur);
                         }
                     }
                     else
                     {
-                        message = string.Format("{0}(ID={1}, unité non statique)", S_NOM, ID_PION);
-                        return LogFile.Notifier(message, out messageErreur);
-                    }
+                        /**** -> on ne replace plus une unité en bivouac si son mouvement est inactif, avec du bol, ça va marcher juste avec ça !!!
+                        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                        if (null != ligneOrdre && ligneOrdre.I_EFFECTIF_DEPART != lignePion.effectifTotalEnMouvement)
+                        {
+                            //unité avec des effectifs ayant comméncé un mouvement mais qui est ponctuellement statique car l'ordre de mouvement est hors des créneaux horaires
+                            if (!PlacerPionEnBivouac(lignePion, ligneOrdre, ligneNation)) { return false; }
+                        }
+                        *****/
+
+                        //if (!MessageEnnemiObserve(null)) { return false; } Pourquoi null ? Impossible de m'en rappeler !
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                        if (!MessageEnnemiObserve(ligneCase)) { return false; }
+
+                        //placer l'unité sur la carte
+                        ligneNation = nation;
+                        if (null == ligneNation)
+                        {
+                            message = string.Format("PlacerStatique, sans ordre mouvement :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", S_NOM, ID_PION);
+                            return LogFile.Notifier(message, out messageErreur);
+                        }
+                        PlacementPion(ligneNation, true);
+                    }                    
                 }
                 catch (Exception ex)
                 {

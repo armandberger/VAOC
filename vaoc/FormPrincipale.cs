@@ -2781,6 +2781,18 @@ namespace vaoc
 
                 Donnees.m_donnees.TAB_BATAILLE_PIONS.Clear();
                 Donnees.m_donnees.TAB_BATAILLE_PIONS.Merge(fBatailles.tableBataillePions, false);
+                foreach(Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS)
+                {
+                    if (ligneBataillePion.IsB_ENGAGEENull()) { ligneBataillePion.B_ENGAGEE = false; }
+                    if (ligneBataillePion.IsB_ENGAGEMENTNull()) { ligneBataillePion.B_ENGAGEMENT = false; }
+                    if (ligneBataillePion.IsB_EN_DEFENSENull()) { ligneBataillePion.B_EN_DEFENSE = false; }
+                    if (ligneBataillePion.IsB_RETRAITENull()) { ligneBataillePion.B_RETRAITE = false; }
+                    if (ligneBataillePion.IsI_INFANTERIE_DEBUTNull()) { ligneBataillePion.I_INFANTERIE_DEBUT = 0; }
+                    if (ligneBataillePion.IsI_CAVALERIE_DEBUTNull()) { ligneBataillePion.I_CAVALERIE_DEBUT = 0; }
+                    if (ligneBataillePion.IsI_ARTILLERIE_DEBUTNull()) { ligneBataillePion.I_ARTILLERIE_DEBUT = 0; }
+                    if (ligneBataillePion.IsI_FATIGUE_DEBUTNull()) { ligneBataillePion.I_FATIGUE_DEBUT = 0; }
+                    if (ligneBataillePion.IsI_MORAL_DEBUTNull()) { ligneBataillePion.I_MORAL_DEBUT = 0; }
+                }
             }
         }
 

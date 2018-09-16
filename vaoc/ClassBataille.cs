@@ -48,8 +48,13 @@ namespace vaoc
                 string message, messageErreur;
                 bool bEnDefense;
 
+                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estDepot)
+                {
+                    return true;
+                }
                 //si l'unité est déjà dans un combat ou est en fuite ou n'a plus de moral, il ne faut pas l'ajouter
-                if (!uniteCreantLaBataille && (lignePion.estAuCombat || !lignePion.estCombattifQG(true, false)))// && 0==lignePion.effectifTotal) si on met la condition précédente, une unité en retraite devient elligible sur un combat
+                //if (!uniteCreantLaBataille && (lignePion.estAuCombat || !lignePion.estCombattifQG(true, false))), si on ajoute estCombattifQG, une unité sans matériel ou moral passe au travers les lignes sans problèmes !// && 0==lignePion.effectifTotal) si on met la condition précédente, une unité en retraite devient elligible sur un combat
+                if (!uniteCreantLaBataille && lignePion.estAuCombat)
                 {
                     return true;
                 }

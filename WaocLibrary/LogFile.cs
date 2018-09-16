@@ -36,7 +36,7 @@ namespace WaocLib
             //recopie de la chaine avant l'extension
             nomfichierTourPhase = nomFichier.Substring(0, positionPoint);
             //ajout du tour et de la phase
-            nomfichierTourPhase = string.Format("{0}_{1}Log_{002}_{003}.log", nomfichierTourPhase, suffixe, tour, phase);
+            nomfichierTourPhase = string.Format("{0}\\logs\\Log_{1}_{002}_{003}.log", Constantes.repertoireDonnees, suffixe, tour, phase);
 
             CreationLogFile(nomfichierTourPhase);
         }

@@ -3649,6 +3649,21 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             public bool RequisitionCase(Donnees.TAB_CASERow ligneCase, bool enMouvement, ref int nbplaces)
             {
+                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                {
+                    //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille, uniquement de jour
+                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+                    foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                    {
+                        if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
+                        if (ligneCase.I_X <= ligneBataille.I_X_CASE_BAS_DROITE && ligneCase.I_Y <= ligneBataille.I_Y_CASE_BAS_DROITE &&
+                            ligneCase.I_X >= ligneBataille.I_X_CASE_HAUT_GAUCHE && ligneCase.I_Y >= ligneBataille.I_Y_CASE_HAUT_GAUCHE)
+                        {
+                            ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
+                        }
+                    }
+                    Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
+                }
                 if (!ligneCase.EstOccupeeOuBloqueParEnnemi(this, enMouvement)/* || lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG || lignePion.estDepot*/)
                 {
                     //-> Maintenant c'est l'inverse, le calcul du cout de case étant fait avant la requisition
@@ -3667,22 +3682,6 @@ namespace vaoc
                     }
 
                     nbplaces++;
-                    if (estMessager || estPatrouille || estDepot /*|| lignePion.estConvoi || lignePion.estPontonnier*/) { return true; }
-                    //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille, uniquement de jour
-                    if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
-                    {
-                        Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
-                        foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
-                        {
-                            if (!ligneBataille.IsI_TOUR_FINNull()) { continue; } // la bataille est terminée
-                            if (ligneCase.I_X <= ligneBataille.I_X_CASE_BAS_DROITE && ligneCase.I_Y <= ligneBataille.I_Y_CASE_BAS_DROITE &&
-                                ligneCase.I_X >= ligneBataille.I_X_CASE_HAUT_GAUCHE && ligneCase.I_Y >= ligneBataille.I_Y_CASE_HAUT_GAUCHE)
-                            {
-                                ligneBataille.AjouterPionDansLaBataille(this, ligneCase);
-                            }
-                        }
-                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
-                    }
                 }
                 else
                 {
@@ -3716,8 +3715,10 @@ namespace vaoc
                 //une unité d'artillerie ne peut jamais, a elle seule, déclenchée une bataille
                 if (!estArtillerie && !lignePionEnnemi.estArtillerie)
                 {
-                    if ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
-                        || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false)))
+                    //si l'un des deux unités est déjà engagée en bataille, elle ne peut pas créer une nouvelle bataille
+                    if (!estAuCombat && !lignePionEnnemi.estAuCombat &&
+                        ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
+                        || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false))))
                     {
                         //unites combattantes standard, création d'une bataille
                         int IdProprietaire = ligneCase.ID_PROPRIETAIRE;

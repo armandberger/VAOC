@@ -345,6 +345,7 @@ namespace vaoc
             fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
             if (fVideoTable.ShowDialog() == DialogResult.OK)
             {
+                Donnees.m_donnees.TAB_VIDEO.Clear();
                 Donnees.m_donnees.TAB_VIDEO.Merge(fVideoTable.tableVideo.Copy(), false);
             }
         }
@@ -361,6 +362,7 @@ namespace vaoc
             fVideoTable.tableTravelling = Donnees.m_donnees.TAB_TRAVELLING;
             if (fVideoTable.ShowDialog() == DialogResult.OK)
             {
+                Donnees.m_donnees.TAB_TRAVELLING.Clear();
                 Donnees.m_donnees.TAB_TRAVELLING.Merge(fVideoTable.tableTravelling.Copy(), false);
             }
         }

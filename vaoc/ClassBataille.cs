@@ -1918,6 +1918,7 @@ namespace vaoc
                 {
                     if (lignePionEnBataille.estQG) { continue; }
                     if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != zoneDefenseur) { continue; }
+                    if (lignePionEnBataille.I_MORAL<=0) { continue; } //l'unité n'est déjà plus vraiment sur la zone...
                     lignePionEnBataille.I_MORAL -= pertesMoral;
 
                     decimal rapporDePerteUnite = (decimal)lignePionEnBataille.effectifTotal / effectifTotalDefenseur;
@@ -2349,6 +2350,12 @@ namespace vaoc
                 bool[] unitesCombattiveHorsArtillerie= new bool[6];
                 //int iPertesInfanterie, iPertesCavalerie, iPertesArtillerie;
 
+                if (lignePionFuite.I_MORAL<=0)
+                {
+                    //l'unité a déjà fuit, elle ne va pas fuir deux fois !
+                    lignePionFuite.I_MORAL = 0;
+                    return true;
+                }
                 Donnees.TAB_BATAILLE_PIONSRow ligneBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePionFuite.ID_PION, ID_BATAILLE);
                 if (null == ligneBataillePions)
                 {

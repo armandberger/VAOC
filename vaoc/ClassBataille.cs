@@ -1468,16 +1468,22 @@ namespace vaoc
                 foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille012)
                 {
                     int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
-                    message = string.Format("EffectuerBataille unité en 012, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
-                    LogFile.Notifier(message, out messageErreur);
-                    lignePion.I_NB_HEURES_COMBAT++;
+                    if (lignePion.estCombattif && iZoneBataille>=0)
+                    {
+                        message = string.Format("EffectuerBataille unité en 012, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
+                        LogFile.Notifier(message, out messageErreur);
+                        lignePion.I_NB_HEURES_COMBAT++;
+                    }
                 }
                 foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille345)
                 {
                     int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
-                    message = string.Format("EffectuerBataille unité en 345, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
-                    LogFile.Notifier(message, out messageErreur);
-                    lignePion.I_NB_HEURES_COMBAT++;
+                    if (lignePion.estCombattif && iZoneBataille >= 0)
+                    {
+                        message = string.Format("EffectuerBataille unité en 345, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
+                        LogFile.Notifier(message, out messageErreur);
+                        lignePion.I_NB_HEURES_COMBAT++;
+                    }
                 }
 
                 //calcul du modificateur strategique

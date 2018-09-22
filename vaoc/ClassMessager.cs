@@ -25,7 +25,7 @@ namespace vaoc
     }
 
     public class ClassMessager
-    {
+    {     
         #region constantes
         public enum COMPAS { CST_NORD = 0, CST_NORD_OUEST = 1, CST_OUEST = 2 , CST_SUD_OUEST = 3, CST_SUD = 4, CST_SUD_EST = 5, CST_EST = 6, CST_NORD_EST = 7 , CST_INDETERMINE = 8};
         private static string[] lieuxMasculins= { "pont","carrefour", "chemin","fleuve" };
@@ -1123,62 +1123,62 @@ namespace vaoc
 
         public static bool EnvoyerMessageImmediat(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, string message="")
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, -1, 0, 0, string.Empty, true, message);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, -1, 0, 0, string.Empty, true, message, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDestruction, ClassMessager.MESSAGES typeMessage)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, ligneCaseDestruction, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, ligneCaseDestruction, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, ClassMessager.MESSAGES typeMessage)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, ligneModeleTerrainDestination, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, ligneModeleTerrainDestination, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int moralPerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int moralPerduOuGagne, int fatiguePerduOuGagne)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, fatiguePerduOuGagne, null, null, null, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, fatiguePerduOuGagne, null, null, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, Donnees.TAB_BATAILLERow ligneBataille)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
-        public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, Donnees.TAB_BATAILLERow ligneBataille)
+        public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, Donnees.TAB_BATAILLERow ligneBataille, List<Donnees.TAB_PIONRow> lignePionsEnBataille)
         {
-            return EnvoyerMessage(lignePion, typeMessage, iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, ravitaillementGagneOuPerdu, materielGagneOuPerdu, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, ravitaillementGagneOuPerdu, materielGagneOuPerdu, string.Empty, false, string.Empty, lignePionsEnBataille);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, Donnees.TAB_PIONRow lignePionCible, ClassMessager.MESSAGES typeMessage)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, lignePionCible, null, null, -1, 0, 0, string.Empty, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, lignePionCible, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, decimal distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, ClassMessager.MESSAGES typeMessage)
         {
-            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, distanceRavitaillement, ravitaillementGagneOuPerdu, materielGagneOuPerdu, depotRavitaillement, false);
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, null, distanceRavitaillement, ravitaillementGagneOuPerdu, materielGagneOuPerdu, depotRavitaillement, false, string.Empty, null);
         }
 
-        public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, decimal distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, bool bImmediat, string message="")
+        public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, decimal distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, bool bImmediat, string message, List<Donnees.TAB_PIONRow> lignePionsEnBataille)
         {
             Donnees.TAB_PIONRow lignePionLeader = null;
             string phrase;
 
             if (string.Empty == message)
             {
-                phrase = GenererPhrase(lignePion, typeMessage, iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne, moralPerduOuGagne, fatiguePerduOuGagne, ligneBataille, lignePionCible, ligneCaseDestination, ligneModeleTerrainDestination, (int)distanceRavitaillement, ravitaillementGagneOuPerdu, materielGagneOuPerdu, depotRavitaillement);
+                phrase = GenererPhrase(lignePion, typeMessage, iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne, moralPerduOuGagne, fatiguePerduOuGagne, ligneBataille, lignePionCible, ligneCaseDestination, ligneModeleTerrainDestination, (int)distanceRavitaillement, ravitaillementGagneOuPerdu, materielGagneOuPerdu, depotRavitaillement, lignePionsEnBataille);
                 if (string.Empty == phrase)
                 {
                     LogFile.Notifier(string.Format("Phrase vide pour le message de type {0} envoyé par pion ID={1}", typeMessage, lignePion.ID_PION));
@@ -1618,7 +1618,7 @@ namespace vaoc
             return lignePionMessager;
         }
 
-        public static string GenererPhrase(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, int distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement)
+        public static string GenererPhrase(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, int distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, List<Donnees.TAB_PIONRow> lignePionsEnBataille)
         {
             string phraseFormat = Donnees.m_donnees.TAB_PHRASE.DonneUnePhrase(typeMessage);
             string phrase = string.Empty;
@@ -1726,8 +1726,15 @@ namespace vaoc
             CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);
             NomDuSuperieur(lignePion, out nomDuSuperieur);
-            PionsAttaquants(lignePion, out unitesAttaquantes, out nationsAttaquantes);
-            
+            if (null== lignePionsEnBataille)
+            {
+                PionsAttaquants(lignePion, out unitesAttaquantes, out nationsAttaquantes);
+            }
+            else
+            {
+                PhrasesPionsNations(lignePionsEnBataille, out unitesAttaquantes, out nationsAttaquantes);
+            }
+
             PionsEnvironnants(lignePion, typeMessage, ligneCaseDestination, out unitesEnvironnantes, out bEnDanger);
             Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);//ID_PION_PROPRIETAIRE
             if (null != ligneOrdreCourant)
@@ -2603,9 +2610,8 @@ namespace vaoc
             int[] canons = new int[6];
             int nbUnites;
             bool bZone012;
-            Donnees.TAB_PIONRow[] lignePionsEnBataille012;
+            Donnees.TAB_PIONRow[] lignePionsEnBataille;
             Collection<int> liste_nations;
-            int i;
 
             liste_nations = new Collection<int>();
             unitesAttaquantes = "aucune unité attaquante";
@@ -2630,52 +2636,61 @@ namespace vaoc
             {
                 bZone012 = true;
             }
-            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out nbUnites, ref des, ref effectifs, ref canons, out lignePionsEnBataille012, true/*bEngagement*/, false/*bCombattif*/, true/*QG*/))
+            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out nbUnites, ref des, ref effectifs, ref canons, out lignePionsEnBataille, true/*bEngagement*/, false/*bCombattif*/, true/*QG*/))
             {
                 return false;
             }
 
-            unitesAttaquantes = string.Empty;
-            for(i=0; i<lignePionsEnBataille012.Length; i++)
+            List<Donnees.TAB_PIONRow> listePionsEnBataille = new List<Donnees.TAB_PIONRow>();
+            foreach(Donnees.TAB_PIONRow lignePionListe in lignePionsEnBataille) { listePionsEnBataille.Add(lignePionListe); }
+            PhrasesPionsNations(listePionsEnBataille, out unitesAttaquantes, out nationsAttaquantes);
+
+            return true;
+        }
+
+        public static void PhrasesPionsNations(List<Donnees.TAB_PIONRow> lignePions, out string unites, out string nations)
+        {
+            Collection<int> liste_nations = new Collection<int>();
+            unites = string.Empty;
+            for (int i = 0; i < lignePions.Count; i++)
             {
-                Donnees.TAB_PIONRow lignePionEnnemi =lignePionsEnBataille012[i];
-                if (unitesAttaquantes != string.Empty)
+                Donnees.TAB_PIONRow lignePion = lignePions[i];
+                if (unites != string.Empty)
                 {
-                    if (i == lignePionsEnBataille012.Length-1)
+                    if (i == lignePions.Count - 1)
                     {
-                        unitesAttaquantes+=" et ";
+                        unites += " et ";
                     }
                     else
                     {
-                        unitesAttaquantes+=", ";
+                        unites += ", ";
                     }
                 }
-                unitesAttaquantes+=lignePionEnnemi.S_NOM;
-                Donnees.TAB_MODELE_PIONRow ligneModelePionEnnemi = lignePionEnnemi.modelePion;
+                unites += lignePion.S_NOM;
+                Donnees.TAB_MODELE_PIONRow ligneModelePionEnnemi = lignePion.modelePion;
                 if (!liste_nations.Contains(ligneModelePionEnnemi.ID_NATION))
                 {
                     liste_nations.Add(ligneModelePionEnnemi.ID_NATION);
                 }
             }
 
-            nationsAttaquantes = string.Empty;
-            for (i = 0; i < liste_nations.Count; i++)
+            nations = string.Empty;
+            for (int i = 0; i < liste_nations.Count; i++)
             {
                 Donnees.TAB_NATIONRow ligneNation = Donnees.m_donnees.TAB_NATION.FindByID_NATION(liste_nations[i]);
-                if (nationsAttaquantes != string.Empty)
+                if (nations != string.Empty)
                 {
                     if (i == liste_nations.Count - 1)
                     {
-                        nationsAttaquantes += " et ";
+                        nations += " et ";
                     }
                     else
                     {
-                        nationsAttaquantes += ", ";
+                        nations += ", ";
                     }
                 }
-                nationsAttaquantes += ligneNation.S_NOM;
+                nations += ligneNation.S_NOM;
             }
-            return true;
-        }
+        }    
     }
 }

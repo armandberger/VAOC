@@ -3397,7 +3397,8 @@ namespace vaoc
                     -1, //distanceravitaillement
                     0, //ravitaillementGagneOuPerdu,
                     0, //materielGagneOuPerdu
-                    string.Empty //depotravitaillement
+                    string.Empty, //depotravitaillement
+                    null//poins en bataille
                     );
 
                 if (string.Empty == phrase)

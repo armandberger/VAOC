@@ -2239,7 +2239,7 @@ namespace vaoc
                 {
                     //message immédiat à tous les autres rôles amis
                     string phrase;
-                    phrase = ClassMessager.GenererPhrase(lignePionSourceMessage, typeMessage, 0, 0, 0, 0, 0, null, lignePionRole, null, null, 0, 0, 0, string.Empty);
+                    phrase = ClassMessager.GenererPhrase(lignePionSourceMessage, typeMessage, 0, 0, 0, 0, 0, null, lignePionRole, null, null, 0, 0, 0, string.Empty, null);
                     if (!ClassMessager.EnvoyerMessage(lignePionSourceMessage, lignePionRole, typeMessage, phrase, true))
                     {
                         return false;
@@ -2248,7 +2248,7 @@ namespace vaoc
                     //message de tous les autres rôles pour prévenir de leur position à ce nouveau leader
                     if (bMessageInverse)
                     {
-                        phrase = ClassMessager.GenererPhrase(lignePionRole, ClassMessager.MESSAGES.MESSAGE_POSITION, 0, 0, 0, 0, 0, null, lignePionSourceMessage, null, null, 0, 0, 0, string.Empty);
+                        phrase = ClassMessager.GenererPhrase(lignePionRole, ClassMessager.MESSAGES.MESSAGE_POSITION, 0, 0, 0, 0, 0, null, lignePionSourceMessage, null, null, 0, 0, 0, string.Empty, null);
                         if (!ClassMessager.EnvoyerMessage(lignePionRole, lignePionSourceMessage, ClassMessager.MESSAGES.MESSAGE_POSITION, phrase, true))
                         {
                             return false;

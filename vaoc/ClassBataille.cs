@@ -807,7 +807,7 @@ namespace vaoc
                 //il faut repartir les pertes sur le poursuivant suivant l'ordre suivant :
                 //pion avec cavalerie, moral le moins élevé
                 var result = from pionsPoursuivi in lignePionsPoursuivi.AsEnumerable()
-                             orderby pionsPoursuivi.I_CAVALERIE, pionsPoursuivi.Moral
+                             orderby pionsPoursuivi.I_CAVALERIE descending, pionsPoursuivi.Moral descending
                              select pionsPoursuivi.ID_PION;
 
                 //les unités affectées par la poursuite perdent également leur équipement en proportion du pourcentage de pertes en poursuite
@@ -1054,7 +1054,7 @@ namespace vaoc
                     {
                         if (lignePion.B_DETRUIT) { continue; }
                         //note : on ne donne pas le moral perdu par l'ennemi, comment pourrait-il l'estimer ?
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_DESTRUCTION_TOTALE, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this))
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_DESTRUCTION_TOTALE, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this, null))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_DESTRUCTION_TOTALE");
                             LogFile.Notifier(message, out messageErreur);
@@ -1075,7 +1075,7 @@ namespace vaoc
                     {
                         if (lignePion.B_DETRUIT) { continue; }
                         //note : on ne donne pas le moral perdu par l'ennemi, comment pourrait-il l'estimer ?
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVANT, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this))
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVANT, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this, null))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
                             LogFile.Notifier(message, out messageErreur);
@@ -1105,7 +1105,7 @@ namespace vaoc
                         else
                         {
                             if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVI,
-                                pertesInfanteriePion, pertesCavaleriePion, pertesArtilleriePion, pertesMoralPion, pertesMaterielPion, pertesRavitaillementPion, this))
+                                pertesInfanteriePion, pertesCavaleriePion, pertesArtilleriePion, pertesMoralPion, pertesMaterielPion, pertesRavitaillementPion, this, null))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVI");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1165,7 +1165,7 @@ namespace vaoc
                                 lignePion.ID_PION, lignePion.S_NOM, materielButin, lignePion.I_MATERIEL, ravitaillementButin, lignePion.I_RAVITAILLEMENT, canonsButin, lignePion.I_ARTILLERIE);
 
                             //envoi d'un message pour prévenir de la prise de butin
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, this))
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, this, null))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1915,16 +1915,33 @@ namespace vaoc
                 string message, messageErreur;
                 int pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal;
                 int pertesInfanterie, pertesCavalerie, pertesArtillerie;
+                List<Donnees.TAB_PIONRow> listePionsEnBatailleAttaquant = new List<TAB_PIONRow>();
+                List<Donnees.TAB_PIONRow> listePionsEnBatailleDefenseur = new List<TAB_PIONRow>();
 
                 pertesInfanterieTotal = pertesCavalerieTotal = pertesArtillerieTotal = 0;
 
-                //pertes infligés à l'ennemi, en % du global
-                int effectifTotalDefenseur = EffectifTotalSurZone(zoneDefenseur, lignePionsEnBatailleDefenseur, false /*bCombatif*/);
+                //on reprend les unités qui ont vraiment participées au combat
                 foreach (Donnees.TAB_PIONRow lignePionEnBataille in lignePionsEnBatailleDefenseur)
                 {
                     if (lignePionEnBataille.estQG) { continue; }
                     if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != zoneDefenseur) { continue; }
-                    if (lignePionEnBataille.I_MORAL<=0) { continue; } //l'unité n'est déjà plus vraiment sur la zone...
+                    if (lignePionEnBataille.I_MORAL <= 0) { continue; } //l'unité n'est déjà plus vraiment sur la zone...
+
+                    listePionsEnBatailleDefenseur.Add(lignePionEnBataille);
+                }
+
+                foreach (Donnees.TAB_PIONRow lignePionEnBataille in lignePionsEnBatailleAttaquant)
+                {
+                    if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.I_TOUR_FUITE_RESTANT > 0 || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT > 0) { continue; }
+                    if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != zoneAttaquant) { continue; }
+
+                    listePionsEnBatailleAttaquant.Add(lignePionEnBataille);
+                }
+
+                //pertes infligés à l'ennemi, en % du global
+                int effectifTotalDefenseur = EffectifTotalSurZone(zoneDefenseur, lignePionsEnBatailleDefenseur, false /*bCombatif*/);
+                foreach (Donnees.TAB_PIONRow lignePionEnBataille in listePionsEnBatailleDefenseur)
+                {
                     lignePionEnBataille.I_MORAL -= pertesMoral;
 
                     decimal rapporDePerteUnite = (decimal)lignePionEnBataille.effectifTotal / effectifTotalDefenseur;
@@ -1972,7 +1989,8 @@ namespace vaoc
                     {
                         if (pertesMoral > 0)
                         {
-                            if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_PERTES_AU_COMBAT, pertesInfanterie, pertesCavalerie, pertesArtillerie, pertesMoral, 0, 0, this))
+                            if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_PERTES_AU_COMBAT, 
+                                                            pertesInfanterie, pertesCavalerie, pertesArtillerie, pertesMoral, 0, 0, this, listePionsEnBatailleAttaquant))
                             {
                                 message = string.Format("CalculDesPertesAuCombat : erreur lors de l'envoi d'un message pour perte de moral au combat");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1983,12 +2001,11 @@ namespace vaoc
                 }
 
                 //message indiquant le niveau de pertes infligé à l'ennemi
-                foreach (Donnees.TAB_PIONRow lignePionEnBataille in lignePionsEnBatailleAttaquant)
+                foreach (Donnees.TAB_PIONRow lignePionEnBataille in listePionsEnBatailleAttaquant)
                 {
-                    if (lignePionEnBataille.B_DETRUIT || lignePionEnBataille.I_TOUR_FUITE_RESTANT > 0 || lignePionEnBataille.I_TOUR_RETRAITE_RESTANT > 0) { continue; }
-                    if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != zoneAttaquant) { continue; }
-
-                    if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_TIR_SUR_ENNEMI, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, pertesMoral, 0, 0, this))
+                    if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_TIR_SUR_ENNEMI, 
+                                                        pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 
+                                                        pertesMoral, 0, 0, this, listePionsEnBatailleDefenseur))
                     {
                         message = string.Format("CalculDesPertesAuCombat : erreur lors de l'envoi d'un message pour tir sur l'ennemi");
                         LogFile.Notifier(message, out messageErreur);
@@ -2430,7 +2447,8 @@ namespace vaoc
                     if (!ClassMessager.EnvoyerMessage(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_AU_COMBAT,
                             ligneBataillePions.I_INFANTERIE_DEBUT - ligneBataillePions.I_INFANTERIE_FIN,
                             ligneBataillePions.I_CAVALERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN,
-                            ligneBataillePions.I_ARTILLERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN, Constantes.CST_PERTE_MORAL_FUITE, 0, 0, this))
+                            ligneBataillePions.I_ARTILLERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN, 
+                            Constantes.CST_PERTE_MORAL_FUITE, 0, 0, this, null))
                     {
                         message = string.Format("FuiteAuCombat : erreur lors de l'envoi d'un message pour fuite au combat");
                         LogFile.Notifier(message, out messageErreur);
@@ -2552,7 +2570,7 @@ namespace vaoc
                     ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN,
                     ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN,
                     ligneBataillePion.I_ARTILLERIE_DEBUT - ligneBataillePion.I_ARTILLERIE_FIN,
-                    ligneBataillePion.I_MORAL_DEBUT - ligneBataillePion.I_MORAL_FIN, 0, 0, this))
+                    ligneBataillePion.I_MORAL_DEBUT - ligneBataillePion.I_MORAL_FIN, 0, 0, this, null))
                 {
                     message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message MESSAGE_PERTES_AU_COMBAT");
                     LogFile.Notifier(message);
@@ -2572,7 +2590,8 @@ namespace vaoc
                         {
                             lignePion.I_INFANTERIE += infanterieRetour;
                             lignePion.I_CAVALERIE += cavalerieRetour;
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.SOINS_APRES_BATAILLE, infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this))
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.SOINS_APRES_BATAILLE, 
+                                                              infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this, null))
                             {
                                 message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message SOINS_APRES_BATAILLE");
                                 LogFile.Notifier(message);

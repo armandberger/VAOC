@@ -750,7 +750,7 @@ namespace vaoc
                 message = string.Format("Poursuite : rapport={0} modifRapport={1}", rapport, modifRapport);
                 LogFile.Notifier(message);
 
-                de = Constantes.JetDeDes(1) + modifRapport - 2;
+                de = Constantes.JetDeDes(1) + modifRapport -1;
                 if (de < 0) de = 0;
                 if (de > 9) de = 9;
 

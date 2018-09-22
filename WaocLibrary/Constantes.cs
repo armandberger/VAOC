@@ -189,8 +189,9 @@ namespace WaocLib
         {50000, 40000, 30000, 20000};
 
         //première colonne jet de dé, deuxième moral (le tout est modifié par le rapport)
-        public static int[,] tablePoursuite = new int[10, 4] 
-        {   { 0, 2, 4, 6}, 
+        public static int[,] tablePoursuite = new int[11, 4] 
+        {   { 0, 0, 0, 0},
+            { 0, 2, 4, 6}, 
             { 2, 4, 6, 8},
             { 4, 6, 8,10}, 
             { 6, 8,10,12}, 

@@ -3317,6 +3317,7 @@ namespace vaoc
                     // les depôt de niveau A ne sont pas réduits,mais il faut une semaine entre le dernier ravitaillement
                     // pour revenir au niveau 0
                     ligneDepot.I_SOLDATS_RAVITAILLES = 0;
+                    ligneDepot.SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull();
                 }
 
                 //Le dépôt est-il épuisé ?

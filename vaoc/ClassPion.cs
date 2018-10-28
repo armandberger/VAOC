@@ -1029,8 +1029,33 @@ namespace vaoc
                 string message;
 
                 if (null == ligneOrdre) { return false; }
-
-                //on vérifie si l'on est bien dans le créneau horaire souhaité
+                //s'il n'y a pas d'heure définie c'est que l'unité bouge tout le temps (messager par exemple)
+                if (ligneOrdre.IsI_HEURE_DEBUTNull() || ligneOrdre.I_DUREE >=24 || 0== ligneOrdre.I_DUREE) { return true; }
+                if (ligneOrdre.I_HEURE_DEBUT > (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE)%24)
+                {
+                    //l'ordre depasse minuit
+                    if ((ligneOrdre.I_HEURE_DEBUT <= Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 24) &&
+                        (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE > Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 24))
+                    { return true; }
+                }
+                else
+                {
+                    if (ligneOrdre.I_HEURE_DEBUT <= Donnees.m_donnees.TAB_PARTIE.HeureCourante() &&
+                        (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE > Donnees.m_donnees.TAB_PARTIE.HeureCourante()))
+                    { return true; }
+                }
+                message = string.Format("{0}(ID={1}, cas 2, l'ordre ID={2} doit être executé de {3} jusqu'à ({4}+{5} modulo 24={6}, et il est {7})",
+                    S_NOM,
+                    ID_PION,
+                    ligneOrdre.ID_ORDRE,
+                    ligneOrdre.I_HEURE_DEBUT,
+                    ligneOrdre.I_HEURE_DEBUT,
+                    ligneOrdre.I_DUREE,
+                    (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE) % 24,
+                    Donnees.m_donnees.TAB_PARTIE.HeureCourante());
+                LogFile.Notifier(message);
+                return false;
+                /*
                 //s'il n'y a pas d'heure définie c'est que l'unité bouge tout le temps (messager par exemple)
                 if (!ligneOrdre.IsI_HEURE_DEBUTNull() && ligneOrdre.I_DUREE > 0)
                 {
@@ -1083,6 +1108,7 @@ namespace vaoc
                     }
                 }
                 return true;
+                */
             }
 
             /// <summary>

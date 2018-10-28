@@ -215,7 +215,7 @@ namespace vaoc
                         }
                     }
                     string libelleFatigue, libelleMoral, /*libelleMoralMax, */LibelleMateriel, LibelleRavitaillement;
-                    if (lignePion.estQG || lignePion.estConvoi || lignePion.estDepot)
+                    if (lignePion.estQG || lignePion.estConvoi || lignePion.estDepot || lignePion.estArtillerie || lignePion.estPontonnier)
                     {
                         libelleFatigue = "N/A";
                         libelleMoral = "N/A ";
@@ -224,25 +224,39 @@ namespace vaoc
                     }
                     else
                     {
-                        libelleFatigue = iFatigue.ToString();
-                        if (lignePion.estArtillerie)
+                        if (100 == iFatigue)
                         {
-                            //Les unités d'artillerie n'ont pas de matériel ou de ravitaillement
-                            libelleMoral = "N/A ";
-                            LibelleMateriel = "N/A";
-                            LibelleRavitaillement = "N/A";
+                            libelleFatigue = "<div style='color:red; font-weight: bold;'>" + iFatigue.ToString()+"</div>";
                         }
                         else
                         {
-                            //libelleFatigue = Constantes.LibelleFatigue(iFatigue);
-                            //libelleMoral = Constantes.LibelleMoral(iMoral);
-                            //libelleMoralMax = Constantes.LibelleMoral(iMoralMax);
-                            //LibelleMateriel = Constantes.LibelleMaterielRavitaillement(iMateriel);
-                            //LibelleRavitaillement = Constantes.LibelleMaterielRavitaillement(iRavitaillement);
-                            libelleMoral = iMoral.ToString() + "/" + iMoralMax.ToString();
-                            LibelleMateriel = iMateriel.ToString();
-                            LibelleRavitaillement = iRavitaillement.ToString();
+                            libelleFatigue = (iFatigue > 90) ? "<div style='font-weight: bold;'>" + iFatigue.ToString() + "</div>" : iFatigue.ToString();
                         }
+                        if (0 == iMateriel)
+                        {
+                            LibelleMateriel = "<div style='color:red; font-weight: bold;'>" + iMateriel.ToString() + "</div>";
+                        }
+                        else
+                        {
+                            LibelleMateriel = (iMateriel < 10) ? "<div style='font-weight: bold;'>" + iMateriel.ToString() + "</div>" : iMateriel.ToString();
+                        }
+                        if (0 == iRavitaillement)
+                        {
+                            LibelleRavitaillement = "<div style='color:red; font-weight: bold;'>" + iRavitaillement.ToString() + "</div>";
+                        }
+                        else
+                        {
+                            LibelleRavitaillement = (iRavitaillement < 10) ? "<div style='font-weight: bold;'>" + iRavitaillement.ToString() + "</div>" : iRavitaillement.ToString();
+                        }
+                        if (0 == iMoral)
+                        {
+                            libelleMoral = "<div style='color:red; font-weight: bold;'>" + iMoral.ToString() + "</div>";
+                        }
+                        else
+                        {
+                            libelleMoral = (iMoral < 10) ? "<div style='font-weight: bold;'>" + iMoral.ToString() + "</div>" : iMoral.ToString();
+                        }
+                        libelleMoral += "/" + iMoralMax.ToString();
                     }
 
                     //string test1 = string.Format("{0,50}",

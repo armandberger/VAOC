@@ -1589,8 +1589,12 @@ namespace vaoc
                 int phaseDebut = (tour == tourDebut) ? phase : 0;
                 string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT>={1} AND I_PHASE_DEBUT>={2} AND I_ORDRE_TYPE={3}",
                                                 this.ID_PION, tourDebut, phaseDebut, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
-                Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
-                return (resOrdre.Count()>0);
+                Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
+                if (resOrdre.Count() > 0)
+                {
+                    if (tour - resOrdre[0].I_TOUR_DEBUT<=24) { return true; }//l'ordre n'est valable que 24 heures
+                }
+                return false;
             }
 
             internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase)

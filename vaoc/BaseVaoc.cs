@@ -1695,9 +1695,9 @@ namespace vaoc
             /// Renvoie l'heure courante sur une base 0-23
             /// </summary>
             /// <returns>heure en cours</returns>
-            public int HeureBase(int heure)
+            public int HeureBase(int tour)
             {
-                return (m_donnees.TAB_JEU[0].I_HEURE_INITIALE + heure) % 24;
+                return (m_donnees.TAB_JEU[0].I_HEURE_INITIALE + tour) % 24;
             }
 
             /// <summary>

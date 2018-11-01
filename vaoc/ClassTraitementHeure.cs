@@ -1515,13 +1515,21 @@ namespace vaoc
                     }
                     else
                     {
-                        //on envoie un message pour indiquer que l'unité est bien ravitaillée
-                        if (!ClassMessager.EnvoyerMessage(lignePion, distanceRavitaillement, lignePion.I_RAVITAILLEMENT - ravitaillementInitial,
-                                lignePion.I_MATERIEL - materielInitial, depotRavitaillement, ClassMessager.MESSAGES.MESSAGE_RECU_RAVITAILLEMENT))
+                        if (distanceRavitaillement<0)
                         {
-                            message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RECU_RAVITAILLEMENT dans Ravitaillement", lignePion.S_NOM, lignePion.ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
+                            //l'unité est bien en liaison avec un dépôt mais comme elle a bougé, elle ne reçoit pas de ravitaillement
+                            //un message MESSAGE_BILAN_ACTION est déjà envoyé dans FatigueEtRepos()
+                        }
+                        else
+                        {
+                            //on envoie un message pour indiquer que l'unité est bien ravitaillée
+                            if (!ClassMessager.EnvoyerMessage(lignePion, distanceRavitaillement, lignePion.I_RAVITAILLEMENT - ravitaillementInitial,
+                                    lignePion.I_MATERIEL - materielInitial, depotRavitaillement, ClassMessager.MESSAGES.MESSAGE_RECU_RAVITAILLEMENT))
+                            {
+                                message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RECU_RAVITAILLEMENT dans Ravitaillement", lignePion.S_NOM, lignePion.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
                         }
                     }
                 }

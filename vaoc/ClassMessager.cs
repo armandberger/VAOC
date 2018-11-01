@@ -142,7 +142,7 @@ namespace vaoc
             //l'unité vient de retrouver un ravitaillement
             // ex: Très bonne nouvelle, je suis dorénavant ravitaillé par le {31} situé à une distance de {30} kilomètres de notre position. Nos besaces se remplissent à nouveau.
             MESSAGE_REDITION_POUR_RAVITAILLEMENT = 42,
-            //l'unité se rend par manque de ravitaillement
+            //l'unité se rend par manque de ravitaillement -> non utilisé pour l'instant, l'unité n'est simplement pas combattive comme avez zéro de moral
             //ex : Affamés, sans munition et desespérés, mon unité s'est rendu en proie à une désagrégation complète. A {0}, la {1} n'est plus.
             MESSAGE_EST_CAPTURE = 43,
             //l'unité a été capturé par une autre (cas d'un dépôt au contact avec une unité ennemie).

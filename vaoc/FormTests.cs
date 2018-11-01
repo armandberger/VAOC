@@ -135,6 +135,8 @@ namespace vaoc
         {
             textBoxResultat.Text = string.Empty;
 
+            Cursor oldCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
@@ -147,6 +149,7 @@ namespace vaoc
                     ligneCase.I_Y,
                     ligneNomCarte.I_VICTOIRE);
             }
+            Cursor.Current = oldCursor;
         }
 
         /// <summary>
@@ -158,7 +161,9 @@ namespace vaoc
         private void buttonMessageTexteFictif_Click(object sender, EventArgs e)
         {
             string nomZoneGeographique;
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE[0];
+            Cursor oldCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(0);
 
             ClassMessager.CaseVersZoneGeographique(ligneCase.ID_CASE, out nomZoneGeographique);
 
@@ -204,6 +209,7 @@ namespace vaoc
 "<37:Général Bidon>"
             }
                         );
+            Cursor.Current = oldCursor;
         }
 
         /// <summary>
@@ -214,6 +220,8 @@ namespace vaoc
             Donnees.TAB_NOMS_CARTERow[] liste;
             bool bPremier;
             textBoxResultat.Text = string.Empty;
+            Cursor oldCursor = Cursor.Current;
+            Cursor.Current = Cursors.WaitCursor;
 
             textBoxResultat.Text += string.Format("Hôpitaux :\r\n");
             bPremier = true;
@@ -244,6 +252,7 @@ namespace vaoc
                 textBoxResultat.Text += ligneNomCarte.S_NOM;
             }
             textBoxResultat.Text += ".";
+            Cursor.Current = oldCursor;
         }
     }
 }

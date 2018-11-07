@@ -48,7 +48,7 @@ namespace vaoc
                 string message, messageErreur;
                 bool bEnDefense;
 
-                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estDepot)
+                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estDepot || lignePion.estBlesses || lignePion.estConvoi || lignePion.estPrisonniers)
                 {
                     return true;
                 }

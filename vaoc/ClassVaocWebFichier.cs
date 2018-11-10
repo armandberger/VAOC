@@ -657,23 +657,27 @@ namespace vaoc
         public void SauvegardeNomsCarte(int idPartie)
         {
             string requete;
-
+            StringBuilder listeRequete = new StringBuilder();
             //on reconstitue systématiquement tous les noms
             requete = string.Format("delete from tab_vaoc_noms_carte WHERE ID_PARTIE={0};",
                                     idPartie);
             AjouterLigne(requete);
 
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
+            requete = "INSERT INTO `tab_vaoc_noms_carte` (`ID_NOM`, `ID_PARTIE`, `S_NOM`, `I_X`, `I_Y`, `B_PONT`) VALUES ";
+            AjouterLigne(requete);
+            for (int i=0; i < Donnees.m_donnees.TAB_NOMS_CARTE.Count(); i++)
             {
+                Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE[i];
                 int bPont = (ligneNom.B_PONT) ? 1 : 0;
                 string nomCarte = (ligneNom.IsS_NOM_INDEXNull() || ligneNom.S_NOM_INDEX == string.Empty) ? ligneNom.S_NOM : ligneNom.S_NOM_INDEX;
-                requete = string.Format("INSERT INTO `tab_vaoc_noms_carte` (`ID_NOM`, `ID_PARTIE`, `S_NOM`, `I_X`, `I_Y`, `B_PONT`) VALUES ({0}, {1}, '{2}', {3}, {4}, {5});",
+                requete = string.Format("({0}, {1}, '{2}', {3}, {4}, {5}){6}",
                                         ligneNom.ID_NOM, idPartie, 
                                         Constantes.ChaineSQL(ligneNom.S_NOM),
-                                        ligneNom.I_X, ligneNom.I_Y, bPont);
-                AjouterLigne(requete);
+                                        ligneNom.I_X, ligneNom.I_Y, bPont,
+                                        (i== Donnees.m_donnees.TAB_NOMS_CARTE.Count()-1) ? ";": ",");
+                listeRequete.AppendLine(requete);
             }
-
+            AjouterLigne(listeRequete.ToString());
         }
 
         public void SauvegardeNation(int idPartie)
@@ -698,7 +702,9 @@ namespace vaoc
         public void SauvegardeMessage(int idPartie)
         {
             string requete, nomZoneGeographique;
-
+            StringBuilder listeRequete = new StringBuilder();
+            bool bInsert = true;
+            int nblignes = 0;
             //INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_MESSAGE`) VALUES (1, 1, 2, 1, '1805-06-15 02:04:18', '1805-06-15 22:40:15', 'La division a reçu un ordre : aller à Grenoble en partant à 8h00 durant 6 heures/jour'), (2, 1, 3, 1, '1805-06-02 22:52:27', '1805-06-03 12:52:27', 'La division vient d''arriver à Lyon et attend vos Constantes.ORDRES.');
 
             //on reconstitue systématiquement tous les messages
@@ -706,8 +712,15 @@ namespace vaoc
                                     idPartie);
             AjouterLigne(requete);
 
-            foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
+            for (int i = 0; i< Donnees.m_donnees.TAB_MESSAGE.Count(); i++)
             {
+                if (bInsert)
+                {
+                    requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
+                    listeRequete.AppendLine(requete);
+                    bInsert = false;
+                }
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull() 
                     && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_PHASE_ARRIVEE!=Constantes.NULLENTIER)
                 {
@@ -726,9 +739,9 @@ namespace vaoc
                     }
                     idEmetteur = lignePionEmetteur.ID_PION;
 
+                    if (!bInsert && 0 == nblignes % 5000) { bInsert = true; }
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
-                    requete = string.Format("INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) "+
-                                            "VALUES ({0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', '{7}');",
+                    requete = string.Format("({0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', '{7}'){8}",
                                             ligneMessage.ID_MESSAGE,
                                             idPartie,
                                             idEmetteur,
@@ -736,10 +749,13 @@ namespace vaoc
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART),
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_ARRIVEE, ligneMessage.I_PHASE_ARRIVEE),
                                             Constantes.ChaineSQL(nomZoneGeographique),
-                                            Constantes.ChaineSQL(ligneMessage.S_TEXTE));
-                    AjouterLigne(requete);
+                                            Constantes.ChaineSQL(ligneMessage.S_TEXTE),
+                                            ((i == Donnees.m_donnees.TAB_MESSAGE.Count() - 1) || bInsert) ? ";" : ",");
+                    listeRequete.AppendLine(requete);
+                    nblignes++;
                 }
             }
+            AjouterLigne(listeRequete.ToString());
         }
 
         //public void SauvegardeNation(int idPartie)
@@ -953,7 +969,10 @@ namespace vaoc
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
             char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
             string sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
-
+            if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
+            {
+                sOrdreCourant += "(ravitaillement direct)";
+            }
             requete = string.Format(
                                     "INSERT INTO `tab_vaoc_pion` (`ID_PION`, `ID_PARTIE`, `ID_PION_PROPRIETAIRE`, `ID_MODELE_PION`, `S_NOM`, `I_INFANTERIE`, " +
                                     "`I_CAVALERIE`, `I_ARTILLERIE`, `I_FATIGUE`, `I_MORAL`, `I_INFANTERIE_REEL`, `I_CAVALERIE_REEL`, `I_ARTILLERIE_REEL`, " +

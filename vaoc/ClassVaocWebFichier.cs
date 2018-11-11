@@ -599,11 +599,15 @@ namespace vaoc
         public void SauvegardeForum(int idPartie)
         {
             string requete;
+            StringBuilder listeRequete = new StringBuilder();
+            bool bPremier = true;
 
             //On remet la table à vide pour la partie
             requete = string.Format("DELETE FROM `tab_vaoc_forum` WHERE ID_PARTIE={0};",
                                     idPartie);
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
+            requete = "INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ";
+            listeRequete.AppendLine(requete);
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
@@ -634,16 +638,19 @@ namespace vaoc
                         if (!lignePion.IsID_BATAILLENull() && !lignePion2.IsID_BATAILLENull() &&
                             (lignePion.ID_BATAILLE == lignePion2.ID_BATAILLE) || (dist <= 1* Donnees.m_donnees.TAB_JEU[0].I_ECHELLE))
                         {
-                            requete = string.Format("INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ({0}, {1}, {2});",
+                            if (bPremier) { bPremier = false; } else { listeRequete.AppendLine(","); }
+                            requete = string.Format("({0}, {1}, {2})",
                                                     idPartie,
                                                     lignePion.ID_PION,
                                                     lignePion2.ID_PION
                                                     );
-                            AjouterLigne(requete);
+                            listeRequete.Append(requete);
                         }
                     }
                 }
             }
+            listeRequete.AppendLine(";");
+            AjouterLigne(listeRequete.ToString());
         }
 
         public void TraitementEnCours(bool bTraitementEnCours, int idJeu, int idPartie)
@@ -661,10 +668,10 @@ namespace vaoc
             //on reconstitue systématiquement tous les noms
             requete = string.Format("delete from tab_vaoc_noms_carte WHERE ID_PARTIE={0};",
                                     idPartie);
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
 
             requete = "INSERT INTO `tab_vaoc_noms_carte` (`ID_NOM`, `ID_PARTIE`, `S_NOM`, `I_X`, `I_Y`, `B_PONT`) VALUES ";
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
             for (int i=0; i < Donnees.m_donnees.TAB_NOMS_CARTE.Count(); i++)
             {
                 Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE[i];
@@ -714,12 +721,6 @@ namespace vaoc
 
             for (int i = 0; i< Donnees.m_donnees.TAB_MESSAGE.Count(); i++)
             {
-                if (bInsert)
-                {
-                    requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
-                    listeRequete.AppendLine(requete);
-                    bInsert = false;
-                }
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull() 
                     && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_PHASE_ARRIVEE!=Constantes.NULLENTIER)
@@ -739,9 +740,17 @@ namespace vaoc
                     }
                     idEmetteur = lignePionEmetteur.ID_PION;
 
+                    if (bInsert)
+                    {
+                        if (nblignes>0) { listeRequete.Append(";"); }
+                        requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
+                        listeRequete.AppendLine(requete);
+                        bInsert = false;
+                    }
+                    else { listeRequete.Append(","); }
                     if (!bInsert && 0 == nblignes % 5000) { bInsert = true; }
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
-                    requete = string.Format("({0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', '{7}'){8}",
+                    requete = string.Format("({0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', '{7}')",
                                             ligneMessage.ID_MESSAGE,
                                             idPartie,
                                             idEmetteur,
@@ -749,19 +758,14 @@ namespace vaoc
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART),
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_ARRIVEE, ligneMessage.I_PHASE_ARRIVEE),
                                             Constantes.ChaineSQL(nomZoneGeographique),
-                                            Constantes.ChaineSQL(ligneMessage.S_TEXTE),
-                                            ((i == Donnees.m_donnees.TAB_MESSAGE.Count() - 1) || bInsert) ? ";" : ",");
+                                            Constantes.ChaineSQL(ligneMessage.S_TEXTE));
                     listeRequete.AppendLine(requete);
                     nblignes++;
                 }
             }
+            listeRequete.Append(";");
             AjouterLigne(listeRequete.ToString());
         }
-
-        //public void SauvegardeNation(int idPartie)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         /// <summary>
         /// Sauvegarde de TAB_PION
@@ -771,11 +775,25 @@ namespace vaoc
         public void SauvegardePion(int idPartie)
         {
             string requete;
+            StringBuilder listeRequete = new StringBuilder();
+            bool bPremier = true;
 
             //on reconstitue systématiquement tous les noms
-            requete = string.Format("delete from tab_vaoc_pion WHERE ID_PARTIE={0};",
+            requete = string.Format("DELETE FROM tab_vaoc_pion WHERE ID_PARTIE={0};",
                                     idPartie);
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
+
+            requete = "INSERT INTO `tab_vaoc_pion` (`ID_PION`, `ID_PARTIE`, `ID_PION_PROPRIETAIRE`, `ID_MODELE_PION`, `S_NOM`, `I_INFANTERIE`, " +
+                                    "`I_CAVALERIE`, `I_ARTILLERIE`, `I_FATIGUE`, `I_MORAL`, `I_INFANTERIE_REEL`, `I_CAVALERIE_REEL`, `I_ARTILLERIE_REEL`, " +
+                                    "`I_FATIGUE_REEL`, `I_MORAL_REEL`, `I_MORAL_MAX`, `I_EXPERIENCE`, `I_TACTIQUE`, `I_STRATEGIQUE`, `C_NIVEAU_HIERARCHIQUE`, " +
+                                    "`I_RETRAITE`, `ID_BATAILLE`, `I_ZONE_BATAILLE`, `S_POSITION`, `B_DETRUIT`, `I_PATROUILLES_DISPONIBLES`, `I_PATROUILLES_MAX`, " +
+                                    "`I_VITESSE`, `I_X` ,`I_Y`, `I_INFANTERIE_INITIALE`, `I_CAVALERIE_INITIALE`, `I_ARTILLERIE_INITIALE`, " +
+                                    "`B_FUITE_AU_COMBAT`, `B_REDITION_RAVITAILLEMENT`, `B_DEPOT`, `B_PONTONNIER`," +
+                                    "`I_MATERIEL`, `I_RAVITAILLEMENT`, `I_NIVEAU_FORTIFICATION`, " +
+                                    "`I_TOUR_CONVOI_CREE`, `ID_DEPOT_SOURCE`, `B_CAVALERIE_DE_LIGNE`, `B_CAVALERIE_LOURDE`, `B_GARDE`, `B_VIEILLE_GARDE`," +
+                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`," +
+                                    "`S_ORDRE_COURANT`) VALUES ";
+            listeRequete.AppendLine(requete);
 
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
@@ -832,8 +850,16 @@ namespace vaoc
                         }
                     }
                 }
-                AjouterLigne(requete);
+                if (bPremier)
+                { bPremier = false; }
+                else
+                {
+                    if (requete != string.Empty) { listeRequete.AppendLine(","); }
+                }
+                listeRequete.Append(requete);
             }
+            listeRequete.AppendLine(";");
+            AjouterLigne(listeRequete.ToString());
         }
 
         private static string GenereLignePion(Donnees.TAB_PIONRow lignePion, int idPartie, int id_pion_proprietaire, Donnees.TAB_MESSAGERow ligneMessage)
@@ -973,20 +999,9 @@ namespace vaoc
             {
                 sOrdreCourant += "(ravitaillement direct)";
             }
-            requete = string.Format(
-                                    "INSERT INTO `tab_vaoc_pion` (`ID_PION`, `ID_PARTIE`, `ID_PION_PROPRIETAIRE`, `ID_MODELE_PION`, `S_NOM`, `I_INFANTERIE`, " +
-                                    "`I_CAVALERIE`, `I_ARTILLERIE`, `I_FATIGUE`, `I_MORAL`, `I_INFANTERIE_REEL`, `I_CAVALERIE_REEL`, `I_ARTILLERIE_REEL`, " +
-                                    "`I_FATIGUE_REEL`, `I_MORAL_REEL`, `I_MORAL_MAX`, `I_EXPERIENCE`, `I_TACTIQUE`, `I_STRATEGIQUE`, `C_NIVEAU_HIERARCHIQUE`, " +
-                                    "`I_RETRAITE`, `ID_BATAILLE`, `I_ZONE_BATAILLE`, `S_POSITION`, `B_DETRUIT`, `I_PATROUILLES_DISPONIBLES`, `I_PATROUILLES_MAX`, " +
-                                    "`I_VITESSE`, `I_X` ,`I_Y`, `I_INFANTERIE_INITIALE`, `I_CAVALERIE_INITIALE`, `I_ARTILLERIE_INITIALE`, " +
-                                    "`B_FUITE_AU_COMBAT`, `B_REDITION_RAVITAILLEMENT`, `B_DEPOT`, `B_PONTONNIER`," +
-                                    "`I_MATERIEL`, `I_RAVITAILLEMENT`, `I_NIVEAU_FORTIFICATION`, " +
-                                    "`I_TOUR_CONVOI_CREE`, `ID_DEPOT_SOURCE`, `B_CAVALERIE_DE_LIGNE`, `B_CAVALERIE_LOURDE`, `B_GARDE`, `B_VIEILLE_GARDE`," +
-                                    "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`," +
-                                    "`S_ORDRE_COURANT`) VALUES " +
-                                    "({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
+            requete = string.Format("({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+
-                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}');",
+                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}')",
                                     lignePion.ID_PION,//0
                                     idPartie,
                                     (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
@@ -1053,24 +1068,28 @@ namespace vaoc
         public void SauvegardeMeteo(int idJeu)
         {
             string requete;
+            StringBuilder listeRequete = new StringBuilder();
 
             //Supression des valeurs précédentes
             requete = string.Format("delete from tab_vaoc_meteo WHERE ID_JEU={0};",
                                     idJeu);
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
 
-            foreach (Donnees.TAB_METEORow ligneMeteo in Donnees.m_donnees.TAB_METEO)
+            requete = "INSERT INTO `tab_vaoc_meteo` (`ID_JEU`, `ID_METEO`, `S_NOM`, `I_CHANCE`) VALUES";
+            listeRequete.AppendLine(requete);
+            for(int i= 0; i< Donnees.m_donnees.TAB_METEO.Count(); i++)
             {
-                requete = string.Format("INSERT INTO `tab_vaoc_meteo` (`ID_JEU`, `ID_METEO`, `S_NOM`, `I_CHANCE`) " +
-                                        "VALUES ({0}, {1}, '{2}', {3});",
+                Donnees.TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO[i];
+                requete = string.Format("({0},{1},'{2}',{3}){4}",
                                         idJeu,
                                         ligneMeteo.ID_METEO,
                                         ligneMeteo.S_NOM,                                        
-                                        ligneMeteo.I_CHANCE
-                                        );
+                                        ligneMeteo.I_CHANCE,
+                                        (i == Donnees.m_donnees.TAB_METEO.Count() - 1) ? ";" : ",");
 
-                AjouterLigne(requete);
+                listeRequete.AppendLine(requete);
             }
+            AjouterLigne(listeRequete.ToString());
         }
 
         /// <summary>
@@ -1080,12 +1099,16 @@ namespace vaoc
         public void SauvegardeModelesMouvement(int idJeu)
         {
             string requete;
-                                        
+            StringBuilder listeRequete = new StringBuilder();
+            bool bPremier = true;
+
             //Supression des valeurs précédentes
             requete = string.Format("delete from tab_vaoc_modele_mouvement WHERE ID_JEU={0};",
                                     idJeu);
-            AjouterLigne(requete);
-            
+            listeRequete.AppendLine(requete);
+
+            requete = "INSERT INTO `tab_vaoc_modele_mouvement` (`ID_JEU`, `ID_MODELE_MOUVEMENT`, `S_NATION`, `S_METEO`, `S_MODELE`, `S_TERRAIN`, `I_VITESSE_INFANTERIE`, `I_VITESSE_CAVALERIE`, `I_VITESSE_ARTILLERIE`) VALUES";
+            listeRequete.AppendLine(requete);
             foreach (Donnees.TAB_MODELE_PIONRow ligneModelePion in Donnees.m_donnees.TAB_MODELE_PION)
             {
                 Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
@@ -1096,8 +1119,8 @@ namespace vaoc
                         int cout = Donnees.m_donnees.TAB_MOUVEMENT_COUT.CalculCout(ligneMeteo.ID_METEO, ligneModeleTerrain.ID_MODELE_TERRAIN, ligneModeleMouvement.ID_MODELE_MOUVEMENT);
                         Donnees.TAB_NATIONRow ligneNation = Donnees.m_donnees.TAB_NATION.FindByID_NATION(ligneModelePion.ID_NATION);
 
-                        requete = string.Format("INSERT INTO `tab_vaoc_modele_mouvement` (`ID_JEU`, `ID_MODELE_MOUVEMENT`, `S_NATION`, `S_METEO`, `S_MODELE`, `S_TERRAIN`, `I_VITESSE_INFANTERIE`, `I_VITESSE_CAVALERIE`, `I_VITESSE_ARTILLERIE`) " +
-                                        "VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}', {6}, {7}, {8});",
+                        if (bPremier) { bPremier = false; } else { listeRequete.AppendLine(","); }
+                        requete = string.Format("({0}, {1}, '{2}', '{3}', '{4}', '{5}', {6}, {7}, {8})",
                                         idJeu,
                                         ligneModelePion.ID_MODELE_PION,
                                         ligneNation.S_NOM,
@@ -1109,10 +1132,12 @@ namespace vaoc
                                         Constantes.ChaineSQL((0 == cout) ? 0 : (decimal)(ligneModeleMouvement.I_VITESSE_ARTILLERIE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) / cout)
                                         );
 
-                        AjouterLigne(requete);
+                        listeRequete.Append(requete);
                     }
                 }
             }
+            listeRequete.AppendLine(";");
+            AjouterLigne(listeRequete.ToString());
         }
 
         /// <summary>
@@ -1392,6 +1417,7 @@ namespace vaoc
             List<ClassDataRole> listeRoles = ListeRoles(idPartie);
             Donnees.TAB_MODELE_PIONRow ligneModele;
             Donnees.TAB_PIONRow lignePion;
+            StringBuilder listeRequete = new StringBuilder();
 
             int bEngagee, bEnDefense, bRetraite, bEngagement;
             string s_terrain0, s_terrain1, s_terrain2, s_terrain3, s_terrain4, s_terrain5;
@@ -1400,12 +1426,16 @@ namespace vaoc
             string dateFin;
             
             //Batailles
-            requete = string.Format("delete from tab_vaoc_bataille WHERE ID_PARTIE={0};",
+            requete = string.Format("DELETE FROM tab_vaoc_bataille WHERE ID_PARTIE={0};",
                                     idPartie);
-            AjouterLigne(requete);
+            listeRequete.AppendLine(requete);
 
-            foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+            requete = "INSERT INTO `tab_vaoc_bataille` (`ID_PARTIE`, `ID_BATAILLE`, `S_NOM`, `DT_BATAILLE_DEBUT`, `C_ORIENTATION`, `S_TERRAIN0`, `S_TERRAIN1`, `S_TERRAIN2`, `S_TERRAIN3`, `S_TERRAIN4`, `S_TERRAIN5`, `S_COULEURTERRAIN0`, `S_COULEURTERRAIN1`, `S_COULEURTERRAIN2`, `S_COULEURTERRAIN3`, `S_COULEURTERRAIN4`, `S_COULEURTERRAIN5`, `S_OBSTACLE0`, `S_OBSTACLE1`, `S_OBSTACLE2`, `S_COULEUROBSTACLE0`, `S_COULEUROBSTACLE1`, `S_COULEUROBSTACLE2`, `ID_NATION_012`, `ID_NATION_345`, `ID_LEADER_012`, `ID_LEADER_345`, `DT_BATAILLE_FIN`, `I_TOUR_DEBUT`, `S_COMBAT_0`, `S_COMBAT_1`, `S_COMBAT_2`, `S_COMBAT_3`, `S_COMBAT_4`, `S_COMBAT_5`, `I_ENGAGEMENT_0`, `I_ENGAGEMENT_1`, `I_ENGAGEMENT_2`, `I_ENGAGEMENT_3`, `I_ENGAGEMENT_4`, `I_ENGAGEMENT_5`) VALUES";
+            listeRequete.AppendLine(requete);
+
+            for (int i=0; i< Donnees.m_donnees.TAB_BATAILLE.Count(); i++)
             {
+                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[i];
                 FormatTerrainBataille(ligneBataille.ID_TERRAIN_0, out s_terrain0, out s_couleurTerrain0);
                 FormatTerrainBataille(ligneBataille.ID_TERRAIN_1, out s_terrain1, out s_couleurTerrain1);
                 FormatTerrainBataille(ligneBataille.ID_TERRAIN_2, out s_terrain2, out s_couleurTerrain2);
@@ -1419,8 +1449,7 @@ namespace vaoc
 
                 dateFin = ligneBataille.IsI_PHASE_FINNull() ? string.Empty : ClassMessager.DateHeureSQL(ligneBataille.I_TOUR_FIN, ligneBataille.I_PHASE_FIN);
 
-                requete = string.Format("INSERT INTO `tab_vaoc_bataille` (`ID_PARTIE`, `ID_BATAILLE`, `S_NOM`, `DT_BATAILLE_DEBUT`, `C_ORIENTATION`, `S_TERRAIN0`, `S_TERRAIN1`, `S_TERRAIN2`, `S_TERRAIN3`, `S_TERRAIN4`, `S_TERRAIN5`, `S_COULEURTERRAIN0`, `S_COULEURTERRAIN1`, `S_COULEURTERRAIN2`, `S_COULEURTERRAIN3`, `S_COULEURTERRAIN4`, `S_COULEURTERRAIN5`, `S_OBSTACLE0`, `S_OBSTACLE1`, `S_OBSTACLE2`, `S_COULEUROBSTACLE0`, `S_COULEUROBSTACLE1`, `S_COULEUROBSTACLE2`, `ID_NATION_012`, `ID_NATION_345`, `ID_LEADER_012`, `ID_LEADER_345`, `DT_BATAILLE_FIN`, `I_TOUR_DEBUT`, `S_COMBAT_0`, `S_COMBAT_1`, `S_COMBAT_2`, `S_COMBAT_3`, `S_COMBAT_4`, `S_COMBAT_5`, `I_ENGAGEMENT_0`, `I_ENGAGEMENT_1`, `I_ENGAGEMENT_2`, `I_ENGAGEMENT_3`, `I_ENGAGEMENT_4`, `I_ENGAGEMENT_5`) " +
-                                        "VALUES ({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', {23}, {24}, {25}, {26}, '{27}', {28}, '{29}', '{30}', '{31}', '{32}', '{33}', '{34}', {35}, {36}, {37}, {38}, {39}, {40});",
+                requete = string.Format("({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', {23}, {24}, {25}, {26}, '{27}', {28}, '{29}', '{30}', '{31}', '{32}', '{33}', '{34}', {35}, {36}, {37}, {38}, {39}, {40}){41}",
                                         idPartie,
                                         ligneBataille.ID_BATAILLE,
                                         Constantes.ChaineSQL(ligneBataille.S_NOM),
@@ -1461,18 +1490,25 @@ namespace vaoc
                                         ligneBataille.I_ENGAGEMENT_2,
                                         ligneBataille.I_ENGAGEMENT_3,
                                         ligneBataille.I_ENGAGEMENT_4,
-                                        ligneBataille.I_ENGAGEMENT_5
+                                        ligneBataille.I_ENGAGEMENT_5,
+                                        (i == Donnees.m_donnees.TAB_BATAILLE.Count() - 1) ? ";" : ","
                                         );
 
-                AjouterLigne(requete);
+                listeRequete.AppendLine(requete);
             }
 
             //Pions en bataille
-            requete = string.Format("delete from tab_vaoc_bataille_pions WHERE ID_PARTIE={0};",
+            requete = string.Format("DELETE FROM tab_vaoc_bataille_pions WHERE ID_PARTIE={0};",
                                     idPartie);
-            AjouterLigne(requete);
-            foreach (Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS)
+            listeRequete.AppendLine(requete);
+
+            requete = "INSERT INTO `tab_vaoc_bataille_pions` (`ID_PARTIE`, `ID_BATAILLE`,`ID_PION`,`ID_NATION`,`B_ENGAGEE`,`B_EN_DEFENSE`" +
+                    ",`I_INFANTERIE_DEBUT`,`I_INFANTERIE_FIN`,`I_CAVALERIE_DEBUT`,`I_CAVALERIE_FIN`,`I_ARTILLERIE_DEBUT`,`I_ARTILLERIE_FIN`,`I_MORAL_DEBUT`,`I_MORAL_FIN`" +
+                    ",`I_FATIGUE_DEBUT`,`I_FATIGUE_FIN`,`B_RETRAITE`,`B_ENGAGEMENT`,`I_ZONE_BATAILLE_ENGAGEMENT`) VALUES";
+            listeRequete.AppendLine(requete);
+            for(int i = 0; i < Donnees.m_donnees.TAB_BATAILLE_PIONS.Count(); i++)
             {
+                Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS[i];
                 lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePion.ID_PION);
                 ligneModele = lignePion.modelePion;
 
@@ -1481,10 +1517,7 @@ namespace vaoc
                 bRetraite = (ligneBataillePion.IsB_RETRAITENull() || !ligneBataillePion.B_RETRAITE) ? 0 : 1;//l'unité à fait retraite dans le combat
                 bEngagement = (ligneBataillePion.IsB_ENGAGEMENTNull() || !ligneBataillePion.B_ENGAGEMENT) ? 0 : 1;//l'unite a été engagée dans le combat
 
-                requete = string.Format("INSERT INTO `tab_vaoc_bataille_pions` (`ID_PARTIE`, `ID_BATAILLE`,`ID_PION`,`ID_NATION`,`B_ENGAGEE`,`B_EN_DEFENSE`" +
-                                        ",`I_INFANTERIE_DEBUT`,`I_INFANTERIE_FIN`,`I_CAVALERIE_DEBUT`,`I_CAVALERIE_FIN`,`I_ARTILLERIE_DEBUT`,`I_ARTILLERIE_FIN`,`I_MORAL_DEBUT`,`I_MORAL_FIN`" +
-                                        ",`I_FATIGUE_DEBUT`,`I_FATIGUE_FIN`,`B_RETRAITE`,`B_ENGAGEMENT`,`I_ZONE_BATAILLE_ENGAGEMENT`"+
-                                        ") VALUES ({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18});",
+                requete = string.Format("({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}){19}",
                                         idPartie,
                                         ligneBataillePion.ID_BATAILLE,
                                         ligneBataillePion.ID_PION,
@@ -1503,11 +1536,13 @@ namespace vaoc
                                         ligneBataillePion.IsI_FATIGUE_FINNull() ? 0 : ligneBataillePion.I_FATIGUE_FIN,//15
                                         bRetraite,
                                         bEngagement,
-                                        ligneBataillePion.IsI_ZONE_BATAILLE_ENGAGEMENTNull() ? -1 : ligneBataillePion.I_ZONE_BATAILLE_ENGAGEMENT//18
+                                        ligneBataillePion.IsI_ZONE_BATAILLE_ENGAGEMENTNull() ? -1 : ligneBataillePion.I_ZONE_BATAILLE_ENGAGEMENT,//18
+                                        (i == Donnees.m_donnees.TAB_BATAILLE_PIONS.Count() - 1) ? ";" : ","
                                         );
 
-                AjouterLigne(requete);
+                listeRequete.AppendLine(requete);
             }
+            AjouterLigne(listeRequete.ToString());
         }
 
         /// <summary>
@@ -1518,17 +1553,21 @@ namespace vaoc
         {
             string requete;
             int id=0;
+            StringBuilder listeRequete = new StringBuilder();
+            bool bPremier = true;
 
             //Supression des valeurs précédentes
-            requete = string.Format("delete from tab_vaoc_objectifs WHERE ID_PARTIE={0};",idPartie);
-            AjouterLigne(requete);
+            requete = string.Format("DELETE FROM tab_vaoc_objectifs WHERE ID_PARTIE={0};",idPartie);
+            listeRequete.AppendLine(requete);
 
+            requete = "INSERT INTO `tab_vaoc_objectifs` (`ID_PARTIE`, `ID_OBJECTIF`, `S_NOM`, `I_VICTOIRE`, `ID_NATION`) VALUES ";
+            listeRequete.AppendLine(requete);
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 if (ligneNomCarte.I_VICTOIRE>0)
                 {
-                    requete = string.Format("INSERT INTO `tab_vaoc_objectifs` (`ID_PARTIE`, `ID_OBJECTIF`, `S_NOM`, `I_VICTOIRE`, `ID_NATION`) " +
-                                    "VALUES ({0}, {1}, '{2}', {3}, {4});",
+                    if (bPremier) { bPremier = false; } else { listeRequete.AppendLine(","); }
+                    requete = string.Format("({0}, {1}, '{2}', {3}, {4})",
                                     idPartie,
                                     id++,
                                     ligneNomCarte.S_NOM,
@@ -1536,9 +1575,11 @@ namespace vaoc
                                     (ligneNomCarte.IsID_NATION_CONTROLENull() || ligneNomCarte.ID_NATION_CONTROLE<0) ? -1 : ligneNomCarte.ID_NATION_CONTROLE
                                     );
 
-                    AjouterLigne(requete);
+                    listeRequete.Append(requete);
                 }
             }
+            listeRequete.AppendLine(";");
+            AjouterLigne(listeRequete.ToString());
         }
         #endregion
         #endregion

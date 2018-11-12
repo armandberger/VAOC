@@ -20,7 +20,7 @@ namespace vaoc
         {
             set
             {
-                InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(value, false);
+                InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(value, string.Empty, false);
                 List<ClassDataUtilisateur> liste = iWeb.ListeUtilisateurs(false);
                 dataGridViewUtilisateur.DataSource = liste;
             }

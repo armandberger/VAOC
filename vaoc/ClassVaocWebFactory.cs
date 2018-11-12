@@ -10,21 +10,21 @@ namespace vaoc
     {
         private static InterfaceVaocWeb m_iWeb;
 
-        public static InterfaceVaocWeb CreerVaocWeb(string fichierJeu, bool nouveauFichier)
+        public static InterfaceVaocWeb CreerVaocWeb(string fichierJeu, string complement, bool nouveauFichier)
         {
             //if (null == m_iWeb)//, ne permet pas de changer le nom pour le nouveau tour
             //{
                try
                {
                    //m_iWeb = new ClassVaocWebHTTP(DataSetCoutDonnees.m_donnees.TAB_PARTIE[0].S_PHPSERVICE);
-                   m_iWeb = new ClassVaocWebFichier(fichierJeu, nouveauFichier);
+                   m_iWeb = new ClassVaocWebFichier(fichierJeu, complement, nouveauFichier);
                }
                catch (Exception ex1)
                {
                    //si l'interface HTTP ne fonctionne pas, on tente le mode dégradé avec un fichier
                    try
                    {
-                       m_iWeb = new ClassVaocWebFichier(fichierJeu, nouveauFichier);
+                       m_iWeb = new ClassVaocWebFichier(fichierJeu, complement, nouveauFichier);
                    }
                    catch (Exception ex)
                    {

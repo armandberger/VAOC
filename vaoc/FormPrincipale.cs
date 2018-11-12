@@ -1536,7 +1536,7 @@ namespace vaoc
         private void buttonData_Click(object sender, EventArgs e)
         {
 
-            InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb("toto.txt", true);
+            InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb("toto.txt", string.Empty, true);
             try
             {
                 WebRequest requete = WebRequest.Create("http://localhost:8080/vaoc/service.php?op=utilisateurs");

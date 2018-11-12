@@ -25,7 +25,7 @@ namespace vaoc
                 notification = new ClassNotificationJoueurs(value);
 
                 //initialisation de la liste des utilisateurs
-                InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(value, false);
+                InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(value, string.Empty, false);
                 List<ClassDataUtilisateur> liste = iWeb.ListeUtilisateurs(true);
                 dataGridViewUtilisateur.DataSource = liste;
 

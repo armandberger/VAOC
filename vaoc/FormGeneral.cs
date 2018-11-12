@@ -60,7 +60,7 @@ namespace vaoc
        {
            set
            {
-               iWeb = ClassVaocWebFactory.CreerVaocWeb(value, false);
+               iWeb = ClassVaocWebFactory.CreerVaocWeb(value, string.Empty, false);
                List<ClassDataJeu> liste = iWeb.ListeJeux();
                comboBoxID_JEU.Items.Clear();
                comboBoxID_JEU.DisplayMember = "description";

@@ -48,7 +48,7 @@ namespace vaoc
             messageErreur = "";
 
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
-            m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
+            m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, false);
 
             //TestCreation();
             AmeliorationsPerformances();
@@ -5112,27 +5112,7 @@ namespace vaoc
 
             Cartographie.ChargerLesFichiers();
 
-            iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, true);
-
-            iWeb.TraitementEnCours(true, Donnees.m_donnees.TAB_JEU[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeNomsCarte(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeMessage(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardePion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeMeteo(Donnees.m_donnees.TAB_JEU[0].ID_JEU);
-
-            iWeb.SauvegardeModelesMouvement(Donnees.m_donnees.TAB_JEU[0].ID_JEU);
-
-            iWeb.SauvegardeModelesPion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeRole(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeForum(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeObjectifs(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+            iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, true);
 
             iWeb.SauvegardeBataille(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
@@ -5140,7 +5120,30 @@ namespace vaoc
 
             iWeb.SauvegardePartie(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
+            iWeb.TraitementEnCours(true, Donnees.m_donnees.TAB_JEU[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeRole(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeForum(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeMessage(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardePion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeModelesPion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);// a besoin du fichier XML, donc doit se trouver avec le fichier général
+
             iWeb.TraitementEnCours(false, Donnees.m_donnees.TAB_JEU[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, "_Nom_Meteo_Modeles_Objectifs", true);
+
+            iWeb.SauvegardeNomsCarte(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            iWeb.SauvegardeMeteo(Donnees.m_donnees.TAB_JEU[0].ID_JEU);
+
+            iWeb.SauvegardeModelesMouvement(Donnees.m_donnees.TAB_JEU[0].ID_JEU);
+
+            iWeb.SauvegardeObjectifs(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
             return true;
         }
 

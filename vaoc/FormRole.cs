@@ -22,7 +22,7 @@ namespace vaoc
         {
             set
             {
-                iWeb = ClassVaocWebFactory.CreerVaocWeb(value, false);
+                iWeb = ClassVaocWebFactory.CreerVaocWeb(value, string.Empty, false);
             }
         }
 

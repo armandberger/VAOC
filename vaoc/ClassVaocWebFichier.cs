@@ -17,7 +17,7 @@ namespace vaoc
         private string m_fileNameXML;
 
         #region InterfaceVaocWeb Members
-        public ClassVaocWebFichier(string connexion, bool nouveauFichier)
+        public ClassVaocWebFichier(string connexion, string complement, bool nouveauFichier)
         {
             int positionPoint = connexion.LastIndexOf(".");
             //recopie de la chaine avant l'extension
@@ -30,16 +30,17 @@ namespace vaoc
             if (i != nomFichier.Length - 1) tourfichier = Convert.ToInt32(nomFichier.Substring(i + 1, nomFichier.Length - i - 1));
             if (tourfichier > 0 && Donnees.m_donnees.TAB_PARTIE[0].I_TOUR > tourfichier)
             {
-                m_fileNameSQL = string.Format("{0}{1}.sql",
+                m_fileNameSQL = string.Format("{0}{1}{2}.sql",
                         nomFichier.Substring(0, i + 1),
-                        Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+                        Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
+                        complement);
             }
             else
             {
-                m_fileNameSQL = nomFichier + ".sql";
+                m_fileNameSQL = nomFichier + complement + ".sql";
             }
 
-            m_fileNameXML = nomFichier + ".xml";
+            m_fileNameXML = nomFichier + complement + ".xml";
 
             if (nouveauFichier && File.Exists(m_fileNameSQL))
             {

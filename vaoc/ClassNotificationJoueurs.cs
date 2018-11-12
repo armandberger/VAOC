@@ -18,7 +18,7 @@ namespace vaoc
             LogFile.CreationLogFile(fichierCourant, "courriel", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
             m_fichierCourant = fichierCourant;
 
-            m_iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, false);
+            m_iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, string.Empty, false);
             m_listeOrdreWeb = m_iWeb.ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
                                                 Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
         }
@@ -408,7 +408,7 @@ namespace vaoc
                 Donnees.m_donnees.TAB_PARTIE[0].S_HOST_UTILISATEUR,
                 Donnees.m_donnees.TAB_PARTIE[0].S_HOST_MOTDEPASSE);
 
-            InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, false);
+            InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, string.Empty, false);
             foreach (ClassDataUtilisateur utilisateur in iWeb.ListeUtilisateurs(true))
             {
                 requete = string.Format("ID_UTILISATEUR={0}", utilisateur.ID_UTILISATEUR);

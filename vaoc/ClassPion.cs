@@ -1584,9 +1584,20 @@ namespace vaoc
 
             public bool estRavitaillableDirect(int tour, int phase)
             {
+                int tourDebut, phaseDebut;
+                int heure = ClassMessager.DateHeure(tour, phase).Hour;
                 //on part dela première heure depuis minuit
-                int tourDebut = tour - ClassMessager.DateHeure(tour, phase).Hour;
-                int phaseDebut = (tour == tourDebut) ? phase : 0;
+                if (0==heure)
+                {
+                    //cas de la phase de ravitaillement quotidienne
+                    tourDebut = tour - 23;
+                    phaseDebut = 0;
+                }
+                else
+                {
+                    tourDebut = tour - heure;
+                    phaseDebut = (tour == tourDebut) ? phase : 0;
+                }
                 string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT>={1} AND I_PHASE_DEBUT>={2} AND I_ORDRE_TYPE={3}",
                                                 this.ID_PION, tourDebut, phaseDebut, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
@@ -2418,11 +2429,6 @@ namespace vaoc
                     return true;
                 }
 
-                if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
-                {
-                    this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
-                }
-
                 ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out meilleurPourcentageRavitaillement);
 
                 //modification suivant la météo en cours
@@ -2434,6 +2440,11 @@ namespace vaoc
                     I_MATERIEL = Math.Min(100, I_MATERIEL + meilleurPourcentageRavitaillement);
                     message = string.Format("{0}(ID={1}, Ravitaillement ok, distance 'effective' du dépôt {3} = {2} km)", S_NOM, ID_PION, meilleurDistanceRavitaillement, ligneMeilleurDepot.S_NOM);
                     LogFile.Notifier(message);
+                }
+
+                if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                {
+                    this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 }
 
                 return true;

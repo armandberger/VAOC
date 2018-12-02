@@ -2547,6 +2547,7 @@ namespace vaoc
                 }
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+
                 encombrementTotal = CalculerEncombrement(ligneNation, this.infanterie, this.cavalerie, this.artillerie, true);
                 AStar etoile = new AStar();
                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -2564,17 +2565,17 @@ namespace vaoc
                         S_NOM, ID_PION, ligneOrdre.I_EFFECTIF_DESTINATION);
                     LogFile.Notifier(message);
 
+                    //effectifs actuellement à l'arrivée
+                    CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
+                                                out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
+                    encombrementArrivee = CalculerEncombrement(ligneNation, iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
+                    poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count());
+                    message = string.Format("CalculPionPositionRelativeAvancement :effectif à destination :i={0} c={1} a={2} avec un encombrement de {3} et un poids de {4}",
+                                            iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, encombrementArrivee, poidsEncombrementArrivee);
+                    LogFile.Notifier(message);
+
                     if (ligneOrdre.I_EFFECTIF_DESTINATION < this.effectifTotal)
                     {
-                        //effectifs actuellement à l'arrivée
-                        CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
-                                                    out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
-                        encombrementArrivee = CalculerEncombrement(ligneNation, iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
-                        poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count());
-                        message = string.Format("CalculPionPositionRelativeAvancement :effectif à destination :i={0} c={1} a={2} avec un encombrement de {3} et un poids de {4}",
-                                                iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, encombrementArrivee, poidsEncombrementArrivee);
-                        LogFile.Notifier(message);
-
                         //calcul de l'encombrement des gens encore sur la route
                         if (0 == ligneOrdre.I_EFFECTIF_DEPART)
                         {

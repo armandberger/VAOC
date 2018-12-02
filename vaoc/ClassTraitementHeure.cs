@@ -3216,10 +3216,23 @@ namespace vaoc
                         while (i < listeLeaders.Count())
                         {
                             Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
+                            Donnees.TAB_PIONRow lignePionRapport;
+                            string nomHopital = "Hôpital de " + ligneNomCarte.S_NOM;
+
                             //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
-                            Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
-                            lignePionRapport.S_NOM = "Hôpital de " + ligneNomCarte.S_NOM;
-                            lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                            // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
+                            Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomHopital + "' AND ID_PION_PROPRIETAIRE=" + lignePionLeader.ID_PION, "ID_PION");
+                            if (listePionRapport.Count() > 0)
+                            {
+                                lignePionRapport = listePionRapport[0];
+                            }
+                            else
+                            {
+                                lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                                lignePionRapport.S_NOM = nomHopital;
+                                lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                                lignePionRapport.DetruirePion();
+                            }
                             // pour le rapport d'effectifs
                             lignePionRapport.I_INFANTERIE = iBlessesInfanterie;
                             lignePionRapport.I_CAVALERIE = iBlessesCavalerie;
@@ -3227,7 +3240,6 @@ namespace vaoc
 
                             //obligé de l'envoyé en immédiat, sinon le pion hopital apparait dans la liste des unités ! 
                             // -> a priori pas le cas, si le pion est détruit avant envoi
-                            lignePionRapport.DetruirePion();
                             if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
                             {
                                 LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
@@ -3277,17 +3289,30 @@ namespace vaoc
                         while (i<listeLeaders.Count())
                         {
                             Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
+                            Donnees.TAB_PIONRow lignePionRapport;
+                            string nomPrison = "Prison de " + ligneNomCarte.S_NOM;
+                            // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
+                            Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[]) Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomPrison + "' AND ID_PION_PROPRIETAIRE=" + lignePionLeader.ID_PION, "ID_PION");
+                            if (listePionRapport.Count()>0)
+                            {
+                                lignePionRapport = listePionRapport[0];
+                            }
+                            else
+                            {
+                                //sinon on le crée
+                                lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
+                                lignePionRapport.S_NOM = nomPrison;
+                                lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
+                                lignePionRapport.DetruirePion();
+                            }
+
                             //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
-                            Donnees.TAB_PIONRow lignePionRapport = lignePionLeader.CreerConvoi(lignePionLeader, false, false, false);
-                            lignePionRapport.S_NOM = "Prison de " + ligneNomCarte.S_NOM;
-                            lignePionRapport.ID_CASE = ligneNomCarte.ID_CASE;
                             lignePionRapport.I_INFANTERIE = iPrisonniersInfanterie;
                             lignePionRapport.I_CAVALERIE = iPrisonniersCavalerie;
                             lignePionRapport.I_ARTILLERIE = iPrisonniersArtillerie;
 
                             //obligé de l'envoyé en immédiat, sinon le pion prison apparait dans la liste des unités !
                             //-> a priori pas le cas, si le pion est détruit avant envoi
-                            lignePionRapport.DetruirePion();
                             if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
                             {
                                 LogFile.Notifier("RapportDesPrisons : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_PRISON");

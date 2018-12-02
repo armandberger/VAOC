@@ -183,6 +183,65 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region Mise à jour des rapports de prison et hopitaux sur un seul pion
+            /*
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            {
+                if (ligneNomCarte.B_PRISON && !ligneNomCarte.IsID_NATION_CONTROLENull())
+                {
+                    IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
+                    int i = 0;
+                    while (i < listeLeaders.Count())
+                    {
+                        Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
+                        string nomPrison = "Prison de " + ligneNomCarte.S_NOM;
+                        // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
+                        Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomPrison+"' AND ID_PION_PROPRIETAIRE="+ lignePionLeader.ID_PION, "ID_PION");
+                        if (listePionRapport.Count() > 0)
+                        {
+                            for (int j=1; j< listePionRapport.Count(); j++)
+                            {
+                                //on recherche tous les autres messages affectés à d'autres unités du même nom
+                                Donnees.TAB_MESSAGERow[] listeMessages = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("ID_PION_EMETTEUR = " + listePionRapport[j].ID_PION);
+                                foreach (Donnees.TAB_MESSAGERow message in listeMessages)
+                                {
+                                    message.ID_PION_EMETTEUR = listePionRapport[0].ID_PION;
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                }
+
+                if (ligneNomCarte.B_HOPITAL && !ligneNomCarte.IsID_NATION_CONTROLENull())
+                {
+                    IEnumerable<Donnees.TAB_PIONRow> listeLeaders = Donnees.m_donnees.TAB_NATION.CommandantEnChef(ligneNomCarte.ID_NATION_CONTROLE);
+                    int i = 0;
+                    while (i < listeLeaders.Count())
+                    {
+                        Donnees.TAB_PIONRow lignePionLeader = listeLeaders.ElementAt(i);
+                        string nomHopital = "Hôpital de " + ligneNomCarte.S_NOM;
+                        // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
+                        Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomHopital + "' AND ID_PION_PROPRIETAIRE=" + lignePionLeader.ID_PION, "ID_PION");
+                        if (listePionRapport.Count() > 0)
+                        {
+                            for (int j = 1; j < listePionRapport.Count(); j++)
+                            {
+                                //on recherche tous les autres messages affectés à d'autres unités du même nom
+                                Donnees.TAB_MESSAGERow[] listeMessages = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("ID_PION_EMETTEUR = " + listePionRapport[j].ID_PION);
+                                foreach (Donnees.TAB_MESSAGERow message in listeMessages)
+                                {
+                                    message.ID_PION_EMETTEUR = listePionRapport[0].ID_PION;
+                                }
+                            }
+                        }
+                        i++;
+                    }
+                }
+            }
+            */
+            #endregion
+
             #region tests
             //ajout du mode forum pour les pions
             //ClassVaocWebFichier test = new ClassVaocWebFichier("test.test", false);

@@ -946,6 +946,7 @@ namespace vaoc
             //on boucle sur le nom jusqu'à en trouver un qui n'a jamais été pris
             int u = 0;
             bool bUtilise = true;
+            Monitor.Enter(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
             while (bUtilise)
             {
                 bUtilise = false;
@@ -974,15 +975,15 @@ namespace vaoc
 
                 //on regarde si le nom trouvé n'existe pas déjà
                 int j = 0;
-                int nbPions = Donnees.m_donnees.TAB_PION.Count();
-                while (!bUtilise && j < nbPions)
+                int nbNoms = Donnees.m_donnees.TAB_NOMS_PIONS.Count();
+                while (!bUtilise && j < nbNoms)
                 {
-                    Donnees.TAB_PIONRow lignePionRecherche = Donnees.m_donnees.TAB_PION[j];
-                    if (lignePionRecherche.S_NOM.Equals(nomDeDepot)) { bUtilise = true; u++; }
+                    if (Donnees.m_donnees.TAB_NOMS_PIONS[j].S_NOM.Equals(nomDeDepot)) { bUtilise = true; u++; }
                     j++;
                 }
-
             }
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow(nomDeDepot);
+            Monitor.Exit(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
             return true;
         }
 

@@ -1177,7 +1177,7 @@ namespace vaoc
                     if ('D' == lignePion.C_NIVEAU_DEPOT)
                     {
                         Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                        lignePion.S_NOM = "Convoi de ravitaillement";
+                        lignePion.S_NOM = lignePion.NouveauNomConvoiRavitaillement();
                         int idModeleCONVOI = Donnees.m_donnees.TAB_MODELE_PION.RechercherModele(lignePion.modelePion.ID_NATION, "CONVOI");
 
                         if (idModeleCONVOI >= 0)

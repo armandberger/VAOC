@@ -33,9 +33,9 @@
             this.buttonAnnuler = new System.Windows.Forms.Button();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewNoms = new System.Windows.Forms.DataGridView();
-            this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tABNOMSPIONSBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.donnees = new vaoc.Donnees();
+            this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewNoms)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABNOMSPIONSBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.donnees)).BeginInit();
@@ -83,12 +83,6 @@
             this.dataGridViewNoms.Size = new System.Drawing.Size(472, 150);
             this.dataGridViewNoms.TabIndex = 13;
             // 
-            // sNOMDataGridViewTextBoxColumn
-            // 
-            this.sNOMDataGridViewTextBoxColumn.DataPropertyName = "S_NOM";
-            this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
-            this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
-            // 
             // tABNOMSPIONSBindingSource
             // 
             this.tABNOMSPIONSBindingSource.DataMember = "TAB_NOMS_PIONS";
@@ -98,6 +92,13 @@
             // 
             this.donnees.DataSetName = "Donnees";
             this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // sNOMDataGridViewTextBoxColumn
+            // 
+            this.sNOMDataGridViewTextBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.sNOMDataGridViewTextBoxColumn.DataPropertyName = "S_NOM";
+            this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
+            this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
             // 
             // FormNomsPions
             // 
@@ -126,8 +127,8 @@
         private System.Windows.Forms.Button buttonAnnuler;
         private System.Windows.Forms.Button buttonValider;
         private System.Windows.Forms.DataGridView dataGridViewNoms;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource tABNOMSPIONSBindingSource;
         private Donnees donnees;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
     }
 }

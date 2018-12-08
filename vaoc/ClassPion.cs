@@ -3623,17 +3623,22 @@ namespace vaoc
                 return lignePionConvoi;
             }
 
+            /// <summary>
+            /// Renvoi un nom de convoi de ravitaillement unique et l'ajoute dans la table de référence
+            /// </summary>
+            /// <returns>Nom pour l'unité</returns>
             public string NouveauNomConvoiRavitaillement()
             {
                 bool bExistant = true;
                 string nom= string.Format("Convoi de ravitaillement du {0}", S_NOM);
                 int iNumero=1;
 
+                Monitor.Enter(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
                 while (bExistant)
                 {
                     int i = 0;
-                    while (i < m_donnees.TAB_PION.Count && m_donnees.TAB_PION[i].S_NOM != nom) i++;
-                    if (i < m_donnees.TAB_PION.Count)
+                    while (i < m_donnees.TAB_NOMS_PIONS.Count && m_donnees.TAB_NOMS_PIONS[i].S_NOM != nom) i++;
+                    if (i < m_donnees.TAB_NOMS_PIONS.Count)
                     {
                         iNumero++;
                         nom = string.Format("Convoi de ravitaillement n°{1} du {0}", S_NOM, iNumero);
@@ -3643,6 +3648,8 @@ namespace vaoc
                         bExistant = false;
                     }
                 }
+                m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow(nom);
+                Monitor.Exit(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
                 return nom;
             }
 

@@ -106,6 +106,12 @@
     <Compile Include="FormMessageAncien.Designer.cs">
       <DependentUpon>FormMessageAncien.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormNomsPions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNomsPions.Designer.cs">
+      <DependentUpon>FormNomsPions.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormNomsPromus.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -335,6 +341,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMessageAncien.resx">
       <DependentUpon>FormMessageAncien.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNomsPions.resx">
+      <DependentUpon>FormNomsPions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormNomsPromus.resx">
       <DependentUpon>FormNomsPromus.cs</DependentUpon>

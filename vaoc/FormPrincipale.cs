@@ -4485,6 +4485,19 @@ namespace vaoc
 
             #endregion
         }
+
+        private void nomsPionsUniquesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormNomsPions fNompsPionsTable = new FormNomsPions();
+
+            fNompsPionsTable.tableNomsPions = Donnees.m_donnees.TAB_NOMS_PIONS;
+            if (DialogResult.OK == fNompsPionsTable.ShowDialog())
+            {
+                m_modification = true;
+                Donnees.m_donnees.TAB_NOMS_PIONS.Clear();
+                Donnees.m_donnees.TAB_NOMS_PIONS.Merge(fNompsPionsTable.tableNomsPions, false);
+            }
+        }
     }
 
     internal static class NativeMethods

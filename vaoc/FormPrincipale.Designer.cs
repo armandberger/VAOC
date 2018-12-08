@@ -142,6 +142,7 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.nomsPionsUniquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -690,6 +691,7 @@ namespace vaoc
             this.phrasesToolStripMenuItem,
             this.bataillesToolStripMenuItem,
             this.mEssagesToolStripMenuItem,
+            this.nomsPionsUniquesToolStripMenuItem,
             this.toolStripSeparator6,
             this.pionsAnciensToolStripMenuItem,
             this.ordresAnciensToolStripMenuItem,
@@ -1203,6 +1205,13 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
+            // nomsPionsUniquesToolStripMenuItem
+            // 
+            this.nomsPionsUniquesToolStripMenuItem.Name = "nomsPionsUniquesToolStripMenuItem";
+            this.nomsPionsUniquesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.nomsPionsUniquesToolStripMenuItem.Text = "Noms Pions Uniques";
+            this.nomsPionsUniquesToolStripMenuItem.Click += new System.EventHandler(this.nomsPionsUniquesToolStripMenuItem_Click);
+            // 
             // FormPrincipale
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1352,6 +1361,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem actuelsAnciensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem anciensActuelsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nomsPionsUniquesToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

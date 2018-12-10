@@ -2036,26 +2036,30 @@ namespace vaoc
                                 return false;
                             }
 
-                            ligneModelePion = lignePion.modelePion;
-                            if (null == ligneModelePion)
+                            //seul un pion combattif , même avec zéro de moral, peut prendre le contrôle d'une zone, sinon, les patrouilles peuvent prendre des villes !
+                            if (lignePion.estCombattifQG(false,true))
                             {
-                                message = string.Format("ControleDesVilles : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
-                            }
+                                ligneModelePion = lignePion.modelePion;
+                                if (null == ligneModelePion)
+                                {
+                                    message = string.Format("ControleDesVilles : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
+                                    LogFile.Notifier(message, out messageErreur);
+                                    return false;
+                                }
 
-                            //un point de plus sur la zone pour son camp !
-                            if (idNation0 == -1 || idNation0 == ligneModelePion.ID_NATION)
-                            {
-                                idNation0 = ligneModelePion.ID_NATION;
-                                zone[0]++;
-                                if (null==listePionControle0.Find(x => x==lignePion)) { listePionControle0.Add(lignePion); }
-                            }
-                            else
-                            {
-                                idNation1 = ligneModelePion.ID_NATION;
-                                zone[1]++;
-                                if (null == listePionControle1.Find(x => x == lignePion)) { listePionControle1.Add(lignePion); }
+                                //un point de plus sur la zone pour son camp !
+                                if (idNation0 == -1 || idNation0 == ligneModelePion.ID_NATION)
+                                {
+                                    idNation0 = ligneModelePion.ID_NATION;
+                                    zone[0]++;
+                                    if (null == listePionControle0.Find(x => x == lignePion)) { listePionControle0.Add(lignePion); }
+                                }
+                                else
+                                {
+                                    idNation1 = ligneModelePion.ID_NATION;
+                                    zone[1]++;
+                                    if (null == listePionControle1.Find(x => x == lignePion)) { listePionControle1.Add(lignePion); }
+                                }
                             }
                         }
                     }

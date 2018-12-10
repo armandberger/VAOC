@@ -183,6 +183,55 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region ajouts des noms uniques depôts et convois
+            /*
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Naumburg (Leipsic)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Saalfeld");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt de Naumburg (Leipsic)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt de Saalfeld");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°2 du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°3 du Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°3 du Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°3 du Dépôt de Naumburg (Leipsic)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°3 du Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°3 du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°4 du Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°4 du Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°4 du Dépôt de Naumburg (Leipsic)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°4 du Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°4 du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°5 du Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°5 du Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°5 du Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°5 du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement n°6 du Dépôt d'Erfurt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt d'Altstadt");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Berlin");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Brandenburg");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Leipsic");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Luckau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Magdeburg");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Naumburg (Leipsic)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Neustadt (Saalfeld)");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Nordhausen");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Rosslau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Saalfeld");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Sangershausen");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Torgau");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Weimar");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Wittemberg");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt de Zalma");
+            Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Dépôt d'Erfurt");
+            */
+            #endregion
+
             #region Mise à jour des rapports de prison et hopitaux sur un seul pion
             /*
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)

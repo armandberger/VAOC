@@ -843,7 +843,7 @@ namespace vaoc
                         {
                             //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
                             ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
-                            requete = GenereLignePion(lignePion, idPartie, -1, ligneMessage);
+                            requete = GenereLignePion(lignePion, idPartie, -1, ligneMessage);//renverra vide si ligneMessage est Null, ce qui est possible (convoi crée par un dépôt et message non encore arrivé par exemple
                         }
                         else
                         {
@@ -851,13 +851,18 @@ namespace vaoc
                         }
                     }
                 }
-                if (bPremier)
-                { bPremier = false; }
-                else
+                if (requete != string.Empty)
                 {
-                    if (requete != string.Empty) { listeRequete.AppendLine(","); }
+                    if (bPremier)
+                    {
+                        bPremier = false;
+                    }
+                    else
+                    {
+                        listeRequete.AppendLine(",");
+                    }
+                    listeRequete.Append(requete);
                 }
-                listeRequete.Append(requete);
             }
             listeRequete.AppendLine(";");
             AjouterLigne(listeRequete.ToString());

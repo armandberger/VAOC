@@ -1608,12 +1608,13 @@ namespace vaoc
                 return false;
             }
 
-            internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase)
+            internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase, out string nomDepot)
             {
                 string message;
                 int effectifsRavitailles;
                 int meilleurPourcentageRavitaillement;
                 int meilleurPourcentageMateriel;
+                nomDepot = string.Empty;
                 Donnees.TAB_PIONRow ligneDepot = RechercheMeilleurDepotDirect(out effectifsRavitailles, out meilleurPourcentageRavitaillement, out meilleurPourcentageMateriel);
                 if (null == ligneDepot || 0 == effectifsRavitailles)
                 {
@@ -1626,6 +1627,7 @@ namespace vaoc
                 }
                 else
                 {
+                    nomDepot = ligneDepot.S_NOM;
                     Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     ligneDepot.I_SOLDATS_RAVITAILLES += effectifsRavitailles;
                     ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
@@ -2438,13 +2440,19 @@ namespace vaoc
                     bUniteRavitaillee = true;
                     I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + meilleurPourcentageRavitaillement);
                     I_MATERIEL = Math.Min(100, I_MATERIEL + meilleurPourcentageRavitaillement);
+                    depotRavitaillement = ligneMeilleurDepot.S_NOM;
                     message = string.Format("{0}(ID={1}, Ravitaillement ok, distance 'effective' du dépôt {3} = {2} km)", S_NOM, ID_PION, meilleurDistanceRavitaillement, ligneMeilleurDepot.S_NOM);
                     LogFile.Notifier(message);
                 }
 
                 if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                 {
-                    this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+                    string nomDepot;
+                    if (!this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, out nomDepot))
+                    {
+                        return false;
+                    }
+                    if (string.Empty != nomDepot) { depotRavitaillement = nomDepot; }
                 }
 
                 return true;

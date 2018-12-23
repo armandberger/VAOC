@@ -812,32 +812,26 @@ namespace vaoc
                     continue;
                 }
 
-                requete = string.Empty;
-                if (!lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull())
+                if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
                 {
-                    //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
+                    //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                     //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                    Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, -1);
-                    requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
+                    Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                    requete = GenereLignePion(lignePion, idPartie, lignePion.ID_ANCIEN_PION_PROPRIETAIRE, ligneMessage);
+
+                    //il faut aussi que le nouveau proprietaire voit l'unité si ce n'est pas le même et qu'il a reçu l'affectation
+                    if (lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull() && (lignePion.ID_ANCIEN_PION_PROPRIETAIRE != lignePion.ID_PION_PROPRIETAIRE))
+                    {
+                        ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
+                        requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
+                    }
                 }
                 else
                 {
-                    if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
+                    if (lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull())
                     {
-                        //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
+                        //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
-                        requete = GenereLignePion(lignePion, idPartie, lignePion.ID_ANCIEN_PION_PROPRIETAIRE, ligneMessage);
-
-                        //il faut aussi que le nouveau proprietaire voit l'unité si ce n'est pas le même
-                        if (lignePion.ID_ANCIEN_PION_PROPRIETAIRE != lignePion.ID_PION_PROPRIETAIRE)
-                        {
-                            ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
-                            requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
-                        }
-                    }
-                    else
-                    {
                         Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
                         if (null == ligneMessage)
                         {
@@ -849,7 +843,7 @@ namespace vaoc
                         {
                             requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
                         }
-                    }
+                    }                
                 }
                 if (requete != string.Empty)
                 {

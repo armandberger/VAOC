@@ -1249,7 +1249,7 @@ namespace vaoc
                 int idMaxOrdre = -1;
                 foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
                 {
-                    idMaxOrdre = Math.Max(idMaxOrdre, ligneOrdre.ID_MESSAGE);
+                    idMaxOrdre = Math.Max(idMaxOrdre, ligneOrdre.ID_ORDRE);
                 }
                 int idMaxMessage = -1;
                 foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)

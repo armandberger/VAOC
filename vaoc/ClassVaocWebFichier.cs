@@ -1245,10 +1245,21 @@ namespace vaoc
 
             if (null != partie)
             {
+                //recherche des id max pour les ordres et les messages
+                int idMaxOrdre = -1;
+                foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
+                {
+                    idMaxOrdre = Math.Max(idMaxOrdre, ligneOrdre.ID_MESSAGE);
+                }
+                int idMaxMessage = -1;
+                foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
+                {
+                    idMaxMessage = Math.Max(idMaxMessage, ligneMessage.ID_MESSAGE);
+                }
                 requete = string.Format("UPDATE `tab_vaoc_partie` SET `ID_JEU`={1}, `S_NOM`='{2}', `I_TOUR`={3},`DT_TOUR`='{4}',`I_PHASE`={5},`DT_MISEAJOUR`=NOW(), `H_JOUR`={7}, " +
                                         "`H_NUIT`={8}, `S_REPERTOIRE`='{9}', `FL_DEMARRAGE`={10}, `I_NB_CARTE_X`={11}, `I_NB_CARTE_Y`={12}, "+
                                         "`I_NB_CARTE_ZOOM_X`={13}, `I_NB_CARTE_ZOOM_Y`={14}, `D_MULT_ZOOM_X`={15}, `D_MULT_ZOOM_Y`={16}, `I_LARGEUR_CARTE_ZOOM`={17}, `I_HAUTEUR_CARTE_ZOOM`={18}, "+
-                                        "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}, `MAX_ID_MESSAGE`={23}' WHERE (ID_PARTIE={0});",
+                                        "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}, , `MAX_ID_ORDRE`={23}, `MAX_ID_MESSAGE`={24}' WHERE (ID_PARTIE={0});",
                                         idPartie,
                                         lignePartie.ID_JEU,
                                         lignePartie.S_NOM,
@@ -1273,7 +1284,9 @@ namespace vaoc
                                         ligneJeu.I_ECHELLE,//19, `I_ECHELLE`     
                                         idVictoire,
                                         sMeteo,
-                                        Constantes.DateHeureSQL(lignePartie.DT_PROCHAINTOUR)
+                                        Constantes.DateHeureSQL(lignePartie.DT_PROCHAINTOUR),
+                                        idMaxOrdre,
+                                        idMaxMessage
                                         );                                        
             }
             else

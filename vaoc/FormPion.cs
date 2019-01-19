@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WaocLib;
 
 namespace vaoc
 {
@@ -222,11 +223,12 @@ namespace vaoc
 
         private void Redimensionner()
         {
-            #region positionnement des boutons annuler et valider
-            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width) / 4;
-            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width) / 4;
-            buttonRenfort.Left = buttonValider.Width + 3 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width) / 4;
-            buttonValider.Top = buttonAnnuler.Top = buttonRenfort.Top = Height - 3 * buttonValider.Height;
+            #region positionnement des boutons
+            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
+            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
+            buttonRenfort.Left = buttonValider.Width + 3 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
+            buttonExportCSV.Left = buttonValider.Width + 4 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
+            buttonValider.Top = buttonAnnuler.Top = buttonRenfort.Top = buttonExportCSV.Top = Height - 3 * buttonValider.Height;
             #endregion
 
             #region positionnement du champ commentaire
@@ -286,5 +288,21 @@ namespace vaoc
              * */
         }
 
+        private void buttonExportCSV_Click(object sender, EventArgs e)
+        {
+            string nomfichier;
+            //string messageErreur = Dal.exportCSV(tablePions, out nomfichier);
+            string messageErreur = Dal.exportCSV(dataGridViewPions, tablePions.TableName, out nomfichier);
+            
+            if (string.Empty == messageErreur)
+            {
+                MessageBox.Show("Fichier CSV exporté : " + nomfichier, "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Information);    
+            }
+            else
+            {
+                MessageBox.Show("Erreur sur l'export du fichier CSV : " + nomfichier + " : "+ messageErreur, 
+                    "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

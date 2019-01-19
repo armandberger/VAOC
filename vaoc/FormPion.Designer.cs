@@ -32,10 +32,6 @@ namespace vaoc
             this.buttonAnnuler = new System.Windows.Forms.Button();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewPions = new System.Windows.Forms.DataGridView();
-            this.labelCommentaire = new System.Windows.Forms.Label();
-            this.buttonRenfort = new System.Windows.Forms.Button();
-            this.donnees = new vaoc.Donnees();
-            this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.ID_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.B_DETRUIT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MODELE_PION = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -96,6 +92,11 @@ namespace vaoc
             this.I_CAVALERIE_ESCORTE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_MATERIEL_ESCORTE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.labelCommentaire = new System.Windows.Forms.Label();
+            this.buttonRenfort = new System.Windows.Forms.Button();
+            this.donnees = new vaoc.Donnees();
+            this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.buttonExportCSV = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.donnees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMODELEPIONBindingSource)).BeginInit();
@@ -190,35 +191,6 @@ namespace vaoc
             this.dataGridViewPions.Name = "dataGridViewPions";
             this.dataGridViewPions.Size = new System.Drawing.Size(1001, 228);
             this.dataGridViewPions.TabIndex = 6;
-            // 
-            // labelCommentaire
-            // 
-            this.labelCommentaire.Location = new System.Drawing.Point(12, 405);
-            this.labelCommentaire.Name = "labelCommentaire";
-            this.labelCommentaire.Size = new System.Drawing.Size(240, 41);
-            this.labelCommentaire.TabIndex = 9;
-            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique\r\nAttention ! Pas d\'une unité" +
-    " sur un bord de carte car sinon crash AStar\r\n";
-            // 
-            // buttonRenfort
-            // 
-            this.buttonRenfort.Location = new System.Drawing.Point(524, 413);
-            this.buttonRenfort.Name = "buttonRenfort";
-            this.buttonRenfort.Size = new System.Drawing.Size(114, 23);
-            this.buttonRenfort.TabIndex = 10;
-            this.buttonRenfort.Text = "Mettre en renfort";
-            this.buttonRenfort.UseVisualStyleBackColor = true;
-            this.buttonRenfort.Click += new System.EventHandler(this.buttonRenfort_Click);
-            // 
-            // donnees
-            // 
-            this.donnees.DataSetName = "Donnees";
-            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // tABMODELEPIONBindingSource
-            // 
-            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
-            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
             // 
             // ID_PION
             // 
@@ -553,11 +525,51 @@ namespace vaoc
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT.HeaderText = "I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT";
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT.Name = "I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT";
             // 
+            // labelCommentaire
+            // 
+            this.labelCommentaire.Location = new System.Drawing.Point(12, 405);
+            this.labelCommentaire.Name = "labelCommentaire";
+            this.labelCommentaire.Size = new System.Drawing.Size(240, 41);
+            this.labelCommentaire.TabIndex = 9;
+            this.labelCommentaire.Text = "Artillerie : effectifs = nb canons, bonus = Tactique\r\nAttention ! Pas d\'une unité" +
+    " sur un bord de carte car sinon crash AStar\r\n";
+            // 
+            // buttonRenfort
+            // 
+            this.buttonRenfort.Location = new System.Drawing.Point(524, 413);
+            this.buttonRenfort.Name = "buttonRenfort";
+            this.buttonRenfort.Size = new System.Drawing.Size(114, 23);
+            this.buttonRenfort.TabIndex = 10;
+            this.buttonRenfort.Text = "Mettre en renfort";
+            this.buttonRenfort.UseVisualStyleBackColor = true;
+            this.buttonRenfort.Click += new System.EventHandler(this.buttonRenfort_Click);
+            // 
+            // donnees
+            // 
+            this.donnees.DataSetName = "Donnees";
+            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // tABMODELEPIONBindingSource
+            // 
+            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
+            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
+            // 
+            // buttonExportCSV
+            // 
+            this.buttonExportCSV.Location = new System.Drawing.Point(661, 413);
+            this.buttonExportCSV.Name = "buttonExportCSV";
+            this.buttonExportCSV.Size = new System.Drawing.Size(114, 23);
+            this.buttonExportCSV.TabIndex = 11;
+            this.buttonExportCSV.Text = "Export csv";
+            this.buttonExportCSV.UseVisualStyleBackColor = true;
+            this.buttonExportCSV.Click += new System.EventHandler(this.buttonExportCSV_Click);
+            // 
             // FormPion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1007, 448);
+            this.Controls.Add(this.buttonExportCSV);
             this.Controls.Add(this.buttonRenfort);
             this.Controls.Add(this.labelCommentaire);
             this.Controls.Add(this.buttonAnnuler);
@@ -644,5 +656,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_CAVALERIE_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_MATERIEL_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
+        private System.Windows.Forms.Button buttonExportCSV;
     }
 }

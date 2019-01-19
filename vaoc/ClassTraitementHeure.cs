@@ -351,6 +351,7 @@ namespace vaoc
                 }
 
                 /************ A la fin de l'heure ****************/
+                LogFile.CreationLogFile(fichierCourant, "finheure", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 //on regarde toutes les unités qui participent à un combat
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
@@ -5129,7 +5130,7 @@ namespace vaoc
         internal bool miseÀJourInternet(string fichierCourant, out string messageErreur)
         {
             InterfaceVaocWeb iWeb;
-            LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            if (string.Empty == LogFile.nomfichier) { LogFile.CreationLogFile(fichierCourant, "internet", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE); }
             messageErreur = string.Empty;
 
             Cartographie.ChargerLesFichiers();

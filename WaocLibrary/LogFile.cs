@@ -94,5 +94,7 @@ namespace WaocLib
                 Monitor.Exit(m_verrouEcriture);
             }
         }
+
+        public static string nomfichier { get { return m_fileName; } }
     }
 }

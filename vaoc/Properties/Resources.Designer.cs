@@ -91,6 +91,26 @@ namespace vaoc.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap blesse_0 {
+            get {
+                object obj = ResourceManager.GetObject("blesse_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap blesse_1 {
+            get {
+                object obj = ResourceManager.GetObject("blesse_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Byte[].
         /// </summary>
         public static byte[] bullseye_ani {
@@ -256,6 +276,26 @@ namespace vaoc.Properties {
         public static System.Drawing.Bitmap ponton {
             get {
                 object obj = ResourceManager.GetObject("ponton", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap prisonnier_0 {
+            get {
+                object obj = ResourceManager.GetObject("prisonnier_0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap prisonnier_1 {
+            get {
+                object obj = ResourceManager.GetObject("prisonnier_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

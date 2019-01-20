@@ -211,4 +211,16 @@
   <data name="genie_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\genie_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="blesse_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\blesse_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="blesse_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\blesse_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="prisonnier_0" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\prisonnier_0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="prisonnier_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\prisonnier_1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

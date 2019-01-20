@@ -103,6 +103,7 @@ namespace vaoc
             this.phrasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bataillesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mEssagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nomsPionsUniquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.pionsAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ordresAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -142,7 +143,7 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.nomsPionsUniquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractionDeLaBaseEnCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -847,6 +848,13 @@ namespace vaoc
             this.mEssagesToolStripMenuItem.Text = "M&Essages";
             this.mEssagesToolStripMenuItem.Click += new System.EventHandler(this.mEssagesToolStripMenuItem_Click);
             // 
+            // nomsPionsUniquesToolStripMenuItem
+            // 
+            this.nomsPionsUniquesToolStripMenuItem.Name = "nomsPionsUniquesToolStripMenuItem";
+            this.nomsPionsUniquesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.nomsPionsUniquesToolStripMenuItem.Text = "Noms Pions Uniques";
+            this.nomsPionsUniquesToolStripMenuItem.Click += new System.EventHandler(this.nomsPionsUniquesToolStripMenuItem_Click);
+            // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
@@ -887,6 +895,7 @@ namespace vaoc
             this.testsToolStripMenuItem,
             this.outilsToolStripMenuItem,
             this.statistiquesToolStripMenuItem,
+            this.extractionDeLaBaseEnCSVToolStripMenuItem,
             this.repriseDeDonnéesToolStripMenuItem,
             this.toolStripSeparator7,
             this.actuelsAnciensToolStripMenuItem,
@@ -1205,12 +1214,12 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // nomsPionsUniquesToolStripMenuItem
+            // extractionDeLaBaseEnCSVToolStripMenuItem
             // 
-            this.nomsPionsUniquesToolStripMenuItem.Name = "nomsPionsUniquesToolStripMenuItem";
-            this.nomsPionsUniquesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.nomsPionsUniquesToolStripMenuItem.Text = "Noms Pions Uniques";
-            this.nomsPionsUniquesToolStripMenuItem.Click += new System.EventHandler(this.nomsPionsUniquesToolStripMenuItem_Click);
+            this.extractionDeLaBaseEnCSVToolStripMenuItem.Name = "extractionDeLaBaseEnCSVToolStripMenuItem";
+            this.extractionDeLaBaseEnCSVToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.extractionDeLaBaseEnCSVToolStripMenuItem.Text = "Extraction de la base en CSV";
+            this.extractionDeLaBaseEnCSVToolStripMenuItem.Click += new System.EventHandler(this.extractionDeLaBaseEnCSVToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1362,6 +1371,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem actuelsAnciensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem anciensActuelsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nomsPionsUniquesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extractionDeLaBaseEnCSVToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

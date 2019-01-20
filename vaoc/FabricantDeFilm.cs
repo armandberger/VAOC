@@ -36,6 +36,8 @@ namespace vaoc
         public int i_X_CASE;
         public int i_Y_CASE;
         public TIPEUNITEVIDEO tipe;
+        public bool b_blesse;
+        public bool b_prisonnier;
     }
 
     public class MyCustomComparer : IComparer<FileInfo>
@@ -545,31 +547,45 @@ namespace vaoc
         private void DessineUniteImage(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
         {
             Image image;
-            switch (unite.tipe)
+            if (unite.b_blesse)
             {
-                case TIPEUNITEVIDEO.INFANTERIE:
-                    //barre haut gauche, bas droite
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
-                    break;
-                case TIPEUNITEVIDEO.CAVALERIE:
-                    //barre haut gauche, bas droite
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
-                    break;
-                case TIPEUNITEVIDEO.ARTILLERIE:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
-                    break;
-                case TIPEUNITEVIDEO.CONVOI:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.convoi_0) : new Bitmap(vaoc.Properties.Resources.convoi_1);
-                    break;
-                case TIPEUNITEVIDEO.DEPOT:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.depot_0) : new Bitmap(vaoc.Properties.Resources.depot_1);
-                    break;
-                case TIPEUNITEVIDEO.PONTONNIER:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.genie_0) : new Bitmap(vaoc.Properties.Resources.genie_1);
-                    break;
-                default:
-                    image = new Bitmap(vaoc.Properties.Resources.zoomMoins);
-                    break;
+                image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.blesse_0) : new Bitmap(vaoc.Properties.Resources.blesse_1);
+            }
+            else
+            {
+                if (unite.b_prisonnier)
+                {
+                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.prisonnier_0) : new Bitmap(vaoc.Properties.Resources.prisonnier_1);
+                }
+                else
+                {
+                    switch (unite.tipe)
+                    {
+                        case TIPEUNITEVIDEO.INFANTERIE:
+                            //barre haut gauche, bas droite
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
+                            break;
+                        case TIPEUNITEVIDEO.CAVALERIE:
+                            //barre haut gauche, bas droite
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
+                            break;
+                        case TIPEUNITEVIDEO.ARTILLERIE:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
+                            break;
+                        case TIPEUNITEVIDEO.CONVOI:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.convoi_0) : new Bitmap(vaoc.Properties.Resources.convoi_1);
+                            break;
+                        case TIPEUNITEVIDEO.DEPOT:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.depot_0) : new Bitmap(vaoc.Properties.Resources.depot_1);
+                            break;
+                        case TIPEUNITEVIDEO.PONTONNIER:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.genie_0) : new Bitmap(vaoc.Properties.Resources.genie_1);
+                            break;
+                        default:
+                            image = new Bitmap(vaoc.Properties.Resources.zoomMoins);
+                            break;
+                    }
+                }
             }
             G.DrawImage(image,
                         m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - image.Width/2, 

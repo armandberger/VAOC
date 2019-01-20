@@ -506,6 +506,8 @@
     <Content Include="IconVAOC.ico" />
     <Content Include="Resources\artillerie_0.png" />
     <Content Include="Resources\artillerie_1.png" />
+    <Content Include="Resources\blesse_0.png" />
+    <Content Include="Resources\blesse_1.png" />
     <Content Include="Resources\bullseye-ani.ani" />
     <None Include="Resources\IconVAOC.ico" />
     <Content Include="Resources\cavalerie_0.png" />
@@ -521,6 +523,8 @@
     <Content Include="Resources\memoire.bmp" />
     <Content Include="Resources\pontendommage.bmp" />
     <Content Include="Resources\ponton.bmp" />
+    <Content Include="Resources\prisonnier_0.png" />
+    <Content Include="Resources\prisonnier_1.png" />
     <Content Include="Resources\voirTrajetsVilles.bmp" />
     <Content Include="Resources\tail2.ani" />
   </ItemGroup>

@@ -78,6 +78,8 @@ namespace vaoc
         {
             m_texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1];
             this.buttonOuvrirFilm.Enabled = false;
+            m_oldcurseur = Cursor;
+            Cursor = Cursors.WaitCursor;
 
             for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
             {
@@ -177,6 +179,8 @@ namespace vaoc
                 unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
                 //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
                 Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
+                unite.b_blesse = lignePion.B_BLESSES;
+                unite.b_prisonnier = lignePion.B_PRISONNIERS;
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
@@ -198,8 +202,6 @@ namespace vaoc
 
             //lancement du traitement
             this.buttonOuvrirFilm.Enabled = false;
-            m_oldcurseur = Cursor;
-            Cursor = Cursors.WaitCursor;
             //m_dateDebut = DateTime.Now;
             progressBar.Value = 0;
             Invalidate();

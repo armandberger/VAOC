@@ -4547,6 +4547,28 @@ namespace vaoc
                 Donnees.m_donnees.TAB_NOMS_PIONS.Merge(fNompsPionsTable.tableNomsPions, false);
             }
         }
+
+        private void extractionDeLaBaseEnCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string nomfichier;
+            string nomsfichier = string.Empty;
+            string messageErreur = string.Empty;
+            foreach (DataTable table in Donnees.m_donnees.Tables)
+            {
+                messageErreur += Dal.exportCSV(table, out nomfichier);
+                nomsfichier += nomfichier + ",";
+            }
+
+            if (string.Empty == messageErreur)
+            {
+                MessageBox.Show("Fichiers CSV exporté : " + nomsfichier, "Export CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Erreur sur l'export du fichier CSV : " + nomsfichier + " : " + messageErreur,
+                    "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 
     internal static class NativeMethods

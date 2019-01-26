@@ -1880,7 +1880,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 8;
+            TAB_JEU[0].I_VERSION = 9;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
@@ -2297,7 +2297,6 @@ namespace vaoc
                     }
                 }
             }
-
             #endregion
 
             #region version 8
@@ -2310,7 +2309,22 @@ namespace vaoc
                     ligneNomCarte.B_CREATION_DEPOT = false;
                 }
             }
+            #endregion
 
+            #region version 9
+            if (TAB_JEU[0].I_VERSION < 9)
+            {
+                for (int l = 0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
+                {
+                    Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];
+                    ligneBataille.B_ZONE_UNIQUE = false;
+                }
+                for (int l = 0; l < Donnees.m_donnees.TAB_MODELE_TERRAIN.Count; l++)
+                {
+                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN[l];
+                    ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE = false;
+                }
+            }
             #endregion
             return true;
         }

@@ -87,6 +87,7 @@ namespace vaoc
             this.ID_NOUVEAU_TERRAIN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.B_OBSTACLE_DEFENSIF = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.B_ANNULEE_EN_COMBAT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.B_BATAILLE_ZONE_UNIQUE = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCouleurs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewModelesTerrain)).BeginInit();
             this.groupBoxPositionCouleur.SuspendLayout();
@@ -309,7 +310,8 @@ namespace vaoc
             this.Routier,
             this.ID_NOUVEAU_TERRAIN,
             this.B_OBSTACLE_DEFENSIF,
-            this.B_ANNULEE_EN_COMBAT});
+            this.B_ANNULEE_EN_COMBAT,
+            this.B_BATAILLE_ZONE_UNIQUE});
             this.dataGridViewModelesTerrain.Location = new System.Drawing.Point(0, 259);
             this.dataGridViewModelesTerrain.Name = "dataGridViewModelesTerrain";
             this.dataGridViewModelesTerrain.Size = new System.Drawing.Size(828, 150);
@@ -465,7 +467,7 @@ namespace vaoc
             this.label9.Size = new System.Drawing.Size(259, 32);
             this.label9.TabIndex = 35;
             this.label9.Text = "Inutilisable si occupée = indique une case qui, si elle est occupée, bloque le mo" +
-                "uvement";
+    "uvement";
             // 
             // buttonModifierModele
             // 
@@ -499,18 +501,21 @@ namespace vaoc
             this.NOM_TERRAIN.FillWeight = 103.7132F;
             this.NOM_TERRAIN.HeaderText = "Terrain";
             this.NOM_TERRAIN.Name = "NOM_TERRAIN";
+            this.NOM_TERRAIN.ReadOnly = true;
             // 
             // B_ANNULEE_SI_OCCUPEE
             // 
             this.B_ANNULEE_SI_OCCUPEE.FillWeight = 103.7132F;
             this.B_ANNULEE_SI_OCCUPEE.HeaderText = "Inutilisable si occupée";
             this.B_ANNULEE_SI_OCCUPEE.Name = "B_ANNULEE_SI_OCCUPEE";
+            this.B_ANNULEE_SI_OCCUPEE.ReadOnly = true;
             // 
             // I_MODIFICATEUR_DEFENSE
             // 
             this.I_MODIFICATEUR_DEFENSE.FillWeight = 103.7132F;
             this.I_MODIFICATEUR_DEFENSE.HeaderText = "Modificateur de défense";
             this.I_MODIFICATEUR_DEFENSE.Name = "I_MODIFICATEUR_DEFENSE";
+            this.I_MODIFICATEUR_DEFENSE.ReadOnly = true;
             // 
             // TERRAIN_COULEUR
             // 
@@ -538,6 +543,7 @@ namespace vaoc
             // 
             this.ID_GRAPHIQUE.HeaderText = "ID_GRAPHIQUE";
             this.ID_GRAPHIQUE.Name = "ID_GRAPHIQUE";
+            this.ID_GRAPHIQUE.ReadOnly = true;
             this.ID_GRAPHIQUE.Visible = false;
             // 
             // Pont
@@ -545,17 +551,20 @@ namespace vaoc
             this.Pont.FillWeight = 103.7132F;
             this.Pont.HeaderText = "Pont";
             this.Pont.Name = "Pont";
+            this.Pont.ReadOnly = true;
             // 
             // Ponton
             // 
             this.Ponton.FillWeight = 59.15494F;
             this.Ponton.HeaderText = "Ponton";
             this.Ponton.Name = "Ponton";
+            this.Ponton.ReadOnly = true;
             // 
             // Detruit
             // 
             this.Detruit.HeaderText = "Detruit";
             this.Detruit.Name = "Detruit";
+            this.Detruit.ReadOnly = true;
             this.Detruit.ToolTipText = "indique un élément résultant de la destruction d\'un autre";
             // 
             // Routier
@@ -563,12 +572,14 @@ namespace vaoc
             this.Routier.FillWeight = 103.7132F;
             this.Routier.HeaderText = "Routier";
             this.Routier.Name = "Routier";
+            this.Routier.ReadOnly = true;
             // 
             // ID_NOUVEAU_TERRAIN
             // 
             this.ID_NOUVEAU_TERRAIN.FillWeight = 103.7132F;
             this.ID_NOUVEAU_TERRAIN.HeaderText = "ID_NOUVEAU_TERRAIN";
             this.ID_NOUVEAU_TERRAIN.Name = "ID_NOUVEAU_TERRAIN";
+            this.ID_NOUVEAU_TERRAIN.ReadOnly = true;
             this.ID_NOUVEAU_TERRAIN.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.ID_NOUVEAU_TERRAIN.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
@@ -577,6 +588,7 @@ namespace vaoc
             this.B_OBSTACLE_DEFENSIF.FillWeight = 103.7132F;
             this.B_OBSTACLE_DEFENSIF.HeaderText = "Obstacle défensif";
             this.B_OBSTACLE_DEFENSIF.Name = "B_OBSTACLE_DEFENSIF";
+            this.B_OBSTACLE_DEFENSIF.ReadOnly = true;
             this.B_OBSTACLE_DEFENSIF.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.B_OBSTACLE_DEFENSIF.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
@@ -585,8 +597,17 @@ namespace vaoc
             this.B_ANNULEE_EN_COMBAT.FillWeight = 103.7132F;
             this.B_ANNULEE_EN_COMBAT.HeaderText = "Sans effet au combat";
             this.B_ANNULEE_EN_COMBAT.Name = "B_ANNULEE_EN_COMBAT";
+            this.B_ANNULEE_EN_COMBAT.ReadOnly = true;
             this.B_ANNULEE_EN_COMBAT.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.B_ANNULEE_EN_COMBAT.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // B_BATAILLE_ZONE_UNIQUE
+            // 
+            this.B_BATAILLE_ZONE_UNIQUE.HeaderText = "Zone de Bataille Unique";
+            this.B_BATAILLE_ZONE_UNIQUE.Name = "B_BATAILLE_ZONE_UNIQUE";
+            this.B_BATAILLE_ZONE_UNIQUE.ReadOnly = true;
+            this.B_BATAILLE_ZONE_UNIQUE.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.B_BATAILLE_ZONE_UNIQUE.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // FormFondDeCarte
             // 
@@ -695,5 +716,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_NOUVEAU_TERRAIN;
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_OBSTACLE_DEFENSIF;
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_ANNULEE_EN_COMBAT;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn B_BATAILLE_ZONE_UNIQUE;
     }
 }

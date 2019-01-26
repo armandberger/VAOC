@@ -49,6 +49,7 @@
             this.textBoxIdentifiant = new System.Windows.Forms.TextBox();
             this.checkBoxPonton = new System.Windows.Forms.CheckBox();
             this.checkBoxDetruit = new System.Windows.Forms.CheckBox();
+            this.checkBoxBatailleZoneUnique = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -119,7 +120,7 @@
             // buttonCreer
             // 
             this.buttonCreer.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCreer.Location = new System.Drawing.Point(24, 277);
+            this.buttonCreer.Location = new System.Drawing.Point(24, 300);
             this.buttonCreer.Name = "buttonCreer";
             this.buttonCreer.Size = new System.Drawing.Size(75, 23);
             this.buttonCreer.TabIndex = 7;
@@ -129,7 +130,7 @@
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(150, 277);
+            this.buttonAnnuler.Location = new System.Drawing.Point(150, 300);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 8;
@@ -241,12 +242,23 @@
             this.checkBoxDetruit.Text = "Detruit";
             this.checkBoxDetruit.UseVisualStyleBackColor = true;
             // 
+            // checkBoxBatailleZoneUnique
+            // 
+            this.checkBoxBatailleZoneUnique.AutoSize = true;
+            this.checkBoxBatailleZoneUnique.Location = new System.Drawing.Point(16, 268);
+            this.checkBoxBatailleZoneUnique.Name = "checkBoxBatailleZoneUnique";
+            this.checkBoxBatailleZoneUnique.Size = new System.Drawing.Size(218, 17);
+            this.checkBoxBatailleZoneUnique.TabIndex = 16;
+            this.checkBoxBatailleZoneUnique.Text = "Zone unique de combat (forteresse, etc.)";
+            this.checkBoxBatailleZoneUnique.UseVisualStyleBackColor = true;
+            // 
             // FormNouveauModeleTerrain
             // 
             this.AcceptButton = this.buttonCreer;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(263, 312);
+            this.ClientSize = new System.Drawing.Size(263, 335);
+            this.Controls.Add(this.checkBoxBatailleZoneUnique);
             this.Controls.Add(this.checkBoxDetruit);
             this.Controls.Add(this.checkBoxPonton);
             this.Controls.Add(this.textBoxIdentifiant);
@@ -301,5 +313,6 @@
         private System.Windows.Forms.TextBox textBoxIdentifiant;
         private System.Windows.Forms.CheckBox checkBoxPonton;
         private System.Windows.Forms.CheckBox checkBoxDetruit;
+        private System.Windows.Forms.CheckBox checkBoxBatailleZoneUnique;
     }
 }

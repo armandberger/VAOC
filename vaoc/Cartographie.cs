@@ -1160,6 +1160,26 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 idModeleTerrain[i] = idTerrain;
             }
 
+            //on regarde si l'un des terrains est un terrain sur lequel on a une seule zone de combat au lieu de trois (cas des forteresses par exemple)
+            bool bZoneUnique = false;
+            for (i = 0; i < 6; i++)
+            {
+                Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain= Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(idModeleTerrain[i]);
+                if (ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE)
+                {
+                    bZoneUnique = true;
+                    //dans ce cas le terrain central (le seul joué) est forcement ce terrain unique
+                    if (i<3)
+                    {
+                        idModeleTerrain[1] = idModeleTerrain[i];
+                    }
+                    else
+                    {
+                        idModeleTerrain[4] = idModeleTerrain[i];
+                    }
+                }
+            }
+
             //recherche d'éventuels obstacles (rivière, etc.) entre les zones, d'après le nombre d'éléments présents
             for (i = 0; i < 3; i++)
             {
@@ -1234,7 +1254,8 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                                     "Aucun Combat",
                                     "Aucun Combat",
                                     "Aucun Combat",
-                                    "Aucun Combat"
+                                    "Aucun Combat",
+                                    bZoneUnique//B_ZONE_UNIQUE
                                     );
             if (null == ligneBataille)
             {

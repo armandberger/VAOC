@@ -90,6 +90,18 @@ namespace vaoc
             }
         }
 
+        public bool bBatailleZoneUnique
+        {
+            get
+            {
+                return checkBoxBatailleZoneUnique.Checked;
+            }
+            set
+            {
+                checkBoxBatailleZoneUnique.Checked = value;
+            }
+        }
+        
         public bool bAnnuleeSiOcccupee
         { 
             get

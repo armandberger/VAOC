@@ -127,6 +127,7 @@ namespace vaoc
                     ligneTerrain.ID_MODELE_NOUVEAU_TERRAIN = Convert.ToInt32(ligne.Cells["ID_NOUVEAU_TERRAIN"].Value);
                     ligneTerrain.B_OBSTACLE_DEFENSIF = Convert.ToBoolean(ligne.Cells["B_OBSTACLE_DEFENSIF"].Value);
                     ligneTerrain.B_ANNULEE_EN_COMBAT = Convert.ToBoolean(ligne.Cells["B_ANNULEE_EN_COMBAT"].Value);
+                    ligneTerrain.B_BATAILLE_ZONE_UNIQUE = Convert.ToBoolean(ligne.Cells["B_BATAILLE_ZONE_UNIQUE"].Value);
 
                     m_tableModelesTerrains.AddTAB_MODELE_TERRAINRow(ligneTerrain);
                 }
@@ -174,6 +175,7 @@ namespace vaoc
                             ligne.Cells[12].Value = ligneTerrain.ID_MODELE_NOUVEAU_TERRAIN;//"ID_MODELE_NOUVEAU_TERRAIN"
                             ligne.Cells[13].Value = ligneTerrain.B_OBSTACLE_DEFENSIF;
                             ligne.Cells[14].Value = ligneTerrain.B_ANNULEE_EN_COMBAT;
+                            ligne.Cells[15].Value = ligneTerrain.B_BATAILLE_ZONE_UNIQUE;
                             dataGridViewModelesTerrain.Rows.Add(ligne);
                         }
                     }
@@ -581,7 +583,8 @@ namespace vaoc
                                                                                         false,
                                                                                         false, //B_PONT
                                                                                         false, //B_PONTON
-                                                                                        false //B_DETRUIT
+                                                                                        false, //B_DETRUIT
+                                                                                        false //B_BATAILLE_ZONE_UNIQUE
                                                                                         );//B_ANNULEE_EN_COMBAT
                         m_identifiantsModelesTerrains.Add(ligneTerrain.ID_MODELE_TERRAIN, ligneTerrain.ID_MODELE_TERRAIN);
                         //création de la nouvelle ligne dans la table des modeles de terrain
@@ -955,7 +958,8 @@ namespace vaoc
                     fNouveauModeleTerrain.bAnnuleEnCombat,
                     fNouveauModeleTerrain.bPont,
                     fNouveauModeleTerrain.bPonton,
-                    fNouveauModeleTerrain.bDetruit
+                    fNouveauModeleTerrain.bDetruit,
+                    fNouveauModeleTerrain.bBatailleZoneUnique
                     );
 
                 m_identifiantsModelesTerrains.Add(ligneModeleTerrain.ID_MODELE_TERRAIN, ligneModeleTerrain.ID_MODELE_TERRAIN);
@@ -1018,6 +1022,7 @@ namespace vaoc
             ligne.Cells[12].Value = ligneModeleTerrain.ID_MODELE_NOUVEAU_TERRAIN;//"ID_MODELE_NOUVEAU_TERRAIN"
             ligne.Cells[13].Value = ligneModeleTerrain.B_OBSTACLE_DEFENSIF;
             ligne.Cells[14].Value = ligneModeleTerrain.B_ANNULEE_EN_COMBAT;
+            ligne.Cells[15].Value = ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE;
         }
 
         private void buttonSupprimerModele_Click(object sender, EventArgs e)
@@ -1106,6 +1111,7 @@ namespace vaoc
             fNouveauModeleTerrain.CouleurB = lignePoint.I_BLEU;
             fNouveauModeleTerrain.CouleurR = lignePoint.I_ROUGE;
             fNouveauModeleTerrain.CouleurG = lignePoint.I_VERT;
+            fNouveauModeleTerrain.bBatailleZoneUnique = ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE;
             if (fNouveauModeleTerrain.ShowDialog(this) == DialogResult.OK)
             {
                 //mise à jour des données
@@ -1139,6 +1145,7 @@ namespace vaoc
                 lignePoint.I_BLEU = (short)fNouveauModeleTerrain.CouleurB;
                 lignePoint.I_ROUGE = (short)fNouveauModeleTerrain.CouleurR;
                 lignePoint.I_VERT = (short)fNouveauModeleTerrain.CouleurG;
+                ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE = fNouveauModeleTerrain.bBatailleZoneUnique;
 
                 //maintenant il faut mettre à jour la datagrid modele
                 Color pixelColor = Color.FromArgb(fNouveauModeleTerrain.CouleurR,

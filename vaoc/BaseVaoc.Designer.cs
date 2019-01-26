@@ -4244,6 +4244,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnB_DETRUIT;
             
+            private global::System.Data.DataColumn columnB_BATAILLE_ZONE_UNIQUE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_MODELE_TERRAINDataTable() {
@@ -4375,6 +4377,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn B_BATAILLE_ZONE_UNIQUEColumn {
+                get {
+                    return this.columnB_BATAILLE_ZONE_UNIQUE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -4410,7 +4420,7 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TAB_MODELE_TERRAINRow AddTAB_MODELE_TERRAINRow(int ID_MODELE_TERRAIN, string S_NOM, int ID_GRAPHIQUE, int ID_MODELE_NOUVEAU_TERRAIN, int I_MODIFICATEUR_DEFENSE, bool B_ANNULEE_SI_OCCUPEE, bool B_CIRCUIT_ROUTIER, bool B_OBSTACLE_DEFENSIF, bool B_ANNULEE_EN_COMBAT, bool B_PONT, bool B_PONTON, bool B_DETRUIT) {
+            public TAB_MODELE_TERRAINRow AddTAB_MODELE_TERRAINRow(int ID_MODELE_TERRAIN, string S_NOM, int ID_GRAPHIQUE, int ID_MODELE_NOUVEAU_TERRAIN, int I_MODIFICATEUR_DEFENSE, bool B_ANNULEE_SI_OCCUPEE, bool B_CIRCUIT_ROUTIER, bool B_OBSTACLE_DEFENSIF, bool B_ANNULEE_EN_COMBAT, bool B_PONT, bool B_PONTON, bool B_DETRUIT, bool B_BATAILLE_ZONE_UNIQUE) {
                 TAB_MODELE_TERRAINRow rowTAB_MODELE_TERRAINRow = ((TAB_MODELE_TERRAINRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_MODELE_TERRAIN,
@@ -4424,7 +4434,8 @@ namespace vaoc {
                         B_ANNULEE_EN_COMBAT,
                         B_PONT,
                         B_PONTON,
-                        B_DETRUIT};
+                        B_DETRUIT,
+                        B_BATAILLE_ZONE_UNIQUE};
                 rowTAB_MODELE_TERRAINRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_MODELE_TERRAINRow);
                 return rowTAB_MODELE_TERRAINRow;
@@ -4466,6 +4477,7 @@ namespace vaoc {
                 this.columnB_PONT = base.Columns["B_PONT"];
                 this.columnB_PONTON = base.Columns["B_PONTON"];
                 this.columnB_DETRUIT = base.Columns["B_DETRUIT"];
+                this.columnB_BATAILLE_ZONE_UNIQUE = base.Columns["B_BATAILLE_ZONE_UNIQUE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4495,6 +4507,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnB_PONTON);
                 this.columnB_DETRUIT = new global::System.Data.DataColumn("B_DETRUIT", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnB_DETRUIT);
+                this.columnB_BATAILLE_ZONE_UNIQUE = new global::System.Data.DataColumn("B_BATAILLE_ZONE_UNIQUE", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_BATAILLE_ZONE_UNIQUE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_MODELE_TERRAIN}, true));
                 this.columnID_MODELE_TERRAIN.AllowDBNull = false;
@@ -10289,6 +10303,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnS_COMBAT_5;
             
+            private global::System.Data.DataColumn columnB_ZONE_UNIQUE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TAB_BATAILLEDataTable() {
@@ -10612,6 +10628,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn B_ZONE_UNIQUEColumn {
+                get {
+                    return this.columnB_ZONE_UNIQUE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -10683,7 +10707,8 @@ namespace vaoc {
                         string S_COMBAT_2, 
                         string S_COMBAT_3, 
                         string S_COMBAT_4, 
-                        string S_COMBAT_5) {
+                        string S_COMBAT_5, 
+                        bool B_ZONE_UNIQUE) {
                 TAB_BATAILLERow rowTAB_BATAILLERow = ((TAB_BATAILLERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_BATAILLE,
@@ -10721,7 +10746,8 @@ namespace vaoc {
                         S_COMBAT_2,
                         S_COMBAT_3,
                         S_COMBAT_4,
-                        S_COMBAT_5};
+                        S_COMBAT_5,
+                        B_ZONE_UNIQUE};
                 rowTAB_BATAILLERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_BATAILLERow);
                 return rowTAB_BATAILLERow;
@@ -10787,6 +10813,7 @@ namespace vaoc {
                 this.columnS_COMBAT_3 = base.Columns["S_COMBAT_3"];
                 this.columnS_COMBAT_4 = base.Columns["S_COMBAT_4"];
                 this.columnS_COMBAT_5 = base.Columns["S_COMBAT_5"];
+                this.columnB_ZONE_UNIQUE = base.Columns["B_ZONE_UNIQUE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -10864,6 +10891,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnS_COMBAT_4);
                 this.columnS_COMBAT_5 = new global::System.Data.DataColumn("S_COMBAT_5", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnS_COMBAT_5);
+                this.columnB_ZONE_UNIQUE = new global::System.Data.DataColumn("B_ZONE_UNIQUE", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_ZONE_UNIQUE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint11", new global::System.Data.DataColumn[] {
                                 this.columnID_BATAILLE}, true));
                 this.columnID_BATAILLE.AutoIncrementSeed = 1;
@@ -22339,6 +22368,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool B_BATAILLE_ZONE_UNIQUE {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_MODELE_TERRAIN.B_BATAILLE_ZONE_UNIQUEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_BATAILLE_ZONE_UNIQUE\' dans la table \'TAB_MODELE_TERR" +
+                                "AIN\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_TERRAIN.B_BATAILLE_ZONE_UNIQUEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_MODELE_TERRAIN.S_NOMColumn);
             }
@@ -22467,6 +22513,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetB_DETRUITNull() {
                 this[this.tableTAB_MODELE_TERRAIN.B_DETRUITColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsB_BATAILLE_ZONE_UNIQUENull() {
+                return this.IsNull(this.tableTAB_MODELE_TERRAIN.B_BATAILLE_ZONE_UNIQUEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetB_BATAILLE_ZONE_UNIQUENull() {
+                this[this.tableTAB_MODELE_TERRAIN.B_BATAILLE_ZONE_UNIQUEColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -26933,6 +26991,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool B_ZONE_UNIQUE {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_BATAILLE.B_ZONE_UNIQUEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_ZONE_UNIQUE\' dans la table \'TAB_BATAILLE\' est DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE.B_ZONE_UNIQUEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_BATAILLE.S_NOMColumn);
             }
@@ -27349,6 +27424,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetS_COMBAT_5Null() {
                 this[this.tableTAB_BATAILLE.S_COMBAT_5Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsB_ZONE_UNIQUENull() {
+                return this.IsNull(this.tableTAB_BATAILLE.B_ZONE_UNIQUEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetB_ZONE_UNIQUENull() {
+                this[this.tableTAB_BATAILLE.B_ZONE_UNIQUEColumn] = global::System.Convert.DBNull;
             }
         }
         

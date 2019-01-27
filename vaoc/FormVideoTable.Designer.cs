@@ -58,6 +58,7 @@
             this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataSetCoutDonnees = new vaoc.Donnees();
             this.buttonAnnuler = new System.Windows.Forms.Button();
+            this.buttonExportCSV = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVideo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -273,12 +274,23 @@
             this.buttonAnnuler.Text = "Annuler";
             this.buttonAnnuler.UseVisualStyleBackColor = true;
             // 
+            // buttonExportCSV
+            // 
+            this.buttonExportCSV.Location = new System.Drawing.Point(311, 312);
+            this.buttonExportCSV.Name = "buttonExportCSV";
+            this.buttonExportCSV.Size = new System.Drawing.Size(75, 23);
+            this.buttonExportCSV.TabIndex = 13;
+            this.buttonExportCSV.Text = "Export CSV";
+            this.buttonExportCSV.UseVisualStyleBackColor = true;
+            this.buttonExportCSV.Click += new System.EventHandler(this.buttonExportCSV_Click);
+            // 
             // FormVideoTable
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(1458, 383);
+            this.ClientSize = new System.Drawing.Size(1284, 383);
+            this.Controls.Add(this.buttonExportCSV);
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.dataGridViewVideo);
             this.Controls.Add(this.buttonValider);
@@ -324,5 +336,6 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn bPRISONNIERSDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cNIVEAUDEPOTDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iVICTOIREDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button buttonExportCSV;
     }
 }

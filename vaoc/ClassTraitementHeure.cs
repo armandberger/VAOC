@@ -550,15 +550,6 @@ namespace vaoc
                                 bTourSuivant = false;
                                 LogFile.Notifier("Fin de tour :A moins de 20/10 kilomètres, on ne fait pas plus de deux heures de suite le jour");
                             }
-
-                            // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
-                            if ((Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) ||
-                                (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL) ||
-                                (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
-                            {
-                                bTourSuivant = true;
-                                LogFile.Notifier("Fin de tour :+1 tour pour finir au lever du soleil ou à la première heure du jour");
-                            }
                         }
                         else
                         {
@@ -568,6 +559,14 @@ namespace vaoc
                                 bTourSuivant = false;
                                 LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                             }
+                        }
+                        // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
+                        if ((Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) ||
+                            (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL) ||
+                            (Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == 1))
+                        {
+                            bTourSuivant = true;
+                            LogFile.Notifier("Fin de tour :+1 tour pour finir au lever du soleil ou à la première heure du jour");
                         }
                     }
                 }

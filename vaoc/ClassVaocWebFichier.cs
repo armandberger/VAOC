@@ -1444,7 +1444,7 @@ namespace vaoc
                                     idPartie);
             listeRequete.AppendLine(requete);
 
-            requete = "INSERT INTO `tab_vaoc_bataille` (`ID_PARTIE`, `ID_BATAILLE`, `S_NOM`, `DT_BATAILLE_DEBUT`, `C_ORIENTATION`, `S_TERRAIN0`, `S_TERRAIN1`, `S_TERRAIN2`, `S_TERRAIN3`, `S_TERRAIN4`, `S_TERRAIN5`, `S_COULEURTERRAIN0`, `S_COULEURTERRAIN1`, `S_COULEURTERRAIN2`, `S_COULEURTERRAIN3`, `S_COULEURTERRAIN4`, `S_COULEURTERRAIN5`, `S_OBSTACLE0`, `S_OBSTACLE1`, `S_OBSTACLE2`, `S_COULEUROBSTACLE0`, `S_COULEUROBSTACLE1`, `S_COULEUROBSTACLE2`, `ID_NATION_012`, `ID_NATION_345`, `ID_LEADER_012`, `ID_LEADER_345`, `DT_BATAILLE_FIN`, `I_TOUR_DEBUT`, `S_COMBAT_0`, `S_COMBAT_1`, `S_COMBAT_2`, `S_COMBAT_3`, `S_COMBAT_4`, `S_COMBAT_5`, `I_ENGAGEMENT_0`, `I_ENGAGEMENT_1`, `I_ENGAGEMENT_2`, `I_ENGAGEMENT_3`, `I_ENGAGEMENT_4`, `I_ENGAGEMENT_5`) VALUES";
+            requete = "INSERT INTO `tab_vaoc_bataille` (`ID_PARTIE`, `ID_BATAILLE`, `S_NOM`, `DT_BATAILLE_DEBUT`, `C_ORIENTATION`, `S_TERRAIN0`, `S_TERRAIN1`, `S_TERRAIN2`, `S_TERRAIN3`, `S_TERRAIN4`, `S_TERRAIN5`, `S_COULEURTERRAIN0`, `S_COULEURTERRAIN1`, `S_COULEURTERRAIN2`, `S_COULEURTERRAIN3`, `S_COULEURTERRAIN4`, `S_COULEURTERRAIN5`, `S_OBSTACLE0`, `S_OBSTACLE1`, `S_OBSTACLE2`, `S_COULEUROBSTACLE0`, `S_COULEUROBSTACLE1`, `S_COULEUROBSTACLE2`, `ID_NATION_012`, `ID_NATION_345`, `ID_LEADER_012`, `ID_LEADER_345`, `DT_BATAILLE_FIN`, `I_TOUR_DEBUT`, `S_COMBAT_0`, `S_COMBAT_1`, `S_COMBAT_2`, `S_COMBAT_3`, `S_COMBAT_4`, `S_COMBAT_5`, `I_ENGAGEMENT_0`, `I_ENGAGEMENT_1`, `I_ENGAGEMENT_2`, `I_ENGAGEMENT_3`, `I_ENGAGEMENT_4`, `I_ENGAGEMENT_5`, `B_ZONE_UNIQUE`) VALUES";
             listeRequete.AppendLine(requete);
 
             for (int i=0; i< Donnees.m_donnees.TAB_BATAILLE.Count(); i++)
@@ -1463,7 +1463,7 @@ namespace vaoc
 
                 dateFin = ligneBataille.IsI_PHASE_FINNull() ? string.Empty : ClassMessager.DateHeureSQL(ligneBataille.I_TOUR_FIN, ligneBataille.I_PHASE_FIN);
 
-                requete = string.Format("({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', {23}, {24}, {25}, {26}, '{27}', {28}, '{29}', '{30}', '{31}', '{32}', '{33}', '{34}', {35}, {36}, {37}, {38}, {39}, {40}){41}",
+                requete = string.Format("({0}, {1}, '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}', '{17}', '{18}', '{19}', '{20}', '{21}', '{22}', {23}, {24}, {25}, {26}, '{27}', {28}, '{29}', '{30}', '{31}', '{32}', '{33}', '{34}', {35}, {36}, {37}, {38}, {39}, {40}, {41}){42}",
                                         idPartie,
                                         ligneBataille.ID_BATAILLE,
                                         Constantes.ChaineSQL(ligneBataille.S_NOM),
@@ -1505,6 +1505,7 @@ namespace vaoc
                                         ligneBataille.I_ENGAGEMENT_3,
                                         ligneBataille.I_ENGAGEMENT_4,
                                         ligneBataille.I_ENGAGEMENT_5,
+                                        ligneBataille.B_ZONE_UNIQUE ? 1 : 0,
                                         (i == Donnees.m_donnees.TAB_BATAILLE.Count() - 1) ? ";" : ","
                                         );
 

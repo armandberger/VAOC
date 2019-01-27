@@ -351,7 +351,6 @@ namespace vaoc
                 }
 
                 /************ A la fin de l'heure ****************/
-                LogFile.CreationLogFile(fichierCourant, "finheure", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 //on regarde toutes les unités qui participent à un combat
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
@@ -470,6 +469,7 @@ namespace vaoc
 
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas
+                LogFile.CreationLogFile(fichierCourant, "fintour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 if (bFinDePartie 
                     || !Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE
                     || 1==Donnees.m_donnees.TAB_PARTIE[0].I_TOUR //premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres
@@ -571,6 +571,7 @@ namespace vaoc
                         }
                     }
                 }
+                if (bTourSuivant) LogFile.Notifier("Fin de tour : Aucune condition réunie pour terminer, on continue le tour");
                 #endregion
 
                 //dernière sauvegarde pour demarrer au tour suivant

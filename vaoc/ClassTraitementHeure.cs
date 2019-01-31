@@ -529,19 +529,32 @@ namespace vaoc
                         DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement, 
                                                     out lignePionMin1, out lignePionMin2,
                                                     out lignePionMax1, out lignePionMax2);
-                        LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : {2} ({7}:{8} <-> {9}:{10})",
-                           nbTourExecutes, 
-                           distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, 
-                           distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
-                           lignePionMin1.ID_PION,
-                           lignePionMin1.S_NOM,
-                           lignePionMin2.ID_PION,//5
-                           lignePionMin2.S_NOM, 
-                           lignePionMax1.ID_PION,
-                           lignePionMax1.S_NOM, 
-                           lignePionMax2.ID_PION,
-                           lignePionMax2.S_NOM));
-
+                        if (null== lignePionMax1 || lignePionMax2==null)
+                        {
+                            LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : aucune unité en mouvement !)",
+                               nbTourExecutes,
+                               distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                               distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                               lignePionMin1.ID_PION,
+                               lignePionMin1.S_NOM,
+                               lignePionMin2.ID_PION,//5
+                               lignePionMin2.S_NOM));
+                        }
+                        else
+                        {
+                            LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : {2} ({7}:{8} <-> {9}:{10})",
+                               nbTourExecutes,
+                               distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                               distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
+                               lignePionMin1.ID_PION,
+                               lignePionMin1.S_NOM,
+                               lignePionMin2.ID_PION,//5
+                               lignePionMin2.S_NOM,
+                               lignePionMax1.ID_PION,
+                               lignePionMax1.S_NOM,
+                               lignePionMax2.ID_PION,
+                               lignePionMax2.S_NOM));
+                        }
                         if (distanceMin < 5 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE || distanceMinEnMouvement< 15 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE )
                         {
                             //A moins de 15 kilomètres en mouvement ou 5 kilomètres à l'arrêt, on ne fait pas plus de deux heures de suite le jour

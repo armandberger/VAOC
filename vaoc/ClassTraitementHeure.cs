@@ -3189,7 +3189,8 @@ namespace vaoc
                                     iCavalerieRenfort = lignePion.I_CAVALERIE;
                                 }
                                 Donnees.TAB_NATIONRow ligneNation = lignePion.nation;
-                                Donnees.TAB_PIONRow lignePionCommandantEnChef = ligneNation.commandantEnChef;
+                                //Donnees.TAB_PIONRow lignePionCommandantEnChef = ligneNation.commandantEnChef; -> s'il y a plusieurs commandants en chef, cela pose problème !
+                                Donnees.TAB_PIONRow lignePionCommandantEnChef = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_PROPRIETAIRE);
                                 Donnees.TAB_PIONRow lignePionRenfort = lignePion.CreerConvoi(lignePionCommandantEnChef, false /*bBlesses*/, false /*bPrisonniers*/, true /*bRenfort*/);
                                 if (null == lignePionRenfort)
                                 {

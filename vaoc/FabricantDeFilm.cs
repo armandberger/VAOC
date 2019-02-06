@@ -362,6 +362,34 @@ namespace vaoc
                                         //m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
                 }
 
+                //indicateur de victoires sous forme de camembert
+                int victoire0=0, victoire1=0;
+                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                {
+                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                    {
+                        if (eev.iTour != m_traitement)
+                        {
+                            continue;
+                        }
+                        if (0 == eev.iNation) { victoire0 = eev.iVictoire;} else { victoire1 = eev.iVictoire; }
+
+                            Brush brosseNation = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
+                    }
+                }
+                Rectangle RectangleVictoire = new Rectangle(BARRE_ECART, BARRE_ECART, m_largeurCote, m_largeurCote);
+                //on pose un cercle complet dans le fond en premier
+                G.FillEllipse(Brushes.Blue, RectangleVictoire);
+                //on complète par le camembert
+                if (victoire1>victoire0)
+                {
+                    G.FillPie(Brushes.Red, RectangleVictoire, 360 + 50 - 90 - (victoire1 * 360 / (victoire0 + victoire1)), 90);
+                }
+                else
+                {
+                    G.FillPie(Brushes.Red, RectangleVictoire, ((victoire1 + 90) * 360 / (victoire0 + victoire1)) - 50 -90, 90);
+                }
+
                 // effectifs et indicateur de victoire par camp
                 if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
                 {

@@ -381,14 +381,9 @@ namespace vaoc
                 //on pose un cercle complet dans le fond en premier
                 G.FillEllipse(Brushes.Blue, RectangleVictoire);
                 //on complète par le camembert
-                if (victoire1>victoire0)
-                {
-                    G.FillPie(Brushes.Red, RectangleVictoire, 360 + 50 - 90 - (victoire1 * 360 / (victoire0 + victoire1)), 90);
-                }
-                else
-                {
-                    G.FillPie(Brushes.Red, RectangleVictoire, ((victoire1 + 90) * 360 / (victoire0 + victoire1)) - 50 -90, 90);
-                }
+                G.FillPie(Brushes.Red, new Rectangle(BARRE_ECART, BARRE_ECART + 2*m_largeurCote, m_largeurCote, m_largeurCote)
+                                    , 90 - (victoire1 * 360 / (victoire0 + victoire1))
+                                    , (victoire1 * 360 / (victoire0 + victoire1)));
 
                 // effectifs et indicateur de victoire par camp
                 if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)

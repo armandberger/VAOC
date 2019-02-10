@@ -131,7 +131,7 @@
             this.textBoxLargeurBase.Name = "textBoxLargeurBase";
             this.textBoxLargeurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxLargeurBase.TabIndex = 7;
-            this.textBoxLargeurBase.Text = "800";
+            this.textBoxLargeurBase.Text = "1200";
             // 
             // textBoxHauteurBase
             // 
@@ -139,7 +139,7 @@
             this.textBoxHauteurBase.Name = "textBoxHauteurBase";
             this.textBoxHauteurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxHauteurBase.TabIndex = 8;
-            this.textBoxHauteurBase.Text = "600";
+            this.textBoxHauteurBase.Text = "800";
             // 
             // label5
             // 

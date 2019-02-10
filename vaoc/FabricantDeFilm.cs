@@ -393,9 +393,9 @@ namespace vaoc
                             }
                         }
                     }
-                    Rectangle RectangleVictoire = new Rectangle(rectBas.Width - BARRE_ECART - m_hauteurBandeau,
+                    Rectangle RectangleVictoire = new Rectangle(rectBas.Width - BARRE_ECART - rectBas.Height,
                                                                 rectBas.Y + BARRE_ECART,
-                                                                rectBas.Width - 2*BARRE_ECART, rectBas.Height - 2 * BARRE_ECART);
+                                                                rectBas.Height - 2*BARRE_ECART, rectBas.Height - 2 * BARRE_ECART);
                     //on pose un cercle complet dans le fond en premier
                     G.FillEllipse(Brushes.Blue, RectangleVictoire);
                     //on complète par le camembert
@@ -412,7 +412,7 @@ namespace vaoc
                 if (null != m_texteImages && m_texteImages.Length > 0)
                 {
                     tailleTexte = G.MeasureString(m_texteImages[m_traitement], m_police);
-                    Rectangle rectText = new Rectangle(m_largeurCote + (m_largeur - (int)tailleTexte.Width) / 2,
+                    Rectangle rectText = new Rectangle(m_largeurCote + (m_largeur - m_largeurCote - m_hauteurBandeau - (int)tailleTexte.Width) / 2,
                                             m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
                                             (int)tailleTexte.Width + 1,
                                             (int)tailleTexte.Height + 1);
@@ -479,7 +479,7 @@ namespace vaoc
                     //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
                     //Graphics graph = Graphics.FromImage(imageVideo);
 
-                    G.DrawImage(fichierImageSource, 0, 0, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
+                    G.DrawImage(fichierImageSource, -1, -1, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
                     //imageVideo.Save(m_repertoireVideo + "\\" + "test.png", ImageFormat.Png);
                     //G.DrawImageUnscaledAndClipped(imageVideo, new Rectangle(0,0, m_largeur, m_hauteur));
                     //graph.Dispose();
@@ -500,13 +500,13 @@ namespace vaoc
                         if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                         {
                             G.DrawRectangle(styloExterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
+                                (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
                                 (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
 
                             G.DrawRectangle(styloInterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
+                                (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
                                 (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
                                 (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
                                 (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
@@ -840,7 +840,7 @@ namespace vaoc
                 }
             }
             G.DrawImage(image,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - image.Width/2, 
+                        (unite.i_X_CASE - xTravelling) * m_rapport - image.Width/2, 
                         (unite.i_Y_CASE - yTravelling) * m_rapport - image.Height/2);
         }
 

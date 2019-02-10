@@ -128,7 +128,7 @@ namespace vaoc
         //private BaseVideo m_baseVideo = new BaseVideo();
         private int m_xTravelling = -1;
         private int m_yTravelling = -1;
-
+        private int m_effectifsMax = 0;
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilm()
@@ -191,6 +191,9 @@ namespace vaoc
                     if (m_hauteur > fichierImage.Height) { m_hauteur = fichierImage.Height; }
                 }
 
+                foreach(EffectifEtVictoire ev in effectifsEtVictoires)
+                { m_effectifsMax = Math.Max(m_effectifsMax, ev.iEffectif); }
+
                 if (m_largeurMax != m_largeur || m_hauteurMax != m_hauteur)
                 {
                     return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué",
@@ -215,7 +218,7 @@ namespace vaoc
                     }
                 }
 
-                //calcul de la hauteur du bandeau = 2 fois la hauteur de la police, et de la largeur du bandeau (au cas où cela dépassererait la largeur min)
+                //calcul de la hauteur du bandeau et de la largeur du bandeau (au cas où cela dépassererait la largeur min)
                 if (null != texteImages && texteImages.Length > 0)
                 {
                     fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
@@ -229,12 +232,14 @@ namespace vaoc
                     }
 
                     //ajout des chiffres d'effectif à droite et à gauche
-                    tailleTexte = G.MeasureString(999999.ToString("000,000"), police);
+                    tailleTexte = G.MeasureString(m_effectifsMax.ToString("000,000"), police);
                     m_largeurCote = (int)tailleTexte.Width+1;
                     hauteurTexte = Math.Max(hauteurTexte, tailleTexte.Height);
 
-                    m_hauteurBandeau = (int)(hauteurTexte * 1.5);
-                    m_largeur = Math.Max((int)(largeurTexte * 1)+1, m_largeur); // non, car on inclue pas les bords dans la taille d'image +2 * (int)(tailleTexte.Width * 2);
+                    //v1 - m_hauteurBandeau = (int)(hauteurTexte * 1.5);
+                    //v1 - m_largeur = Math.Max((int)(largeurTexte * 1)+1, m_largeur); // non, car on inclue pas les bords dans la taille d'image +2 * (int)(tailleTexte.Width * 2);
+                    m_hauteurBandeau = (int)(hauteurTexte * 3);
+                    m_largeur = Math.Max((int)(largeurTexte * 1)+1+ m_hauteurBandeau+ m_largeurCote, m_largeur); // non, car on inclue pas les bords dans la taille d'image +2 * (int)(tailleTexte.Width * 2);
                     fichierImageSource.Dispose();
                 }
 
@@ -338,52 +343,81 @@ namespace vaoc
                 Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
-                Bitmap fichierImage = new Bitmap(m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
+                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
                 //bandes blanches en bas et sur les côtés
                 //bas
-                G.FillRectangle(Brushes.White, new Rectangle(0, m_hauteur, m_largeur + 2 * m_largeurCote, m_hauteurBandeau));
+                Rectangle rectBas = new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau);
+                G.FillRectangle(Brushes.White, rectBas);
                 //gauche
-                G.FillRectangle(Brushes.White, new Rectangle(0, 0, m_largeurCote, m_hauteur));
+                //G.FillRectangle(Brushes.White, new Rectangle(0, 0, m_largeurCote, m_hauteur));
                 //droite
-                G.FillRectangle(Brushes.White, new Rectangle(m_largeur + m_largeurCote, 0, m_largeurCote, m_hauteur));
+                //G.FillRectangle(Brushes.White, new Rectangle(m_largeur + m_largeurCote, 0, m_largeurCote, m_hauteur));
+
+                //indicateur de victoires sous forme de camembert et ligne des effectifs
+                int largeurGraphEffectifs = rectBas.Width - m_largeurCote - m_hauteurBandeau;
+                if (m_traitement > 0)
+                {
+                    int victoire0 = 0, victoire1 = 0;
+                    Point[] pointsEff0 = new Point[m_traitement + 1];
+                    Point[] pointsEff1 = new Point[m_traitement + 1];
+                    int nbTours = m_effectifsEtVictoires.Count / 2;
+                    if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                    {
+                        foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                        {
+                            if (eev.iTour == m_traitement)
+                            {
+                                if (0 == eev.iNation)
+                                {
+                                    victoire0 = eev.iVictoire;
+                                }
+                                else
+                                {
+                                    victoire1 = eev.iVictoire;
+                                }
+                            }
+                            if (eev.iTour <= m_traitement)
+                            {
+                                if (0 == eev.iNation)
+                                {
+                                    pointsEff0[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
+                                    pointsEff0[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                }
+                                else
+                                {
+                                    pointsEff1[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
+                                    pointsEff1[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                }
+                            }
+                        }
+                    }
+                    Rectangle RectangleVictoire = new Rectangle(rectBas.Width - BARRE_ECART - m_hauteurBandeau,
+                                                                rectBas.Y + BARRE_ECART,
+                                                                rectBas.Width - 2*BARRE_ECART, rectBas.Height - 2 * BARRE_ECART);
+                    //on pose un cercle complet dans le fond en premier
+                    G.FillEllipse(Brushes.Blue, RectangleVictoire);
+                    //on complète par le camembert
+                    int degresVictoire = (victoire1 * 360 / (victoire0 + victoire1));
+                    G.FillPie(Brushes.Red, RectangleVictoire, 90 - degresVictoire, degresVictoire);
+                    //on trace les lignes des effectifs
+                    Pen styloEff0 = new Pen(Color.Blue, 3);
+                    Pen styloEff1 = new Pen(Color.Red, 3);
+                    G.DrawLines(styloEff1, pointsEff1);
+                    G.DrawLines(styloEff0, pointsEff0);
+                }
 
                 //bandeau avec texte
                 if (null != m_texteImages && m_texteImages.Length > 0)
                 {
                     tailleTexte = G.MeasureString(m_texteImages[m_traitement], m_police);
-                    G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black,
-                        new Rectangle(m_largeurCote + (m_largeur - (int)tailleTexte.Width) / 2,
-                                        m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
-                                        (int)tailleTexte.Width + 1, 
-                                        (int)tailleTexte.Height + 1));
-                                        //m_largeur - (m_largeur - (int)tailleTexte.Width) / 2, 
-                                        //m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
+                    Rectangle rectText = new Rectangle(m_largeurCote + (m_largeur - (int)tailleTexte.Width) / 2,
+                                            m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                            (int)tailleTexte.Width + 1,
+                                            (int)tailleTexte.Height + 1);
+                    G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black, rectText);
                 }
-
-                //indicateur de victoires sous forme de camembert
-                int victoire0=0, victoire1=0;
-                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
-                {
-                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
-                    {
-                        if (eev.iTour != m_traitement)
-                        {
-                            continue;
-                        }
-                        if (0 == eev.iNation) { victoire0 = eev.iVictoire;} else { victoire1 = eev.iVictoire; }
-
-                            Brush brosseNation = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
-                    }
-                }
-                Rectangle RectangleVictoire = new Rectangle(BARRE_ECART, BARRE_ECART, m_largeurCote, m_largeurCote);
-                //on pose un cercle complet dans le fond en premier
-                G.FillEllipse(Brushes.Blue, RectangleVictoire);
-                //on complète par le camembert
-                G.FillPie(Brushes.Red, new Rectangle(BARRE_ECART, BARRE_ECART + 2*m_largeurCote, m_largeurCote, m_largeurCote)
-                                    , 90 - (victoire1 * 360 / (victoire0 + victoire1))
-                                    , (victoire1 * 360 / (victoire0 + victoire1)));
 
                 // effectifs et indicateur de victoire par camp
                 if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
@@ -400,38 +434,19 @@ namespace vaoc
                         {
                             //affichage des effectifs
                             G.DrawString(strEffectif, m_police, Brushes.Blue,
-                                new Rectangle((m_largeurCote - (int)tailleTexte.Width) / 2,
-                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                new Rectangle(BARRE_ECART + rectBas.X,
+                                                rectBas.Y + (int)(tailleTexte.Height* 1 / 2),
                                                 (int)tailleTexte.Width+1, 
                                                 (int)tailleTexte.Height+1));
-                            //affichage de la barre de victoire
-                            //barre inférieure
-                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
-                            //barre verticale (points)
-                            int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
-                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART + m_largeurCote / 4, 
-                                                                        m_hauteur - BARRE_EPAISSEUR - h, 
-                                                                        m_largeurCote / 2 - 2 * BARRE_ECART, 
-                                                                        h));                            
                         }
                         else
                         {
                             //affichage des effectifs
                             G.DrawString(strEffectif, m_police, Brushes.Red,
-                                new Rectangle(m_largeur + m_largeurCote - (m_largeurCote - (int)tailleTexte.Width) / 2,
-                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                new Rectangle(BARRE_ECART + rectBas.X,
+                                                rectBas.Y + (int)(tailleTexte.Height * 3 / 2),
                                                 (int)tailleTexte.Width+1, 
                                                 (int)tailleTexte.Height+1));
-
-                            //affichage de la barre de victoire
-                            //barre inférieure
-                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
-                            //barre verticale (points)
-                            int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
-                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART + m_largeurCote / 4, 
-                                                                        m_hauteur - BARRE_EPAISSEUR - h, 
-                                                                        m_largeurCote / 2 - 2 * BARRE_ECART, 
-                                                                        h));
                         }
                     }
                 }
@@ -464,7 +479,7 @@ namespace vaoc
                     //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
                     //Graphics graph = Graphics.FromImage(imageVideo);
 
-                    G.DrawImage(fichierImageSource, m_largeurCote, 0, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
+                    G.DrawImage(fichierImageSource, 0, 0, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
                     //imageVideo.Save(m_repertoireVideo + "\\" + "test.png", ImageFormat.Png);
                     //G.DrawImageUnscaledAndClipped(imageVideo, new Rectangle(0,0, m_largeur, m_hauteur));
                     //graph.Dispose();
@@ -472,7 +487,7 @@ namespace vaoc
                 }
                 else
                 {
-                    G.DrawImage(fichierImageSource, m_largeurCote, 0, m_largeur, m_hauteur);
+                    G.DrawImage(fichierImageSource, 0, 0, m_largeur, m_hauteur);
                 }
 
                 if (m_bHistoriqueBataille)
@@ -534,6 +549,220 @@ namespace vaoc
                 fichierImageSource.Dispose();
                 m_traitement++;
                 m_travailleur.ReportProgress(m_traitement*100/m_nbImages);
+                //m_travailleur.ReportProgress(m_traitement * 100 / m_listeFichiers.Length);
+                //if (m_traitement == m_listeFichiers.Length)
+                if (m_traitement == m_nbImages)
+                {
+                    return "film crée";
+                }
+                return string.Empty;
+            }
+            catch (AviWriter.AviException e)
+            {
+                return "AVI Exception in: " + e.ToString();
+            }
+        }
+
+        public string TraitementV1()
+        {
+            SizeF tailleTexte;
+            Graphics G;
+            Bitmap fichierImageSource;
+
+            try
+            {
+                Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
+                FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
+                fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
+                Bitmap fichierImage = new Bitmap(m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
+                G = Graphics.FromImage(fichierImage);
+                G.PageUnit = GraphicsUnit.Pixel;
+                //bandes blanches en bas et sur les côtés
+                //bas
+                G.FillRectangle(Brushes.White, new Rectangle(0, m_hauteur, m_largeur + 2 * m_largeurCote, m_hauteurBandeau));
+                //gauche
+                G.FillRectangle(Brushes.White, new Rectangle(0, 0, m_largeurCote, m_hauteur));
+                //droite
+                G.FillRectangle(Brushes.White, new Rectangle(m_largeur + m_largeurCote, 0, m_largeurCote, m_hauteur));
+
+                //bandeau avec texte
+                if (null != m_texteImages && m_texteImages.Length > 0)
+                {
+                    tailleTexte = G.MeasureString(m_texteImages[m_traitement], m_police);
+                    G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black,
+                        new Rectangle(m_largeurCote + (m_largeur - (int)tailleTexte.Width) / 2,
+                                        m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                        (int)tailleTexte.Width + 1,
+                                        (int)tailleTexte.Height + 1));
+                    //m_largeur - (m_largeur - (int)tailleTexte.Width) / 2, 
+                    //m_hauteurBandeau - (m_hauteurBandeau - (int)tailleTexte.Height) / 2));
+                }
+
+                //indicateur de victoires sous forme de camembert
+                int victoire0 = 0, victoire1 = 0;
+                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                {
+                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                    {
+                        if (eev.iTour != m_traitement)
+                        {
+                            continue;
+                        }
+                        if (0 == eev.iNation) { victoire0 = eev.iVictoire; } else { victoire1 = eev.iVictoire; }
+
+                        Brush brosseNation = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
+                    }
+                }
+
+                // effectifs et indicateur de victoire par camp
+                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                {
+                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                    {
+                        if (eev.iTour != m_traitement)
+                        {
+                            continue;
+                        }
+                        string strEffectif = eev.iEffectif.ToString("000,000");
+                        tailleTexte = G.MeasureString(strEffectif, m_police);
+                        if (0 == eev.iNation)
+                        {
+                            //affichage des effectifs
+                            G.DrawString(strEffectif, m_police, Brushes.Blue,
+                                new Rectangle((m_largeurCote - (int)tailleTexte.Width) / 2,
+                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                                (int)tailleTexte.Width + 1,
+                                                (int)tailleTexte.Height + 1));
+                            //affichage de la barre de victoire
+                            //barre inférieure
+                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
+                            //barre verticale (points)
+                            int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
+                            G.FillRectangle(Brushes.Blue, new Rectangle(BARRE_ECART + m_largeurCote / 4,
+                                                                        m_hauteur - BARRE_EPAISSEUR - h,
+                                                                        m_largeurCote / 2 - 2 * BARRE_ECART,
+                                                                        h));
+                        }
+                        else
+                        {
+                            //affichage des effectifs
+                            G.DrawString(strEffectif, m_police, Brushes.Red,
+                                new Rectangle(m_largeur + m_largeurCote - (m_largeurCote - (int)tailleTexte.Width) / 2,
+                                                m_hauteur + (m_hauteurBandeau - (int)tailleTexte.Height) / 2,
+                                                (int)tailleTexte.Width + 1,
+                                                (int)tailleTexte.Height + 1));
+
+                            //affichage de la barre de victoire
+                            //barre inférieure
+                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART, m_hauteur - BARRE_EPAISSEUR, m_largeurCote - 2 * BARRE_ECART, BARRE_EPAISSEUR));
+                            //barre verticale (points)
+                            int h = eev.iVictoire * (m_hauteur - BARRE_EPAISSEUR) / m_totalvictoire;
+                            G.FillRectangle(Brushes.Red, new Rectangle(m_largeur + m_largeurCote + BARRE_ECART + m_largeurCote / 4,
+                                                                        m_hauteur - BARRE_EPAISSEUR - h,
+                                                                        m_largeurCote / 2 - 2 * BARRE_ECART,
+                                                                        h));
+                        }
+                    }
+                }
+
+                //image de base
+                if (m_bTravelling)
+                {
+                    string requete = string.Format("I_TOUR<={0}", m_traitement);
+                    Donnees.TAB_TRAVELLINGRow[] resultatTravelling = (Donnees.TAB_TRAVELLINGRow[])Donnees.m_donnees.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
+                    int xCentreTravelling = resultatTravelling[0].I_X - m_largeur / 2;
+                    int yCentreTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    if (m_xTravelling < 0 || m_yTravelling < 0)
+                    {
+                        m_xTravelling = xCentreTravelling;
+                        m_yTravelling = yCentreTravelling;
+                    }
+                    else
+                    {
+                        if (m_yTravelling != yCentreTravelling)
+                        {
+                            //on fait un travelling pour approcher la position
+                            m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / RATIO_TRAVELLING) ? xCentreTravelling : m_xTravelling + Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / RATIO_TRAVELLING;
+                        }
+                        if (m_yTravelling != yCentreTravelling)
+                        {
+                            //on fait un travelling pour approcher la position
+                            m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / RATIO_TRAVELLING) ? yCentreTravelling : m_yTravelling + Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / RATIO_TRAVELLING;
+                        }
+                    }
+                    //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);
+                    //Graphics graph = Graphics.FromImage(imageVideo);
+
+                    G.DrawImage(fichierImageSource, m_largeurCote, 0, new Rectangle(m_xTravelling, m_yTravelling, m_largeur, m_hauteur), GraphicsUnit.Pixel);
+                    //imageVideo.Save(m_repertoireVideo + "\\" + "test.png", ImageFormat.Png);
+                    //G.DrawImageUnscaledAndClipped(imageVideo, new Rectangle(0,0, m_largeur, m_hauteur));
+                    //graph.Dispose();
+                    //imageVideo.Dispose();
+                }
+                else
+                {
+                    G.DrawImage(fichierImageSource, m_largeurCote, 0, m_largeur, m_hauteur);
+                }
+
+                if (m_bHistoriqueBataille)
+                {
+                    Pen styloExterieur = new Pen(Color.Black, 4);
+                    Pen styloInterieur = new Pen(Color.White, 1);
+                    //on ajoute les batailles s'il y en a
+                    foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
+                    {
+                        if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
+                        {
+                            G.DrawRectangle(styloExterieur,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+
+                            G.DrawRectangle(styloInterieur,
+                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
+                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+                        }
+                    }
+
+                    //on ajoute les unités
+                    foreach (UniteRemarquable unite in m_unitesRemarquables)
+                    {
+                        if (unite.iTour != m_traitement)
+                        {
+                            continue;
+                        }
+                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                    }
+                }
+                //G.DrawImageUnscaled(fichierImageSource, 0, 0);
+                if (m_bFilm)
+                {
+                    fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
+                    fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
+                    BitmapData bmpDat = fichierImage.LockBits(
+                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+
+                    //BitmapData imageCible = new BitmapData();
+                    //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
+                    //m_imageCarte.UnlockBits(imageCible);
+                    //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+                    //imageFinale.Save(nomFichierFinal);
+                    m_aw.AddFrame(bmpDat);
+                    fichierImage.UnlockBits(bmpDat);
+                }
+                else
+                {
+                    fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
+                }
+
+                G.Dispose();
+                fichierImage.Dispose();
+                fichierImageSource.Dispose();
+                m_traitement++;
+                m_travailleur.ReportProgress(m_traitement * 100 / m_nbImages);
                 //m_travailleur.ReportProgress(m_traitement * 100 / m_listeFichiers.Length);
                 //if (m_traitement == m_listeFichiers.Length)
                 if (m_traitement == m_nbImages)

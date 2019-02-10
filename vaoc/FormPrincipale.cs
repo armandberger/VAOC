@@ -183,6 +183,64 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region messages non arrivés sur des pions détruits !!!
+            Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
+            foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
+                if (lignePion.B_DETRUIT)
+                {
+                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
+                    if (null == ligneOrdre)
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
+                    }
+                    else
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
+                    }
+                }
+            }
+            #endregion
+
+            #region Tests sur des chemins en doublon
+            /*
+            AStar etoile = new AStar();
+            AstarTerrain[] tableCoutsMouvementsTerrain;
+            double cout, coutHorsRoute;
+            string messageErreur;
+            List<LigneCASE> chemin;
+            List<LigneCASE> cheminRaccourci;
+            string retour = string.Empty;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (lignePion.B_DETRUIT) { continue; }
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                if (null == ligneOrdre) { continue; }
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+
+                if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, 
+                    ligneCaseDepart, ligneCaseDestination, ligneOrdre, 
+                    out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                {
+                    cheminRaccourci = etoile.ParcoursOptimise(chemin);
+                    if (cheminRaccourci.Count() != chemin.Count())
+                    {
+                        retour += lignePion.S_NOM + " de " + chemin.Count().ToString() + "cases à " + cheminRaccourci.Count().ToString() + "cases\r\n";
+                    }
+                }
+            }
+            sw.Stop();
+            Debug.WriteLine(string.Format("Test chemin en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", 
+                sw.Elapsed.Hours, sw.Elapsed.Minutes, sw.Elapsed.Seconds, sw.Elapsed.Milliseconds));
+                */
+            #endregion
+
             #region ajouts des noms uniques depôts et convois
             /*
             Donnees.m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow("Convoi de ravitaillement du Dépôt de Berlin");
@@ -481,27 +539,6 @@ namespace vaoc
             */
             #endregion
 
-            #region messages non arrivés sur des pions détruits !!!
-            Donnees.TAB_MESSAGERow[] listeMessage= (Donnees.TAB_MESSAGERow[]) Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
-            foreach(Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
-            {
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
-                if (lignePion.B_DETRUIT)
-                {
-                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
-                    if (null == ligneOrdre)
-                    {
-                        ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
-                        ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
-                    }
-                    else
-                    {
-                        ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
-                        ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
-                    }
-                }
-            }
-            #endregion
             #region test sur le nom de dépôts
             //Donnees.TAB_PIONRow ligneTest = Donnees.m_donnees.TAB_PION.FindByID_PION(13);
             //string nom;

@@ -169,6 +169,15 @@ namespace vaoc
                     continue; //case comptant seulement pour les points de victoire
                 }
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
+                if (lignePion.estJoueur)
+                {
+                    UniteRole role = new UniteRole();
+                    role.iTour = ligneVideo.I_TOUR;
+                    role.nom = lignePion.S_NOM;
+                    Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
+                    m_unitesRoles.Add(role);
+                }
+
                 if (lignePion.estQG || lignePion.estPrisonniers || lignePion.estBlesses || lignePion.B_DETRUIT)
                 {
                     continue; //on n'affiche pas les QG, les prisonniers, les blesses, les unités détruites
@@ -185,15 +194,6 @@ namespace vaoc
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
-
-                if (lignePion.estJoueur)
-                {
-                    UniteRole role = new UniteRole();
-                    role.iTour = ligneVideo.I_TOUR;
-                    role.nom = lignePion.S_NOM;
-                    Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
-                    m_unitesRoles.Add(role);
-                }
             }            
 
             /* -> deporté dans un traitement background ci-dessous

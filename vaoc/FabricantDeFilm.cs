@@ -105,6 +105,7 @@ namespace vaoc
         private FileInfo[] m_listeFichiers;
         private AviWriter m_aw;
         private int m_traitement;//traitement principal
+        private int m_traitementRole;//traitement secondaire si un fichier vidéo par role
         private bool m_bHistoriqueBataille;
         private bool m_bCarteGlobale;
         private bool m_bFilm;
@@ -114,6 +115,7 @@ namespace vaoc
         private List<EffectifEtVictoire> m_effectifsEtVictoires;
         private List<UniteRemarquable> m_unitesRemarquables;
         private List<UniteRole> m_unitesRoles;
+        private List<string> m_roles;
         private int m_largeurMax;
         private int m_hauteurMax;
         private int m_largeur;
@@ -190,6 +192,11 @@ namespace vaoc
                 if (m_videoParRole)
                 {
                     m_unitesRoles = unitesRoles;
+                    m_roles = new List<string>();
+                    foreach (UniteRole role in m_unitesRoles)
+                    {
+                        if (!m_roles.Contains(role.nom)) { m_roles.Add(role.nom); }
+                    }
                 }
 
                 //recherche le nombre d'images et leur taille
@@ -315,6 +322,7 @@ namespace vaoc
                 }
 
                 m_traitement = 0;
+                m_traitementRole = 0;
                 return string.Empty;
             }
             catch (AviWriter.AviException e)
@@ -381,10 +389,6 @@ namespace vaoc
                 //bas
                 Rectangle rectBas = new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau);
                 G.FillRectangle(Brushes.White, rectBas);
-                //gauche
-                //G.FillRectangle(Brushes.White, new Rectangle(0, 0, m_largeurCote, m_hauteur));
-                //droite
-                //G.FillRectangle(Brushes.White, new Rectangle(m_largeur + m_largeurCote, 0, m_largeurCote, m_hauteur));
 
                 //indicateur de victoires sous forme de camembert et ligne des effectifs
                 int largeurGraphEffectifs = rectBas.Width - m_largeurCote - m_hauteurBandeau;
@@ -485,10 +489,26 @@ namespace vaoc
                 //image de base
                 if (m_bTravelling)
                 {
-                    string requete = string.Format("I_TOUR<={0}", m_traitement);
-                    Donnees.TAB_TRAVELLINGRow[] resultatTravelling = (Donnees.TAB_TRAVELLINGRow[])Donnees.m_donnees.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
-                    int xCentreTravelling = resultatTravelling[0].I_X - m_largeur / 2;
-                    int yCentreTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    int xCentreTravelling=0, yCentreTravelling=0;
+                    if (m_videoParRole)
+                    {
+                        foreach (UniteRole role in m_unitesRoles)
+                        {
+                            if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour== m_traitement)
+                            {
+                                xCentreTravelling = role.i_X_CASE - m_largeur / 2;
+                                yCentreTravelling = role.i_Y_CASE - m_hauteur / 2;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string requete = string.Format("I_TOUR<={0}", m_traitement);
+                        Donnees.TAB_TRAVELLINGRow[] resultatTravelling = (Donnees.TAB_TRAVELLINGRow[])Donnees.m_donnees.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
+                        xCentreTravelling = resultatTravelling[0].I_X - m_largeur / 2;
+                        yCentreTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
+                    }
                     if (m_xTravelling < 0 || m_yTravelling < 0)
                     {
                         m_xTravelling = xCentreTravelling;
@@ -572,13 +592,35 @@ namespace vaoc
                 }
                 else
                 {
-                    fichierImage.Save(m_repertoireVideo + "\\"+"imageVideo_"+m_traitement.ToString("0000")+".png", ImageFormat.Png);
+                    if (m_videoParRole)
+                    {
+                        fichierImage.Save(m_repertoireVideo + "\\" + m_roles[m_traitementRole] + "_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
+                    }
+                    else
+                    {
+                        fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
+                    }
                 }
 
                 G.Dispose();
                 fichierImage.Dispose();
                 fichierImageSource.Dispose();
-                m_traitement++;
+                if (m_videoParRole)
+                {
+                    if (m_traitementRole++ == m_roles.Count)
+                    {
+                        m_traitementRole = 0;
+                        m_traitement++;
+                    }
+                    else
+                    {
+                        m_traitementRole++;
+                    }
+                }
+                else
+                {
+                    m_traitement++;
+                }
                 m_travailleur.ReportProgress(m_traitement*100/m_nbImages);
                 //m_travailleur.ReportProgress(m_traitement * 100 / m_listeFichiers.Length);
                 //if (m_traitement == m_listeFichiers.Length)

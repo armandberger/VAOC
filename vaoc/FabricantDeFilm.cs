@@ -40,6 +40,14 @@ namespace vaoc
         public bool b_prisonnier;
     }
 
+    public class UniteRole
+    {
+        public int iTour;
+        public int i_X_CASE;
+        public int i_Y_CASE;
+        public string nom;
+    }
+
     public class MyCustomComparer : IComparer<FileInfo>
     {
         public int Compare(FileInfo x, FileInfo y)
@@ -105,6 +113,7 @@ namespace vaoc
         private List<LieuRemarquable> m_lieuxRemarquables;
         private List<EffectifEtVictoire> m_effectifsEtVictoires;
         private List<UniteRemarquable> m_unitesRemarquables;
+        private List<UniteRole> m_unitesRoles;
         private int m_largeurMax;
         private int m_hauteurMax;
         private int m_largeur;
@@ -129,6 +138,7 @@ namespace vaoc
         private int m_xTravelling = -1;
         private int m_yTravelling = -1;
         private int m_effectifsMax = 0;
+        private bool m_videoParRole = false;
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilm()
@@ -137,9 +147,10 @@ namespace vaoc
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling,
+                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling, bool videoParRole,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
-                                    List<EffectifEtVictoire> effectifsEtVictoires, int totalvictoire, int nbImages,
+                                    List<EffectifEtVictoire> effectifsEtVictoires, List<UniteRole> unitesRoles,
+                                    int totalvictoire, int nbImages, 
                                     System.ComponentModel.BackgroundWorker worker)
         {
             try
@@ -175,6 +186,11 @@ namespace vaoc
                 m_travailleur = worker;
                 float largeurTexte, hauteurTexte;
                 m_bTravelling = bTravelling;
+                m_videoParRole = videoParRole;
+                if (m_videoParRole)
+                {
+                    m_unitesRoles = unitesRoles;
+                }
 
                 //recherche le nombre d'images et leur taille
                 DirectoryInfo dir = new DirectoryInfo(repertoireImages);
@@ -316,12 +332,17 @@ namespace vaoc
                 {
                     //on lance la commande DOS de création du film
                     //string YourApplicationPath = m_repertoireVideo + "\\ffmpeg.exe";
-                    ProcessStartInfo processInfo = new ProcessStartInfo();
-                    processInfo.WindowStyle = ProcessWindowStyle.Normal;
-                    processInfo.FileName = "ffmpeg.exe";
-                    processInfo.WorkingDirectory = m_repertoireVideo; //Path.GetDirectoryName(YourApplicationPath);
-                    processInfo.Arguments = "-framerate 1 -i imageVideo_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p " + NOM_FICHIER_VIDEO;
-                    Process.Start(processInfo);
+                    if (m_videoParRole)
+                    {
+                        foreach (UniteRole role in m_unitesRoles)
+                        {
+                            FilmMpeg(role.nom);
+                        }
+                    }
+                    else
+                    {
+                        FilmMpeg("imageVideo");
+                    }
                 }
                 m_travailleur.ReportProgress(100);
                 return string.Empty;
@@ -330,6 +351,16 @@ namespace vaoc
             {
                 return "AVI Exception in: " + e.ToString();
             }
+        }
+
+        private void FilmMpeg(string nom)
+        {
+            ProcessStartInfo processInfo = new ProcessStartInfo();
+            processInfo.WindowStyle = ProcessWindowStyle.Normal;
+            processInfo.FileName = "ffmpeg.exe";
+            processInfo.WorkingDirectory = m_repertoireVideo; //Path.GetDirectoryName(YourApplicationPath);
+            processInfo.Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom);
+            Process.Start(processInfo);
         }
 
         public string Traitement()

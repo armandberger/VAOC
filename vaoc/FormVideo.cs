@@ -17,6 +17,7 @@ namespace vaoc
         private List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
         private List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
         private List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
+        private List<UniteRole> m_unitesRoles = new List<UniteRole>();
         private string[] m_texteImages;
         delegate void FinTraitementCallBack(string strErreur);
         private string m_repertoireSource;
@@ -184,6 +185,15 @@ namespace vaoc
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
+
+                if (lignePion.estJoueur)
+                {
+                    UniteRole role = new UniteRole();
+                    role.iTour = ligneVideo.I_TOUR;
+                    role.nom = lignePion.S_NOM;
+                    Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
+                    m_unitesRoles.Add(role);
+                }
             }            
 
             /* -> deporté dans un traitement background ci-dessous
@@ -251,7 +261,8 @@ namespace vaoc
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
                                         Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
                                         true, checkBoxCarteGlobale.Checked, checkBoxFilm.Checked, checkBoxTravelling.Checked,
-                                        m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires,                                         
+                                        checkBoxVideoParRole.Checked,
+                                        m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, m_unitesRoles,
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);
                 if (string.Empty != erreurTraitement)

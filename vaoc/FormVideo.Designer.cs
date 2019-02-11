@@ -60,11 +60,12 @@
             this.checkBoxFilm = new System.Windows.Forms.CheckBox();
             this.checkBoxTravelling = new System.Windows.Forms.CheckBox();
             this.buttonDonneesTravelling = new System.Windows.Forms.Button();
+            this.checkBoxVideoParRole = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(388, 478);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(635, 478);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
             this.buttonCreerFilm.Size = new System.Drawing.Size(99, 23);
             this.buttonCreerFilm.TabIndex = 0;
@@ -216,7 +217,7 @@
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(493, 478);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(740, 478);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
             this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
             this.buttonOuvrirFilm.TabIndex = 22;
@@ -347,11 +348,24 @@
             this.buttonDonneesTravelling.UseVisualStyleBackColor = true;
             this.buttonDonneesTravelling.Click += new System.EventHandler(this.buttonDonneesTravelling_Click);
             // 
+            // checkBoxVideoParRole
+            // 
+            this.checkBoxVideoParRole.AutoSize = true;
+            this.checkBoxVideoParRole.Checked = true;
+            this.checkBoxVideoParRole.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxVideoParRole.Location = new System.Drawing.Point(388, 482);
+            this.checkBoxVideoParRole.Name = "checkBoxVideoParRole";
+            this.checkBoxVideoParRole.Size = new System.Drawing.Size(74, 17);
+            this.checkBoxVideoParRole.TabIndex = 38;
+            this.checkBoxVideoParRole.Text = "vidéo/rôle";
+            this.checkBoxVideoParRole.UseVisualStyleBackColor = true;
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(827, 517);
+            this.Controls.Add(this.checkBoxVideoParRole);
             this.Controls.Add(this.buttonDonneesTravelling);
             this.Controls.Add(this.checkBoxTravelling);
             this.Controls.Add(this.checkBoxFilm);
@@ -422,6 +436,7 @@
         private System.Windows.Forms.CheckBox checkBoxFilm;
         private System.Windows.Forms.CheckBox checkBoxTravelling;
         private System.Windows.Forms.Button buttonDonneesTravelling;
+        private System.Windows.Forms.CheckBox checkBoxVideoParRole;
     }
 }
 

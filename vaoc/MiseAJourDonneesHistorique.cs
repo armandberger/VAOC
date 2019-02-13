@@ -122,9 +122,10 @@ namespace vaoc
 
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
-                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.estQG)
+                //if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.estQG)
+                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.B_DETRUIT)
                 {
-                    continue;
+                        continue;
                 }
                 try
                 {

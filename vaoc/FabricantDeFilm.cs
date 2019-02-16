@@ -307,8 +307,12 @@ namespace vaoc
                         {
                             File.Delete(fichier.FullName);
                         }
-                        //on supprimer également une éventuelle vidéo précédente
-                        listeFichiers = dir.GetFiles(NOM_FICHIER_VIDEO, SearchOption.TopDirectoryOnly);
+                        //on supprime également toutes les vidéos précédentes
+                        listeFichiers = dir.GetFiles("*.mp4", SearchOption.TopDirectoryOnly);
+                        foreach (FileInfo fichier in listeFichiers)
+                        {
+                            File.Delete(fichier.FullName);
+                        }
 
                         foreach (FileInfo fichier in listeFichiers)
                         {
@@ -342,9 +346,9 @@ namespace vaoc
                     //string YourApplicationPath = m_repertoireVideo + "\\ffmpeg.exe";
                     if (m_videoParRole)
                     {
-                        foreach (UniteRole role in m_unitesRoles)
+                        foreach (string role in m_roles)
                         {
-                            FilmMpeg(role.nom);
+                            FilmMpeg(ChaineFichier(role));
                         }
                     }
                     else
@@ -594,7 +598,7 @@ namespace vaoc
                 {
                     if (m_videoParRole)
                     {
-                        fichierImage.Save(m_repertoireVideo + "\\" + m_roles[m_traitementRole] + "_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
+                        fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole] + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
                     }
                     else
                     {
@@ -607,7 +611,7 @@ namespace vaoc
                 fichierImageSource.Dispose();
                 if (m_videoParRole)
                 {
-                    if (m_traitementRole++ == m_roles.Count)
+                    if (m_traitementRole == m_roles.Count -1)
                     {
                         m_traitementRole = 0;
                         m_traitement++;
@@ -1139,5 +1143,10 @@ public string CreerFilm(string repertoireImages, string repertoireVideo, Font po
    }
 }
 */
+        public string ChaineFichier(string source)
+        {
+            char[] charsToTrim = { '*', ' ', '\'','\\'};
+            return source.Trim(charsToTrim);
+        }
     }
 }

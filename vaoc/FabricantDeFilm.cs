@@ -100,7 +100,7 @@ namespace vaoc
     }
 
 
-        public class FabricantDeFilm
+    public class FabricantDeFilm
     {
         private FileInfo[] m_listeFichiers;
         private AviWriter m_aw;

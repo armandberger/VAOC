@@ -123,7 +123,7 @@ namespace vaoc
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
                 //if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.estQG)
-                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort || lignePion.B_DETRUIT)
+                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estRenfort)
                 {
                         continue;
                 }
@@ -163,7 +163,8 @@ namespace vaoc
                     lignePion.B_PRISONNIERS,
                     lignePion.C_NIVEAU_DEPOT,
                     lignePion.IsI_VICTOIRENull() ? 0 : lignePion.I_VICTOIRE,
-                    -1
+                    -1,//I_TYPE
+                    lignePion.estQG
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
                 ligneVideo.I_TYPE = (int) lignePion.tipeVideo(ligneVideo);
@@ -200,7 +201,8 @@ namespace vaoc
                     false, //lignePion.B_PRISONNIERS,
                     ' ',//lignePion.C_NIVEAU_DEPOT,
                     ligneNomCarte.I_VICTOIRE,
-                    Constantes.NULLENTIER
+                    Constantes.NULLENTIER,//I_TYPE
+                    false //lignePion.B_QG
                 );                
             }
         }

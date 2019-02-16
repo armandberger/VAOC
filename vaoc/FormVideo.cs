@@ -168,17 +168,16 @@ namespace vaoc
                 { 
                     continue; //case comptant seulement pour les points de victoire
                 }
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
-                if (lignePion.estJoueur)
+                if (ligneVideo.B_QG)
                 {
                     UniteRole role = new UniteRole();
                     role.iTour = ligneVideo.I_TOUR;
-                    role.nom = lignePion.S_NOM;
+                    role.nom = ligneVideo.S_NOM;
                     Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     m_unitesRoles.Add(role);
                 }
 
-                if (lignePion.estQG || lignePion.estPrisonniers || lignePion.estBlesses || lignePion.B_DETRUIT)
+                if (ligneVideo.B_QG || ligneVideo.B_PRISONNIERS || ligneVideo.B_BLESSES || ligneVideo.B_DETRUIT)
                 {
                     continue; //on n'affiche pas les QG, les prisonniers, les blesses, les unités détruites
                 }
@@ -186,11 +185,12 @@ namespace vaoc
                 UniteRemarquable unite = new UniteRemarquable();
                 unite.iNation = ligneVideo.ID_NATION;
                 unite.iTour = ligneVideo.I_TOUR;
-                unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
+                //unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
+                unite.tipe = (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
                 //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
                 Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
-                unite.b_blesse = lignePion.B_BLESSES;
-                unite.b_prisonnier = lignePion.B_PRISONNIERS;
+                unite.b_blesse = ligneVideo.B_BLESSES;
+                unite.b_prisonnier = ligneVideo.B_PRISONNIERS;
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);

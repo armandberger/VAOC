@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace vaoc
 {
-    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER, AUTRE};
+    public enum TIPEUNITEVIDEO { INFANTERIE, CAVALERIE, ARTILLERIE, DEPOT, CONVOI, PONTONNIER, QG, BLESSE, PRISONNIER, AUTRE};
 
     public class EffectifEtVictoire
     {
@@ -127,6 +127,7 @@ namespace vaoc
         private int m_nbImages;
         private Font m_police;
         private bool m_bTravelling;
+        public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
 
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
@@ -325,7 +326,7 @@ namespace vaoc
                     }
                 }
 
-                m_traitement = 0;
+                m_traitement = CST_DEBUT_FILM;
                 m_traitementRole = 0;
                 return string.Empty;
             }
@@ -380,6 +381,8 @@ namespace vaoc
             SizeF tailleTexte;
             Graphics G;
             Bitmap fichierImageSource;
+            UniteRemarquable uniteQG = new UniteRemarquable();
+            uniteQG.tipe = TIPEUNITEVIDEO.QG;
 
             try
             {
@@ -502,6 +505,8 @@ namespace vaoc
                             {
                                 xCentreTravelling = role.i_X_CASE - m_largeur / 2;
                                 yCentreTravelling = role.i_Y_CASE - m_hauteur / 2;
+                                uniteQG.i_X_CASE = role.i_X_CASE;
+                                uniteQG.i_Y_CASE = role.i_Y_CASE;
                                 break;
                             }
                         }
@@ -577,6 +582,10 @@ namespace vaoc
                         }
                         DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                     }
+                }
+                if (m_bTravelling && m_videoParRole)
+                {
+                    DessineUnite(G, uniteQG, m_xTravelling, m_yTravelling);
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
                 if (m_bFilm)
@@ -909,6 +918,15 @@ namespace vaoc
                             break;
                         case TIPEUNITEVIDEO.PONTONNIER:
                             image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.genie_0) : new Bitmap(vaoc.Properties.Resources.genie_1);
+                            break;
+                        case TIPEUNITEVIDEO.QG:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.qg_0) : new Bitmap(vaoc.Properties.Resources.qg_1);
+                            break;
+                        case TIPEUNITEVIDEO.PRISONNIER:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.prisonnier_0) : new Bitmap(vaoc.Properties.Resources.prisonnier_1);
+                            break;
+                        case TIPEUNITEVIDEO.BLESSE:
+                            image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.blesse_0) : new Bitmap(vaoc.Properties.Resources.blesse_1);
                             break;
                         default:
                             image = new Bitmap(vaoc.Properties.Resources.zoomMoins);

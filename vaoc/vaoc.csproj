@@ -525,6 +525,8 @@
     <Content Include="Resources\ponton.bmp" />
     <Content Include="Resources\prisonnier_0.png" />
     <Content Include="Resources\prisonnier_1.png" />
+    <Content Include="Resources\qg_0.png" />
+    <Content Include="Resources\qg_1.png" />
     <Content Include="Resources\voirTrajetsVilles.bmp" />
     <Content Include="Resources\tail2.ani" />
   </ItemGroup>

@@ -4915,6 +4915,18 @@ namespace vaoc
             //}
             public TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
             {
+                if (ligneVideo.B_QG)
+                {
+                    return TIPEUNITEVIDEO.QG;
+                }
+                if (ligneVideo.B_PRISONNIERS)
+                {
+                    return TIPEUNITEVIDEO.PRISONNIER;
+                }
+                if (ligneVideo.B_BLESSES)
+                {
+                    return TIPEUNITEVIDEO.BLESSE;
+                }
                 if (estConvoiDeRavitaillement)
                 {
                     return TIPEUNITEVIDEO.CONVOI;

@@ -1144,9 +1144,8 @@ public string CreerFilm(string repertoireImages, string repertoireVideo, Font po
 }
 */
         public string ChaineFichier(string source)
-        {
-            char[] charsToTrim = { '*', ' ', '\'','\\'};
-            return source.Trim(charsToTrim);
+        {            
+            return source.Replace(" ", "_").Replace("'","").ToUpper();
         }
     }
 }

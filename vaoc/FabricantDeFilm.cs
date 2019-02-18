@@ -46,6 +46,14 @@ namespace vaoc
         public int i_X_CASE;
         public int i_Y_CASE;
         public string nom;
+        public int iNation;
+    }
+
+    public class Travelling
+    {
+        public int i_X_CASE;
+        public int i_Y_CASE;
+        public Travelling(int x, int y) { i_X_CASE = x; i_Y_CASE = y; }
     }
 
     public class MyCustomComparer : IComparer<FileInfo>
@@ -127,6 +135,7 @@ namespace vaoc
         private int m_nbImages;
         private Font m_police;
         private bool m_bTravelling;
+        private List<Travelling> m_travelling;
         public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
 
         System.ComponentModel.BackgroundWorker m_travailleur;
@@ -194,9 +203,10 @@ namespace vaoc
                 {
                     m_unitesRoles = unitesRoles;
                     m_roles = new List<string>();
+                    m_travelling = new List<Travelling>();
                     foreach (UniteRole role in m_unitesRoles)
                     {
-                        if (!m_roles.Contains(role.nom)) { m_roles.Add(role.nom); }
+                        if (!m_roles.Contains(role.nom)) { m_roles.Add(role.nom); m_travelling.Add(new Travelling(-1, -1)); }
                     }
                 }
 
@@ -501,15 +511,36 @@ namespace vaoc
                     {
                         foreach (UniteRole role in m_unitesRoles)
                         {
-                            if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour== m_traitement)
+                            if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour == m_traitement)
                             {
                                 xCentreTravelling = role.i_X_CASE - m_largeur / 2;
                                 yCentreTravelling = role.i_Y_CASE - m_hauteur / 2;
                                 uniteQG.i_X_CASE = role.i_X_CASE;
                                 uniteQG.i_Y_CASE = role.i_Y_CASE;
+                                uniteQG.iNation = role.iNation;
                                 break;
                             }
                         }
+                        if (m_travelling[m_traitementRole].i_X_CASE < 0 || m_travelling[m_traitementRole].i_Y_CASE < 0)
+                        {
+                            m_travelling[m_traitementRole].i_X_CASE = xCentreTravelling;
+                            m_travelling[m_traitementRole].i_Y_CASE = yCentreTravelling;
+                        }
+                        else
+                        {
+                            if (m_travelling[m_traitementRole].i_X_CASE != xCentreTravelling)
+                            {
+                                //on fait un travelling pour approcher la position
+                                m_travelling[m_traitementRole].i_X_CASE = (Math.Abs(m_travelling[m_traitementRole].i_X_CASE - xCentreTravelling) < m_largeur / RATIO_TRAVELLING) ? xCentreTravelling : m_travelling[m_traitementRole].i_X_CASE + Math.Sign(xCentreTravelling - m_travelling[m_traitementRole].i_X_CASE) * m_largeur / RATIO_TRAVELLING;
+                            }
+                            if (m_travelling[m_traitementRole].i_Y_CASE != yCentreTravelling)
+                            {
+                                //on fait un travelling pour approcher la position
+                                m_travelling[m_traitementRole].i_Y_CASE = (Math.Abs(m_travelling[m_traitementRole].i_Y_CASE - yCentreTravelling) < m_hauteur / RATIO_TRAVELLING) ? yCentreTravelling : m_travelling[m_traitementRole].i_Y_CASE + Math.Sign(yCentreTravelling - m_travelling[m_traitementRole].i_Y_CASE) * m_hauteur / RATIO_TRAVELLING;
+                            }
+                        }
+                        m_xTravelling = m_travelling[m_traitementRole].i_X_CASE;
+                        m_yTravelling = m_travelling[m_traitementRole].i_Y_CASE;
                     }
                     else
                     {
@@ -517,23 +548,23 @@ namespace vaoc
                         Donnees.TAB_TRAVELLINGRow[] resultatTravelling = (Donnees.TAB_TRAVELLINGRow[])Donnees.m_donnees.TAB_TRAVELLING.Select(requete, "I_TOUR DESC");
                         xCentreTravelling = resultatTravelling[0].I_X - m_largeur / 2;
                         yCentreTravelling = resultatTravelling[0].I_Y - m_hauteur / 2;
-                    }
-                    if (m_xTravelling < 0 || m_yTravelling < 0)
-                    {
-                        m_xTravelling = xCentreTravelling;
-                        m_yTravelling = yCentreTravelling;
-                    }
-                    else
-                    {
-                        if (m_yTravelling != yCentreTravelling)
+                        if (m_xTravelling < 0 || m_yTravelling < 0)
                         {
-                            //on fait un travelling pour approcher la position
-                            m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / RATIO_TRAVELLING) ? xCentreTravelling : m_xTravelling + Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / RATIO_TRAVELLING;
+                            m_xTravelling = xCentreTravelling;
+                            m_yTravelling = yCentreTravelling;
                         }
-                        if (m_yTravelling != yCentreTravelling)
+                        else
                         {
-                            //on fait un travelling pour approcher la position
-                            m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / RATIO_TRAVELLING) ? yCentreTravelling : m_yTravelling + Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / RATIO_TRAVELLING;
+                            if (m_xTravelling != xCentreTravelling)
+                            {
+                                //on fait un travelling pour approcher la position
+                                m_xTravelling = (Math.Abs(m_xTravelling - xCentreTravelling) < m_largeur / RATIO_TRAVELLING) ? xCentreTravelling : m_xTravelling + Math.Sign(xCentreTravelling - m_xTravelling) * m_largeur / RATIO_TRAVELLING;
+                            }
+                            if (m_yTravelling != yCentreTravelling)
+                            {
+                                //on fait un travelling pour approcher la position
+                                m_yTravelling = (Math.Abs(m_yTravelling - yCentreTravelling) < m_hauteur / RATIO_TRAVELLING) ? yCentreTravelling : m_yTravelling + Math.Sign(yCentreTravelling - m_yTravelling) * m_hauteur / RATIO_TRAVELLING;
+                            }
                         }
                     }
                     //Bitmap imageVideo = new Bitmap(m_largeur, m_hauteur, fichierImageSource.PixelFormat);

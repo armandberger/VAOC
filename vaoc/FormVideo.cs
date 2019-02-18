@@ -173,6 +173,7 @@ namespace vaoc
                     UniteRole role = new UniteRole();
                     role.iTour = ligneVideo.I_TOUR;
                     role.nom = ligneVideo.S_NOM;
+                    role.iNation = ligneVideo.ID_NATION;
                     Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     m_unitesRoles.Add(role);
                 }

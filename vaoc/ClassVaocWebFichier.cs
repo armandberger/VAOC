@@ -812,6 +812,7 @@ namespace vaoc
                     continue;
                 }
 
+                requete = string.Empty;//Un pion peut-être actif mais être en le transfert de son ancien propriétaire et son nouveau et donc ne donner, au final, aucune nouvelle ligne
                 if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
                 {
                     //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan

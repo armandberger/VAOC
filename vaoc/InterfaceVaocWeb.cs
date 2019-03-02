@@ -88,6 +88,7 @@ namespace vaoc
         List<ClassDataUtilisateur> ListeUtilisateurs(bool bPresent);
         ClassDataUtilisateur GetUtilisateur(int id_utilisateur);
         ClassDataUtilisateur GetUtilisateur(string s_login);
+        List<ClassDataPion> ListePions(int idPartie);
         #endregion
     }
 }

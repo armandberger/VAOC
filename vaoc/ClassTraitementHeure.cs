@@ -76,6 +76,7 @@ namespace vaoc
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
             if (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
             {
+                if (!NouveauxNoms()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
                 if (!NouveauxOrdres(out nbTourExecutes)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
             }
             else
@@ -2360,6 +2361,40 @@ namespace vaoc
                         lignePionEmetteur.C_NIVEAU_DEPOT);
                 }
             }
+            return true;
+        }
+
+        /// <summary>
+        /// On vérifie si un joueur a changé le nom de l'un de ses pions, si oui, on le modifie dans la table source des pions
+        /// </summary>
+        /// <returns></returns>
+        private bool NouveauxNoms()
+        {
+            //string message, messageErreur;
+            Donnees.TAB_PIONRow lignePion;
+
+            LogFile.Notifier("Debut NouveauxNoms");
+            if (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE != 0)
+            {
+                //il doit s'agir d'un rechargement en cours de route
+                LogFile.Notifier("NouveauxNoms : pas de traitement, la phase n'est pas égale à 0");
+                return true;
+            }
+
+            List<ClassDataPion> liste = m_iWeb.ListePions(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
+            foreach (ClassDataPion pion in liste)
+            {
+                //si l'ordre a bien été envoyé à ce tour et n'est pas déjà inclus dans la table, bref s'il s'agit d'un nouvel
+                //ordre saisie par un joueur, on l'ajoute
+                lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(pion.ID_PION);
+                if (!lignePion.S_NOM.Equals(pion.S_NOM))
+                {
+                    lignePion.S_NOM = pion.S_NOM;
+                }
+            }
+            
+            LogFile.Notifier("Fin NouveauxNoms");
             return true;
         }
 

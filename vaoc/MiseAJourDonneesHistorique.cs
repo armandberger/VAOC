@@ -71,6 +71,7 @@ namespace vaoc
                 }
                 else
                 {
+                    Donnees.m_donnees.TAB_CASE.ViderLaTable();//sinon on peut avoir des doublons au chargement de fichiers contenant des données de cases
                     if (0 == m_tableVideo.Rows.Count)
                     {
                         m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);
@@ -83,7 +84,7 @@ namespace vaoc
                     {
                         Donnees.m_donnees.TAB_VIDEO.Clear();
                         Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
-                        Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false, false);
+                        Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false, false, false);
                         //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
                     }
                 }
@@ -164,10 +165,13 @@ namespace vaoc
                     lignePion.C_NIVEAU_DEPOT,
                     lignePion.IsI_VICTOIRENull() ? 0 : lignePion.I_VICTOIRE,
                     -1,//I_TYPE
-                    lignePion.estQG
+                    lignePion.estConvoiDeRavitaillement,
+                    lignePion.estQG,
+                    lignePion.estPontonnier,
+                    lignePion.estDepot
                 );
                 if (lignePion.IsID_BATAILLENull()) ligneVideo.SetID_BATAILLENull();
-                ligneVideo.I_TYPE = (int) lignePion.tipeVideo(ligneVideo);
+                ligneVideo.I_TYPE = (int) tipeVideo(ligneVideo);
             }
 
             foreach( Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
@@ -202,9 +206,53 @@ namespace vaoc
                     ' ',//lignePion.C_NIVEAU_DEPOT,
                     ligneNomCarte.I_VICTOIRE,
                     Constantes.NULLENTIER,//I_TYPE
-                    false //lignePion.B_QG
+                    false,
+                    false, //lignePion.B_QG
+                    false, //B_PONTONNIER
+                    false
                 );                
             }
+        }
+
+        private TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
+        {
+            if (ligneVideo.B_QG)
+            {
+                return TIPEUNITEVIDEO.QG;
+            }
+            if (ligneVideo.B_PRISONNIERS)
+            {
+                return TIPEUNITEVIDEO.PRISONNIER;
+            }
+            if (ligneVideo.B_BLESSES)
+            {
+                return TIPEUNITEVIDEO.BLESSE;
+            }
+            if (ligneVideo.B_CONVOI_RAVITAILLEMENT)
+            {
+                return TIPEUNITEVIDEO.CONVOI;
+            }
+            if (ligneVideo.B_DEPOT)
+            {
+                return TIPEUNITEVIDEO.DEPOT;
+            }
+            if (ligneVideo.I_INFANTERIE == 0 && ligneVideo.I_CAVALERIE == 0 && ligneVideo.I_ARTILLERIE > 0)
+            {
+                return TIPEUNITEVIDEO.ARTILLERIE;
+            }
+            if (ligneVideo.B_PONTONNIER)
+            {
+                return TIPEUNITEVIDEO.PONTONNIER;
+            }
+            if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
+            {
+                return TIPEUNITEVIDEO.CAVALERIE;
+            }
+            if (ligneVideo.I_INFANTERIE_INITIALE > 0)
+            {
+                return TIPEUNITEVIDEO.INFANTERIE;
+            }
+            return TIPEUNITEVIDEO.AUTRE;
         }
 
         /// <summary>

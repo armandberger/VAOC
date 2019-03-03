@@ -1868,6 +1868,11 @@ namespace vaoc
 
         internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur, bool bConserverCases)
         {
+            return SauvegarderPartie(nomFichier, iTour, iPhase, bSuperieur, bConserverCases, true);
+        }
+
+        internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur, bool bConserverCases, bool bSauvegarderCases)
+        {
             bool retour;
 
             if (0 == TAB_JEU.Count)
@@ -1884,7 +1889,7 @@ namespace vaoc
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
-                if (0 != iTour)
+                if (0 != iTour && bSauvegarderCases)
                 {
                     if (!SauvegarderCases()) { return false; }
                 }

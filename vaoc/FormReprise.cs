@@ -79,7 +79,6 @@ namespace vaoc
                         erreurTraitement = majHistorique.Traitement();
                     }
                 }
-                Cursor = m_oldcurseur;
                 MessageBox.Show(erreurTraitement, "Reprise des données", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 majHistorique.Terminer();
             }
@@ -106,6 +105,11 @@ namespace vaoc
                 travailleur.CancelAsync();
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void backgroundTraitement_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Cursor = m_oldcurseur;
         }
     }
 }

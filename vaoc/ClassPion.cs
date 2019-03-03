@@ -4908,51 +4908,7 @@ namespace vaoc
             {
                 return "Patrouille du " + S_NOM;
             }
-
-            //internal void SetI_TOUR_CONVOI_CREENull()
-            //{
-            //    this.I_TOUR_CONVOI_CREE = Constantes.NULLENTIER;
-            //}
-            public TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
-            {
-                if (ligneVideo.B_QG)
-                {
-                    return TIPEUNITEVIDEO.QG;
-                }
-                if (ligneVideo.B_PRISONNIERS)
-                {
-                    return TIPEUNITEVIDEO.PRISONNIER;
-                }
-                if (ligneVideo.B_BLESSES)
-                {
-                    return TIPEUNITEVIDEO.BLESSE;
-                }
-                if (estConvoiDeRavitaillement)
-                {
-                    return TIPEUNITEVIDEO.CONVOI;
-                }
-                if (estDepot)
-                {
-                    return TIPEUNITEVIDEO.DEPOT;
-                }
-                if (estArtillerie)
-                {
-                    return TIPEUNITEVIDEO.ARTILLERIE;
-                }
-                if (estPontonnier)
-                {
-                    return TIPEUNITEVIDEO.PONTONNIER;
-                }
-                if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
-                {
-                    return TIPEUNITEVIDEO.CAVALERIE;
-                }
-                if (ligneVideo.I_INFANTERIE_INITIALE > 0)
-                {
-                    return TIPEUNITEVIDEO.INFANTERIE;
-                }
-                return TIPEUNITEVIDEO.AUTRE;
-            }
+        
         }
     }
 }

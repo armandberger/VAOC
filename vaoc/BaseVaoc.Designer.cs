@@ -19274,7 +19274,13 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_TYPE;
             
+            private global::System.Data.DataColumn columnB_CONVOI_RAVITAILLEMENT;
+            
             private global::System.Data.DataColumn columnB_QG;
+            
+            private global::System.Data.DataColumn columnB_PONTONNIER;
+            
+            private global::System.Data.DataColumn columnB_DEPOT;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -19511,9 +19517,33 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn B_CONVOI_RAVITAILLEMENTColumn {
+                get {
+                    return this.columnB_CONVOI_RAVITAILLEMENT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public global::System.Data.DataColumn B_QGColumn {
                 get {
                     return this.columnB_QG;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn B_PONTONNIERColumn {
+                get {
+                    return this.columnB_PONTONNIER;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn B_DEPOTColumn {
+                get {
+                    return this.columnB_DEPOT;
                 }
             }
             
@@ -19580,7 +19610,10 @@ namespace vaoc {
                         char C_NIVEAU_DEPOT, 
                         int I_VICTOIRE, 
                         int I_TYPE, 
-                        bool B_QG) {
+                        bool B_CONVOI_RAVITAILLEMENT, 
+                        bool B_QG, 
+                        bool B_PONTONNIER, 
+                        bool B_DEPOT) {
                 TAB_VIDEORow rowTAB_VIDEORow = ((TAB_VIDEORow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         I_TOUR,
@@ -19608,7 +19641,10 @@ namespace vaoc {
                         C_NIVEAU_DEPOT,
                         I_VICTOIRE,
                         I_TYPE,
-                        B_QG};
+                        B_CONVOI_RAVITAILLEMENT,
+                        B_QG,
+                        B_PONTONNIER,
+                        B_DEPOT};
                 rowTAB_VIDEORow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_VIDEORow);
                 return rowTAB_VIDEORow;
@@ -19656,7 +19692,10 @@ namespace vaoc {
                 this.columnC_NIVEAU_DEPOT = base.Columns["C_NIVEAU_DEPOT"];
                 this.columnI_VICTOIRE = base.Columns["I_VICTOIRE"];
                 this.columnI_TYPE = base.Columns["I_TYPE"];
+                this.columnB_CONVOI_RAVITAILLEMENT = base.Columns["B_CONVOI_RAVITAILLEMENT"];
                 this.columnB_QG = base.Columns["B_QG"];
+                this.columnB_PONTONNIER = base.Columns["B_PONTONNIER"];
+                this.columnB_DEPOT = base.Columns["B_DEPOT"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -19712,8 +19751,14 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_VICTOIRE);
                 this.columnI_TYPE = new global::System.Data.DataColumn("I_TYPE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_TYPE);
+                this.columnB_CONVOI_RAVITAILLEMENT = new global::System.Data.DataColumn("B_CONVOI_RAVITAILLEMENT", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_CONVOI_RAVITAILLEMENT);
                 this.columnB_QG = new global::System.Data.DataColumn("B_QG", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnB_QG);
+                this.columnB_PONTONNIER = new global::System.Data.DataColumn("B_PONTONNIER", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_PONTONNIER);
+                this.columnB_DEPOT = new global::System.Data.DataColumn("B_DEPOT", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_DEPOT);
                 this.columnI_TOUR.Caption = "I_TOUR_SANS_RAVITAILLEMENT";
                 this.columnID_PION.AllowDBNull = false;
                 this.columnI_FATIGUE.Caption = "ID_CASE_ARRIVEE_RENFORT";
@@ -33888,6 +33933,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool B_CONVOI_RAVITAILLEMENT {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_VIDEO.B_CONVOI_RAVITAILLEMENTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_CONVOI_RAVITAILLEMENT\' dans la table \'TAB_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.B_CONVOI_RAVITAILLEMENTColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool B_QG {
                 get {
                     try {
@@ -33899,6 +33961,38 @@ namespace vaoc {
                 }
                 set {
                     this[this.tableTAB_VIDEO.B_QGColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool B_PONTONNIER {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_VIDEO.B_PONTONNIERColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_PONTONNIER\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.B_PONTONNIERColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool B_DEPOT {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_VIDEO.B_DEPOTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_DEPOT\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.B_DEPOTColumn] = value;
                 }
             }
             
@@ -34168,6 +34262,18 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsB_CONVOI_RAVITAILLEMENTNull() {
+                return this.IsNull(this.tableTAB_VIDEO.B_CONVOI_RAVITAILLEMENTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetB_CONVOI_RAVITAILLEMENTNull() {
+                this[this.tableTAB_VIDEO.B_CONVOI_RAVITAILLEMENTColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsB_QGNull() {
                 return this.IsNull(this.tableTAB_VIDEO.B_QGColumn);
             }
@@ -34176,6 +34282,30 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetB_QGNull() {
                 this[this.tableTAB_VIDEO.B_QGColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsB_PONTONNIERNull() {
+                return this.IsNull(this.tableTAB_VIDEO.B_PONTONNIERColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetB_PONTONNIERNull() {
+                this[this.tableTAB_VIDEO.B_PONTONNIERColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsB_DEPOTNull() {
+                return this.IsNull(this.tableTAB_VIDEO.B_DEPOTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetB_DEPOTNull() {
+                this[this.tableTAB_VIDEO.B_DEPOTColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -51,6 +51,93 @@ namespace vaoc
 
 
         #region lecture des données
+        public List<ClassDataPion> ListePions(int idPartie)
+        {
+            string xpath;
+            List<ClassDataPion> listePions = new List<ClassDataPion>();
+            XmlDocument xDoc = new XmlDocument();
+            //xDoc.Load(m_fileNameXML);
+            xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
+            if (idPartie >= 0)
+            {
+                xpath = string.Format("/vaoc/tab_vaoc_pion[ID_PARTIE={0}]", idPartie);
+            }
+            else
+            {
+                xpath = "/vaoc/tab_vaoc_pion";
+            }
+
+            foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
+            {
+                ClassDataPion pion = ConversionPion(noeud);
+                listePions.Add(pion);
+            }
+            return listePions;
+        }
+
+        private ClassDataPion ConversionPion(XmlNode noeud)
+        {
+            ClassDataPion pion = new ClassDataPion();
+
+            pion.ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText);
+            pion.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
+            pion.ID_PION_PROPRIETAIRE = Convert.ToInt32(noeud["ID_PION_PROPRIETAIRE"].InnerText);
+            pion.ID_PION_REMPLACE = Convert.ToInt32(noeud["ID_PION_REMPLACE"].InnerText);
+            pion.ID_MODELE_PION = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText);
+            pion.S_NOM = noeud["S_NOM"].InnerText;
+            pion.I_INFANTERIE = Convert.ToInt32(noeud["I_INFANTERIE"].InnerText);
+            pion.I_INFANTERIE_REEL = Convert.ToInt32(noeud["I_INFANTERIE_REEL"].InnerText);
+            pion.I_INFANTERIE_INITIALE = Convert.ToInt32(noeud["I_INFANTERIE_INITIALE"].InnerText);
+            pion.I_CAVALERIE = Convert.ToInt32(noeud["I_CAVALERIE"].InnerText);
+            pion.I_CAVALERIE_REEL = Convert.ToInt32(noeud["I_CAVALERIE_REEL"].InnerText);
+            pion.I_CAVALERIE_INITIALE = Convert.ToInt32(noeud["I_CAVALERIE_INITIALE"].InnerText);
+            pion.I_ARTILLERIE = Convert.ToInt32(noeud["I_ARTILLERIE"].InnerText);
+            pion.I_ARTILLERIE_REEL = Convert.ToInt32(noeud["I_ARTILLERIE_REEL"].InnerText);
+            pion.I_ARTILLERIE_INITIALE = Convert.ToInt32(noeud["I_ARTILLERIE_INITIALE"].InnerText);
+            pion.I_FATIGUE = Convert.ToInt32(noeud["I_FATIGUE"].InnerText);
+            pion.I_FATIGUE_REEL = Convert.ToInt32(noeud["I_FATIGUE_REEL"].InnerText);
+            pion.I_MORAL = Convert.ToInt32(noeud["I_MORAL"].InnerText);
+            pion.I_MORAL_REEL = Convert.ToInt32(noeud["I_MORAL_REEL"].InnerText);
+            pion.I_MORAL_MAX = Convert.ToInt32(noeud["I_MORAL_MAX"].InnerText);
+            pion.I_EXPERIENCE = Convert.ToInt32(noeud["I_EXPERIENCE"].InnerText);
+            pion.I_TACTIQUE = Convert.ToInt32(noeud["I_TACTIQUE"].InnerText);
+            pion.B_QG = noeud["B_QG"].InnerText == "1" ? true : false;
+            pion.I_STRATEGIQUE = Convert.ToInt32(noeud["I_STRATEGIQUE"].InnerText);
+            pion.C_NIVEAU_HIERARCHIQUE = Convert.ToChar(noeud["C_NIVEAU_HIERARCHIQUE"].InnerText);
+            pion.I_MATERIEL = Convert.ToInt32(noeud["I_MATERIEL"].InnerText);
+            pion.I_RAVITAILLEMENT = Convert.ToInt32(noeud["I_RAVITAILLEMENT"].InnerText);
+            pion.I_NIVEAU_FORTIFICATION = Convert.ToInt32(noeud["I_NIVEAU_FORTIFICATION"].InnerText);
+            pion.I_RETRAITE = Convert.ToInt32(noeud["I_RETRAITE"].InnerText);
+            pion.ID_BATAILLE = Convert.ToInt32(noeud["ID_BATAILLE"].InnerText);
+            pion.I_ZONE_BATAILLE = Convert.ToInt32(noeud["I_ZONE_BATAILLE"].InnerText);
+            pion.S_POSITION = noeud["S_POSITION"].InnerText;
+            pion.B_DETRUIT = noeud["B_DETRUIT"].InnerText == "1" ? true : false;
+            pion.B_FUITE_AU_COMBAT = noeud["B_FUITE_AU_COMBAT"].InnerText == "1" ? true : false;
+            pion.B_REDITION_RAVITAILLEMENT = noeud["B_REDITION_RAVITAILLEMENT"].InnerText == "1" ? true : false;
+            pion.B_DEPOT = noeud["B_DEPOT"].InnerText == "1" ? true : false;
+            if (noeud["C_NIVEAU_DEPOT"].InnerText.Length > 0) pion.C_NIVEAU_DEPOT = Convert.ToChar(noeud["C_NIVEAU_DEPOT"].InnerText); else pion.C_NIVEAU_DEPOT = null;
+            pion.I_TOUR_CONVOI_CREE = Convert.ToInt32(noeud["I_TOUR_CONVOI_CREE"].InnerText);
+            pion.I_SOLDATS_RAVITAILLES = Convert.ToInt32(noeud["I_SOLDATS_RAVITAILLES"].InnerText);
+            pion.ID_DEPOT_SOURCE = Convert.ToInt32(noeud["ID_DEPOT_SOURCE"].InnerText);
+            pion.B_CAVALERIE_DE_LIGNE = noeud["B_CAVALERIE_DE_LIGNE"].InnerText == "1" ? true : false;
+            pion.B_CAVALERIE_LOURDE = noeud["B_CAVALERIE_LOURDE"].InnerText == "1" ? true : false;
+            pion.B_GARDE = noeud["B_GARDE"].InnerText == "1" ? true : false;
+            pion.B_VIEILLE_GARDE = noeud["B_VIEILLE_GARDE"].InnerText == "1" ? true : false;
+            pion.B_PONTONNIER = noeud["B_PONTONNIER"].InnerText == "1" ? true : false;
+            pion.B_CONVOI = noeud["B_CONVOI"].InnerText == "1" ? true : false;
+            pion.B_RENFORT = noeud["B_RENFORT"].InnerText == "1" ? true : false;
+            pion.B_BLESSES = noeud["B_BLESSES"].InnerText == "1" ? true : false;
+            pion.B_PRISONNIERS = noeud["B_PRISONNIERS"].InnerText == "1" ? true : false;
+            pion.I_PATROUILLES_DISPONIBLES = Convert.ToInt32(noeud["I_PATROUILLES_DISPONIBLES"].InnerText);
+            pion.I_PATROUILLES_MAX = Convert.ToInt32(noeud["I_PATROUILLES_MAX"].InnerText);
+            pion.I_VITESSE = Convert.ToDecimal(noeud["I_VITESSE"].InnerText);
+            pion.I_X = Convert.ToInt32(noeud["I_X"].InnerText);
+            pion.I_Y = Convert.ToInt32(noeud["I_Y"].InnerText);
+            pion.S_ORDRE_COURANT = noeud["S_ORDRE_COURANT"].InnerText;
+
+            return pion;
+        }
+
         public List<ClassDataRole> ListeRoles(int idPartie)
         {
             string xpath;

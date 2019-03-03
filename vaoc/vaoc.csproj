@@ -98,6 +98,7 @@
     <Compile Include="ClassMessager.cs" />
     <Compile Include="ClassNation.cs" />
     <Compile Include="ClassPion.cs" />
+    <Compile Include="DataFichier\ClassDataPion.cs" />
     <Compile Include="dataOBJ\LigneCASE.cs" />
     <Compile Include="FabricantDeFilm.cs" />
     <Compile Include="FormMessageAncien.cs">

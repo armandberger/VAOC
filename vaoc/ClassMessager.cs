@@ -302,10 +302,14 @@ namespace vaoc
             //Nous n'avons pas pu nous ravitailler comme vous l'aviez ordonné, soit aucun dépôt n'était présent soit il ne pouvait pas nous ravitailler.
             //Aucun dépôt n'était disponible pour nous fournir le ravitaillement ou le matériel attendu.
             //Nous n'avons pas trouvé à notre emplacement un dépôt capable de nous donner quelque chose.
-            MESSAGE_LIEU_POINT_DE_VICTOIRE = 92
+            MESSAGE_LIEU_POINT_DE_VICTOIRE = 92,
             //Notre position vient d'être capturée par l'ennemi.
             //{1} est passée sous le contrôle de l'ennemi, j'ai pris tous les risques pour vous faire parvenir ce message.
             //Des informations concordantes de différents observateurs indique que {1} n'est plus sous notre autorité.
+            MESSAGE_RENFORT_IMPOSSIBLE = 93
+            //Arrivé à destination je recherche, sans succès, l'unité à renforcer sur place mais celle-ci reste invisible. Que dois-je faire maintenant ?
+            //J'ai bien executé votre ordre demandant de renforcer les éléments présents mais les éléments n'étant en définitive pas présent, je ne peux rien faire. J'attends de nouvelles consignes.
+            //{1} est prêt à renforcer l'unité en suivant vos ordre mais celle-ci n'est pas présente à {2} et je ne peux donc rien faire de plus. 
         }
         /*
                DateHeure(true), //0

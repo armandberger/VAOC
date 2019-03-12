@@ -1254,10 +1254,27 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
+                    //la distance entre le pion et l'unité à renforcer est-elle correcte ?
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseRenfort = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionARenforcer.ID_CASE);
+                    double distanceRenfort = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCaseRenfort.I_X, ligneCaseRenfort.I_Y);
+                    if (distanceRenfort > Constantes.CST_DISTANCE_RENFORT * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+                    {
+                        //on est très loin, 
+                        //on prévient le joueur qu'il ne peut pas renforcer l'unité car il est trop loin
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_IMPOSSIBLE))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                        lignePion.TerminerOrdre(ligneOrdre, false, true);
+                        break;//on ne fait pas la suite
+                    }
+
                     //dans le cas d'un convoi de ravitaillement sur un dépôt de type 'B' il faut s'assurer qu'il est sur une ville où les dépôts de type 'A' sont autorisés avant de faire l'ordre
                     if (lignePion.estConvoiDeRavitaillement && lignePionARenforcer.C_NIVEAU_DEPOT == 'B')
                     {
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
                         double distanceCreationDepot = double.MaxValue;
                         foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
                         {

@@ -61,6 +61,7 @@ namespace WaocLib
         public const int CST_FORTIFICATIONS_MAX = 2;//niveau maximum de fortifications
         public const int CST_DUREE_INDISPONIBLE_SUR_BLESSURE = 2;//temps necessaire à trouver un remplaçant sur blessure grave.
         public const int CST_DISTANCE_CREATION_DEPOT_A = 5;//distance, en kms, à partir d'une ville où l'on peut mettre un dépôt de type A
+        public const int CST_DISTANCE_RENFORT = 3;//distance, en kms, où l'on peut renforcer une unité ou un dépôt
 
         public const double SQRT2 = 1.4142135623730950488016887242097;
         public enum VICTOIRECOMBAT { VICTOIRE012, EGALITE, VICTOIRE345 };

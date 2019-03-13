@@ -1819,15 +1819,16 @@ namespace vaoc
                 int longueurPont, longueurPonton;
 
                 ligneCasePont = null;
-                if (ligneOrdre.IsID_CASE_DESTINATIONNull())
-                {
+                // priori, on fait toujours une action sur les ponts par rapport à la case où se trouve le pion quand il doit executer l'ordre
+                //if (ligneOrdre.IsID_CASE_DESTINATIONNull())
+                //{
                     //on recherche le pont sur lequel on souhaite faire l'action
                     ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
-                }
-                else
-                {
-                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-                }
+                //}
+                //else
+                //{
+                //    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                //}
                 switch (CSTAction)
                 {
                     case Constantes.CST_DUREE_ENDOMMAGE_PONT:

@@ -1313,6 +1313,20 @@ namespace vaoc
 
                     if (lignePion.estConvoiDeRavitaillement)
                     {
+                        //si l'unité cible n'est pas un dépôt (possible si un dépôt D a été transformé en convoi, l'ordre est annulé
+                        if (lignePionARenforcer.estConvoiDeRavitaillement)
+                        {
+                            //on prévient le joueur qu'il ne peut pas renforcer l'unité car elle n'est pas conforme
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_IMPOSSIBLE))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
+                            lignePion.TerminerOrdre(ligneOrdre, false, true);
+                            break;//on ne fait pas la suite
+                        }
+
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
                         Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (lignePionARenforcer.C_NIVEAU_DEPOT != 'A')

@@ -204,6 +204,31 @@ namespace vaoc
                 }
             }
             #endregion
+            /*
+            int y = 1204;
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709,y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
+            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
+            */
 
             #region Tests sur des chemins en doublon
             /*

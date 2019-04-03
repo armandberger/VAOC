@@ -318,10 +318,10 @@ namespace WaocLib
 
             for (i = 0; i < nombre; i++)
             {
-                int score = de.Next(1, 6);
+                int score = de.Next(1, 7);
                 if ((relance > 0) && (score == 1 || score == 2))
                 {
-                    score = de.Next(1, 6);
+                    score = de.Next(1, 7);
                     relance--;
                 }
                 resultat += score;

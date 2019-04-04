@@ -93,7 +93,7 @@ namespace vaoc
                     {
                         return false;
                     }
-                    if (enMouvement && !lignePion.estEnnemi(this, true))
+                    if (enMouvement && !lignePion.estEnnemi(this, false))//false au lieu de true, 4/4/2019 car sinon une unite en mouvement traverse les depots sans les capturer
                     {
                         //si l'on se déplace sur une route, les occupants peuvent se superposer
                         return false;

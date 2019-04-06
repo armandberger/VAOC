@@ -3771,26 +3771,6 @@ namespace vaoc
                 {
                     return true;
                 }
-                //une unité d'artillerie ne peut jamais, a elle seule, déclenchée une bataille
-                if (!estArtillerie && !lignePionEnnemi.estArtillerie)
-                {
-                    //si l'un des deux unités est déjà engagée en bataille, elle ne peut pas créer une nouvelle bataille
-                    if (!estAuCombat && !lignePionEnnemi.estAuCombat &&
-                        ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
-                        || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false))))
-                    {
-                        //unites combattantes standard, création d'une bataille
-                        int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
-                        string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
-                        int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                        string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
-
-                        message = string.Format("RequisitionCase-NouvelleBataille: entre les poins ID_PION={0} et ID_PION={1} ou ID_PION={2} sur ID_CASE:{3}",
-                            ID_PION, proprio, nouveauProprio, ligneCase.ID_CASE);
-                        LogFile.Notifier(message);
-                        return Cartographie.NouvelleBataille(ligneCase, this);
-                    }
-                }
 
                 #region Une patrouille, elle indique la présence de l'ennemi et se transforme en messager.
                 //un poin patrouille ET message est une patrouille sur le retour, elle n'envoit pas deux rapports !
@@ -3906,6 +3886,28 @@ namespace vaoc
                         }
                     }
                     #endregion
+
+                    //Bataille ? Une unité d'artillerie ne peut jamais, a elle seule, déclenchée une bataille
+                    if (!estArtillerie && !lignePionEnnemi.estArtillerie)
+                    {
+                        //si l'un des deux unités est déjà engagée en bataille, elle ne peut pas créer une nouvelle bataille
+                        if (!estAuCombat && !lignePionEnnemi.estAuCombat &&
+                            ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
+                            || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false))))
+                        {
+                            //unites combattantes standard, création d'une bataille
+                            int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                            string proprio = (Constantes.NULLENTIER == IdProprietaire) ? "null" : IdProprietaire.ToString();
+                            int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                            string nouveauProprio = (Constantes.NULLENTIER == IdNouveauProprietaire) ? "null" : IdNouveauProprietaire.ToString();
+
+                            message = string.Format("RequisitionCase-NouvelleBataille: entre les poins ID_PION={0} et ID_PION={1} ou ID_PION={2} sur ID_CASE:{3}",
+                                ID_PION, proprio, nouveauProprio, ligneCase.ID_CASE);
+                            LogFile.Notifier(message);
+                            return Cartographie.NouvelleBataille(ligneCase, this);
+                        }
+                    }
+
                 }
                 return true;
             }

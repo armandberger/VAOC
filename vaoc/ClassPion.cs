@@ -3888,6 +3888,7 @@ namespace vaoc
                     #endregion
 
                     //Bataille ? Une unité d'artillerie ne peut jamais, a elle seule, déclenchée une bataille
+                    //6/4/2019, test remis en fin, sinon, pour toute les unités qui ne sont pas des artilleries, on passe dans ce test et on ne fait pas les tests de capture
                     if (!estArtillerie && !lignePionEnnemi.estArtillerie)
                     {
                         //si l'un des deux unités est déjà engagée en bataille, elle ne peut pas créer une nouvelle bataille

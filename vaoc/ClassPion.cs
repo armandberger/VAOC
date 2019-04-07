@@ -4165,10 +4165,8 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             internal bool CaptureDepot(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
-                Donnees.TAB_PIONRow lignePionEnnemiQG = null;
-                Donnees.TAB_RENFORTRow lignePionEnnemiQGRenfort = null;
                 int idNouveauPionProprietaire;
-                string requete, message;
+                string message;
                 int idNationCaptureur;
                 bool bEnDanger;
 
@@ -4184,9 +4182,14 @@ namespace vaoc
                 }
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
+                idNationCaptureur = lignePionEnnemi.idNation;
 
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
-                idNationCaptureur = lignePionEnnemi.idNation;
+                /* -> plus maintenant, n'importe quel chef peut diriger un dépôt
+                Donnees.TAB_PIONRow lignePionEnnemiQG = null;
+                Donnees.TAB_RENFORTRow lignePionEnnemiQGRenfort = null;
+                string requete;
+
                 requete = "C_NIVEAU_HIERARCHIQUE = 'A'";
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
@@ -4225,7 +4228,8 @@ namespace vaoc
                 {
                     idNouveauPionProprietaire = lignePionEnnemiQG.ID_PION;
                 }
-
+                */
+                idNouveauPionProprietaire = lignePionEnnemi.proprietaire.ID_PION;
 
                 return CapturePion(lignePionEnnemi, idNouveauPionProprietaire, "DEPOT", idNationCaptureur, ligneCaseCapture);
             }

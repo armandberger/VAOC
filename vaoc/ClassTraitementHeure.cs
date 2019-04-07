@@ -128,8 +128,8 @@ namespace vaoc
             }
             #endregion
 
-            #region transfert correctif
-            /*
+            #region  correctifs
+            /* transfert
             Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(2016);
             Donnees.TAB_PIONRow lignePionNouveau = Donnees.m_donnees.TAB_PION.FindByID_PION(6);
             TransfertsDesliens(lignePionAncien, lignePionNouveau);
@@ -137,7 +137,17 @@ namespace vaoc
             ligneRole.ID_PION = 6;
             lignePionAncien.DetruirePion();
             */
+
+            //capture de dépôts
+            Donnees.TAB_PIONRow lignePionEnnemi = Donnees.m_donnees.TAB_PION.FindByID_PION(71);
+            Donnees.TAB_PIONRow lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(103);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(6392630);
+            lignePionCapture.I_TOUR_RETRAITE_RESTANT = 0;
+            lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
+            lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(18926);
+            lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
             #endregion
+
 
             CalculNombreTotalPointsDeVictoire();
 

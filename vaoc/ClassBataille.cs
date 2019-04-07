@@ -1455,7 +1455,7 @@ namespace vaoc
                     }
                 }
 
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/))//false sur bcombattif avant, mais dans ce cas, donne une fausse valeur du modificateur stratégique, remis a false car sinon on ne joue plus la blessure des chefs
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, true/*bengagement*/, true/*bcombattif*/, true/*QG*/))//false sur bcombattif avant, mais dans ce cas, donne une fausse valeur du modificateur stratégique, remis a false car sinon on ne joue plus la blessure des chefs, remis à true sinon, les unités en déroute sont comptabilisées
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille I");
                     LogFile.Notifier(message, out messageErreur);
@@ -1673,7 +1673,7 @@ namespace vaoc
                         return FinDeBataille(out bFinDeBataille);
                     }
 
-                    //si un leader se retrouve dans une zone sans unité combattante, il doit être remis en réserve
+                    //si un leader ou une unite d'artillerie se retrouve dans une zone sans unité combattante, il doit être remis en réserve
                     RemiseLeaderEnReserve();
                 }
 
@@ -1727,7 +1727,7 @@ namespace vaoc
                 {
                     nb6 = 0;
                     score[i] = (des[i] > 0) ? Constantes.JetDeDes(des[i], relance[i], out nb6) : 0;
-                    blessureChef[i] = (nb6 >= 4) ? true : false;
+                    if (i < 3) { blessureChef[i+3] = (nb6 >= 4) ? true : false; } else { blessureChef[i-3] = (nb6 >= 4) ? true : false; }
                     this["S_COMBAT_" + Convert.ToString(i)]=string.Format("{0} dés, {1} relances = {2}", des[i], relance[i], score[i]);
                 }
 
@@ -1810,14 +1810,14 @@ namespace vaoc
                     //Un des chefs présents est-il blessé ?
                     if (pertesMoral[i] > 0 && blessureChef[i])
                     {
-                        if (!BlessureChef(i, lignePionsEnBataille012))
+                        if (!BlessureChef(i))
                         {
                             LogFile.Notifier("i=" + i + " erreur dans BlessureChef", out messageErreur);
                         }
                     }
                     if (pertesMoral[i + 3] > 0 && blessureChef[i + 3])
                     {
-                        if (!BlessureChef(i + 3, lignePionsEnBataille345))
+                        if (!BlessureChef(i + 3))
                         {
                             LogFile.Notifier("i=" + i + " erreur dans BlessureChef", out messageErreur);
                         }
@@ -1860,16 +1860,31 @@ namespace vaoc
             /// Un chef d'un secteur est blesse dans une bataille
             /// </summary>
             /// <param name="zone">secteur dans lequel un chef doit être blessé (s'il y en a un)</param>
-            /// <param name="lignePionsEnBataille">Pions dans la bataille zone 012 ou 345</param>
             /// <returns>true si OK, false si KO</returns>
-            private bool BlessureChef(int zone, Donnees.TAB_PIONRow[] lignePionsEnBataille)
+            private bool BlessureChef(int zone)
             {
-                List<Donnees.TAB_PIONRow> listeChefsEnBataille = new List<Donnees.TAB_PIONRow>();
-
+                return true;//le mode de calcul ne convient, grosse bataille, certains d'être blessé, petite bataille aucune chance...
+                Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //Recherche de tous les chefs présents dans le secteur
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille)
+                var resultComplet = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                                    from Pion in Donnees.m_donnees.TAB_PION
+                                    where (BataillePion.ID_PION == Pion.ID_PION)
+                                    && (BataillePion.B_ENGAGEE == true)
+                                    && (BataillePion.ID_BATAILLE == ID_BATAILLE)
+                                    && (BataillePion.I_ZONE_BATAILLE_ENGAGEMENT == zone)
+                                    && !Pion.B_DETRUIT
+                                    select new rechercheQG { idPion = Pion.ID_PION, bEngagee = BataillePion.B_ENGAGEMENT, izoneEngagement = Pion.IsI_ZONE_BATAILLENull() ? -1 : Pion.I_ZONE_BATAILLE };
+
+                IEnumerable<int> resultPionsBataille;
+                resultPionsBataille = from resultatPion in resultComplet
+                                      select resultatPion.idPion;
+
+                List<Donnees.TAB_PIONRow> listeChefsEnBataille = new List<Donnees.TAB_PIONRow>();
+                foreach (int id in resultPionsBataille)
                 {
-                    if (lignePion.estQG && (!lignePion.IsI_ZONE_BATAILLENull() && lignePion.I_ZONE_BATAILLE == zone))
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(id);
+                    if (lignePion.estQG)
                     {
                         listeChefsEnBataille.Add(lignePion);
                     }
@@ -1907,6 +1922,8 @@ namespace vaoc
                         // -> Le chef remplaçant n'est crée qu'après une période d'inactivité (voir NouvelleHeure)
                     }
                 }
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 return true;
             }
 
@@ -2016,9 +2033,9 @@ namespace vaoc
             }
 
             /// <summary>
-            /// Si un leader se retrouve dans une zone sans unité combattante, il doit être remis en réserve
+            /// Si un leader ou une unité d'artillerie se retrouve dans une zone sans unité combattante, il doit être remis en réserve
             /// </summary>
-            /// <param name="ligneBataille">Bataille pour laquelle on recherche si un leader se retrouve sans unité au combat</param>
+            /// <param name="ligneBataille">Bataille pour laquelle on recherche si un leader ou une unité d'artillerie se retrouve sans unité au combat</param>
             private void RemiseLeaderEnReserve()
             {
                 string message, messageErreur;
@@ -2034,39 +2051,45 @@ namespace vaoc
                 Donnees.TAB_BATAILLE_PIONSRow lignePionBataille;
                 for (i = 0; i < 3; i++)
                 {
-                    Donnees.TAB_PIONRow ligneLeader012 = null;
-                    Donnees.TAB_PIONRow ligneLeader345 = null;
+                    List<Donnees.TAB_PIONRow> ligneLeaderArtillerie012 = new List<TAB_PIONRow>();
+                    List<Donnees.TAB_PIONRow> ligneLeaderArtillerie345 = new List<TAB_PIONRow>();
                     bool bCombattants012 = false;
                     bool bCombattants345 = false;
                     foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille012)
                     {
                         if (lignePion.IsI_ZONE_BATAILLENull() || lignePion.I_ZONE_BATAILLE != i) continue;
-                        if (lignePion.estCombattif) bCombattants012 = true;
-                        if (lignePion.estQG) ligneLeader012 = lignePion;
+                        if (lignePion.estCombattif && !lignePion.estArtillerie) bCombattants012 = true;
+                        if (lignePion.estQG || lignePion.estArtillerie) ligneLeaderArtillerie012.Add(lignePion);
                     }
                     foreach (Donnees.TAB_PIONRow lignePion in lignePionsEnBataille345)
                     {
                         if (lignePion.IsI_ZONE_BATAILLENull() || lignePion.I_ZONE_BATAILLE != i + 3) continue;
-                        if (lignePion.estCombattif) bCombattants345 = true;
-                        if (lignePion.estQG) ligneLeader345 = lignePion;
+                        if (lignePion.estCombattif && !lignePion.estArtillerie) bCombattants345 = true;
+                        if (lignePion.estQG || lignePion.estArtillerie) ligneLeaderArtillerie345.Add(lignePion);
                     }
-                    if (null != ligneLeader012 && !bCombattants012)
+                    if (ligneLeaderArtillerie012.Count>0 && !bCombattants012)
                     {
-                        message = string.Format("EffectuerBataille le QG {1} ID={0} se retrouve seul en zone {2} et est remis à disposition",
-                            ligneLeader012.ID_PION, ligneLeader012.S_NOM, i);
-                        LogFile.Notifier(message, out messageErreur);
-                        ligneLeader012.SetI_ZONE_BATAILLENull();
-                        lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ligneLeader012.ID_PION, ID_BATAILLE);
-                        lignePionBataille.B_ENGAGEE = false; // = dans le combat mais pas au front
+                        foreach (Donnees.TAB_PIONRow lignePion in ligneLeaderArtillerie012)
+                        {
+                            message = string.Format("EffectuerBataille {1} ID={0} se retrouve seul en zone {2} et est remis en réserve",
+                                                    lignePion.ID_PION, lignePion.S_NOM, i);
+                            LogFile.Notifier(message, out messageErreur);
+                            lignePion.SetI_ZONE_BATAILLENull();
+                            lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ID_BATAILLE);
+                            lignePionBataille.B_ENGAGEE = false; // = dans le combat mais pas au front
+                        }
                     }
-                    if (null != ligneLeader345 && !bCombattants345)
+                    if (ligneLeaderArtillerie345.Count>0 && !bCombattants345)
                     {
-                        message = string.Format("EffectuerBataille le QG {1} ID={0} se retrouve seul en zone {2} et est remis à disposition",
-                            ligneLeader345.ID_PION, ligneLeader345.S_NOM, i + 3);
-                        LogFile.Notifier(message, out messageErreur);
-                        ligneLeader345.SetI_ZONE_BATAILLENull();
-                        lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ligneLeader345.ID_PION, ID_BATAILLE);
-                        lignePionBataille.B_ENGAGEE = false;// = dans le combat mais pas au front
+                        foreach (Donnees.TAB_PIONRow lignePion in ligneLeaderArtillerie345)
+                        {
+                            message = string.Format("EffectuerBataille {1} ID={0} se retrouve seul en zone {2} et est remis à disposition",
+                                                    lignePion.ID_PION, lignePion.S_NOM, i + 3);
+                            LogFile.Notifier(message, out messageErreur);
+                            lignePion.SetI_ZONE_BATAILLENull();
+                            lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ID_BATAILLE);
+                            lignePionBataille.B_ENGAGEE = false;// = dans le combat mais pas au front
+                        }
                     }
                 }
             }

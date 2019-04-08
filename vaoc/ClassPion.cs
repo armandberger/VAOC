@@ -4183,6 +4183,7 @@ namespace vaoc
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
                 idNationCaptureur = lignePionEnnemi.idNation;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
                 /* -> plus maintenant, n'importe quel chef peut diriger un dépôt

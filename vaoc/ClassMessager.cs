@@ -2026,13 +2026,14 @@ namespace vaoc
 
                 case Constantes.ORDRES.TRANSFERER:
                     Donnees.TAB_PIONRow lignePionCible = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_CIBLE);
-                    Donnees.TAB_PIONRow lignePionDestinataireCible = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE_CIBLE);
-                    retour = avecProprietaire ?
+                    Donnees.TAB_PIONRow lignePionProprietaire = lignePionCible.proprietaire;
+                    //Donnees.TAB_PIONRow lignePionDestinataireCible = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE_CIBLE); -> toujours null
+                    retour = (avecProprietaire && null!= lignePionProprietaire) ?
                                 string.Format("{0} doit transférer l'unité {1} à {2}.",
-                                lignePionDestinataire.S_NOM, lignePionCible.S_NOM, lignePionDestinataireCible.S_NOM)
+                                lignePionProprietaire.S_NOM, lignePionCible.S_NOM, lignePionDestinataire.S_NOM)
                             :
                                 string.Format("transférer l'unité {1} à {2}.",
-                                lignePionDestinataire.S_NOM, lignePionCible.S_NOM, lignePionDestinataireCible.S_NOM);
+                                "inconnu", lignePionCible.S_NOM, lignePionDestinataire.S_NOM);
                     break;
 
                 case Constantes.ORDRES.GENERERCONVOI:

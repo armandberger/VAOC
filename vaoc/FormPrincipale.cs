@@ -2578,6 +2578,7 @@ namespace vaoc
             splitContainer.Width = toolStripCarte.Width;
             splitContainer.Top = toolStripCarte.Bottom;
             splitContainer.Height = this.Bottom - toolStripCarte.Bottom - SystemInformation.HorizontalScrollBarHeight;
+            splitContainer.SplitterDistance = panelInformation.Width + 20;
         }
 
         private void utilisateursToolStripMenuItem_Click(object sender, EventArgs e)

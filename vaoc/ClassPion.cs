@@ -3623,12 +3623,13 @@ namespace vaoc
                     }
                 }
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                /* finalement non, certains joueurs préférant envoyer leurs convois/blessés ailleurs que le lieu de création, il faut donc imposer au moins un mouvement avant de rejoindre un hopital ou une prison.
                 if (bBlesses || bPrisonniers)
                 {
                     //on en profite aussi pour voir si l'unité n'est pas sur un hopital ou une prison
                     lignePionConvoi.ArriveeSurPrisonOuHopital();
                 }
-
+                */
                 return lignePionConvoi;
             }
 

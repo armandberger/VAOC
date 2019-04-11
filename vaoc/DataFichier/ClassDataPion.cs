@@ -62,5 +62,6 @@ namespace vaoc
         public int I_X { get; set; }
         public int I_Y { get; set; }
         public string S_ORDRE_COURANT { get; set; }
+        public int I_TRI { get; set; }
     }
 }

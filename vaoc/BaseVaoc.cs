@@ -1885,7 +1885,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 9;
+            TAB_JEU[0].I_VERSION = 10;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
@@ -2328,6 +2328,16 @@ namespace vaoc
                 {
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN[l];
                     ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE = false;
+                }
+            }
+            #endregion
+
+            #region version 10
+            if (TAB_JEU[0].I_VERSION < 10)
+            {
+                foreach (TAB_PIONRow lignePion in TAB_PION)
+                {
+                    lignePion.I_TRI = Constantes.NULLENTIER;
                 }
             }
             #endregion

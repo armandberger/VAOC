@@ -76,7 +76,7 @@ namespace vaoc
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
             if (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
             {
-                if (!NouveauxNoms()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
+                if (!NouveauxNomsEtTri()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
                 if (!NouveauxOrdres(out nbTourExecutes)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
             }
             else
@@ -139,6 +139,7 @@ namespace vaoc
             */
 
             //capture de dépôts
+            /*
             Donnees.TAB_PIONRow lignePionEnnemi = Donnees.m_donnees.TAB_PION.FindByID_PION(71);
             Donnees.TAB_PIONRow lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(103);
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(6392630);
@@ -146,6 +147,7 @@ namespace vaoc
             lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
             lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(18926);
             lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
+            */
             #endregion
 
 
@@ -2406,10 +2408,10 @@ namespace vaoc
         }
 
         /// <summary>
-        /// On vérifie si un joueur a changé le nom de l'un de ses pions, si oui, on le modifie dans la table source des pions
+        /// On vérifie si un joueur a changé le nom ou l'ordre de tri de l'un de ses pions, si oui, on le modifie dans la table source des pions
         /// </summary>
         /// <returns></returns>
-        private bool NouveauxNoms()
+        private bool NouveauxNomsEtTri()
         {
             //string message, messageErreur;
             Donnees.TAB_PIONRow lignePion;
@@ -2433,6 +2435,7 @@ namespace vaoc
                 {
                     lignePion.S_NOM = pion.S_NOM;
                 }
+                if (pion.I_TRI < 0) { lignePion.SetI_TRINull(); } else { lignePion.I_TRI = pion.I_TRI; }
             }
             
             LogFile.Notifier("Fin NouveauxNoms");

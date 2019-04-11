@@ -4918,7 +4918,18 @@ namespace vaoc
             {
                 return "Patrouille du " + S_NOM;
             }
-        
+
+            internal bool IsI_TRINull()
+            {
+                return this.I_TRI == Constantes.NULLENTIER;
+            }
+
+            internal void SetI_TRINull()
+            {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                this.I_TRI = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            }
         }
     }
 }

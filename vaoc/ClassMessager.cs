@@ -1612,7 +1612,8 @@ namespace vaoc
                     0,//I_CAVALERIE_ESCORTE
                     0,//I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
-                    0//I_VICTOIRE
+                    0,//I_VICTOIRE
+                    -1//I_TRI
                     );
                 lignePionMessager.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionMessager.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -1621,6 +1622,7 @@ namespace vaoc
                 lignePionMessager.SetID_LIEU_RATTACHEMENTNull();
                 lignePionMessager.SetID_PION_ESCORTENull();
                 lignePionMessager.SetID_DEPOT_SOURCENull();
+                lignePionMessager.SetI_TRINull();
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 

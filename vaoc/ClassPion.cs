@@ -97,7 +97,8 @@ namespace vaoc
                         int I_CAVALERIE_ESCORTE,
                         int I_MATERIEL_ESCORTE,
                         int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
-                        int I_VICTOIRE
+                        int I_VICTOIRE,
+                        int I_TRI
                 )
             {
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
@@ -172,7 +173,8 @@ namespace vaoc
                         I_CAVALERIE_ESCORTE,
                         I_MATERIEL_ESCORTE,
                         I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
-                        I_VICTOIRE
+                        I_VICTOIRE,
+                        I_TRI
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
@@ -2893,7 +2895,8 @@ namespace vaoc
                     0,//int I_CAVALERIE_ESCORTE,
                     0,//int I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
-                    0//I_VICTOIRE
+                    0,//I_VICTOIRE
+                    -1//I_TRI
                     );
 
                 if (null == lignePionRemplacant)
@@ -2979,6 +2982,7 @@ namespace vaoc
                 lignePionRemplacant.SetID_LIEU_RATTACHEMENTNull();
                 lignePionRemplacant.SetID_PION_ESCORTENull();
                 lignePionRemplacant.SetID_DEPOT_SOURCENull();
+                lignePionRemplacant.SetI_TRINull();
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return lignePionRemplacant;
             }
@@ -3071,7 +3075,8 @@ namespace vaoc
                     0,//int I_CAVALERIE_ESCORTE,
                     0,//int I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
-                    0//I_VICTOIRE
+                    0,//I_VICTOIRE
+                    I_TRI//I_TRI
                     );
 
                 if (null == ligneAncienPion)
@@ -3583,7 +3588,8 @@ namespace vaoc
                     0,//I_CAVALERIE_ESCORTE
                     0,//I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
-                    0//I_VICTOIRE
+                    0,//I_VICTOIRE
+                    -1//I_TRI
                     );
                 lignePionConvoi.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionConvoi.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -3591,6 +3597,7 @@ namespace vaoc
                 lignePionConvoi.SetID_BATAILLENull();
                 lignePionConvoi.SetID_LIEU_RATTACHEMENTNull();
                 lignePionConvoi.SetID_PION_ESCORTENull();
+                lignePionConvoi.SetI_TRINull();
 
 
                 if (bBlesses)
@@ -4922,6 +4929,7 @@ namespace vaoc
             internal bool IsI_TRINull()
             {
                 return this.I_TRI == Constantes.NULLENTIER;
+                //return this.IsNull("I_TRI");
             }
 
             internal void SetI_TRINull()

@@ -183,6 +183,12 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (lignePion.IsI_TRINull())
+            //        { lignePion.SetI_TRINull(); }
+            //}
+
             #region messages non arrivés sur des pions détruits !!!
             Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
             foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)

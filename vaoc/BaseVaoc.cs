@@ -2337,7 +2337,7 @@ namespace vaoc
             {
                 foreach (TAB_PIONRow lignePion in TAB_PION)
                 {
-                    lignePion.I_TRI = Constantes.NULLENTIER;
+                    lignePion.SetI_TRINull();
                 }
             }
             #endregion

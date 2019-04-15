@@ -3893,7 +3893,7 @@ namespace vaoc
                     //recherche de la case sur le trajet
                     int pos = 0;
                     while (pos < chemin.Count && chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;
-                    if (chemin[pos].ID_CASE != lignePion.ID_CASE)
+                    if (pos == chemin.Count || chemin[pos].ID_CASE != lignePion.ID_CASE)
                     {
                         //ne doit jamais arrivé, bug de parallelisme quelque part
                         for(pos=0; pos<chemin.Count;pos++)

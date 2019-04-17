@@ -2312,6 +2312,7 @@ namespace vaoc
                                 {
                                     //unitées de la même nation que l'observateur, on indique le proprietaire plutôt que la nationalité, on remonte jusqu'à ce que l'on trouve un joueur
                                     unitesEnvironnantes += nomType;
+                                    if (lignePionVoisin.estConvoi) unitesEnvironnantes += "(" + lignePionVoisin.C_NIVEAU_DEPOT + ")";
                                     unitesEnvironnantes += lignePionVoisin.ChaineAppartenance();
                                     //unitesEnvironnantes += string.Format(" situé{1} à {0}  avec des effectifs de ", NomZoneGeographique, femminin);
                                     unitesEnvironnantes += string.Format(" situé{1} à {0}", NomZoneGeographique, femminin);

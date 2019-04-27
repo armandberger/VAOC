@@ -4928,8 +4928,8 @@ namespace vaoc
 
             internal bool IsI_TRINull()
             {
+                if (this.IsNull("I_TRI")) return true;
                 return this.I_TRI == Constantes.NULLENTIER;
-                //return this.IsNull("I_TRI");
             }
 
             internal void SetI_TRINull()

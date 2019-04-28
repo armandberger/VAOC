@@ -76,8 +76,12 @@ namespace vaoc
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
             if (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
             {
-                if (!NouveauxNomsEtTri()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
-                if (!NouveauxOrdres(out nbTourExecutes)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
+                bool bNouveauxOrdres;
+                if (!NouveauxOrdres(out nbTourExecutes, out bNouveauxOrdres)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
+                if (bNouveauxOrdres)
+                {
+                    if (!NouveauxNomsEtTri()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
+                }
             }
             else
             {
@@ -2448,8 +2452,9 @@ namespace vaoc
         /// Mise en place des nouveaux ordres saisies par les joueurs
         /// </summary>
         /// <param name="bPartieCommence">true si la partie à commencé, false si on est en pré-discussion</param>
+        /// <param name="bSansNouveauxOrdres">true s'il y a des nouveaux ordres, false sinon</param>
         /// <returns>OK=true, KO=false</returns>
-        private bool NouveauxOrdres(out int nbTourExecutes)
+        private bool NouveauxOrdres(out int nbTourExecutes, out bool bNouveauxOrdres)
         {
             //string message, messageErreur;
             int tourDernierOrdre = -1;//pour s'assurer que l'on a bon fichier d'ordres !
@@ -2457,6 +2462,7 @@ namespace vaoc
             //int id_ordre_suivant;
 
             LogFile.Notifier("Debut NouveauxOrdres");
+            bNouveauxOrdres = true;
             nbTourExecutes = 0;
             if (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE != 0)
             {
@@ -2523,6 +2529,7 @@ namespace vaoc
 
             if (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR != tourDernierOrdre)
             {
+                bNouveauxOrdres = false;
                 if (DialogResult.No == MessageBox.Show("Attention ! Pas de nouveaux ordres à ce tour, derniers ordres fait au tour:" + tourDernierOrdre + ". Est-ce normal ?", "NouveauxOrdres()", MessageBoxButtons.YesNo))
                 {
                     LogFile.Notifier("NouveauxOrdres : derniers ordres reçus au tour " + tourDernierOrdre);

@@ -4342,23 +4342,26 @@ namespace vaoc
                     }
                 }
             }
-            // on place l'unité sur la case où elle est actuellement
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-            if (null == ligneCase)
+            // on place l'unité sur la case où elle est actuellement si le pion ne vient pas d'être détruit
+            if (!lignePion.B_DETRUIT)
             {
-                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : impossible de trouver la case courante ID={2}", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
-                LogFile.Notifier(message, out messageErreur);
-                return false;
-            }
-            else
-            {
-                int nbPlacesOccupees=0;
-                lignePion.RequisitionCase(ligneCase, true, ref nbPlacesOccupees);//note : tous les cas de rencontre entre pions sont gérés dans cette méthode
-                //ligneCase.ID_NOUVEAU_PROPRIETAIRE = lignePion.ID_PION;
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                if (null == ligneCase)
+                {
+                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : impossible de trouver la case courante ID={2}", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
+                    LogFile.Notifier(message, out messageErreur);
+                    return false;
+                }
+                else
+                {
+                    int nbPlacesOccupees = 0;
+                    lignePion.RequisitionCase(ligneCase, true, ref nbPlacesOccupees);//note : tous les cas de rencontre entre pions sont gérés dans cette méthode
+                                                                                     //ligneCase.ID_NOUVEAU_PROPRIETAIRE = lignePion.ID_PION;
 
-                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : pion en ID={2} X={3} Y={4}",
-                    lignePion.S_NOM, lignePion.ID_PION, ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y);
-                LogFile.Notifier(message, out messageErreur);
+                    message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : pion en ID={2} X={3} Y={4}",
+                        lignePion.S_NOM, lignePion.ID_PION, ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y);
+                    LogFile.Notifier(message, out messageErreur);
+                }
             }
 
             return true;

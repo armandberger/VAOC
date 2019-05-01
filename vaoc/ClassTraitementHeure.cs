@@ -4520,6 +4520,15 @@ namespace vaoc
             //activer le nouvel ordre (s'il y en a un ! Mais, normalement, il y en a toujours un)
             if (null != ligneOrdreNouveau)
             {
+                //Si on donner un ordre de mouvement vers une destination où l'on se trouve déjà, cela ne sert à rien et cela va couter une phase de mouvement
+                if (ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT && ligneOrdreNouveau.ID_CASE_DESTINATION == lignePionDestinataire.ID_CASE)
+                {
+                    message = string.Format("{0}(ID={1}, ChangerOrdreCourant reçoit un {2} de mouvement vers une case où l'unité se trouve déjà on ne l'applique donc pas",
+                        lignePionDestinataire.S_NOM, lignePionDestinataire.ID_PION, ligneOrdreNouveau.ID_ORDRE);
+                    LogFile.Notifier(message);
+                    return true;
+                }
+
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdreNouveau.ID_PION = lignePionDestinataire.ID_PION;
                 ligneOrdreNouveau.ID_CASE_DEPART = lignePionDestinataire.ID_CASE;

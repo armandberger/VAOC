@@ -1589,6 +1589,7 @@ namespace vaoc
                 int tourDebut, phaseDebut;
                 int heure = ClassMessager.DateHeure(tour, phase).Hour;
                 //on part dela première heure depuis minuit
+
                 if (0==heure)
                 {
                     //cas de la phase de ravitaillement quotidienne

@@ -2119,7 +2119,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT || lignePion.B_BLESSES) { continue; }
-                    if (lignePion.estQG && lignePion.I_STRATEGIQUE > 0)// test sur strategique ajouté à cause du cas "Bessières", général pouvant uniquement servir en appui tactique mais pas en commandement
+                    if (lignePion.estQG && lignePion.estJoueur)// test sur estJoueur ajouté à cause du cas "Bessières", général pouvant uniquement servir en appui tactique mais pas en commandement
                     {
                         if (lignePion.C_NIVEAU_HIERARCHIQUE == cHierarchie && retourLeader >= 0
                             && null == lignePionLeader)//si leader de même niveau déjà affecté à un tour précédent, on ne le change pas

@@ -1059,7 +1059,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 if (lignePionBataille.B_DETRUIT) { continue; }
                 //unité QG et non présente dans un autre combat
-                if (lignePionBataille.estQGHierarchique(out niveauHierarchique) && !lignePionBataille.estAuCombat && lignePionBataille.I_STRATEGIQUE > 0)
+                if (lignePionBataille.estQGHierarchique(out niveauHierarchique) && !lignePionBataille.estAuCombat && lignePionBataille.estJoueur)
                 {
                     ligneCasePion = lignePionBataille.CaseCourante();
                     if (ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite &&

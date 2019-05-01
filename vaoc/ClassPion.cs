@@ -3556,8 +3556,8 @@ namespace vaoc
                     -1,
                     "",//nomConvoi,
                     0, 0, 0, 0, 0, 0, 0, 
-                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
-                    100, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
+                    10, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute -> réduit à 10 sinon pourrait potentiellement être un avantage en combat
+                    10, //le moral doit être à 100, sinon il va ajouter +1km/h à la vitesse pour déroute
                     0, 0, 0, 'Z', 0, 0, 0, 0,
                     ID_CASE,
                     0, //I_TOUR_SANS_RAVITAILLEMENT

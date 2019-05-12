@@ -1969,7 +1969,7 @@ namespace vaoc
                 {
                     if (lignePionEnBataille.estQG) { continue; }
                     if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != zoneDefenseur) { continue; }
-                    if (lignePionEnBataille.I_MORAL <= 0) { continue; } //l'unité n'est déjà plus vraiment sur la zone...
+                    //if (lignePionEnBataille.I_MORAL <= 0) { continue; } //l'unité n'est déjà plus vraiment sur la zone... -> possible si toutes les unités présentes sont démoralisées
 
                     listePionsEnBatailleDefenseur.Add(lignePionEnBataille);
                 }

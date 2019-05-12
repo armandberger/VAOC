@@ -67,7 +67,7 @@ namespace vaoc
                             Convert.ToInt32(ligne.Cells["I_FATIGUE"].Value),
                             Convert.ToInt32(ligne.Cells["I_MORAL"].Value),
                             Convert.ToInt32(ligne.Cells["I_MORAL_MAX"].Value),
-                            Convert.ToInt32(ligne.Cells["I_EXPERIENCE"].Value),
+                            Convert.ToDecimal(ligne.Cells["I_EXPERIENCE"].Value),
                             Convert.ToInt32(ligne.Cells["I_TACTIQUE"].Value),
                             Convert.ToInt32(ligne.Cells["I_STRATEGIQUE"].Value),
                             Convert.ToChar(ligne.Cells["C_NIVEAU_HIERARCHIQUE"].Value),

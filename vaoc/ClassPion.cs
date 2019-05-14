@@ -1036,8 +1036,13 @@ namespace vaoc
                 if (ligneOrdre.I_HEURE_DEBUT > (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE)%24)
                 {
                     //l'ordre depasse minuit
+                    /*
                     if ((ligneOrdre.I_HEURE_DEBUT <= Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 24) &&
                         (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE > Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 24))
+                    { return true; }
+                    */
+                    if ((ligneOrdre.I_HEURE_DEBUT <= Donnees.m_donnees.TAB_PARTIE.HeureCourante()) ||
+                            (ligneOrdre.I_HEURE_DEBUT + ligneOrdre.I_DUREE) % 24 >= Donnees.m_donnees.TAB_PARTIE.HeureCourante())
                     { return true; }
                 }
                 else

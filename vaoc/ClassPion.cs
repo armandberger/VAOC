@@ -852,6 +852,7 @@ namespace vaoc
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 B_DETRUIT = true;
+                I_ARTILLERIE = 0;//pas toujours remis à zéro quand l'unité est surtout composé de cavalerie et d'infanterie
                 I_MORAL = 0; //ainsi, les blessés légers d'une bataille sont mis automatiquement en bléssés graves (sinon, l'unité pourrait "renaitre" post bataille)
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 DetruireEspacePion();

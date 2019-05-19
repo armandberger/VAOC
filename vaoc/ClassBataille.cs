@@ -883,6 +883,7 @@ namespace vaoc
                             {
                                 int perteAuMoral = Math.Min(lignePionPerte.Moral, pertesMoral);
                                 lignePionPerte.I_MORAL -= perteAuMoral;
+                                if (lignePionPerte.I_MORAL <= 0 ) { lignePionPerte.B_FUITE_AU_COMBAT = true; }
 
                                 if (listePertesMateriel.ContainsKey(lignePionPerte.ID_PION))
                                 {
@@ -2440,6 +2441,7 @@ namespace vaoc
                 {
                     //l'unité a déjà fuit, elle ne va pas fuir deux fois !
                     lignePionFuite.I_MORAL = 0;
+                    lignePionFuite.B_FUITE_AU_COMBAT = true;
                     return true;
                 }
                 Donnees.TAB_BATAILLE_PIONSRow ligneBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePionFuite.ID_PION, ID_BATAILLE);

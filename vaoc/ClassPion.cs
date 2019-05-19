@@ -283,7 +283,17 @@ namespace vaoc
                     return infanterie + cavalerie + artillerie;
                     //return I_ARTILLERIE + I_CAVALERIE + I_INFANTERIE;
                 }
-                //set; 
+            }
+
+            /// <summary>
+            /// effectif total du pion en début de campagne
+            /// </summary>
+            public int effectifInitial
+            {
+                get
+                {
+                    return I_ARTILLERIE_INITIALE + I_CAVALERIE_INITIALE + I_INFANTERIE_INITIALE;
+                }
             }
 
             /// <summary>

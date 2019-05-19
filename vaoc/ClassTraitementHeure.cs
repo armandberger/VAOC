@@ -1270,22 +1270,27 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
-                    //la distance entre le pion et l'unité à renforcer est-elle correcte ?
                     Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
                     Donnees.TAB_CASERow ligneCaseRenfort = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionARenforcer.ID_CASE);
-                    double distanceRenfort = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCaseRenfort.I_X, ligneCaseRenfort.I_Y);
-                    if (distanceRenfort > Constantes.CST_DISTANCE_RENFORT * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
+
+                    //si les deux pions sont engagés dans la même bataille, ils peuvent toujours se renforcer
+                    if (lignePion.IsID_BATAILLENull() || lignePion.ID_BATAILLE == lignePionARenforcer.ID_BATAILLE)
                     {
-                        //on est très loin, 
-                        //on prévient le joueur qu'il ne peut pas renforcer l'unité car il est trop loin
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_IMPOSSIBLE))
+                        //la distance entre le pion et l'unité à renforcer est-elle correcte ?
+                        double distanceRenfort = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCaseRenfort.I_X, ligneCaseRenfort.I_Y);
+                        if (distanceRenfort > Constantes.CST_DISTANCE_RENFORT * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {
-                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
+                            //on est très loin, 
+                            //on prévient le joueur qu'il ne peut pas renforcer l'unité car il est trop loin
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_IMPOSSIBLE))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
+                            lignePion.TerminerOrdre(ligneOrdre, false, true);
+                            break;//on ne fait pas la suite
                         }
-                        lignePion.TerminerOrdre(ligneOrdre, false, true);
-                        break;//on ne fait pas la suite
                     }
 
                     //dans le cas d'un convoi de ravitaillement sur un dépôt de type 'B' il faut s'assurer qu'il est sur une ville où les dépôts de type 'A' sont autorisés avant de faire l'ordre
@@ -1602,8 +1607,7 @@ namespace vaoc
         {
             bFinDePartie = false;
             int[] victoire = new int[2];
-            int[] defaite = new int[2];
-            Donnees.TAB_MODELE_PIONRow ligneModelePion;
+            int[] defaite = new int[2];            
 
             try
             {
@@ -1625,29 +1629,31 @@ namespace vaoc
                     for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
                     {
                         Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                        if (lignePion.effectifTotal > 0 && !lignePion.B_DETRUIT && !lignePion.estPrisonniers && !lignePion.estBlesses)
+                        //if (lignePion.effectifTotal > 0 && !lignePion.B_DETRUIT && !lignePion.estPrisonniers && !lignePion.estBlesses)
+                        if (lignePion.I_VICTOIRE > 0)
                         {
                             //unité combattante
-                            ligneModelePion = lignePion.modelePion;
+                            int idNation = lignePion.modelePion.ID_NATION;
 
-                            if (lignePion.B_FUITE_AU_COMBAT)
+                            if (lignePion.B_FUITE_AU_COMBAT || lignePion.B_DETRUIT)
                             {
-                                defaite[ligneModelePion.ID_NATION]++;
+                                defaite[idNation] += lignePion.I_VICTOIRE;
                             }
                             else
                             {
-                                victoire[ligneModelePion.ID_NATION]++;
+                                victoire[idNation] += lignePion.I_VICTOIRE;
                             }
                         }
                     }
 
+                    //les renforts à venir peuvent renforcer un camp
                     for (int l=0; l<Donnees.m_donnees.TAB_RENFORT.Count; l++)
                     {
                         Donnees.TAB_RENFORTRow ligneRenfort = Donnees.m_donnees.TAB_RENFORT[l];
                         if (ligneRenfort.effectifTotal > 0)
                         {
-                            ligneModelePion = Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(ligneRenfort.ID_MODELE_PION);
-                            victoire[ligneModelePion.ID_NATION]++;
+                            Donnees.TAB_MODELE_PIONRow ligneModelePion = Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(ligneRenfort.ID_MODELE_PION);
+                            victoire[ligneModelePion.ID_NATION] += ligneRenfort.I_VICTOIRE;
                         }
                     }
 

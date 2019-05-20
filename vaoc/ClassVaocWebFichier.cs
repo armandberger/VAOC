@@ -694,8 +694,6 @@ namespace vaoc
             requete = string.Format("DELETE FROM `tab_vaoc_forum` WHERE ID_PARTIE={0};",
                                     idPartie);
             listeRequete.AppendLine(requete);
-            requete = "INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ";
-            listeRequete.AppendLine(requete);
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
@@ -726,7 +724,12 @@ namespace vaoc
                         if (!lignePion.IsID_BATAILLENull() && !lignePion2.IsID_BATAILLENull() &&
                             (lignePion.ID_BATAILLE == lignePion2.ID_BATAILLE) || (dist <= 1* Donnees.m_donnees.TAB_JEU[0].I_ECHELLE))
                         {
-                            if (bPremier) { bPremier = false; } else { listeRequete.AppendLine(","); }
+                            if (bPremier)
+                            {
+                                requete = "INSERT INTO `tab_vaoc_forum` (`ID_PARTIE`, `ID_PION1`, `ID_PION2`) VALUES ";
+                                listeRequete.AppendLine(requete);
+                                bPremier = false;
+                            } else { listeRequete.AppendLine(","); }
                             requete = string.Format("({0}, {1}, {2})",
                                                     idPartie,
                                                     lignePion.ID_PION,
@@ -1664,13 +1667,16 @@ namespace vaoc
             requete = string.Format("DELETE FROM tab_vaoc_objectifs WHERE ID_PARTIE={0};",idPartie);
             listeRequete.AppendLine(requete);
 
-            requete = "INSERT INTO `tab_vaoc_objectifs` (`ID_PARTIE`, `ID_OBJECTIF`, `S_NOM`, `I_VICTOIRE`, `ID_NATION`) VALUES ";
-            listeRequete.AppendLine(requete);
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 if (ligneNomCarte.I_VICTOIRE>0)
                 {
-                    if (bPremier) { bPremier = false; } else { listeRequete.AppendLine(","); }
+                    if (bPremier)
+                    {
+                        requete = "INSERT INTO `tab_vaoc_objectifs` (`ID_PARTIE`, `ID_OBJECTIF`, `S_NOM`, `I_VICTOIRE`, `ID_NATION`) VALUES ";
+                        listeRequete.AppendLine(requete);
+                        bPremier = false;
+                    } else { listeRequete.AppendLine(","); }
                     requete = string.Format("({0}, {1}, '{2}', {3}, {4})",
                                     idPartie,
                                     id++,

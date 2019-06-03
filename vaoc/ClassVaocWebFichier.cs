@@ -1148,7 +1148,7 @@ namespace vaoc
                                     lignePion.I_SOLDATS_RAVITAILLES,
                                     lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE,
                                     Constantes.ChaineSQL(sOrdreCourant),
-                                    lignePion.IsI_TRINull() || lignePion.I_TRI<=0 ? lignePion.ID_PION : lignePion.I_TRI
+                                    lignePion.IsI_TRINull() || lignePion.I_TRI<0 ? lignePion.ID_PION : lignePion.I_TRI
                                     );
             return requete;
         }

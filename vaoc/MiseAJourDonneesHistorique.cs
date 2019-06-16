@@ -71,7 +71,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.m_donnees.TAB_CASE.ViderLaTable();//sinon on peut avoir des doublons au chargement de fichiers contenant des données de cases
+                    Donnees.m_donnees.TAB_CASE.ViderLaTable(true);//sinon on peut avoir des doublons au chargement de fichiers contenant des données de cases
                     if (0 == m_tableVideo.Rows.Count)
                     {
                         m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);

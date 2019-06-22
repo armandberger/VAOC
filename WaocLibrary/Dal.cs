@@ -116,6 +116,23 @@ namespace WaocLib
                 ZipArchive fichierZip = ZipFile.Open(nomfichier, ZipArchiveMode.Create);
                 ZipArchiveEntry fichier = fichierZip.CreateEntry(nomfichier);
                 StreamWriter ecrivain = new StreamWriter(fichier.Open());
+                //cette méthode renvoie Erreur sur ChargerPartie :Données non valides au niveau racine. Ligne 1, position 1.
+                /*
+                bool bpremier = true;
+                foreach (DataTable table in donnees.Tables)
+                {
+                    if (table.TableName != "TAB_CASE")
+                    {
+                        if (bpremier)
+                        {
+                            table.WriteXml(ecrivain);
+                            bpremier = false;
+                        }
+                        else
+                            table.WriteXml(ecrivain, XmlWriteMode.IgnoreSchema);
+                    }
+                }
+                */
                 donnees.WriteXml(ecrivain);
                 ecrivain.Close();
                 fichierZip.Dispose();

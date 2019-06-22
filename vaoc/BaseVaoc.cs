@@ -1877,7 +1877,7 @@ namespace vaoc
         internal bool SauvegarderPartie(string nomFichier, int iTour, int iPhase, bool bSuperieur, bool bConserverCases, bool bSauvegarderCases)
         {
             bool retour;
-            Donnees.TAB_CASEDataTable caseTemp = null;
+            //Donnees.TAB_CASEDataTable caseTemp = null;
 
             if (0 == TAB_JEU.Count)
             {
@@ -1899,17 +1899,17 @@ namespace vaoc
                 }
                 if (0 == iPhase)
                 {
-                    caseTemp = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.Copy();
-                    Donnees.m_donnees.TAB_CASE.ViderLaTable(false);
+                    //caseTemp = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.Copy();
+                    Donnees.m_donnees.TAB_CASE.ViderLaTable(true);
                 }
             }
 
             Monitor.Enter(Donnees.m_donnees);
             retour = Dal.SauvegarderPartie(nomFichier, iTour, iPhase, Donnees.m_donnees, bSuperieur);
-            if (null!= caseTemp)
-            {
-                Donnees.m_donnees.TAB_CASE.Merge(caseTemp,false);
-            }
+            //if (null!= caseTemp)
+            //{
+            //    Donnees.m_donnees.TAB_CASE.Merge(caseTemp,false);
+            //}
             Monitor.Exit(Donnees.m_donnees);
             return retour;
 

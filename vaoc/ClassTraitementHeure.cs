@@ -4593,6 +4593,8 @@ namespace vaoc
             if (lignePion.I_DISTANCE_A_PARCOURIR <= 0)
             {
                 //l'unité progresse d'une case
+
+
                 if (ligneOrdre.I_EFFECTIF_DESTINATION > 0)
                 {
                     if (!ExecuterMouvementAvecEffectifForcesADestination(lignePion, ligneOrdre, ligneCaseDepart, ligneCaseDestination, ligneNation))

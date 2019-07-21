@@ -144,6 +144,8 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.sQLDeTousLesMessagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -897,9 +899,11 @@ namespace vaoc
             this.statistiquesToolStripMenuItem,
             this.extractionDeLaBaseEnCSVToolStripMenuItem,
             this.repriseDeDonnéesToolStripMenuItem,
+            this.sQLDeTousLesMessagesToolStripMenuItem,
             this.toolStripSeparator7,
             this.actuelsAnciensToolStripMenuItem,
-            this.anciensActuelsToolStripMenuItem});
+            this.anciensActuelsToolStripMenuItem,
+            this.toolStripSeparator8});
             this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
             this.actionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.actionsToolStripMenuItem.Text = "&Actions";
@@ -1221,6 +1225,18 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(218, 6);
+            // 
+            // sQLDeTousLesMessagesToolStripMenuItem
+            // 
+            this.sQLDeTousLesMessagesToolStripMenuItem.Name = "sQLDeTousLesMessagesToolStripMenuItem";
+            this.sQLDeTousLesMessagesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.sQLDeTousLesMessagesToolStripMenuItem.Text = "SQL de tous les messages";
+            this.sQLDeTousLesMessagesToolStripMenuItem.Click += new System.EventHandler(this.sQLDeTousLesMessagesToolStripMenuItem_Click);
+            // 
             // FormPrincipale
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1372,6 +1388,8 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem anciensActuelsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nomsPionsUniquesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem extractionDeLaBaseEnCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sQLDeTousLesMessagesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

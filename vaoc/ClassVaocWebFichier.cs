@@ -16,7 +16,20 @@ namespace vaoc
         private string m_fileNameSQL;
         private string m_fileNameXML;
 
+        #region proprietes
+        public string fileNameSQL
+        {
+            get { return m_fileNameSQL; }
+        }
+
+        public string fileNameXML
+        {
+            get { return m_fileNameXML; }
+        }
+        #endregion
+
         #region InterfaceVaocWeb Members
+        private ClassVaocWebFichier() { }
         public ClassVaocWebFichier(string connexion, string complement, bool nouveauFichier)
         {
             int positionPoint = connexion.LastIndexOf(".");
@@ -797,7 +810,12 @@ namespace vaoc
             */
         }
 
-        public void SauvegardeMessage(int idPartie)
+        /// <summary>
+        /// ScriptsSQL de sauvegarde en base des messages
+        /// </summary>
+        /// <param name="idPartie">identifiant de partie</param>
+        /// <param name="tourSansEnvoi">premier tour pour lequel on a pas enovyés les messags sql : pour éviter d'avoir un .sql trop important</param>
+        public void SauvegardeMessage(int idPartie, int tourSansEnvoi)
         {
             string requete, nomZoneGeographique;
             StringBuilder listeRequete = new StringBuilder();
@@ -805,16 +823,20 @@ namespace vaoc
             int nblignes = 0;
             //INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_MESSAGE`) VALUES (1, 1, 2, 1, '1805-06-15 02:04:18', '1805-06-15 22:40:15', 'La division a reçu un ordre : aller à Grenoble en partant à 8h00 durant 6 heures/jour'), (2, 1, 3, 1, '1805-06-02 22:52:27', '1805-06-03 12:52:27', 'La division vient d''arriver à Lyon et attend vos Constantes.ORDRES.');
 
-            //on reconstitue systématiquement tous les messages
-            requete = string.Format("delete from tab_vaoc_message WHERE ID_PARTIE={0};",
-                                    idPartie);
-            AjouterLigne(requete);
+            //on reconstitue systématiquement tous les messages si on refait tout depuis le début
+            if (tourSansEnvoi <= 0)
+            {
+                requete = string.Format("DELETE FROM tab_vaoc_message WHERE ID_PARTIE={0};",
+                                        idPartie);
+                AjouterLigne(requete);
+            }
 
             for (int i = 0; i< Donnees.m_donnees.TAB_MESSAGE.Count(); i++)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull() 
-                    && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_PHASE_ARRIVEE!=Constantes.NULLENTIER)
+                    && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_PHASE_ARRIVEE!=Constantes.NULLENTIER
+                    && ligneMessage.I_TOUR_ARRIVEE>= tourSansEnvoi)
                 {
                     //Il faut indiquer en pion emetteur, le véritable emetteur et non le messager
                     //d'une part parce que l'on se moque d'avoir le nom du messager mais, aussi parce que les messagers

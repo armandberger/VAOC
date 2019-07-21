@@ -5277,7 +5277,7 @@ namespace vaoc
 
             iWeb.SauvegardeForum(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
-            iWeb.SauvegardeMessage(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+            iWeb.SauvegardeMessage(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION);
 
             iWeb.SauvegardePion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 

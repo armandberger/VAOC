@@ -4638,6 +4638,21 @@ namespace vaoc
                     "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void sQLDeTousLesMessagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Donnees.m_donnees.TAB_PARTIE.Count <= 0)
+            {
+                MessageBox.Show("Vous devez charger une partie pour pouvoir en exporter les messages.","SQL Messages", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            else
+            {
+                InterfaceVaocWeb iWeb;
+                iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, "_messages", true);
+                iWeb.SauvegardeMessage(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE, -1);
+                MessageBox.Show("Fichier message exporté : " + iWeb.fileNameSQL, "SQL Messages", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 
     internal static class NativeMethods

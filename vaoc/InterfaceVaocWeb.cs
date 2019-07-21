@@ -7,6 +7,11 @@ namespace vaoc
 {
     public interface InterfaceVaocWeb
     {
+        #region proprietes
+        string fileNameSQL {get;}
+        string fileNameXML {get;}
+        #endregion
+
         #region mise à jour des données
         void TraitementEnCours(bool bTraitementEnCours, int idJeu, int idPartie);
 
@@ -16,7 +21,7 @@ namespace vaoc
         /// <param name="idPartie">identifiant de la partie</param>
         void SauvegardeNomsCarte(int idPartie);
 
-        void SauvegardeMessage(int idPartie);
+        void SauvegardeMessage(int idPartie, int tourSansEnvoi);
 
         /// <summary>
         /// Sauvegarde TAB_METEO. Utile uniquement dans l'information de scénario des joueurs

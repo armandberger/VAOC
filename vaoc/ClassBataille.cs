@@ -339,7 +339,7 @@ namespace vaoc
             ///tous les pions dans la zone de bataille des battus mais non engagées, on un temps de retraite pour éviter de redéclencher immédiatement un combat sur d'autres unités
             ///// correction -> prendre même les non engagées sinon les engagées se retrouvent "coincées" dans la zone et ne peuvent pas sortir
             ///il faut prendre toutes les zones dans la zone, pas seulement celles dans la bataille car les unités avec 0 de moral ne sont pas incluses et cela reprovoque une fin de
-            ///bataille juste après la fin de l'autre si plusieures unités à 0 de moral sont dans la zone.
+            ///bataille juste après la fin de l'autre si plusieurs unités à 0 de moral sont dans la zone.
             /// </summary>
             /// <param name="bZone012">true prendre la nation de la zone 012, 345 sinon</param>
             private void DesengagementDuVaincu(bool bZone012)

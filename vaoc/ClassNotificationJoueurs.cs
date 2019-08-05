@@ -194,6 +194,9 @@ namespace vaoc
                         iCavalerie = (int)Math.Round((decimal)ligneMessage.I_CAVALERIE * (100 - ligneMessage.I_FATIGUE) / 100);
                         iArtillerie = (int)Math.Round((decimal)ligneMessage.I_ARTILLERIE * (100 - ligneMessage.I_FATIGUE) / 100);
                         iFatigue = ligneMessage.I_FATIGUE;
+                        iMoral = ligneMessage.I_MORAL;
+                        iMateriel = ligneMessage.I_MATERIEL;
+                        iRavitaillement = ligneMessage.I_RAVITAILLEMENT;
                         if (!ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull())
                         {
                             sNbPhasesMarcheJour = Math.Ceiling((decimal)ligneMessage.I_NB_PHASES_MARCHE_JOUR / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES).ToString();
@@ -206,6 +209,7 @@ namespace vaoc
                         {
                             sNbHeuresCombat = ligneMessage.I_NB_HEURES_COMBAT.ToString();
                         }
+
                         sDateDernierMessage = ClassMessager.DateHeure(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART, false);
 
                         sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);

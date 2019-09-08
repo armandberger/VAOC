@@ -396,7 +396,7 @@ namespace vaoc
 
             try
             {
-                Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
+                //Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
                 Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
@@ -688,7 +688,7 @@ namespace vaoc
 
             try
             {
-                Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
+                //Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
                 Bitmap fichierImage = new Bitmap(m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);

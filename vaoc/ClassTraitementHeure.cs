@@ -44,7 +44,7 @@ namespace vaoc
             bool bRenfort = false;
             bool bDebutDeNuit = false;
 
-            Debug.WriteLine("TraitementHeure");
+            //Debug.WriteLine("TraitementHeure");
             messageErreur = "";
 
             LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
@@ -220,7 +220,7 @@ namespace vaoc
                         return false;
                     }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("PlacerLesUnitesStatiques en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    //Debug.WriteLine(string.Format("PlacerLesUnitesStatiques en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                     //timeStart = DateTime.Now;
                     //if (!Cartographie.PlacerLesUnitesStatiquesParallele())
@@ -267,7 +267,7 @@ namespace vaoc
                         return false;
                     }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("ExecuterMouvementAvecEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    //Debug.WriteLine(string.Format("ExecuterMouvementAvecEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
                     #region Mouvement de toutes les unités sans effectif (QG, messagers)
@@ -302,7 +302,7 @@ namespace vaoc
                         return false;
                     }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("ExecuterMouvementSansEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+                    //Debug.WriteLine(string.Format("ExecuterMouvementSansEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
                     #region Toutes les actions qui ne sont pas des mouvements
@@ -887,10 +887,10 @@ namespace vaoc
                 }
             }
             */
-            Debug.WriteLine(string.Format("Après AmeliorationsPerformances #pions={0} #messages={1} #ordres={2}",
-                Donnees.m_donnees.TAB_PION.Count(),
-                Donnees.m_donnees.TAB_MESSAGE.Count(),
-                Donnees.m_donnees.TAB_ORDRE.Count()));
+            //Debug.WriteLine(string.Format("Après AmeliorationsPerformances #pions={0} #messages={1} #ordres={2}",
+            //    Donnees.m_donnees.TAB_PION.Count(),
+            //    Donnees.m_donnees.TAB_MESSAGE.Count(),
+            //    Donnees.m_donnees.TAB_ORDRE.Count()));
             #endregion
         }
 

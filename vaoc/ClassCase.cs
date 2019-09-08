@@ -235,7 +235,7 @@ namespace vaoc
 
                 try
                 {
-                    Debug.WriteLine(string.Format("Début EndommagerReparerPont sur la case ID={0}({1},{2})", ID_CASE, I_X, I_Y));
+                    //Debug.WriteLine(string.Format("Début EndommagerReparerPont sur la case ID={0}({1},{2})", ID_CASE, I_X, I_Y));
                     DateTime timeStartGlobal = DateTime.Now;
                     ClassHPAStarCreation hpaStarCreation = new ClassHPAStarCreation(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
 
@@ -243,7 +243,7 @@ namespace vaoc
                     List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>();
                     listeCasesPont.Add(this);
                     ListeCasesVoisinesDeMemeType(ref listeCasesPont);
-                    Debug.WriteLine(string.Format("EndommagerReparerPont sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count()));
+                    //Debug.WriteLine(string.Format("EndommagerReparerPont sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count()));
 
                     foreach (Donnees.TAB_CASERow ligneCasePont in listeCasesPont)
                     {
@@ -309,7 +309,7 @@ namespace vaoc
                             if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc, false))
                             {
                                 message = string.Format("EndommagerReparerPont: Erreur fatale sur RecalculCheminPCCBloc bloc X={0} Y={1}", bloc.xBloc, bloc.yBloc);
-                                Debug.WriteLine(message);
+                                //Debug.WriteLine(message);
                                 return false;
                             }
                         }
@@ -321,7 +321,7 @@ namespace vaoc
                 catch (Exception e)
                 {
                     message = string.Format("EndommagerReparerPont: Erreur fatale sur la case ID={0}({1},{2}) : {3}", ID_CASE, I_X, I_Y, e.Message);
-                    Debug.WriteLine(message);
+                    //Debug.WriteLine(message);
                     LogFile.Notifier(message);
                     return false;
                 }

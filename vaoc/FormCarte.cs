@@ -241,10 +241,10 @@ namespace vaoc
                         //controle que tout a bien marche
                         for (int i=0; i<m_tableCaseTraitement.Length;i++)
                         {
-                            if (m_tableCaseTraitement[i].IsID_MODELE_TERRAIN_SI_OCCUPENull())
-                            {
-                                Debug.WriteLine(string.Format("IsID_MODELE_TERRAIN_SI_OCCUPENull pour X={0},Y={1},ID={2}", m_tableCaseTraitement[i].I_X, m_tableCaseTraitement[i].I_Y, m_tableCaseTraitement[i].ID_CASE));
-                            }
+                            //if (m_tableCaseTraitement[i].IsID_MODELE_TERRAIN_SI_OCCUPENull())
+                            //{
+                            //    Debug.WriteLine(string.Format("IsID_MODELE_TERRAIN_SI_OCCUPENull pour X={0},Y={1},ID={2}", m_tableCaseTraitement[i].I_X, m_tableCaseTraitement[i].I_Y, m_tableCaseTraitement[i].ID_CASE));
+                            //}
                         }
                         m_sous_traitement = 0;
                         m_traitement++;
@@ -303,7 +303,7 @@ namespace vaoc
                 //int debut = k + m_sous_traitement;
                 m_tasks.Add(Task.Factory.StartNew( (debut)=>
                 {
-                    Debug.WriteLine("TraitementParallele2 m_sous_traitement=" + ((int)debut).ToString());
+                    //Debug.WriteLine("TraitementParallele2 m_sous_traitement=" + ((int)debut).ToString());
                     for (int i = 0; i < nbPointsParTraitement; i++)
                     { CreationCasesDeRemplacement(m_tableCaseTraitement[((int)debut * nbPointsParTraitement) + i]); }
                 }, k + m_sous_traitement));

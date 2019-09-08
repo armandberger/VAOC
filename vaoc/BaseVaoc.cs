@@ -1184,7 +1184,7 @@ namespace vaoc
                     timeStart = DateTime.Now;
                     debutNouvellesLignes = this.Count;
                     //Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false); -> prends beaucoup trop de temps, >50 secondes quand la table est déjà très chargée
-                    Debug.WriteLine(string.Format("ChargerCases x={0}, y={1}", x, y));
+                    //Debug.WriteLine(string.Format("ChargerCases x={0}, y={1}", x, y));
                     foreach (Donnees.TAB_CASERow ligneCasePlus in donneesSource)
                     {
                         //si je retrouve la même ligne avant l'intertion,je sors ! C'est possible si deux process differents veulent voir en même temps une case non chargée
@@ -1205,7 +1205,7 @@ namespace vaoc
                         //    ligneCasePlus.I_COUT);
                     }
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
+                    //Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     //mise à jour de l'index
                     timeStart = DateTime.Now;
                     for (i = debutNouvellesLignes; i < this.Count; i++)
@@ -1215,7 +1215,7 @@ namespace vaoc
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     perf = DateTime.Now - timeStart;
-                    Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
+                    //Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;
                 }
                 catch (Exception ex)

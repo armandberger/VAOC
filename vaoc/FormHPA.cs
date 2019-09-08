@@ -369,10 +369,10 @@ namespace vaoc
             string requete;
             for (int xBloc = 0; xBloc < m_nbBlocsHorizontaux; xBloc++)
             {
-                Debug.WriteLine("xbloc=" + xBloc + " / " + m_nbBlocsHorizontaux);
+                //Debug.WriteLine("xbloc=" + xBloc + " / " + m_nbBlocsHorizontaux);
                 for (int yBloc = 0; yBloc < m_nbBlocsHorizontaux; yBloc++)
                 {
-                    Debug.WriteLine("bloc=" + xBloc + "," + yBloc);
+                    //Debug.WriteLine("bloc=" + xBloc + "," + yBloc);
                     for (int c = 0; c < 4; c++)
                     {
                         int x = Math.Min((xBloc + c / 2) * tailleBloc, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1);
@@ -455,8 +455,8 @@ namespace vaoc
             AStar m_etoile = new AStar();
             int m_idTrajet;
 
-            Debug.WriteLine(string.Format("GenerationTrajets xBloc={0}, yBloc={1}, case ={2}({3},{4})", 
-                xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y));
+            //Debug.WriteLine(string.Format("GenerationTrajets xBloc={0}, yBloc={1}, case ={2}({3},{4})", 
+            //    xBloc, yBloc, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y));
             m_idTrajet = (int)Donnees.m_donnees.TAB_PCC_COUTS.Compute("MAX(ID_TRAJET)", "");
             try
             {

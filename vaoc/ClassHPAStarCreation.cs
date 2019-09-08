@@ -504,7 +504,7 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         private bool CalculCheminPCCBloc(int xBloc, int yBloc, int numeroTache)
         {
-            Debug.WriteLine(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
+            //Debug.WriteLine(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
             return CalculCheminPCCBloc(xBloc, yBloc, false, numeroTache);
         }
 

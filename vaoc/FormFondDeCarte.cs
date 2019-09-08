@@ -303,10 +303,10 @@ namespace vaoc
                             }
                         }
                     }
-                    else
-                    {
-                        Debug.WriteLine("Erreur dans le chargement de tableMouvementCout, modele, mét");
-                    }
+                    //else
+                    //{
+                    //    Debug.WriteLine("Erreur dans le chargement de tableMouvementCout, modele, mét");
+                    //}
                 }
             }
         }
@@ -467,7 +467,7 @@ namespace vaoc
                     if (btrouve)
                     {
                         //la couleur existe toujours, on la retire de la liste des couleurs à ajouter
-                        Debug.WriteLine("la couleur existe toujours " + pixelColor.Name);
+                        //Debug.WriteLine("la couleur existe toujours " + pixelColor.Name);
                         m_tableCouleur.Remove(pixelColor.Name);
                         i++;
                     }

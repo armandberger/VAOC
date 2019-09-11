@@ -2959,7 +2959,7 @@ namespace vaoc
 
                     //si le chef blessé dirigeait le combat, il faut déterminer qui est le nouveau commandant sur le champ de bataille
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePionRemplacant.ID_BATAILLE);
-                    if (!ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/))
+                    if (!ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("CreationRemplacantChefBlesse : erreur dans RecherchePionsEnBataille QG");
                         LogFile.Notifier(message);

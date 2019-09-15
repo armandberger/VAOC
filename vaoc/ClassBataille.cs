@@ -206,7 +206,7 @@ namespace vaoc
                 */
 
                 if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons,
-                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, true/*QG*/, true /*bArtillerie*/))
+                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille II");
                     LogFile.Notifier(message, out messageErreur);

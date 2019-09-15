@@ -887,6 +887,9 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 return null;
             }
 
+            message = string.Format("CreationBataille : bataille de {0}", nomBataille);
+            LogFile.Notifier(message, out messageErreur);
+
             RectangleChampDeBataille(ligneCaseBataille, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
             #region recherche de l'orientation

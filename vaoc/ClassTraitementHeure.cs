@@ -372,14 +372,12 @@ namespace vaoc
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];
-                    bool bFinDeBataille;
-                    if (!ligneBataille.EffectuerBataille(out bFinDeBataille))
+                    if (!ligneBataille.EffectuerBataille(ref m_bFinDeBataille))
                     {
                         messageErreur = "Erreur durant le traitement EffectuerBataille";
                         LogFile.Notifier(messageErreur);
                         return false;
                     }
-                    if (!m_bFinDeBataille) { m_bFinDeBataille = bFinDeBataille; }
                 }
 
                 // Une unité envoie un message régulièrement, ça rassure le joueur s'il n'est pas proche de ses troupes !

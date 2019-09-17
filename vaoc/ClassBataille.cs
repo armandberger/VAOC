@@ -1231,7 +1231,7 @@ namespace vaoc
             /// </summary>
             /// <param name="ligneBataille">bataille à effectuer</param>
             /// <returns>true si OK, false si KO</returns>
-            public bool EffectuerBataille(out bool bFinDeBataille)
+            public bool EffectuerBataille(ref bool bFinDeBataille)
             {
                 string message, messageErreur;
                 int[] des;
@@ -1252,7 +1252,6 @@ namespace vaoc
                 bool bRetraite012 = false;
                 bool bRetraite345 = false;
 
-                bFinDeBataille = false;
                 Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(62);
                 if (!IsI_TOUR_FINNull())
                 {

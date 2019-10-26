@@ -905,7 +905,7 @@ namespace vaoc
                                     "`I_MATERIEL`, `I_RAVITAILLEMENT`, `I_NIVEAU_FORTIFICATION`, " +
                                     "`I_TOUR_CONVOI_CREE`, `ID_DEPOT_SOURCE`, `B_CAVALERIE_DE_LIGNE`, `B_CAVALERIE_LOURDE`, `B_GARDE`, `B_VIEILLE_GARDE`," +
                                     "`B_BLESSES`, `B_PRISONNIERS`, `C_NIVEAU_DEPOT`, `B_CONVOI`, `B_RENFORT`, `B_QG`, `I_SOLDATS_RAVITAILLES`,  `ID_PION_REMPLACE`," +
-                                    "`S_ORDRE_COURANT`, `I_TRI`) VALUES ";
+                                    "`S_ORDRE_COURANT`, `I_TRI`, `DT_DERNIER_MESSAGE`) VALUES ";
             listeRequete.AppendLine(requete);
 
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
@@ -1114,7 +1114,7 @@ namespace vaoc
             }
             requete = string.Format("({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+
-                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}', {55})",
+                                    "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}', {55}, '{56}')",
                                     lignePion.ID_PION,//0
                                     idPartie,
                                     (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
@@ -1170,7 +1170,8 @@ namespace vaoc
                                     lignePion.I_SOLDATS_RAVITAILLES,
                                     lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE,
                                     Constantes.ChaineSQL(sOrdreCourant),
-                                    lignePion.IsI_TRINull() || lignePion.I_TRI<0 ? lignePion.ID_PION : lignePion.I_TRI
+                                    lignePion.IsI_TRINull() || lignePion.I_TRI<0 ? lignePion.ID_PION : lignePion.I_TRI,
+                                    ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART)
                                     );
             return requete;
         }

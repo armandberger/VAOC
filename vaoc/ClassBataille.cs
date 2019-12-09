@@ -1798,7 +1798,7 @@ namespace vaoc
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i) { continue; }
                                 //effectifTotal += lignePionEnBataille.effectifTotal;
-                                if (lignePionEnBataille.I_MORAL > pertesMoral[i]) { bCamp012KO = false; }
+                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i]) { bCamp012KO = false; }
                             }
                         }
 
@@ -1808,7 +1808,7 @@ namespace vaoc
                             {
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i + 3) { continue; }
-                                if (lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) { bCamp345KO = false; }
+                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) { bCamp345KO = false; }
                             }
                         }
 

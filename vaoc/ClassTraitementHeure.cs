@@ -572,7 +572,7 @@ namespace vaoc
                                lignePionMax2.ID_PION,
                                lignePionMax2.S_NOM));
                         }
-                        if (distanceMin < 5 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE || distanceMinEnMouvement< 15 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE )
+                        if (/*distanceMin < 5 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE || */ distanceMinEnMouvement< 15 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE )
                         {
                             //A moins de 15 kilomètres en mouvement ou 5 kilomètres à l'arrêt, on ne fait pas plus de deux heures de suite le jour
                             if ((!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()) && nbTourExecutes >= 2)

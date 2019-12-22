@@ -1746,7 +1746,7 @@ namespace vaoc
                 PhrasesPionsNations(lignePionsEnBataille, out unitesAttaquantes, out nationsAttaquantes);
             }
 
-            PionsEnvironnants(lignePion, typeMessage, ligneCaseDestination, out unitesEnvironnantes, out bEnDanger);
+            PionsEnvironnants(lignePion, typeMessage, ligneCaseDestination, false, out unitesEnvironnantes, out bEnDanger);
             Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);//ID_PION_PROPRIETAIRE
             if (null != ligneOrdreCourant)
             {
@@ -2134,7 +2134,7 @@ namespace vaoc
         /// <param name="unitesEnvironnantes">chaine décrivant l'environnement</param>
         /// <param name="bEnDanger">true si l'unité voit des unités ennemies combattives sans voir d'unités amies combattives (utile pour savoir si un role a le droit de donner des ordres ou pas</param>
         /// <returns>true si ok, false sinon</returns>
-        public static bool PionsEnvironnants(Donnees.TAB_PIONRow lignePion, MESSAGES typeMessage, Donnees.TAB_CASERow ligneCaseDestination, out string unitesEnvironnantes, out bool bEnDanger)
+        public static bool PionsEnvironnants(Donnees.TAB_PIONRow lignePion, MESSAGES typeMessage, Donnees.TAB_CASERow ligneCaseDestination, bool bUniquementCombattives, out string unitesEnvironnantes, out bool bEnDanger)
         {
             string NomZoneGeographique;
             string nomType, femminin;
@@ -2203,7 +2203,8 @@ namespace vaoc
                         Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVue.ID_CASE);
                         if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
                         {
-                            if (lignePionVue.ID_PION != lignePion.ID_PION && !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
+                            if (lignePionVue.ID_PION != lignePion.ID_PION && 
+                                !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
                             {
                                 Barycentre bar = new Barycentre();
                                 bar.x += ligneCasePion.I_X;
@@ -2221,6 +2222,7 @@ namespace vaoc
 
                         if (null == lignePionVoisin || lignePionVoisin.B_DETRUIT) { continue; }//note, null possible si j'ai détruit manuellement une unité
                         if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
+                        if (!lignePionVoisin.estCombattifQG(true, true) && bUniquementCombattives) { continue; }
 
                         if (!bAmiCombattif && lignePionVoisin.estCombattif)
                         {
@@ -2466,39 +2468,42 @@ namespace vaoc
                 }
 
                 //Ajout des informations d'état sur les ponts/gués environnants.
-                bool bPontOuGuet = false;
-                Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
-                for (int l = 0; l < ligneCaseVues.Count(); l++)
+                if (!bUniquementCombattives)
                 {
-                    Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
-                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
-                    if (ligneModeleTerrain.B_PONT || ligneModeleTerrain.B_PONTON)
+                    bool bPontOuGuet = false;
+                    Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
+                    for (int l = 0; l < ligneCaseVues.Count(); l++)
                     {
-                        //cette case fait-elle partie d'un pont déjà indiqué ?
-                        if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
+                        Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
+                        Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
+                        if (ligneModeleTerrain.B_PONT || ligneModeleTerrain.B_PONTON)
                         {
-                            //si la case est trouvé on recherche toutes les cases de même type contigues
-                            List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
-                            listeCasesVoisines.Add(ligneCaseVue);
-                            ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
-                            for (int ll = 0; ll < listeCasesVoisines.Count; ll++)
+                            //cette case fait-elle partie d'un pont déjà indiqué ?
+                            if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
                             {
-                                Donnees.TAB_CASERow ligneCasePont = listeCasesVoisines[ll];
-                                listePonts.Add(ligneCasePont.ID_CASE, ligneCasePont);
-                            }
-                            if (!bPontOuGuet)
-                            {
-                                unitesEnvironnantes += "<UL>";//avec un <br/> en plus cela fait un trop gros espace
-                                bPontOuGuet = true;
-                            }
+                                //si la case est trouvé on recherche toutes les cases de même type contigues
+                                List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
+                                listeCasesVoisines.Add(ligneCaseVue);
+                                ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
+                                for (int ll = 0; ll < listeCasesVoisines.Count; ll++)
+                                {
+                                    Donnees.TAB_CASERow ligneCasePont = listeCasesVoisines[ll];
+                                    listePonts.Add(ligneCasePont.ID_CASE, ligneCasePont);
+                                }
+                                if (!bPontOuGuet)
+                                {
+                                    unitesEnvironnantes += "<UL>";//avec un <br/> en plus cela fait un trop gros espace
+                                    bPontOuGuet = true;
+                                }
 
-                            CaseVersZoneGeographique(ligneCaseVue.ID_CASE, out NomZoneGeographique);
-                            //unitesEnvironnantes += "<LI>" + PremiereCaseMajuscule(ligneModeleTerrain.S_NOM) + " situé à " + NomZoneGeographique + ".</LI>";
-                            unitesEnvironnantes += "<LI>Un " + ligneModeleTerrain.S_NOM + " situé à " + NomZoneGeographique + ".</LI>";
+                                CaseVersZoneGeographique(ligneCaseVue.ID_CASE, out NomZoneGeographique);
+                                //unitesEnvironnantes += "<LI>" + PremiereCaseMajuscule(ligneModeleTerrain.S_NOM) + " situé à " + NomZoneGeographique + ".</LI>";
+                                unitesEnvironnantes += "<LI>Un " + ligneModeleTerrain.S_NOM + " situé à " + NomZoneGeographique + ".</LI>";
+                            }
                         }
                     }
+                    if (bPontOuGuet) { unitesEnvironnantes += "</UL>"; }
                 }
-                if (bPontOuGuet) { unitesEnvironnantes += "</UL>"; }
                 if (lignePion.estAuCombat) { bEnDanger = false; } //on est jamais en danger au combat c'est bien connu 
             }
             catch (Exception ex)

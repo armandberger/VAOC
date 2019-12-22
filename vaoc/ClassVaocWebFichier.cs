@@ -1452,7 +1452,7 @@ namespace vaoc
             int i, iAucontact;
             List<ClassDataRole> listeRoles = ListeRoles(idPartie);
             Donnees.TAB_MODELE_PIONRow ligneModele;
-            string sUnitesVisibles;
+            string sUnitesVisibles, sUnitesCombattivesVisibles;
 
             //INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`S_IMAGE`) VALUES (1, 1, 'Napoleon', 'napoleon_tete.jpeg')
             //on reconstitue systématiquement tous les noms
@@ -1490,7 +1490,11 @@ namespace vaoc
                     i++;
                 }
 
-                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, out sUnitesVisibles, out bEnDanger))
+                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, false, out sUnitesVisibles, out bEnDanger))
+                {
+                    throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={0}", ligneRole.ID_ROLE, lignePion.ID_PION));
+                }
+                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, true, out sUnitesCombattivesVisibles, out bEnDanger))
                 {
                     throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={0}", ligneRole.ID_ROLE, lignePion.ID_PION));
                 }
@@ -1500,7 +1504,7 @@ namespace vaoc
                 iAucontact = bEnDanger ? 1 : 0;
                 if (bExiste)
                 {
-                    requete = string.Format("UPDATE `tab_vaoc_role` SET `ID_UTILISATEUR`={2}, `S_NOM`='{3}',`ID_PION`={4},`ID_NATION`={5}, `S_UNITES_VISIBLES`='{6}', `B_AU_CONTACT`={7} WHERE (ID_ROLE={0} AND ID_PARTIE={1});",
+                    requete = string.Format("UPDATE `tab_vaoc_role` SET `ID_UTILISATEUR`={2}, `S_NOM`='{3}',`ID_PION`={4},`ID_NATION`={5}, `S_UNITES_VISIBLES`='{6}', `S_UNITES_COMBATTIVES_VISIBLES`='{7}', `B_AU_CONTACT`={8} WHERE (ID_ROLE={0} AND ID_PARTIE={1});",
                                             ligneRole.ID_ROLE,
                                             idPartie,
                                             ligneRole.ID_UTILISATEUR,
@@ -1508,6 +1512,7 @@ namespace vaoc
                                             ligneRole.ID_PION,
                                             ligneModele.ID_NATION,
                                             Constantes.ChaineSQL(sUnitesVisibles),
+                                            Constantes.ChaineSQL(sUnitesCombattivesVisibles),
                                             iAucontact);
                                             //"black", à ne pas mettre à jour
                                             //"white" à ne pas mettre à jour
@@ -1515,7 +1520,7 @@ namespace vaoc
                 }
                 else
                 {
-                    requete = string.Format("INSERT INTO `tab_vaoc_role` (`ID_ROLE`, `ID_PARTIE`, `ID_UTILISATEUR`, `S_NOM`,`ID_PION`,`ID_NATION`,`S_COULEUR_FOND`,`S_COULEUR_TEXTE`, `S_UNITES_VISIBLES`, `B_AU_CONTACT`) VALUES ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', '{7}', '{8}', {9});",
+                    requete = string.Format("INSERT INTO `tab_vaoc_role` (`ID_ROLE`, `ID_PARTIE`, `ID_UTILISATEUR`, `S_NOM`,`ID_PION`,`ID_NATION`,`S_COULEUR_FOND`,`S_COULEUR_TEXTE`, `S_UNITES_VISIBLES`, `S_UNITES_COMBATTIVES_VISIBLES`, `B_AU_CONTACT`) VALUES ({0}, {1}, {2}, '{3}', {4}, {5}, '{6}', '{7}', '{8}', '{9}', {10});",
                                             ligneRole.ID_ROLE,
                                             idPartie,
                                             ligneRole.ID_UTILISATEUR,
@@ -1525,6 +1530,7 @@ namespace vaoc
                                             "black",
                                             "white",
                                             Constantes.ChaineSQL(sUnitesVisibles),
+                                            Constantes.ChaineSQL(sUnitesCombattivesVisibles),
                                             iAucontact);
                 }
 

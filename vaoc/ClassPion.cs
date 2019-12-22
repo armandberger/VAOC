@@ -3845,7 +3845,7 @@ namespace vaoc
                     #region un depot rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
                     if ((estDepot || estArtillerie) && lignePionEnnemi.estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (estDepot)
@@ -3860,7 +3860,7 @@ namespace vaoc
                     }
                     if ((lignePionEnnemi.estDepot || lignePionEnnemi.estArtillerie) && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (estDepot)
@@ -3879,7 +3879,7 @@ namespace vaoc
                     //aucune des deux unités ne doit être en fuite ou en retraite (pris en compte est l'appel à estCombattif)
                     if ((estConvoi || estBlesses || estPrisonniers) && lignePionEnnemi.estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
@@ -3887,7 +3887,7 @@ namespace vaoc
                     }
                     if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers) && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this, ligneCase)) return false;
@@ -3896,7 +3896,7 @@ namespace vaoc
 
                     if (estPontonnier && lignePionEnnemi.estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
@@ -3904,7 +3904,7 @@ namespace vaoc
                     }
                     if (lignePionEnnemi.estPontonnier && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, out message, out bEnDanger);
+                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out message, out bEnDanger);
                         if (bEnDanger)
                         {
                             if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION, ligneCase)) return false;
@@ -4100,7 +4100,7 @@ namespace vaoc
                 string message;
 
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, out message, out bEnDanger);
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out message, out bEnDanger);
                 if (!bEnDanger) { return true; }
 
                 //if (lignePion.estDepot) -> pas un bon test, c'est un convoi à ce moment là, pas un dépôt
@@ -4196,7 +4196,7 @@ namespace vaoc
                 bool bEnDanger;
 
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, out message, out bEnDanger);
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out message, out bEnDanger);
                 if (!bEnDanger) { return true; }
 
                 // Un dépôt capturé est réduit d'un niveau (règle avancé) et capturé

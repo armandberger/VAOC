@@ -1358,7 +1358,7 @@ namespace vaoc
                     return true;//on ne fait le combat que toutes les deux heures
                 }
 
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
+                if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() % 24))
                 {
                     //pas de combat la nuit
                     message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
@@ -1712,6 +1712,15 @@ namespace vaoc
                 if (bRetraite012 || bRetraite345)
                 {
                     return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                }
+
+                //si dans une heure, il fait nuit, on peut arrête la bataille tout de suite
+                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
+                {
+                    //pas de combat la nuit
+                    message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
+                    LogFile.Notifier(message, out messageErreur);
+                    return FinDeBataille(out bFinDeBataille);
                 }
 
                 return true;

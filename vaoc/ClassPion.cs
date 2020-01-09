@@ -3942,6 +3942,9 @@ namespace vaoc
             {
                 string message;
 
+                message = string.Format("CapturePion  : de {0}:{1} par {2} avec l'aptitude {3}",
+                    lignePionEnnemi.ID_PION, lignePionEnnemi.S_NOM, idNouveauPionProprietaire, aptitude);
+                LogFile.Notifier(message);
                 //on envoit les messages pour indiquer la capture
                 if (!ClassMessager.EnvoyerMessage(this, lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_EST_CAPTURE))
                 {
@@ -3999,6 +4002,8 @@ namespace vaoc
                     return false;
                 }
                 //le pion change de nationalité.
+                message = string.Format("CapturePion : nouveau modèle {0}",idModelePionCaptureur);
+                LogFile.Notifier(message);
                 ID_MODELE_PION = idModelePionCaptureur;
                 //si l'unité faisait quelque chose, il faut qu'elle arrête
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(ID_PION);

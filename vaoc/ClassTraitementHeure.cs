@@ -2160,6 +2160,7 @@ namespace vaoc
                                     lignePionBlesses.I_INFANTERIE = 0;
                                     lignePionBlesses.I_CAVALERIE = 0;
                                     lignePionBlesses.I_ARTILLERIE = 0;
+                                    lignePionBlesses.SetID_LIEU_RATTACHEMENTNull();
                                 }
                                 else
                                 {

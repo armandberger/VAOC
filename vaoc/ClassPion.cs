@@ -4158,7 +4158,7 @@ namespace vaoc
                 //le pion change maintenant de proprietaire, celui-ci est affecté au proprietaire du pion de capture
                 //pas forcément très logique pour un convoi de ravitaillement mais pas logique non plus si le leader de niveau A est très très loin de l'unité
                 //à chaque pour lui de faire un transfert s'il ne veut pas laisser un dépôt à la charge de l'un de ses subordonnés
-                return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
+                return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
             }
 
             /// <summary>

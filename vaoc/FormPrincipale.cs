@@ -210,6 +210,12 @@ namespace vaoc
                 }
             }
             #endregion
+            //disparation incompréhensible d'un nom de ville
+            //Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(206);
+            //Donnees.TAB_NOMS_CARTERow ligneNomPlus = Donnees.m_donnees.TAB_NOMS_CARTE.AddTAB_NOMS_CARTERow(
+            //    4922413, 0, "Bitterfeld", 0, 0, 0, 0, 1, 0, false, false, 0, 0, 0, 0, 0, 0, false, "Bitterfeld", 1533, 1483, false);
+            //ligneNomPlus.ID_NOM = 206;
+
             /*
             int y = 1204;
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709,y++);

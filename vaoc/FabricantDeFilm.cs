@@ -1193,8 +1193,11 @@ public string CreerFilm(string repertoireImages, string repertoireVideo, Font po
 }
 */
         public string ChaineFichier(string source)
-        {            
-            return source.Replace(" ", "_").Replace("'","").ToUpper();
+        {
+            byte[] tempBytes;
+            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(source);
+            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            return asciiStr.Replace(" ", "_").Replace("'","").ToUpper();
         }
     }
 }

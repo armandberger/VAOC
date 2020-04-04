@@ -252,6 +252,7 @@ namespace vaoc
             {
                 return TIPEUNITEVIDEO.INFANTERIE;
             }
+            LogFile.Notifier("Tipe video non reconnu pour le pion " + ligneVideo.ID_PION);
             return TIPEUNITEVIDEO.AUTRE;
         }
 

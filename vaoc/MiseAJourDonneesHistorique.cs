@@ -252,8 +252,8 @@ namespace vaoc
             {
                 return TIPEUNITEVIDEO.INFANTERIE;
             }
-            LogFile.Notifier("Tipe video non reconnu pour le pion " + ligneVideo.ID_PION);
-            return TIPEUNITEVIDEO.AUTRE;
+            //LogFile.Notifier("Tipe video non reconnu pour le pion " + ligneVideo.ID_PION);
+            return TIPEUNITEVIDEO.AUTRE;//Ce sont les lieux, hopitaux, villes, etc, donc pas à afficher
         }
 
         /// <summary>

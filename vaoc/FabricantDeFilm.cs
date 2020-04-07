@@ -47,6 +47,8 @@ namespace vaoc
         public int i_Y_CASE;
         public string nom;
         public int iNation;
+        public int ID_ROLE;
+        public int iEffectif;
     }
 
     public class Travelling
@@ -480,26 +482,31 @@ namespace vaoc
                         {
                             continue;
                         }
-                        string strEffectif = eev.iEffectif.ToString("000,000");
+
+                        string strEffectif = string.Empty;
+                        if (m_videoParRole)
+                        {
+                            foreach (UniteRole role in m_unitesRoles)
+                            {
+                                if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour == m_traitement)
+                                {
+                                    strEffectif = role.iEffectif.ToString("000,000");
+                                    break;
+                                }
+                            }
+                        }
+                        else { strEffectif = eev.iEffectif.ToString("000,000"); }
+                            
                         tailleTexte = G.MeasureString(strEffectif, m_police);
-                        if (0==eev.iNation)
-                        {
-                            //affichage des effectifs
-                            G.DrawString(strEffectif, m_police, Brushes.Blue,
-                                new Rectangle(BARRE_ECART + rectBas.X,
-                                                rectBas.Y + (int)(tailleTexte.Height* 1 / 2),
-                                                (int)tailleTexte.Width+1, 
-                                                (int)tailleTexte.Height+1));
-                        }
-                        else
-                        {
-                            //affichage des effectifs
-                            G.DrawString(strEffectif, m_police, Brushes.Red,
-                                new Rectangle(BARRE_ECART + rectBas.X,
-                                                rectBas.Y + (int)(tailleTexte.Height * 3 / 2),
-                                                (int)tailleTexte.Width+1, 
-                                                (int)tailleTexte.Height+1));
-                        }
+                        Brush brosse = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
+                        int y = rectBas.Y;
+                        y += (m_videoParRole) ? (int)tailleTexte.Height : (0 == eev.iNation) ? (int)(tailleTexte.Height * 1 / 2) : (int)(tailleTexte.Height * 3 / 2);
+                        //affichage des effectifs
+                        G.DrawString(strEffectif, m_police, brosse,
+                            new Rectangle(BARRE_ECART + rectBas.X,
+                                            rectBas.Y + (int)(tailleTexte.Height* 1 / 2),
+                                            (int)tailleTexte.Width+1, 
+                                            (int)tailleTexte.Height+1));
                     }
                 }
 
@@ -605,15 +612,30 @@ namespace vaoc
                     }
 
                     //on ajoute les unités
+                    // d'abord tous les dépôts et convois
                     foreach(UniteRemarquable unite in m_unitesRemarquables)
                     {
-                        if (unite.iTour!= m_traitement)
+                        if (unite.iTour!= m_traitement && 
+                            (unite.tipe == TIPEUNITEVIDEO.INFANTERIE || unite.tipe == TIPEUNITEVIDEO.CAVALERIE ||
+                            unite.tipe == TIPEUNITEVIDEO.ARTILLERIE || unite.tipe == TIPEUNITEVIDEO.QG))
+                        {
+                            continue;
+                        }
+                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                    }
+                    //maintenant les unités combattantes
+                    foreach (UniteRemarquable unite in m_unitesRemarquables)
+                    {
+                        if (unite.iTour != m_traitement &&
+                            (unite.tipe != TIPEUNITEVIDEO.INFANTERIE && unite.tipe == TIPEUNITEVIDEO.CAVALERIE &&
+                            unite.tipe != TIPEUNITEVIDEO.ARTILLERIE && unite.tipe != TIPEUNITEVIDEO.QG))
                         {
                             continue;
                         }
                         DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                     }
                 }
+                //Le leader à la fin
                 if (m_bTravelling && m_videoParRole)
                 {
                     DessineUnite(G, uniteQG, m_xTravelling, m_yTravelling);
@@ -910,7 +932,11 @@ namespace vaoc
                 }
             }
             //DessineUniteFilaire(G, unite, xTravelling, yTravelling);
-            DessineUniteImage(G, unite, xTravelling, yTravelling);
+            //Autre = villes, hopitaux, etc.
+            if (unite.tipe != TIPEUNITEVIDEO.AUTRE)
+            {
+                DessineUniteImage(G, unite, xTravelling, yTravelling);
+            }
         }
 
         private void DessineUniteImage(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)

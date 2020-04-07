@@ -146,8 +146,8 @@ namespace vaoc
                     EffectifEtVictoire effV = new EffectifEtVictoire();
                     effV.iTour = i;
                     effV.iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION;
-                    effV.iEffectif = effectifs.HasValue ? effectifs.Value : 0;
-                    effV.iVictoire = victoires.HasValue ? victoires.Value : 0;
+                    effV.iEffectif = effectifs ?? 0;
+                    effV.iVictoire = victoires ?? 0;
                     m_effectifsEtVictoires.Add(effV);
                 }
                 /*
@@ -174,7 +174,17 @@ namespace vaoc
                     role.iTour = ligneVideo.I_TOUR;
                     role.nom = ligneVideo.S_NOM;
                     role.iNation = ligneVideo.ID_NATION;
+                    role.ID_ROLE = ligneVideo.ID_PION;
                     Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
+                    System.Nullable<int> effectifs = (from video in Donnees.m_donnees.TAB_VIDEO
+                         where (video.I_TOUR == role.iTour)
+                            && (video.ID_PION_PROPRIETAIRE == ligneVideo.ID_PION)
+                            && (false == video.B_DETRUIT)
+                            && (false == video.B_PRISONNIERS)
+                            && (false == video.B_BLESSES)
+                         select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
+                        .Sum();
+                    role.iEffectif = effectifs ?? 0;
                     m_unitesRoles.Add(role);
                 }
 

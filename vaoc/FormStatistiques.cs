@@ -294,5 +294,200 @@ namespace vaoc
                 buttonCouleurEmis.ForeColor = (buttonCouleurEmis.BackColor.R + buttonCouleurEmis.BackColor.G + buttonCouleurEmis.BackColor.B > 3 * 127) ? Color.Black : Color.White;
             }
         }
+
+        /// <summary>
+        /// =MOYENNE.SI.ENS($Donnees.$T$2:$T$600000;$Donnees.$A$2:$A$600000;"="&A2;$Donnees.$B$2:$B$600000;"=0";$Donnees.$Z$2:$Z$600000;"=True")
+        /// </summary>
+        /// <returns>table de donnnées</returns>
+        private System.Windows.Forms.DataGridView StatistiquesRavitaillement()
+        {            
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("tour", "Tour");
+            table.Columns.Add("date", "Date");
+            table.Columns.Add("camp0", "0");
+            table.Columns.Add("camp1", "1");
+            Decimal[] ravitaillement = new Decimal[2];
+
+            for (int tour = 0; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour += 24)
+            {
+                
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    var result = from ligne in Donnees.m_donnees.TAB_VIDEO
+                                 where (ligne.ID_NATION == nation) && (ligne.I_TOUR == tour) 
+                                    && ((ligne.I_INFANTERIE_INITIALE>0) || (ligne.I_CAVALERIE_INITIALE>0))
+                                    && (!ligne.B_DETRUIT)
+                                 select ligne.I_RAVITAILLEMENT;
+                    ravitaillement[nation]= (Decimal)result.ToList().Sum() / result.Count();
+                }
+                table.Rows.Add(tour, ClassMessager.DateHeure(tour,0,false), ravitaillement[0], ravitaillement[1]);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// =MOYENNE.SI.ENS($Donnees.$S$2:$S$600000;$Donnees.$A$2:$A$600000;$A2;$Donnees.$B$2:$B$600000;"0";$Donnees.$Z$2:$Z$600000;"True")
+        /// </summary>
+        /// <returns>table de donnnées</returns>
+        private System.Windows.Forms.DataGridView StatistiquesMateriel()
+        {
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("tour", "Tour");
+            table.Columns.Add("date", "Date");
+            table.Columns.Add("camp0", "0");
+            table.Columns.Add("camp1", "1");
+            Decimal[] materiel = new Decimal[2];
+
+            for (int tour = 0; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour += 24)
+            {
+
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    var result = from ligne in Donnees.m_donnees.TAB_VIDEO
+                                 where (ligne.ID_NATION == nation) && (ligne.I_TOUR == tour)
+                                    && ((ligne.I_INFANTERIE_INITIALE > 0) || (ligne.I_CAVALERIE_INITIALE > 0))
+                                    && (!ligne.B_DETRUIT)
+                                 select ligne.I_MATERIEL;
+                    materiel[nation] = (Decimal)result.ToList().Sum() / result.Count();
+                }
+                table.Rows.Add(tour, ClassMessager.DateHeure(tour, 0, false), materiel[0], materiel[1]);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// =MOYENNE.SI.ENS($Donnees.$M$2:$M$600000;$Donnees.$A$2:$A$600000;"="&A2;$Donnees.$B$2:$B$600000;"=0";$Donnees.$Z$2:$Z$600000;"=True")
+        /// </summary>
+        /// <returns>table de donnnées</returns>
+        private System.Windows.Forms.DataGridView StatistiquesFatigue()
+        {
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("tour", "Tour");
+            table.Columns.Add("date", "Date");
+            table.Columns.Add("camp0", "0");
+            table.Columns.Add("camp1", "1");
+            Decimal[] fatigue = new Decimal[2];
+
+            for (int tour = 0; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour += 24)
+            {
+
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    var result = from ligne in Donnees.m_donnees.TAB_VIDEO
+                                 where (ligne.ID_NATION == nation) && (ligne.I_TOUR == tour)
+                                    && ((ligne.I_INFANTERIE_INITIALE > 0) || (ligne.I_CAVALERIE_INITIALE > 0))
+                                    && (!ligne.B_DETRUIT)
+                                 select ligne.I_FATIGUE;
+                    fatigue[nation] = (Decimal)result.ToList().Sum() / result.Count();
+                }
+                table.Rows.Add(tour, ClassMessager.DateHeure(tour, 0, false), fatigue[0], fatigue[1]);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// =MOYENNE.SI.ENS($Donnees.$N$2:$N$600000;$Donnees.$A$2:$A$600000;A2;$Donnees.$B$2:$B$600000;"0";$Donnees.$Z$2:$Z$600000;"True")
+        /// </summary>
+        /// <returns>table de donnnées</returns>
+        private System.Windows.Forms.DataGridView StatistiquesMoral()
+        {
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("tour", "Tour");
+            table.Columns.Add("date", "Date");
+            table.Columns.Add("camp0", "0");
+            table.Columns.Add("camp1", "1");
+            Decimal[] fatigue = new Decimal[2];
+
+            for (int tour = 0; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour += 24)
+            {
+
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    var result = from ligne in Donnees.m_donnees.TAB_VIDEO
+                                 where (ligne.ID_NATION == nation) && (ligne.I_TOUR == tour)
+                                    && ((ligne.I_INFANTERIE_INITIALE > 0) || (ligne.I_CAVALERIE_INITIALE > 0))
+                                    && (!ligne.B_DETRUIT)
+                                 select ligne.I_MORAL;
+                    fatigue[nation] = (Decimal)result.ToList().Sum() / result.Count();
+                }
+                table.Rows.Add(tour, ClassMessager.DateHeure(tour, 0, false), fatigue[0], fatigue[1]);
+            }
+            return table;
+        }
+
+        /// <summary>
+        /// =MOYENNE.SI.ENS($Donnees.$N$2:$N$600000;$Donnees.$A$2:$A$600000;A2;$Donnees.$B$2:$B$600000;"0";$Donnees.$Z$2:$Z$600000;"True")
+        /// </summary>
+        /// <returns>table de donnnées</returns>
+        private System.Windows.Forms.DataGridView StatistiquesDepots()
+        {
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("tour", "Tour");
+            table.Columns.Add("date", "Date");
+            table.Columns.Add("depotA-0", "depotA-0");
+            table.Columns.Add("depotA-1", "depotA-1");
+            table.Columns.Add("depotB-0", "depotB-0");
+            table.Columns.Add("depotB-1", "depotB-1");
+            table.Columns.Add("depotC-0", "depotC-0");
+            table.Columns.Add("depotC-1", "depotC-1");
+            table.Columns.Add("depotD-0", "depotD-0");
+            table.Columns.Add("depotD-1", "depotD-1");
+            int[] nbDepots = new int[8];
+
+            for (int tour = 0; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour += 24)
+            {
+
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    var result = from ligne in Donnees.m_donnees.TAB_VIDEO
+                                 where (ligne.ID_NATION == nation) && (ligne.I_TOUR == tour)
+                                    && (ligne.B_DEPOT)
+                                    && (!ligne.B_DETRUIT)
+                                 select new { niveau = ligne.C_NIVEAU_DEPOT };
+                    nbDepots[nation] = result.ToList().Count(x =>x.niveau=='A');
+                    nbDepots[nation + 2] = result.ToList().Count(x => x.niveau == 'B');
+                    nbDepots[nation + 4] = result.ToList().Count(x => x.niveau == 'C');
+                    nbDepots[nation + 6] = result.ToList().Count(x => x.niveau == 'D');
+                }
+                table.Rows.Add(tour, ClassMessager.DateHeure(tour, 0, false), 
+                    nbDepots[0], nbDepots[1], nbDepots[2], nbDepots[3], 
+                    nbDepots[4], nbDepots[5], nbDepots[6], nbDepots[7]);
+            }
+            return table;
+        }
+
+        private void buttonFichiers_Click(object sender, EventArgs e)
+        {
+            //on exporte déjà les données des tables au format csv
+            string nomfichier;
+            string nomsfichier = string.Empty;
+            string messageErreur = string.Empty;
+            messageErreur += Dal.exportCSV(this.dataGridMessages,"Messages", out nomfichier);
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(this.dataGridOrdres,"Ordres", out nomfichier);
+            nomsfichier += nomfichier + ",";
+
+            //puis on ajoute des fichiers de statistiques pour le ravitaillement, etc
+            messageErreur += Dal.exportCSV(StatistiquesRavitaillement(), "RavitaillementMoyen", out nomfichier);
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(StatistiquesMateriel(), "MaterielMoyen", out nomfichier);
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(StatistiquesFatigue(), "FatigueMoyen", out nomfichier);
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(StatistiquesMoral(), "MoralMoyen", out nomfichier);
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(StatistiquesDepots(), "Depots", out nomfichier);
+            nomsfichier += nomfichier + ",";           
+
+            if (string.Empty == messageErreur)
+            {
+                MessageBox.Show("Fichiers CSV exportés : " + nomsfichier, "Export CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("Erreur sur l'export du fichier CSV : " + nomsfichier + " : " + messageErreur,
+                    "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

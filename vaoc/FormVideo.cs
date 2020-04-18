@@ -161,6 +161,7 @@ namespace vaoc
             }
 
             //On ajoute les unites à représenter à l'écran
+            LogFile.CreationLogFile("DonneesVideo.csv");
             for (int j=0; j<Donnees.m_donnees.TAB_VIDEO.Count; j++)
             {
                 Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[j];
@@ -168,7 +169,11 @@ namespace vaoc
                 { 
                     continue; //case comptant seulement pour les points de victoire
                 }
-                if (ligneVideo.B_QG)
+                //ligneVideo.B_QG a été ajouté à la fin et n'est pas fiable
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
+                if (lignePion.estQG && !ligneVideo.B_QG) { 
+                    Debug.Write("bug indicateur"); }
+                if (ligneVideo.B_QG)// || lignePion.estQG)
                 {
                     UniteRole role = new UniteRole();
                     role.iTour = ligneVideo.I_TOUR;
@@ -185,6 +190,7 @@ namespace vaoc
                          select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
                         .Sum();
                     role.iEffectif = effectifs ?? 0;
+                    LogFile.Notifier(string.Format("{0};{1};{2}", role.nom,role.iTour,role.iEffectif)); ;
                     m_unitesRoles.Add(role);
                 }
 

@@ -51,6 +51,14 @@ namespace vaoc
         public int iEffectif;
     }
 
+    public class Role
+    {
+        public string nom;
+        public int iNation;
+        public int ID_ROLE;
+        public int iEffectifMax;
+    }
+    
     public class Travelling
     {
         public int i_X_CASE;
@@ -125,7 +133,7 @@ namespace vaoc
         private List<EffectifEtVictoire> m_effectifsEtVictoires;
         private List<UniteRemarquable> m_unitesRemarquables;
         private List<UniteRole> m_unitesRoles;
-        private List<string> m_roles;
+        private Dictionary<int, Role> m_roles;
         private int m_largeurMax;
         private int m_hauteurMax;
         private int m_largeur;
@@ -137,7 +145,7 @@ namespace vaoc
         private int m_nbImages;
         private Font m_police;
         private bool m_bTravelling;
-        private List<Travelling> m_travelling;
+        private Dictionary<int, Travelling> m_travelling;
         public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
 
         System.ComponentModel.BackgroundWorker m_travailleur;
@@ -204,11 +212,25 @@ namespace vaoc
                 if (m_videoParRole)
                 {
                     m_unitesRoles = unitesRoles;
-                    m_roles = new List<string>();
-                    m_travelling = new List<Travelling>();
-                    foreach (UniteRole role in m_unitesRoles)
+                    m_roles = new Dictionary<int, Role>();
+                    m_travelling = new Dictionary<int, Travelling>();
+                    foreach (UniteRole roleUnite in m_unitesRoles)
                     {
-                        if (!m_roles.Contains(role.nom)) { m_roles.Add(role.nom); m_travelling.Add(new Travelling(-1, -1)); }
+                        if (!m_roles.ContainsKey(roleUnite.ID_ROLE)) 
+                        {
+                            Role role = new Role();
+                            role.ID_ROLE = roleUnite.ID_ROLE;
+                            role.iNation = roleUnite.iNation;
+                            role.nom = roleUnite.nom;
+                            role.iEffectifMax = roleUnite.iEffectif;
+                            m_roles.Add(role.ID_ROLE,role); 
+                            m_travelling.Add(role.ID_ROLE, new Travelling(-1, -1)); 
+                        }
+                        else
+                        {
+                            Role role = m_roles[roleUnite.ID_ROLE];
+                            if (role.iEffectifMax< roleUnite.iEffectif) { role.iEffectifMax = roleUnite.iEffectif; }
+                        }
                     }
                 }
 
@@ -339,7 +361,16 @@ namespace vaoc
                 }
 
                 m_traitement = CST_DEBUT_FILM;
-                m_traitementRole = 0;
+                if (m_videoParRole) 
+                {
+                    Dictionary<int, Role>.Enumerator listeRole = m_roles.GetEnumerator();
+                    listeRole.MoveNext();
+                    m_traitementRole = listeRole.Current.Key;
+                }
+                else
+                {
+                    m_traitementRole = 0;
+                }
                 return string.Empty;
             }
             catch (AviWriter.AviException e)
@@ -359,9 +390,9 @@ namespace vaoc
                     //string YourApplicationPath = m_repertoireVideo + "\\ffmpeg.exe";
                     if (m_videoParRole)
                     {
-                        foreach (string role in m_roles)
+                        foreach (Role role in m_roles.Values)
                         {
-                            FilmMpeg(ChaineFichier(role));
+                            FilmMpeg(ChaineFichier(role.nom));
                         }
                     }
                     else
@@ -413,53 +444,83 @@ namespace vaoc
                 int largeurGraphEffectifs = rectBas.Width - m_largeurCote - m_hauteurBandeau;
                 if (m_traitement > 0)
                 {
-                    int victoire0 = 0, victoire1 = 0;
-                    Point[] pointsEff0 = new Point[m_traitement + 1];
-                    Point[] pointsEff1 = new Point[m_traitement + 1];
-                    int nbTours = m_effectifsEtVictoires.Count / 2;
-                    if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                    if (m_videoParRole)
                     {
-                        foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                        if (m_roles[m_traitementRole].iEffectifMax > 0)
                         {
-                            if (eev.iTour == m_traitement)
+                            Pen styloEff;
+                            int iNationRole = -1;
+                            Point[] pointsEff = new Point[m_traitement + 1];
+                            int nbTours = m_effectifsEtVictoires.Count / 2;
+                            foreach (UniteRole role in m_unitesRoles)
                             {
-                                if (0 == eev.iNation)
+                                if (role.iTour > m_traitement)
                                 {
-                                    victoire0 = eev.iVictoire;
+                                    continue;
                                 }
-                                else
+
+                                if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
                                 {
-                                    victoire1 = eev.iVictoire;
+                                    iNationRole = role.iNation;
+                                    pointsEff[role.iTour].X = rectBas.X + m_largeurCote + (role.iTour * largeurGraphEffectifs / nbTours);
+                                    pointsEff[role.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (role.iEffectif * (rectBas.Height - BARRE_ECART) / m_roles[m_traitementRole].iEffectifMax);
                                 }
                             }
-                            if (eev.iTour <= m_traitement)
+                            //on trace les lignes des effectifs
+                            styloEff = (0 == iNationRole) ? new Pen(Color.Blue, 3) : new Pen(Color.Red, 3);
+                            G.DrawLines(styloEff, pointsEff);
+                        }
+                    }
+                    else
+                    {
+                        int victoire0 = 0, victoire1 = 0;
+                        Point[] pointsEff0 = new Point[m_traitement + 1];
+                        Point[] pointsEff1 = new Point[m_traitement + 1];
+                        int nbTours = m_effectifsEtVictoires.Count / 2;
+                        if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                        {
+                            foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
                             {
-                                if (0 == eev.iNation)
+                                if (eev.iTour == m_traitement)
                                 {
-                                    pointsEff0[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
-                                    pointsEff0[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                    if (0 == eev.iNation)
+                                    {
+                                        victoire0 = eev.iVictoire;
+                                    }
+                                    else
+                                    {
+                                        victoire1 = eev.iVictoire;
+                                    }
                                 }
-                                else
+                                if (eev.iTour <= m_traitement)
                                 {
-                                    pointsEff1[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
-                                    pointsEff1[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                    if (0 == eev.iNation)
+                                    {
+                                        pointsEff0[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
+                                        pointsEff0[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                    }
+                                    else
+                                    {
+                                        pointsEff1[eev.iTour].X = rectBas.X + m_largeurCote + (eev.iTour * largeurGraphEffectifs / nbTours);
+                                        pointsEff1[eev.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (eev.iEffectif * (rectBas.Height - BARRE_ECART) / m_effectifsMax);
+                                    }
                                 }
                             }
                         }
+                        Rectangle RectangleVictoire = new Rectangle(rectBas.Width - BARRE_ECART - rectBas.Height,
+                                                                    rectBas.Y + BARRE_ECART,
+                                                                    rectBas.Height - 2 * BARRE_ECART, rectBas.Height - 2 * BARRE_ECART);
+                        //on pose un cercle complet dans le fond en premier
+                        G.FillEllipse(Brushes.Blue, RectangleVictoire);
+                        //on complète par le camembert
+                        int degresVictoire = (victoire1 * 360 / (victoire0 + victoire1));
+                        G.FillPie(Brushes.Red, RectangleVictoire, 90 - degresVictoire, degresVictoire);
+                        //on trace les lignes des effectifs
+                        Pen styloEff0 = new Pen(Color.Blue, 3);
+                        Pen styloEff1 = new Pen(Color.Red, 3);
+                        G.DrawLines(styloEff1, pointsEff1);
+                        G.DrawLines(styloEff0, pointsEff0);
                     }
-                    Rectangle RectangleVictoire = new Rectangle(rectBas.Width - BARRE_ECART - rectBas.Height,
-                                                                rectBas.Y + BARRE_ECART,
-                                                                rectBas.Height - 2*BARRE_ECART, rectBas.Height - 2 * BARRE_ECART);
-                    //on pose un cercle complet dans le fond en premier
-                    G.FillEllipse(Brushes.Blue, RectangleVictoire);
-                    //on complète par le camembert
-                    int degresVictoire = (victoire1 * 360 / (victoire0 + victoire1));
-                    G.FillPie(Brushes.Red, RectangleVictoire, 90 - degresVictoire, degresVictoire);
-                    //on trace les lignes des effectifs
-                    Pen styloEff0 = new Pen(Color.Blue, 3);
-                    Pen styloEff1 = new Pen(Color.Red, 3);
-                    G.DrawLines(styloEff1, pointsEff1);
-                    G.DrawLines(styloEff0, pointsEff0);
                 }
 
                 //bandeau avec texte
@@ -473,40 +534,54 @@ namespace vaoc
                     G.DrawString(m_texteImages[m_traitement], m_police, Brushes.Black, rectText);
                 }
 
-                // effectifs et indicateur de victoire par camp
-                if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                // effectifs et indicateur de victoire par camp ou par role
+                if (m_videoParRole)
                 {
-                    foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                    foreach (UniteRole role in m_unitesRoles)
                     {
-                        if (eev.iTour!=m_traitement)
+                        if (role.iTour != m_traitement)
                         {
                             continue;
                         }
-
-                        string strEffectif = string.Empty;
-                        if (m_videoParRole)
+                        
+                        if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
                         {
-                            foreach (UniteRole role in m_unitesRoles)
-                            {
-                                if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour == m_traitement)
-                                {
-                                    strEffectif = role.iEffectif.ToString("000,000");
-                                    break;
-                                }
-                            }
+                            string strEffectif = role.iEffectif.ToString("###,000");
+                            tailleTexte = G.MeasureString(strEffectif, m_police);
+                            Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
+                            //affichage des effectifs
+                            G.DrawString(strEffectif, m_police, brosse,
+                                new Rectangle(BARRE_ECART + rectBas.X,
+                                                rectBas.Y + (int)(tailleTexte.Height),
+                                                (int)tailleTexte.Width + 1,
+                                                (int)tailleTexte.Height + 1));
+                            break;
                         }
-                        else { strEffectif = eev.iEffectif.ToString("000,000"); }
-                            
-                        tailleTexte = G.MeasureString(strEffectif, m_police);
-                        Brush brosse = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
-                        int y = rectBas.Y;
-                        y += (m_videoParRole) ? (int)tailleTexte.Height : (0 == eev.iNation) ? (int)(tailleTexte.Height * 1 / 2) : (int)(tailleTexte.Height * 3 / 2);
-                        //affichage des effectifs
-                        G.DrawString(strEffectif, m_police, brosse,
-                            new Rectangle(BARRE_ECART + rectBas.X,
-                                            rectBas.Y + (int)(tailleTexte.Height* 1 / 2),
-                                            (int)tailleTexte.Width+1, 
-                                            (int)tailleTexte.Height+1));
+                    }
+                }
+                else
+                {
+                    if (null != m_effectifsEtVictoires && m_effectifsEtVictoires.Count > 0)
+                    {
+                        foreach (EffectifEtVictoire eev in m_effectifsEtVictoires)
+                        {
+                            if (eev.iTour != m_traitement)
+                            {
+                                continue;
+                            }
+
+                            string strEffectif = eev.iEffectif.ToString("###,000");
+                            tailleTexte = G.MeasureString(strEffectif, m_police);
+                            Brush brosse = (0 == eev.iNation) ? Brushes.Blue : Brushes.Red;
+                            int y = rectBas.Y;
+                            y += (0 == eev.iNation) ? (int)(tailleTexte.Height * 1 / 2) : (int)(tailleTexte.Height * 3 / 2);
+                            //affichage des effectifs
+                            G.DrawString(strEffectif, m_police, brosse,
+                                new Rectangle(BARRE_ECART + rectBas.X,
+                                                y,
+                                                (int)tailleTexte.Width + 1,
+                                                (int)tailleTexte.Height + 1));
+                        }
                     }
                 }
 
@@ -518,7 +593,7 @@ namespace vaoc
                     {
                         foreach (UniteRole role in m_unitesRoles)
                         {
-                            if (m_roles[m_traitementRole].Equals(role.nom) && role.iTour == m_traitement)
+                            if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE && role.iTour == m_traitement)
                             {
                                 xCentreTravelling = role.i_X_CASE - m_largeur / 2;
                                 yCentreTravelling = role.i_Y_CASE - m_hauteur / 2;
@@ -613,26 +688,25 @@ namespace vaoc
 
                     //on ajoute les unités
                     // d'abord tous les dépôts et convois
-                    foreach(UniteRemarquable unite in m_unitesRemarquables)
+                    foreach (UniteRemarquable unite in m_unitesRemarquables)
                     {
-                        if (unite.iTour!= m_traitement && 
-                            (unite.tipe == TIPEUNITEVIDEO.INFANTERIE || unite.tipe == TIPEUNITEVIDEO.CAVALERIE ||
-                            unite.tipe == TIPEUNITEVIDEO.ARTILLERIE || unite.tipe == TIPEUNITEVIDEO.QG))
+                        if (unite.iTour == m_traitement &&
+                            (unite.tipe != TIPEUNITEVIDEO.INFANTERIE && unite.tipe != TIPEUNITEVIDEO.CAVALERIE &&
+                            unite.tipe != TIPEUNITEVIDEO.ARTILLERIE && unite.tipe != TIPEUNITEVIDEO.QG))
                         {
-                            continue;
+                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                         }
-                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                     }
+
                     //maintenant les unités combattantes
                     foreach (UniteRemarquable unite in m_unitesRemarquables)
                     {
-                        if (unite.iTour != m_traitement &&
-                            (unite.tipe != TIPEUNITEVIDEO.INFANTERIE && unite.tipe == TIPEUNITEVIDEO.CAVALERIE &&
-                            unite.tipe != TIPEUNITEVIDEO.ARTILLERIE && unite.tipe != TIPEUNITEVIDEO.QG))
+                        if (unite.iTour == m_traitement &&
+                            (unite.tipe == TIPEUNITEVIDEO.INFANTERIE || unite.tipe == TIPEUNITEVIDEO.CAVALERIE ||
+                            unite.tipe == TIPEUNITEVIDEO.ARTILLERIE || unite.tipe == TIPEUNITEVIDEO.QG))
                         {
-                            continue;
+                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                         }
-                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                     }
                 }
                 //Le leader à la fin
@@ -646,8 +720,7 @@ namespace vaoc
                     fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
                     fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
                     BitmapData bmpDat = fichierImage.LockBits(
-                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
+                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);                    
                     //BitmapData imageCible = new BitmapData();
                     //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
                     //m_imageCarte.UnlockBits(imageCible);
@@ -660,7 +733,7 @@ namespace vaoc
                 {
                     if (m_videoParRole)
                     {
-                        fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole] + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
+                        fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole].nom + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
                     }
                     else
                     {
@@ -673,15 +746,19 @@ namespace vaoc
                 fichierImageSource.Dispose();
                 if (m_videoParRole)
                 {
-                    if (m_traitementRole == m_roles.Count -1)
+                    // on recherche la clef suivante
+                    Dictionary<int, Role>.Enumerator listeRole = m_roles.GetEnumerator();
+                    listeRole.MoveNext();
+                    while (listeRole.Current.Key!= m_traitementRole) listeRole.MoveNext();
+                    if (!listeRole.MoveNext())
                     {
                         m_traitementRole = 0;
                         m_traitement++;
                     }
                     else
                     {
-                        m_traitementRole++;
-                    }
+                        m_traitementRole = listeRole.Current.Key;
+                    }                        
                 }
                 else
                 {

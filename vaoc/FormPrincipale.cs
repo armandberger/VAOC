@@ -4659,6 +4659,12 @@ namespace vaoc
                 MessageBox.Show("Fichier message exporté : " + iWeb.fileNameSQL, "SQL Messages", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
+
+        private void broderiequadrillageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormBroderie broderie = new FormBroderie();
+            broderie.ShowDialog();
+        }
     }
 
     internal static class NativeMethods

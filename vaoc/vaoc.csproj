@@ -101,6 +101,12 @@
     <Compile Include="DataFichier\ClassDataPion.cs" />
     <Compile Include="dataOBJ\LigneCASE.cs" />
     <Compile Include="FabricantDeFilm.cs" />
+    <Compile Include="FormBroderie.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBroderie.Designer.cs">
+      <DependentUpon>FormBroderie.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMessageAncien.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -340,6 +346,9 @@
     <Compile Include="MiseAJourDonneesHistorique.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FormBroderie.resx">
+      <DependentUpon>FormBroderie.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMessageAncien.resx">
       <DependentUpon>FormMessageAncien.cs</DependentUpon>
     </EmbeddedResource>

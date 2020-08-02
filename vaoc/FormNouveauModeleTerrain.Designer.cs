@@ -50,6 +50,7 @@
             this.checkBoxPonton = new System.Windows.Forms.CheckBox();
             this.checkBoxDetruit = new System.Windows.Forms.CheckBox();
             this.checkBoxBatailleZoneUnique = new System.Windows.Forms.CheckBox();
+            this.checkBoxSansBonusCavalerie = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -120,7 +121,7 @@
             // buttonCreer
             // 
             this.buttonCreer.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonCreer.Location = new System.Drawing.Point(24, 300);
+            this.buttonCreer.Location = new System.Drawing.Point(14, 327);
             this.buttonCreer.Name = "buttonCreer";
             this.buttonCreer.Size = new System.Drawing.Size(75, 23);
             this.buttonCreer.TabIndex = 7;
@@ -130,7 +131,7 @@
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(150, 300);
+            this.buttonAnnuler.Location = new System.Drawing.Point(140, 327);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 8;
@@ -252,12 +253,23 @@
             this.checkBoxBatailleZoneUnique.Text = "Zone unique de combat (forteresse, etc.)";
             this.checkBoxBatailleZoneUnique.UseVisualStyleBackColor = true;
             // 
+            // checkBoxSansBonusCavalerie
+            // 
+            this.checkBoxSansBonusCavalerie.AutoSize = true;
+            this.checkBoxSansBonusCavalerie.Location = new System.Drawing.Point(14, 291);
+            this.checkBoxSansBonusCavalerie.Name = "checkBoxSansBonusCavalerie";
+            this.checkBoxSansBonusCavalerie.Size = new System.Drawing.Size(249, 17);
+            this.checkBoxSansBonusCavalerie.TabIndex = 17;
+            this.checkBoxSansBonusCavalerie.Text = "Sans bonus de cavalerie (forteresse, forêt, etc.)";
+            this.checkBoxSansBonusCavalerie.UseVisualStyleBackColor = true;
+            // 
             // FormNouveauModeleTerrain
             // 
             this.AcceptButton = this.buttonCreer;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(263, 335);
+            this.ClientSize = new System.Drawing.Size(263, 363);
+            this.Controls.Add(this.checkBoxSansBonusCavalerie);
             this.Controls.Add(this.checkBoxBatailleZoneUnique);
             this.Controls.Add(this.checkBoxDetruit);
             this.Controls.Add(this.checkBoxPonton);
@@ -314,5 +326,6 @@
         private System.Windows.Forms.CheckBox checkBoxPonton;
         private System.Windows.Forms.CheckBox checkBoxDetruit;
         private System.Windows.Forms.CheckBox checkBoxBatailleZoneUnique;
+        private System.Windows.Forms.CheckBox checkBoxSansBonusCavalerie;
     }
 }

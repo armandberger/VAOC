@@ -2351,6 +2351,17 @@ namespace vaoc
                 }
             }
             #endregion
+
+            #region version 11
+            if (TAB_JEU[0].I_VERSION < 11)
+            {
+                for (int l = 0; l < Donnees.m_donnees.TAB_MODELE_TERRAIN.Count; l++)
+                {
+                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN[l];
+                    ligneModeleTerrain.B_SANS_BONUS_CAVALERIE = false;
+                }
+            }
+            #endregion
             return true;
         }
     }

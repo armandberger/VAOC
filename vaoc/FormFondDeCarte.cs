@@ -128,6 +128,7 @@ namespace vaoc
                     ligneTerrain.B_OBSTACLE_DEFENSIF = Convert.ToBoolean(ligne.Cells["B_OBSTACLE_DEFENSIF"].Value);
                     ligneTerrain.B_ANNULEE_EN_COMBAT = Convert.ToBoolean(ligne.Cells["B_ANNULEE_EN_COMBAT"].Value);
                     ligneTerrain.B_BATAILLE_ZONE_UNIQUE = Convert.ToBoolean(ligne.Cells["B_BATAILLE_ZONE_UNIQUE"].Value);
+                    ligneTerrain.B_SANS_BONUS_CAVALERIE = Convert.ToBoolean(ligne.Cells["B_SANS_BONUS_CAVALERIE"].Value);
 
                     m_tableModelesTerrains.AddTAB_MODELE_TERRAINRow(ligneTerrain);
                 }
@@ -176,6 +177,7 @@ namespace vaoc
                             ligne.Cells[13].Value = ligneTerrain.B_OBSTACLE_DEFENSIF;
                             ligne.Cells[14].Value = ligneTerrain.B_ANNULEE_EN_COMBAT;
                             ligne.Cells[15].Value = ligneTerrain.B_BATAILLE_ZONE_UNIQUE;
+                            ligne.Cells[16].Value = ligneTerrain.B_SANS_BONUS_CAVALERIE;
                             dataGridViewModelesTerrain.Rows.Add(ligne);
                         }
                     }
@@ -580,12 +582,13 @@ namespace vaoc
                                                                                         false,//B_ANNULEE_SI_OCCUPEE
                                                                                         false,//B_CIRCUIT_ROUTIER
                                                                                         false,//B_OBSTACLE_DEFENSIF
-                                                                                        false,
+                                                                                        false,//B_ANNULEE_EN_COMBAT
                                                                                         false, //B_PONT
                                                                                         false, //B_PONTON
                                                                                         false, //B_DETRUIT
-                                                                                        false //B_BATAILLE_ZONE_UNIQUE
-                                                                                        );//B_ANNULEE_EN_COMBAT
+                                                                                        false, //B_BATAILLE_ZONE_UNIQUE
+                                                                                        false
+                                                                                        );
                         m_identifiantsModelesTerrains.Add(ligneTerrain.ID_MODELE_TERRAIN, ligneTerrain.ID_MODELE_TERRAIN);
                         //création de la nouvelle ligne dans la table des modeles de terrain
                         ligne = new DataGridViewRow();
@@ -959,7 +962,8 @@ namespace vaoc
                     fNouveauModeleTerrain.bPont,
                     fNouveauModeleTerrain.bPonton,
                     fNouveauModeleTerrain.bDetruit,
-                    fNouveauModeleTerrain.bBatailleZoneUnique
+                    fNouveauModeleTerrain.bBatailleZoneUnique,
+                    fNouveauModeleTerrain.bSansBonusCavalerie
                     );
 
                 m_identifiantsModelesTerrains.Add(ligneModeleTerrain.ID_MODELE_TERRAIN, ligneModeleTerrain.ID_MODELE_TERRAIN);
@@ -1023,6 +1027,7 @@ namespace vaoc
             ligne.Cells[13].Value = ligneModeleTerrain.B_OBSTACLE_DEFENSIF;
             ligne.Cells[14].Value = ligneModeleTerrain.B_ANNULEE_EN_COMBAT;
             ligne.Cells[15].Value = ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE;
+            ligne.Cells[16].Value = ligneModeleTerrain.B_SANS_BONUS_CAVALERIE;
         }
 
         private void buttonSupprimerModele_Click(object sender, EventArgs e)
@@ -1112,6 +1117,7 @@ namespace vaoc
             fNouveauModeleTerrain.CouleurR = lignePoint.I_ROUGE;
             fNouveauModeleTerrain.CouleurG = lignePoint.I_VERT;
             fNouveauModeleTerrain.bBatailleZoneUnique = ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE;
+            fNouveauModeleTerrain.bSansBonusCavalerie = ligneModeleTerrain.B_SANS_BONUS_CAVALERIE;
             if (fNouveauModeleTerrain.ShowDialog(this) == DialogResult.OK)
             {
                 //mise à jour des données
@@ -1146,6 +1152,7 @@ namespace vaoc
                 lignePoint.I_ROUGE = (short)fNouveauModeleTerrain.CouleurR;
                 lignePoint.I_VERT = (short)fNouveauModeleTerrain.CouleurG;
                 ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE = fNouveauModeleTerrain.bBatailleZoneUnique;
+                ligneModeleTerrain.B_SANS_BONUS_CAVALERIE = fNouveauModeleTerrain.bSansBonusCavalerie;
 
                 //maintenant il faut mettre à jour la datagrid modele
                 Color pixelColor = Color.FromArgb(fNouveauModeleTerrain.CouleurR,

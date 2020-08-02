@@ -88,6 +88,7 @@ namespace vaoc
             this.B_OBSTACLE_DEFENSIF = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.B_ANNULEE_EN_COMBAT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.B_BATAILLE_ZONE_UNIQUE = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.B_SANS_BONUS_CAVALERIE = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCouleurs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewModelesTerrain)).BeginInit();
             this.groupBoxPositionCouleur.SuspendLayout();
@@ -311,7 +312,8 @@ namespace vaoc
             this.ID_NOUVEAU_TERRAIN,
             this.B_OBSTACLE_DEFENSIF,
             this.B_ANNULEE_EN_COMBAT,
-            this.B_BATAILLE_ZONE_UNIQUE});
+            this.B_BATAILLE_ZONE_UNIQUE,
+            this.B_SANS_BONUS_CAVALERIE});
             this.dataGridViewModelesTerrain.Location = new System.Drawing.Point(0, 259);
             this.dataGridViewModelesTerrain.Name = "dataGridViewModelesTerrain";
             this.dataGridViewModelesTerrain.Size = new System.Drawing.Size(828, 150);
@@ -609,6 +611,12 @@ namespace vaoc
             this.B_BATAILLE_ZONE_UNIQUE.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.B_BATAILLE_ZONE_UNIQUE.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // B_SANS_BONUS_CAVALERIE
+            // 
+            this.B_SANS_BONUS_CAVALERIE.HeaderText = "Sans Bonus de Cavalerie";
+            this.B_SANS_BONUS_CAVALERIE.Name = "B_SANS_BONUS_CAVALERIE";
+            this.B_SANS_BONUS_CAVALERIE.ReadOnly = true;
+            // 
             // FormFondDeCarte
             // 
             this.AcceptButton = this.buttonValider;
@@ -645,6 +653,7 @@ namespace vaoc
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Fond de Carte";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.FormFondDeCarte_Load);
             this.Resize += new System.EventHandler(this.FormFondDeCarte_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCouleurs)).EndInit();
@@ -717,5 +726,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_OBSTACLE_DEFENSIF;
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_ANNULEE_EN_COMBAT;
         private System.Windows.Forms.DataGridViewCheckBoxColumn B_BATAILLE_ZONE_UNIQUE;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn B_SANS_BONUS_CAVALERIE;
     }
 }

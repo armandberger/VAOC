@@ -197,6 +197,17 @@ namespace vaoc
                 textBoxB.Text = Convert.ToString(value);
             }
         }
+        public bool bSansBonusCavalerie
+        {
+            get
+            {
+                return checkBoxSansBonusCavalerie.Checked;
+            }
+            set
+            {
+                checkBoxSansBonusCavalerie.Checked = value;
+            }
+        }
 
         public FormNouveauModeleTerrain()
         {

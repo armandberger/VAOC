@@ -1900,7 +1900,7 @@ namespace vaoc
             /// <returns>true si OK, false si KO</returns>
             private bool BlessureChef(int zone)
             {
-                return true;//le mode de calcul ne convient, grosse bataille, certains d'être blessé, petite bataille aucune chance...
+                //return true;//le mode de calcul ne convient, grosse bataille, certains d'être blessé, petite bataille aucune chance...
                 Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //Recherche de tous les chefs présents dans le secteur

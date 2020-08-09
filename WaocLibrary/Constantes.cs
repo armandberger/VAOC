@@ -295,21 +295,9 @@ namespace WaocLib
         /// </summary>
         /// <param name="nombre">nombre de dés à lancer</param>
         /// <param name="relance">nombre de dés que l'on relance après tirage si le score est 1 ou 2</param>
-        /// <returns>total des jets de dés</returns>
-        public static int JetDeDes(int nombre, int relance)
-        {
-            int nb6 = 0;
-            return JetDeDes(nombre, relance, out nb6);
-        }
-
-        /// <summary>
-        /// Jet de dés à 6 faces
-        /// </summary>
-        /// <param name="nombre">nombre de dés à lancer</param>
-        /// <param name="relance">nombre de dés que l'on relance après tirage si le score est 1 ou 2</param>
         /// <param name="nb6">nombre de '6' lancés (utile pour déterminer si un chef est blessé)</param>
         /// <returns>total des jets de dés</returns>
-        public static int JetDeDes(int nombre, int relance, out int nb6)
+        public static int JetDeDes(int nombre, int modificateur, int relance, out int nb6)
         {
             int i;
             int resultat = 0;
@@ -327,7 +315,7 @@ namespace WaocLib
                 resultat += score;
                 if (6 == score) { nb6++; }
             }
-            return resultat;
+            return resultat + modificateur;
         }
 
         /// <summary>

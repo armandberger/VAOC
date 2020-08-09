@@ -137,6 +137,7 @@ namespace vaoc
                 int[] des;
                 int[] effectifs;
                 int[] canons;
+                int[] modificateurs;
                 int nbUnites012 = 0, nbUnites345 = 0;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
@@ -154,7 +155,7 @@ namespace vaoc
 
                 //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(20);
                 //recherche de tous les pions présents sur le champ de bataille et qui "voient" le résultat et peuvent subir une poursuite
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons,
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons,
                     out lignePionsEnBataille012, out lignePionsEnBataille345,
                     true,//engagement
                     false,//combattif
@@ -205,7 +206,7 @@ namespace vaoc
                 }
                 */
 
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons,
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons,
                     out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille II");
@@ -224,7 +225,7 @@ namespace vaoc
                     int[] effectifsRetraite;
                     int[] canonsRetraite;
                     int nbUnitesRetraite012 = 0, nbUnitesRetraite345 = 0;
-                    if (!RecherchePionsEnBataille(out nbUnitesRetraite012, out nbUnitesRetraite345, out desRetraite, out effectifsRetraite, out canonsRetraite,
+                    if (!RecherchePionsEnBataille(out nbUnitesRetraite012, out nbUnitesRetraite345, out desRetraite, out modificateurs, out effectifsRetraite, out canonsRetraite,
                         out lignePionsEnBatailleRetraite012, out lignePionsEnBatailleRetraite345, null /*engagement*/, false/*combattif*/, true/*QG*/, true /*bArtillerie*/))
                     {
                         message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille III");
@@ -1237,6 +1238,7 @@ namespace vaoc
                 int[] des;
                 int[] effectifs;
                 int[] canons;
+                int[] modificateurs;
                 //int[] score = new int[6];
                 //int[] pertesMoral = new int[6];
                 int[] relance = new int[6];                //nombre de dés autorises à être relancés en cas de superiorité d'artillerie
@@ -1273,7 +1275,7 @@ namespace vaoc
                 #region choix des leaders sur le combat
                 Donnees.TAB_PIONRow[] tablePionsPresents012;
                 Donnees.TAB_PIONRow[] tablePionsPresents345;
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsPresents012, out tablePionsPresents345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsPresents012, out tablePionsPresents345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille QG");
                     LogFile.Notifier(message, out messageErreur);
@@ -1400,7 +1402,7 @@ namespace vaoc
                 //toutes les unités engagées viennent de passer une heure sur le terrain, cela joue pour la fatigue de fin de journée
                 Donnees.TAB_PIONRow[] tablePionsEngagesCombattifs012;
                 Donnees.TAB_PIONRow[] tablePionsEngagesCombattifs345;
-                if (!RecherchePionsEnBataille(out nbUnites012Base, out nbUnites345Base, out des, out effectifs, out canons, out tablePionsEngagesCombattifs012, out tablePionsEngagesCombattifs345, true/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out nbUnites012Base, out nbUnites345Base, out des, out modificateurs, out effectifs, out canons, out tablePionsEngagesCombattifs012, out tablePionsEngagesCombattifs345, true/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille 0");
                     LogFile.Notifier(message, out messageErreur);
@@ -1414,7 +1416,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow[] tablePionsCombattifsNonEngagesSansQG012;
                     Donnees.TAB_PIONRow[] tablePionsCombattifsNonEngagesSansQG345;
-                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsCombattifsNonEngagesSansQG012, out tablePionsCombattifsNonEngagesSansQG345, false/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsCombattifsNonEngagesSansQG012, out tablePionsCombattifsNonEngagesSansQG345, false/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille 012");
                         LogFile.Notifier(message, out messageErreur);
@@ -1428,7 +1430,7 @@ namespace vaoc
                     }
                     Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG012;
                     Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG345;
-                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsNonEngagesSansQG012, out tablePionsNonEngagesSansQG345, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsNonEngagesSansQG012, out tablePionsNonEngagesSansQG345, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille 012-II");
                         LogFile.Notifier(message, out messageErreur);
@@ -1446,7 +1448,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow[] tablePionsCombattifsNonEngagesSansQG012;
                     Donnees.TAB_PIONRow[] tablePionsCombattifsNonEngagesSansQG345;
-                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsCombattifsNonEngagesSansQG012, out tablePionsCombattifsNonEngagesSansQG345, false/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsCombattifsNonEngagesSansQG012, out tablePionsCombattifsNonEngagesSansQG345, false/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille 345");
                         LogFile.Notifier(message, out messageErreur);
@@ -1460,7 +1462,7 @@ namespace vaoc
                     }
                     Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG012;
                     Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG345;
-                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsNonEngagesSansQG012, out tablePionsNonEngagesSansQG345, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                    if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsNonEngagesSansQG012, out tablePionsNonEngagesSansQG345, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille 345-II");
                         LogFile.Notifier(message, out messageErreur);
@@ -1476,7 +1478,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow[] tablePionsEngages012;
                 Donnees.TAB_PIONRow[] tablePionsEngages345;
                 //false sur bcombattif avant, mais dans ce cas, donne une fausse valeur du modificateur stratégique, remis a false car sinon on ne joue plus la blessure des chefs, remis à true sinon, les unités en déroute sont comptabilisées
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, true/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, true/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille I");
                     LogFile.Notifier(message, out messageErreur);
@@ -1651,11 +1653,12 @@ namespace vaoc
                 }
 
                 message = string.Format("EffectuerBataille des={0} {1} {2} {3} {4} {5}", des[0], des[1], des[2], des[3], des[4], des[5]);
+                message = string.Format("EffectuerBataille modificateurs={0} {1} {2} {3} {4} {5}", modificateurs[0], modificateurs[1], modificateurs[2], modificateurs[3], modificateurs[4], modificateurs[5]);
                 LogFile.Notifier(message, out messageErreur);
 
                 #endregion
 
-                if (!CalculDesPertesAuCombat(des, relance, listePionsEngages012, listePionsEngages345, bRetraite012, bRetraite345))
+                if (!CalculDesPertesAuCombat(des, modificateurs, relance, listePionsEngages012, listePionsEngages345, bRetraite012, bRetraite345))
                 {
                     message = string.Format("EffectuerBataille : erreur dans CalculDesPertesAuCombat II");
                     LogFile.Notifier(message, out messageErreur);
@@ -1665,7 +1668,7 @@ namespace vaoc
                 //Y-a-t-il encore des combattants dans chaque camp ?
                 Donnees.TAB_PIONRow[] tablePionsCombattifs012;
                 Donnees.TAB_PIONRow[] tablePionsCombattifs345;
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out tablePionsCombattifs012, out tablePionsCombattifs345, null/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsCombattifs012, out tablePionsCombattifs345, null/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille II");
                     LogFile.Notifier(message, out messageErreur);
@@ -1749,7 +1752,7 @@ namespace vaoc
             /// <param name="lignePionsEnBataille012"></param>
             /// <param name="lignePionsEnBataille345"></param>
             /// <returns>true si OK, false si KO</returns>
-            private bool CalculDesPertesAuCombat( int[] des, int[] relance, List<Donnees.TAB_PIONRow> lignePionsEnBataille012, List<Donnees.TAB_PIONRow> lignePionsEnBataille345, bool bRetraite012, bool bRetraite345)
+            private bool CalculDesPertesAuCombat( int[] des, int[] modificateurs, int[] relance, List<Donnees.TAB_PIONRow> lignePionsEnBataille012, List<Donnees.TAB_PIONRow> lignePionsEnBataille345, bool bRetraite012, bool bRetraite345)
             {
                 string message, messageErreur;
                 int[] score = new int[6];
@@ -1763,9 +1766,9 @@ namespace vaoc
                 for (i = 0; i < 6; i++)
                 {
                     nb6 = 0;
-                    score[i] = (des[i] > 0) ? Constantes.JetDeDes(des[i], relance[i], out nb6) : 0;
+                    score[i] = (des[i] > 0) ? Constantes.JetDeDes(des[i], modificateurs[i], relance[i], out nb6) : 0;
                     if (i < 3) { blessureChef[i+3] = (nb6 >= 4) ? true : false; } else { blessureChef[i-3] = (nb6 >= 4) ? true : false; }
-                    this["S_COMBAT_" + Convert.ToString(i)]=string.Format("{0} dés, {1} relances = {2}", des[i], relance[i], score[i]);
+                    this["S_COMBAT_" + Convert.ToString(i)]=string.Format("{0} dés + {1}, {2} relances = {3}", des[i], modificateurs[i], relance[i], score[i]);
                 }
 
                 for (i = 0; i < 3; i++)
@@ -2079,12 +2082,13 @@ namespace vaoc
                 int[] des;
                 int[] effectifs;
                 int[] canons;
+                int[] modificateurs;
                 int i;
                 int nbUnites012 = 0, nbUnites345 = 0;//pour les bonus stratégiques
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
 
-                RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/);
+                RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/);
                 Donnees.TAB_BATAILLE_PIONSRow lignePionBataille;
                 for (i = 0; i < 3; i++)
                 {
@@ -2253,20 +2257,21 @@ namespace vaoc
                 }
             }
 
-            public bool RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out int[] des, out int[] effectifs, out int[] canons, out Donnees.TAB_PIONRow[] lignePionsEnBataille012, out Donnees.TAB_PIONRow[] lignePionsEnBataille345, bool? bEngagement, bool bCombattif, bool bQG, bool bArtillerie)
+            public bool RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out int[] des, out int[] modificateurs, out int[] effectifs, out int[] canons, out Donnees.TAB_PIONRow[] lignePionsEnBataille012, out Donnees.TAB_PIONRow[] lignePionsEnBataille345, bool? bEngagement, bool bCombattif, bool bQG, bool bArtillerie)
             {
                 des = new int[6];
                 effectifs = new int[6];
                 canons = new int[6];
+                modificateurs = new int[6];
 
                 nbUnites012 = nbUnites345 = 0;
                 lignePionsEnBataille012 = lignePionsEnBataille345 = null;
 
-                if (!RecherchePionsEnBatailleParZone(ID_BATAILLE, true, out nbUnites012, ref des, ref effectifs, ref canons, out lignePionsEnBataille012, bEngagement, bCombattif, bQG, bArtillerie))
+                if (!RecherchePionsEnBatailleParZone(ID_BATAILLE, true, out nbUnites012, ref des, ref modificateurs, ref effectifs, ref canons, out lignePionsEnBataille012, bEngagement, bCombattif, bQG, bArtillerie))
                 {
                     return false;
                 }
-                if (!RecherchePionsEnBatailleParZone(ID_BATAILLE, false, out nbUnites345, ref des, ref effectifs, ref canons, out lignePionsEnBataille345, bEngagement, bCombattif, bQG, bArtillerie))
+                if (!RecherchePionsEnBatailleParZone(ID_BATAILLE, false, out nbUnites345, ref des, ref modificateurs, ref effectifs, ref canons, out lignePionsEnBataille345, bEngagement, bCombattif, bQG, bArtillerie))
                 {
                     return false;
                 }
@@ -2289,7 +2294,7 @@ namespace vaoc
             /// <param name="bQG">true si on  prend les unités QG, false sinon</param>
             /// <param name="bArtillerie">true si on prend les unités d'artillerie pure, false sinon</param>
             /// <returns>true si ok, false si ko</returns>
-            public bool RecherchePionsEnBatailleParZone(int idBataille, bool bZone012, out int nbUnites, ref int[] des, ref int[] effectifs, ref int[] canons, out Donnees.TAB_PIONRow[] lignePionsEnBatailleZone, bool? bEngagement, bool bCombattif, bool bQG, bool bArtillerie)
+            public bool RecherchePionsEnBatailleParZone(int idBataille, bool bZone012, out int nbUnites, ref int[] des, ref int[] modificateurs, ref int[] effectifs, ref int[] canons, out Donnees.TAB_PIONRow[] lignePionsEnBatailleZone, bool? bEngagement, bool bCombattif, bool bQG, bool bArtillerie)
             {
                 //string requete;
                 //DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[] lignePionsEnBataille;
@@ -2304,6 +2309,7 @@ namespace vaoc
                 bool[] presenceCavalerieLourde = new bool[] { false, false, false, false, false, false };
                 bool[] presenceGarde = new bool[] { false, false, false, false, false, false };
                 bool[] presenceVieilleGarde = new bool[] { false, false, false, false, false, false };
+                bool[] presenceArtillerie = new bool[] { false, false, false, false, false, false };
 
                 idNation = bZone012 ? ligneBataille.ID_NATION_012 : ligneBataille.ID_NATION_345;
                 //recherche toutes les unités engagées dans une bataille par une nation (donc dans une zone)
@@ -2399,11 +2405,15 @@ namespace vaoc
                                 if (!lignePion.estArtillerie)
                                 {
                                     //modification liée à la valeur de matériel et de ravitaillement
-                                    des[lignePion.I_ZONE_BATAILLE] += Constantes.CalculerEfficaciteAuCombat(lignePion.I_MATERIEL, lignePion.I_RAVITAILLEMENT);
+                                    modificateurs[lignePion.I_ZONE_BATAILLE] += Constantes.CalculerEfficaciteAuCombat(lignePion.I_MATERIEL, lignePion.I_RAVITAILLEMENT);
+                                }
+                                else
+                                {
+                                    presenceArtillerie[lignePion.I_ZONE_BATAILLE] = true;
                                 }
                                 canons[lignePion.I_ZONE_BATAILLE] += lignePion.I_ARTILLERIE;
                                 effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
-                                des[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
+                                modificateurs[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
 
                                 if (lignePion.B_CAVALERIE_DE_LIGNE) { presenceCavalerieDeLigne[lignePion.I_ZONE_BATAILLE] = true; }
                                 if (lignePion.B_CAVALERIE_LOURDE) { presenceCavalerieLourde[lignePion.I_ZONE_BATAILLE] = true; }
@@ -2432,10 +2442,15 @@ namespace vaoc
                         des[i] += Math.Max(1, valeurTactique[i]);
                         LogFile.Notifier(string.Format("RecherchePionsEnBatailleParZone valeurTactique sur zone={0} = {1}", i, valeurTactique[i]));
                     }
-                    if (presenceCavalerieDeLigne[i] && !presenceCavalerieLourde[i]) { des[i] += 1; }
-                    if (presenceCavalerieLourde[i]) { des[i] += 2; }
+                    Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN((int)this["ID_TERRAIN_" + Convert.ToString(i)]);
+                    if (!ligneModeleTerrain.B_SANS_BONUS_CAVALERIE)
+                    {
+                        if (presenceCavalerieDeLigne[i] && !presenceCavalerieLourde[i]) { des[i] += 1; }
+                        if (presenceCavalerieLourde[i]) { des[i] += 2; }
+                    }
                     if (presenceGarde[i] && !presenceVieilleGarde[i]) { des[i] += 2; }
                     if (presenceVieilleGarde[i]) { des[i] += 3; }
+                    if (presenceArtillerie[i]) { des[i] += 1; }
                 }
 
                 return true;

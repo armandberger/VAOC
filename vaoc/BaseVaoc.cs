@@ -609,6 +609,7 @@ namespace vaoc
             public bool IsID_CASE_DESTINATIONNull() { return (Constantes.NULLENTIER == this.ID_CASE_DESTINATION); }
             public bool IsID_CIBLENull() { return (Constantes.NULLENTIER == this.ID_CIBLE); }
             public bool IsID_ORDRE_TRANSMISNull() { return (Constantes.NULLENTIER == this.ID_ORDRE_TRANSMIS); }
+            public bool IsID_PIONNull() { return (Constantes.NULLENTIER == this.ID_PION); }
             public bool IsID_MESSAGENull() { return (Constantes.NULLENTIER == this.ID_MESSAGE); }
             public bool IsID_DESTINATAIRENull() { return (Constantes.NULLENTIER == this.ID_DESTINATAIRE); }
 

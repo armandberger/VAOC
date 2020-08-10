@@ -4198,11 +4198,12 @@ namespace vaoc
 
             #region Backup des messages, ordres et pions détruits ou passés
             /* Retrait de l'optimisation sur les messages, en effets, certains pouvant être crées sur le web d'autres par l'interface, cela crée des bugs d'identifiants. */
+            int tourSansEnvoi = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
             int i = 0;
             while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
-                if (!ligneMessage.IsI_TOUR_ARRIVEENull())
+                if (!ligneMessage.IsI_TOUR_ARRIVEENull() && ligneMessage.I_TOUR_ARRIVEE!=Constantes.NULLENTIER && ligneMessage.I_TOUR_ARRIVEE < tourSansEnvoi)
                 {
                     Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncien = Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
                         ligneMessage.ID_MESSAGE,
@@ -4288,41 +4289,23 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
-                    if (lignePion.B_DETRUIT)
+                    if (!ligneOrdre.IsID_PIONNull())
                     {
-                        bdetruire = true;
-                    }
+                        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+                        if (lignePion.B_DETRUIT)
+                        {
+                            bdetruire = true;
+                            if (!ligneOrdre.IsID_ORDRE_TRANSMISNull())
+                            {
+                                Donnees.TAB_ORDRERow ligneOrdreTransmis = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(ligneOrdre.ID_ORDRE_TRANSMIS);
+                                if (null!= ligneOrdreTransmis) DeplacerOrdreAncienVersNouveau(ligneOrdreTransmis);
+                            }
+                        }
+                    }                    
                 }
                 if (bdetruire)
                 {
-                    Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
-                    ligneOrdre.ID_ORDRE,
-                    ligneOrdre.ID_ORDRE_TRANSMIS,
-                    ligneOrdre.ID_ORDRE_SUIVANT,
-                    ligneOrdre.ID_ORDRE_WEB,
-                    ligneOrdre.I_ORDRE_TYPE,
-                    ligneOrdre.ID_PION,
-                    ligneOrdre.ID_CASE_DEPART,
-                    ligneOrdre.I_EFFECTIF_DEPART,
-                    ligneOrdre.ID_CASE_DESTINATION,
-                    ligneOrdre.ID_NOM_DESTINATION,
-                    ligneOrdre.I_EFFECTIF_DESTINATION,
-                    ligneOrdre.I_TOUR_DEBUT,
-                    ligneOrdre.I_PHASE_DEBUT,
-                    ligneOrdre.I_TOUR_FIN,
-                    ligneOrdre.I_PHASE_FIN,
-                    ligneOrdre.ID_MESSAGE,
-                    ligneOrdre.ID_DESTINATAIRE,
-                    ligneOrdre.ID_CIBLE,
-                    ligneOrdre.ID_DESTINATAIRE_CIBLE,
-                    ligneOrdre.ID_BATAILLE,
-                    ligneOrdre.I_ZONE_BATAILLE,
-                    ligneOrdre.I_HEURE_DEBUT,
-                    ligneOrdre.I_DUREE,
-                    ligneOrdre.I_ENGAGEMENT);
-
-                    ligneOrdre.Delete();
+                    DeplacerOrdreAncienVersNouveau(ligneOrdre);
                 }
                 else
                 {
@@ -4414,7 +4397,37 @@ namespace vaoc
                 Donnees.m_donnees.TAB_ORDRE.Count()),"Résultat",MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             #endregion
+        }
 
+        private void DeplacerOrdreAncienVersNouveau(Donnees.TAB_ORDRERow ligneOrdre)
+        {
+            Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
+            ligneOrdre.ID_ORDRE,
+            ligneOrdre.ID_ORDRE_TRANSMIS,
+            ligneOrdre.ID_ORDRE_SUIVANT,
+            ligneOrdre.ID_ORDRE_WEB,
+            ligneOrdre.I_ORDRE_TYPE,
+            ligneOrdre.ID_PION,
+            ligneOrdre.ID_CASE_DEPART,
+            ligneOrdre.I_EFFECTIF_DEPART,
+            ligneOrdre.ID_CASE_DESTINATION,
+            ligneOrdre.ID_NOM_DESTINATION,
+            ligneOrdre.I_EFFECTIF_DESTINATION,
+            ligneOrdre.I_TOUR_DEBUT,
+            ligneOrdre.I_PHASE_DEBUT,
+            ligneOrdre.I_TOUR_FIN,
+            ligneOrdre.I_PHASE_FIN,
+            ligneOrdre.ID_MESSAGE,
+            ligneOrdre.ID_DESTINATAIRE,
+            ligneOrdre.ID_CIBLE,
+            ligneOrdre.ID_DESTINATAIRE_CIBLE,
+            ligneOrdre.ID_BATAILLE,
+            ligneOrdre.I_ZONE_BATAILLE,
+            ligneOrdre.I_HEURE_DEBUT,
+            ligneOrdre.I_DUREE,
+            ligneOrdre.I_ENGAGEMENT);
+
+            ligneOrdre.Delete();
         }
 
         private void anciensActuelsToolStripMenuItem_Click(object sender, EventArgs e)

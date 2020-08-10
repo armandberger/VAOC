@@ -1580,11 +1580,13 @@ namespace vaoc
                         message = string.Format("EffectuerBataille avec valeur stratégique des[{0}]={1} des[{2}]={3}", i, des[i], i + 3, des[i + 3]);
                         LogFile.Notifier(message, out messageErreur);
 
-                        //rapport de force, +2 pour 2/1, +3 pour 3/1 avec un maximum de +6
+                        //rapport de force, +2 pour 2/1, +3 pour 3/1 avec un maximum de +6, +2 sur une zone de combat unique (= forteresse)
+                        ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN((int)this["ID_TERRAIN_" + Convert.ToString(i)]);
+                        int rapportmaximum = (ligneModeleTerrain.B_BATAILLE_ZONE_UNIQUE) ? 2 : 6;
                         int rapport = effectifs[i] / effectifs[i + 3];
-                        if (rapport >= 2) { des[i] += Math.Min(rapport, 6); }
+                        if (rapport >= 2) { des[i] += Math.Min(rapport, rapportmaximum); }
                         rapport = effectifs[i + 3] / effectifs[i];
-                        if (rapport >= 2) { des[i + 3] += Math.Min(rapport, 6); }
+                        if (rapport >= 2) { des[i + 3] += Math.Min(rapport, rapportmaximum); }
                         message = string.Format("EffectuerBataille avec rapport de forces des[{0}]={1} effectif={2} des[{3}]={4} effectif={5}",
                             i, des[i], effectifs[i], i + 3, des[i + 3], effectifs[i + 3]);
                         LogFile.Notifier(message, out messageErreur);

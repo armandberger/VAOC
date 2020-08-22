@@ -7882,6 +7882,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_GUERISON;
             
+            private global::System.Data.DataColumn columnI_LIMITE_DEPOT_A;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_NATIONDataTable() {
@@ -8005,6 +8007,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_LIMITE_DEPOT_AColumn {
+                get {
+                    return this.columnI_LIMITE_DEPOT_A;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -8040,7 +8050,7 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TAB_NATIONRow AddTAB_NATIONRow(string S_NOM, int I_ENCOMBREMENT_INFANTERIE, int I_ENCOMBREMENT_CAVALERIE, int I_ENCOMBREMENT_ARTILLERIE, int I_ENCOMBREMENT_ARRET, int I_FOURGON, string S_CRI_RALLIEMENT, int I_FOURRAGE, int I_LIMITE_FOURRAGE, int I_GUERISON) {
+            public TAB_NATIONRow AddTAB_NATIONRow(string S_NOM, int I_ENCOMBREMENT_INFANTERIE, int I_ENCOMBREMENT_CAVALERIE, int I_ENCOMBREMENT_ARTILLERIE, int I_ENCOMBREMENT_ARRET, int I_FOURGON, string S_CRI_RALLIEMENT, int I_FOURRAGE, int I_LIMITE_FOURRAGE, int I_GUERISON, short I_LIMITE_DEPOT_A) {
                 TAB_NATIONRow rowTAB_NATIONRow = ((TAB_NATIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -8053,7 +8063,8 @@ namespace vaoc {
                         S_CRI_RALLIEMENT,
                         I_FOURRAGE,
                         I_LIMITE_FOURRAGE,
-                        I_GUERISON};
+                        I_GUERISON,
+                        I_LIMITE_DEPOT_A};
                 rowTAB_NATIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_NATIONRow);
                 return rowTAB_NATIONRow;
@@ -8094,6 +8105,7 @@ namespace vaoc {
                 this.columnI_FOURRAGE = base.Columns["I_FOURRAGE"];
                 this.columnI_LIMITE_FOURRAGE = base.Columns["I_LIMITE_FOURRAGE"];
                 this.columnI_GUERISON = base.Columns["I_GUERISON"];
+                this.columnI_LIMITE_DEPOT_A = base.Columns["I_LIMITE_DEPOT_A"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8121,6 +8133,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_LIMITE_FOURRAGE);
                 this.columnI_GUERISON = new global::System.Data.DataColumn("I_GUERISON", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_GUERISON);
+                this.columnI_LIMITE_DEPOT_A = new global::System.Data.DataColumn("I_LIMITE_DEPOT_A", typeof(short), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_LIMITE_DEPOT_A);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_NATION}, true));
                 this.columnID_NATION.AutoIncrement = true;
@@ -24848,6 +24862,23 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public short I_LIMITE_DEPOT_A {
+                get {
+                    try {
+                        return ((short)(this[this.tableTAB_NATION.I_LIMITE_DEPOT_AColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_LIMITE_DEPOT_A\' dans la table \'TAB_NATION\' est DBNul" +
+                                "l.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_NATION.I_LIMITE_DEPOT_AColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_NATION.S_NOMColumn);
             }
@@ -24964,6 +24995,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetI_GUERISONNull() {
                 this[this.tableTAB_NATION.I_GUERISONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_LIMITE_DEPOT_ANull() {
+                return this.IsNull(this.tableTAB_NATION.I_LIMITE_DEPOT_AColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_LIMITE_DEPOT_ANull() {
+                this[this.tableTAB_NATION.I_LIMITE_DEPOT_AColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -25655,7 +25698,7 @@ namespace vaoc {
                 set {
                     this[this.tableTAB_PION.I_TRIColumn] = value;
                 }
-            }           
+            }            
         }
         
         /// <summary>

@@ -2361,6 +2361,11 @@ namespace vaoc
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN[l];
                     ligneModeleTerrain.B_SANS_BONUS_CAVALERIE = false;
                 }
+                for (int l = 0; l < Donnees.m_donnees.TAB_NATION.Count; l++)
+                {
+                    Donnees.TAB_NATIONRow ligneNation = Donnees.m_donnees.TAB_NATION[l];
+                    ligneNation.I_LIMITE_DEPOT_A = 1;
+                }
             }
             #endregion
             return true;

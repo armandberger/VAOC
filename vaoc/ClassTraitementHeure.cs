@@ -152,6 +152,16 @@ namespace vaoc
             lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(18926);
             lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
             */
+            /* test d'un ordre */
+            //je cherche un convoi de ravitaillement français
+            Donnees.TAB_PIONRow lignePionTest = (from lignePion in Donnees.m_donnees.TAB_PION
+                                                 where lignePion.estConvoiDeRavitaillement && !lignePion.B_DETRUIT
+                                                 select lignePion).ToList()[0];
+            Donnees.TAB_PIONRow lignePionTest2 = Donnees.m_donnees.TAB_PION.FindByID_PION(1);
+            lignePionTest.ID_CASE = lignePionTest2.ID_CASE;
+            Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(10000, -1, 10000, Constantes.ORDRES.RENFORCER, lignePionTest.ID_PION, lignePionTest.ID_CASE,
+                -1, lignePionTest.ID_CASE, -1, 0, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, -1, -1, -1,
+                lignePionTest2.ID_PION, lignePionTest2.ID_PION, lignePionTest2.ID_PION, -1, -1, 0, 0, 0);
             #endregion
 
 
@@ -1350,23 +1360,32 @@ namespace vaoc
 
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
                         Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                        if (lignePionARenforcer.C_NIVEAU_DEPOT != 'A')
+                        if (lignePionARenforcer.C_NIVEAU_DEPOT == 'A' || (lignePionARenforcer.C_NIVEAU_DEPOT == 'B' && lignePion.nation.NombreDepot('A') >= lignePion.nation.I_LIMITE_DEPOT_A))
+                        {
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_DEPOT_A dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
+                        }
+                        else
                         {
                             lignePionARenforcer.C_NIVEAU_DEPOT--;// 'A' c'est le meilleur, 'D' le pire
-                        }
 
-                        int ligneDepotTable = lignePionARenforcer.C_NIVEAU_DEPOT - 'A';
-                        //int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
-                        //lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
-                        lignePionARenforcer.I_SOLDATS_RAVITAILLES += lignePion.I_SOLDATS_RAVITAILLES;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            int ligneDepotTable = lignePionARenforcer.C_NIVEAU_DEPOT - 'A';
+                            //int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
+                            //lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
+                            lignePionARenforcer.I_SOLDATS_RAVITAILLES += lignePion.I_SOLDATS_RAVITAILLES;
+                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
-                        //on indique au joueur que le renfort a été fait
-                        if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT))
-                        {
-                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_CONVOI dans ExecuterOrdreHorsMouvement", lignePionARenforcer.S_NOM, lignePionARenforcer.ID_PION);
-                            LogFile.Notifier(message);
-                            return false;
+                            //on indique au joueur que le renfort a été fait
+                            if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_CONVOI dans ExecuterOrdreHorsMouvement", lignePionARenforcer.S_NOM, lignePionARenforcer.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
                         }
                     }
                     else

@@ -75,6 +75,18 @@ namespace vaoc
                     return result.ElementAt(0);
                 }
             }
+
+            /// <summary>
+            /// Renvoie le nombre de dépôt présent de la nation pour le niveau indiqué
+            /// </summary>
+            /// <param name="niveau"></param>
+            /// <returns></returns>
+            internal int NombreDepot(char niveau)
+            {
+                return (from lignePion in Donnees.m_donnees.TAB_PION
+                        where lignePion.estConvoiDeRavitaillement && (lignePion.C_NIVEAU_DEPOT==niveau) && !lignePion.B_DETRUIT && (lignePion.idNation == this.ID_NATION)
+                        select lignePion).ToList().Count();
+            }
         }
     }
 }

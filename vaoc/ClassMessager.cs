@@ -310,9 +310,8 @@ namespace vaoc
             //Arrivé à destination je recherche, sans succès, l'unité à renforcer sur place mais celle-ci reste invisible. Que dois-je faire maintenant ?
             //J'ai bien executé votre ordre demandant de renforcer les éléments présents mais les éléments n'étant en définitive pas présent, je ne peux rien faire. J'attends de nouvelles consignes.
             //{1} est prêt à renforcer l'unité en suivant vos ordre mais celle-ci n'est pas présente à {2} et je ne peux donc rien faire de plus. 
-            MESSAGE_RENFORT_DEPOT_IMPOSSIBLE = 94
+            MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE = 94
             //Le dépôt de destination ne peut pas être renforcé, mon convoi reste donc sans affectation
-            //Il semblerait que le dépôt à renforcer sur redevenu un convoi, je ne peux donc rien faire
             //{1} est arrivé à {2} mais le dépôt que je dois renforcer n'est pas en mesure d'accepter mes chariots. Je suis en attente de nouvelles consignes. 
         }
         /*

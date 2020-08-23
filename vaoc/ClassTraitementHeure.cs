@@ -152,16 +152,30 @@ namespace vaoc
             lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(18926);
             lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
             */
+            /*
+
+            var result =from lignePion in Donnees.m_donnees.TAB_PION
+                    where lignePion.estConvoiDeRavitaillement && (lignePion.C_NIVEAU_DEPOT == 'A') && !lignePion.B_DETRUIT && (lignePion.idNation == 0)
+                    select lignePion;
+            var result2 = from lignePion in Donnees.m_donnees.TAB_PION
+                         where (lignePion.C_NIVEAU_DEPOT == 'A') && !lignePion.B_DETRUIT && (lignePion.idNation == 0)
+                         select lignePion;
+            */
             /* test d'un ordre */
+            /*
             //je cherche un convoi de ravitaillement français
             Donnees.TAB_PIONRow lignePionTest = (from lignePion in Donnees.m_donnees.TAB_PION
                                                  where lignePion.estConvoiDeRavitaillement && !lignePion.B_DETRUIT
                                                  select lignePion).ToList()[0];
-            Donnees.TAB_PIONRow lignePionTest2 = Donnees.m_donnees.TAB_PION.FindByID_PION(1);
+            Donnees.TAB_PIONRow lignePionTest2 = Donnees.m_donnees.TAB_PION.FindByID_PION(1);//depot A français
+            lignePionTest2.C_NIVEAU_DEPOT = 'B';//que je remet en B
             lignePionTest.ID_CASE = lignePionTest2.ID_CASE;
-            Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(10000, -1, 10000, Constantes.ORDRES.RENFORCER, lignePionTest.ID_PION, lignePionTest.ID_CASE,
-                -1, lignePionTest.ID_CASE, -1, 0, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, -1, -1, -1,
-                lignePionTest2.ID_PION, lignePionTest2.ID_PION, lignePionTest2.ID_PION, -1, -1, 0, 0, 0);
+            //ajout d'un ordre pour créer un dépot A en renforçant un dépot B
+            Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(10000, Constantes.NULLENTIER, 10000, Constantes.ORDRES.RENFORCER, lignePionTest.ID_PION, lignePionTest.ID_CASE,
+                Constantes.NULLENTIER, lignePionTest.ID_CASE, Constantes.NULLENTIER, 0, 
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, Constantes.NULLENTIER, Constantes.NULLENTIER, Constantes.NULLENTIER,
+                lignePionTest2.ID_PION, lignePionTest2.ID_PION, lignePionTest2.ID_PION, Constantes.NULLENTIER, Constantes.NULLENTIER, 0, 0, 0);
+            */
             #endregion
 
 

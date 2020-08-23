@@ -84,7 +84,7 @@ namespace vaoc
             internal int NombreDepot(char niveau)
             {
                 return (from lignePion in Donnees.m_donnees.TAB_PION
-                        where lignePion.estConvoiDeRavitaillement && (lignePion.C_NIVEAU_DEPOT==niveau) && !lignePion.B_DETRUIT && (lignePion.idNation == this.ID_NATION)
+                        where  (lignePion.C_NIVEAU_DEPOT == niveau) && !lignePion.B_DETRUIT && (lignePion.idNation == this.ID_NATION)
                         select lignePion).ToList().Count();
             }
         }

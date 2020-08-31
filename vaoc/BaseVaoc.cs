@@ -18,6 +18,13 @@ namespace vaoc
         public static Donnees m_donnees;
         public static int m_phaseCases = -1;
         public static int m_tourCases = -1;
+        /// <summary>
+        /// Liste des case où le proprietaire à changer pour ne pas avoir à faire le 
+        /// string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
+        /// Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+        /// qui prendre, à lui seul 15% du temps de traitement
+        /// </summary>
+        public static List<TAB_CASERow> m_listeNouveauProprietaire = new List<TAB_CASERow>();
         #endregion
 
         partial class TAB_VIDEORow

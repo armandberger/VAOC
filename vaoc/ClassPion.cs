@@ -3763,6 +3763,18 @@ namespace vaoc
                         //Une unité en mouvement étant la seule à surchargée une route, son occupation est prioritaire par rapport à une unité fixe
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         ligneCase.ID_NOUVEAU_PROPRIETAIRE = ID_PION;
+                        
+                        if (!m_listeNouveauProprietaire.Contains(ligneCase)) 
+                        { 
+                            m_listeNouveauProprietaire.Add(ligneCase);
+                            //string requete1 = string.Format("ID_NOUVEAU_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
+                            //Donnees.TAB_CASERow[] changeRows1 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete1);
+                            //string requete2 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
+                            //Donnees.TAB_CASERow[] changeRows2 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete2);
+                            //string requete3 = string.Format("ID_PROPRIETAIRE<>ID_NOUVEAU_PROPRIETAIRE", Constantes.NULLENTIER);
+                            //Donnees.TAB_CASERow[] changeRows3 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete3);
+                            //LogFile.Notifier(string.Format("requisition cases {0},{1},{2}", changeRows1.Count(), changeRows2.Count(), m_listeNouveauProprietaire.Count));
+                        };
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 

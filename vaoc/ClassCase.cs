@@ -407,15 +407,26 @@ namespace vaoc
             internal void SetID_PROPRIETAIRENull()
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                this.ID_PROPRIETAIRE = Constantes.NULLENTIER;
+                initialisationID_PROPRIETAIRENull();
+                if (!Donnees.m_listeNouveauProprietaire.Contains(this)) { Donnees.m_listeNouveauProprietaire.Add(this); }
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
+            internal void initialisationID_PROPRIETAIRENull()
+            {
+                this.ID_PROPRIETAIRE = Constantes.NULLENTIER;
+            }
             internal void SetID_NOUVEAU_PROPRIETAIRENull()
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                this.ID_NOUVEAU_PROPRIETAIRE = Constantes.NULLENTIER;
+                initialisationID_NOUVEAU_PROPRIETAIRENull();
+                if (!Donnees.m_listeNouveauProprietaire.Contains(this)) { Donnees.m_listeNouveauProprietaire.Add(this); }
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+            }
+
+            internal void initialisationID_NOUVEAU_PROPRIETAIRENull()
+            {
+                this.ID_NOUVEAU_PROPRIETAIRE = Constantes.NULLENTIER;
             }
 
             internal bool IsID_NOUVEAU_PROPRIETAIRENull()

@@ -4456,6 +4456,13 @@ namespace vaoc
             FormBroderie broderie = new FormBroderie();
             broderie.ShowDialog();
         }
+
+        private void copieDeSauvegardeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormBackup copieDeSauvegarde = new FormBackup();
+            copieDeSauvegarde.fichierCourant = fichierCourant;
+            copieDeSauvegarde.ShowDialog();
+        }
     }
 
     internal static class NativeMethods

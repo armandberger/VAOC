@@ -127,6 +127,7 @@ namespace vaoc
             this.actuelsAnciensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.anciensActuelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.broderiequadrillageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AProposToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripCarte = new System.Windows.Forms.ToolStrip();
             this.toolStripAfficherVilles = new System.Windows.Forms.ToolStripButton();
@@ -146,7 +147,7 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.broderiequadrillageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copieDeSauvegardeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -891,6 +892,7 @@ namespace vaoc
             this.creationInternetToolStripMenuItem,
             this.miseÀJourInternetToolStripMenuItem,
             this.notificationAuxJoueursToolStripMenuItem,
+            this.copieDeSauvegardeToolStripMenuItem,
             this.toolStripSeparator5,
             this.initilisationPartieToolStripMenuItem,
             this.donneesVidéoToolStripMenuItem,
@@ -1030,6 +1032,13 @@ namespace vaoc
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(219, 6);
+            // 
+            // broderiequadrillageToolStripMenuItem
+            // 
+            this.broderiequadrillageToolStripMenuItem.Name = "broderiequadrillageToolStripMenuItem";
+            this.broderiequadrillageToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.broderiequadrillageToolStripMenuItem.Text = "Broderie (quadrillage)";
+            this.broderiequadrillageToolStripMenuItem.Click += new System.EventHandler(this.broderiequadrillageToolStripMenuItem_Click);
             // 
             // AProposToolStripMenuItem
             // 
@@ -1239,12 +1248,12 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // broderiequadrillageToolStripMenuItem
+            // copieDeSauvegardeToolStripMenuItem
             // 
-            this.broderiequadrillageToolStripMenuItem.Name = "broderiequadrillageToolStripMenuItem";
-            this.broderiequadrillageToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.broderiequadrillageToolStripMenuItem.Text = "Broderie (quadrillage)";
-            this.broderiequadrillageToolStripMenuItem.Click += new System.EventHandler(this.broderiequadrillageToolStripMenuItem_Click);
+            this.copieDeSauvegardeToolStripMenuItem.Name = "copieDeSauvegardeToolStripMenuItem";
+            this.copieDeSauvegardeToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.copieDeSauvegardeToolStripMenuItem.Text = "Copie de Sauvegarde";
+            this.copieDeSauvegardeToolStripMenuItem.Click += new System.EventHandler(this.copieDeSauvegardeToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1400,6 +1409,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem sQLDeTousLesMessagesToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem broderiequadrillageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copieDeSauvegardeToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

@@ -90,6 +90,7 @@
             // timerTraitement
             // 
             this.timerTraitement.Interval = 50;
+            this.timerTraitement.Tick += new System.EventHandler(this.timerTraitement_Tick);
             // 
             // textBoxRepertoireSource
             // 

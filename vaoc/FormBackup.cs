@@ -18,7 +18,12 @@ namespace vaoc
         const string registryValueName = "repertoireBackup";
         private Cursor m_oldcurseur;
         private int m_traitement;
+        private int m_soustraitement;
+        List<FileInfo> m_fichiersDestination;
         List<FileInfo> m_fichiersSource;
+        DirectoryInfo[] m_repertoiresSource;
+        int m_lgRepertoireSource;
+        int m_lgRepertoireDestination;
         long m_taille_fichiers;
         long m_taille_fichiers_copies;
 
@@ -72,7 +77,7 @@ namespace vaoc
 
         private void buttonSynchroniser_Click(object sender, EventArgs e)
         {
-            if (m_traitement > 0)
+            if (m_soustraitement > 0)
             {
                 Cursor = m_oldcurseur;
                 timerTraitement.Enabled = false;
@@ -80,6 +85,11 @@ namespace vaoc
                 {
                     Cursor = Cursors.WaitCursor;
                     timerTraitement.Enabled = true;
+                }
+                else
+                {
+                    labelStatut.Text = "Traitement annulé";
+                    progressBar.Value = 0;
                 }
             }
             else
@@ -96,68 +106,19 @@ namespace vaoc
                 }
                 SauvegardeRegistryCible();
                 m_traitement = 0;
-                int lgRepertoireSource = this.textBoxRepertoireSource.Text.Length;
-                int lgRepertoireDestination = this.textBoxRepertoireCible.Text.Length;
+                m_soustraitement = 0;
+                m_lgRepertoireSource = this.textBoxRepertoireSource.Text.Length;
+                m_lgRepertoireDestination = this.textBoxRepertoireCible.Text.Length;
                 DirectoryInfo dirSource = new DirectoryInfo(this.textBoxRepertoireSource.Text);
                 //fichiers du repertoire primaire
                 m_fichiersSource = dirSource.GetFiles("*", SearchOption.TopDirectoryOnly).ToList();
 
                 DirectoryInfo dirDestination = new DirectoryInfo(this.textBoxRepertoireCible.Text);
-                List<FileInfo> fichiersDestination = dirDestination.GetFiles("*", SearchOption.TopDirectoryOnly).ToList();
+                m_fichiersDestination = dirDestination.GetFiles("*", SearchOption.TopDirectoryOnly).ToList();
 
-                //liste des reepertoires de la partie
-                DirectoryInfo[] repertoiresSource = dirSource.GetDirectories("*", SearchOption.AllDirectories);
-                foreach (DirectoryInfo repertoire in repertoiresSource)
-                {
-                    DirectoryInfo repertoireCible = new DirectoryInfo(textBoxRepertoireCible.Text + repertoire.FullName.Substring(lgRepertoireSource));
-                    if (Directory.Exists(repertoireCible.FullName))
-                    {
-                        if (repertoire.LastWriteTime > repertoireCible.LastWriteTime)
-                        {
-                            //on reteste les fichiers un par un
-                            m_fichiersSource.AddRange(repertoire.GetFiles("*", SearchOption.TopDirectoryOnly));
-                            fichiersDestination.AddRange(repertoireCible.GetFiles("*", SearchOption.TopDirectoryOnly));
-                        }
-                    }
-                    else
-                    {
-                        CreationRepertoire(repertoireCible.FullName);
-                        m_fichiersSource.AddRange(repertoire.GetFiles("*", SearchOption.TopDirectoryOnly));
-                    }
-                }
-
-                //on conserve les fichiers sources que l'on doit copier
-                int i = 0;
-                while (i<m_fichiersSource.Count())
-                {
-                    FileInfo source = m_fichiersSource[i];
-                    string nomSource = source.FullName.Substring(lgRepertoireSource);
-                    int j = 0;
-                    while (j < fichiersDestination.Count() && fichiersDestination[j].FullName.Substring(lgRepertoireDestination) != nomSource) j++;
-                    if (j == fichiersDestination.Count())
-                    {
-                        //on a pas trouvé de fichier équivalent donc il faut le copier
-                        i++;
-                    }
-                    else
-                    {
-                        // on converse le plus récent
-                        if (source.LastWriteTime < fichiersDestination[j].LastWriteTime)
-                        {
-                            //fichier source plus vieux donc, on ne le copie pas
-                            m_fichiersSource.RemoveAt(i);
-                        }
-                        else
-                        {
-                            i++;
-                        }
-                    }
-                }
-                //calcul de la taille de fichiers à copier
-                m_taille_fichiers = 0;
-                foreach (FileInfo fichier in m_fichiersSource) { m_taille_fichiers += fichier.Length; };
-                m_taille_fichiers_copies = 0;
-
+                //liste des repertoires de la partie
+                m_repertoiresSource = dirSource.GetDirectories("*", SearchOption.AllDirectories);
+                labelStatut.Text = "Analyse des repertoires";
                 
                 m_oldcurseur = Cursor;
                 Cursor = Cursors.WaitCursor;
@@ -170,26 +131,114 @@ namespace vaoc
 
         private void timerTraitement_Tick(object sender, EventArgs e)
         {
-            if (m_traitement== m_fichiersSource.Count)
+            switch (m_traitement)
             {
-                Cursor = m_oldcurseur;
-                timerTraitement.Enabled = false;
-            }
-            else
-            {
-                int lgRepertoireSource = this.textBoxRepertoireSource.Text.Length;
-                try
-                {
-                    m_fichiersSource[m_traitement].CopyTo(this.textBoxRepertoireCible.Text + m_fichiersSource[m_traitement].FullName.Substring(lgRepertoireSource), true);
-                    m_taille_fichiers_copies += m_fichiersSource[m_traitement].Length;
-                    progressBar.Value = (int)(m_taille_fichiers_copies * 100 / m_taille_fichiers);
-                    m_traitement++;
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    //le repertoire n'existe pas il faut le créer
-                    CreationRepertoire(this.textBoxRepertoireCible.Text + m_fichiersSource[m_traitement].FullName.Substring(lgRepertoireSource));
-                }
+                case 0:
+                    if (m_soustraitement == m_repertoiresSource.Length)
+                    {
+                        //traitement terminé
+                        labelStatut.Text = "Analyse des fichiers";
+                        m_soustraitement = 0;
+                        progressBar.Value = 0;
+                        m_traitement++;
+                    }
+                    else
+                    {
+                        DirectoryInfo repertoire = m_repertoiresSource[m_soustraitement];
+                        DirectoryInfo repertoireCible = new DirectoryInfo(textBoxRepertoireCible.Text + m_repertoiresSource[m_soustraitement].FullName.Substring(m_lgRepertoireSource));
+                        if (Directory.Exists(repertoireCible.FullName))
+                        {
+                            if (repertoire.LastWriteTime > repertoireCible.LastWriteTime)
+                            {
+                                //on reteste les fichiers un par un
+                                m_fichiersSource.AddRange(repertoire.GetFiles("*", SearchOption.TopDirectoryOnly));
+                                m_fichiersDestination.AddRange(repertoireCible.GetFiles("*", SearchOption.TopDirectoryOnly));
+                            }
+                        }
+                        else
+                        {
+                            CreationRepertoire(repertoireCible.FullName);
+                            m_fichiersSource.AddRange(repertoire.GetFiles("*", SearchOption.TopDirectoryOnly));
+                        }
+                        //progression en pourcentage
+                        progressBar.Value = (int)(m_soustraitement * 100 / m_repertoiresSource.Length);
+                        m_soustraitement++;
+                    }
+
+                    break;
+                case 1:
+                    //on conserve les fichiers sources que l'on doit copier
+                    if (m_soustraitement == m_fichiersSource.Count)
+                    {
+                        //traitement terminé
+                        //calcul de la taille de fichiers à copier
+                        m_taille_fichiers = 0;
+                        foreach (FileInfo fichier in m_fichiersSource) { m_taille_fichiers += fichier.Length; };
+                        m_taille_fichiers_copies = 0;
+
+                        labelStatut.Text = "Copie des fichiers";
+                        m_soustraitement = 0;
+                        progressBar.Value = 0;
+                        m_traitement++;
+                    }
+                    else
+                    {
+                        FileInfo source = m_fichiersSource[m_soustraitement];
+                        string nomSource = source.FullName.Substring(m_lgRepertoireSource);
+                        int j = 0;
+                        while (j < m_fichiersDestination.Count() && m_fichiersDestination[j].FullName.Substring(m_lgRepertoireDestination) != nomSource) j++;
+                        if (j == m_fichiersDestination.Count())
+                        {
+                            //on a pas trouvé de fichier équivalent donc il faut le copier
+                            m_soustraitement++;
+                        }
+                        else
+                        {
+                            // on converse le plus récent
+                            if (source.LastWriteTime <= m_fichiersDestination[j].LastWriteTime)
+                            {
+                                //fichier source plus vieux ou équivalent donc, on ne le copie pas
+                                m_fichiersSource.RemoveAt(m_soustraitement);
+                            }
+                            else
+                            {
+                                
+                                m_soustraitement++;
+                            }
+                        }
+                        //progression en pourcentage
+                        progressBar.Value = (0 == m_fichiersSource.Count) ? 100 : (int)(m_soustraitement * 100 / m_fichiersSource.Count);
+                    }
+                    break;
+                case 2:
+                    if (m_soustraitement == m_fichiersSource.Count)
+                    {
+                        //traitement terminé
+                        m_soustraitement = 0;
+                        Cursor = m_oldcurseur;
+                        timerTraitement.Enabled = false;
+                        labelStatut.Text = (0== m_fichiersSource.Count) ? "Aucun fichier à copier" : "Terminé";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            string fichierDestination = this.textBoxRepertoireCible.Text + m_fichiersSource[m_soustraitement].FullName.Substring(m_lgRepertoireSource);
+                            labelStatut.Text = m_fichiersSource[m_soustraitement].FullName + " -> " + fichierDestination;
+                            m_fichiersSource[m_soustraitement].CopyTo(fichierDestination, true);
+                            m_taille_fichiers_copies += m_fichiersSource[m_soustraitement].Length;
+                            progressBar.Value = (int)(m_taille_fichiers_copies * 100 / m_taille_fichiers);
+                            m_soustraitement++;
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            //le repertoire n'existe pas il faut le créer
+                            CreationRepertoire(this.textBoxRepertoireCible.Text + m_fichiersSource[m_soustraitement].FullName.Substring(m_lgRepertoireSource));
+                        }
+                    }
+                    break;
+                default:
+                    throw new Exception("valeur de m_traitement non prévue");
             }
         }
 

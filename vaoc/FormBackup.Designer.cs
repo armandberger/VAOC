@@ -38,11 +38,12 @@
             this.timerTraitement = new System.Windows.Forms.Timer(this.components);
             this.textBoxRepertoireSource = new System.Windows.Forms.TextBox();
             this.labelRepertoireSource = new System.Windows.Forms.Label();
+            this.labelStatut = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(28, 113);
+            this.progressBar.Location = new System.Drawing.Point(28, 89);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(760, 23);
             this.progressBar.Step = 1;
@@ -109,11 +110,23 @@
             this.labelRepertoireSource.TabIndex = 14;
             this.labelRepertoireSource.Text = "Répertoire source";
             // 
+            // labelStatut
+            // 
+            this.labelStatut.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.labelStatut.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStatut.Location = new System.Drawing.Point(28, 115);
+            this.labelStatut.Name = "labelStatut";
+            this.labelStatut.Size = new System.Drawing.Size(760, 27);
+            this.labelStatut.TabIndex = 15;
+            this.labelStatut.Text = "Statut";
+            this.labelStatut.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // FormBackup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 189);
+            this.Controls.Add(this.labelStatut);
             this.Controls.Add(this.labelRepertoireSource);
             this.Controls.Add(this.textBoxRepertoireSource);
             this.Controls.Add(this.buttonValider);
@@ -140,5 +153,6 @@
         private System.Windows.Forms.Timer timerTraitement;
         private System.Windows.Forms.TextBox textBoxRepertoireSource;
         private System.Windows.Forms.Label labelRepertoireSource;
+        private System.Windows.Forms.Label labelStatut;
     }
 }

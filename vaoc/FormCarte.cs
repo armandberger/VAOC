@@ -239,13 +239,13 @@ namespace vaoc
                     else
                     {
                         //controle que tout a bien marche
-                        for (int i=0; i<m_tableCaseTraitement.Length;i++)
-                        {
-                            //if (m_tableCaseTraitement[i].IsID_MODELE_TERRAIN_SI_OCCUPENull())
-                            //{
-                            //    Debug.WriteLine(string.Format("IsID_MODELE_TERRAIN_SI_OCCUPENull pour X={0},Y={1},ID={2}", m_tableCaseTraitement[i].I_X, m_tableCaseTraitement[i].I_Y, m_tableCaseTraitement[i].ID_CASE));
-                            //}
-                        }
+                        //for (int i=0; i<m_tableCaseTraitement.Length;i++)
+                        //{
+                        //    if (m_tableCaseTraitement[i].IsID_MODELE_TERRAIN_SI_OCCUPENull())
+                        //    {
+                        //        Debug.WriteLine(string.Format("IsID_MODELE_TERRAIN_SI_OCCUPENull pour X={0},Y={1},ID={2}", m_tableCaseTraitement[i].I_X, m_tableCaseTraitement[i].I_Y, m_tableCaseTraitement[i].ID_CASE));
+                        //    }
+                        //}
                         m_sous_traitement = 0;
                         m_traitement++;
                     }
@@ -429,8 +429,8 @@ namespace vaoc
                 x, y, -1, -1, -1,
                 Constantes.CST_COUTMAX);
             ligneCase.SetID_MODELE_TERRAIN_SI_OCCUPENull();
-            ligneCase.SetID_PROPRIETAIRENull();
-            ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
+            ligneCase.initialisationID_PROPRIETAIRENull(); // SetID_PROPRIETAIRENull();            
+            ligneCase.initialisationID_NOUVEAU_PROPRIETAIRENull();//ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
             return true;
         }
 

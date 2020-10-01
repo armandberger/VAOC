@@ -95,7 +95,8 @@ namespace vaoc
 
                 #region coupure spécifique
                 //rect = new Rectangle(0, 1128 * 5, m_imageCarte.Width, m_imageCarte.Height-1128*5);
-                rect = new Rectangle(0, 0, 5110, m_imageCarte.Height);
+                //rect = new Rectangle(0, 0, 5110, m_imageCarte.Height);
+                rect = new Rectangle(0, 0, 5110, 4320);
                 nomFichierFinal = string.Format("{0}_{1}{2}", nomFichier, 1, extensionFichier);
                 SauvegardeDecoupeFichier(nomFichierFinal, rect);
                 #endregion

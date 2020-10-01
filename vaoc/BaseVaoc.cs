@@ -1624,7 +1624,8 @@ namespace vaoc
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
-                if (viderIndex)
+                //m_listeIndex peut être null quand on crée la partie et que la carte n'est pas encore générée
+                if (viderIndex && null!= m_listeIndex)
                 {
                     for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
                 }

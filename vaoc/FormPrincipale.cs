@@ -2104,6 +2104,11 @@ namespace vaoc
                 this.Cursor = Cursors.WaitCursor;
                 Donnees.m_donnees.TAB_CASE.Clear();
                 Donnees.m_donnees.TAB_CASE.Merge(fCarte.tableCase, false);
+                //sauvegarde des cases crées
+                if (!Donnees.m_donnees.SauvegarderCases())
+                {
+                    MessageBox.Show(this, "Erreur à la sauvegarde des cases", "FormCarte", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 this.Cursor = oldcurseur;
             }
         }
@@ -3196,9 +3201,13 @@ namespace vaoc
                 Donnees.m_donnees.TAB_BATAILLE.Clear();
                 Donnees.m_donnees.TAB_BATAILLE_PIONS.Clear();
                 Donnees.m_donnees.TAB_MESSAGE.Clear();
+                Donnees.m_donnees.TAB_ORDRE_ANCIEN.Clear();
+                Donnees.m_donnees.TAB_MESSAGE_ANCIEN.Clear();
+                Donnees.m_donnees.TAB_PION_ANCIEN.Clear();
                 Donnees.m_donnees.TAB_ORDRE.Clear();
                 Donnees.m_donnees.TAB_PARCOURS.Clear();
                 Donnees.m_donnees.TAB_ESPACE.Clear();
+                Donnees.m_donnees.TAB_VIDEO.Clear();
                 //suppression des patrouilles et des messages
                 int i = 0;
                 while (i < Donnees.m_donnees.TAB_PION.Count)
@@ -3258,12 +3267,18 @@ namespace vaoc
                 }
 
                 //Suppression de tous les trajets crées suite à la destruction ou à la construction d'un pont
-                foreach (Donnees.TAB_PCC_COUTSRow ligneCout in Donnees.m_donnees.TAB_PCC_COUTS)
+                i = 0;
+                while (i<Donnees.m_donnees.TAB_PCC_COUTS.Count)
                 {
+                    Donnees.TAB_PCC_COUTSRow ligneCout = Donnees.m_donnees.TAB_PCC_COUTS[i];
                     if (ligneCout.B_CREATION)
                     {
                         Dal.SupprimerTrajet(ligneCout.ID_TRAJET, "");
                         ligneCout.Delete();
+                    }
+                    else
+                    {
+                        i++;
                     }
                 }
                 //foreach (Donnees.TAB_PCC_VILLESRow lignePCCVille in Donnees.m_donnees.TAB_PCC_VILLES)

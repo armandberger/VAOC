@@ -429,8 +429,12 @@ namespace vaoc
                 x, y, -1, -1, -1,
                 Constantes.CST_COUTMAX);
             ligneCase.SetID_MODELE_TERRAIN_SI_OCCUPENull();
+            ligneCase.SetID_PROPRIETAIRENull();            
+            ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
+            /*
             ligneCase.initialisationID_PROPRIETAIRENull(); // SetID_PROPRIETAIRENull();            
             ligneCase.initialisationID_NOUVEAU_PROPRIETAIRENull();//ligneCase.SetID_NOUVEAU_PROPRIETAIRENull();
+            */
             return true;
         }
 

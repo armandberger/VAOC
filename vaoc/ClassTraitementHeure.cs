@@ -5022,9 +5022,8 @@ namespace vaoc
                 ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
             }
             */
-            for (int l = 0; l < Donnees.m_listeNouveauProprietaire.Count(); l++)
+            foreach (Donnees.TAB_CASERow ligne in Donnees.m_listeNouveauProprietaire)
             {
-                Donnees.TAB_CASERow ligne = Donnees.m_listeNouveauProprietaire[l];
                 ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
                 ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
             }

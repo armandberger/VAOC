@@ -24,7 +24,7 @@ namespace vaoc
         /// Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
         /// qui prendre, à lui seul 15% du temps de traitement
         /// </summary>
-        public static List<TAB_CASERow> m_listeNouveauProprietaire = new List<TAB_CASERow>();
+        public static HashSet<TAB_CASERow> m_listeNouveauProprietaire = new HashSet<TAB_CASERow>();
         #endregion
 
         partial class TAB_VIDEORow

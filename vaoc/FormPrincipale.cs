@@ -188,7 +188,31 @@ namespace vaoc
             //    if (lignePion.IsI_TRINull())
             //        { lignePion.SetI_TRINull(); }
             //}
+            /* récupération et mise à jour des anciens noms de villes
+            int i = 0;
+            while (i < Donnees.m_donnees.TAB_NOMS_CARTE.Count)
+            {
+                Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE[i];
+                if (ligneNom.B_PONT || ligneNom.I_Y + 1128>=4320)
+                {
+                    ligneNom.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
 
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
+            {
+                //if (ligneNom.S_NOM.IndexOf("Berlin", 0, ligneNom.S_NOM.Length, StringComparison.CurrentCultureIgnoreCase) >=0)
+                //{
+                //    Debug.WriteLine("berlin x="+ligneNom.I_X + " y=" + ligneNom.I_Y);
+                //}
+                ligneNom.I_Y += 1128;
+                ligneNom.ID_CASE = Donnees.m_donnees.TAB_CASE.FindByXY(ligneNom.I_X, ligneNom.I_Y).ID_CASE;
+            }
+            */
             #region messages non arrivés sur des pions détruits !!!
             Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
             foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)

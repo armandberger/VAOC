@@ -36,6 +36,9 @@
             this.buttonCasesNoms = new System.Windows.Forms.Button();
             this.buttonMessageTexteFictif = new System.Windows.Forms.Button();
             this.buttonHopitaux = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxHorsVille = new System.Windows.Forms.CheckBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -50,7 +53,7 @@
             // 
             // buttonMessages
             // 
-            this.buttonMessages.Location = new System.Drawing.Point(12, 12);
+            this.buttonMessages.Location = new System.Drawing.Point(12, 6);
             this.buttonMessages.Name = "buttonMessages";
             this.buttonMessages.Size = new System.Drawing.Size(75, 23);
             this.buttonMessages.TabIndex = 3;
@@ -60,39 +63,39 @@
             // 
             // textBoxResultat
             // 
-            this.textBoxResultat.Location = new System.Drawing.Point(12, 48);
+            this.textBoxResultat.Location = new System.Drawing.Point(12, 64);
             this.textBoxResultat.Multiline = true;
             this.textBoxResultat.Name = "textBoxResultat";
             this.textBoxResultat.ReadOnly = true;
             this.textBoxResultat.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxResultat.Size = new System.Drawing.Size(520, 519);
+            this.textBoxResultat.Size = new System.Drawing.Size(520, 503);
             this.textBoxResultat.TabIndex = 4;
             // 
             // textBoxFormats
             // 
-            this.textBoxFormats.Location = new System.Drawing.Point(538, 48);
+            this.textBoxFormats.Location = new System.Drawing.Point(538, 64);
             this.textBoxFormats.Multiline = true;
             this.textBoxFormats.Name = "textBoxFormats";
             this.textBoxFormats.ReadOnly = true;
             this.textBoxFormats.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxFormats.Size = new System.Drawing.Size(211, 519);
+            this.textBoxFormats.Size = new System.Drawing.Size(211, 503);
             this.textBoxFormats.TabIndex = 5;
             this.textBoxFormats.Tag = "";
             this.textBoxFormats.Text = resources.GetString("textBoxFormats.Text");
             // 
             // buttonCasesNoms
             // 
-            this.buttonCasesNoms.Location = new System.Drawing.Point(392, 12);
+            this.buttonCasesNoms.Location = new System.Drawing.Point(6, 19);
             this.buttonCasesNoms.Name = "buttonCasesNoms";
-            this.buttonCasesNoms.Size = new System.Drawing.Size(140, 23);
+            this.buttonCasesNoms.Size = new System.Drawing.Size(83, 23);
             this.buttonCasesNoms.TabIndex = 6;
-            this.buttonCasesNoms.Text = "Cases des lieux nommés";
+            this.buttonCasesNoms.Text = "Test";
             this.buttonCasesNoms.UseVisualStyleBackColor = true;
             this.buttonCasesNoms.Click += new System.EventHandler(this.buttonCasesNoms_Click);
             // 
             // buttonMessageTexteFictif
             // 
-            this.buttonMessageTexteFictif.Location = new System.Drawing.Point(93, 12);
+            this.buttonMessageTexteFictif.Location = new System.Drawing.Point(12, 35);
             this.buttonMessageTexteFictif.Name = "buttonMessageTexteFictif";
             this.buttonMessageTexteFictif.Size = new System.Drawing.Size(135, 23);
             this.buttonMessageTexteFictif.TabIndex = 7;
@@ -110,15 +113,36 @@
             this.buttonHopitaux.UseVisualStyleBackColor = true;
             this.buttonHopitaux.Click += new System.EventHandler(this.buttonHopitaux_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxHorsVille);
+            this.groupBox1.Controls.Add(this.buttonCasesNoms);
+            this.groupBox1.Location = new System.Drawing.Point(252, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(280, 52);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Cases des lieux nommés";
+            // 
+            // checkBoxHorsVille
+            // 
+            this.checkBoxHorsVille.AutoSize = true;
+            this.checkBoxHorsVille.Location = new System.Drawing.Point(98, 24);
+            this.checkBoxHorsVille.Name = "checkBoxHorsVille";
+            this.checkBoxHorsVille.Size = new System.Drawing.Size(91, 17);
+            this.checkBoxHorsVille.TabIndex = 7;
+            this.checkBoxHorsVille.Text = "lieux hors ville";
+            this.checkBoxHorsVille.UseVisualStyleBackColor = true;
+            // 
             // FormTests
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(761, 612);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonHopitaux);
             this.Controls.Add(this.buttonMessageTexteFictif);
-            this.Controls.Add(this.buttonCasesNoms);
             this.Controls.Add(this.textBoxFormats);
             this.Controls.Add(this.textBoxResultat);
             this.Controls.Add(this.buttonMessages);
@@ -127,6 +151,8 @@
             this.Name = "FormTests";
             this.Text = "FormTests";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,5 +167,7 @@
         private System.Windows.Forms.Button buttonCasesNoms;
         private System.Windows.Forms.Button buttonMessageTexteFictif;
         private System.Windows.Forms.Button buttonHopitaux;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxHorsVille;
     }
 }

@@ -137,17 +137,24 @@ namespace vaoc
 
             Cursor oldCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
+            string nomPrecedent = string.Empty;
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE.OrderBy(u => u["S_NOM"]))
             {
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCase.ID_MODELE_TERRAIN);
 
-                textBoxResultat.Text += string.Format("{0} en {1} : {2},{3} PV={4}\r\n",
-                    ligneNomCarte.S_NOM,
-                    ligneModeleTerrain.S_NOM,
-                    ligneCase.I_X,
-                    ligneCase.I_Y,
-                    ligneNomCarte.I_VICTOIRE);
+                if (!this.checkBoxHorsVille.Checked || ligneModeleTerrain.S_NOM.IndexOf("ville", 0, StringComparison.CurrentCultureIgnoreCase) < 0)
+                {
+                    string doublon = (nomPrecedent == ligneNomCarte.S_NOM) ? "Doublon !" : string.Empty;
+                    textBoxResultat.Text += string.Format("{0} en {1} : {2},{3} PV={4} {5}\r\n",
+                        ligneNomCarte.S_NOM,
+                        ligneModeleTerrain.S_NOM,
+                        ligneCase.I_X,
+                        ligneCase.I_Y,
+                        ligneNomCarte.I_VICTOIRE,
+                        doublon);
+                }
+                nomPrecedent = ligneNomCarte.S_NOM;
             }
             Cursor.Current = oldCursor;
         }

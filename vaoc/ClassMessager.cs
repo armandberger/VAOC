@@ -354,6 +354,7 @@ namespace vaoc
                 ravitaillementGagneOuPerdu,
                 materielGagneOuPerdu//37
                 nomDuChefRemplace//38
+                modele de l'unité (son nom donner une indication sur la nation) //39
 */
         #endregion
 
@@ -1732,6 +1733,7 @@ namespace vaoc
 
             string effectifs = ChaineEffectifs(lignePion.I_INFANTERIE, lignePion.I_CAVALERIE, lignePion.I_ARTILLERIE);
             string effectifsPerdus = ChaineEffectifs(iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne);
+            string nomModelePionSource = lignePion.modelePion.S_NOM;
 
             CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);
@@ -1822,7 +1824,8 @@ namespace vaoc
                 lignePion.I_MATERIEL,//35
                 ravitaillementGagneOuPerdu,
                 materielGagneOuPerdu,//37
-                nomDuChefRemplace//38
+                nomDuChefRemplace,//38
+                nomModelePionSource//39
             );
 
             return phrase;

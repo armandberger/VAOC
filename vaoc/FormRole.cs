@@ -41,16 +41,24 @@ namespace vaoc
 
                         ClassDataUtilisateur utilisateur = iWeb.GetUtilisateur(login);
 
-                        table.AddTAB_ROLERow(
-                            Convert.ToInt32(ligne.Cells["ID_ROLE"].Value),
-                            utilisateur.ID_UTILISATEUR,
-                            Convert.ToString(ligne.Cells["S_NOM"].Value),
-                            Convert.ToInt32(ligne.Cells["ID_PION"].Value)
-                            );
+                        //recherche de l'id pion couplé au nom séléctionné
+                        if (null != ligne.Cells["S_PION"].Value)
+                        {
+                            int iPion = ligne.Cells["S_PION"].Value.ToString().IndexOf("(");
+                            string idPion = ligne.Cells["S_PION"].Value.ToString().Substring(iPion + 1, ligne.Cells["S_PION"].Value.ToString().Length - iPion - 2);
+
+                            table.AddTAB_ROLERow(
+                                Convert.ToInt32(ligne.Cells["ID_ROLE"].Value),
+                                utilisateur.ID_UTILISATEUR,
+                                Convert.ToString(ligne.Cells["S_NOM"].Value),
+                                Convert.ToInt32(idPion)
+                                );
+                        }
                     }
                 }
                 return table;
             }
+
             set
             {
                 dataGridViewRole.Rows.Clear();
@@ -59,6 +67,15 @@ namespace vaoc
                 foreach (ClassDataUtilisateur utilisateur in iWeb.ListeUtilisateurs(false))
                 {
                     this.S_UTILISATEUR.Items.Add(string.Format("{0} {1}({2})", utilisateur.S_PRENOM, utilisateur.S_NOM, utilisateur.S_LOGIN));
+                }
+
+                //ajout des valeurs de la liste dérolante des QG disponibles
+                foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+                {
+                    if (lignePion.estQG)
+                    {
+                        this.S_PION.Items.Add(string.Format("{0} ({1})", lignePion.S_NOM, lignePion.ID_PION));
+                    }
                 }
 
                 //mise à jour de la valeur séléctionnée dans la liste déroulante
@@ -72,8 +89,13 @@ namespace vaoc
                     ligneGrid.Cells["ID_ROLE"].Value = ligneRole.ID_ROLE;
                     //ligneGrid.Cells["ID_PARTIE"].Value = ligneRole.ID_PARTIE;
                     ligneGrid.Cells["S_UTILISATEUR"].Value = string.Format("{0} {1}({2})", utilisateur.S_PRENOM, utilisateur.S_NOM, utilisateur.S_LOGIN);
-                    ligneGrid.Cells["ID_PION"].Value = ligneRole.ID_PION;
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                    if (null != lignePion && lignePion.estQG)
+                    {
+                        ligneGrid.Cells["S_PION"].Value = string.Format("{0} ({1})", lignePion.S_NOM, lignePion.ID_PION);
+                    }
                 }
+
             }
         }
 
@@ -105,5 +127,9 @@ namespace vaoc
         }
         #endregion
 
+        private void buttonValider_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

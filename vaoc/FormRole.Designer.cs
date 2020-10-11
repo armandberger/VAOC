@@ -34,7 +34,7 @@ namespace vaoc
             this.ID_ROLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.S_NOM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.S_UTILISATEUR = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ID_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_PION = new System.Windows.Forms.DataGridViewComboBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRole)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,16 +46,16 @@ namespace vaoc
             this.ID_ROLE,
             this.S_NOM,
             this.S_UTILISATEUR,
-            this.ID_PION});
+            this.S_PION});
             this.dataGridViewRole.Location = new System.Drawing.Point(12, 12);
             this.dataGridViewRole.Name = "dataGridViewRole";
-            this.dataGridViewRole.Size = new System.Drawing.Size(607, 192);
+            this.dataGridViewRole.Size = new System.Drawing.Size(694, 192);
             this.dataGridViewRole.TabIndex = 3;
             // 
             // buttonAnnuler
             // 
             this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(327, 222);
+            this.buttonAnnuler.Location = new System.Drawing.Point(390, 224);
             this.buttonAnnuler.Name = "buttonAnnuler";
             this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
             this.buttonAnnuler.TabIndex = 5;
@@ -65,12 +65,13 @@ namespace vaoc
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(193, 222);
+            this.buttonValider.Location = new System.Drawing.Point(256, 224);
             this.buttonValider.Name = "buttonValider";
             this.buttonValider.Size = new System.Drawing.Size(75, 23);
             this.buttonValider.TabIndex = 4;
             this.buttonValider.Text = "Valider";
             this.buttonValider.UseVisualStyleBackColor = true;
+            this.buttonValider.Click += new System.EventHandler(this.buttonValider_Click);
             // 
             // ID_ROLE
             // 
@@ -88,16 +89,19 @@ namespace vaoc
             this.S_UTILISATEUR.Name = "S_UTILISATEUR";
             this.S_UTILISATEUR.Width = 200;
             // 
-            // ID_PION
+            // S_PION
             // 
-            this.ID_PION.HeaderText = "ID_PION";
-            this.ID_PION.Name = "ID_PION";
+            this.S_PION.HeaderText = "ID_PION";
+            this.S_PION.Name = "S_PION";
+            this.S_PION.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.S_PION.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.S_PION.Width = 250;
             // 
             // FormRole
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(631, 259);
+            this.ClientSize = new System.Drawing.Size(721, 259);
             this.Controls.Add(this.dataGridViewRole);
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.buttonValider);
@@ -118,6 +122,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_ROLE;
         private System.Windows.Forms.DataGridViewTextBoxColumn S_NOM;
         private System.Windows.Forms.DataGridViewComboBoxColumn S_UTILISATEUR;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ID_PION;
+        private System.Windows.Forms.DataGridViewComboBoxColumn S_PION;
     }
 }

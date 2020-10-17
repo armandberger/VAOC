@@ -182,15 +182,15 @@ namespace vaoc
         }
 
         private void Correctifs()
-        {/*
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            {
-                if (6880373 == lignePion.ID_CASE && !lignePion.estQG)
-                { 
-                    lignePion.ID_CASE= 3182801; 
-                }
-            }
-            */
+        {
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (0 == lignePion.ID_CASE)
+            //    { 
+            //        lignePion.ID_CASE= (lignePion.estQG) ? 9708619 : 18332258; 
+            //    }
+            //}
+            
             /* récupération et mise à jour des anciens noms de villes
             int i = 0;
             while (i < Donnees.m_donnees.TAB_NOMS_CARTE.Count)

@@ -2241,7 +2241,23 @@ namespace vaoc
             List<ClassDataOrdre> liste = m_iWeb.ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
                                                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
-            //pour test
+            #region pour test
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                ClassDataOrdre ordreTest = new ClassDataOrdre();
+                ordreTest.I_TOUR = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                ordreTest.ID_PARTIE = Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE;
+                ordreTest.I_TYPE = Constantes.ORDRES.MOUVEMENT;// Constantes.ORDRES.CONSTRUIRE_PONTON;
+                ordreTest.ID_ORDRE = lignePion.ID_PION;
+                ordreTest.ID_PION = lignePion.ID_PION;
+                ordreTest.ID_PION_DESTINATAIRE = lignePion.ID_PION;
+                ordreTest.I_HEURE = 0;
+                ordreTest.I_DUREE = 24;
+                Random de = new Random();
+                ordreTest.ID_NOM_LIEU = Donnees.m_donnees.TAB_NOMS_CARTE[de.Next(Donnees.m_donnees.TAB_NOMS_CARTE.Count)].ID_NOM;
+                liste.Add(ordreTest);
+            }
+
             /*
             //DataSetCoutDonnees.m_donnees.TAB_ORDRE.Clear();//à virer ensuite
             //Donnees.TAB_ORDRERow ligneOrdreDebug = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(1067);
@@ -2264,6 +2280,7 @@ namespace vaoc
             ordreTest.ID_PION_DESTINATAIRE = 112;
             liste.Add(ordreTest);
              * */
+            #endregion
 
             foreach (ClassDataOrdre ordre in liste)
             {

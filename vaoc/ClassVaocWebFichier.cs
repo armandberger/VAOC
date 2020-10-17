@@ -1560,6 +1560,8 @@ namespace vaoc
             string s_obstacle0,s_obstacle1,s_obstacle2,s_couleurObstacle0,s_couleurObstacle1,s_couleurObstacle2;
             string dateFin;
             
+            if (0== Donnees.m_donnees.TAB_BATAILLE.Count()) { return; }
+
             //Batailles
             requete = string.Format("DELETE FROM tab_vaoc_bataille WHERE ID_PARTIE={0};",
                                     idPartie);

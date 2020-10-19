@@ -115,6 +115,12 @@
     <Compile Include="FormBroderie.Designer.cs">
       <DependentUpon>FormBroderie.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormForcesInitiales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormForcesInitiales.Designer.cs">
+      <DependentUpon>FormForcesInitiales.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMessageAncien.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -359,6 +365,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormBroderie.resx">
       <DependentUpon>FormBroderie.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormForcesInitiales.resx">
+      <DependentUpon>FormForcesInitiales.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMessageAncien.resx">
       <DependentUpon>FormMessageAncien.cs</DependentUpon>

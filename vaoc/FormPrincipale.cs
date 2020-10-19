@@ -4505,6 +4505,12 @@ namespace vaoc
             copieDeSauvegarde.fichierCourant = fichierCourant;
             copieDeSauvegarde.ShowDialog();
         }
+
+        private void forcesInitialesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormForcesInitiales forcesInitiales = new FormForcesInitiales();
+            forcesInitiales.ShowDialog();
+        }
     }
 
     internal static class NativeMethods

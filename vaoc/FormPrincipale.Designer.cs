@@ -69,7 +69,6 @@ namespace vaoc
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panelImage = new System.Windows.Forms.Panel();
-            this.ImageCarte = new WaocLib.VaocPictureBox();
             this.menuPrincipal = new System.Windows.Forms.MenuStrip();
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouveauToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -113,6 +112,7 @@ namespace vaoc
             this.creationInternetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.miseÀJourInternetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.notificationAuxJoueursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copieDeSauvegardeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.initilisationPartieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.donneesVidéoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -147,7 +147,8 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.copieDeSauvegardeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ImageCarte = new WaocLib.VaocPictureBox();
+            this.forcesInitialesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -155,9 +156,9 @@ namespace vaoc
             this.panelInformation.SuspendLayout();
             this.panelTestPlusCourtChemin.SuspendLayout();
             this.panelImage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.menuPrincipal.SuspendLayout();
             this.toolStripCarte.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog
@@ -556,20 +557,6 @@ namespace vaoc
             this.panelImage.Size = new System.Drawing.Size(319, 521);
             this.panelImage.TabIndex = 3;
             // 
-            // ImageCarte
-            // 
-            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
-            this.ImageCarte.Name = "ImageCarte";
-            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
-            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
-            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
-            this.ImageCarte.TabIndex = 3;
-            this.ImageCarte.TabStop = false;
-            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
-            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
-            // 
             // menuPrincipal
             // 
             this.menuPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -895,6 +882,7 @@ namespace vaoc
             this.copieDeSauvegardeToolStripMenuItem,
             this.toolStripSeparator5,
             this.initilisationPartieToolStripMenuItem,
+            this.forcesInitialesToolStripMenuItem,
             this.donneesVidéoToolStripMenuItem,
             this.genererLeFilmToolStripMenuItem,
             this.testsToolStripMenuItem,
@@ -940,6 +928,13 @@ namespace vaoc
             this.notificationAuxJoueursToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.notificationAuxJoueursToolStripMenuItem.Text = "&Notification aux Joueurs";
             this.notificationAuxJoueursToolStripMenuItem.Click += new System.EventHandler(this.notificationAuxJoueursToolStripMenuItem_Click);
+            // 
+            // copieDeSauvegardeToolStripMenuItem
+            // 
+            this.copieDeSauvegardeToolStripMenuItem.Name = "copieDeSauvegardeToolStripMenuItem";
+            this.copieDeSauvegardeToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.copieDeSauvegardeToolStripMenuItem.Text = "Copie de Sauvegarde";
+            this.copieDeSauvegardeToolStripMenuItem.Click += new System.EventHandler(this.copieDeSauvegardeToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
@@ -1248,12 +1243,26 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // copieDeSauvegardeToolStripMenuItem
+            // ImageCarte
             // 
-            this.copieDeSauvegardeToolStripMenuItem.Name = "copieDeSauvegardeToolStripMenuItem";
-            this.copieDeSauvegardeToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.copieDeSauvegardeToolStripMenuItem.Text = "Copie de Sauvegarde";
-            this.copieDeSauvegardeToolStripMenuItem.Click += new System.EventHandler(this.copieDeSauvegardeToolStripMenuItem_Click);
+            this.ImageCarte.Interpolation = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.ImageCarte.Location = new System.Drawing.Point(0, 0);
+            this.ImageCarte.Name = "ImageCarte";
+            this.ImageCarte.QualiteDeComposition = System.Drawing.Drawing2D.CompositingQuality.HighSpeed;
+            this.ImageCarte.Size = new System.Drawing.Size(100, 50);
+            this.ImageCarte.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.ImageCarte.Smoothing = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+            this.ImageCarte.TabIndex = 3;
+            this.ImageCarte.TabStop = false;
+            this.ImageCarte.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseClick);
+            this.ImageCarte.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ImageCarte_MouseMove);
+            // 
+            // forcesInitialesToolStripMenuItem
+            // 
+            this.forcesInitialesToolStripMenuItem.Name = "forcesInitialesToolStripMenuItem";
+            this.forcesInitialesToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.forcesInitialesToolStripMenuItem.Text = "Forces initiales";
+            this.forcesInitialesToolStripMenuItem.Click += new System.EventHandler(this.forcesInitialesToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1280,11 +1289,11 @@ namespace vaoc
             this.panelTestPlusCourtChemin.ResumeLayout(false);
             this.panelTestPlusCourtChemin.PerformLayout();
             this.panelImage.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.menuPrincipal.ResumeLayout(false);
             this.menuPrincipal.PerformLayout();
             this.toolStripCarte.ResumeLayout(false);
             this.toolStripCarte.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ImageCarte)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1410,6 +1419,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem broderiequadrillageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copieDeSauvegardeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem forcesInitialesToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

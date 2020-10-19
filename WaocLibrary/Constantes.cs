@@ -315,7 +315,7 @@ namespace WaocLib
                 resultat += score;
                 if (6 == score) { nb6++; }
             }
-            return resultat + modificateur;
+            return Math.Max(0, resultat + modificateur);//pas de résultat négatif !
         }
 
         /// <summary>

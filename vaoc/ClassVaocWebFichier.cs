@@ -856,17 +856,18 @@ namespace vaoc
                     if (bInsert)
                     {
                         if (nblignes>0) { listeRequete.Append(";"); }
-                        requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
+                        requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `I_TYPE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
                         listeRequete.AppendLine(requete);
                         bInsert = false;
                     }
                     else { listeRequete.Append(","); }
                     if (!bInsert && 0 == nblignes % 5000) { bInsert = true; }
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
-                    requete = string.Format("({0}, {1}, {2}, {3}, '{4}', '{5}', '{6}', '{7}')",
+                    requete = string.Format("({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', '{8}')",
                                             ligneMessage.ID_MESSAGE,
+                                            ligneMessage.I_TYPE,
                                             idPartie,
-                                            idEmetteur,
+                                            idEmetteur,//4
                                             ligneMessage.ID_PION_PROPRIETAIRE,
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART),
                                             ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_ARRIVEE, ligneMessage.I_PHASE_ARRIVEE),

@@ -310,9 +310,13 @@ namespace vaoc
             //Arrivé à destination je recherche, sans succès, l'unité à renforcer sur place mais celle-ci reste invisible. Que dois-je faire maintenant ?
             //J'ai bien executé votre ordre demandant de renforcer les éléments présents mais les éléments n'étant en définitive pas présent, je ne peux rien faire. J'attends de nouvelles consignes.
             //{1} est prêt à renforcer l'unité en suivant vos ordre mais celle-ci n'est pas présente à {2} et je ne peux donc rien faire de plus. 
-            MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE = 94
+            MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE = 94,
             //Le dépôt de destination ne peut pas être renforcé, mon convoi reste donc sans affectation
             //{1} est arrivé à {2} mais le dépôt que je dois renforcer n'est pas en mesure d'accepter mes chariots. Je suis en attente de nouvelles consignes. 
+            MESSAGE_POSITION_OFFICIERS = 95
+            //Renseignements pris auprès des divisions sur place, leurs officiers sont positionnés à {11}.
+            //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {11}
+            //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {11}
         }
         /*
                DateHeure(true), //0
@@ -354,7 +358,7 @@ namespace vaoc
                 ravitaillementGagneOuPerdu,
                 materielGagneOuPerdu//37
                 nomDuChefRemplace//38
-                modele de l'unité (son nom donner une indication sur la nation) //39
+                modele de l'unité (son nom donne une indication sur la nation) //39
 */
         #endregion
 
@@ -2217,6 +2221,12 @@ namespace vaoc
                         }
                     }
 
+                    if (typeMessage == MESSAGES.MESSAGE_POSITION_OFFICIERS)
+                    {
+                        //cas particulier où l'on donne les positions des chefs non présents des unités présentes
+                        return PostionsOfficiersAmis(lignePion, unitesVisibles, out unitesEnvironnantes);
+                    }
+
                     unitesEnvironnantes += "<UL>";
                     foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
                     {
@@ -2252,8 +2262,9 @@ namespace vaoc
                         {
                             nomType = "un état-major";
 
-                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
-                                && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT 
+                                    && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
+                                    && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE )
                                 || Constantes.JetDeDes(1) > 5)
                             {
                                 nomType += (Constantes.DebuteParUneVoyelle(lignePionVoisin.S_NOM)) ? " de l'" : " du ";
@@ -2309,7 +2320,9 @@ namespace vaoc
                         }
                         if (0 == lignePionVoisin.I_INFANTERIE && 0 == lignePionVoisin.I_CAVALERIE && 0 == lignePionVoisin.I_ARTILLERIE)
                         {
-                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT
+                                    && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI 
+                                    && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
                                 || Constantes.JetDeDes(1) > 2)
                             {
                                 if (lignePion.nation.ID_NATION == ligneNationVoisin.ID_NATION)
@@ -2515,6 +2528,31 @@ namespace vaoc
                        ex.StackTrace, ex.GetType().ToString());
                 LogFile.Notifier(messageEX);
                 throw ex;
+            }
+            return true;
+        }
+
+        private static bool PostionsOfficiersAmis(Donnees.TAB_PIONRow lignePion, Dictionary<int, Barycentre> unitesVisibles, out string positionOfficiers)
+        {
+            List<int> listeOfficiersIndiques = new List<int>();
+            positionOfficiers = string.Empty;
+            foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
+            {
+                Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION.FindByID_PION(unite.Key);
+                if (!lignePionVoisin.estQG && !lignePionVoisin.estEnnemi(lignePion) && lignePionVoisin.proprietaire!=lignePion)
+                {
+                    Donnees.TAB_PIONRow lignePionVoisinLeader = lignePionVoisin.proprietaire;
+                    //on vérifie que le leader n'est pas visible, sinon inutile de redonner la position
+                    //inutile également de l'indiquer à nouveau si on l'a déjà fait !
+                    if (!unitesVisibles.ContainsKey(lignePionVoisinLeader.ID_PION) && !listeOfficiersIndiques.Contains(lignePionVoisinLeader.ID_PION))
+                    {
+                        if (string.Empty != positionOfficiers) { positionOfficiers += ", "; }
+                        string NomZoneGeographique;
+                        CaseVersZoneGeographique(lignePionVoisinLeader.ID_CASE, out NomZoneGeographique);
+                        positionOfficiers += lignePionVoisinLeader.S_NOM + " à " + NomZoneGeographique;
+                        listeOfficiersIndiques.Add(lignePionVoisinLeader.ID_PION);
+                    }
+                }
             }
             return true;
         }

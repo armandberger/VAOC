@@ -204,7 +204,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 90;//BEA, permet de tester une fin de bataille
+                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 98;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
                     //Initialisation de la phase
@@ -354,11 +354,11 @@ namespace vaoc
                     #endregion
 
                     /************* rendre actif l'ordre suivant
-                 * L'idée était de vérifier si un ordre avait été terminé durant cette phase, si oui et qu'il avait un ID_ORDRE_SUIVANT le rend actif
-                 * mais qu'un ce qu'un ordre actif si ce n'est le premier ordre non terminé ? Donc, a priori, il n'y a rien à faire à tester quand même :-)
-                 * --> et il faut quand même envoyer un message pour prévenir du changement d'ordre
-                 * --> et en plus c'est pas vrai, il faut indiquer i_tour_debut/i_phase_debut dans l'ordre, tout est géré dans TerminerOrdreCourant (sur PIONRow)
-                 *********************************/
+                     * L'idée était de vérifier si un ordre avait été terminé durant cette phase, si oui et qu'il avait un ID_ORDRE_SUIVANT le rend actif
+                     * mais qu'un ce qu'un ordre actif si ce n'est le premier ordre non terminé ? Donc, a priori, il n'y a rien à faire à tester quand même :-)
+                     * --> et il faut quand même envoyer un message pour prévenir du changement d'ordre
+                     * --> et en plus c'est pas vrai, il faut indiquer i_tour_debut/i_phase_debut dans l'ordre, tout est géré dans TerminerOrdreCourant (sur PIONRow)
+                     *********************************/
                     LogFile.Notifier("Mise à jour des propriétaires des cases");
                     MiseAJourProprietaires();
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES)
@@ -429,6 +429,13 @@ namespace vaoc
                         }
                     }
                     i++;
+                }
+
+                //On indique les positions des officiers non présents pour le joueur mais dont des unités sont présentes (cela aide si le joueur a perdu la connexion avec le reste de l'armée)
+                if (IndiquerPositionsOfficiers())
+                {
+                    messageErreur = "Erreur durant le traitement IndiquerPositionsOfficiers";
+                    return false;
                 }
 
                 // On regarde si toutes les unités sont bien ravitaillées
@@ -636,6 +643,35 @@ namespace vaoc
                 travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
 
                 nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;//le nombre de phases peut juste différer au premier tour, pas aux suivants
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Indique les positions des officiers d'unités présentes mais qui ne sont pas présents
+        /// Cela peut aider un joueur à retrouver d'autres joueurs dont il est sans nouvelle
+        /// </summary>
+        /// <returns>true=OJ, false=KO</returns>
+        private bool IndiquerPositionsOfficiers()
+        {
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
+                if (!lignePion.B_DETRUIT && lignePion.estJoueur)
+                {
+                    string message;
+                    bool bEnDanger;
+                    if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS, null, false, out message, out bEnDanger))
+                    { 
+                        LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:PionsEnvironnants."); return false; 
+                    }
+                    if (string.Empty!=message)
+                    {
+                        //il y a effectivement des officiers à indiquer, on envoie donc un message
+                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS))
+                        { LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:EnvoyerMessageImmediat."); return false; }
+                    }
+                }
             }
             return true;
         }

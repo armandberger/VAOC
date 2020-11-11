@@ -159,6 +159,10 @@ namespace WaocLib
             /// Une unité se ravitaille en effectuant un prélevement direct sur le dépôt au risque de le réduire.
             /// </summary>
             public const int RAVITAILLEMENT_DIRECT = 20;
+            /// <summary>
+            /// Une unité suit une autre unité
+            /// </summary>
+            public const int ORDRE_SUIVRE_UNITE = 21;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

@@ -1057,8 +1057,8 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-                    Donnees.TAB_CASERow ligneCaseRenfort = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionARenforcer.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseRenfort = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionARenforcer.ID_CASE);
 
                     //si les deux pions sont engagés dans la même bataille, ils peuvent toujours se renforcer
                     if (lignePion.IsID_BATAILLENull() || lignePion.ID_BATAILLE == lignePionARenforcer.ID_BATAILLE)
@@ -1865,7 +1865,7 @@ namespace vaoc
                 listePionControle1.Clear();
                 if (ligneNomCarte.I_VICTOIRE > 0 || ligneNomCarte.B_HOPITAL || ligneNomCarte.B_PRISON)
                 {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
                     //on regarde qui contrôle la zone à CST_RECHERCHE_ZONE_VICTOIRE kilomètres alentour
                     #region calcul du cadre de recherche
                     int xCaseHautGauche = ligneCase.I_X - Constantes.CST_RECHERCHE_ZONE_VICTOIRE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
@@ -2559,7 +2559,7 @@ namespace vaoc
 
                 case Constantes.ORDRES.MOUVEMENT:
                 case Constantes.ORDRES.PATROUILLE:
-                    #region envoi d'un ordre de mouvement ou de patrouille ou d'arrêt ou de transfert devant être transmis par messager
+                    #region envoi d'un ordre de mouvement ou de patrouille devant être transmis par messager
                     int idPionOrdre = ordre.ID_PION;
                     compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION);
 
@@ -3584,7 +3584,7 @@ namespace vaoc
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
                 Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
                 Donnees.TAB_NATIONRow ligneNation = lignePion.nation;// Donnees.m_donnees.TAB_PION.TrouveNation(lignePion);
-                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
 
                 if (null == ligneCaseDestination)
                 {
@@ -3615,7 +3615,7 @@ namespace vaoc
 
                 if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG)
                 {
-                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                     if (null == ligneCaseDepart)
                     {
                         message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE_DEPART:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_CASE_DEPART);
@@ -3628,7 +3628,7 @@ namespace vaoc
                 {
                     //Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE); -> si on fait cela, le parcours est recalculé à chaque mouvement dés qu'il n'y a plus d'effectif
                         //sur le point de départ et le chemin n'est trouvé n'est plus toujours le même, d'où un crash car il ne retrouve pas la position courante
-                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                     if (null == ligneCaseDepart)
                     {
                         message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
@@ -3754,7 +3754,7 @@ namespace vaoc
                         // Si le destinataire n'a pas bougé, inutile de changer
                         if (lignePionDestinataire.ID_CASE != ligneOrdre.ID_CASE_DESTINATION)
                         {
-                            Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionDestinataire.ID_CASE);
+                            Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionDestinataire.ID_CASE);
                             if (Constantes.Distance(chemin[pos].I_X, chemin[pos].I_Y, ligneCaseNouvelleDestination.I_X, ligneCaseNouvelleDestination.I_Y) < lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                             {
                                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -3852,7 +3852,7 @@ namespace vaoc
                                 if (lignePionDestinataire.estJoueur && lignePionEmetteur.estJoueur && (Constantes.ORDRES.MESSAGE == ligneOrdre.I_ORDRE_TYPE))
                                 {
                                     //Calcul de la distance entre les deux zones indiquées
-                                    Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionDestinataire.ID_CASE);
+                                    Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionDestinataire.ID_CASE);
 
                                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDestination, ligneCaseNouvelleDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                                     {
@@ -4165,7 +4165,7 @@ namespace vaoc
             // on place l'unité sur la case où elle est actuellement si le pion ne vient pas d'être détruit
             if (!lignePion.B_DETRUIT)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                 if (null == ligneCase)
                 {
                     message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif : impossible de trouver la case courante ID={2}", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
@@ -4584,7 +4584,7 @@ namespace vaoc
 
         private bool CalculCoutCase(Donnees.TAB_PIONRow lignePion, Donnees.TAB_MODELE_PIONRow ligneModelePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDestination, LigneCASE ligneCaseChemin, out int coutCase, out bool bBlocageParUnite)
         {
-            return CalculCoutCase(lignePion, ligneModelePion, ligneOrdre, ligneCaseDestination, Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseChemin.ID_CASE), out coutCase, out bBlocageParUnite);
+            return CalculCoutCase(lignePion, ligneModelePion, ligneOrdre, ligneCaseDestination, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseChemin.ID_CASE), out coutCase, out bBlocageParUnite);
         }
 
         private bool CalculCoutCase(Donnees.TAB_PIONRow lignePion, Donnees.TAB_MODELE_PIONRow ligneModelePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_CASERow ligneCaseChemin, out int coutCase, out bool bBlocageParUnite)

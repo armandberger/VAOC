@@ -358,7 +358,7 @@ namespace vaoc
                         //|| lignePionEnBataille.I_TOUR_RETRAITE_RESTANT>0 || lignePionEnBataille.I_TOUR_FUITE_RESTANT>0 ->reprendre le compte à zéro, peu importe qu'elle soit déjà en retraite
                         || lignePionEnBataille.estMessager || lignePionEnBataille.estQG || lignePionEnBataille.estConvoi || lignePionEnBataille.estDepot) { continue; }
 
-                    Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionEnBataille.ID_CASE);
+                    Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionEnBataille.ID_CASE);
                     if (ligneCasePionBataille.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCasePionBataille.I_Y >= I_Y_CASE_HAUT_GAUCHE 
                         && ligneCasePionBataille.I_X <= I_X_CASE_BAS_DROITE && ligneCasePionBataille.I_Y <= I_Y_CASE_BAS_DROITE)
                     {
@@ -411,8 +411,8 @@ namespace vaoc
                     if (null != ligneOrdre)
                     {
                         //On recherche le point du parcours où l'on va sortir de la zone de combat
-                        Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-                        Donnees.TAB_CASERow ligneCaseDepart = (lignePion.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                        Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                        Donnees.TAB_CASERow ligneCaseDepart = (lignePion.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
 
                         if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                         {
@@ -462,7 +462,7 @@ namespace vaoc
                         //on place l'unité sur le bord de la zone de combat le plus proche et qui ne soit pas occupée par l'ennemi
                         //on prend le coté qui a le moins de cases occupées par l'ennemi, et, en cas d'égalité, le plus de cases occupées par
                         //des amis
-                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                         Donnees.TAB_CASERow ligneCaseSortie = null;
                         int nbCasesOccupeesParEnnemi = int.MaxValue, nbCasesOccupeesParAmis = 0;
 
@@ -2248,7 +2248,7 @@ namespace vaoc
                     if (0 == resultComplet.Count() && lignePion.estCombattifQG(true, true))
                     {
                         //Pion à distance correcte
-                        ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                        ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                         dist = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, xBataille, yBataille);
                         if (dist < Constantes.CST_BRUIT_DU_CANON * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {

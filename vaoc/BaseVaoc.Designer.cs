@@ -4028,6 +4028,13 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_CASERow FindByID_CASE(int ID_CASE) {
+                return ((TAB_CASERow)(this.Rows.Find(new object[] {
+                            ID_CASE})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public override global::System.Data.DataTable Clone() {
                 TAB_CASEDataTable cln = ((TAB_CASEDataTable)(base.Clone()));
                 cln.InitVars();
@@ -9390,6 +9397,8 @@ namespace vaoc {
                 this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT.AllowDBNull = false;
                 this.columnI_VICTOIRE.AllowDBNull = false;
                 this.columnI_VICTOIRE.DefaultValue = ((int)(0));
+                this.columnI_TRI.AllowDBNull = false;
+                this.columnI_TRI.DefaultValue = ((int)(0));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -25688,17 +25697,12 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public int I_TRI {
                 get {
-                    try {
-                        return ((int)(this[this.tableTAB_PION.I_TRIColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TRI\' dans la table \'TAB_PION\' est DBNull.", e);
-                    }
+                    return ((int)(this[this.tableTAB_PION.I_TRIColumn]));
                 }
                 set {
                     this[this.tableTAB_PION.I_TRIColumn] = value;
                 }
-            }            
+            }
         }
         
         /// <summary>

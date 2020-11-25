@@ -535,7 +535,10 @@ namespace vaoc
                 TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Select(requete, tri);
                 if (0 != resOrdre.Length)
                 {
-                    if ((resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MESSAGE) || (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.PATROUILLE))
+                    if ((resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT) ||
+                        (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.MESSAGE) ||
+                        (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE) ||
+                        (resOrdre[0].I_ORDRE_TYPE == Constantes.ORDRES.PATROUILLE))
                     {
                         ligneOrdreRetour = resOrdre[0];
                     }
@@ -947,7 +950,7 @@ namespace vaoc
             {
                 TAB_NOMS_CARTERow ligneNom = m_donnees.TAB_NOMS_CARTE.FindByID_NOM(id_nom);
                 if (null == ligneNom) return null;
-                return FindByID_CASE(ligneNom.ID_CASE);
+                return FindParID_CASE(ligneNom.ID_CASE);
             }
 
             public bool estCaseChargee(int x, int y)
@@ -1075,9 +1078,7 @@ namespace vaoc
                 x = (idcase - y) / m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
             }
 
-            //[global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            //[global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TAB_CASERow FindByID_CASE(int ID_CASE)
+            public TAB_CASERow FindParID_CASE(int ID_CASE)
             {
                 TAB_CASERow retour;
                 retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
@@ -1625,7 +1626,7 @@ namespace vaoc
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 Clear();//le but c'est de ne pas les sauver pour gagner en temps de chargement justement
                 //m_listeIndex peut être null quand on crée la partie et que la carte n'est pas encore générée
-                if (viderIndex && null!= m_listeIndex)
+                if (viderIndex && null != m_listeIndex)
                 {
                     for (int x = 0; x < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE; x++) for (int y = 0; y < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE; y++) { m_listeIndex.SetValue(-1, x, y); }
                 }
@@ -2312,7 +2313,7 @@ namespace vaoc
                 for (int l = 0; l < Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
                 {
                     Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
                     if (null != ligneCase)
                     {
                         ligneNomCarte.I_X = ligneCase.I_X;

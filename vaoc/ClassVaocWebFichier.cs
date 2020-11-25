@@ -717,7 +717,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                     foreach (Donnees.TAB_ROLERow ligneRole2 in Donnees.m_donnees.TAB_ROLE)
                     {
                         Donnees.TAB_PIONRow lignePion2 = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole2.ID_PION);
@@ -732,7 +732,7 @@ namespace vaoc
                         //si les deux pions sont séparés de moins d'un kilomètre, 
                         //ou si les deux pions sont dans la même bataille 
                         //on ajoute les lignes dans la table
-                        Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion2.ID_CASE);
+                        Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion2.ID_CASE);
                         double dist = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCase2.I_X, ligneCase2.I_Y);
                         if (!lignePion.IsID_BATAILLENull() && !lignePion2.IsID_BATAILLENull() &&
                             (lignePion.ID_BATAILLE == lignePion2.ID_BATAILLE) || (dist <= 1* Donnees.m_donnees.TAB_JEU[0].I_ECHELLE))
@@ -1078,7 +1078,7 @@ namespace vaoc
             iVitesse = decimal.MaxValue;
             Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
             Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
 
             //cas d'une unité sans effectif, on prend la vitesse de la cavalerie
             if (lignePion.I_INFANTERIE == 0 && lignePion.I_CAVALERIE == 0 && lignePion.I_ARTILLERIE == 0)

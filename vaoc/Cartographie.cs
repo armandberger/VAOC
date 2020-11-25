@@ -325,13 +325,12 @@ namespace vaoc
             string messageErreur = string.Empty;
 
             //on redessine la carte avec les villes
-            foreach (Donnees.TAB_NOMS_CARTERow ligneNom in
-Donnees.m_donnees.TAB_NOMS_CARTE)
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 int x = 0, y = 0;
 
                 lignePolice = Donnees.m_donnees.TAB_POLICE.FindByID_POLICE(ligneNom.ID_POLICE);
-                ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNom.ID_CASE);
+                ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNom.ID_CASE);
                 if (null == ligneCase)
                 {
                     //possible en construction de cartes quand on repart d'un existant
@@ -636,7 +635,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
                 if (lignePion.B_DETRUIT || lignePion.estAuCombat) { ++i; continue; }
                 if (lignePion.effectifTotal == 0)
                 {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                     int nbplacesOccupes = 0;
                     if (!lignePion.RequisitionCase(ligneCase, false, ref nbplacesOccupes)) { return false; }
                 }
@@ -1291,7 +1290,7 @@ Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 Donnees.TAB_PIONRow lignePionEnBataille = Donnees.m_donnees.TAB_PION[i++];
                 if (lignePionEnBataille.B_DETRUIT) { continue; }
-                Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionEnBataille.ID_CASE);
+                Donnees.TAB_CASERow ligneCasePionBataille = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionEnBataille.ID_CASE);
                 if (ligneCasePionBataille.I_X >= xCaseHautGauche && ligneCasePionBataille.I_Y >= yCaseHautGauche && ligneCasePionBataille.I_X <= xCaseBasDroite && ligneCasePionBataille.I_Y <= yCaseBasDroite)
                 {
                     if (!ligneBataille.AjouterPionDansLaBataille(lignePionEnBataille, ligneCasePionBataille, false))

@@ -1907,6 +1907,9 @@ namespace vaoc
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                     retour = "se ravitailler en direct sur un dépôt";
                     break;
+                case Constantes.ORDRES.SUIVRE_UNITE:
+                    retour = "suivre une autre unité";
+                    break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");
                     retour = "inconnu";
@@ -2101,6 +2104,13 @@ namespace vaoc
                                 lignePionDestinataire.S_NOM)
                              :
                                 "se ravitaille en direct sur un dépôt.";
+                    break;
+                case Constantes.ORDRES.SUIVRE_UNITE:
+                    retour = avecProprietaire ?
+                                string.Format("suit la {0}.",
+                                lignePionDestinataire.S_NOM)
+                             :
+                                "suit une unité.";
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");

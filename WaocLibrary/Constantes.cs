@@ -162,7 +162,7 @@ namespace WaocLib
             /// <summary>
             /// Une unité suit une autre unité
             /// </summary>
-            public const int ORDRE_SUIVRE_UNITE = 21;
+            public const int SUIVRE_UNITE = 21;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

@@ -717,7 +717,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_CASERow ligneCaseBase = (null == ligneCase) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(this.ID_CASE) : ligneCase;
+                    Donnees.TAB_CASERow ligneCaseBase = (null == ligneCase) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(this.ID_CASE) : ligneCase;
                     xCaseHautGauche = Math.Max(0, ligneCaseBase.I_X - visionPixel);
                     yCaseHautGauche = Math.Max(0, ligneCaseBase.I_Y - visionPixel);
                     xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCaseBase.I_X + visionPixel);
@@ -814,7 +814,7 @@ namespace vaoc
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     foreach (Donnees.TAB_CASERow ligneChange in changeRows)
                     {
-                        Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                        Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneChange.ID_CASE);
                         ligne.SetID_PROPRIETAIRENull();
                         ligne.SetID_NOUVEAU_PROPRIETAIRENull();
                     }
@@ -822,7 +822,7 @@ namespace vaoc
                 else
                 {
                     //les autes unités n'occupent, potentiellement, qu'une case
-                    Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                    Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                     if (null != ligne)
                     {
                         int IdProprietaire = ligne.ID_PROPRIETAIRE;
@@ -1706,7 +1706,7 @@ namespace vaoc
             /// <returns>la case, null si non trouvée</returns>
             public TAB_CASERow CaseCourante()
             {
-                return m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                return m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
             }
 
             public int nombrePatrouillesEnCours()
@@ -1805,7 +1805,7 @@ namespace vaoc
                         if (null == ligneMessage ||
                             ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                         {
-                            ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                            ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                             dist = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseBruit.I_X, ligneCaseBruit.I_Y);
                             if (dist < distanceBruit * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)//distance en km où l'on entend le bruit de construction d'un pont ou d'un ponton
                             {
@@ -1842,7 +1842,7 @@ namespace vaoc
                 //if (ligneOrdre.IsID_CASE_DESTINATIONNull())
                 //{
                     //on recherche le pont sur lequel on souhaite faire l'action
-                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                 //}
                 //else
                 //{
@@ -2284,12 +2284,12 @@ namespace vaoc
                 meilleurPourcentageRavitaillement = 0;
                 meilleurPourcentageMateriel = 0;
                 effectifsRavitailles = 0;
-                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                 int besoinEnRavitaillement = this.effectifTotal * (100 - this.I_MATERIEL + 100 - this.I_RAVITAILLEMENT) / 100;
                 foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
                 {
                     if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
-                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneDepot.ID_CASE);
 
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
@@ -2367,11 +2367,11 @@ namespace vaoc
 
                 meilleurDistanceRavitaillement = -1;
                 meilleurPourcentageRavitaillement = 0;
-                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                 foreach (Donnees.TAB_PIONRow ligneDepot in Donnees.m_donnees.TAB_PION)
                 {
                     if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
-                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneDepot.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneDepot.ID_CASE);
 
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
@@ -2497,8 +2497,8 @@ namespace vaoc
                 foreach (Donnees.TAB_NOMS_CARTERow ligneHopital in resultComplet)
                 {
                     //Pion à distance correcte
-                    Donnees.TAB_CASERow ligneCaseHopital = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneHopital.ID_CASE);
-                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseHopital = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneHopital.ID_CASE);
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                     double dist = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseHopital.I_X, ligneCaseHopital.I_Y);
                     if (dist < distMini)
                     {
@@ -2531,8 +2531,8 @@ namespace vaoc
                 foreach (Donnees.TAB_NOMS_CARTERow lignePrison in resultComplet)
                 {
                     //Pion à distance correcte
-                    Donnees.TAB_CASERow ligneCaseHopital = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePrison.ID_CASE);
-                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseHopital = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePrison.ID_CASE);
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                     double dist = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseHopital.I_X, ligneCaseHopital.I_Y);
                     if (dist < distMini)
                     {
@@ -2573,8 +2573,8 @@ namespace vaoc
                     LogFile.Notifier("CalculPionPositionRelativeAvancement, l'un des paramètres est null");
                     return -1;
                 }
-                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
-                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
 
                 encombrementTotal = CalculerEncombrement(ligneNation, this.infanterie, this.cavalerie, this.artillerie, true);
                 AStar etoile = new AStar();
@@ -3447,7 +3447,7 @@ namespace vaoc
                 }
 
                 #region création du message d'après ce qu'il y a autour de la patrouille
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                 if (!ligneCase.EstInnocupe() && estEnnemi(ligneCase))
                 {
                     //cas particulier, la patrouille trouve un ennemi
@@ -3722,7 +3722,7 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             public bool RequisitionCase(LigneCASE ligneCase, bool enMouvement, ref int nbplaces)
             {
-                return RequisitionCase(m_donnees.TAB_CASE.FindByID_CASE(ligneCase.ID_CASE), enMouvement, ref nbplaces);
+                return RequisitionCase(m_donnees.TAB_CASE.FindParID_CASE(ligneCase.ID_CASE), enMouvement, ref nbplaces);
             }
 
             /// <summary>
@@ -4425,7 +4425,7 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
 
                     //maintenant y'a plus qu'à trouver de la place...
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(IDcase);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(IDcase);
                     if (null == ligneCase)
                     {
                         message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de placement en base)", S_NOM, ID_PION, IDcase);
@@ -4455,7 +4455,7 @@ namespace vaoc
                         nbplacesOccupes = 0;
                         while (i < listeCaseEspace.Count && nbplacesOccupes < encombrement)
                         {
-                            Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCaseEspace[i]);
+                            Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCaseEspace[i]);
 
                             if (!RequisitionCase(ligneOccupation, false, ref nbplacesOccupes)) { return false; }
                             i++;
@@ -4522,7 +4522,7 @@ namespace vaoc
                         *****/
 
                         //if (!MessageEnnemiObserve(null)) { return false; } Pourquoi null ? Impossible de m'en rappeler !
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CASE);
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                         if (!MessageEnnemiObserve(ligneCase)) { return false; }
 
                         //placer l'unité sur la carte
@@ -4564,8 +4564,8 @@ namespace vaoc
                 int i,j;
                 int nbplacesOccupes;
                 double cout, coutHorsRoute;
-                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
+                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                 AStar etoile = new AStar();
 
                 idCaseDebut = -1;

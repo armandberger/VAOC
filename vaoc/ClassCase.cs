@@ -35,6 +35,7 @@ namespace vaoc
                     Donnees.m_donnees.TAB_CASE.AjouterCaseCoutNonMax(this);
                 }
             }
+
             /// <summary>
             /// Renvoie le coût d'une case pour un modèle de mouvement particulier pour la case courante et la météo courante
             /// </summary>

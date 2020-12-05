@@ -104,6 +104,57 @@ namespace vaoc
             }
 
             /// <summary>
+            /// renvoi le modèle du pion
+            /// </summary>
+            /// <returns></returns>
+            public TAB_MODELE_PIONRow modelePion
+            {
+                get
+                {
+                    return m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(ID_MODELE_PION);
+                }
+            }
+
+            /// <summary>
+            ///renvoie la nation du pion
+            /// </summary>
+            public TAB_NATIONRow nation
+            {
+                get
+                {
+                    TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
+                    if (null == ligneModelePion) { return null; }
+                    return m_donnees.TAB_NATION.FindByID_NATION(ligneModelePion.ID_NATION);
+                }
+            }
+
+            /// <summary>
+            /// Indique s'il s'agit uniquement d'une unité d'artillerie
+            /// </summary>
+            /// <returns>true si pur unité d'artillerie, false sinon</returns>
+            public bool estArtillerie
+            {
+                get
+                {
+                    if (I_INFANTERIE > 0 || I_CAVALERIE > 0 || I_ARTILLERIE <= 0)
+                        return false;
+                    return true;
+                }
+            }
+
+
+            /// <summary>
+            /// indique si le pion est en état de se battre ou pas
+            /// </summary>
+            /// <returns>true si combattif false sinon</returns>
+            public bool estCombattif
+            {
+                get
+                {
+                    return !estQG;
+                }
+            }
+            /// <summary>
             /// renvoie la nation du pion
             /// </summary>
             /// <returns>identifiant de la nation du pion, -1 si non trouvé</returns>
@@ -969,7 +1020,7 @@ namespace vaoc
             /// <param name="x">abscisse</param>
             /// <param name="y">ordonnée</param>
             /// <returns>case trouvée, null si la case n'existe pas</returns>
-            public TAB_CASERow FindByXY(int x, int y)
+            public TAB_CASERow FindParXY(int x, int y)
             {
                 int index;
                 try
@@ -1012,9 +1063,10 @@ namespace vaoc
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Erreur sur TABCASEDataTables.FindByXY :" + ex.Message + ex.StackTrace, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    string message = string.Format("TrouveCase m_donnees.ChargerCases tombe en exception x={0} et y={1} : {2}, {3}",
+                    string message = string.Format("Erreur sur TABCASEDataTables.FindParXY tombe en exception x={0} et y={1} : {2}, {3}",
                         x, y, ex.Message, ex.StackTrace);
+                    MessageBox.Show(message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LogFile.Notifier(message);
                     //throw new Exception(message); //peut visiblement arriver sur certains mouvements de souris, mieux vaut que cela ne crash pas tout
                     return null;//pas sur que ce soit bien géré dérrière...
                 }
@@ -1295,7 +1347,7 @@ namespace vaoc
                 {
                     for (int y = yCaseHautGauche; y <= yCaseBasDroite; y++)
                     {
-                        resCase[nb++] = FindByXY(x, y);
+                        resCase[nb++] = FindParXY(x, y);
                     }
                 }
 
@@ -1373,7 +1425,7 @@ namespace vaoc
                 resCase = new TAB_CASERow[nb_points];
                 for (int i = 0; i < nb_points; i++)
                 {
-                    resCase[i] = FindByXY(x[i], y[i]);
+                    resCase[i] = FindParXY(x[i], y[i]);
                 }
 
                 if (0 == resCase.Length)
@@ -1447,7 +1499,7 @@ namespace vaoc
                     resCase = new Node[nb_points];
                     for (int i = 0; i < nb_points; i++)
                     {
-                        Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);//avec le find en direct, on a un crash d'accès !
+                        Donnees.TAB_CASERow ligneCase = FindParXY(x[i], y[i]);//avec le find en direct, on a un crash d'accès !
                         resCase[i] = new Node(ligneCase);
                     }
 
@@ -1528,7 +1580,7 @@ namespace vaoc
                     if (x[i] >= xmin && x[i] <= xmax && y[i] >= ymin && y[i] <= ymax)
                     //if (x[i] >= xmin && x[i] < xmax && y[i] >= ymin && y[i] < ymax)
                     {
-                        Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);
+                        Donnees.TAB_CASERow ligneCase = FindParXY(x[i], y[i]);
                         resCase.Add(ligneCase);
                     }
                 }
@@ -1602,7 +1654,7 @@ namespace vaoc
                     if (x[i] >= xmin && x[i] <= xmax && y[i] >= ymin && y[i] <= ymax)
                     //if (x[i] >= xmin && x[i] < xmax && y[i] >= ymin && y[i] < ymax)
                     {
-                        Donnees.TAB_CASERow ligneCase = FindByXY(x[i], y[i]);
+                        Donnees.TAB_CASERow ligneCase = FindParXY(x[i], y[i]);
                         resCase.Add(new Node(ligneCase));
                     }
                 }

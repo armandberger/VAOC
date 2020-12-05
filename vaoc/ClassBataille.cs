@@ -552,7 +552,7 @@ namespace vaoc
 
                 for (int i = minimum; i < maximum; i++)
                 {
-                    ligneCase = bVertical ? Donnees.m_donnees.TAB_CASE.FindByXY(autreCoordonnee, i) : Donnees.m_donnees.TAB_CASE.FindByXY(i, autreCoordonnee);
+                    ligneCase = bVertical ? Donnees.m_donnees.TAB_CASE.FindParXY(autreCoordonnee, i) : Donnees.m_donnees.TAB_CASE.FindParXY(i, autreCoordonnee);
                     if (!ligneCase.EstOccupeeOuBloqueParEnnemi(lignePion, false) && ligneCase.EstMouvementPossible())
                     {
                         double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);

@@ -684,7 +684,7 @@ namespace vaoc
             }
             
             //Mise a jour de la case
-            Donnees.TAB_CASERow ligneCase=m_tableCase.FindByXY(x,y);
+            Donnees.TAB_CASERow ligneCase=m_tableCase.FindParXY(x,y);
             Monitor.Enter(m_tableCase);
             ligneCase.ID_MODELE_TERRAIN = resModeleTerrain[0].ID_MODELE_TERRAIN;
             Monitor.Exit(m_tableCase);

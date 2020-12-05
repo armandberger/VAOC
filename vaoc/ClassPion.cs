@@ -246,7 +246,9 @@ namespace vaoc
                 }
             }
 
-            //renvoie la nation du pion
+            /// <summary>
+            ///renvoie la nation du pion
+            /// </summary>
             public TAB_NATIONRow nation
             {
                 get

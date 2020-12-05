@@ -228,8 +228,8 @@ namespace vaoc
             //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
             //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
 
-            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(StartNode.ID_CASE);
-            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(EndNode.ID_CASE);
+            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(StartNode.ID_CASE);
+            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(EndNode.ID_CASE);
             //Debug.WriteLine(string.Format("Début de AStar.SearchPathHPA de {0}({1},{2}) -> {3}({4},{5})",
             //    lDebug1.ID_CASE,
             //    lDebug1.I_X,
@@ -692,7 +692,7 @@ namespace vaoc
             {
                 if (null != T.EndNode)
                 {
-                    Path.Insert(0, new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNode.ID_CASE)));
+                    Path.Insert(0, new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParID_CASE(T.EndNode.ID_CASE)));
                 }
                 else
                 {
@@ -703,7 +703,7 @@ namespace vaoc
                             j = 0;
                             while (j < listeCases.Count)
                             {
-                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j++]);
                                 Path.Insert(0, new LigneCASE(ligneCase));
                             }
                         }
@@ -712,7 +712,7 @@ namespace vaoc
                             j = listeCases.Count - 1;
                             while (j >= 0)
                             {
-                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j--]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j--]);
                                 Path.Insert(0, new LigneCASE(ligneCase));
                             }
                         }
@@ -909,7 +909,7 @@ namespace vaoc
                 }
 
                 //on regarde si le chemin ne conduit pas dans le bloc de destination
-                Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
+                Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
                 //if (ligneCout.I_BLOCX == m_xBlocEnd && ligneCout.I_BLOCY == m_yBlocEnd)
                 if (ligneCaseFin.I_X >= xminBlocEnd && ligneCaseFin.I_X <= xmaxBlocEnd && ligneCaseFin.I_Y >= yminBlocEnd && ligneCaseFin.I_Y <= ymaxBlocEnd)
                 {
@@ -1022,7 +1022,7 @@ namespace vaoc
                 //case vers bloc
                 //Debug.WriteLineIf(trackSource.EndNode.ID_CASE != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
                 //    "Cout : null != trackSource.EndNode && null != trackDestination.EndNodeHPA");
-                Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
+                Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
                 //if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
                 //{
                 //    return AStar.CST_COUTMAX;//trajet intraversable
@@ -1041,7 +1041,7 @@ namespace vaoc
                 //{
                 //    return AStar.CST_COUTMAX;//trajet intraversable
                 //}
-                Donnees.TAB_CASERow caseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
+                Donnees.TAB_CASERow caseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
                 return Cout(new Node(caseSource), trackDestination.EndNode);
             }
             throw new NotSupportedException("Erreur : Cout pour HPA non défini");//normalement, on ne devrait jamais arriver là
@@ -1317,15 +1317,15 @@ namespace vaoc
         public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, LigneCASE ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
             return RechercheChemin(tipePacours, lignePion,
-                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDepart.ID_CASE),
-                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDestination.ID_CASE),
+                Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
+                Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDestination.ID_CASE),
                 ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
         }
 
         public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
             return RechercheChemin(tipePacours, lignePion,
-                Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseDepart.ID_CASE),
+                Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
                 ligneCaseDestination,
                 ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
         }
@@ -1390,7 +1390,7 @@ namespace vaoc
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//BEA, normalement inutile mais ça crash avec un id_case non accessible
                         for (i = 0; i < parcoursExistant.Length; i++)
                         {
-                            chemin.Add(new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE)));
+                            chemin.Add(new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParID_CASE(parcoursExistant[i].ID_CASE)));
                         }
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//BEA, normalement inutile mais ça crash avec un id_case non accessible
                         perf = DateTime.Now - timeStart;

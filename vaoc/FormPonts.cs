@@ -129,7 +129,7 @@ namespace vaoc
             int i=0;
             foreach (NomDePont nom in liste)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(nom.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(nom.ID_CASE);
                 textBoxResultat.Text += string.Format("{4}-{0} / {5} : {1} ({2},{3}) \r\n",
                     nom.S_NOM, nom.ID_CASE, ligneCase.I_X, ligneCase.I_Y, i++, nom.S_NOM_INDEX);
             }

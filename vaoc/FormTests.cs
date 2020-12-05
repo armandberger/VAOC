@@ -140,7 +140,7 @@ namespace vaoc
             string nomPrecedent = string.Empty;
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE.OrderBy(u => u["S_NOM"]))
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCase.ID_MODELE_TERRAIN);
 
                 if (!this.checkBoxHorsVille.Checked || ligneModeleTerrain.S_NOM.IndexOf("ville", 0, StringComparison.CurrentCultureIgnoreCase) < 0)
@@ -170,7 +170,7 @@ namespace vaoc
             string nomZoneGeographique;
             Cursor oldCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(0);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(0);
 
             ClassMessager.CaseVersZoneGeographique(ligneCase.ID_CASE, out nomZoneGeographique);
 

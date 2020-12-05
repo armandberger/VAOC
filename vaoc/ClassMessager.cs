@@ -439,8 +439,8 @@ namespace vaoc
 
         public static bool CaseVersCompas(int ID_CaseSource, int ID_CaseDestination, out COMPAS direction)
         {
-            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CaseSource);
-            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ID_CaseDestination);
+            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CaseSource);
+            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CaseDestination);
             if (ligneCaseSource == null || ligneCaseDestination == null)
             {
                 direction = COMPAS.CST_NORD;
@@ -521,12 +521,12 @@ namespace vaoc
             COMPAS direction;
 
             nomDistance = string.Empty;
-            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(id_caseSource);
+            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(id_caseSource);
             if (null == ligneCaseSource)
             {
                 return false;
             }
-            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(id_caseDestination);
+            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(id_caseDestination);
             if (null == ligneCaseDestination)
             {
                 return false;
@@ -582,7 +582,7 @@ namespace vaoc
             double dist;
             int x=-1, y=-1;
 
-            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(id_case);
+            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(id_case);
             if (null == ligneCaseSource)
             {
                 return false;
@@ -630,7 +630,7 @@ namespace vaoc
             for (int l=0; l< Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
                 Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
                 if (null == ligneCase)
                 {
                     return false;
@@ -675,7 +675,7 @@ namespace vaoc
                 return false;
             }
 
-            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
             if (null == ligneCaseSource)
             {
                 return false;
@@ -722,7 +722,9 @@ namespace vaoc
             if (y > Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1) { y = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1; }
 
             //on regarde s'il y a un lieu ou une route très proche (1 kilomètre), si oui, on recale la case dessus
-            Donnees.TAB_CASERow[] ligneCaseResultat = Donnees.m_donnees.TAB_CASE.CasesCadre(x - echelle, y - echelle, x + echelle, y + echelle);
+            Donnees.TAB_CASERow[] ligneCaseResultat = Donnees.m_donnees.TAB_CASE.CasesCadre(
+                Math.Max(0,x - echelle), Math.Max(0,y- echelle), 
+                Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, x + echelle), Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1,y + echelle));
             if (0==ligneCaseResultat.Length)
             {
                 return false;
@@ -762,7 +764,7 @@ namespace vaoc
             //si l'on a trouvé ni lieu, ni route, on renvoit la case exacte (en plein champ)
             if (id_case == -1)
             {
-                Donnees.TAB_CASERow ligneCaseFinale = Donnees.m_donnees.TAB_CASE.FindByXY(x, y);
+                Donnees.TAB_CASERow ligneCaseFinale = Donnees.m_donnees.TAB_CASE.FindParXY(x, y);
                 if (null == ligneCaseFinale)
                 {
                     return false;
@@ -842,7 +844,7 @@ namespace vaoc
             for (int l=0; l<Donnees.m_donnees.TAB_NOMS_CARTE.Count; l++)
             {
                 Donnees.TAB_NOMS_CARTERow ligneNomCarte = Donnees.m_donnees.TAB_NOMS_CARTE[l];
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneNomCarte.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNomCarte.ID_CASE);
                 if (null == ligneCaseSource)
                 {
                     return false;
@@ -875,7 +877,7 @@ namespace vaoc
 
         public static bool NomDeBataille(int id_case, out string nomDeBataille)
         {
-            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(id_case);
+            Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(id_case);
             return NomDeBataille(ligneCaseSource, out nomDeBataille);
         }
 
@@ -1665,7 +1667,7 @@ namespace vaoc
             {
                 nomBataille = ligneBataille.S_NOM;
 
-                Donnees.TAB_CASERow ligneCaseBataille = Donnees.m_donnees.TAB_CASE.FindByXY(
+                Donnees.TAB_CASERow ligneCaseBataille = Donnees.m_donnees.TAB_CASE.FindParXY(
                     (ligneBataille.I_X_CASE_BAS_DROITE + ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2,
                     (ligneBataille.I_Y_CASE_BAS_DROITE + ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2);
 
@@ -1771,7 +1773,7 @@ namespace vaoc
             }
 
             int iTourSansRavitaillement = lignePion.I_TOUR_SANS_RAVITAILLEMENT;
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+            ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
             if (null == ligneModeleTerrainDestination)
             {
                 ligneModeleTerrain = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCase.ID_MODELE_TERRAIN) : Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseDestination.ID_MODELE_TERRAIN);
@@ -2131,8 +2133,8 @@ namespace vaoc
             double dist;
 
             visionKM = lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-            Donnees.TAB_CASERow ligneCaseCible = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionCible.ID_CASE);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+            Donnees.TAB_CASERow ligneCaseCible = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionCible.ID_CASE);
             dist = Constantes.Distance(ligneCaseCible.I_X, ligneCaseCible.I_Y, ligneCase.I_X, ligneCase.I_Y);
             if (dist <= visionKM)
             {
@@ -2176,7 +2178,7 @@ namespace vaoc
                     return false;
                 }
 
-                Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
+                Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
                 lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
@@ -2216,7 +2218,7 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
                         if (lignePionVue.B_DETRUIT) { continue; }
-                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVue.ID_CASE);
+                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionVue.ID_CASE);
                         if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
                         {
                             if (lignePionVue.ID_PION != lignePion.ID_PION && 
@@ -2259,7 +2261,7 @@ namespace vaoc
                             }
                         }
 
-                        Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindByXY(unite.Value.x / unite.Value.nb, unite.Value.y / unite.Value.nb);
+                        Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindParXY(unite.Value.x / unite.Value.nb, unite.Value.y / unite.Value.nb);
                         Donnees.TAB_NATIONRow ligneNationVoisin = lignePionVoisin.nation;
                         CaseVersZoneGeographique(ligneCaseVoisin.ID_CASE, out NomZoneGeographique);
                         unitesEnvironnantes += "<LI>";
@@ -2594,13 +2596,13 @@ namespace vaoc
             }
             visionKM = lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
 
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
             for (int l=0; l<Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION[l];
                 if (lignePionVoisin.B_DETRUIT) { continue; }
                 if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
-                Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionVoisin.ID_CASE);
+                Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionVoisin.ID_CASE);
                 dist = Constantes.Distance(ligneCaseVoisin.I_X, ligneCaseVoisin.I_Y, ligneCase.I_X, ligneCase.I_Y);
                 if (dist <= visionKM)
                 {

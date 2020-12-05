@@ -359,7 +359,7 @@ namespace vaoc
                 //recherche du terrain avec le cout minimum sur la ligne
                 for (i = debut; i < fin + 1; i++)//+1 car frontière commune avec le voisin
                 {
-                    Donnees.TAB_CASERow ligneCase = bAbscisse ? Donnees.m_donnees.TAB_CASE.FindByXY(i, fixe) : Donnees.m_donnees.TAB_CASE.FindByXY(fixe, i);
+                    Donnees.TAB_CASERow ligneCase = bAbscisse ? Donnees.m_donnees.TAB_CASE.FindParXY(i, fixe) : Donnees.m_donnees.TAB_CASE.FindParXY(fixe, i);
                     int coutCase = Donnees.m_donnees.TAB_MOUVEMENT_COUT.CalculCout(0, ligneCase.ID_MODELE_TERRAIN, 0);
                     if (coutCase < coutMin && coutCase>0)
                     {
@@ -381,7 +381,7 @@ namespace vaoc
                 int nbCasesContinue = 0;//on ne garde que les points en continue s'il sont supérieur à une longueur de CST_LGPCC
                 for (i = debut; i < fin + 1; i++)//+1 car frontière commune avec le voisin
                 {
-                    Donnees.TAB_CASERow ligneCase = bAbscisse ? Donnees.m_donnees.TAB_CASE.FindByXY(i, fixe) : Donnees.m_donnees.TAB_CASE.FindByXY(fixe, i);
+                    Donnees.TAB_CASERow ligneCase = bAbscisse ? Donnees.m_donnees.TAB_CASE.FindParXY(i, fixe) : Donnees.m_donnees.TAB_CASE.FindParXY(fixe, i);
                     if (terrainMin == ligneCase.ID_MODELE_TERRAIN)
                     {
                         //case de sortie possible
@@ -530,11 +530,11 @@ namespace vaoc
 
                 for (i = 0; i < listeCases.Length; i++)
                 {
-                    ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[i].ID_CASE);
+                    ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[i].ID_CASE);
                     j = i + 1;
                     while (j < listeCases.Length)
                     {
-                        ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j].ID_CASE);
+                        ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j].ID_CASE);
                         //if (ligneCaseDepart.I_X == ligneCaseArrivee.I_X || ligneCaseDepart.I_Y == ligneCaseArrivee.I_Y)
                         //{
                         //    //    j++;//pas de trajets entre deux points sur la même ligne

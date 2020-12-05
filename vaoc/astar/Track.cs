@@ -88,7 +88,7 @@ namespace vaoc
             }
             else
             {
-                Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Queue.EndNodeHPA.ID_CASE_FIN);
+                Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Queue.EndNodeHPA.ID_CASE_FIN);
                 Node noeud = new Node(ligneCaseSource);
                 _Cost = Queue.Cost + etoile.Cout(noeud, caseFinale);
                 _OutRoad = Queue.OutRoad + etoile.HorsRoute(noeud, caseFinale);

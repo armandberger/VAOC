@@ -60,6 +60,45 @@ namespace vaoc
                         }
                     }
                 }
+                //La même chose avec les renforts
+                str += "Renforts" + Environment.NewLine;
+                foreach (Donnees.TAB_RENFORTRow ligneLeader in Donnees.m_donnees.TAB_RENFORT.ToList().OrderBy(l => l.ID_PION))
+                {
+                    if (ligneLeader.estQG && ligneLeader.nation.ID_NATION == ligneNation.ID_NATION)
+                    {
+                        int nbDivisions = 0;
+                        int nbFantassins = 0;
+                        int nbCavaliers = 0;
+                        int nbArtillerie = 0;
+                        int moral = 0;
+                        decimal experience = 0;
+                        foreach (Donnees.TAB_RENFORTRow lignePion in Donnees.m_donnees.TAB_RENFORT)
+                        {
+                            if (lignePion.ID_PION_PROPRIETAIRE == ligneLeader.ID_PION && lignePion.estCombattif)
+                            {
+                                if (!lignePion.estArtillerie)
+                                {
+                                    nbDivisions++;
+                                    moral += lignePion.I_MORAL_MAX;
+                                    experience += lignePion.I_EXPERIENCE;
+                                }
+                                nbFantassins += lignePion.I_INFANTERIE;
+                                nbCavaliers += lignePion.I_CAVALERIE;
+                                nbArtillerie += lignePion.I_ARTILLERIE;
+                            }
+                        }
+                        if (nbDivisions > 0)
+                        {
+                            moral /= nbDivisions;
+                            experience /= nbDivisions;
+                            int niveau = moral / 10; //pour donner un chiffre entre 1 et 5 normalement
+                            niveau += (int)Math.Round(experience);
+                            //ajout de la date d'arrivée du renfort
+                            str += "Le " + ClassMessager.DateHeure(ligneLeader.I_TOUR_ARRIVEE, 0) + Environment.NewLine;
+                            str += ligneLeader.S_NOM.PadLeft(40) + nbDivisions.ToString().PadLeft(10) + nbFantassins.ToString().PadLeft(10) + nbCavaliers.ToString().PadLeft(10) + nbArtillerie.ToString().PadLeft(10) + libelleNiveau[niveau].PadLeft(20) + Environment.NewLine;
+                        }
+                    }
+                }
             }
             textBoxResultat.Text = str;
         }

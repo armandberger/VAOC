@@ -193,7 +193,7 @@ namespace vaoc
                     lignePion.ID_PION);
 
                 //fichier pion (historique) qui sera peut-être repris par un autre message plus tard
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                 rect = new Rectangle(ligneCase.I_X - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
                         ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
                         vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2,
@@ -410,7 +410,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                     Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {

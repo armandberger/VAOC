@@ -2376,8 +2376,8 @@ namespace vaoc
                 {
                     if (lignePCCTrajet.I_BLOCX != xBloc || lignePCCTrajet.I_BLOCY != yBloc) continue;
                     Donnees.TAB_CASERow lDebug1, lDebug2;
-                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePCCTrajet.ID_CASE_DEBUT);
-                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePCCTrajet.ID_CASE_FIN);
+                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePCCTrajet.ID_CASE_DEBUT);
+                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePCCTrajet.ID_CASE_FIN);
                     Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCout : ID={0}({1},{2}) -> ID={3}({4},{5}) ",
                         lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y,
                         lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y
@@ -2394,7 +2394,7 @@ namespace vaoc
                     int j = 0;
                     while (j < listeCases.Count)
                     {
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j++]);
                         ligneCase.I_COUT = lignePCCTrajet.ID_TRAJET;//pour debug, je met l'id de trajet dans le cout pour l'afficher
                         cheminPCCTrajet.Add(ligneCase);
                     }
@@ -2414,7 +2414,7 @@ namespace vaoc
                     int j = 0;
                     while (j < listeCases.Count)
                     {
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j++]);
                         ligneCase.I_COUT = lignePCCVille.ID_TRAJET;//pour debug, je met l'id de trajet dans le cout pour l'afficher
                         cheminPCCTrajet.Add(ligneCase);
                     }
@@ -2455,7 +2455,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Cartographie.AfficherArriveeDepart((Bitmap)ImageCarte.Image,null,Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE), Color.DarkGreen, 1);
+                    Cartographie.AfficherArriveeDepart((Bitmap)ImageCarte.Image,null,Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE), Color.DarkGreen, 1);
                 }
             }
             ImageCarte.Invalidate();
@@ -2953,12 +2953,12 @@ namespace vaoc
 
                 if (null == ligneOrdre)
                 {
-                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                 }
                 else
                 {
-                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
-                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 }
             }
             ConstruireImageCarte();
@@ -3135,7 +3135,7 @@ namespace vaoc
                 MessageBox.Show("Aucun fichier chargé", "buttonCaseID_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Convert.ToInt32(this.textBoxCaseID.Text));
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Convert.ToInt32(this.textBoxCaseID.Text));
             if (null == ligneCase)
             {
                 MessageBox.Show("ID inconnu sur la carte", "buttonCaseID_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3149,7 +3149,7 @@ namespace vaoc
             if (comboBoxListeUnites.SelectedIndex != -1)
             {
                 m_lignePionSelection = (Donnees.TAB_PIONRow)comboBoxListeUnites.SelectedItem;
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
                 labelInformationX.Text = ligneCase.I_X.ToString();
                 labelInformationY.Text = ligneCase.I_Y.ToString();
                 labelInformationIDCASE.Text = String.Format("ID_CASE:{0:00000}", ligneCase.ID_CASE);
@@ -3162,8 +3162,8 @@ namespace vaoc
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
                 if (null != ligneOrdre)
                 {
-                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-                    Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                    Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     double cout, coutHorsRoute;
                     AStar etoile = new AStar();
@@ -3343,7 +3343,7 @@ namespace vaoc
                 //de même on remet en place les modèles de terrains des cases au moment du début du scénario
                 foreach (Donnees.TAB_CASE_MODIFICATIONRow ligneCaseModif in Donnees.m_donnees.TAB_CASE_MODIFICATION)
                 {
-                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCaseModif.ID_CASE);
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseModif.ID_CASE);
                     if (null != ligneCase)
                     {
                         ligneCase.ID_MODELE_TERRAIN = ligneCaseModif.ID_MODELE_TERRAIN_SOURCE;
@@ -3396,7 +3396,7 @@ namespace vaoc
             {
                 if (clicX >= 0 && clicY >= 0 && clicX < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE && clicY < Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE)
                 {
-                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(clicX, clicY);
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(clicX, clicY);
                     if (null != ligneCase)
                     {
                         bTrouveCase = true;
@@ -3438,7 +3438,7 @@ namespace vaoc
 
                 if (MouseButtons.Left == e.Button)
                 {
-                    m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
+                    m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(931, 180);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(378, 720);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(622, 577);
@@ -3452,7 +3452,7 @@ namespace vaoc
                 }
                 else
                 {
-                    m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
+                    m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(933, 180);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(1596, 561);
                     //m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(3515734));
@@ -3634,7 +3634,7 @@ namespace vaoc
             int lgPontOuGue;
             if (this.toolStripButtonConstruirePonton.CheckState == CheckState.Checked)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
                 //un guet, c'est un ponton détruit
                 Donnees.TAB_CASERow ligneCasePont = ligneCase.RecherchePontouPonton(false, true, out lgPontOuGue);
                 if (null == ligneCasePont)
@@ -3666,7 +3666,7 @@ namespace vaoc
             #region Test endommager un pont / detruire un ponton
             if (toolStripButtonPontEndommage.CheckState == CheckState.Checked)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
                 Donnees.TAB_CASERow ligneCasePont = ligneCase.RecherchePontouPonton(true, false, out lgPontOuGue);
                 Donnees.TAB_CASERow ligneCasePonton = ligneCase.RecherchePontouPonton(false, false, out lgPontOuGue);
                 if (null == ligneCasePont && null == ligneCasePonton)
@@ -3704,7 +3704,7 @@ namespace vaoc
             #region Test reparation de pont
             if (toolStripButtonReparerPont.CheckState == CheckState.Checked)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
                 Donnees.TAB_CASERow ligneCasePont = ligneCase.RecherchePontouPonton(true, true, out lgPontOuGue);
                 if (null == ligneCasePont)
                 {
@@ -3743,7 +3743,7 @@ namespace vaoc
             {
                 if (Constantes.Distance(clicX, clicY, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_X, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_Y) < Properties.Settings.Default.distanceRechercheNom)
                 {
-                    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_CASE);
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_CASE);
                     id_case = ligneCase.ID_CASE;
                     fNomCarte.id_nom = Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_NOM;
                     fNomCarte.victoire = Donnees.m_donnees.TAB_NOMS_CARTE[i].I_VICTOIRE;
@@ -3786,7 +3786,7 @@ namespace vaoc
             //s'il n'y en pas, on prend la case du clic
             if (Constantes.CST_IDNULL == id_case)
             {
-                ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(clicX, clicY);
+                ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(clicX, clicY);
                 if (null != ligneCase)
                 {
                     id_case = ligneCase.ID_CASE;
@@ -3902,8 +3902,8 @@ namespace vaoc
         {
             AstarTerrain[] tableCoutsMouvementsTerrain;
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
-            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-            Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE);
+            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+            Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
 
             /*string requete = string.Format("ID_VILLE_DEBUT=26 AND ID_VILLE_FIN=50");
             Donnees.TAB_PCC_VILLESRow[] lignesCout = (Donnees.TAB_PCC_VILLESRow[])Donnees.m_donnees.TAB_PCC_VILLES.Select(requete);
@@ -3926,8 +3926,8 @@ namespace vaoc
         {
             string messageErreur;
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
-            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-            Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindByID_CASE(m_lignePionSelection.ID_CASE);
+            Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+            Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
             Donnees.TAB_NATIONRow ligneNation = m_lignePionSelection.nation; // Donnees.m_donnees.TAB_PION.TrouveNation(m_lignePionSelection);
             //Donnees.TAB_NOMS_CARTERow ligneNom=null;
             AstarTerrain[] tableCoutsMouvementsTerrain;
@@ -3961,7 +3961,7 @@ namespace vaoc
             //Recalcul du nouveau trajet
             AStar etoile = new AStar();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
-                m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, ligneOrdre,
+                m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, ligneOrdre,
                 out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
             {
                 MessageBox.Show("Erreur dans RechercheChemin.", "buttonRecalculTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);

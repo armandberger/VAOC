@@ -378,7 +378,7 @@ namespace vaoc
                         int x = Math.Min((xBloc + c / 2) * tailleBloc, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1);
                         int y = Math.Min((yBloc + c % 2) * tailleBloc, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE - 1);
                         // on regarde si le coin fait partie du bloc, si oui, on verifie qu'il est bien présent pour les 3 blocs voisins
-                        ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(x, y);
+                        ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(x, y);
                         if (null != ligneCase)
                         {
                             requete = string.Format("I_BLOCX={0} AND I_BLOCY={1} AND ID_CASE={2}", xBloc, yBloc, ligneCase.ID_CASE);
@@ -467,7 +467,7 @@ namespace vaoc
 
                 for (i = 0; i < listeCases.Length; i++)
                 {
-                    ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[i].ID_CASE);
+                    ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[i].ID_CASE);
                     if (ligneCaseDepart.ID_CASE == ligneCaseArrivee.ID_CASE)
                     {
                         continue;

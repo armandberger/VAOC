@@ -30,6 +30,7 @@
         {
             this.buttonFermer = new System.Windows.Forms.Button();
             this.textBoxResultat = new System.Windows.Forms.TextBox();
+            this.checkBoxCampagne = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonFermer
@@ -53,11 +54,23 @@
             this.textBoxResultat.Size = new System.Drawing.Size(776, 397);
             this.textBoxResultat.TabIndex = 13;
             // 
+            // checkBoxCampagne
+            // 
+            this.checkBoxCampagne.AutoSize = true;
+            this.checkBoxCampagne.Location = new System.Drawing.Point(13, 421);
+            this.checkBoxCampagne.Name = "checkBoxCampagne";
+            this.checkBoxCampagne.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxCampagne.TabIndex = 14;
+            this.checkBoxCampagne.Text = "affichage Campagne";
+            this.checkBoxCampagne.UseVisualStyleBackColor = true;
+            this.checkBoxCampagne.CheckedChanged += new System.EventHandler(this.checkBoxCampagne_CheckedChanged);
+            // 
             // FormForcesInitiales
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.checkBoxCampagne);
             this.Controls.Add(this.textBoxResultat);
             this.Controls.Add(this.buttonFermer);
             this.Name = "FormForcesInitiales";
@@ -72,5 +85,6 @@
 
         private System.Windows.Forms.Button buttonFermer;
         private System.Windows.Forms.TextBox textBoxResultat;
+        private System.Windows.Forms.CheckBox checkBoxCampagne;
     }
 }

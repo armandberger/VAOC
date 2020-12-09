@@ -30,8 +30,8 @@ namespace vaoc
             {
                 if (bCampagne)
                 {
-                    str += "<table>";
-                    str += "<tr><th>Rôle</th><th>Divisions</th><th>Inf.</th><th>Cav.</th><th>Art.</th><th>Qualité</th><th>Localisation</th></tr>" + Environment.NewLine;
+                    str += "<table class=\"campagne\">";
+                    str += "<tr><th class=\"campagne\">Rôle</th><th class=\"campagne\">Divisions</th><th class=\"campagne\">Inf.</th><th class=\"campagne\">Cav.</th><th class=\"campagne\">Art.</th><th>Qualité</th><th class=\"campagne\">Localisation</th></tr>" + Environment.NewLine;
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace vaoc
                             niveau += (int)Math.Round(experience);
                             if (bCampagne)
                             {
-                                str += "<tr><td>"+ligneLeader.S_NOM + "</td><td>"+nbDivisions + "</td><td>" + nbFantassins + "</td><td>" + nbCavaliers + "</td><td>" + nbArtillerie + "</td><td>" + libelleNiveau[niveau] + "</td><td></td></tr>" + Environment.NewLine;
+                                str += "<tr><td class=\"campagne\">" + ligneLeader.S_NOM + "</td><td class=\"campagnedroite\">" + nbDivisions + "</td><td class=\"campagnedroite\">" + nbFantassins + "</td><td class=\"campagnedroite\">" + nbCavaliers + "</td><td class=\"campagnedroite\">" + nbArtillerie + "</td><td class=\"campagne\">" + libelleNiveau[niveau] + "</td><td class=\"campagne\"></td></tr>" + Environment.NewLine;
                             }
                             else
                             {

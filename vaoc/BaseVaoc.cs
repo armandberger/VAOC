@@ -1048,16 +1048,16 @@ namespace vaoc
                         index = (int)m_listeIndex.GetValue(x, y);
                         if (index < 0)
                         {
-                            if (!m_donnees.ChargerCases(x, y))
+                            if (!ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES))
                             {
-                                string message = string.Format("TrouveCase m_donnees.ChargerCases ne trouve pas de valeurs pour x={0} et y={1}", x, y);
+                                    string message = string.Format("TrouveCase m_donnees.ChargerCases ne trouve pas de valeurs pour x={0} et y={1}", x, y);
                                 throw new Exception(message);
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
                         }
-                        Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon, des fois il ne trouve plus la valeur d'une colonne
+                        Monitor.Enter(this.Rows.SyncRoot);//l'intêret du lock semble pas évident mais il y a des crashs bizarres sinon, des fois il ne trouve plus la valeur d'une colonne
                         TAB_CASERow retourLigne = this[index];
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        Monitor.Exit(this.Rows.SyncRoot);
                         return retourLigne;
                     }
                 }
@@ -1240,7 +1240,7 @@ namespace vaoc
 
                     DateTime timeStart;
                     TimeSpan perf;
-                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                    Monitor.Enter(this.Rows.SyncRoot);
                     //importrow duplicate les cases sans vérifier aucune contrainte.
                     timeStart = DateTime.Now;
                     debutNouvellesLignes = this.Count;
@@ -1251,10 +1251,10 @@ namespace vaoc
                         //si je retrouve la même ligne avant l'intertion,je sors ! C'est possible si deux process differents veulent voir en même temps une case non chargée
                         if ((int)m_listeIndex.GetValue(ligneCasePlus.I_X, ligneCasePlus.I_Y) > 0)
                         {
-                            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                            Monitor.Exit(this.Rows.SyncRoot);
                             return true;
                         }
-                        Donnees.m_donnees.TAB_CASE.ImportRow(ligneCasePlus);
+                        this.ImportRow(ligneCasePlus);
                         //Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(
                         //    ligneCasePlus.ID_CASE,
                         //    ligneCasePlus.ID_MODELE_TERRAIN,
@@ -1274,7 +1274,7 @@ namespace vaoc
                         ligneCase = this[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long
                         m_listeIndex.SetValue(i, ligneCase.I_X, ligneCase.I_Y);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                    Monitor.Exit(this.Rows.SyncRoot);
                     perf = DateTime.Now - timeStart;
                     //Debug.WriteLine(string.Format("mise à jour de l'index en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
                     Cursor.Current = oldCursor;
@@ -1959,10 +1959,10 @@ namespace vaoc
                 {
                     if (!SauvegarderCases()) { return false; }
                 }
-                if (0 == iPhase)
+                if (0 == iPhase || 0== this.TAB_PARTIE.Count() || !this.TAB_PARTIE[0].FL_DEMARRAGE)
                 {
                     //caseTemp = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.Copy();
-                    Donnees.m_donnees.TAB_CASE.ViderLaTable(true);
+                    this.TAB_CASE.ViderLaTable(true);
                 }
             }
 
@@ -2020,16 +2020,6 @@ namespace vaoc
                 Donnees.m_donnees.TAB_CASE.SetValueIndex(i, ligneCase.I_X, ligneCase.I_Y);
             }
             Cursor.Current = oldCursor;
-            return true;
-        }
-
-        internal bool ChargerCases(int x, int y)
-        {
-            if (!this.TAB_CASE.ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES))
-            {
-                return false;
-            }
-
             return true;
         }
 

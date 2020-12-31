@@ -40,6 +40,7 @@ namespace vaoc
             set
             {
                 m_tableCase = (Donnees.TAB_CASEDataTable)value.Copy();
+                m_tableCase.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
             }
         }
 
@@ -682,12 +683,19 @@ namespace vaoc
                     pixelColor.R, pixelColor.G, pixelColor.B);
                 throw new Exception(message);
             }
-            
+
             //Mise a jour de la case
             Donnees.TAB_CASERow ligneCase=m_tableCase.FindParXY(x,y);
             Monitor.Enter(m_tableCase);
             ligneCase.ID_MODELE_TERRAIN = resModeleTerrain[0].ID_MODELE_TERRAIN;
             Monitor.Exit(m_tableCase);
+            /*
+            //Je ne peux pas charger la table temportaire à cause du chargement dynanmique
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(x, y);
+            Monitor.Enter(Donnees.m_donnees.TAB_CASE);
+            ligneCase.ID_MODELE_TERRAIN = resModeleTerrain[0].ID_MODELE_TERRAIN;
+            Monitor.Exit(Donnees.m_donnees.TAB_CASE);
+            */
             return true;
         }
 

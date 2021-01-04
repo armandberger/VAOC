@@ -824,7 +824,7 @@ namespace vaoc
             //INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_MESSAGE`) VALUES (1, 1, 2, 1, '1805-06-15 02:04:18', '1805-06-15 22:40:15', 'La division a reçu un ordre : aller à Grenoble en partant à 8h00 durant 6 heures/jour'), (2, 1, 3, 1, '1805-06-02 22:52:27', '1805-06-03 12:52:27', 'La division vient d''arriver à Lyon et attend vos Constantes.ORDRES.');
 
             //on reconstitue systématiquement tous les messages si on refait tout depuis le début
-            if (tourSansEnvoi <= 0)
+            if (tourSansEnvoi < 0)
             {
                 requete = string.Format("DELETE FROM tab_vaoc_message WHERE ID_PARTIE={0};",
                                         idPartie);

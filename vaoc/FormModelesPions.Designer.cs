@@ -29,6 +29,10 @@ namespace vaoc
         private void InitializeComponent()
         {
             this.dataGridViewModelesPions = new System.Windows.Forms.DataGridView();
+            this.buttonAnnuler = new System.Windows.Forms.Button();
+            this.buttonValider = new System.Windows.Forms.Button();
+            this.couleurDialog = new System.Windows.Forms.ColorDialog();
+            this.labelModele = new System.Windows.Forms.Label();
             this.ID_MODELE_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.S_NOM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MODELE_DE_MOUVEMENT = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -37,10 +41,11 @@ namespace vaoc
             this.COULEUR = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_VISION_JOUR = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_VISION_NUIT = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
-            this.buttonValider = new System.Windows.Forms.Button();
-            this.couleurDialog = new System.Windows.Forms.ColorDialog();
-            this.labelModele = new System.Windows.Forms.Label();
+            this.I_FOURGON = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_FOURRAGE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_GUERISON = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_CRI_RALLIEMENT = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_NATION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewModelesPions)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,12 +61,48 @@ namespace vaoc
             this.CHOIX,
             this.COULEUR,
             this.I_VISION_JOUR,
-            this.I_VISION_NUIT});
+            this.I_VISION_NUIT,
+            this.I_FOURGON,
+            this.I_FOURRAGE,
+            this.I_GUERISON,
+            this.S_CRI_RALLIEMENT,
+            this.S_NATION});
             this.dataGridViewModelesPions.Location = new System.Drawing.Point(12, 0);
             this.dataGridViewModelesPions.Name = "dataGridViewModelesPions";
             this.dataGridViewModelesPions.Size = new System.Drawing.Size(820, 278);
             this.dataGridViewModelesPions.TabIndex = 7;
             this.dataGridViewModelesPions.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewModelesPions_CellContentClick);
+            // 
+            // buttonAnnuler
+            // 
+            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonAnnuler.Location = new System.Drawing.Point(653, 295);
+            this.buttonAnnuler.Name = "buttonAnnuler";
+            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
+            this.buttonAnnuler.TabIndex = 5;
+            this.buttonAnnuler.Text = "Annuler";
+            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            // 
+            // buttonValider
+            // 
+            this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonValider.Location = new System.Drawing.Point(118, 295);
+            this.buttonValider.Name = "buttonValider";
+            this.buttonValider.Size = new System.Drawing.Size(75, 23);
+            this.buttonValider.TabIndex = 6;
+            this.buttonValider.Text = "Valider";
+            this.buttonValider.UseVisualStyleBackColor = true;
+            // 
+            // labelModele
+            // 
+            this.labelModele.AutoSize = true;
+            this.labelModele.Location = new System.Drawing.Point(274, 295);
+            this.labelModele.MaximumSize = new System.Drawing.Size(350, 0);
+            this.labelModele.Name = "labelModele";
+            this.labelModele.Size = new System.Drawing.Size(317, 26);
+            this.labelModele.TabIndex = 8;
+            this.labelModele.Text = "Chaque nation doit posséder des modèles de pion nommés \"MESSAGER\", \"PATROUILLE\" e" +
+    "t \"\"PATROUILLEMESSAGER\"";
             // 
             // ID_MODELE_PION
             // 
@@ -109,36 +150,30 @@ namespace vaoc
             this.I_VISION_NUIT.HeaderText = "Portée de la vision de nuit";
             this.I_VISION_NUIT.Name = "I_VISION_NUIT";
             // 
-            // buttonAnnuler
+            // I_FOURGON
             // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(653, 295);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 5;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            this.I_FOURGON.HeaderText = "% Fourgon";
+            this.I_FOURGON.Name = "I_FOURGON";
             // 
-            // buttonValider
+            // I_FOURRAGE
             // 
-            this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(118, 295);
-            this.buttonValider.Name = "buttonValider";
-            this.buttonValider.Size = new System.Drawing.Size(75, 23);
-            this.buttonValider.TabIndex = 6;
-            this.buttonValider.Text = "Valider";
-            this.buttonValider.UseVisualStyleBackColor = true;
+            this.I_FOURRAGE.HeaderText = "% Fourrage";
+            this.I_FOURRAGE.Name = "I_FOURRAGE";
             // 
-            // labelModele
+            // I_GUERISON
             // 
-            this.labelModele.AutoSize = true;
-            this.labelModele.Location = new System.Drawing.Point(274, 295);
-            this.labelModele.MaximumSize = new System.Drawing.Size(350, 0);
-            this.labelModele.Name = "labelModele";
-            this.labelModele.Size = new System.Drawing.Size(317, 26);
-            this.labelModele.TabIndex = 8;
-            this.labelModele.Text = "Chaque nation doit posséder des modèles de pion nommés \"MESSAGER\", \"PATROUILLE\" e" +
-                "t \"\"PATROUILLEMESSAGER\"";
+            this.I_GUERISON.HeaderText = "% Guérison";
+            this.I_GUERISON.Name = "I_GUERISON";
+            // 
+            // S_CRI_RALLIEMENT
+            // 
+            this.S_CRI_RALLIEMENT.HeaderText = "Cri de ralliement";
+            this.S_CRI_RALLIEMENT.Name = "S_CRI_RALLIEMENT";
+            // 
+            // S_NATION
+            // 
+            this.S_NATION.HeaderText = "Nationalité";
+            this.S_NATION.Name = "S_NATION";
             // 
             // FormModelesPions
             // 
@@ -165,6 +200,7 @@ namespace vaoc
         private System.Windows.Forms.Button buttonAnnuler;
         private System.Windows.Forms.Button buttonValider;
         private System.Windows.Forms.ColorDialog couleurDialog;
+        private System.Windows.Forms.Label labelModele;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_MODELE_PION;
         private System.Windows.Forms.DataGridViewTextBoxColumn S_NOM;
         private System.Windows.Forms.DataGridViewComboBoxColumn MODELE_DE_MOUVEMENT;
@@ -173,6 +209,10 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn COULEUR;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_VISION_JOUR;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_VISION_NUIT;
-        private System.Windows.Forms.Label labelModele;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_FOURGON;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_FOURRAGE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_GUERISON;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_CRI_RALLIEMENT;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_NATION;
     }
 }

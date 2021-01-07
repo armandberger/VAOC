@@ -7515,6 +7515,16 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_VISION_NUIT;
             
+            private global::System.Data.DataColumn columnI_FOURGON;
+            
+            private global::System.Data.DataColumn columnI_GUERISON;
+            
+            private global::System.Data.DataColumn columnI_FOURRAGE;
+            
+            private global::System.Data.DataColumn columnS_CRI_RALLIEMENT;
+            
+            private global::System.Data.DataColumn columnS_NATION;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_MODELE_PIONDataTable() {
@@ -7622,6 +7632,46 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_FOURGONColumn {
+                get {
+                    return this.columnI_FOURGON;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_GUERISONColumn {
+                get {
+                    return this.columnI_GUERISON;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_FOURRAGEColumn {
+                get {
+                    return this.columnI_FOURRAGE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_CRI_RALLIEMENTColumn {
+                get {
+                    return this.columnS_CRI_RALLIEMENT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_NATIONColumn {
+                get {
+                    return this.columnS_NATION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -7657,7 +7707,7 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TAB_MODELE_PIONRow AddTAB_MODELE_PIONRow(int ID_MODELE_PION, string S_NOM, int ID_MODELE_MOUVEMENT, int ID_NATION, short I_ROUGE, short I_VERT, short I_BLEU, int I_VISION_JOUR, int I_VISION_NUIT) {
+            public TAB_MODELE_PIONRow AddTAB_MODELE_PIONRow(int ID_MODELE_PION, string S_NOM, int ID_MODELE_MOUVEMENT, int ID_NATION, short I_ROUGE, short I_VERT, short I_BLEU, int I_VISION_JOUR, int I_VISION_NUIT, int I_FOURGON, int I_GUERISON, int I_FOURRAGE, string S_CRI_RALLIEMENT, string S_NATION) {
                 TAB_MODELE_PIONRow rowTAB_MODELE_PIONRow = ((TAB_MODELE_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_MODELE_PION,
@@ -7668,7 +7718,12 @@ namespace vaoc {
                         I_VERT,
                         I_BLEU,
                         I_VISION_JOUR,
-                        I_VISION_NUIT};
+                        I_VISION_NUIT,
+                        I_FOURGON,
+                        I_GUERISON,
+                        I_FOURRAGE,
+                        S_CRI_RALLIEMENT,
+                        S_NATION};
                 rowTAB_MODELE_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_MODELE_PIONRow);
                 return rowTAB_MODELE_PIONRow;
@@ -7707,6 +7762,11 @@ namespace vaoc {
                 this.columnI_BLEU = base.Columns["I_BLEU"];
                 this.columnI_VISION_JOUR = base.Columns["I_VISION_JOUR"];
                 this.columnI_VISION_NUIT = base.Columns["I_VISION_NUIT"];
+                this.columnI_FOURGON = base.Columns["I_FOURGON"];
+                this.columnI_GUERISON = base.Columns["I_GUERISON"];
+                this.columnI_FOURRAGE = base.Columns["I_FOURRAGE"];
+                this.columnS_CRI_RALLIEMENT = base.Columns["S_CRI_RALLIEMENT"];
+                this.columnS_NATION = base.Columns["S_NATION"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7730,6 +7790,16 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_VISION_JOUR);
                 this.columnI_VISION_NUIT = new global::System.Data.DataColumn("I_VISION_NUIT", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_VISION_NUIT);
+                this.columnI_FOURGON = new global::System.Data.DataColumn("I_FOURGON", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_FOURGON);
+                this.columnI_GUERISON = new global::System.Data.DataColumn("I_GUERISON", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_GUERISON);
+                this.columnI_FOURRAGE = new global::System.Data.DataColumn("I_FOURRAGE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_FOURRAGE);
+                this.columnS_CRI_RALLIEMENT = new global::System.Data.DataColumn("S_CRI_RALLIEMENT", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_CRI_RALLIEMENT);
+                this.columnS_NATION = new global::System.Data.DataColumn("S_NATION", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_NATION);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_MODELE_PION}, true));
                 this.columnID_MODELE_PION.AllowDBNull = false;
@@ -7871,24 +7941,6 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnS_NOM;
             
-            private global::System.Data.DataColumn columnI_ENCOMBREMENT_INFANTERIE;
-            
-            private global::System.Data.DataColumn columnI_ENCOMBREMENT_CAVALERIE;
-            
-            private global::System.Data.DataColumn columnI_ENCOMBREMENT_ARTILLERIE;
-            
-            private global::System.Data.DataColumn columnI_ENCOMBREMENT_ARRET;
-            
-            private global::System.Data.DataColumn columnI_FOURGON;
-            
-            private global::System.Data.DataColumn columnS_CRI_RALLIEMENT;
-            
-            private global::System.Data.DataColumn columnI_FOURRAGE;
-            
-            private global::System.Data.DataColumn columnI_LIMITE_FOURRAGE;
-            
-            private global::System.Data.DataColumn columnI_GUERISON;
-            
             private global::System.Data.DataColumn columnI_LIMITE_DEPOT_A;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -7942,78 +7994,6 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_ENCOMBREMENT_INFANTERIEColumn {
-                get {
-                    return this.columnI_ENCOMBREMENT_INFANTERIE;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_ENCOMBREMENT_CAVALERIEColumn {
-                get {
-                    return this.columnI_ENCOMBREMENT_CAVALERIE;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_ENCOMBREMENT_ARTILLERIEColumn {
-                get {
-                    return this.columnI_ENCOMBREMENT_ARTILLERIE;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_ENCOMBREMENT_ARRETColumn {
-                get {
-                    return this.columnI_ENCOMBREMENT_ARRET;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_FOURGONColumn {
-                get {
-                    return this.columnI_FOURGON;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn S_CRI_RALLIEMENTColumn {
-                get {
-                    return this.columnS_CRI_RALLIEMENT;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_FOURRAGEColumn {
-                get {
-                    return this.columnI_FOURRAGE;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_LIMITE_FOURRAGEColumn {
-                get {
-                    return this.columnI_LIMITE_FOURRAGE;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn I_GUERISONColumn {
-                get {
-                    return this.columnI_GUERISON;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn I_LIMITE_DEPOT_AColumn {
                 get {
                     return this.columnI_LIMITE_DEPOT_A;
@@ -8057,20 +8037,11 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public TAB_NATIONRow AddTAB_NATIONRow(string S_NOM, int I_ENCOMBREMENT_INFANTERIE, int I_ENCOMBREMENT_CAVALERIE, int I_ENCOMBREMENT_ARTILLERIE, int I_ENCOMBREMENT_ARRET, int I_FOURGON, string S_CRI_RALLIEMENT, int I_FOURRAGE, int I_LIMITE_FOURRAGE, int I_GUERISON, short I_LIMITE_DEPOT_A) {
+            public TAB_NATIONRow AddTAB_NATIONRow(string S_NOM, short I_LIMITE_DEPOT_A) {
                 TAB_NATIONRow rowTAB_NATIONRow = ((TAB_NATIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         S_NOM,
-                        I_ENCOMBREMENT_INFANTERIE,
-                        I_ENCOMBREMENT_CAVALERIE,
-                        I_ENCOMBREMENT_ARTILLERIE,
-                        I_ENCOMBREMENT_ARRET,
-                        I_FOURGON,
-                        S_CRI_RALLIEMENT,
-                        I_FOURRAGE,
-                        I_LIMITE_FOURRAGE,
-                        I_GUERISON,
                         I_LIMITE_DEPOT_A};
                 rowTAB_NATIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_NATIONRow);
@@ -8103,15 +8074,6 @@ namespace vaoc {
             internal void InitVars() {
                 this.columnID_NATION = base.Columns["ID_NATION"];
                 this.columnS_NOM = base.Columns["S_NOM"];
-                this.columnI_ENCOMBREMENT_INFANTERIE = base.Columns["I_ENCOMBREMENT_INFANTERIE"];
-                this.columnI_ENCOMBREMENT_CAVALERIE = base.Columns["I_ENCOMBREMENT_CAVALERIE"];
-                this.columnI_ENCOMBREMENT_ARTILLERIE = base.Columns["I_ENCOMBREMENT_ARTILLERIE"];
-                this.columnI_ENCOMBREMENT_ARRET = base.Columns["I_ENCOMBREMENT_ARRET"];
-                this.columnI_FOURGON = base.Columns["I_FOURGON"];
-                this.columnS_CRI_RALLIEMENT = base.Columns["S_CRI_RALLIEMENT"];
-                this.columnI_FOURRAGE = base.Columns["I_FOURRAGE"];
-                this.columnI_LIMITE_FOURRAGE = base.Columns["I_LIMITE_FOURRAGE"];
-                this.columnI_GUERISON = base.Columns["I_GUERISON"];
                 this.columnI_LIMITE_DEPOT_A = base.Columns["I_LIMITE_DEPOT_A"];
             }
             
@@ -8122,24 +8084,6 @@ namespace vaoc {
                 base.Columns.Add(this.columnID_NATION);
                 this.columnS_NOM = new global::System.Data.DataColumn("S_NOM", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnS_NOM);
-                this.columnI_ENCOMBREMENT_INFANTERIE = new global::System.Data.DataColumn("I_ENCOMBREMENT_INFANTERIE", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_ENCOMBREMENT_INFANTERIE);
-                this.columnI_ENCOMBREMENT_CAVALERIE = new global::System.Data.DataColumn("I_ENCOMBREMENT_CAVALERIE", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_ENCOMBREMENT_CAVALERIE);
-                this.columnI_ENCOMBREMENT_ARTILLERIE = new global::System.Data.DataColumn("I_ENCOMBREMENT_ARTILLERIE", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_ENCOMBREMENT_ARTILLERIE);
-                this.columnI_ENCOMBREMENT_ARRET = new global::System.Data.DataColumn("I_ENCOMBREMENT_ARRET", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_ENCOMBREMENT_ARRET);
-                this.columnI_FOURGON = new global::System.Data.DataColumn("I_FOURGON", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_FOURGON);
-                this.columnS_CRI_RALLIEMENT = new global::System.Data.DataColumn("S_CRI_RALLIEMENT", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnS_CRI_RALLIEMENT);
-                this.columnI_FOURRAGE = new global::System.Data.DataColumn("I_FOURRAGE", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_FOURRAGE);
-                this.columnI_LIMITE_FOURRAGE = new global::System.Data.DataColumn("I_LIMITE_FOURRAGE", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_LIMITE_FOURRAGE);
-                this.columnI_GUERISON = new global::System.Data.DataColumn("I_GUERISON", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnI_GUERISON);
                 this.columnI_LIMITE_DEPOT_A = new global::System.Data.DataColumn("I_LIMITE_DEPOT_A", typeof(short), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_LIMITE_DEPOT_A);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
@@ -8148,9 +8092,6 @@ namespace vaoc {
                 this.columnID_NATION.AllowDBNull = false;
                 this.columnID_NATION.Unique = true;
                 this.columnID_NATION.Caption = "ID_MODELE_MOUVEMENT";
-                this.columnI_ENCOMBREMENT_CAVALERIE.Caption = "I_ENCOMBREMENT_INFANTERIE";
-                this.columnI_FOURRAGE.DefaultValue = ((int)(0));
-                this.columnI_GUERISON.DefaultValue = ((int)(0));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -24583,6 +24524,90 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_FOURGON {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_MODELE_PION.I_FOURGONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_FOURGON\' dans la table \'TAB_MODELE_PION\' est DBNull." +
+                                "", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_PION.I_FOURGONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_GUERISON {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_MODELE_PION.I_GUERISONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_GUERISON\' dans la table \'TAB_MODELE_PION\' est DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_PION.I_GUERISONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_FOURRAGE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_MODELE_PION.I_FOURRAGEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_FOURRAGE\' dans la table \'TAB_MODELE_PION\' est DBNull" +
+                                ".", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_PION.I_FOURRAGEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_CRI_RALLIEMENT {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_MODELE_PION.S_CRI_RALLIEMENTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_CRI_RALLIEMENT\' dans la table \'TAB_MODELE_PION\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_PION.S_CRI_RALLIEMENTColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_NATION {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_MODELE_PION.S_NATIONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_NATION\' dans la table \'TAB_MODELE_PION\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_MODELE_PION.S_NATIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_MODELE_PION.S_NOMColumn);
             }
@@ -24676,6 +24701,66 @@ namespace vaoc {
             public void SetI_VISION_NUITNull() {
                 this[this.tableTAB_MODELE_PION.I_VISION_NUITColumn] = global::System.Convert.DBNull;
             }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_FOURGONNull() {
+                return this.IsNull(this.tableTAB_MODELE_PION.I_FOURGONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_FOURGONNull() {
+                this[this.tableTAB_MODELE_PION.I_FOURGONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_GUERISONNull() {
+                return this.IsNull(this.tableTAB_MODELE_PION.I_GUERISONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_GUERISONNull() {
+                this[this.tableTAB_MODELE_PION.I_GUERISONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_FOURRAGENull() {
+                return this.IsNull(this.tableTAB_MODELE_PION.I_FOURRAGEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_FOURRAGENull() {
+                this[this.tableTAB_MODELE_PION.I_FOURRAGEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_CRI_RALLIEMENTNull() {
+                return this.IsNull(this.tableTAB_MODELE_PION.S_CRI_RALLIEMENTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_CRI_RALLIEMENTNull() {
+                this[this.tableTAB_MODELE_PION.S_CRI_RALLIEMENTColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_NATIONNull() {
+                return this.IsNull(this.tableTAB_MODELE_PION.S_NATIONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_NATIONNull() {
+                this[this.tableTAB_MODELE_PION.S_NATIONColumn] = global::System.Convert.DBNull;
+            }
         }
         
         /// <summary>
@@ -24721,156 +24806,6 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_ENCOMBREMENT_INFANTERIE {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_ENCOMBREMENT_INFANTERIEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENCOMBREMENT_INFANTERIE\' dans la table \'TAB_NATION\' " +
-                                "est DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_ENCOMBREMENT_INFANTERIEColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_ENCOMBREMENT_CAVALERIE {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_ENCOMBREMENT_CAVALERIEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENCOMBREMENT_CAVALERIE\' dans la table \'TAB_NATION\' e" +
-                                "st DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_ENCOMBREMENT_CAVALERIEColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_ENCOMBREMENT_ARTILLERIE {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_ENCOMBREMENT_ARTILLERIEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENCOMBREMENT_ARTILLERIE\' dans la table \'TAB_NATION\' " +
-                                "est DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_ENCOMBREMENT_ARTILLERIEColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_ENCOMBREMENT_ARRET {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_ENCOMBREMENT_ARRETColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENCOMBREMENT_ARRET\' dans la table \'TAB_NATION\' est D" +
-                                "BNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_ENCOMBREMENT_ARRETColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_FOURGON {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_FOURGONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_FOURGON\' dans la table \'TAB_NATION\' est DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_FOURGONColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public string S_CRI_RALLIEMENT {
-                get {
-                    try {
-                        return ((string)(this[this.tableTAB_NATION.S_CRI_RALLIEMENTColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_CRI_RALLIEMENT\' dans la table \'TAB_NATION\' est DBNul" +
-                                "l.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.S_CRI_RALLIEMENTColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_FOURRAGE {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_FOURRAGEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_FOURRAGE\' dans la table \'TAB_NATION\' est DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_FOURRAGEColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_LIMITE_FOURRAGE {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_LIMITE_FOURRAGEColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_LIMITE_FOURRAGE\' dans la table \'TAB_NATION\' est DBNu" +
-                                "ll.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_LIMITE_FOURRAGEColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_GUERISON {
-                get {
-                    try {
-                        return ((int)(this[this.tableTAB_NATION.I_GUERISONColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_GUERISON\' dans la table \'TAB_NATION\' est DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableTAB_NATION.I_GUERISONColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public short I_LIMITE_DEPOT_A {
                 get {
                     try {
@@ -24896,114 +24831,6 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetS_NOMNull() {
                 this[this.tableTAB_NATION.S_NOMColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_ENCOMBREMENT_INFANTERIENull() {
-                return this.IsNull(this.tableTAB_NATION.I_ENCOMBREMENT_INFANTERIEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_ENCOMBREMENT_INFANTERIENull() {
-                this[this.tableTAB_NATION.I_ENCOMBREMENT_INFANTERIEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_ENCOMBREMENT_CAVALERIENull() {
-                return this.IsNull(this.tableTAB_NATION.I_ENCOMBREMENT_CAVALERIEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_ENCOMBREMENT_CAVALERIENull() {
-                this[this.tableTAB_NATION.I_ENCOMBREMENT_CAVALERIEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_ENCOMBREMENT_ARTILLERIENull() {
-                return this.IsNull(this.tableTAB_NATION.I_ENCOMBREMENT_ARTILLERIEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_ENCOMBREMENT_ARTILLERIENull() {
-                this[this.tableTAB_NATION.I_ENCOMBREMENT_ARTILLERIEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_ENCOMBREMENT_ARRETNull() {
-                return this.IsNull(this.tableTAB_NATION.I_ENCOMBREMENT_ARRETColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_ENCOMBREMENT_ARRETNull() {
-                this[this.tableTAB_NATION.I_ENCOMBREMENT_ARRETColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_FOURGONNull() {
-                return this.IsNull(this.tableTAB_NATION.I_FOURGONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_FOURGONNull() {
-                this[this.tableTAB_NATION.I_FOURGONColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsS_CRI_RALLIEMENTNull() {
-                return this.IsNull(this.tableTAB_NATION.S_CRI_RALLIEMENTColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetS_CRI_RALLIEMENTNull() {
-                this[this.tableTAB_NATION.S_CRI_RALLIEMENTColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_FOURRAGENull() {
-                return this.IsNull(this.tableTAB_NATION.I_FOURRAGEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_FOURRAGENull() {
-                this[this.tableTAB_NATION.I_FOURRAGEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_LIMITE_FOURRAGENull() {
-                return this.IsNull(this.tableTAB_NATION.I_LIMITE_FOURRAGEColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_LIMITE_FOURRAGENull() {
-                this[this.tableTAB_NATION.I_LIMITE_FOURRAGEColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public bool IsI_GUERISONNull() {
-                return this.IsNull(this.tableTAB_NATION.I_GUERISONColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public void SetI_GUERISONNull() {
-                this[this.tableTAB_NATION.I_GUERISONColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

@@ -42,7 +42,12 @@ namespace vaoc
                             resDataNation[0].ID_NATION,
                             pixelColor.R, pixelColor.G, pixelColor.B,
                             Convert.ToInt32(ligne.Cells["I_VISION_JOUR"].Value),
-                            Convert.ToInt32(ligne.Cells["I_VISION_NUIT"].Value)
+                            Convert.ToInt32(ligne.Cells["I_VISION_NUIT"].Value),
+                            Convert.ToInt32(ligne.Cells["I_FOURGON"].Value),
+                            Convert.ToInt32(ligne.Cells["I_GUERISON"].Value),
+                            Convert.ToInt32(ligne.Cells["I_FOURRAGE"].Value),
+                            Convert.ToString(ligne.Cells["S_CRI_RALLIEMENT"].Value),
+                            Convert.ToString(ligne.Cells["S_NATION"].Value)
                             );
                     }
                 }
@@ -83,6 +88,11 @@ namespace vaoc
                     ligneGrid.Cells["Couleur"].Style.BackColor = pixelColor;
                     ligneGrid.Cells["I_VISION_JOUR"].Value = ligneModele.I_VISION_JOUR;
                     ligneGrid.Cells["I_VISION_NUIT"].Value = ligneModele.I_VISION_NUIT;
+                    ligneGrid.Cells["I_FOURGON"].Value = ligneModele.I_FOURGON;
+                    ligneGrid.Cells["I_GUERISON"].Value = ligneModele.I_GUERISON;
+                    ligneGrid.Cells["I_FOURRAGE"].Value = ligneModele.I_FOURRAGE;
+                    ligneGrid.Cells["S_CRI_RALLIEMENT"].Value = ligneModele.S_CRI_RALLIEMENT;
+                    ligneGrid.Cells["S_NATION"].Value = ligneModele.S_NATION;
                 }
             }
         }

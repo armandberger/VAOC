@@ -308,15 +308,15 @@ namespace vaoc
                 {
                     if (estDepot)
                     {
-                        return Constantes.CST_ENCOMBREMENT_DEPOT[(int)(C_NIVEAU_DEPOT - 'A')] * this.nation.I_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE; 
+                        return Constantes.CST_ENCOMBREMENT_DEPOT[(int)(C_NIVEAU_DEPOT - 'A')] * Constantes.CST_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE; 
                     }
                     if (estConvoiDeRavitaillement)
                     {
-                        return Constantes.CST_ENCOMBREMENT_CONVOI_RAVITAILLEMENT * this.nation.I_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+                        return Constantes.CST_ENCOMBREMENT_CONVOI_RAVITAILLEMENT * Constantes.CST_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                     }
                     if (estPontonnier)
                     {
-                        return Constantes.CST_ENCOMBREMENT_CONVOI_RAVITAILLEMENT * this.nation.I_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
+                        return Constantes.CST_ENCOMBREMENT_CONVOI_RAVITAILLEMENT * Constantes.CST_ENCOMBREMENT_INFANTERIE;// / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                     }
 
                     return infanterie + cavalerie + artillerie;
@@ -906,13 +906,13 @@ namespace vaoc
                 LogFile.Notifier(message, out messageErreur);
             }
 
-            public bool CalculerEffectif(Donnees.TAB_NATIONRow ligneNation, decimal encombrement, bool enMouvement, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
+            public bool CalculerEffectif(decimal encombrement, bool enMouvement, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
             {
                 int iInfanterie;
 
                 iInfanterie = (enMouvement && (estDepot || estConvoiDeRavitaillement || estPontonnier)) ? effectifTotalEnMouvement : I_INFANTERIE;
 
-                return CalculerEffectif(ligneNation, iInfanterie, I_CAVALERIE, I_ARTILLERIE, encombrement, enMouvement, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
+                return CalculerEffectif(iInfanterie, I_CAVALERIE, I_ARTILLERIE, encombrement, enMouvement, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
             }
 
             /// <summary>
@@ -929,8 +929,7 @@ namespace vaoc
             /// <param name="iCAVALERIE">cavalerie constituant l'encombrement</param>
             /// <param name="iARTILLERIE">artillerie constituant l'encombrement</param>
             /// <returns>true si OK, false si KO</returns>
-            public bool CalculerEffectif(Donnees.TAB_NATIONRow ligneNation,
-                int iInfanterieInitial, int iCavalerieInitial, int iArtillerieInitial, decimal encombrement, bool enMouvement, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
+            public bool CalculerEffectif(int iInfanterieInitial, int iCavalerieInitial, int iArtillerieInitial, decimal encombrement, bool enMouvement, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
             {
                 int encombrementCavalerie, encombrementInfanterie;
                 int effectif;
@@ -948,17 +947,17 @@ namespace vaoc
                 else
                 {
                     rapportMoral = (I_MORAL > 0) ? 100 : 50;
-                    encombrementReel = (decimal)(encombrement * rapportMoral) / (100 + ligneNation.I_FOURGON);
+                    encombrementReel = (decimal)(encombrement * rapportMoral) / (100 + this.modelePion.I_FOURGON);
                 }
 
                 if (enMouvement)
                 {
                     //encombrement sur route
-                    encombrementCavalerie = iCavalerieInitial * (100 - I_FATIGUE) / 100 * echelle / ligneNation.I_ENCOMBREMENT_CAVALERIE;
+                    encombrementCavalerie = iCavalerieInitial * (100 - I_FATIGUE) / 100 * echelle / Constantes.CST_ENCOMBREMENT_CAVALERIE;
                     if (encombrementReel < encombrementCavalerie)
                     {
                         //la cavalerie occupe tout l'espace
-                        iCAVALERIE = (int)(encombrementReel * ligneNation.I_ENCOMBREMENT_CAVALERIE / echelle);
+                        iCAVALERIE = (int)(encombrementReel * Constantes.CST_ENCOMBREMENT_CAVALERIE / echelle);
                         return true;
                     }
                     else
@@ -968,11 +967,11 @@ namespace vaoc
                         encombrementReel -= encombrementCavalerie;
                     }
 
-                    encombrementInfanterie = iInfanterieInitial * (100 - I_FATIGUE) / 100 * echelle / ligneNation.I_ENCOMBREMENT_INFANTERIE;
+                    encombrementInfanterie = iInfanterieInitial * (100 - I_FATIGUE) / 100 * echelle / Constantes.CST_ENCOMBREMENT_INFANTERIE;
                     if (encombrementReel < encombrementInfanterie)
                     {
                         //l'infanterie occupe tout l'espace restant
-                        iINFANTERIE = (int)(encombrementReel * ligneNation.I_ENCOMBREMENT_INFANTERIE / echelle);
+                        iINFANTERIE = (int)(encombrementReel * Constantes.CST_ENCOMBREMENT_INFANTERIE / echelle);
                         return true;
                     }
                     else
@@ -982,12 +981,12 @@ namespace vaoc
                         encombrementReel -= encombrementInfanterie;
                     }
                     //l'artillerie occupe ce qui reste
-                    iARTILLERIE = (int)Math.Round(encombrementReel * ligneNation.I_ENCOMBREMENT_ARTILLERIE / echelle);
+                    iARTILLERIE = (int)Math.Round(encombrementReel * Constantes.CST_ENCOMBREMENT_ARTILLERIE / echelle);
                 }
                 else
                 {
                     //encombrement en statique
-                    effectif = (int)(ligneNation.I_ENCOMBREMENT_ARRET * encombrement / (echelle * echelle));
+                    effectif = (int)(Constantes.CST_ENCOMBREMENT_ARRET * encombrement / (echelle * echelle));
                     CalculerRepartitionEffectif(effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
                 }
 
@@ -2432,9 +2431,9 @@ namespace vaoc
 
                 #region fourrage : Vivre sur le terrain
                 //l'unité reprend du ravitaillement en prenant sur le terrain en tenant compte de la météo
-                if (I_RAVITAILLEMENT < ligneNation.I_LIMITE_FOURRAGE)
+                if (I_RAVITAILLEMENT < 100)
                 {
-                    I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + (ligneNation.I_FOURRAGE * ligneMeteo.I_POURCENT_RAVITAILLEMENT / 100));
+                    I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + (this.modelePion.I_FOURRAGE * ligneMeteo.I_POURCENT_RAVITAILLEMENT / 100));
                 }
                 #endregion
 
@@ -2578,7 +2577,7 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
 
-                encombrementTotal = CalculerEncombrement(ligneNation, this.infanterie, this.cavalerie, this.artillerie, true);
+                encombrementTotal = CalculerEncombrement(this.infanterie, this.cavalerie, this.artillerie, true);
                 AStar etoile = new AStar();
                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
@@ -2598,7 +2597,7 @@ namespace vaoc
                     //effectifs actuellement à l'arrivée
                     CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
                                                 out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
-                    encombrementArrivee = CalculerEncombrement(ligneNation, iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
+                    encombrementArrivee = CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
                     poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count());
                     message = string.Format("CalculPionPositionRelativeAvancement :effectif à destination :i={0} c={1} a={2} avec un encombrement de {3} et un poids de {4}",
                                             iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, encombrementArrivee, poidsEncombrementArrivee);
@@ -2639,7 +2638,7 @@ namespace vaoc
                     message = string.Format("PlacerPionEnBivouac :effectif sur route: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                     LogFile.Notifier(message);
 
-                    encombrementRoute = CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
+                    encombrementRoute = CalculerEncombrement(iInfanterie, iCavalerie, iArtillerie, true);
 
                     //recherche du plus court chemin
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -2699,7 +2698,7 @@ namespace vaoc
                 }
 
                 //les pions sans encombrement ne se place pas en bivouac
-                if (0 == CalculerEncombrement(this.nation, false)) { return true; }
+                if (0 == CalculerEncombrement(false)) { return true; }
 
                 //les pions qui ne sont pas en cours de mouvement, sont déjà en bivouac !
                 if (ligneOrdre.I_ORDRE_TYPE != Constantes.ORDRES.MOUVEMENT) { return true; }
@@ -2731,14 +2730,13 @@ namespace vaoc
             /// note : les blessés occupent le même encombrement qu'une unité standard
             /// note : les prisonniers ont une escorte égale à 10% du nombre de prisonniers dont il faut tenir compte
             /// </summary>
-            /// <param name="ligneNation">Nation à laquelle appartient les effectifs</param>
             /// <param name="effectifInfanterie">effectifs d'infanterie</param>
             /// <param name="effectifCavalerie">effectifs de cavalerie</param>
             /// <param name="effectifArtillerie">effectifs d'artillerie</param>
             /// <param name="moral">moral de l'unité</param>
             /// <param name="enMouvement">true si unité en mouvement, false si à l'arrêt</param>
             /// <returns>valeur d'encombrement en pixels</returns>
-            public decimal CalculerEncombrement(Donnees.TAB_NATIONRow ligneNation, int effectifInfanterie, int effectifCavalerie, int effectifArtillerie, bool enMouvement)
+            public decimal CalculerEncombrement(int effectifInfanterie, int effectifCavalerie, int effectifArtillerie, bool enMouvement)
             {
                 decimal encombrement = 0;
 
@@ -2750,7 +2748,7 @@ namespace vaoc
                     if (enMouvement /*|| effectifInfanterie > 0*/)
                     {
                         //return immediat car on ne doit pas tenir compte du moral ou des fourgons pour les depôts et les pontonniers
-                        return (int)((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_INFANTERIE);
+                        return (int)((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / Constantes.CST_ENCOMBREMENT_INFANTERIE);
                     }
                     else
                     {
@@ -2763,14 +2761,14 @@ namespace vaoc
                 if (enMouvement)
                 {
                     //encombrement sur route
-                    encombrement = ((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_INFANTERIE
-                        + (decimal)effectifCavalerie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_CAVALERIE
-                        + (decimal)effectifArtillerie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_ARTILLERIE);
+                    encombrement = ((decimal)effectifInfanterie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / Constantes.CST_ENCOMBREMENT_INFANTERIE
+                        + (decimal)effectifCavalerie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / Constantes.CST_ENCOMBREMENT_CAVALERIE
+                        + (decimal)effectifArtillerie * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / Constantes.CST_ENCOMBREMENT_ARTILLERIE);
                 }
                 else
                 {
                     //encombrement a l'arrêt
-                    encombrement = (decimal)(effectifInfanterie + effectifCavalerie + effectifArtillerie) * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / ligneNation.I_ENCOMBREMENT_ARRET;
+                    encombrement = (decimal)(effectifInfanterie + effectifCavalerie + effectifArtillerie) * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE / Constantes.CST_ENCOMBREMENT_ARRET;
                 }
 
                 if (this.estPrisonniers)
@@ -2782,7 +2780,7 @@ namespace vaoc
                 }
 
                 // on ajoute les fourgons
-                encombrement = ((100 + ligneNation.I_FOURGON) * encombrement) / 100;
+                encombrement = ((100 + this.modelePion.I_FOURGON) * encombrement) / 100;
                 //on tient compte du moral
                 if (I_MORAL <= 0) encombrement = encombrement * 2;
 
@@ -2793,12 +2791,11 @@ namespace vaoc
             /// <summary>
             /// Calcul de l'encombrement des troupes en pixels
             /// </summary>
-            /// <param name="ligneNation">Nation à laquelle appartient les effectifs</param>
             /// <param name="enMouvement">true si unité en mouvement, false si à l'arrêt</param>
             /// <returns>valeur d'encombrement en pixels</returns>
-            public decimal CalculerEncombrement(Donnees.TAB_NATIONRow ligneNation, bool enMouvement)
+            public decimal CalculerEncombrement(bool enMouvement)
             {
-                return CalculerEncombrement(ligneNation, this.infanterie, this.cavalerie, this.artillerie, enMouvement);
+                return CalculerEncombrement(this.infanterie, this.cavalerie, this.artillerie, enMouvement);
             }
 
             /// <summary>
@@ -4420,7 +4417,7 @@ namespace vaoc
                         return LogFile.Notifier(message, out messageErreur);
                     }
                     //calcul de l'encombrement
-                    encombrement = CalculerEncombrement(ligneNation, effectifInfanterie, effectifCavalerie, effectifArtillerie, false);
+                    encombrement = CalculerEncombrement(effectifInfanterie, effectifCavalerie, effectifArtillerie, false);
 
                     message = string.Format("PlacementPion : pion ID={0} iInf={1} iCav={2} iArt={3} encombrement={4} en IDcase={5}",
                         ID_PION, effectifInfanterie, effectifCavalerie, effectifArtillerie, encombrement, IDcase);
@@ -4573,7 +4570,7 @@ namespace vaoc
                 idCaseDebut = -1;
                 idCaseFin = ID_CASE;//valeur par défaut
                 int effectifInfanterie = (estDepot || estConvoiDeRavitaillement || estPontonnier) ? effectifTotalEnMouvement : infanterie;
-                encombrementTotal = CalculerEncombrement(ligneNation, effectifInfanterie, cavalerie, artillerie, true);
+                encombrementTotal = CalculerEncombrement(effectifInfanterie, cavalerie, artillerie, true);
                 //recherche du plus court chemin
                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
@@ -4607,8 +4604,8 @@ namespace vaoc
                         LogFile.Notifier(message, out messageErreur);
 
                         //effectifs maximum sur la route
-                        decimal encombrementArrivee = CalculerEncombrement(ligneNation, iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
-                        if (!CalculerEffectif(ligneNation,
+                        decimal encombrementArrivee = CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
+                        if (!CalculerEffectif(
                                 Math.Max(0, effectifInfanterie - iInfanterieDestination),
                                 Math.Max(0, cavalerie - iCavalerieDestination),
                                 Math.Max(0, artillerie - iArtillerieDestination),
@@ -4634,14 +4631,14 @@ namespace vaoc
                         if (0 == ligneOrdre.I_EFFECTIF_DEPART)
                         {
                             //la route est partiellement occupée
-                            encombrement = CalculerEncombrement(ligneNation, iInfanterieRoute, iCavalerieRoute, iArtillerieRoute, true);
+                            encombrement = CalculerEncombrement(iInfanterieRoute, iCavalerieRoute, iArtillerieRoute, true);
                         }
                         else
                         {
                             //la route est complètement occupée
                             encombrement = chemin.Count;
                             //on recalcule les effectifs reellement sur la route
-                            if (!CalculerEffectif(ligneNation,
+                            if (!CalculerEffectif(
                                     iInfanterieRoute, iCavalerieRoute, iArtillerieRoute,
                                     encombrement,
                                     true,
@@ -4734,7 +4731,7 @@ namespace vaoc
                     message = string.Format("PlacerPionEnRoute :effectif: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                     LogFile.Notifier(message, out messageErreur);
 
-                    encombrement = CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
+                    encombrement = CalculerEncombrement(iInfanterie, iCavalerie, iArtillerie, true);
                     message = string.Format("PlacerPionEnRoute : encombrement={0}", encombrement);
                     LogFile.Notifier(message, out messageErreur);
 

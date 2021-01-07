@@ -1104,10 +1104,7 @@ namespace vaoc
             {
                 return false;
             }
-            if (!Donnees.m_donnees.TAB_NATION[ligneModelePion.ID_NATION].IsS_CRI_RALLIEMENTNull())
-            {
-                criRalliement = Donnees.m_donnees.TAB_NATION[ligneModelePion.ID_NATION].S_CRI_RALLIEMENT;
-            }
+            criRalliement = ligneModelePion.S_CRI_RALLIEMENT;
             return true;
         }
 

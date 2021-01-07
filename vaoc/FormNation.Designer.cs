@@ -38,15 +38,11 @@ namespace vaoc
             this.label2 = new System.Windows.Forms.Label();
             this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iENCOMBREMENTARRETDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iFOURGONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sCRIRALLIEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iFOURRAGEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iLIMITEFOURRAGEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iGUERISONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iLIMITEDEPOTADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewModelesCombats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABNATIONBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
@@ -60,15 +56,11 @@ namespace vaoc
             this.dataGridViewModelesCombats.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iDNATIONDataGridViewTextBoxColumn,
             this.sNOMDataGridViewTextBoxColumn,
-            this.iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn,
-            this.iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn,
-            this.iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn,
-            this.iENCOMBREMENTARRETDataGridViewTextBoxColumn,
             this.iFOURGONDataGridViewTextBoxColumn,
             this.sCRIRALLIEMENTDataGridViewTextBoxColumn,
             this.iFOURRAGEDataGridViewTextBoxColumn,
-            this.iLIMITEFOURRAGEDataGridViewTextBoxColumn,
-            this.iGUERISONDataGridViewTextBoxColumn});
+            this.iGUERISONDataGridViewTextBoxColumn,
+            this.iLIMITEDEPOTADataGridViewTextBoxColumn});
             this.dataGridViewModelesCombats.DataSource = this.tABNATIONBindingSource;
             this.dataGridViewModelesCombats.Dock = System.Windows.Forms.DockStyle.Top;
             this.dataGridViewModelesCombats.Location = new System.Drawing.Point(0, 0);
@@ -113,7 +105,7 @@ namespace vaoc
             this.label1.Size = new System.Drawing.Size(559, 23);
             this.label1.TabIndex = 6;
             this.label1.Text = "Encombrement : nombre d\'hommes necessaires pour occuper 1 km sur route (1 km2 à l" +
-                "\'arrêt)";
+    "\'arrêt)";
             // 
             // label2
             // 
@@ -135,30 +127,6 @@ namespace vaoc
             this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
             this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
             // 
-            // iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn
-            // 
-            this.iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ENCOMBREMENT_INFANTERIE";
-            this.iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn.HeaderText = "I_ENCOMBREMENT_INFANTERIE";
-            this.iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn.Name = "iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn";
-            // 
-            // iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn
-            // 
-            this.iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ENCOMBREMENT_CAVALERIE";
-            this.iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn.HeaderText = "I_ENCOMBREMENT_CAVALERIE";
-            this.iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn.Name = "iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn";
-            // 
-            // iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn
-            // 
-            this.iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ENCOMBREMENT_ARTILLERIE";
-            this.iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn.HeaderText = "I_ENCOMBREMENT_ARTILLERIE";
-            this.iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn.Name = "iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn";
-            // 
-            // iENCOMBREMENTARRETDataGridViewTextBoxColumn
-            // 
-            this.iENCOMBREMENTARRETDataGridViewTextBoxColumn.DataPropertyName = "I_ENCOMBREMENT_ARRET";
-            this.iENCOMBREMENTARRETDataGridViewTextBoxColumn.HeaderText = "I_ENCOMBREMENT_ARRET";
-            this.iENCOMBREMENTARRETDataGridViewTextBoxColumn.Name = "iENCOMBREMENTARRETDataGridViewTextBoxColumn";
-            // 
             // iFOURGONDataGridViewTextBoxColumn
             // 
             this.iFOURGONDataGridViewTextBoxColumn.DataPropertyName = "I_FOURGON";
@@ -177,17 +145,17 @@ namespace vaoc
             this.iFOURRAGEDataGridViewTextBoxColumn.HeaderText = "I_FOURRAGE";
             this.iFOURRAGEDataGridViewTextBoxColumn.Name = "iFOURRAGEDataGridViewTextBoxColumn";
             // 
-            // iLIMITEFOURRAGEDataGridViewTextBoxColumn
-            // 
-            this.iLIMITEFOURRAGEDataGridViewTextBoxColumn.DataPropertyName = "I_LIMITE_FOURRAGE";
-            this.iLIMITEFOURRAGEDataGridViewTextBoxColumn.HeaderText = "I_LIMITE_FOURRAGE";
-            this.iLIMITEFOURRAGEDataGridViewTextBoxColumn.Name = "iLIMITEFOURRAGEDataGridViewTextBoxColumn";
-            // 
             // iGUERISONDataGridViewTextBoxColumn
             // 
             this.iGUERISONDataGridViewTextBoxColumn.DataPropertyName = "I_GUERISON";
             this.iGUERISONDataGridViewTextBoxColumn.HeaderText = "I_GUERISON";
             this.iGUERISONDataGridViewTextBoxColumn.Name = "iGUERISONDataGridViewTextBoxColumn";
+            // 
+            // iLIMITEDEPOTADataGridViewTextBoxColumn
+            // 
+            this.iLIMITEDEPOTADataGridViewTextBoxColumn.DataPropertyName = "I_LIMITE_DEPOT_A";
+            this.iLIMITEDEPOTADataGridViewTextBoxColumn.HeaderText = "I_LIMITE_DEPOT_A";
+            this.iLIMITEDEPOTADataGridViewTextBoxColumn.Name = "iLIMITEDEPOTADataGridViewTextBoxColumn";
             // 
             // FormNation
             // 
@@ -223,14 +191,10 @@ namespace vaoc
         private System.Windows.Forms.BindingSource tABNATIONBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iENCOMBREMENTINFANTERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iENCOMBREMENTCAVALERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iENCOMBREMENTARTILLERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iENCOMBREMENTARRETDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iFOURGONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sCRIRALLIEMENTDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iFOURRAGEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iLIMITEFOURRAGEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iGUERISONDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iLIMITEDEPOTADataGridViewTextBoxColumn;
     }
 }

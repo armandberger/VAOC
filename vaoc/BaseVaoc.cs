@@ -1050,7 +1050,7 @@ namespace vaoc
                         {
                             if (!ChargerCases(x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES))
                             {
-                                    string message = string.Format("TrouveCase m_donnees.ChargerCases ne trouve pas de valeurs pour x={0} et y={1}", x, y);
+                                string message = string.Format("TrouveCase m_donnees.ChargerCases ne trouve pas de valeurs pour x={0} et y={1}", x, y);
                                 throw new Exception(message);
                             }
                             index = (int)m_listeIndex.GetValue(x, y);
@@ -1951,7 +1951,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 10;
+            TAB_JEU[0].I_VERSION = 12;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
@@ -1959,7 +1959,7 @@ namespace vaoc
                 {
                     if (!SauvegarderCases()) { return false; }
                 }
-                if (0 == iPhase || 0== this.TAB_PARTIE.Count() || !this.TAB_PARTIE[0].FL_DEMARRAGE)
+                if (0 == iPhase || 0 == this.TAB_PARTIE.Count() || !this.TAB_PARTIE[0].FL_DEMARRAGE)
                 {
                     //caseTemp = (Donnees.TAB_CASEDataTable)Donnees.m_donnees.TAB_CASE.Copy();
                     this.TAB_CASE.ViderLaTable(true);
@@ -2268,12 +2268,13 @@ namespace vaoc
                     ligneNomCarte.I_RAVITAILLEMENT_RENFORT = 50;
                 }
 
-                foreach (TAB_NATIONRow ligneNation in TAB_NATION)
-                {
-                    ligneNation.I_FOURRAGE = 0;
-                    ligneNation.I_LIMITE_FOURRAGE = 100;//limite du niveau de ravitaillement en dessous de laquelle on peut fourrager, 100%=égal, dans tous les cas (pour les français par exemple)
-                    ligneNation.I_GUERISON = 0;
-                }
+                //evolutions supprimés en version 12
+                //foreach (TAB_NATIONRow ligneNation in TAB_NATION)
+                //{
+                    //ligneNation.I_FOURRAGE = 0;
+                    //ligneNation.I_LIMITE_FOURRAGE = 100;//limite du niveau de ravitaillement en dessous de laquelle on peut fourrager, 100%=égal, dans tous les cas (pour les français par exemple)
+                    //ligneNation.I_GUERISON = 0;
+                //}
             }
             #endregion 
 
@@ -2416,6 +2417,21 @@ namespace vaoc
                 {
                     Donnees.TAB_NATIONRow ligneNation = Donnees.m_donnees.TAB_NATION[l];
                     ligneNation.I_LIMITE_DEPOT_A = 1;
+                }
+            }
+            #endregion
+
+            #region version 12
+            if (TAB_JEU[0].I_VERSION < 12)
+            {
+                for (int l = 0; l < Donnees.m_donnees.TAB_MODELE_PION.Count; l++)
+                {
+                    Donnees.TAB_MODELE_PIONRow ligneModelePion = Donnees.m_donnees.TAB_MODELE_PION[l];
+                    ligneModelePion.I_FOURGON = 0;
+                    ligneModelePion.I_GUERISON = 0;
+                    ligneModelePion.I_FOURRAGE = 0;
+                    ligneModelePion.S_CRI_RALLIEMENT = string.Empty;
+                    ligneModelePion.S_NATION = string.Empty;
                 }
             }
             #endregion

@@ -3069,10 +3069,6 @@ namespace vaoc
                     int iBlessesCavalerie = 0;
                     int iBlessesArtillerie = 0;
 
-                    //Le nombre de blessés soignés par unité est égale à (50% + La valeur de I_GUERISON dans TAB_NATION + d3 avec (1: -10%, 2: 0, 3: +10)/4 
-                    int pourcentGuerison = 50 + ligneNomCarte.nation.I_GUERISON + (1 - (Constantes.JetDeDes(1) - 1) / 2) * 10;
-                    LogFile.Notifier("SoinsAuxBlesses : soins aux blessés sur l'hopital " + ligneNomCarte.S_NOM + " avec un pourcentage de " + pourcentGuerison + " %");
-
                     //recherche de toutes les unités rattachés à ce nom
                     string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
@@ -3088,6 +3084,10 @@ namespace vaoc
                             if (nbToursHopital > 0 && (0 == nbToursHopital % (24 * 7)))
                             {
                                 int iInfanterieRenfort = 0, iCavalerieRenfort = 0;
+                                //Le nombre de blessés soignés par unité est égale à (50% + La valeur de I_GUERISON dans TAB_MODELE_PION + d3 avec (1: -10%, 2: 0, 3: +10)/4 
+                                int pourcentGuerison = 50 + lignePion.modelePion.I_GUERISON + (1 - (Constantes.JetDeDes(1) - 1) / 2) * 10;
+                                LogFile.Notifier("SoinsAuxBlesses : soins aux blessés sur le pion " + lignePion.S_NOM + " avec un pourcentage de " + pourcentGuerison + " %");
+
                                 iInfanterieRenfort = lignePion.I_INFANTERIE * pourcentGuerison / 100;
                                 iCavalerieRenfort = lignePion.I_CAVALERIE * pourcentGuerison / 100;
                                 if (iInfanterieRenfort + iCavalerieRenfort <= Constantes.CST_TAILLE_MINIMUM_UNITE)
@@ -4463,7 +4463,7 @@ namespace vaoc
             message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute :effectif: i={2} c={3} a={4}", lignePion.S_NOM, lignePion.ID_PION, iInfanterie, iCavalerie, iArtillerie);
             LogFile.Notifier(message, out messageErreur);
 
-            encombrement = lignePion.CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
+            encombrement = lignePion.CalculerEncombrement(iInfanterie, iCavalerie, iArtillerie, true);
             message = string.Format("{0},ID={1}, ExecuterMouvementAvecEffectifForcesEnRoute : encombrement={2}", lignePion.S_NOM, lignePion.ID_PION, encombrement);
             LogFile.Notifier(message, out messageErreur);
 
@@ -4702,7 +4702,7 @@ namespace vaoc
             message = string.Format("ExecuterMouvementAvecEffectifForcesAuDepart :effectif: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
             LogFile.Notifier(message, out messageErreur);
 
-            encombrement = lignePion.CalculerEncombrement(ligneNation, iInfanterie, iCavalerie, iArtillerie, true);
+            encombrement = lignePion.CalculerEncombrement(iInfanterie, iCavalerie, iArtillerie, true);
             message = string.Format("ExecuterMouvementAvecEffectifForcesAuDepart : encombrement={0}", encombrement);
             LogFile.Notifier(message, out messageErreur);
 
@@ -4784,7 +4784,7 @@ namespace vaoc
 
             //on calcule les effectifs qui ne sont plus au départ, avec une case de plus sur la route
             encombrement++;
-            lignePion.CalculerEffectif(ligneNation, encombrement, true, out iInfanterie, out iCavalerie, out iArtillerie);
+            lignePion.CalculerEffectif(encombrement, true, out iInfanterie, out iCavalerie, out iArtillerie);
             message = string.Format("ExecuterMouvementAvecEffectifForcesAuDepart :effectif en route: i={0} c={1} a={2} encombrement={3}", iInfanterie, iCavalerie, iArtillerie, encombrement);
             LogFile.Notifier(message, out messageErreur);
 
@@ -4847,7 +4847,7 @@ namespace vaoc
             LogFile.Notifier(message, out messageErreur);
 
             iInfanterie = (lignePion.estDepot || lignePion.estConvoiDeRavitaillement || lignePion.estPontonnier) ? lignePion.effectifTotalEnMouvement : lignePion.infanterie;
-            encombrementTotal = lignePion.CalculerEncombrement(ligneNation, iInfanterie, lignePion.cavalerie, lignePion.artillerie, true);
+            encombrementTotal = lignePion.CalculerEncombrement(iInfanterie, lignePion.cavalerie, lignePion.artillerie, true);
             message = string.Format("ExecuterMouvementAvecEffectifForcesADestination :ligneOrdre.I_EFFECTIF_DESTINATION={0} encombrementTotal={1}", ligneOrdre.I_EFFECTIF_DESTINATION, encombrementTotal);
             LogFile.Notifier(message, out messageErreur);
             if (ligneOrdre.I_EFFECTIF_DESTINATION <= lignePion.effectifTotalEnMouvement)
@@ -4880,9 +4880,9 @@ namespace vaoc
                 LogFile.Notifier(message, out messageErreur);
 
                 //effectifs maximum sur la route
-                decimal encombrementArrivee = lignePion.CalculerEncombrement(ligneNation, iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
+                decimal encombrementArrivee = lignePion.CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
                 int iInfanterieLocal = (lignePion.estDepot || lignePion.estConvoiDeRavitaillement || lignePion.estPontonnier) ? lignePion.effectifTotalEnMouvement : lignePion.I_INFANTERIE;
-                if (!lignePion.CalculerEffectif(ligneNation,
+                if (!lignePion.CalculerEffectif(
                         iInfanterieLocal - iInfanterieDestination,
                         lignePion.I_CAVALERIE - iCavalerieDestination,
                         lignePion.I_ARTILLERIE - iArtillerieDestination,
@@ -4912,7 +4912,7 @@ namespace vaoc
                     encombrement = chemin.Count;
                 }
                 //en avançant d'une case, quels sont les nouveaux effectifs qui arrivent
-                if (!lignePion.CalculerEffectif(ligneNation, iInfanterieRoute, iCavalerieRoute, iArtillerieRoute, 1, true, out iInfanterie, out iCavalerie, out iArtillerie))
+                if (!lignePion.CalculerEffectif(iInfanterieRoute, iCavalerieRoute, iArtillerieRoute, 1, true, out iInfanterie, out iCavalerie, out iArtillerie))
                 {
                     message = string.Format("ExecuterMouvementAvecEffectifForcesADestination :{0}(ID={1}, erreur CalculerEffectif renvoie false)", lignePion.S_NOM, lignePion.ID_PION);
                     LogFile.Notifier(message, out messageErreur);

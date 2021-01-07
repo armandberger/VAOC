@@ -441,7 +441,7 @@ namespace vaoc
                                 //de la zone de bataille
                                 //on calcule les effectifs qui ne sont plus au départ
                                 int iInfanterie, iCavalerie, iArtillerie;
-                                lignePion.CalculerEffectif(ligneNation, i, true, out iInfanterie, out iCavalerie, out iArtillerie);
+                                lignePion.CalculerEffectif(i, true, out iInfanterie, out iCavalerie, out iArtillerie);
                                 message = string.Format("SortieDuChampDeBataille :effectif en route: i={0} c={1} a={2} encombrement={3}", iInfanterie, iCavalerie, iArtillerie, i);
                                 LogFile.Notifier(message, out messageErreur);
 

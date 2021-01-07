@@ -189,6 +189,10 @@ namespace WaocLib
          };
 
         public static int[] CST_ENCOMBREMENT_DEPOT = new int[4] { 25, 20, 15, 10 };//un dépôt, ça prend de la place ! choix personnel, je n'ai pas trouvé l'info dans les règles 
+        public static int CST_ENCOMBREMENT_INFANTERIE = 2000;
+        public static int CST_ENCOMBREMENT_CAVALERIE = 500;
+        public static int CST_ENCOMBREMENT_ARTILLERIE = 20;
+        public static int CST_ENCOMBREMENT_ARRET = 10000;
 
         public static int[] tableLimiteRavitaillementDepot = new int[]
         {50000, 40000, 30000, 20000};

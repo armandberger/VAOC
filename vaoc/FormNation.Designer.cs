@@ -38,10 +38,6 @@ namespace vaoc
             this.label2 = new System.Windows.Forms.Label();
             this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iFOURGONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sCRIRALLIEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iFOURRAGEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iGUERISONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iLIMITEDEPOTADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewModelesCombats)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABNATIONBindingSource)).BeginInit();
@@ -56,10 +52,6 @@ namespace vaoc
             this.dataGridViewModelesCombats.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.iDNATIONDataGridViewTextBoxColumn,
             this.sNOMDataGridViewTextBoxColumn,
-            this.iFOURGONDataGridViewTextBoxColumn,
-            this.sCRIRALLIEMENTDataGridViewTextBoxColumn,
-            this.iFOURRAGEDataGridViewTextBoxColumn,
-            this.iGUERISONDataGridViewTextBoxColumn,
             this.iLIMITEDEPOTADataGridViewTextBoxColumn});
             this.dataGridViewModelesCombats.DataSource = this.tABNATIONBindingSource;
             this.dataGridViewModelesCombats.Dock = System.Windows.Forms.DockStyle.Top;
@@ -127,30 +119,6 @@ namespace vaoc
             this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
             this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
             // 
-            // iFOURGONDataGridViewTextBoxColumn
-            // 
-            this.iFOURGONDataGridViewTextBoxColumn.DataPropertyName = "I_FOURGON";
-            this.iFOURGONDataGridViewTextBoxColumn.HeaderText = "I_FOURGON";
-            this.iFOURGONDataGridViewTextBoxColumn.Name = "iFOURGONDataGridViewTextBoxColumn";
-            // 
-            // sCRIRALLIEMENTDataGridViewTextBoxColumn
-            // 
-            this.sCRIRALLIEMENTDataGridViewTextBoxColumn.DataPropertyName = "S_CRI_RALLIEMENT";
-            this.sCRIRALLIEMENTDataGridViewTextBoxColumn.HeaderText = "S_CRI_RALLIEMENT";
-            this.sCRIRALLIEMENTDataGridViewTextBoxColumn.Name = "sCRIRALLIEMENTDataGridViewTextBoxColumn";
-            // 
-            // iFOURRAGEDataGridViewTextBoxColumn
-            // 
-            this.iFOURRAGEDataGridViewTextBoxColumn.DataPropertyName = "I_FOURRAGE";
-            this.iFOURRAGEDataGridViewTextBoxColumn.HeaderText = "I_FOURRAGE";
-            this.iFOURRAGEDataGridViewTextBoxColumn.Name = "iFOURRAGEDataGridViewTextBoxColumn";
-            // 
-            // iGUERISONDataGridViewTextBoxColumn
-            // 
-            this.iGUERISONDataGridViewTextBoxColumn.DataPropertyName = "I_GUERISON";
-            this.iGUERISONDataGridViewTextBoxColumn.HeaderText = "I_GUERISON";
-            this.iGUERISONDataGridViewTextBoxColumn.Name = "iGUERISONDataGridViewTextBoxColumn";
-            // 
             // iLIMITEDEPOTADataGridViewTextBoxColumn
             // 
             this.iLIMITEDEPOTADataGridViewTextBoxColumn.DataPropertyName = "I_LIMITE_DEPOT_A";
@@ -191,10 +159,6 @@ namespace vaoc
         private System.Windows.Forms.BindingSource tABNATIONBindingSource;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iFOURGONDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sCRIRALLIEMENTDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iFOURRAGEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iGUERISONDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iLIMITEDEPOTADataGridViewTextBoxColumn;
     }
 }

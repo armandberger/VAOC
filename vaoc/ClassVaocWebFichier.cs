@@ -1267,12 +1267,6 @@ namespace vaoc
             int i;
             List<ClassDataModeles> listeModeles = ListeModeles(idPartie);
 
-            //INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`S_IMAGE`) VALUES (1, 1, 'Napoleon', 'napoleon_tete.jpeg')
-            //on reconstitue systématiquement tous les noms
-            //requete = string.Format("delete from tab_vaoc_modele_pion WHERE ID_PARTIE={0};",
-            //                        idPartie);
-            //AjouterLigne(requete);
-
             foreach (Donnees.TAB_MODELE_PIONRow ligneModelePion in Donnees.m_donnees.TAB_MODELE_PION)
             {
                 Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
@@ -1291,28 +1285,32 @@ namespace vaoc
 
                 if (bExiste)
                 {
-                    requete = string.Format("UPDATE `tab_vaoc_modele_pion` SET `S_NOM`='{2}',`I_VISION_JOUR`={3},`I_VISION_NUIT`={4}, `ID_NATION`={5} WHERE (ID_MODELE_PION={0} AND ID_PARTIE={1});",
+                    requete = string.Format("UPDATE `tab_vaoc_modele_pion` SET `S_NOM`='{2}',`I_VISION_JOUR`={3},`I_VISION_NUIT`={4}, `ID_NATION`={5}, `I_FOURGON`={6}, `I_GUERISON`={7}, `I_FOURRAGE`={8}, `S_NATION`='{9}' WHERE (ID_MODELE_PION={0} AND ID_PARTIE={1});",
                                             ligneModelePion.ID_MODELE_PION,
                                             idPartie,
                                             ligneModelePion.S_NOM,
-                                            //"inconnu.jpg", -> à ne pas mettre à jour surtout
                                             ligneModelePion.I_VISION_JOUR,
                                             ligneModelePion.I_VISION_NUIT,
-                                            ligneModelePion.ID_NATION);
+                                            ligneModelePion.ID_NATION,
+                                            ligneModelePion.I_FOURGON,
+                                            ligneModelePion.I_GUERISON,
+                                            ligneModelePion.I_FOURRAGE,
+                                            ligneModelePion.S_NATION);
                 }
                 else
                 {
-                    //requete = string.Format("INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`S_IMAGE`,`I_VISION_JOUR`,`I_VISION_NUIT`, `ID_NATION`) VALUES ({0}, {1}, '{2}', '{3}', {4}, {5}, {6});",
-                    requete = string.Format("INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`I_VISION_JOUR`,`I_VISION_NUIT`, `ID_NATION`) VALUES ({0}, {1}, '{2}', {3}, {4}, {5});",
+                    requete = string.Format("INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`I_VISION_JOUR`,`I_VISION_NUIT`, `ID_NATION`, `I_FOURGON`, `I_GUERISON`, `I_FOURRAGE`, `S_NATION`) VALUES ({0}, {1}, '{2}', {3}, {4}, {5}, {6}, {7}, {8}, '{9}');",
                                             ligneModelePion.ID_MODELE_PION,
                                             idPartie,
                                             ligneModelePion.S_NOM,
-                                            //"inconnu.jpg",
                                             ligneModelePion.I_VISION_JOUR,
                                             ligneModelePion.I_VISION_NUIT,
-                                            ligneModelePion.ID_NATION);
+                                            ligneModelePion.ID_NATION,
+                                            ligneModelePion.I_FOURGON,
+                                            ligneModelePion.I_GUERISON,
+                                            ligneModelePion.I_FOURRAGE,
+                                            ligneModelePion.S_NATION);
                 }
-
                 AjouterLigne(requete);
             }
         }
@@ -1328,9 +1326,6 @@ namespace vaoc
             ClassDataPartie partie = GetPartie(idPartie);
             string repertoireTour;
 
-//INSERT INTO `tab_vaoc_partie` (`ID_PARTIE`, `ID_JEU`, `S_NOM`, `I_TOUR`, `DT_TOUR`, `I_PHASE`, `DT_CREATION`, `DT_MISEAJOUR`, `H_JOUR`, `H_NUIT`, `S_REPERTOIRE`, `FL_MISEAJOUR`, `FL_DEMARRAGE`, `I_NB_CARTE_X`, `I_NB_CARTE_Y`, `I_NB_CARTE_ZOOM_X`, `I_NB_CARTE_ZOOM_Y`, `D_MULT_ZOOM_X`, `D_MULT_ZOOM_Y`, `I_LARGEUR_CARTE_ZOOM`, `I_HAUTEUR_CARTE_ZOOM`, `I_ECHELLE`) VALUES
-//(2, 2, 'Bataille de Russie 1801', 0, '1809-04-16 09:00:00', 0, '2007-07-29 21:51:41', '2010-02-23 18:21:40', 8, 18, 'BatailledeRussie1801_Thewar_0', '0', '0', 3, 2, 10, 9, 5, 5, 800, 600, 10);
-            
             Donnees.TAB_PARTIERow lignePartie = Donnees.m_donnees.TAB_PARTIE[0];
             Donnees.TAB_JEURow ligneJeu = Donnees.m_donnees.TAB_JEU[0];
 

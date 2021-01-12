@@ -363,13 +363,13 @@ namespace vaoc
                     MiseAJourProprietaires();
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE % Constantes.CST_SAUVEGARDE_ECART_PHASES)
                     {
-                        if ((0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
-                        {
-                            //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
-                            Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                            //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
-                            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        }
+                        //if ((0 != Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                        //{
+                        //    //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
+                        //    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        //    //Donnees.m_donnees.SauvegarderPartie(fichierCourant, true); //-> prend quand même près de dix minutes !
+                        //    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                        //}
 
                         ClassTraitementWeb webRoles = new ClassTraitementWeb(fichierCourant);
                         if (!webRoles.GenerationWebFichiersRoles(true))
@@ -678,7 +678,7 @@ namespace vaoc
 
         private void AmeliorationsPerformances()
         {
-            ActuelsVersAnciens();
+            //ActuelsVersAnciens(); -> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
         }
 
         /// <summary>
@@ -2278,6 +2278,7 @@ namespace vaoc
                                                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
             #region pour test
+            /*
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
                 ClassDataOrdre ordreTest = new ClassDataOrdre();
@@ -2293,6 +2294,7 @@ namespace vaoc
                 ordreTest.ID_NOM_LIEU = Donnees.m_donnees.TAB_NOMS_CARTE[de.Next(Donnees.m_donnees.TAB_NOMS_CARTE.Count)].ID_NOM;
                 liste.Add(ordreTest);
             }
+            */
 
             /*
             //DataSetCoutDonnees.m_donnees.TAB_ORDRE.Clear();//à virer ensuite
@@ -5049,22 +5051,22 @@ namespace vaoc
             }
             //Donnees.TAB_CASERow ligneCaseD2 = Donnees.m_donnees.TAB_CASE.FindByXY(1379, 1774);
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-            */
+            */            
             Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-            /**** -> prend 1m30
+            /**** -> prend 20 minutes ! 
             foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
             {
                 ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
                 ligne.SetID_NOUVEAU_PROPRIETAIRENull();
             }
-            **/
-            /*
+            */
+            /**/
             string requete1 = string.Format("ID_NOUVEAU_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
             Donnees.TAB_CASERow[] changeRows1 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete1);
-            string requete2 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
-            Donnees.TAB_CASERow[] changeRows2 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete2);
-            string requete3 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
-            Donnees.TAB_CASERow[] changeRows3 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select("ID_PROPRIETAIRE<>ID_NOUVEAU_PROPRIETAIRE");
+            //string requete2 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
+            //Donnees.TAB_CASERow[] changeRows2 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete2);
+            //string requete3 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
+            //Donnees.TAB_CASERow[] changeRows3 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select("ID_PROPRIETAIRE<>ID_NOUVEAU_PROPRIETAIRE");
 
             string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
             Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
@@ -5074,12 +5076,14 @@ namespace vaoc
                 ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
                 ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
             }
-            */
+
+            /*
             foreach (Donnees.TAB_CASERow ligne in Donnees.m_listeNouveauProprietaire)
             {
                 ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
                 ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
             }
+            */
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             Donnees.m_listeNouveauProprietaire.Clear();
         }

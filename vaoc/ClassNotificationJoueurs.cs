@@ -99,6 +99,8 @@ namespace vaoc
             {
                 requete = string.Format("ID_PION_PROPRIETAIRE={0} AND I_TOUR_ARRIVEE<={1}  AND I_TOUR_ARRIVEE>={2}",
                     ligneRole.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - 1, iDernierNotification);
+                //requete = string.Format("ID_PION_PROPRIETAIRE={0} AND I_TOUR_ARRIVEE<={1}  AND ID_MESSAGE>{2}",
+                //    ligneRole.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - 1, 6630);
             }
             else
             {
@@ -116,7 +118,7 @@ namespace vaoc
                 {
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
                     Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
-                    texte.AppendLine(string.Format("<div>Message reçu par le {0}, parti de {1} le {2}:<br/>",
+                    texte.AppendLine(string.Format("<div>Message reçu le {0}, parti de {1} le {2}:<br/>",
                         ClassMessager.DateHeure(ligneMessage.I_TOUR_ARRIVEE, ligneMessage.I_PHASE_ARRIVEE, false),
                         nomZoneGeographique,
                         ClassMessager.DateHeure(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART, false)));
@@ -136,7 +138,7 @@ namespace vaoc
                 foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
                 {
                     //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
-                    if (lignePion.estMessager || lignePion.estPatrouille) continue;
+                    if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estJoueur) continue;
 
                     string nom, format;
                     int iInfanterie, iCavalerie, iArtillerie, iInfanterieMax, iCavalerieMax, iArtillerieMax, iFatigue, iMoral, iMoralMax, iMateriel, iRavitaillement;
@@ -370,8 +372,8 @@ namespace vaoc
             texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> vos troupes attendent vos ordres au <a href=\"http://vaoc.free.fr/\">camp de rassemblement.</a></div>");
 
             //Si le joueur ne souhaite donner aucun ordre supplémentaire
-            texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> prevenez vos aides de camp que vous n'avez <a href=\"http://vaoc.free.fr/vaocpasdenouveauxordres.php?id_partie=" + Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE + "&id_role=" + ligneRole.ID_ROLE + "\">aucun nouvel ordre à donner.</a></div>");
-
+            texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> prevenez vos aides de camp que vous n'avez <a href=\"http://vaoc.free.fr/vaocqg_ordres_termines?ordres_termines=true&id_partie="
+                + Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE + "&id_role=" + ligneRole.ID_ROLE + "\">aucun nouvel ordre à donner.</a></div>");
             texte.AppendLine("</html>");
             return true;
         }

@@ -1133,15 +1133,15 @@ namespace vaoc
             public TAB_CASERow FindParID_CASE(int ID_CASE)
             {
                 TAB_CASERow retour;
-                retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
-                            ID_CASE})));
+                retour = FindByID_CASE(ID_CASE);
+                //((TAB_CASERow)(this.Rows.Find(new object[] {ID_CASE})));
                 if (null == retour)
                 {
                     int x, y;
                     m_donnees.TAB_CASE.ID_CASE_Vers_XY(ID_CASE, out x, out y);
                     ChargerCases(x, y, m_donnees.TAB_PARTIE[0].I_TOUR_CASES, m_donnees.TAB_PARTIE[0].I_PHASE_CASES);
-                    retour = ((TAB_CASERow)(this.Rows.Find(new object[] {
-                            ID_CASE})));
+                    //retour = ((TAB_CASERow)(this.Rows.Find(new object[] {ID_CASE})));
+                    retour = FindByID_CASE(ID_CASE);
                 }
                 return retour;
             }

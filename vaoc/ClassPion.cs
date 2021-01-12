@@ -1847,7 +1847,7 @@ namespace vaoc
                 //}
                 //else
                 //{
-                //    ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                //    ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 //}
                 switch (CSTAction)
                 {

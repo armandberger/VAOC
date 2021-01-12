@@ -266,7 +266,7 @@ namespace vaoc
                     foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
                     {
                         if (ligneVideo.ID_CASE<0 || (0==ligneVideo.EffectifTotal)) { continue; }//ca peut arriver visiblement...
-                        //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
+                        //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
                         int x, y;
                         Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out x, out y);
                         m_minX = Math.Min(m_minX, x);

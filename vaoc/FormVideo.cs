@@ -204,7 +204,7 @@ namespace vaoc
                 unite.iTour = ligneVideo.I_TOUR;
                 //unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
                 unite.tipe = (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
-                //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneVideo.ID_CASE);
+                //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
                 Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
                 unite.b_blesse = ligneVideo.B_BLESSES;
                 unite.b_prisonnier = ligneVideo.B_PRISONNIERS;

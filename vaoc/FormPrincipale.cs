@@ -286,8 +286,8 @@ namespace vaoc
                 if (lignePion.B_DETRUIT) { continue; }
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
                 if (null == ligneOrdre) { continue; }
-                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART);
-                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
 
                 if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, 
                     ligneCaseDepart, ligneCaseDestination, ligneOrdre, 
@@ -628,8 +628,8 @@ namespace vaoc
             //AstarTerrain[] tableCoutsMouvementsTerrain;
             //string message;
             //star.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,
-            //    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART),
-            //    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION),
+            //    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART),
+            //    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION),
             //    ligneOrdre, out chemin, out coutGlobal, out couthorsroute, out tableCoutsMouvementsTerrain, out message);
             //foreach(LigneCASE l in chemin)
             //{
@@ -651,8 +651,8 @@ namespace vaoc
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 string message;
                 star.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,
-                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DEPART),
-                    Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneOrdre.ID_CASE_DESTINATION),
+                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART),
+                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION),
                     ligneOrdre, out chemin, out coutGlobal, out couthorsroute, out tableCoutsMouvementsTerrain, out message);
                 int i = 0;
                 while (i < chemin.Count && chemin[i].ID_CASE != lignePion.ID_CASE) i++;
@@ -662,7 +662,7 @@ namespace vaoc
                     //repositionnement au plus prêt
                     int idcaseposition = -1;
                     double distanceMax = double.MaxValue;
-                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                     foreach (LigneCASE l in chemin)
                     {
                         double distance = Constantes.Distance(l.I_X, l.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
@@ -884,7 +884,7 @@ namespace vaoc
             /* 
             Donnees.TAB_PIONRow lignePionCorrectif;
             lignePionCorrectif = Donnees.m_donnees.TAB_PION.FindByID_PION(207);
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(3480428);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(3480428);
             for (int i = 0; i < 100; i++)
             {
                 String test;
@@ -910,7 +910,7 @@ namespace vaoc
 
             for (int i = 0; i < listeCases.Length; i++)
             {
-                ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[i].ID_CASE);
+                ligneCaseArrivee = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[i].ID_CASE);
                 Debug.WriteLine(string.Format("case ={0}({1},{2})", 
                     ligneCaseArrivee.ID_CASE, ligneCaseArrivee.I_X, ligneCaseArrivee.I_Y));
             }
@@ -921,8 +921,8 @@ namespace vaoc
             foreach (Donnees.TAB_PCC_COUTSRow ligneCout in lignesCout)
             {
 
-                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
-                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+                lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
+                lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
                 Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de ligneCout : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9}, ID_TRAJET={10}",
     lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
     lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
@@ -964,7 +964,7 @@ namespace vaoc
             /*
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                 bool bObservable = Cartographie.EnnemiObservable(lignePion, null);
                 string phrase = bObservable ? ClassMessager.GenererPhrase(lignePion, ClassMessager.MESSAGES.MESSAGE_ENNEMI_OBSERVE, 0, 0, 0, 0, 0, null, null, null, null, 0, string.Empty) : ClassMessager.GenererPhrase(lignePion, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE, 0, 0, 0, 0, 0, null, null, null, null, 0, string.Empty);
                 Debug.WriteLine(String.Format("pion ID= {0}: {1} EnnemiObservable={2} en {3},{4} : {5}",
@@ -1143,8 +1143,8 @@ namespace vaoc
                 {
                     lVDebug1 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVille.ID_VILLE_DEBUT);
                     lVDebug2 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVille.ID_VILLE_FIN);
-                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug1.ID_CASE);
-                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug2.ID_CASE);
+                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug1.ID_CASE);
+                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug2.ID_CASE);
                     Debug.WriteLine(string.Format("trajet impossible {0}:{1}({2},{3}) -> {4}:{5}({6},{7}), cout={8}",
     lVDebug1.S_NOM,
     lDebug1.ID_CASE,
@@ -1165,8 +1165,8 @@ namespace vaoc
             {
                 lVDebug1 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVilleMax.ID_VILLE_DEBUT);
                 lVDebug2 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVilleMax.ID_VILLE_FIN);
-                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug1.ID_CASE);
-                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug2.ID_CASE);
+                lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug1.ID_CASE);
+                lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug2.ID_CASE);
                 Debug.WriteLine(string.Format("trajet max {0},id={9} :{1}({2},{3}) -> {4}id={10} :{5}({6},{7}), cout={8}",
                     lVDebug1.S_NOM,
                     lDebug1.ID_CASE,
@@ -1189,8 +1189,8 @@ namespace vaoc
                 Donnees.TAB_PCC_VILLESRow[] lignesVilles = (Donnees.TAB_PCC_VILLESRow[])Donnees.m_donnees.TAB_PCC_VILLES.Select(requeteDebug);
                 lVDebug1 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignesVilles[0].ID_VILLE_DEBUT);
                 lVDebug2 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignesVilles[0].ID_VILLE_FIN);
-                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug1.ID_CASE);
-                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug2.ID_CASE);
+                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug1.ID_CASE);
+                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug2.ID_CASE);
                     Debug.WriteLine(string.Format("trajet ID={9} {0},id={10}:{1}({2},{3}) -> {4},id={11}:{5}({6},{7}), cout={8}",
                     lVDebug1.S_NOM,
                     lDebug1.ID_CASE,
@@ -1213,8 +1213,8 @@ namespace vaoc
             {
                 lVDebug1 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePCCVille.ID_VILLE_DEBUT);
                 lVDebug2 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePCCVille.ID_VILLE_FIN);
-                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug1.ID_CASE);
-                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug2.ID_CASE);
+                lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug1.ID_CASE);
+                lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug2.ID_CASE);
                 Debug.WriteLine(string.Format("trajet ID={9} {0},id={10}:{1}({2},{3}) -> {4},id={11}:{5}({6},{7}), cout={8}",
                 lVDebug1.S_NOM,
                 lDebug1.ID_CASE,
@@ -1338,7 +1338,7 @@ namespace vaoc
                     List<Donnees.TAB_CASERow> chemin = new List<Donnees.TAB_CASERow>(parcoursExistant.Length);
                     for (int i = 0; i < parcoursExistant.Length; i++)
                     {
-                        chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i].ID_CASE));
+                        chemin.Add(Donnees.m_donnees.TAB_CASE.FindParID_CASE(parcoursExistant[i].ID_CASE));
                     }
                     List<Donnees.TAB_CASERow> nouveauChemin = Cartographie.ParcoursOptimise(chemin);
                     if (nouveauChemin.Count < chemin.Count)
@@ -1965,7 +1965,7 @@ namespace vaoc
             string erreur;
             Donnees.TAB_CASERow[] listeCaseEspace;
             IEnumerable<LigneCASE> listeCaseEspaceOBJ;
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
             LigneCASE ligneCaseOBJ = BD.Base.Case.FindByXY(ligneCase.I_X, ligneCase.I_Y);
             timeStart = DateTime.Now;
 
@@ -3715,8 +3715,8 @@ namespace vaoc
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(931, 180);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(378, 720);//bug poentiel, départ sur une bordure
                     //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(622, 577);
-                    //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4373903);
-                    //m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(7232577));
+                    //m_departPlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(4373903);
+                    //m_departPlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParID_CASE(7232577));
                     labelDepartX.Text = Convert.ToString(m_departPlusCourtChemin.I_X);
                     labelDepartY.Text = Convert.ToString(m_departPlusCourtChemin.I_Y);
                     labelDepartIDCASE.Text = Convert.ToString(m_departPlusCourtChemin.ID_CASE);
@@ -3728,10 +3728,10 @@ namespace vaoc
                     m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0)));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(933, 180);
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(1596, 561);
-                    //m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindByID_CASE(3515734));
+                    //m_arriveePlusCourtChemin = new LigneCASE(Donnees.m_donnees.TAB_CASE.FindParID_CASE(3515734));
                     //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByXY(661, 560);
                     //ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(120);
-                    //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(4431204);//bug potentiel empéchant de trouver un chemin pour aller jusqu'à cette case
+                    //m_arriveePlusCourtChemin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(4431204);//bug potentiel empéchant de trouver un chemin pour aller jusqu'à cette case
                     labelArriveeX.Text = Convert.ToString(m_arriveePlusCourtChemin.I_X);
                     labelArriveeY.Text = Convert.ToString(m_arriveePlusCourtChemin.I_Y);
                     labelArriveeIDCASE.Text = Convert.ToString(m_arriveePlusCourtChemin.ID_CASE);
@@ -3838,8 +3838,8 @@ namespace vaoc
                         {
                             Donnees.TAB_NOMS_CARTERow lVDebug1 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVille.ID_VILLE_DEBUT);
                             Donnees.TAB_NOMS_CARTERow lVDebug2 = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(lignePccVille.ID_VILLE_FIN);
-                            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug1.ID_CASE);
-                            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lVDebug2.ID_CASE);
+                            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug1.ID_CASE);
+                            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lVDebug2.ID_CASE);
                             Debug.WriteLine(string.Format("trajet impossible de {0}:{1}({2},{3}) vers {4}:{5}({6},{7}), cout={8}",
                                 lVDebug1.S_NOM,
                                 lDebug1.ID_CASE,

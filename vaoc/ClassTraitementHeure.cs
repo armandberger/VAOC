@@ -146,7 +146,7 @@ namespace vaoc
             /*
             Donnees.TAB_PIONRow lignePionEnnemi = Donnees.m_donnees.TAB_PION.FindByID_PION(71);
             Donnees.TAB_PIONRow lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(103);
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(6392630);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(6392630);
             lignePionCapture.I_TOUR_RETRAITE_RESTANT = 0;
             lignePionCapture.Rencontre(lignePionEnnemi, ligneCase);
             lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(18926);
@@ -3628,7 +3628,7 @@ namespace vaoc
                 }
                 else
                 {
-                    //Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE); -> si on fait cela, le parcours est recalculé à chaque mouvement dés qu'il n'y a plus d'effectif
+                    //Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE); -> si on fait cela, le parcours est recalculé à chaque mouvement dés qu'il n'y a plus d'effectif
                         //sur le point de départ et le chemin n'est trouvé n'est plus toujours le même, d'où un crash car il ne retrouve pas la position courante
                     Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                     if (null == ligneCaseDepart)
@@ -5015,7 +5015,7 @@ namespace vaoc
             if (0==changeDataSet.Rows.Count) { return; }
             foreach (Donnees.TAB_CASERow ligneChange in changeDataSet)
             {
-                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneChange.ID_CASE);
                 if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
                 {
                     ligne.SetID_PROPRIETAIRENull();
@@ -5036,7 +5036,7 @@ namespace vaoc
             Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
             for (int l=0; l<changeRows.Count(); l++)
             {
-                //Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneChange.ID_CASE);
+                //Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneChange.ID_CASE);
                 Donnees.TAB_CASERow ligne = changeRows[l];
                 int IdNouveauProprietaire = ligne.ID_NOUVEAU_PROPRIETAIRE;
                 if (Constantes.NULLENTIER == IdNouveauProprietaire)

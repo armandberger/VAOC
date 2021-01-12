@@ -351,8 +351,8 @@ namespace vaoc
                     BestTrack.Cost));
             else
             {
-                Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrack.EndNodeHPA.ID_CASE_DEBUT);
-                Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(BestTrack.EndNodeHPA.ID_CASE_FIN);
+                Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(BestTrack.EndNodeHPA.ID_CASE_DEBUT);
+                Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(BestTrack.EndNodeHPA.ID_CASE_FIN);
                 Debug.WriteLine(string.Format("BestTrack trajet {0}({1},{2}) -> {4}({5},{6}), cout={3}",
                     lDebug1.ID_CASE,
                     lDebug1.I_X,
@@ -446,8 +446,8 @@ namespace vaoc
                         Successor.Cost));
                 else
                 {
-                    Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_DEBUT);
-                    Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(Successor.EndNodeHPA.ID_CASE_FIN);
+                    Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Successor.EndNodeHPA.ID_CASE_DEBUT);
+                    Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Successor.EndNodeHPA.ID_CASE_FIN);
                     Debug.WriteLine(string.Format("Successor trajet {0}({1},{2}) -> {4}({5},{6}), cout={3}",
                         lDebug1.ID_CASE,
                         lDebug1.I_X,
@@ -618,7 +618,7 @@ namespace vaoc
             {
                 if (null != T.EndNode)
                 {
-                    Path.Insert(0, Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNode.ID_CASE));
+                    Path.Insert(0, Donnees.m_donnees.TAB_CASE.FindParID_CASE(T.EndNode.ID_CASE));
                     //Debug.WriteLine(string.Format("GoBackUpNodes ajout de T.EndNode : ID={0}({1},{2}) ",
                     //    T.EndNode.ID_CASE, T.EndNode.I_X, T.EndNode.I_Y
                     //    ));
@@ -626,8 +626,8 @@ namespace vaoc
                 else
                 {
                     //Donnees.TAB_CASERow lDebug1, lDebug2;
-                    //lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_DEBUT);
-                    //lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(T.EndNodeHPA.ID_CASE_FIN);
+                    //lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(T.EndNodeHPA.ID_CASE_DEBUT);
+                    //lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(T.EndNodeHPA.ID_CASE_FIN);
                     //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCout : ID={0}({1},{2}) -> ID={3}({4},{5}) ",
                     //    lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y,
                     //    lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y
@@ -639,7 +639,7 @@ namespace vaoc
                             j = 0;
                             while (j < listeCases.Count)
                             {
-                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j++]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j++]);
                                 Path.Insert(0, ligneCase);
                                 //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
                                 //    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
@@ -651,7 +651,7 @@ namespace vaoc
                             j = listeCases.Count - 1;
                             while (j >= 0)
                             {
-                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(listeCases[j--]);
+                                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCases[j--]);
                                 Path.Insert(0, ligneCase);
                                 //Debug.WriteLine(string.Format("GoBackUpNodes ajout de ligneCase : ID={0}({1},{2}) ",
                                 //    ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y
@@ -841,7 +841,7 @@ namespace vaoc
                             if (null != lignesCout && lignesCout.Length > 0)
                             {
                                 /*
-                                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNode.ID_CASE);
+                                lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackSource.EndNode.ID_CASE);
                                 Debug.WriteLine(string.Format("case frontière : ID={0}({1},{2}) bloc :{3},{4}", lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, trackSource.blocX, trackSource.blocY));
                                  */
                                 //c'est une case case de frontière valide
@@ -850,8 +850,8 @@ namespace vaoc
                                 {
                                     AjouterBlocHPA(trackSource, ligneCout, ref listeRetour);
                                     /* debug 
-                                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
-                                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+                                    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
+                                    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
 
                                     Debug.WriteLine(string.Format("CasesVoisinesHPA ajout de ligneCout : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9} Cout={10}",
                                     lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
@@ -896,8 +896,8 @@ namespace vaoc
             if (null != trackSource.EndNodeHPA)
             {
                 /* debug 
-                lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_DEBUT);
-                lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
+                lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackSource.EndNodeHPA.ID_CASE_DEBUT);
+                lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackSource.EndNodeHPA.ID_CASE_FIN);
                 Debug.WriteLine(string.Format("CasesVoisinesHPA Blocs voisins de : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9}",
                 lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, trackSource.EndNodeHPA.I_BLOCX, trackSource.EndNodeHPA.I_BLOCY,
                 lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, trackSource.EndNodeHPA.I_BLOCX, trackSource.EndNodeHPA.I_BLOCY));
@@ -933,19 +933,19 @@ namespace vaoc
             //int ymin = m_yBlocEnd * m_tailleBloc;
             //int ymax = ymin + m_tailleBloc;
 
-            //Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+            //Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
             ////if (ligneCout.I_BLOCX == m_xBlocEnd && ligneCout.I_BLOCY == m_yBlocEnd)
             //if (ligneCaseFin.I_X >= xmin && ligneCaseFin.I_X <= xmax && ligneCaseFin.I_Y >= ymin && ligneCaseFin.I_Y <= ymax)
             //{
             //    /* debug 
-            //    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
-            //    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+            //    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
+            //    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
             //    Debug.WriteLine(string.Format("AjouterBlocHPA ajout ligneCout : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9} cout={10}",
             //    lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
             //    lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY, nouveauPoint.Cost));
             //    */
             //    Donnees.TAB_CASERow ligneCaseSource = ligneCaseFin;
-            //    //Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
+            //    //Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
             //                    /* debug 
             //    Debug.WriteLine(string.Format("AjouterBlocHPA Cases voisines de : ID={0}({1},{2}) bloc :{3},{4}",
             //        ligneCaseSource.ID_CASE, ligneCaseSource.I_X, ligneCaseSource.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY));
@@ -969,8 +969,8 @@ namespace vaoc
             //    nouveauPoint = new Track(ligneCout);
             //                    /* debug 
 
-            //    lDebug1 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_DEBUT);
-            //    lDebug2 = Donnees.m_donnees.TAB_CASE.FindByID_CASE(ligneCout.ID_CASE_FIN);
+            //    lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
+            //    lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
             //    Debug.WriteLine(string.Format("AjouterBlocHPA ajout ligneCout : ID={0}({1},{2}) bloc :{3},{4} -> ID={5}({6},{7}) bloc :{8},{9} cout={10}",
             //        lDebug1.ID_CASE, lDebug1.I_X, lDebug1.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY,
             //        lDebug2.ID_CASE, lDebug2.I_X, lDebug2.I_Y, ligneCout.I_BLOCX, ligneCout.I_BLOCY, nouveauPoint.Cost));
@@ -1421,7 +1421,7 @@ namespace vaoc
                                 chemin = new List<Donnees.TAB_CASERow>(parcoursExistant.Length - i);
                                 for (int j = 0; j < parcoursExistant.Length - i; j++)
                                 {
-                                    chemin.Add(Donnees.m_donnees.TAB_CASE.FindByID_CASE(parcoursExistant[i + j].ID_CASE));
+                                    chemin.Add(Donnees.m_donnees.TAB_CASE.FindParID_CASE(parcoursExistant[i + j].ID_CASE));
                                 }
                                 perf = DateTime.Now - timeStart;
                                 message = string.Format("RechercheChemin : existant en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);

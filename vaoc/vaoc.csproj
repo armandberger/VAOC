@@ -121,6 +121,12 @@
     <Compile Include="FormForcesInitiales.Designer.cs">
       <DependentUpon>FormForcesInitiales.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormMajCases.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMajCases.Designer.cs">
+      <DependentUpon>FormMajCases.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMessageAncien.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -368,6 +374,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormForcesInitiales.resx">
       <DependentUpon>FormForcesInitiales.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMajCases.resx">
+      <DependentUpon>FormMajCases.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMessageAncien.resx">
       <DependentUpon>FormMessageAncien.cs</DependentUpon>

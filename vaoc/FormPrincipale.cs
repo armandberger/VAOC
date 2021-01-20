@@ -183,6 +183,21 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //test sur le levee du soleil
+            //for (int i=0; i<48; i++)
+            //{
+            //    Donnees.m_donnees.TAB_PARTIE[0].I_TOUR = i;
+            //    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 0;
+            //    Debug.WriteLine(i+",0");
+            //    Debug.WriteLine("HeureCourante=" + Donnees.m_donnees.TAB_PARTIE.HeureCourante());
+            //    Debug.WriteLine("HeureBase=" + Donnees.m_donnees.TAB_PARTIE.HeureBase(i));
+            //    Debug.WriteLine("Nocturne=" + Donnees.m_donnees.TAB_PARTIE.Nocturne());
+            //    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 1;
+            //    Debug.WriteLine(i+",1");
+            //    Debug.WriteLine("HeureCourante=" + Donnees.m_donnees.TAB_PARTIE.HeureCourante());
+            //    Debug.WriteLine("HeureBase=" + Donnees.m_donnees.TAB_PARTIE.HeureBase(i));
+            //    Debug.WriteLine("Nocturne=" + Donnees.m_donnees.TAB_PARTIE.Nocturne());
+            //}
             //ChargementInitial();
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
@@ -4783,6 +4798,12 @@ namespace vaoc
         {
             FormForcesInitiales forcesInitiales = new FormForcesInitiales();
             forcesInitiales.ShowDialog();
+        }
+
+        private void miseÀJourProprietairesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormMajCases majDesCases = new FormMajCases();
+            majDesCases.ShowDialog();
         }
     }
 

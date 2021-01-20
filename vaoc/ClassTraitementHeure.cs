@@ -383,7 +383,7 @@ namespace vaoc
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        Donnees.m_donnees.SauvegarderPartie(fichierCourant, false); //-> prend quand même près de dix minutes !
+                        Donnees.m_donnees.SauvegarderPartie(fichierCourant,true); //-> prend quand même près de dix minutes !
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
@@ -2940,10 +2940,10 @@ namespace vaoc
                 0,//i_effectif_destination
                 Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                 0,
-                Constantes.NULLENTIER,//i_tour_fin
-                Constantes.NULLENTIER,//i_phase_fin
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, //c'est un ordre immédiat Constantes.NULLENTIER,//i_tour_fin
+                0,//c'est un ordre immédiat
                 Constantes.NULLENTIER,//id_message,
-                Constantes.NULLENTIER,//ID_DESTINATAIRE
+                ordre.ID_PION,//ID_DESTINATAIRE
                 ordre.ID_PION_CIBLE,//ID_CIBLE
                 ordre.ID_PION_DESTINATAIRE_CIBLE,//ID_DESTINATAIRE_CIBLE
                 Constantes.NULLENTIER,//id_bataille
@@ -5061,29 +5061,34 @@ namespace vaoc
             }
             */
             /**/
-            string requete1 = string.Format("ID_NOUVEAU_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
-            Donnees.TAB_CASERow[] changeRows1 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete1);
+            //string requete1 = string.Format("ID_NOUVEAU_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
+            //Donnees.TAB_CASERow[] changeRows1 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete1);
             //string requete2 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
             //Donnees.TAB_CASERow[] changeRows2 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete2);
             //string requete3 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
             //Donnees.TAB_CASERow[] changeRows3 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select("ID_PROPRIETAIRE<>ID_NOUVEAU_PROPRIETAIRE");
 
-            string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
-            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-            for (int l = 0; l < changeRows.Count(); l++)
+            //if (0 == Donnees.m_listeNouveauProprietaire.Count())
             {
-                Donnees.TAB_CASERow ligne = changeRows[l];
-                ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
+                //Il s'agit très probablement d'un rechargeement sur phase <>0 on ne peut donc pas se fier à la liste en mémoire
+                string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
+                Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+                for (int l = 0; l < changeRows.Count(); l++)
+                {
+                    Donnees.TAB_CASERow ligne = changeRows[l];
+                    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                    ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
+                }
             }
+            //else
+            //{
+            //    foreach (Donnees.TAB_CASERow ligne in Donnees.m_listeNouveauProprietaire)
+            //    {
+            //        ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+            //        ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
+            //    }
+            //}
 
-            /*
-            foreach (Donnees.TAB_CASERow ligne in Donnees.m_listeNouveauProprietaire)
-            {
-                ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
-            }
-            */
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             Donnees.m_listeNouveauProprietaire.Clear();
         }

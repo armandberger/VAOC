@@ -372,8 +372,9 @@ namespace vaoc
             texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> vos troupes attendent vos ordres au <a href=\"http://vaoc.free.fr/\">camp de rassemblement.</a></div>");
 
             //Si le joueur ne souhaite donner aucun ordre supplémentaire
-            texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> prevenez vos aides de camp que vous n'avez <a href=\"http://vaoc.free.fr/vaocqg_ordres_termines?ordres_termines=true&id_partie="
-                + Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE + "&id_role=" + ligneRole.ID_ROLE + "\">aucun nouvel ordre à donner.</a></div>");
+            //texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> prevenez vos aides de camp que vous n'avez <a href=\"http://vaoc.free.fr/vaocqg_ordres_termines?ordres_termines=true&id_partie="
+            //    + Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE + "&id_role=" + ligneRole.ID_ROLE + "\">aucun nouvel ordre à donner.</a></div>");
+            texte.AppendLine("<div><b>" + ligneRole.S_NOM + "</b> prevenez vos aides de camp que vous n'avez <a href=\"http://vaoc.free.fr/vaocpasdenouveauxordres.php?id_partie=" + Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE + "&id_role=" + ligneRole.ID_ROLE + "\">aucun nouvel ordre à donner.</a></div>");
             texte.AppendLine("</html>");
             return true;
         }

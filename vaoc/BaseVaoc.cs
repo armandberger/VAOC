@@ -1154,29 +1154,28 @@ namespace vaoc
                     string nomfichier = NomFichierCases(x, y, repertoire);
 
                     //on recherche le dernier fichier sauvegardé sur les cases
-                    /*** plus maintenant, le fichier doit toujours être là !
-                    int phaserecherche = phase;
+                    /*** plus maintenant, le fichier doit toujours être là ! -> hum, je ne vois pas pourquoi j'ai mis ce qui suit en commentaire, en tout cas pour formmajcases, cela ne marche pas ***/
+                    int phaserecherche = 0; // phase;
                     int tourrecherche = tour;
                     while (!File.Exists(nomfichier) && tourrecherche >= 0)
                     {
-                        phaserecherche -= Constantes.CST_SAUVEGARDE_ECART_PHASES;
-                        if (phaserecherche < 0)
-                        {
-                            phaserecherche = m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;
-                            tourrecherche--;
-                        }
-                        nomfichier = NomFichierCases(x, y, tourrecherche, phaserecherche, repertoire);
+                        tourrecherche--;
+                        repertoire = nomRepertoireCases(tourrecherche, phaserecherche);
+                        nomfichier = NomFichierCases(x, y, repertoire);
                         Debug.WriteLine("ChargerCases, test sur le fichier " + nomfichier);
                     }
 
                     if (tourrecherche < 0)
                     {
-                        MessageBox.Show(string.Format("Erreur sur ChargerDonnneesCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
-                            x, y, tour, phase)
+                        string messageErreur = string.Format("Erreur sur ChargerDonnneesCases : Impossible de trouver un fichiers de cases pour x={0}, y={1}, tour={2}, phase={3}",
+                            x, y, tour, phase);
+                        LogFile.Notifier(messageErreur);
+                        MessageBox.Show(messageErreur
                             , "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return false;
                     }
-                    */
+                    /*********************************/
+
                     ZipArchive fichierZip = ZipFile.OpenRead(nomfichier);
                     ZipArchiveEntry fichier = fichierZip.Entries[0];
                     donneesSource.ReadXml(fichier.Open());//m_donnees.TAB_CASE.ReadXml(fichier.Open()); ne marche pas mais je ne sais pas pourquoi !
@@ -1983,9 +1982,6 @@ namespace vaoc
             {
                 return true;
             }
-            //int iTour, iPhase;
-            //iTour = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-            //iPhase = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
             Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
             Cursor oldCursor = Cursor.Current;
             Cursor.Current = Cursors.WaitCursor;
@@ -2001,19 +1997,13 @@ namespace vaoc
                     {
                         continue; //cases déjà chargées
                     }
-                    //if (!ChargerCases(x, y)) { return false; }
-                    //if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref Donnees.m_donnees.tableTAB_CASE, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)) { return false; } -> ne marche pas mais je ne sais pas pourquoi !
                     if (!Donnees.m_donnees.TAB_CASE.ChargerDonnneesCases(ref donneesSource, x, y, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_CASES, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE_CASES)) { return false; }
                 }
             }
             Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-            //int debutNouvellesLignes = Donnees.m_donnees.TAB_CASE.Count;
             Donnees.m_donnees.TAB_CASE.Merge(donneesSource, false);
-            //perf = DateTime.Now - timeStart;
-            //Debug.WriteLine(string.Format("Donnees.m_donnees.TAB_CASE.Merge en {0} heures, {1} minutes, {2} secondes, {3} millisecondes :{4},{5}", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds, x, y));
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             //mise à jour de l'index
-            //timeStart = DateTime.Now;
             for (int i = 0 /*debutNouvellesLignes*/; i < Donnees.m_donnees.TAB_CASE.Count; i++)
             {
                 TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE[i];// si je ne le fais que sur donnees source, je ne peux pas garantir que l'ordre est respecté par le merge, mais plus je charge plus c'est long

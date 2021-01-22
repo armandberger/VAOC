@@ -11,7 +11,8 @@ namespace vaoc
     {
         private string m_fichierCourant;
         private InterfaceVaocWeb m_iWeb;
-        private List<ClassDataOrdre> m_listeOrdreWeb;
+        private List<ClassDataOrdre> m_listeOrdreWeb; 
+        private List<ClassDataPion> m_listePionWeb;
 
         public ClassNotificationJoueurs(string fichierCourant)
         {
@@ -21,6 +22,7 @@ namespace vaoc
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, string.Empty, false);
             m_listeOrdreWeb = m_iWeb.ListeOrdres(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU,
                                                 Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+            m_listePionWeb = m_iWeb.ListePions(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
         }
 
         /// <summary>
@@ -133,10 +135,12 @@ namespace vaoc
                 texte.AppendLine(string.Format("<table border=\"0\" cellspacing=\"0\" cellpadding=\"5\"><tr bgcolor=\"DarkGrey\"><th>{0}</th><th>{1}</th><th>{2}</th><th>{3}</th><th>{4}</th><th>{5}</th><th>{6}</th><th>{7}</th><th>{8}</th><th>{9}</th><th>{10}</th><th>{11}</th><th>{12}</th></tr>",
                     "Nom", "Inf", "Cav", "Art", "Fatigue", "Moral", "Matériel", "Ravitaillement", "# Marche Jour/Nuit", "# Combat", "Position", "Ordre", "Date de situation"));
                 requete = string.Format("ID_PION_PROPRIETAIRE={0}", ligneRole.ID_PION);
-                Donnees.TAB_PIONRow[] lignePionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
+                //Donnees.TAB_PIONRow[] lignePionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
+                IOrderedEnumerable<ClassDataPion> lignePionResultat = m_listePionWeb.Where(a => a.ID_PION_PROPRIETAIRE == ligneRole.ID_PION).OrderBy(o => o.I_TRI);
                 int numLigne = 0;
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
+                foreach (ClassDataPion lignePionWeb in lignePionResultat)
                 {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePionWeb.ID_PION);
                     //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
                     if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estJoueur) continue;
 
@@ -299,9 +303,11 @@ namespace vaoc
                 //Maintenant on envoie la liste de toutes les patrouilles en cours
                 numLigne = 0;
                 bool bPremierePatrouille = true;
-                foreach (Donnees.TAB_PIONRow lignePion in lignePionResultat)
+                foreach (ClassDataPion lignePionWeb in lignePionResultat)
                 {
                     string sDateDepart, sDestination;
+
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePionWeb.ID_PION);
                     //on ne donne pas la liste des messagers et des patrouilles (pour l'instant,voir après !)
                     if (lignePion.estMessager || lignePion.estPatrouille) continue;
 

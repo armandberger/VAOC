@@ -1648,9 +1648,9 @@ namespace vaoc
                         message = string.Format("EffectuerBataille avec modificateur de terrain des[{0}]={1} des[{2}]={3}", i, des[i], i + 3, des[i + 3]);
                         LogFile.Notifier(message, out messageErreur);
 
-                        //on a toujours 3 au minimum
-                        des[i] = Math.Max(des[i], 3);
-                        des[i + 3] = Math.Max(des[i + 3], 3);
+                        //on a toujours au minimum, le nombre de dés d'egagement
+                        des[i] = Math.Max(des[i], desEngagement);
+                        des[i + 3] = Math.Max(des[i + 3], desEngagement);
                     }
                 }
 

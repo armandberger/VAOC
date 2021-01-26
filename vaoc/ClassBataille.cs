@@ -308,7 +308,7 @@ namespace vaoc
                         }
                         else
                         {
-                            if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
+                            if (I_TOUR_FIN - I_TOUR_DEBUT >= 4 && !lignePion.estArtillerie)
                             {
                                 lignePion.GainExperienceFinDeBataille();
                             }

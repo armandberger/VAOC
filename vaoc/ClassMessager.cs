@@ -1236,17 +1236,6 @@ namespace vaoc
             int iDCaseDebut, iDCaseFin;
             if (!lignePionEmetteur.CasesDebutFin(out iDCaseDebut, out iDCaseFin)) {return false;}
 
-            //if (string.Empty == phrase) et si un joueur veut envoyer un message vide, uniquement pour informer de sa position ?
-            //{
-            //    return false;
-            //}
-
-            //si le pion est un joueur ou que le leader du pion est présent au combat, 
-            //ou que le pion est visible par l'autre, affichage direct, sinon, envoie de messager
-            //le pion est-il un joueur ?
-            //Donnees.TAB_MODELE_PIONRow ligneModelePion = Donnees.m_donnees.TAB_MODELE_PION.FindByID_MODELE_PION(lignePionEmetteur.ID_MODELE_PION);
-
-            //bImmediat = true;//BEA Test de format seulement !
             if (bImmediat)
             {
                 bMessageDirect = true;
@@ -1673,6 +1662,8 @@ namespace vaoc
                     LogFile.Notifier("GenererPhrase CaseVersCase renvoie une erreur");
                     return string.Empty;
                 }
+                //dans le cas où le pion est en bataille, on donne la position centrale de la bataille, sinon, le joueur a du mal parfois à entrer dans la zone
+                CaseVersZoneGeographique(ligneCaseBataille.ID_CASE, out nomZoneGeographique);
             }
             else
             {
@@ -1687,8 +1678,9 @@ namespace vaoc
                         return string.Empty;
                     }
                 }
+                CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             }
-            
+
             if (null != lignePionCible)
             {
                 //nom de la cible
@@ -1696,30 +1688,6 @@ namespace vaoc
                 if (lignePionCible.estMessager)
                 {
                     //message capturé à retrouver
-                    /*
-                    requete = string.Format("ID_PION_PROPRIETAIRE={0}", lignePionCible.ID_PION);
-                    Donnees.TAB_MESSAGERow[] ligneMessageInterception = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
-                    if (null != ligneMessageInterception && ligneMessageInterception.Length > 0)
-                    {
-                        messageInterception = ligneMessageInterception[0].S_TEXTE;
-                    }
-                    else
-                    {
-                        //le messager doit envoyer un ordre et non un message
-                        requete = string.Format("ID_PION={0}", lignePionCible.ID_PION);
-                        Donnees.TAB_ORDRERow[] ligneOrdreInterception = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
-                        if (null != ligneOrdreInterception && ligneOrdreInterception.Length > 0)
-                        {
-                            Donnees.TAB_ORDRERow ligneOrdreTransmis = (Donnees.TAB_ORDRERow)Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(ligneOrdreInterception[0].ID_ORDRE_SUIVANT);
-                            messageInterception = MessageDecrivantUnOrdre(ligneOrdreTransmis, true);
-                        }
-                        else
-                        {
-                            LogFile.Notifier("ERREUR : GenererPhrase Impossible de retrouver l'ordre intercepté");
-                            return string.Empty;
-                        }
-                    }
-                    */
                     Donnees.TAB_ORDRERow ligneOrdreMessager = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionCible.ID_PION);
                     Donnees.TAB_MESSAGERow ligneMessageInterception = ligneOrdreMessager.messageTransmis;
                     if (null != ligneMessageInterception)
@@ -1738,7 +1706,6 @@ namespace vaoc
             string effectifsPerdus = ChaineEffectifs(iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne);
             string nomModelePionSource = lignePion.modelePion.S_NOM;
 
-            CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);
             NomDuSuperieur(lignePion, out nomDuSuperieur);
             if (null== lignePionsEnBataille)

@@ -55,7 +55,7 @@ namespace vaoc
             m_modification = false;
             m_lignePionSelection = null;
             buttonRecalculTrajet.Enabled = false;
-            
+            TestsDePerformance();
             #region gestion du fichier le plus récent
             //RegistryKey regKey = Registry.CurrentUser.OpenSubKey(mruRegKey);
             //if (regKey != null)
@@ -165,7 +165,7 @@ namespace vaoc
 
             if (null != this.ImageCarte.Image)
             {
-                TestsDePerformance();
+                //TestsDePerformance();
                 Donnees.m_donnees.TAB_CASE.InitialisationListeCase(this.ImageCarte.Image.Width, this.ImageCarte.Image.Height);//optimisation mémoire
                 Donnees.m_donnees.TAB_CASE.InitialisationListeCaseNonCoutMax();//optimisation de performance pour AStar.SearchSpace
             }
@@ -206,7 +206,7 @@ namespace vaoc
             //        lignePion.ID_CASE= (lignePion.estQG) ? 9708619 : 18332258; 
             //    }
             //}
-            
+
             /* récupération et mise à jour des anciens noms de villes
             int i = 0;
             while (i < Donnees.m_donnees.TAB_NOMS_CARTE.Count)
@@ -1661,6 +1661,38 @@ namespace vaoc
             //DateTime timeStart;
             //TimeSpan perf;
 
+            #region Performances sur table et modèle de données – aucune différence entre les deux méthodes qui suivent
+            /*
+            for (int i = 0; i < 1000000; i++)
+            {
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(i, 0, i, i, -1, -1, 0, 0);
+                //Donnees.m_listeNouveauProprietaire.Add(ligne);
+            }
+            timeStart = DateTime.Now;
+            for (int i = 0; i < 1000000; i++)
+            {
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(i);
+            }
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("Find en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+            
+            timeStart = DateTime.Now;
+            foreach (Donnees.TAB_CASERow ligne in Donnees.m_listeNouveauProprietaire)
+            {
+                Debug.WriteLine("ligne" + ligne.ID_CASE);
+            }
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("m_listeNouveauProprietaire en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+            timeStart = DateTime.Now;
+            foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
+            {
+                Debug.WriteLine("ligne" + ligne.ID_CASE);
+            }
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("TAB_CASE en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+            */
+            #endregion
 
 
             #region Performances sur chargement en modèle OBJ – Au final, et contre toute attente, c’est beaucoup plus long !        

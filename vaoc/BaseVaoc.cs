@@ -844,8 +844,9 @@ namespace vaoc
                     {
                         vitesse = Math.Min(vitesse, ligneModeleMouvement.I_VITESSE_INFANTERIE);
                     }
-                    if (ligneModeleMouvement.I_VITESSE_ARTILLERIE > 0)
+                    if (ligneModeleMouvement.I_VITESSE_ARTILLERIE > 0 && vitesse == decimal.MaxValue)
                     {
+                        //uniquement pour les unités d'artillerie pure
                         vitesse = Math.Min(vitesse, ligneModeleMouvement.I_VITESSE_ARTILLERIE);
                     }
                 }
@@ -2261,9 +2262,9 @@ namespace vaoc
                 //evolutions supprimés en version 12
                 //foreach (TAB_NATIONRow ligneNation in TAB_NATION)
                 //{
-                    //ligneNation.I_FOURRAGE = 0;
-                    //ligneNation.I_LIMITE_FOURRAGE = 100;//limite du niveau de ravitaillement en dessous de laquelle on peut fourrager, 100%=égal, dans tous les cas (pour les français par exemple)
-                    //ligneNation.I_GUERISON = 0;
+                //ligneNation.I_FOURRAGE = 0;
+                //ligneNation.I_LIMITE_FOURRAGE = 100;//limite du niveau de ravitaillement en dessous de laquelle on peut fourrager, 100%=égal, dans tous les cas (pour les français par exemple)
+                //ligneNation.I_GUERISON = 0;
                 //}
             }
             #endregion 

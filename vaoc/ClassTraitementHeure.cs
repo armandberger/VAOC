@@ -3337,7 +3337,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 //calcul de la fatigue et du moral
                 if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0
-                    && !lignePion.estDepot && !lignePion.estBlesses
+                    && !lignePion.estDepot && !lignePion.estBlesses && !lignePion.estArtillerie
                     && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager
                     && !lignePion.estPatrouille && !lignePion.estPontonnier && !lignePion.estPrisonniers)
                 {

@@ -3309,8 +3309,9 @@ namespace vaoc
                     {
                         vitesse = Math.Min(vitesse, resModeleMouvement[0].I_VITESSE_CAVALERIE);
                     }
-                    if (I_ARTILLERIE > 0)
+                    if (I_ARTILLERIE > 0 && vitesse == int.MaxValue)
                     {
+                        //uniquement pour les unités d'artillerie pure
                         vitesse = Math.Min(vitesse, resModeleMouvement[0].I_VITESSE_ARTILLERIE);
                     }
                 }

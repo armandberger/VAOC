@@ -409,7 +409,7 @@ namespace vaoc
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 initialisationID_PROPRIETAIRENull();
-                if (!Donnees.m_listeNouveauProprietaire.Contains(this)) { Donnees.m_listeNouveauProprietaire.Add(this); }
+                if (null == Donnees.m_donnees.TAB_MAJ_PROPRIO.FindByID_CASE(this.ID_CASE)) { Donnees.m_donnees.TAB_MAJ_PROPRIO.AddTAB_MAJ_PROPRIORow(this.ID_CASE); }
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 
@@ -421,7 +421,7 @@ namespace vaoc
             {
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 initialisationID_NOUVEAU_PROPRIETAIRENull();
-                if (!Donnees.m_listeNouveauProprietaire.Contains(this)) { Donnees.m_listeNouveauProprietaire.Add(this); }
+                if (null == Donnees.m_donnees.TAB_MAJ_PROPRIO.FindByID_CASE(this.ID_CASE)) { Donnees.m_donnees.TAB_MAJ_PROPRIO.AddTAB_MAJ_PROPRIORow(this.ID_CASE); }
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             }
 

@@ -1556,6 +1556,17 @@ namespace vaoc
             }
 
             /// <summary>
+            /// indique si le pion est celui d'un rôle d'un joueur
+            /// </summary>
+            public bool estRole
+            {
+                get 
+                {
+                    return null != Donnees.m_donnees.TAB_ROLE.TrouvePion(ID_PION);
+                }
+            }
+
+            /// <summary>
             /// indique si le pion est en état de se battre ou pas
             /// </summary>
             /// <param name="QGcombattif">true si on considére le QG comme unité combattante, false sinon</param>
@@ -3764,9 +3775,9 @@ namespace vaoc
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         ligneCase.ID_NOUVEAU_PROPRIETAIRE = ID_PION;
                         
-                        if (!m_listeNouveauProprietaire.Contains(ligneCase)) 
-                        { 
-                            m_listeNouveauProprietaire.Add(ligneCase);
+                        if (null == Donnees.m_donnees.TAB_MAJ_PROPRIO.FindByID_CASE(ligneCase.ID_CASE))
+                        {
+                            Donnees.m_donnees.TAB_MAJ_PROPRIO.AddTAB_MAJ_PROPRIORow(ligneCase.ID_CASE);
                             //string requete1 = string.Format("ID_NOUVEAU_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);
                             //Donnees.TAB_CASERow[] changeRows1 = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete1);
                             //string requete2 = string.Format("ID_PROPRIETAIRE<>{0}", Constantes.NULLENTIER);

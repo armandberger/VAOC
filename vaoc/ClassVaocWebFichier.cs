@@ -946,7 +946,7 @@ namespace vaoc
                     {
                         //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estRole ? -1 : lignePion.ID_PION_PROPRIETAIRE);
                         if (null == ligneMessage)
                         {
                             //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
@@ -987,7 +987,6 @@ namespace vaoc
             string nomZoneGeographique;
             string sPosition;
             int bDetruit;
-            decimal iVitesse;
             string sVitesse;
             int iZoneBataille;
             int idBataille;
@@ -995,6 +994,7 @@ namespace vaoc
             int bConvoi;
             int bRenfort;
             int bQG;
+            string sOrdreCourant;
 
             bFuiteAuCombat = (lignePion.B_FUITE_AU_COMBAT) ? 1 : 0;
             bReditionRavitaillement = (lignePion.B_REDITION_RAVITAILLEMENT) ? 1 : 0;
@@ -1054,7 +1054,7 @@ namespace vaoc
                 }
             }
 
-            if (null != Donnees.m_donnees.TAB_ROLE.TrouvePion(lignePion.ID_PION) || null == ligneMessage)
+            if (lignePion.estRole || null == ligneMessage)
             {
                 //s'il y a un role, c'est un joueur, il faut trouver sa position reelle
                 ClassMessager.CaseVersZoneGeographique(lignePion.ID_CASE, out sPosition);
@@ -1073,34 +1073,14 @@ namespace vaoc
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out sPosition);
                 }
             }
+            sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
             sPosition = sPosition.Replace("'", "''");//remplacement des apostrophes pour l'insertion en base
 
-            iVitesse = decimal.MaxValue;
             Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
             Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
 
-            //cas d'une unité sans effectif, on prend la vitesse de la cavalerie
-            if (lignePion.I_INFANTERIE == 0 && lignePion.I_CAVALERIE == 0 && lignePion.I_ARTILLERIE == 0)
-            {
-                iVitesse = ligneModeleMouvement.I_VITESSE_CAVALERIE;
-            }
-            else
-            {
-                if (lignePion.I_INFANTERIE > 0 && ligneModeleMouvement.I_VITESSE_INFANTERIE < iVitesse)
-                {
-                    iVitesse = ligneModeleMouvement.I_VITESSE_INFANTERIE;
-                }
-                if (lignePion.I_CAVALERIE > 0 && ligneModeleMouvement.I_VITESSE_CAVALERIE < iVitesse)
-                {
-                    iVitesse = ligneModeleMouvement.I_VITESSE_CAVALERIE;
-                }
-                if (lignePion.I_ARTILLERIE > 0 && ligneModeleMouvement.I_VITESSE_ARTILLERIE < iVitesse)
-                {
-                    iVitesse = ligneModeleMouvement.I_VITESSE_ARTILLERIE;
-                }
-            }
-            sVitesse = iVitesse.ToString().Replace(",", ".");
+            sVitesse = lignePion.CalculVitesseMouvement().ToString().Replace(",", ".");
             int iInfanterie = (null == ligneMessage) ? lignePion.I_INFANTERIE : ligneMessage.I_INFANTERIE;
             int iCavalerie = (null == ligneMessage) ? lignePion.I_CAVALERIE : ligneMessage.I_CAVALERIE;
             int iArtillerie = (null == ligneMessage) ? lignePion.I_ARTILLERIE : ligneMessage.I_ARTILLERIE;
@@ -1108,7 +1088,6 @@ namespace vaoc
             int iMoral = (null == ligneMessage) ? lignePion.I_MORAL : ligneMessage.I_MORAL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
             char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
-            string sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
             if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
             {
                 sOrdreCourant += "(ravitaillement direct)";

@@ -1486,8 +1486,8 @@ namespace vaoc
 
                 List<Donnees.TAB_PIONRow> listePionsEngages012= tablePionsEngages012.ToList<Donnees.TAB_PIONRow>();
                 List<Donnees.TAB_PIONRow> listePionsEngages345 = tablePionsEngages345.ToList<Donnees.TAB_PIONRow>();
-                if (null != lignePionEngage012) { listePionsEngages012.Add(lignePionEngage012); }
-                if (null != lignePionEngage345) { listePionsEngages345.Add(lignePionEngage345); }
+                //if (null != lignePionEngage012) { listePionsEngages012.Add(lignePionEngage012); } -> inutile maintenant, sinon on ajoute deux fois une unités engagées de force
+                //if (null != lignePionEngage345) { listePionsEngages345.Add(lignePionEngage345); }
 
                 message = string.Format("EffectuerBataille sur {2} nombre d'unités en début de combat nbUnites012={0} nbUnites345={1}",
                     nbUnites012, nbUnites345, S_NOM);

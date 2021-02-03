@@ -565,6 +565,15 @@ namespace vaoc
                 }
             }
 
+            private bool ChefPresent(Donnees.TAB_PIONRow lignePion, Donnees.TAB_PIONRow[] listePions)
+            {
+                foreach (TAB_PIONRow ligneChef in listePions)
+                {
+                    if (lignePion.ID_PION_PROPRIETAIRE == ligneChef.ID_PION) { return true; }
+                }
+                return false;
+            }
+
             private bool EnvoyerMessagesVictoireDefaite(Donnees.TAB_PIONRow[] lignePionsVictoire, Donnees.TAB_PIONRow[] lignePionsDefaite)
             {
                 string message;
@@ -573,22 +582,47 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsVictoire[l];
                     if (lignePion.B_DETRUIT) { continue; }
-                    if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
+                    
+                    if (ChefPresent(lignePion, lignePionsVictoire))
                     {
-                        message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                        LogFile.Notifier(message);
-                        return false;
+                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
+                        {
+                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
+                        {
+                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message);
+                            return false;
+                        }
                     }
                 }
                 for (int l = 0; l < lignePionsDefaite.Count(); l++)
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsDefaite[l];
                     if (lignePion.B_DETRUIT) { continue; }
-                    if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
+                    if (ChefPresent(lignePion, lignePionsDefaite))
                     {
-                        message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                        LogFile.Notifier(message);
-                        return false;
+                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
+                        {
+                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
+                        {
+                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message);
+                            return false;
+                        }
                     }
                 }
                 return true;
@@ -630,20 +664,44 @@ namespace vaoc
                     if (lignePion.B_DETRUIT) { continue; }
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante()+1)%24))//+1 car execution en phase 100
                     {
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
+                        if (ChefPresent(lignePion, lignePionsEnBataille))
                         {
-                            message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message, out messageErreur);
-                            return false;
+                            if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
+                            {
+                                message = string.Format("Poursuite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                                LogFile.Notifier(message, out messageErreur);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
+                            {
+                                message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                                LogFile.Notifier(message, out messageErreur);
+                                return false;
+                            }
                         }
                     }
                     else
                     {
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT, this))
+                        if (ChefPresent(lignePion, lignePionsEnBataille))
                         {
-                            message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message, out messageErreur);
-                            return false;
+                            if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT, this))
+                            {
+                                message = string.Format("Poursuite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                                LogFile.Notifier(message, out messageErreur);
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT, this))
+                            {
+                                message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                                LogFile.Notifier(message, out messageErreur);
+                                return false;
+                            }
                         }
                     }
                 }

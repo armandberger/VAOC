@@ -2740,7 +2740,7 @@ namespace vaoc
                         {
                             lignePion.I_INFANTERIE += infanterieRetour;
                             lignePion.I_CAVALERIE += cavalerieRetour;
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.SOINS_APRES_BATAILLE, 
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_SOINS_APRES_BATAILLE, 
                                                               infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this, null))
                             {
                                 message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message SOINS_APRES_BATAILLE");

@@ -122,11 +122,12 @@ namespace vaoc
 "<31:nom depot>",
 "<32:type terrain>",
 "<33:effectifsPerdus>",
-"<33:ravitaillement>",
-"<34:materiel>",
-"<35:ravitaillementPerduGagne>",
-"<36:materielPerduGagne>",
-"<37nomDuChefRemplace>"
+"<34:ravitaillement>",
+"<35:materiel>",
+"<36:ravitaillementPerduGagne>",
+"<37:materielPerduGagne>",
+"<38:nomDuChefRemplace>",
+"<39:Modèle unité>",
             }
                         );
         }
@@ -213,7 +214,9 @@ namespace vaoc
 "<34:75>",
 "<35:14>",
 "<36:11>",
-"<37:Général Bidon>"
+"<37:-10>",
+"<38:Général Bidon>",
+"<39:Division française>"
             }
                         );
             Cursor.Current = oldCursor;

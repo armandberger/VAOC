@@ -258,7 +258,7 @@ namespace vaoc
             MESSAGE_PRISONNIERS_APRES_BATAILLE = 77,
             // ex: Je viens de constituer la {1} à partir des prisonniers fait à la bataille. Ils sont prêt à être accompagnés sous bonne escorte jusqu'à la prison que vous jugerez le plus sure
             // ex: C'est sous bonne escorte que la {1} est prêt à conduire tous ses hommes perdus pour leur pays dans la prison la plus adéquate.
-            SOINS_APRES_BATAILLE = 78,
+            MESSAGE_SOINS_APRES_BATAILLE = 78,
             // ex: En parcourant le lieu de {3} j'ai pu prodigué des soins à {33} et les réintégrer à l'unité.
             // ex: Après notre belle victoire à {3}, nos chirurgiens ont fait des merveilles sur les blessés et remis rapidement sur pied {4} fantassins et {6} cavaliers.
             MESSAGE_BLESSES_APRES_BATAILLE = 79,
@@ -314,9 +314,9 @@ namespace vaoc
             //Le dépôt de destination ne peut pas être renforcé, mon convoi reste donc sans affectation
             //{1} est arrivé à {2} mais le dépôt que je dois renforcer n'est pas en mesure d'accepter mes chariots. Je suis en attente de nouvelles consignes. 
             MESSAGE_POSITION_OFFICIERS = 95
-            //Renseignements pris auprès des divisions sur place, leurs officiers sont positionnés à {11}.
-            //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {11}
-            //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {11}
+            //Renseignements pris auprès des divisions sur place, leurs officiers sont positionnés à {22}.
+            //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {22}
+            //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {22}
         }
         /*
                DateHeure(true), //0
@@ -2525,7 +2525,7 @@ namespace vaoc
                     Donnees.TAB_PIONRow lignePionVoisinLeader = lignePionVoisin.proprietaire;
                     //on vérifie que le leader n'est pas visible, sinon inutile de redonner la position
                     //inutile également de l'indiquer à nouveau si on l'a déjà fait !
-                    if (!unitesVisibles.ContainsKey(lignePionVoisinLeader.ID_PION) && !listeOfficiersIndiques.Contains(lignePionVoisinLeader.ID_PION))
+                    if (lignePionVoisinLeader.estJoueur && !unitesVisibles.ContainsKey(lignePionVoisinLeader.ID_PION) && !listeOfficiersIndiques.Contains(lignePionVoisinLeader.ID_PION))
                     {
                         if (string.Empty != positionOfficiers) { positionOfficiers += ", "; }
                         string NomZoneGeographique;

@@ -431,13 +431,13 @@ namespace vaoc
                     i++;
                 }
 
-                //On indique les positions des officiers non présents pour le joueur mais dont des unités sont présentes (cela aide si le joueur a perdu la connexion avec le reste de l'armée)
-                //if (IndiquerPositionsOfficiers())
-                //{
-                //    messageErreur = "Erreur durant le traitement IndiquerPositionsOfficiers";
-                //    LogFile.Notifier(messageErreur);
-                //    return false;
-                //}
+                //On indique les positions des officiers non présents pour le joueur mais dont des unités sont présentes(cela aide si le joueur a perdu la connexion avec le reste de l'armée)
+                if (!IndiquerPositionsOfficiers())
+                {
+                    messageErreur = "Erreur durant le traitement IndiquerPositionsOfficiers";
+                    LogFile.Notifier(messageErreur);
+                    return false;
+                }
 
                 // On regarde si toutes les unités sont bien ravitaillées
                 //pas à faire toutes les heures, mais seulement en fin de journée et avec une liaison sur les dépôts que si l'unité n'a pas bougée
@@ -664,13 +664,17 @@ namespace vaoc
                     bool bEnDanger;
                     if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS, null, false, out message, out bEnDanger))
                     { 
-                        LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:PionsEnvironnants."); return false; 
+                        LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:PionsEnvironnants."); 
+                        return false; 
                     }
                     if (string.Empty!=message)
                     {
                         //il y a effectivement des officiers à indiquer, on envoie donc un message
                         if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS))
-                        { LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:EnvoyerMessageImmediat."); return false; }
+                        { 
+                            LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:EnvoyerMessageImmediat."); 
+                            return false; }
+
                     }
                 }
             }

@@ -2520,7 +2520,7 @@ namespace vaoc
             foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
             {
                 Donnees.TAB_PIONRow lignePionVoisin = Donnees.m_donnees.TAB_PION.FindByID_PION(unite.Key);
-                if (!lignePionVoisin.estQG && !lignePionVoisin.estEnnemi(lignePion) && lignePionVoisin.proprietaire!=lignePion)
+                if (!lignePionVoisin.estQG && !lignePionVoisin.estMessager && !lignePionVoisin.estPatrouille && !lignePionVoisin.estEnnemi(lignePion) && lignePionVoisin.proprietaire!=lignePion)
                 {
                     Donnees.TAB_PIONRow lignePionVoisinLeader = lignePionVoisin.proprietaire;
                     //on vérifie que le leader n'est pas visible, sinon inutile de redonner la position

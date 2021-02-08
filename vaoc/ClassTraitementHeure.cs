@@ -639,7 +639,7 @@ namespace vaoc
                 //dernière sauvegarde pour demarrer au tour suivant
                 //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
+                Donnees.m_donnees.SauvegarderPartie(fichierCourant, bTourSuivant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
 
@@ -3876,7 +3876,7 @@ namespace vaoc
 
                                 if (distanceCoutDeplacement > Constantes.CST_DISTANCE_MAX_RECHERCHE_DESTINATAIRE)
                                 {
-                                    ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DESTINATAIRE_INTROUVABLE);
+                                    ClassMessager.EnvoyerMessage(lignePion, lignePionDestinataire, ClassMessager.MESSAGES.MESSAGE_DESTINATAIRE_INTROUVABLE);
                                     lignePion.DetruirePion();//le messager est devenu inutile
                                 }
                                 else

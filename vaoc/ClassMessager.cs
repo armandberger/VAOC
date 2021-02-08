@@ -346,9 +346,9 @@ namespace vaoc
                 ordreHeureDebut,//24
                 ordreDuree,
                 distanceBataille,//26
-                messageInterception,//27
+                messageInterception ou message non remis,//27
                 effectifs,//28
-                nomCible,
+                nomCible ou personne à qui devait être remis le message,
                 distanceRavitaillement, //30
                 depotRavitaillement,
                 ModeleTerrain, //32
@@ -1703,6 +1703,25 @@ namespace vaoc
                     {
                         Donnees.TAB_ORDRERow ligneOrdreTransmis = ligneOrdreMessager.ordreTransmis;
                         messageInterception = MessageDecrivantUnOrdre(ligneOrdreTransmis, true);
+                    }
+                }
+                else
+                {
+                    //cas du messager qui n'arrive pas à remettre son message
+                    if (lignePion.estMessager)
+                    {
+                        //message capturé à retrouver
+                        Donnees.TAB_ORDRERow ligneOrdreMessager = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
+                        Donnees.TAB_MESSAGERow ligneMessageInterception = ligneOrdreMessager.messageTransmis;
+                        if (null != ligneMessageInterception)
+                        {
+                            messageInterception = ligneMessageInterception.S_TEXTE;
+                        }
+                        else
+                        {
+                            Donnees.TAB_ORDRERow ligneOrdreTransmis = ligneOrdreMessager.ordreTransmis;
+                            messageInterception = MessageDecrivantUnOrdre(ligneOrdreTransmis, true);
+                        }
                     }
                 }
             }

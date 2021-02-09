@@ -5076,33 +5076,35 @@ namespace vaoc
             //if (0 == Donnees.m_listeNouveauProprietaire.Count())
             //{
             //    //Il s'agit très probablement d'un rechargeement sur phase <>0 on ne peut donc pas se fier à la liste en mémoire
-            string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
-            Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-            for (int l = 0; l < changeRows.Count(); l++)
-            {
-                Donnees.TAB_CASERow ligne = changeRows[l];
-                ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-                ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
-            }
+
+            //string requete = string.Format("(ID_PROPRIETAIRE<>{0}) OR (ID_NOUVEAU_PROPRIETAIRE<>{0})", Constantes.NULLENTIER);
+            //Donnees.TAB_CASERow[] changeRows = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
+            //for (int l = 0; l < changeRows.Count(); l++)
+            //{
+            //    Donnees.TAB_CASERow ligne = changeRows[l];
+            //    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+            //    ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
+            //}
+
             //}
             //else
             //{
-            //int i = 0;
-            //while (i < Donnees.m_donnees.TAB_MAJ_PROPRIO.Rows.Count)
-            //{
-            //    Donnees.TAB_MAJ_PROPRIORow ligneProprio = Donnees.m_donnees.TAB_MAJ_PROPRIO[i];
-            //    Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneProprio.ID_CASE);
-            //    ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
-            //    ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
-            //    if (ligne.IsID_PROPRIETAIRENull())
-            //    {
-            //        Donnees.m_donnees.TAB_MAJ_PROPRIO.Rows.RemoveAt(i);
-            //    }
-            //    else 
-            //    {
-            //        i++;
-            //    }
-            //}
+            int i = 0;
+            while (i < Donnees.m_donnees.TAB_MAJ_PROPRIO.Rows.Count)
+            {
+                Donnees.TAB_MAJ_PROPRIORow ligneProprio = Donnees.m_donnees.TAB_MAJ_PROPRIO[i];
+                Donnees.TAB_CASERow ligne = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneProprio.ID_CASE);
+                ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                ligne.initialisationID_NOUVEAU_PROPRIETAIRENull();
+                if (ligne.IsID_PROPRIETAIRENull())
+                {
+                    Donnees.m_donnees.TAB_MAJ_PROPRIO.Rows.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
             //}
 
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);

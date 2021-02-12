@@ -3856,6 +3856,8 @@ namespace vaoc
                     List<LigneCASE> chemin;
                     double cout, coutHorsRoute;
 
+                    int id_case = lignePion.ID_CASE;
+                    lignePion.ID_CASE = m_departPlusCourtChemin.ID_CASE;
                     if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
                         out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
@@ -3870,6 +3872,7 @@ namespace vaoc
                         labelInformationTempsPasse.Text += string.Format("\r\n HPA : {0} min {1} sec {2} mil cout:{3}", perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal);
                         m_cheminHPA = m_etoileHPA.PathByNodes;
                     }
+                    lignePion.ID_CASE = id_case;
                     //int pos = 0;
                     //while (chemin[pos].ID_CASE != lignePion.ID_CASE) pos++;                    
                     /* */

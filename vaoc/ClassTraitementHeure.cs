@@ -3703,6 +3703,7 @@ namespace vaoc
                 //par exemple si l'unité est sur la même case que son chef.
                 if (lignePion.ID_CASE != ligneOrdre.ID_CASE_DESTINATION)
                 {
+                    //lignePion.ID_CASE = ligneCaseDepart.ID_CASE;//ajout le 11/02/2021, sinon, c'était refait dans rechercheChemin mais je ne sais pas pourquoi cela peut se décaler
                     if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                     {
                         message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementSansEffectif :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);

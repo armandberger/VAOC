@@ -1458,6 +1458,10 @@ namespace vaoc
             if (ligneCaseDepart.ID_CASE != lignePion.ID_CASE)
             {
                 lignePion.ID_CASE = ligneCaseDepart.ID_CASE;//cas qui devrait être réglé avant l'appel à la fonction normalement
+                //message = string.Format("{0},ID={1}, RechercheChemin : Astar: ligneCaseDepart.ID_CASE != lignePion.ID_CASE de {2} ({3},{4}) à {5} ({6},{7})",
+                //    lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
+                //LogFile.Notifier(message, out messageErreur);
+                //throw new Exception("Astar: ligneCaseDepart.ID_CASE != lignePion.ID_CASE");
             }
             message = string.Format("{0},ID={1}, RechercheChemin : SearchPath de {2} ({3},{4}) à {5} ({6},{7})",
                 lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);

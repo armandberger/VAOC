@@ -1685,7 +1685,8 @@ namespace vaoc
                 }
                 CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             }
-
+            
+            string nomModelePionSource = (null== lignePionCible) ? string.Empty : lignePionCible.modelePion.S_NOM;
             if (null != lignePionCible)
             {
                 //nom de la cible
@@ -1728,7 +1729,6 @@ namespace vaoc
 
             string effectifs = ChaineEffectifs(lignePion.I_INFANTERIE, lignePion.I_CAVALERIE, lignePion.I_ARTILLERIE);
             string effectifsPerdus = ChaineEffectifs(iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne);
-            string nomModelePionSource = lignePion.modelePion.S_NOM;
 
             CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);
             NomDuSuperieur(lignePion, out nomDuSuperieur);

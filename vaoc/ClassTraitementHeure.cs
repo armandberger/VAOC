@@ -3686,9 +3686,9 @@ namespace vaoc
                 Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                message = string.Format("{0},ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
-                    lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR, vitesse);
-                LogFile.Notifier(message, out messageErreur);
+                //message = string.Format("{0},ID={1}, enNapoléon,ID=0, ExecuterMouvementSansEffectif mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
+                //    lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR, vitesse);
+                //LogFile.Notifier(message, out messageErreur);
             }
             if (lignePion.I_DISTANCE_A_PARCOURIR <= 0)
             {

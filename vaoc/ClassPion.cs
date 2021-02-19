@@ -3719,7 +3719,9 @@ namespace vaoc
                             return false;
                         }
                     }
+                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_INTERCEPTION = true;
+                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 return true;
             }

@@ -207,7 +207,7 @@ namespace vaoc
                     }
                     x1 = noeud.I_X;
                     y1 = noeud.I_Y;
-                    LogFile.Notifier("AfficherChemin x=" + x1 + " y=" + y1);
+                    //LogFile.Notifier("AfficherChemin x=" + x1 + " y=" + y1); -> attention provoque des crashs si laissé en cours de traitement
                 }
             }
             //graph.DrawPath(stylo, path);

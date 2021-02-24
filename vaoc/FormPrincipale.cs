@@ -183,6 +183,21 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //test sur l'ordre actif
+            /*
+            Donnees.TAB_PIONRow lignePionA=Donnees.m_donnees.TAB_PION.FindByID_PION(21);
+            Donnees.TAB_ORDRERow ligneOrdreA = Donnees.m_donnees.TAB_ORDRE.Courant(lignePionA.ID_PION);
+            for (int t = 25; t < 25+ligneOrdreA.I_DUREE+2; t++)
+            {
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR = t;
+                for (int p = 0; p < 100; p++)
+                {
+                    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = p;
+                    Debug.WriteLine(lignePionA.OrdreActif(ligneOrdreA) +" t="+t+" p="+p+" HeureCourante=" + Donnees.m_donnees.TAB_PARTIE.HeureCourante());
+                }
+            }
+            Debug.WriteLine("Fin");
+            */
             //test sur le levee du soleil
             //for (int i=0; i<48; i++)
             //{

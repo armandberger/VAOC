@@ -64,7 +64,6 @@ namespace vaoc
             int moisEnCours = ClassMessager.DateHeure().Month;
             Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours-1];
             Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours-1];
-
             //MiseAJourDonneesHistorique majVideo2 = new MiseAJourDonneesHistorique();
             //majVideo2.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
             //majVideo2.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
@@ -204,6 +203,7 @@ namespace vaoc
                     }
                 }
 
+                Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(21);
                 //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 98;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
@@ -223,6 +223,7 @@ namespace vaoc
                     //Cartographie.ConstructionCarte();
                     //Cartographie.AfficherUnites(Cartographie.modeleCarte.HISTORIQUE);
                     //Cartographie.AfficherUnites(Cartographie.modeleCarte.ZOOM);
+                    lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(21);
 
                     //Traitement de la phase
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ||
@@ -379,6 +380,8 @@ namespace vaoc
                         }
                     }
 
+                    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
+
                     if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE) // || 82 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
@@ -387,7 +390,6 @@ namespace vaoc
                         Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     }
 
-                    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
                     travailleur.ReportProgress(0);//toujours zero durant le traitement, car affichage basé differement d'un pourcentage
                     LogFile.Notifier("Fin de la phase");
                 }

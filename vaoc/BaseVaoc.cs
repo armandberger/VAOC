@@ -2036,7 +2036,7 @@ namespace vaoc
                     string requete = string.Format("I_X>={0} AND I_X<{1} AND I_Y>={2} AND I_Y<{3}",
                         x, x + Constantes.CST_TAILLE_BLOC_CASES, y, y + Constantes.CST_TAILLE_BLOC_CASES);
                     Donnees.TAB_CASERow[] listeCases = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete);
-                    Debug.WriteLine(requete + " : " + listeCases.Count());
+                    //Debug.WriteLine(requete + " : " + listeCases.Count());
                     if (0 == listeCases.Count()) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); continue; }
                     for (int i = 0; i < listeCases.Count(); i++)
                     {

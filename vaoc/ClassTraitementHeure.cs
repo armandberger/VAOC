@@ -203,7 +203,7 @@ namespace vaoc
                     }
                 }
 
-                //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(21);
+                Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
                 //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 98;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
@@ -223,7 +223,9 @@ namespace vaoc
                     //Cartographie.ConstructionCarte();
                     //Cartographie.AfficherUnites(Cartographie.modeleCarte.HISTORIQUE);
                     //Cartographie.AfficherUnites(Cartographie.modeleCarte.ZOOM);
-                    //lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(21);
+                    lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
+                    message = string.Format("test {0}:{1} en {2}", lignePionTest.ID_PION, lignePionTest.S_NOM, lignePionTest.ID_CASE);
+                    LogFile.Notifier(message);
 
                     //Traitement de la phase
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ||

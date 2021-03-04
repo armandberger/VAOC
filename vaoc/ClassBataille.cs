@@ -2447,9 +2447,16 @@ namespace vaoc
                 for (i = 0; i < resultPionsBataille.Count(); i++)
                 {
                     lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(resultPionsBataille.ElementAt(i));
-                    if (null != lignePion && (!bCombattif || lignePion.estCombattif) && (bQG || (!lignePion.estQG && (!lignePion.estArtillerie || bArtillerie))))
+                    if (null != lignePion && (!bCombattif || lignePion.estCombattif || bArtillerie || bQG) && (bQG || (!lignePion.estQG && (!lignePion.estArtillerie || bArtillerie))))
                     {
-                        lignePionsEnBatailleZone[nb++] = lignePion;
+
+                        if (!bCombattif || lignePion.estCombattif)
+                        {
+                            if (bQG || (!lignePion.estQG && (!lignePion.estArtillerie || bArtillerie)))
+                            {
+                                lignePionsEnBatailleZone[nb++] = lignePion;
+                            }
+                        }
 
                         if (!lignePion.IsI_ZONE_BATAILLENull() && lignePion.I_ZONE_BATAILLE >= 0)//cas du leader de la zone, engagé mais sans zone
                         {

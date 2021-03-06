@@ -1754,7 +1754,7 @@ namespace vaoc
             /// <returns>heure en cours</returns>
             public int HeureCourante()
             {
-                return HeureBase(m_donnees.TAB_PARTIE[0].I_TOUR);
+                return HeureBase(m_donnees.TAB_PARTIE[0].I_TOUR + m_donnees.TAB_PARTIE[0].I_PHASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
             }
 
             /// <summary>

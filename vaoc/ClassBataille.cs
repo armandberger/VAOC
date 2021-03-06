@@ -329,9 +329,9 @@ namespace vaoc
                 //ne pas le faire car on doit le garder pour savoir si, en fin de journée, l'unité s'est bien reposée
                 //DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[] resBataillePions=(DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[])DataSetCoutDonnees.m_donnees.TAB_BATAILLE_PIONS.Select(requete);
                 //foreach (DataSetCoutDonnees.TAB_BATAILLE_PIONSRow lignePionBataille in resBataillePions) { lignePionBataille.Delete(); }
-                if (this.ID_LEADER_012>=0 || this.ID_LEADER_345>=0)
+                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1)  && (this.ID_LEADER_012>=0 || this.ID_LEADER_345>=0))
                 {
-                    //c'est une fin de bataille necessitant un arrêt du tour en cours que si un leader un présent
+                    //c'est une fin de bataille necessitant un arrêt du tour en cours que si un leader un présent et que l'on ne va pas s'arrêter de toute manière à cause de la nuit
                     bFinDeBataille = true;
                 }
                 return true;
@@ -662,7 +662,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante()+1)%24))//+1 car execution en phase 100
+                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante()+1))
                     {
                         if (ChefPresent(lignePion, lignePionsEnBataille))
                         {
@@ -1748,6 +1748,9 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
                 }
 
+                //Envoie d'un message prévenant d'un bruit de canon pour toutes les unités non présentes.
+                AlerteBruitDuCanon();
+
                 if (0 == nbUnites012 || 0 == nbUnites345)
                 {
                     FinDeBataille(out bFinDeBataille);
@@ -1755,7 +1758,7 @@ namespace vaoc
                 else
                 {
                     //La bataille continue seulement s'il ne fait pas nuit
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
+                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1))
                     {
                         //pas de combat la nuit
                         message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Fin de la bataille à cause de l'arrivée de la nuit.",
@@ -1768,22 +1771,10 @@ namespace vaoc
                     RemiseLeaderEnReserve();
                 }
 
-                //Envoie d'un message prévenant d'un bruit de canon pour toutes les unités non présentes.
-                AlerteBruitDuCanon();
-
                 //Si un ordre de retraite a été donné et que c'était au premier jour, il est effectué en fin de combat
                 if (bRetraite012 || bRetraite345)
                 {
                     return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
-                }
-
-                //si dans une heure, il fait nuit, on peut arrête la bataille tout de suite
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
-                {
-                    //pas de combat la nuit
-                    message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
-                    LogFile.Notifier(message, out messageErreur);
-                    return FinDeBataille(out bFinDeBataille);
                 }
 
                 return true;

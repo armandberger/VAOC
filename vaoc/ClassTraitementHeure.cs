@@ -218,15 +218,6 @@ namespace vaoc
                     //construction de la carte pour les images liés aux messages
                     if (!Cartographie.ChargerLesFichiers()) { return false; }
 
-                    //on reconstruit la carte graphique à chaque étape pour voir la progression à l'écran
-                    //ca ne marche pas, alors autant gagner du temps
-                    //Cartographie.ConstructionCarte();
-                    //Cartographie.AfficherUnites(Cartographie.modeleCarte.HISTORIQUE);
-                    //Cartographie.AfficherUnites(Cartographie.modeleCarte.ZOOM);
-                    lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
-                    message = string.Format("test {0}:{1} en {2}", lignePionTest.ID_PION, lignePionTest.S_NOM, lignePionTest.ID_CASE);
-                    LogFile.Notifier(message);
-
                     //Traitement de la phase
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ||
                         false == Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
@@ -246,7 +237,7 @@ namespace vaoc
                         messageErreur = "Erreur durant le traitement PlacerLesUnitesStatiques";
                         return false;
                     }
-                    perf = DateTime.Now - timeStart;
+                    //perf = DateTime.Now - timeStart;
                     //Debug.WriteLine(string.Format("PlacerLesUnitesStatiques en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                     //timeStart = DateTime.Now;
@@ -3697,8 +3688,8 @@ namespace vaoc
             if (lignePion.I_DISTANCE_A_PARCOURIR <= 0)
             {
                 //faire avancer l'unité si celle-ci n'est pas arrivé à destination
-                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif :  ligneOrdre.ID_ORDRE={2} ligneOrdre.I_EFFECTIF_DEPART={3}",
-                    lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, ligneOrdre.I_EFFECTIF_DEPART);
+                message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif :  ligneOrdre.ID_ORDRE={2} ligneOrdre.I_EFFECTIF_DEPART={3} ID_CASE={4}",
+                    lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, ligneOrdre.I_EFFECTIF_DEPART, lignePion.ID_CASE);
                 LogFile.Notifier(message, out messageErreur);
 
                 //on l'avance d'une case de plus

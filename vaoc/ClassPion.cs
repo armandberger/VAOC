@@ -4519,7 +4519,7 @@ namespace vaoc
                         }
                         else
                         {
-                            message = string.Format("{0}(ID={1}, unité non statique)", S_NOM, ID_PION);
+                            message = string.Format("{0}(ID={1}, unité non statique, ID_CASE={2})", S_NOM, ID_PION, ID_CASE);
                             return LogFile.Notifier(message, out messageErreur);
                         }
                     }
@@ -4592,7 +4592,7 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
                     return false;
                 }
-                message = string.Format("PlacerPionEnRoute : {0},ID={1}, SearchPath longueur={2}", S_NOM, ID_PION, chemin.Count);
+                message = string.Format("PlacerPionEnRoute : {0},ID={1}, SearchPath longueur={2}, ID_CASE={3}", S_NOM, ID_PION, chemin.Count, ID_CASE);
                 LogFile.Notifier(message, out messageErreur);
 
                 if (ligneOrdre.I_EFFECTIF_DESTINATION > 0)

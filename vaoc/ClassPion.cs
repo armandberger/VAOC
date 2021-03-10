@@ -2440,19 +2440,19 @@ namespace vaoc
                 if (!estRavitaillable) { bUniteRavitaillee = true; return true; } //seules les unités combattantes doivent être ravitaillées
                 ligneNation = this.nation;
 
+                #region consommation journaliere
+                //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
+                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
+                //ainsi que 5% de son matériel par heure de combat
+                I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
+                #endregion
+
                 #region fourrage : Vivre sur le terrain
                 //l'unité reprend du ravitaillement en prenant sur le terrain en tenant compte de la météo
                 if (I_RAVITAILLEMENT < 100)
                 {
                     I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + (this.modelePion.I_FOURRAGE * ligneMeteo.I_POURCENT_RAVITAILLEMENT / 100));
                 }
-                #endregion
-
-                #region consommation journaliere
-                //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
-                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
-                //ainsi que 5% de son matériel par heure de combat
-                I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
                 #endregion
 
                 //si l'unité n'est pas en repos complet, elle ne peut pas se ravitailler à un dépôt

@@ -459,7 +459,7 @@ namespace vaoc
 
                 //a la fin de la journée, on met à jour le moral, la fatigue et on envoit un rapport
 
-                if (23 == Donnees.m_donnees.TAB_PARTIE.HeureCourante())
+                if (0 == Donnees.m_donnees.TAB_PARTIE.HeureCourante())
                 {
                     if (!FinDuJour())
                     {

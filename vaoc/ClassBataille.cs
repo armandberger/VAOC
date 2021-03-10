@@ -1827,12 +1827,14 @@ namespace vaoc
                     pertesMoral[i] = score[i + 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
                     pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/) * score[i + 3] / 400;
+                    //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille012);
                 }
                 for (i = 3; i < 6; i++)
                 {
                     pertesMoral[i] = score[i - 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
                     pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille345, false /*bCombatif*/) * score[i - 3] / 400;
+                    //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille345);
                 }
                 #endregion
 
@@ -1946,6 +1948,31 @@ namespace vaoc
                 }
                 return true;
             }
+
+            /*
+            /// <summary>
+            /// Vérifie s'il n'y a pas un effet boule de neige parce que des unités démoralisées démoralisent d'autres unités
+            /// </summary>
+            /// <param name="pertesMoral">perte en moral sur la zone</param>
+            /// <param name="nombreUnitesCassant">nombre d'unités cassant au moral et modifiant le calcul initial</param>
+            /// <param name="lignePionsEnBataille">liste des pions sur la zone</param>
+            private void DemoralisationSurZone(int pertesMoral, ref int nombreUnitesCassant, List<TAB_PIONRow> lignePionsEnBataille)
+            {
+                foreach(TAB_PIONRow lignePion in lignePionsEnBataille)
+                {
+                    if (lignePion.estCombattif)
+                    {
+                        if (lignePion.I_MORAL <= pertesMoral + nombreUnitesCassant * Constantes.CST_PERTE_MORAL_FUITE
+                            && lignePion.I_MORAL > pertesMoral + (nombreUnitesCassant+1) * Constantes.CST_PERTE_MORAL_FUITE)
+                        {
+                            //l'unité casse maintenant mais ne cassait pas avant
+                            nombreUnitesCassant++;
+                            DemoralisationSurZone(pertesMoral, ref nombreUnitesCassant, lignePionsEnBataille);
+                        }
+                    }
+                }
+            }
+            */
 
             /// <summary>
             /// Un chef d'un secteur est blesse dans une bataille
@@ -2520,6 +2547,8 @@ namespace vaoc
                 bool[] unitesCombattiveHorsArtillerie= new bool[6];
                 //int iPertesInfanterie, iPertesCavalerie, iPertesArtillerie;
 
+                message = string.Format("Début FuiteAuCombat pour le pion ID={0}:{1} moral={2}",lignePionFuite.ID_PION, lignePionFuite.S_NOM, lignePionFuite.I_MORAL);
+                LogFile.Notifier(message, out messageErreur);
                 if (lignePionFuite.I_MORAL<=0)
                 {
                     //l'unité a déjà fuit, elle ne va pas fuir deux fois !
@@ -2545,8 +2574,10 @@ namespace vaoc
                     if (lignePion.ID_PION != lignePionFuite.ID_PION &&
                         !lignePion.IsI_ZONE_BATAILLENull() && //possible si l'unité a déjà fuit le combat
                         lignePion.I_ZONE_BATAILLE == zone && lignePion.estCombattif
-                        && !lignePion.estArtillerie)
+                        && !lignePion.estArtillerie && lignePion.I_MORAL>0)
                     {
+                        message = string.Format("FuiteAuCombat effet 'boule de neige' pour le pion ID={0}:{1} moral={2}", lignePion.ID_PION, lignePion.S_NOM, lignePionFuite.I_MORAL);
+                        LogFile.Notifier(message, out messageErreur);
                         lignePion.I_MORAL -= Constantes.CST_PERTE_MORAL_FUITE;
                         if (lignePion.Moral <= 0)
                         {

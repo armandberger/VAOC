@@ -826,7 +826,7 @@ namespace vaoc
                 //si les unités ne sont dans aucune bataille, il faut la créer
                 if (nouvelleBataille)
                 {
-                    Donnees.TAB_BATAILLERow ligneNouvelleBataille = CreationBataille(ligneCaseBataille);
+                    Donnees.TAB_BATAILLERow ligneNouvelleBataille = CreationBataille(ligneCaseBataille, lignePion, lignePionEnnemi);
                     //on ajoute systématiquement le pion ayant crée la bataille
                     ligneNouvelleBataille.AjouterPionDansLaBataille(lignePion, ligneCaseBataille, true);
                 }
@@ -849,8 +849,9 @@ namespace vaoc
         /// Création d'un nouveau lieu de bataille
         /// </summary>
         /// <param name="ligneCaseBataille">case centrale d'où part le combat</param>
+        /// <param name="lignePionOrigineBataille">Pion à l'origine de la bataille</param>
         /// <returns>nouvelle bataille si OK, null si KO</returns>
-        internal static Donnees.TAB_BATAILLERow CreationBataille(Donnees.TAB_CASERow ligneCaseBataille)
+        internal static Donnees.TAB_BATAILLERow CreationBataille(Donnees.TAB_CASERow ligneCaseBataille, Donnees.TAB_PIONRow lignePionOrigineBataille, Donnees.TAB_PIONRow lignePionOrigineBataille2)
         {
             string nomBataille;
             char orientation;
@@ -1277,7 +1278,14 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePionEnBataille = ligneCaseZone.TrouvePionSurCase();
                 if (null != lignePionEnBataille)
                 {
-                    if (!ligneBataille.AjouterPionDansLaBataille(lignePionEnBataille, ligneCaseZone, ligneCaseBataille == ligneCaseZone))
+                    //s'il s'agit d'une des deux unités ayant déclenché la bataille et que celle-ci est en mouvement, l'unité doit être déplace au centre du combat.
+                    Donnees.TAB_CASERow ligneCasePlacement =
+                        ((lignePionOrigineBataille.ID_PION == lignePionEnBataille.ID_PION && lignePionOrigineBataille.enMouvement)
+                        || (lignePionOrigineBataille2.ID_PION == lignePionEnBataille.ID_PION && lignePionOrigineBataille2.enMouvement)) ? ligneCaseBataille : ligneCaseZone;
+
+                    if (!ligneBataille.AjouterPionDansLaBataille(lignePionEnBataille,
+                        ligneCasePlacement, 
+                        ligneCaseBataille == ligneCaseZone))
                     {
                         return null;
                     }

@@ -2708,6 +2708,8 @@ namespace vaoc
                     }
                 }
 
+                LogFile.Notifier(string.Format("RepartirPertes sur le pion ID={0}:{1} inf={2} cav={3} art={4}", lignePion.ID_PION, lignePion.S_NOM, iPertesInfanterie, iPertesCavalerie, iPertesArtillerie));
+
                 lignePion.I_INFANTERIE -= iPertesInfanterie;
                 lignePion.I_CAVALERIE -= iPertesCavalerie;
                 lignePion.I_ARTILLERIE -= iPertesArtillerie;

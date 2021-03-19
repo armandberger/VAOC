@@ -1668,7 +1668,14 @@ namespace vaoc
                     return string.Empty;
                 }
                 //dans le cas où le pion est en bataille, on donne la position centrale de la bataille, sinon, le joueur a du mal parfois à entrer dans la zone
-                CaseVersZoneGeographique(ligneCaseBataille.ID_CASE, out nomZoneGeographique);
+                if (lignePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                {
+                    CaseVersZoneGeographique(ligneCaseBataille.ID_CASE, out nomZoneGeographique);
+                }
+                else
+                {
+                    CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
+                }
             }
             else
             {

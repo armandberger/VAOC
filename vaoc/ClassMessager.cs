@@ -1693,9 +1693,17 @@ namespace vaoc
                 CaseVersZoneGeographique(lignePion.ID_CASE, out nomZoneGeographique);
             }
             
-            string nomModelePionSource = (null== lignePionCible) ? string.Empty : lignePionCible.modelePion.S_NOM;
+            string nomModelePionSource = string.Empty;
             if (null != lignePionCible)
             {
+                if (lignePionCible.estMessager || lignePionCible.estPatrouille)
+                {
+                    nomModelePionSource = lignePionCible.proprietaire.modelePion.S_NOM;
+                }
+                else
+                {
+                    nomModelePionSource = lignePionCible.modelePion.S_NOM;
+                }
                 //nom de la cible
                 nomCible = lignePionCible.S_NOM;
                 if (lignePionCible.estMessager)

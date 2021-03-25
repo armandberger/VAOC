@@ -1160,7 +1160,7 @@ namespace vaoc
 
             public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif)
             {
-                return estEnnemi(ligneCase, ligneModele, bCombattif, false);
+                return estEnnemi(ligneCase, ligneModele, bCombattif, true);//BEA le 24/03/2021 true au lieu de false, sinon, la nuit les unités démoralisées peuvent être traversées
             }
 
             public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif, bool combattifSansMoral)
@@ -4500,8 +4500,11 @@ namespace vaoc
                 try
                 {
                     if (B_DETRUIT) { return true; }
+
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
+                    if (!MessageEnnemiObserve(ligneCase)) { return false; }
+
                     Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(ID_PION);
-                    //if (!enMouvement /*estStatique*/)
                     if (null != ligneOrdre)
                     {
                         ligneNation = nation;
@@ -4525,19 +4528,6 @@ namespace vaoc
                     }
                     else
                     {
-                        /**** -> on ne replace plus une unité en bivouac si son mouvement est inactif, avec du bol, ça va marcher juste avec ça !!!
-                        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
-                        if (null != ligneOrdre && ligneOrdre.I_EFFECTIF_DEPART != lignePion.effectifTotalEnMouvement)
-                        {
-                            //unité avec des effectifs ayant comméncé un mouvement mais qui est ponctuellement statique car l'ordre de mouvement est hors des créneaux horaires
-                            if (!PlacerPionEnBivouac(lignePion, ligneOrdre, ligneNation)) { return false; }
-                        }
-                        *****/
-
-                        //if (!MessageEnnemiObserve(null)) { return false; } Pourquoi null ? Impossible de m'en rappeler !
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
-                        if (!MessageEnnemiObserve(ligneCase)) { return false; }
-
                         //placer l'unité sur la carte
                         ligneNation = nation;
                         if (null == ligneNation)

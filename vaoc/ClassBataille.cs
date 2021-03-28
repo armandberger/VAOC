@@ -382,21 +382,92 @@ namespace vaoc
                 string message, messageErreur;
                 int i;
                 AStar etoile = new AStar();
+                List<Donnees.TAB_PIONRow> listePionsEnBataille = new List<TAB_PIONRow>();
+                foreach (Donnees.TAB_PIONRow l in lignePionsEnBataille) listePionsEnBataille.Add(l);
+                int nation = listePionsEnBataille[0].idNation;
 
                 //Deux cas possibles, soit l'unité est en mouvement (possible pour les unités non engagées) et on "avance" l'unité jusqu'à ce qu'elle
                 //sorte du champ de bataille
                 //soit elle est fixe et on la repositionne sur le bord le plus proche. Chose que l'on fait également si le mouvement
                 //ne conduit pas hors du champ de bataille
 
+                // accès aux cases du champ de bataille pour forcer le chargerCase si besoin, sinon le résultat de la requête est fausse et,
+                // dans le suite du traitement, on a crash car le résultat a été modifié
+                for (int x= I_X_CASE_HAUT_GAUCHE; x< I_X_CASE_BAS_DROITE; x+=10) 
+                { 
+                    for (int y = I_Y_CASE_HAUT_GAUCHE; y < I_Y_CASE_BAS_DROITE; y += 10)
+                    {
+                        Donnees.m_donnees.TAB_CASE.FindParXY(x, y);
+                    }
+                }
+
                 //recherche de toutes les cases du champ de bataille
-                var listeCasesBataille = from Case in Donnees.m_donnees.TAB_CASE
+                List<TAB_CASERow> listeCasesBataille = (from Case in Donnees.m_donnees.TAB_CASE
                                          where (I_X_CASE_BAS_DROITE >= Case.I_X && I_Y_CASE_BAS_DROITE >= Case.I_Y
                                                 && I_X_CASE_HAUT_GAUCHE <= Case.I_X && I_Y_CASE_HAUT_GAUCHE <= Case.I_Y)
-                                         select Case;
-
-                for (int l = 0; l < lignePionsEnBataille.Count(); l++)
+                                         select Case).ToList();
+                //si des unités sont présentes mais n'ont pas été engagées dans le combat, elles doivent quand même sortir du champ de bataille 
+                //sinon des unités se retrouvent encore en plein milieu du champ occupé par l'adversaire
+                foreach(TAB_CASERow ligneCaseBataille in listeCasesBataille)
                 {
-                    Donnees.TAB_PIONRow lignePion = lignePionsEnBataille[l];
+                    bool btrouveProprietaire = false;
+                    bool btrouveNouveauProprietaire = false;
+                    if (!ligneCaseBataille.IsID_PROPRIETAIRENull() || !ligneCaseBataille.IsID_NOUVEAU_PROPRIETAIRENull())
+                    {
+                        foreach (TAB_PIONRow lignePionBataille in listePionsEnBataille)
+                        {
+                            if (lignePionBataille.ID_PION == ligneCaseBataille.ID_PROPRIETAIRE) { btrouveProprietaire = true; }
+                            if (lignePionBataille.ID_PION == ligneCaseBataille.ID_NOUVEAU_PROPRIETAIRE) { btrouveNouveauProprietaire = true; }
+                        }
+                        if (!ligneCaseBataille.IsID_PROPRIETAIRENull() && !btrouveProprietaire)
+                        {
+                            TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_PROPRIETAIRE);
+                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && nation ==lignePionBatailleAjout.nation.ID_NATION) 
+                            { 
+                                listePionsEnBataille.Add(lignePionBatailleAjout); 
+                            }
+                        }
+                        if (!ligneCaseBataille.IsID_NOUVEAU_PROPRIETAIRENull() && !btrouveNouveauProprietaire)
+                        {
+                            TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_PROPRIETAIRE);
+                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && nation == lignePionBatailleAjout.nation.ID_NATION) 
+                            { 
+                                listePionsEnBataille.Add(lignePionBatailleAjout); 
+                            }
+                        }
+                    }
+                }
+                //même chose mais avec des unités qui pourraient être masquées par d'autres
+                foreach (TAB_PIONRow lignePionTerrain in Donnees.m_donnees.TAB_PION)
+                {
+                    if (!lignePionTerrain.estMessager && lignePionTerrain.ID_PION>8418)
+                    {
+                        int ttt = 0;
+                    }
+                    if (lignePionTerrain.B_DETRUIT || nation != lignePionTerrain.nation.ID_NATION) { continue; }
+                    TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionTerrain.ID_CASE);
+                    if (I_X_CASE_BAS_DROITE >= ligneCase.I_X && I_Y_CASE_BAS_DROITE >= ligneCase.I_Y
+                           && I_X_CASE_HAUT_GAUCHE <= ligneCase.I_X && I_Y_CASE_HAUT_GAUCHE <= ligneCase.I_Y)
+                    {
+                        bool btrouvePion = false;
+                        foreach (TAB_PIONRow lignePionBataille in listePionsEnBataille)
+                        {
+                            if (lignePionBataille.ID_PION == lignePionTerrain.ID_PION) { btrouvePion = true; }
+                        }
+                        if (!btrouvePion)
+                        {
+                            if (!lignePionTerrain.estMessager && !lignePionTerrain.estPatrouille)
+                            {
+                                listePionsEnBataille.Add(lignePionTerrain);
+                            }
+                        }
+                    }
+                }
+
+
+                for (int l = 0; l < listePionsEnBataille.Count(); l++)
+                {
+                    Donnees.TAB_PIONRow lignePion = listePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     //si l'unité n'a aucune position dans le champ de bataille, cela ne sert à rien de la bouger !
                     var listeCasesOccupees = from Case in listeCasesBataille
@@ -500,8 +571,12 @@ namespace vaoc
                         lignePion.ID_CASE = ligneCaseSortie.ID_CASE;
                         lignePion.SupprimerTousLesOrdres();
                         lignePion.DetruireEspacePion();//force, par la suite, le recalcul de tous les espaces, parcours, etc.
-                        lignePion.PlacementPion(ligneNation, true);
                     }
+                }
+                for (int l = 0; l < listePionsEnBataille.Count(); l++)
+                {
+                    Donnees.TAB_PIONRow lignePion = listePionsEnBataille[l];
+                    lignePion.PlacementPion(lignePion.nation, true);
                 }
                 return true;
             }
@@ -511,6 +586,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCasePion,
                 ref Donnees.TAB_CASERow ligneCaseSortie, ref int nbCasesOccupeesParEnnemis, ref int nbCasesOccupeesParAmis)
             {
+                LogFile.Notifier("Début RechercheCaseDeSortie");
                 Donnees.TAB_CASERow ligneCase;
                 double distanceCaseSortie = double.MaxValue;
 
@@ -530,6 +606,7 @@ namespace vaoc
 
                 if (nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis)
                 {
+                    LogFile.Notifier("RechercheCaseDeSortie : nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis");
                     return; //la solution précedente est meilleure
                 }
                 nbT = nbT + 1;
@@ -544,6 +621,7 @@ namespace vaoc
                 {
                     if (listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis)
                     {
+                        LogFile.Notifier("RechercheCaseDeSortie : listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis");
                         return; //la solution précedente est meilleure
                     }
                 }
@@ -553,6 +631,7 @@ namespace vaoc
                 for (int i = minimum; i < maximum; i++)
                 {
                     ligneCase = bVertical ? Donnees.m_donnees.TAB_CASE.FindParXY(autreCoordonnee, i) : Donnees.m_donnees.TAB_CASE.FindParXY(i, autreCoordonnee);
+                    LogFile.Notifier(string.Format("RechercheCaseDeSortie : case={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                     if (!ligneCase.EstOccupeeOuBloqueParEnnemi(lignePion, false) && ligneCase.EstMouvementPossible())
                     {
                         double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
@@ -560,9 +639,11 @@ namespace vaoc
                         {
                             distanceCaseSortie = distance;
                             ligneCaseSortie = ligneCase;
+                            LogFile.Notifier(string.Format("RechercheCaseDeSortie : case sortie={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                         }
                     }
                 }
+                LogFile.Notifier("Fin RechercheCaseDeSortie");
             }
 
             private bool ChefPresent(Donnees.TAB_PIONRow lignePion, Donnees.TAB_PIONRow[] listePions)

@@ -183,6 +183,15 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //Donnees.TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(8461);
+            //bool test = lignePionBatailleAjout.estCombattifQG(true, true);
+            // test = lignePionBatailleAjout.estCombattifQG(true, true);
+            // test = lignePionBatailleAjout.estCombattifQG(true, true);
+            // test = lignePionBatailleAjout.estCombattifQG(true, true);
+            // test = lignePionBatailleAjout.estCombattifQG(true, true);
+            // test = lignePionBatailleAjout.estCombattifQG(true, true);
+
+
             //test sur l'ordre actif
             /*
             Donnees.TAB_PIONRow lignePionA=Donnees.m_donnees.TAB_PION.FindByID_PION(21);

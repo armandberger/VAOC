@@ -861,7 +861,7 @@ namespace vaoc
                         bInsert = false;
                     }
                     else { listeRequete.Append(","); }
-                    if (!bInsert && 0 == nblignes % 5000) { bInsert = true; }
+                    if (!bInsert && 0 == nblignes % 50) { bInsert = true; }
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
                     requete = string.Format("({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', '{8}')",
                                             ligneMessage.ID_MESSAGE,

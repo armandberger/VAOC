@@ -1928,7 +1928,7 @@ namespace vaoc
 
                 if (ligneOrdre.I_PHASE_DEBUT == phase)
                 {
-                    if (!InitialisationActionPont(Constantes.CST_DUREE_ENDOMMAGE_PONT, ligneOrdre, tour, phase, out ligneCasePont))
+                  if (!InitialisationActionPont(Constantes.CST_DUREE_ENDOMMAGE_PONT, ligneOrdre, tour, phase, out ligneCasePont))
                     {
                         LogFile.Notifier("Erreur sur InitialisationActionPont dans ExecuterEndommagerPont");
                         return false;

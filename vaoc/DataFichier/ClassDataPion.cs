@@ -27,7 +27,7 @@ namespace vaoc
         public int I_MORAL { get; set; }
         public int I_MORAL_REEL { get; set; }
         public int I_MORAL_MAX { get; set; }
-        public int I_EXPERIENCE { get; set; }
+        public decimal I_EXPERIENCE { get; set; }
         public int I_TACTIQUE { get; set; }
         public bool B_QG { get; set; }
         public int I_STRATEGIQUE { get; set; }

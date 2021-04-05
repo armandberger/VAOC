@@ -440,10 +440,10 @@ namespace vaoc
                 //même chose mais avec des unités qui pourraient être masquées par d'autres
                 foreach (TAB_PIONRow lignePionTerrain in Donnees.m_donnees.TAB_PION)
                 {
-                    if (!lignePionTerrain.estMessager && lignePionTerrain.ID_PION>8418)
-                    {
-                        int ttt = 0;
-                    }
+                    //if (!lignePionTerrain.estMessager && lignePionTerrain.ID_PION>8418)
+                    //{
+                    //    int ttt = 0;// pour mettre un point d'arrêt
+                    //}
                     if (lignePionTerrain.B_DETRUIT || nation != lignePionTerrain.nation.ID_NATION) { continue; }
                     TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionTerrain.ID_CASE);
                     if (I_X_CASE_BAS_DROITE >= ligneCase.I_X && I_Y_CASE_BAS_DROITE >= ligneCase.I_Y

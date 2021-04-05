@@ -368,13 +368,13 @@ namespace vaoc
                 foreach (Donnees.TAB_CASERow ligneCaseRecherche in lignesCaseRecherche)
                 {
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseRecherche.ID_MODELE_TERRAIN);
-                    if (ligneModeleTerrain.ID_MODELE_TERRAIN != 63 && ligneModeleTerrain.ID_MODELE_TERRAIN != 60
-                        && ligneModeleTerrain.ID_MODELE_TERRAIN != 55 && ligneModeleTerrain.ID_MODELE_TERRAIN != 57
-                         && ligneModeleTerrain.ID_MODELE_TERRAIN != 24)
-                    {
-                        int desbugs = 0;
-                        desbugs++;
-                    }
+                    //if (ligneModeleTerrain.ID_MODELE_TERRAIN != 63 && ligneModeleTerrain.ID_MODELE_TERRAIN != 60
+                    //    && ligneModeleTerrain.ID_MODELE_TERRAIN != 55 && ligneModeleTerrain.ID_MODELE_TERRAIN != 57
+                    //     && ligneModeleTerrain.ID_MODELE_TERRAIN != 24)
+                    //{
+                    //    int desbugs = 0;
+                    //    desbugs++;
+                    //}
 
                     if (((unPont && ligneModeleTerrain.B_PONT) || (!unPont && ligneModeleTerrain.B_PONTON)) && (ligneModeleTerrain.B_DETRUIT == bEndommage))
                     {

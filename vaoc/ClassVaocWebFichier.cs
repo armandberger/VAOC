@@ -1095,6 +1095,8 @@ namespace vaoc
             int iArtillerie = (null == ligneMessage) ? lignePion.I_ARTILLERIE : ligneMessage.I_ARTILLERIE;
             int iFatigue = (null == ligneMessage) ? lignePion.I_FATIGUE : ligneMessage.I_FATIGUE;
             int iMoral = (null == ligneMessage) ? lignePion.I_MORAL : ligneMessage.I_MORAL;
+            int iRavitaillement = (null == ligneMessage) ? lignePion.I_RAVITAILLEMENT : ligneMessage.I_RAVITAILLEMENT;
+            int iMateriel = (null == ligneMessage) ? lignePion.I_MATERIEL : ligneMessage.I_MATERIEL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
             char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
             if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
@@ -1141,8 +1143,8 @@ namespace vaoc
                                     bReditionRavitaillement,
                                     bDepot,//35
                                     bPontonnier,
-                                    lignePion.I_MATERIEL,
-                                    lignePion.I_RAVITAILLEMENT,
+                                    iMateriel,
+                                    iRavitaillement,
                                     lignePion.I_NIVEAU_FORTIFICATION,
                                     lignePion.I_TOUR_CONVOI_CREE,//40
                                     lignePion.IsID_DEPOT_SOURCENull() ? -1 : lignePion.ID_DEPOT_SOURCE,

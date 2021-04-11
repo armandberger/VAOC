@@ -1393,7 +1393,7 @@ namespace vaoc
                 bool bRetraite012 = false;
                 bool bRetraite345 = false;
 
-                Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(62);
+                //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(62);
                 if (!IsI_TOUR_FINNull())
                 {
                     return true;//la bataille est déjà terminée
@@ -1538,7 +1538,39 @@ namespace vaoc
                 }
                 #endregion
 
-                //toutes les unités engagées viennent de passer une heure sur le terrain, cela joue pour la fatigue de fin de journée
+                //on retire des zones de combats toute unité demoralisée qui serait encore présente
+                //il faut laisser l'unité au round précédent pour montrer qu'elle a été démoralisée mais il faut la retirer ensuite pour qu'elle ne soit pas comptabilisée comme unité d'attaque
+                Donnees.TAB_PIONRow[] tablePionsEngagesAvantCombat012;
+                Donnees.TAB_PIONRow[] tablePionsEngagesAvantCombat345;
+                if (!RecherchePionsEnBataille(out nbUnites012Base, out nbUnites345Base, out des, out modificateurs, out effectifs, out canons, out tablePionsEngagesAvantCombat012, out tablePionsEngagesAvantCombat345, true/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                {
+                    message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille tablePionsEngagesAvantCombat");
+                    LogFile.Notifier(message, out messageErreur);
+                }
+                foreach (Donnees.TAB_PIONRow lignePion in tablePionsEngagesAvantCombat012)
+                {
+                    int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
+                    if (!lignePion.estCombattif && iZoneBataille >= 0)
+                    {
+                        message = string.Format("EffectuerBataille unité non combattive en 012 retirée de la bataille, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
+                        LogFile.Notifier(message, out messageErreur);
+                        lignePion.SetI_ZONE_BATAILLENull();
+                    }
+                }
+                foreach (Donnees.TAB_PIONRow lignePion in tablePionsEngagesAvantCombat345)
+                {
+                    int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
+                    if (!lignePion.estCombattif && iZoneBataille >= 0)
+                    {
+                        message = string.Format("EffectuerBataille unité non combattive en 345 retirée de la bataille, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
+                        LogFile.Notifier(message, out messageErreur);
+                        lignePion.SetI_ZONE_BATAILLENull();
+                    }
+                }
+
+
+                // on vérifie qu'il y a bien une unité combattive engagagée de chaque coté, sinon, 
+                /// on en choisit une au hasard qui se met en défense au centre
                 Donnees.TAB_PIONRow[] tablePionsEngagesCombattifs012;
                 Donnees.TAB_PIONRow[] tablePionsEngagesCombattifs345;
                 if (!RecherchePionsEnBataille(out nbUnites012Base, out nbUnites345Base, out des, out modificateurs, out effectifs, out canons, out tablePionsEngagesCombattifs012, out tablePionsEngagesCombattifs345, true/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
@@ -1547,8 +1579,6 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
                 }
 
-                // on vérifie qu'il y a bien une unité combattive engagagée de chaque coté, sinon, 
-                /// on en choisit une au hasard qui se met en défense au centre
                 Donnees.TAB_PIONRow lignePionEngage012 = null;
                 Donnees.TAB_PIONRow lignePionEngage345 = null;
                 if (0 == nbUnites012Base)
@@ -1616,8 +1646,10 @@ namespace vaoc
 
                 Donnees.TAB_PIONRow[] tablePionsEngages012;
                 Donnees.TAB_PIONRow[] tablePionsEngages345;
-                //false sur bcombattif avant, mais dans ce cas, donne une fausse valeur du modificateur stratégique, remis a false car sinon on ne joue plus la blessure des chefs, remis à true sinon, les unités en déroute sont comptabilisées
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, true/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
+                //false sur bcombattif avant, mais dans ce cas, donne une fausse valeur du modificateur stratégique, remis a false car sinon on ne joue plus la blessure des chefs,
+                //remis à true sinon, les unités en déroute sont comptabilisées,, remis à false car s'il n'y a que des unités démoralisées, il faut bien faire le combat ! par contre, retrait automatique
+                //des unités démoralisées des zones avant le combat pour ne pas avoir d'unités démoralisée restante d'un combat précédent
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille I");
                     LogFile.Notifier(message, out messageErreur);
@@ -1635,7 +1667,8 @@ namespace vaoc
                 foreach (Donnees.TAB_PIONRow lignePion in listePionsEngages012)
                 {
                     int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
-                    if (lignePion.estCombattif && iZoneBataille>=0)
+                    //if (lignePion.estCombattif && iZoneBataille>=0)
+                    if (iZoneBataille >= 0)//même les unités démoralisées engagées doivent être comptées sinon elles vont pouvoir se reposer alors qu'elles ont combattues
                     {
                         message = string.Format("EffectuerBataille unité en 012, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
                         LogFile.Notifier(message, out messageErreur);
@@ -1645,7 +1678,8 @@ namespace vaoc
                 foreach (Donnees.TAB_PIONRow lignePion in listePionsEngages345)
                 {
                     int iZoneBataille = lignePion.IsI_ZONE_BATAILLENull() ? -1 : lignePion.I_ZONE_BATAILLE;
-                    if (lignePion.estCombattif && iZoneBataille >= 0)
+                    //if (lignePion.estCombattif && iZoneBataille >= 0)
+                    if (iZoneBataille >= 0)//même les unités démoralisées engagées doivent être comptées sinon elles vont pouvoir se reposer alors qu'elles ont combattues
                     {
                         message = string.Format("EffectuerBataille unité en 345, {1} ID={0} zone={2}", lignePion.ID_PION, lignePion.S_NOM, iZoneBataille);
                         LogFile.Notifier(message, out messageErreur);
@@ -2362,7 +2396,8 @@ namespace vaoc
                 {
                     lignePion = listePionsNonEngagesSansQG[de.Next(listePionsNonEngagesSansQG.Count())];
                 }
-                
+                //if (this.ID_BATAILLE==19) lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(321);
+
                 lignePion.I_ZONE_BATAILLE = iZone;//toujours la zone centrale donc 1 ou 4
                 //engagement dans la bataille
                 Donnees.TAB_BATAILLE_PIONSRow lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ID_BATAILLE);

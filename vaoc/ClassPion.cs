@@ -739,6 +739,11 @@ namespace vaoc
                 int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
                 CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+                //je réduit le cadre d'un pixel en espéant ne plus avoir l'effet d'unités en bordure qui apparaissent/disparaissent en emettant un message à chaque fois
+                xCaseHautGauche++;
+                yCaseHautGauche++;
+                xCaseBasDroite--;
+                yCaseBasDroite--;
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;

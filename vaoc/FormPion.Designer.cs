@@ -34,9 +34,9 @@ namespace vaoc
             this.dataGridViewPions = new System.Windows.Forms.DataGridView();
             this.labelCommentaire = new System.Windows.Forms.Label();
             this.buttonRenfort = new System.Windows.Forms.Button();
+            this.buttonExportCSV = new System.Windows.Forms.Button();
             this.donnees = new vaoc.Donnees();
             this.tABMODELEPIONBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.buttonExportCSV = new System.Windows.Forms.Button();
             this.ID_PION = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.B_DETRUIT = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.MODELE_PION = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -98,6 +98,8 @@ namespace vaoc
             this.I_MATERIEL_ESCORTE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_TRI = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_ENNEMI_OBSERVABLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_TOUR_ENNEMI_OBSERVABLE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewPions)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.donnees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tABMODELEPIONBindingSource)).BeginInit();
@@ -188,7 +190,9 @@ namespace vaoc
             this.I_CAVALERIE_ESCORTE,
             this.I_MATERIEL_ESCORTE,
             this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
-            this.I_TRI});
+            this.I_TRI,
+            this.S_ENNEMI_OBSERVABLE,
+            this.I_TOUR_ENNEMI_OBSERVABLE});
             this.dataGridViewPions.Location = new System.Drawing.Point(0, 0);
             this.dataGridViewPions.Name = "dataGridViewPions";
             this.dataGridViewPions.Size = new System.Drawing.Size(1001, 228);
@@ -213,16 +217,6 @@ namespace vaoc
             this.buttonRenfort.UseVisualStyleBackColor = true;
             this.buttonRenfort.Click += new System.EventHandler(this.buttonRenfort_Click);
             // 
-            // donnees
-            // 
-            this.donnees.DataSetName = "Donnees";
-            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // tABMODELEPIONBindingSource
-            // 
-            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
-            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
-            // 
             // buttonExportCSV
             // 
             this.buttonExportCSV.Location = new System.Drawing.Point(661, 413);
@@ -232,6 +226,16 @@ namespace vaoc
             this.buttonExportCSV.Text = "Export csv";
             this.buttonExportCSV.UseVisualStyleBackColor = true;
             this.buttonExportCSV.Click += new System.EventHandler(this.buttonExportCSV_Click);
+            // 
+            // donnees
+            // 
+            this.donnees.DataSetName = "Donnees";
+            this.donnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // tABMODELEPIONBindingSource
+            // 
+            this.tABMODELEPIONBindingSource.DataMember = "TAB_MODELE_PION";
+            this.tABMODELEPIONBindingSource.DataSource = this.donnees;
             // 
             // ID_PION
             // 
@@ -571,6 +575,18 @@ namespace vaoc
             this.I_TRI.HeaderText = "I_TRI";
             this.I_TRI.Name = "I_TRI";
             // 
+            // S_ENNEMI_OBSERVABLE
+            // 
+            this.S_ENNEMI_OBSERVABLE.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
+            this.S_ENNEMI_OBSERVABLE.HeaderText = "S_ENNEMI_OBSERVABLE";
+            this.S_ENNEMI_OBSERVABLE.Name = "S_ENNEMI_OBSERVABLE";
+            this.S_ENNEMI_OBSERVABLE.Width = 164;
+            // 
+            // I_TOUR_ENNEMI_OBSERVABLE
+            // 
+            this.I_TOUR_ENNEMI_OBSERVABLE.HeaderText = "I_TOUR_ENNEMI_OBSERVABLE";
+            this.I_TOUR_ENNEMI_OBSERVABLE.Name = "I_TOUR_ENNEMI_OBSERVABLE";
+            // 
             // FormPion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -665,5 +681,7 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn I_MATERIEL_ESCORTE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_TRI;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_ENNEMI_OBSERVABLE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_TOUR_ENNEMI_OBSERVABLE;
     }
 }

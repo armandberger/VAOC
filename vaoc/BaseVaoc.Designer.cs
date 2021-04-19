@@ -8382,6 +8382,10 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_TRI;
             
+            private global::System.Data.DataColumn columnS_ENNEMI_OBSERVABLE;
+            
+            private global::System.Data.DataColumn columnI_TOUR_ENNEMI_OBSERVABLE;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_PIONDataTable() {
@@ -8905,6 +8909,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_ENNEMI_OBSERVABLEColumn {
+                get {
+                    return this.columnS_ENNEMI_OBSERVABLE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_TOUR_ENNEMI_OBSERVABLEColumn {
+                get {
+                    return this.columnI_TOUR_ENNEMI_OBSERVABLE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -9001,7 +9021,9 @@ namespace vaoc {
                         int I_MATERIEL_ESCORTE, 
                         int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT, 
                         int I_VICTOIRE, 
-                        int I_TRI) {
+                        int I_TRI, 
+                        string S_ENNEMI_OBSERVABLE, 
+                        int I_TOUR_ENNEMI_OBSERVABLE) {
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_PION,
@@ -9064,7 +9086,9 @@ namespace vaoc {
                         I_MATERIEL_ESCORTE,
                         I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
                         I_VICTOIRE,
-                        I_TRI};
+                        I_TRI,
+                        S_ENNEMI_OBSERVABLE,
+                        I_TOUR_ENNEMI_OBSERVABLE};
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
                 return rowTAB_PIONRow;
@@ -9155,6 +9179,8 @@ namespace vaoc {
                 this.columnI_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = base.Columns["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"];
                 this.columnI_VICTOIRE = base.Columns["I_VICTOIRE"];
                 this.columnI_TRI = base.Columns["I_TRI"];
+                this.columnS_ENNEMI_OBSERVABLE = base.Columns["S_ENNEMI_OBSERVABLE"];
+                this.columnI_TOUR_ENNEMI_OBSERVABLE = base.Columns["I_TOUR_ENNEMI_OBSERVABLE"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9282,6 +9308,10 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_VICTOIRE);
                 this.columnI_TRI = new global::System.Data.DataColumn("I_TRI", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_TRI);
+                this.columnS_ENNEMI_OBSERVABLE = new global::System.Data.DataColumn("S_ENNEMI_OBSERVABLE", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_ENNEMI_OBSERVABLE);
+                this.columnI_TOUR_ENNEMI_OBSERVABLE = new global::System.Data.DataColumn("I_TOUR_ENNEMI_OBSERVABLE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_TOUR_ENNEMI_OBSERVABLE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PION}, true));
                 this.columnID_PION.AllowDBNull = false;
@@ -25822,6 +25852,64 @@ namespace vaoc {
                 set {
                     this[this.tableTAB_PION.I_TRIColumn] = value;
                 }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_ENNEMI_OBSERVABLE {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_PION.S_ENNEMI_OBSERVABLEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_ENNEMI_OBSERVABLE\' dans la table \'TAB_PION\' est DBNu" +
+                                "ll.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PION.S_ENNEMI_OBSERVABLEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_TOUR_ENNEMI_OBSERVABLE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_ENNEMI_OBSERVABLE\' dans la table \'TAB_PION\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_ENNEMI_OBSERVABLENull() {
+                return this.IsNull(this.tableTAB_PION.S_ENNEMI_OBSERVABLEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_ENNEMI_OBSERVABLENull() {
+                this[this.tableTAB_PION.S_ENNEMI_OBSERVABLEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_TOUR_ENNEMI_OBSERVABLENull() {
+                return this.IsNull(this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_TOUR_ENNEMI_OBSERVABLENull() {
+                this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn] = global::System.Convert.DBNull;
             }
         }
         

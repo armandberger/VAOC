@@ -98,7 +98,9 @@ namespace vaoc
                         int I_MATERIEL_ESCORTE,
                         int I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
                         int I_VICTOIRE,
-                        int I_TRI
+                        int I_TRI,
+                        string S_ENNEMI_OBSERVABLE,
+                        int I_TOUR_ENNEMI_OBSERVABLE
                 )
             {
                 //recherche du max de l'ID_PION pour effectuer l'insertion, l'ID_PION ne peut pas
@@ -174,7 +176,9 @@ namespace vaoc
                         I_MATERIEL_ESCORTE,
                         I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT,
                         I_VICTOIRE,
-                        I_TRI
+                        I_TRI,
+                        S_ENNEMI_OBSERVABLE,
+                        I_TOUR_ENNEMI_OBSERVABLE
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
@@ -728,19 +732,18 @@ namespace vaoc
             }
 
             /// <summary>
-            /// Indique si le pion a un ennemi dans son cadre de vision
+            /// Indique les pions ennemis dans son cadre de vision
             /// </summary>
             /// <param name="ligneCase"></param>
-            /// <returns>true si un ennemi est en vu, false sinon</returns>
-            public bool EnnemiObservable(Donnees.TAB_CASERow ligneCase)
+            /// <returns>ennemis en vu, vide sinon</returns>
+            public string EnnemiObservable(Donnees.TAB_CASERow ligneCase)
             {
-                bool bEnnemiObservable = false;
+                string sEnnemiObservable = string.Empty;
                 //string requete;
                 int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
                 CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
-                Donnees.TAB_CASERow ligneCasePremiereVue = null;
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
                 foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
@@ -748,21 +751,12 @@ namespace vaoc
                     //je detecte deux cases sur des colonnnes/lignes différentes en espéant ne plus avoir l'effet d'unités en bordure qui apparaissent/disparaissent en emettant un message à chaque fois
                     if (this.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
                     {
-                        if (null == ligneCasePremiereVue)
-                        {
-                            ligneCasePremiereVue = ligneCaseVue;
-                        }
-                        else
-                        {
-                            if (ligneCasePremiereVue.I_X!= ligneCaseVue.I_X && ligneCasePremiereVue.I_Y != ligneCaseVue.I_Y)
-                            {
-                                return true;
-                            }
-                        }
+                        sEnnemiObservable = ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE.ToString();
+                        break;
                     }
                 }
 
-                return bEnnemiObservable;
+                return sEnnemiObservable;
             }
 
             /// <summary>
@@ -776,12 +770,14 @@ namespace vaoc
                     bool bRetour = true;
 
                     //si un ennemi apparait ou disparait, il faut envoyer un message
-                    if (this.estCombattifQG(true, true))
+                    if (this.estCombattifQG(true, true) && 
+                        (this.IsI_TOUR_ENNEMI_OBSERVABLENull() ||
+                        this.I_TOUR_ENNEMI_OBSERVABLE != Donnees.m_donnees.TAB_PARTIE[0].I_TOUR))
                     {
-                        bool bObservable = this.EnnemiObservable(ligneCase);
-                        if (bObservable != this.B_ENNEMI_OBSERVABLE)
+                        string sObservable = this.EnnemiObservable(ligneCase);
+                        if (sObservable != this.S_ENNEMI_OBSERVABLE)
                         {
-                            if (bObservable)
+                            if (string.Empty != sObservable)
                             {
                                 bRetour = ClassMessager.EnvoyerMessage(this, ligneCase, ClassMessager.MESSAGES.MESSAGE_ENNEMI_OBSERVE);
                             }
@@ -790,7 +786,8 @@ namespace vaoc
                                 bRetour = ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE);
                             }
                             Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                            this.B_ENNEMI_OBSERVABLE = bObservable;
+                            this.S_ENNEMI_OBSERVABLE = sObservable;
+                            this.I_TOUR_ENNEMI_OBSERVABLE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                             Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                     }
@@ -2936,7 +2933,9 @@ namespace vaoc
                     0,//int I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     0,//I_VICTOIRE
-                    -1//I_TRI
+                    -1,//I_TRI
+                    string.Empty,
+                    -1
                     );
 
                 if (null == lignePionRemplacant)
@@ -3023,6 +3022,7 @@ namespace vaoc
                 lignePionRemplacant.SetID_PION_ESCORTENull();
                 lignePionRemplacant.SetID_DEPOT_SOURCENull();
                 lignePionRemplacant.SetI_TRINull();
+                lignePionRemplacant.SetI_TOUR_ENNEMI_OBSERVABLENull();
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return lignePionRemplacant;
             }
@@ -3116,7 +3116,9 @@ namespace vaoc
                     0,//int I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     0,//I_VICTOIRE
-                    I_TRI//I_TRI
+                    I_TRI,//I_TRI
+                    S_ENNEMI_OBSERVABLE,
+                    I_TOUR_ENNEMI_OBSERVABLE
                     );
 
                 if (null == ligneAncienPion)
@@ -3630,7 +3632,9 @@ namespace vaoc
                     0,//I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     0,//I_VICTOIRE
-                    -1//I_TRI
+                    -1,//I_TRI
+                    string.Empty,
+                    -1//I_TOUR_ENNEMI_OBSERVABLE
                     );
                 lignePionConvoi.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 lignePionConvoi.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -3639,6 +3643,7 @@ namespace vaoc
                 lignePionConvoi.SetID_LIEU_RATTACHEMENTNull();
                 lignePionConvoi.SetID_PION_ESCORTENull();
                 lignePionConvoi.SetI_TRINull();
+                lignePionConvoi.SetI_TOUR_ENNEMI_OBSERVABLENull();
 
 
                 if (bBlesses)
@@ -4988,6 +4993,19 @@ namespace vaoc
                 this.I_TRI = Constantes.NULLENTIER;
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
+            /*
+            internal bool IsI_TOUR_ENNEMI_OBSERVABLENull()
+            {
+                if (this.IsNull("I_TOUR_ENNEMI_OBSERVABLE")) return true;
+                return this.I_TOUR_ENNEMI_OBSERVABLE == Constantes.NULLENTIER;
+            }
+            internal void SetI_TOUR_ENNEMI_OBSERVABLENull()
+            {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                this.I_TOUR_ENNEMI_OBSERVABLE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            }
+            */
         }
     }
 }

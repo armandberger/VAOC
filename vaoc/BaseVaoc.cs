@@ -1951,7 +1951,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 12;
+            TAB_JEU[0].I_VERSION = 13;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
@@ -2423,6 +2423,18 @@ namespace vaoc
                     ligneModelePion.I_FOURRAGE = 0;
                     ligneModelePion.S_CRI_RALLIEMENT = string.Empty;
                     ligneModelePion.S_NATION = string.Empty;
+                }
+            }
+            #endregion
+
+            #region version 13
+            if (TAB_JEU[0].I_VERSION < 13)
+            {
+                for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
+                {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
+                    lignePion.I_TOUR_ENNEMI_OBSERVABLE = Constantes.NULLENTIER;
+                    lignePion.S_ENNEMI_OBSERVABLE = string.Empty;
                 }
             }
             #endregion

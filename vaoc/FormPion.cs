@@ -48,6 +48,8 @@ namespace vaoc
                         if (null == ligne.Cells["C_NIVEAU_DEPOT"].Value || !char.IsLetter(Convert.ToChar(ligne.Cells["C_NIVEAU_DEPOT"].Value))) ligne.Cells["C_NIVEAU_DEPOT"].Value = ' ';
                         if (null == ligne.Cells["ID_DEPOT_SOURCE"].Value) ligne.Cells["ID_DEPOT_SOURCE"].Value = "-1";
                         if (null == ligne.Cells["I_TRI"].Value) ligne.Cells["I_TRI"].Value = "-1";
+                        if (null == ligne.Cells["S_ENNEMI_OBSERVABLE"].Value) ligne.Cells["S_ENNEMI_OBSERVABLE"].Value = string.Empty;
+                        if (null == ligne.Cells["I_TOUR_ENNEMI_OBSERVABLE"].Value) ligne.Cells["I_TOUR_ENNEMI_OBSERVABLE"].Value = "-1"; 
 
                         Donnees.TAB_PIONRow lignePion = table.AddTAB_PIONRow(
                             Convert.ToInt32(ligne.Cells["ID_PION"].Value),
@@ -112,7 +114,9 @@ namespace vaoc
                             Convert.ToInt32(ligne.Cells["I_MATERIEL_ESCORTE"].Value),
                             Convert.ToInt32(ligne.Cells["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"].Value),
                             Convert.ToInt32(ligne.Cells["I_VICTOIRE"].Value),
-                            Convert.ToInt32(ligne.Cells["I_TRI"].Value)
+                            Convert.ToInt32(ligne.Cells["I_TRI"].Value),
+                            Convert.ToString(ligne.Cells["S_ENNEMI_OBSERVABLE"].Value),
+                            Convert.ToInt32(ligne.Cells["I_TOUR_ENNEMI_OBSERVABLE"].Value)
                             );
                         if (lignePion.ID_BATAILLE < 0) lignePion.SetID_BATAILLENull();
                         if (lignePion.I_TOUR_SANS_RAVITAILLEMENT < 0) lignePion.I_TOUR_SANS_RAVITAILLEMENT=0;
@@ -128,6 +132,7 @@ namespace vaoc
                         if (lignePion.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT < 0) lignePion.SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull();
                         if (lignePion.I_VICTOIRE < 0) lignePion.I_VICTOIRE=0;
                         if (lignePion.I_TRI < 0) lignePion.SetI_TRINull();
+                        if (lignePion.I_TOUR_ENNEMI_OBSERVABLE < 0) lignePion.SetI_TOUR_ENNEMI_OBSERVABLENull();
                     }
                 }
                 return table;
@@ -211,6 +216,8 @@ namespace vaoc
                     ligneGrid.Cells["I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT"].Value = lignePion.IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull() ? -1 : lignePion.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT;
                     ligneGrid.Cells["I_VICTOIRE"].Value = lignePion.IsI_VICTOIRENull() ? -1 : lignePion.I_VICTOIRE;
                     ligneGrid.Cells["I_TRI"].Value = lignePion.IsI_TRINull() ? -1 : lignePion.I_TRI;
+                    ligneGrid.Cells["I_TOUR_ENNEMI_OBSERVABLE"].Value = lignePion.IsI_TOUR_ENNEMI_OBSERVABLENull() ? -1 : lignePion.I_TOUR_ENNEMI_OBSERVABLE;
+                    ligneGrid.Cells["S_ENNEMI_OBSERVABLE"].Value = lignePion.IsS_ENNEMI_OBSERVABLENull() ? string.Empty : lignePion.S_ENNEMI_OBSERVABLE;
                 }
                 dataGridViewPions.Sort(dataGridViewPions.Columns["ID_PION"], ListSortDirection.Ascending);
             }

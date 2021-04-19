@@ -1771,7 +1771,9 @@ namespace vaoc
                             0,//I_MATERIEL_ESCORTE
                             0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                             ligneRenfort.I_VICTOIRE,
-                            -1//I_TRI
+                            -1,//I_TRI
+                            string.Empty,
+                            -1//I_TOUR_ENNEMI_OBSERVABLE
                             );
 
                         lignePionRenfort.SetID_ANCIEN_PION_PROPRIETAIRENull();
@@ -1783,6 +1785,7 @@ namespace vaoc
                         lignePionRenfort.SetID_PION_ESCORTENull();
                         lignePionRenfort.SetID_DEPOT_SOURCENull();
                         lignePionRenfort.SetI_TRINull();
+                        lignePionRenfort.SetI_TOUR_ENNEMI_OBSERVABLENull();
 
                         //il faut imposer l'id_pion du renfort
                         lignePionRenfort.ID_PION = ligneRenfort.ID_PION;
@@ -2348,6 +2351,7 @@ namespace vaoc
                     }
                 }
             }
+            //ClassDataOrdre ordreT = liste.Last();
 
             if (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR != tourDernierOrdre)
             {
@@ -4072,7 +4076,9 @@ namespace vaoc
                                                     0,//I_MATERIEL_ESCORTE
                                                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                                                     0,//I_VICTOIRE
-                                                    -1//I_TRI
+                                                    -1,//I_TRI
+                                                    string.Empty,
+                                                    -1//I_TOUR_ENNEMI_OBSERVABLE
                                                 );
                                                 lignePionPatrouille.SetID_ANCIEN_PION_PROPRIETAIRENull();
                                                 lignePionPatrouille.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -4082,6 +4088,7 @@ namespace vaoc
                                                 lignePionPatrouille.SetID_PION_REMPLACENull();
                                                 lignePionPatrouille.SetID_DEPOT_SOURCENull();
                                                 lignePionPatrouille.SetI_TRINull();
+                                                lignePionPatrouille.SetI_TOUR_ENNEMI_OBSERVABLENull();
                                                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                                             }
                                             else
@@ -5323,7 +5330,9 @@ namespace vaoc
                     0,//I_MATERIEL_ESCORTE
                     0,//I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT
                     1,//I_VICTOIRE
-                    -1//I_TRI
+                    -1,//I_TRI
+                    string.Empty,
+                    -1//I_TOUR_ENNEMI_OBSERVABLE
                     );
                 ligneNouveauPion.SetID_ANCIEN_PION_PROPRIETAIRENull();
                 ligneNouveauPion.SetID_NOUVEAU_PION_PROPRIETAIRENull();
@@ -5335,6 +5344,7 @@ namespace vaoc
                 ligneNouveauPion.ID_PION_PROPRIETAIRE = 0; //Le propriéaire final doit forcément appartenir à un joueur qui doit être crée comme id=0 ligneNouveauPion.ID_PION;
                 ligneNouveauPion.S_NOM = string.Format("Test {0} n°{1} p:{2}", idNation, ligneNouveauPion.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 ligneNouveauPion.SetI_TRINull();
+                ligneNouveauPion.SetI_TOUR_ENNEMI_OBSERVABLENull();
                 Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
         }

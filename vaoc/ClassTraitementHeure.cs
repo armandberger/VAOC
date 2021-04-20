@@ -51,7 +51,6 @@ namespace vaoc
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, false);
 
             //TestCreation();
-            AmeliorationsPerformances();
 
             //IEnumerable<Donnees.TAB_PIONRow> test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
             //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
@@ -674,11 +673,6 @@ namespace vaoc
                 }
             }
             return true;
-        }
-
-        private void AmeliorationsPerformances()
-        {
-            //ActuelsVersAnciens(); -> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
         }
 
         /// <summary>
@@ -2367,6 +2361,12 @@ namespace vaoc
             {
                 List<ClassDataPartie> listeParties = m_iWeb.ListeParties(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
                 nbTourExecutes = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - listeParties[0].I_TOUR;
+                //Déplacement des ordres terminés et des pions détruits vers une autre table pour améliorer les performances. Fait uniquement après des nouveaux ordres pour ne pas touchr au maxide
+                LogFile.Notifier("Nb messages avant archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
+                LogFile.Notifier("Nb pions avant archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                ActuelsVersAnciens(); //-> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
+                LogFile.Notifier("Nb messages après archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
+                LogFile.Notifier("Nb pions après archivage :" + Donnees.m_donnees.TAB_PION.Count());
             }
 
             LogFile.Notifier("Fin NouveauxOrdres");
@@ -5382,6 +5382,7 @@ namespace vaoc
 
         public void ActuelsVersAnciens()
         {
+            return;
             int nbPions = Donnees.m_donnees.TAB_PION.Count();
             int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
             int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();
@@ -5505,77 +5506,107 @@ namespace vaoc
             #endregion
             /* complexe aussi sur les pions, quand on remonte sur proprietaire dans sauvegardeMesage de ClassVaocWebFichier, il faut des fois être sur un ancien des fois non et pas possible
              *  a priori de faire un cast automatique entre les deux */
+            //On commence par ajouter tous les pions elligibles
+            List<int> listeArchiveUnites = new List<int>();
             i = 0;
             while (i < Donnees.m_donnees.TAB_PION.Count())
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 if (lignePion.B_DETRUIT && lignePion.estMessager)
                 {
-                    Donnees.TAB_PION_ANCIENRow lignePionAncien = Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
-                        lignePion.ID_PION,
-                        lignePion.ID_MODELE_PION,
-                        lignePion.ID_PION_PROPRIETAIRE,
-                        lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
-                        lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
-                        lignePion.S_NOM,
-                        lignePion.I_INFANTERIE,
-                        lignePion.I_INFANTERIE_INITIALE,
-                        lignePion.I_CAVALERIE,
-                        lignePion.I_CAVALERIE_INITIALE,
-                        lignePion.I_ARTILLERIE,
-                        lignePion.I_ARTILLERIE_INITIALE,
-                        lignePion.I_FATIGUE,
-                        lignePion.I_MORAL,
-                        lignePion.I_MORAL_MAX,
-                        lignePion.I_EXPERIENCE,
-                        lignePion.I_TACTIQUE,
-                        lignePion.I_STRATEGIQUE,
-                        lignePion.C_NIVEAU_HIERARCHIQUE,
-                        lignePion.I_DISTANCE_A_PARCOURIR,
-                        lignePion.I_NB_PHASES_MARCHE_JOUR,
-                        lignePion.I_NB_PHASES_MARCHE_NUIT,
-                        lignePion.I_NB_HEURES_COMBAT,
-                        lignePion.ID_CASE,
-                        lignePion.I_TOUR_SANS_RAVITAILLEMENT,
-                        lignePion.ID_BATAILLE,
-                        lignePion.I_ZONE_BATAILLE,
-                        lignePion.I_TOUR_RETRAITE_RESTANT,
-                        lignePion.I_TOUR_FUITE_RESTANT,
-                        lignePion.B_DETRUIT,
-                        lignePion.B_FUITE_AU_COMBAT,
-                        lignePion.B_INTERCEPTION,
-                        lignePion.B_REDITION_RAVITAILLEMENT,
-                        lignePion.B_TELEPORTATION,
-                        lignePion.B_ENNEMI_OBSERVABLE,
-                        lignePion.I_MATERIEL,
-                        lignePion.I_RAVITAILLEMENT,
-                        lignePion.B_CAVALERIE_DE_LIGNE,
-                        lignePion.B_CAVALERIE_LOURDE,
-                        lignePion.B_GARDE,
-                        lignePion.B_VIEILLE_GARDE,
-                        lignePion.I_TOUR_CONVOI_CREE,
-                        lignePion.ID_DEPOT_SOURCE,
-                        lignePion.I_SOLDATS_RAVITAILLES,
-                        lignePion.I_NB_HEURES_FORTIFICATION,
-                        lignePion.I_NIVEAU_FORTIFICATION,
-                        lignePion.ID_PION_REMPLACE,
-                        lignePion.I_DUREE_HORS_COMBAT,
-                        lignePion.I_TOUR_BLESSURE,
-                        lignePion.B_BLESSES,
-                        lignePion.B_PRISONNIERS,
-                        lignePion.B_RENFORT,
-                        lignePion.ID_LIEU_RATTACHEMENT,
-                        lignePion.C_NIVEAU_DEPOT,
-                        lignePion.ID_PION_ESCORTE,
-                        lignePion.I_INFANTERIE_ESCORTE,
-                        lignePion.I_CAVALERIE_ESCORTE,
-                        lignePion.I_MATERIEL_ESCORTE);
-
-                    lignePion.Delete();
+                    listeArchiveUnites.Add(lignePion.ID_PION);
                 }
-                else
+                i++;
+            }
+
+            //On vérifie que toutes les unités restantes ont bien toutes leurs proprietaires non détruites, sinon, on les remets !
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_PION.Count())
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                if (!(lignePion.B_DETRUIT && lignePion.estMessager))
                 {
-                    i++;
+                    RetraitUniteProprietaire(ref listeArchiveUnites, lignePion.ID_PION_PROPRIETAIRE);
+                }
+                i++;
+            }
+
+            //On retire effectivement les unités
+            i = 0;
+            while (i < listeArchiveUnites.Count())
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(listeArchiveUnites[i]);
+                Donnees.TAB_PION_ANCIENRow lignePionAncien = Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
+                    lignePion.ID_PION,
+                    lignePion.ID_MODELE_PION,
+                    lignePion.ID_PION_PROPRIETAIRE,
+                    lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
+                    lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
+                    lignePion.S_NOM,
+                    lignePion.I_INFANTERIE,
+                    lignePion.I_INFANTERIE_INITIALE,
+                    lignePion.I_CAVALERIE,
+                    lignePion.I_CAVALERIE_INITIALE,
+                    lignePion.I_ARTILLERIE,
+                    lignePion.I_ARTILLERIE_INITIALE,
+                    lignePion.I_FATIGUE,
+                    lignePion.I_MORAL,
+                    lignePion.I_MORAL_MAX,
+                    lignePion.I_EXPERIENCE,
+                    lignePion.I_TACTIQUE,
+                    lignePion.I_STRATEGIQUE,
+                    lignePion.C_NIVEAU_HIERARCHIQUE,
+                    lignePion.I_DISTANCE_A_PARCOURIR,
+                    lignePion.I_NB_PHASES_MARCHE_JOUR,
+                    lignePion.I_NB_PHASES_MARCHE_NUIT,
+                    lignePion.I_NB_HEURES_COMBAT,
+                    lignePion.ID_CASE,
+                    lignePion.I_TOUR_SANS_RAVITAILLEMENT,
+                    lignePion.ID_BATAILLE,
+                    lignePion.I_ZONE_BATAILLE,
+                    lignePion.I_TOUR_RETRAITE_RESTANT,
+                    lignePion.I_TOUR_FUITE_RESTANT,
+                    lignePion.B_DETRUIT,
+                    lignePion.B_FUITE_AU_COMBAT,
+                    lignePion.B_INTERCEPTION,
+                    lignePion.B_REDITION_RAVITAILLEMENT,
+                    lignePion.B_TELEPORTATION,
+                    lignePion.B_ENNEMI_OBSERVABLE,
+                    lignePion.I_MATERIEL,
+                    lignePion.I_RAVITAILLEMENT,
+                    lignePion.B_CAVALERIE_DE_LIGNE,
+                    lignePion.B_CAVALERIE_LOURDE,
+                    lignePion.B_GARDE,
+                    lignePion.B_VIEILLE_GARDE,
+                    lignePion.I_TOUR_CONVOI_CREE,
+                    lignePion.ID_DEPOT_SOURCE,
+                    lignePion.I_SOLDATS_RAVITAILLES,
+                    lignePion.I_NB_HEURES_FORTIFICATION,
+                    lignePion.I_NIVEAU_FORTIFICATION,
+                    lignePion.ID_PION_REMPLACE,
+                    lignePion.I_DUREE_HORS_COMBAT,
+                    lignePion.I_TOUR_BLESSURE,
+                    lignePion.B_BLESSES,
+                    lignePion.B_PRISONNIERS,
+                    lignePion.B_RENFORT,
+                    lignePion.ID_LIEU_RATTACHEMENT,
+                    lignePion.C_NIVEAU_DEPOT,
+                    lignePion.ID_PION_ESCORTE,
+                    lignePion.I_INFANTERIE_ESCORTE,
+                    lignePion.I_CAVALERIE_ESCORTE,
+                    lignePion.I_MATERIEL_ESCORTE);
+
+                lignePion.Delete();
+                i++;
+            }
+
+            void RetraitUniteProprietaire(ref List<int> listeUnites, int ID_PROPRIETAIRE)
+            {
+                if (listeUnites.IndexOf(ID_PROPRIETAIRE) > 0)
+                {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ID_PROPRIETAIRE);
+                    RetraitUniteProprietaire(ref listeUnites, lignePion.ID_PION_PROPRIETAIRE);
+                    listeArchiveUnites.Remove(ID_PROPRIETAIRE);
                 }
             }
             #endregion

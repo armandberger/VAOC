@@ -1137,6 +1137,7 @@ namespace vaoc
                             {
                                 message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_DEPOT_A dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
                                 LogFile.Notifier(message);
+                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
                         }
@@ -5382,7 +5383,6 @@ namespace vaoc
 
         public void ActuelsVersAnciens()
         {
-            return;
             int nbPions = Donnees.m_donnees.TAB_PION.Count();
             int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
             int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();

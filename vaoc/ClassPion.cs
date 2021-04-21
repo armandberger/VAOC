@@ -2969,6 +2969,7 @@ namespace vaoc
                     {
                         Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                         LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_BATAILLE_PIONSRow");
+                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         return null;
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
@@ -4908,7 +4909,9 @@ namespace vaoc
 
             internal void SetI_TOUR_BLESSURENull()
             {
+                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TOUR_BLESSURE = Constantes.NULLENTIER;
+                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_LIEU_RATTACHEMENTNull()

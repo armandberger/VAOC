@@ -102,14 +102,14 @@ namespace vaoc
                         return false;//problème à l'ajout
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_BATAILLE = ID_BATAILLE;
 
                     //il faut terminer tout ordre en cours d'execution par l'unité et placer l'unité dans la case courante du combat
                     lignePion.ID_CASE = ligneCaseCombat.ID_CASE;
                     lignePion.SupprimerTousLesOrdres();
                     lignePion.PlacerStatique();
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //il faut envoyer un message au propriétaire de l'unité pour indiquer cet ajout
                     ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE, this);
@@ -270,9 +270,9 @@ namespace vaoc
 
                 //desengagement de toutes les unités
                 requete = string.Format("ID_BATAILLE={0}", ID_BATAILLE);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow[] resPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 for (int l=0; l<resPion.Count(); l++)
                 {
                     Donnees.TAB_PIONRow lignePion = resPion[l];
@@ -2098,7 +2098,7 @@ namespace vaoc
             {
                 //return true;//le mode de calcul ne convient, grosse bataille, certains d'être blessé, petite bataille aucune chance...
                 Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //Recherche de tous les chefs présents dans le secteur
                 var resultComplet = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
                                     from Pion in Donnees.m_donnees.TAB_PION
@@ -2155,7 +2155,7 @@ namespace vaoc
                         // -> Le chef remplaçant n'est crée qu'après une période d'inactivité (voir NouvelleHeure)
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 return true;
             }
@@ -2525,7 +2525,7 @@ namespace vaoc
                                           select Pion.ID_PION;
                  * */
                 Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 var resultComplet = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
                                     from Pion in Donnees.m_donnees.TAB_PION
                                     where (BataillePion.ID_PION == Pion.ID_PION)
@@ -2632,7 +2632,7 @@ namespace vaoc
                     }
                 }
 
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                 for (i = 0; i < 6; i++)
                 {

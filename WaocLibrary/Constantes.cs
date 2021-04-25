@@ -62,6 +62,7 @@ namespace WaocLib
         public const int CST_DUREE_INDISPONIBLE_SUR_BLESSURE = 2;//temps necessaire à trouver un remplaçant sur blessure grave.
         public const int CST_DISTANCE_CREATION_DEPOT_A = 5;//distance, en kms, à partir d'une ville où l'on peut mettre un dépôt de type A
         public const int CST_DISTANCE_RENFORT = 3;//distance, en kms, où l'on peut renforcer une unité ou un dépôt
+        public const int CST_DISTANCE_SUIVRE_UNITE = 1;//distance en km où l'on suit automatiquement une autre unité
 
         public const double SQRT2 = 1.4142135623730950488016887242097;
         public enum VICTOIRECOMBAT { VICTOIRE012, EGALITE, VICTOIRE345 };
@@ -88,31 +89,6 @@ namespace WaocLib
         public const int CST_FACTEUR_ZOOM = 5;
 
         //liste des différents ordres
-        /*
-        public enum ORDRES
-        {
-            MOUVEMENT = 1,
-            COMBAT = 2,
-            RETRAITE = 3,
-            PATROUILLE = 4,
-            MESSAGE = 5,
-            ENDOMMAGER_PONT = 6,
-            REPARER_PONT = 7,
-            CONSTRUIRE_PONTON = 8,
-            ARRET = 9,
-            TRANSFERER = 10,
-            GENERERCONVOI = 11,
-            RENFORCER = 12,
-            /// <summary>
-            /// construction de fortification de campagne
-            /// </summary>
-            SEFORTIFIER = 13,
-            /// <summary>
-            /// Modification du niveau d'engagement sur un secteur de la bataille
-            /// </summary>
-            ENGAGEMENT = 14
-        }
-        */
         public static class ORDRES
         {
             public const int MOUVEMENT = 1;

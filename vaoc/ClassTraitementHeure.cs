@@ -920,14 +920,14 @@ namespace vaoc
                         lignePion.SupprimerTousLesOrdres();//normallement déjà fait lors de l'engagement en bataille, mais bon...
 
                         //Mise à jour l'engagement et la zone d'engagement
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.I_ZONE_BATAILLE = ligneOrdre.I_ZONE_BATAILLE;
                         lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         lignePionBataille.B_ENGAGEE = true;
                         //pour les presentations de fin de partie
                         lignePionBataille.B_ENGAGEMENT = true;
                         lignePionBataille.I_ZONE_BATAILLE_ENGAGEMENT = lignePion.I_ZONE_BATAILLE;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //l'ordre est terminé
                         lignePion.TerminerOrdre(ligneOrdre, false, true);
                     }
@@ -937,9 +937,9 @@ namespace vaoc
                     if (ligneOrdre.I_PHASE_DEBUT == phase)
                     {
                         //Mise à jour l'engagement et la zone d'engagement
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.SetI_ZONE_BATAILLENull();
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //il ne faut pas remettre I_ZONE_BATAILLE_ENGAGEMENT à blanc car c'est pour l'historique
                         //lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         //lignePionBataille.SetI_ZONE_BATAILLE_ENGAGEMENTNull();
@@ -952,12 +952,12 @@ namespace vaoc
                     if (ligneOrdre.I_PHASE_DEBUT == phase)
                     {
                         //lignePion.I_TOUR_FUITE_RESTANT = 2; -> seulement pour les unités en déroute
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.I_TOUR_RETRAITE_RESTANT = 2 +1; // même chose que I_TOUR_FUITE_RESTANT mais tu peux donner des ordres, //+1 car on fait une fin de combat au tour T,phase 100, si le combat reprend à T+2,phase 0, cela ne laisse en fait qu'une heure de retraite
                         lignePionBataille = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(lignePion.ID_PION, ligneOrdre.ID_BATAILLE);
                         lignePionBataille.B_ENGAGEE = false;
                         lignePion.SetI_ZONE_BATAILLENull();
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         //l'ordre est terminé
                         lignePion.TerminerOrdre(ligneOrdre, false, true);
                     }
@@ -981,20 +981,20 @@ namespace vaoc
                     //s'il s'agit d'un dépôt de niveau 'D', il se transforme en convoi
                     if ('D' == lignePion.C_NIVEAU_DEPOT)
                     {
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePion.S_NOM = lignePion.NouveauNomConvoiRavitaillement();
                         int idModeleCONVOI = Donnees.m_donnees.TAB_MODELE_PION.RechercherModele(lignePion.modelePion.ID_NATION, "CONVOI");
 
                         if (idModeleCONVOI >= 0)
                         {
                             lignePion.ID_MODELE_PION = idModeleCONVOI;
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                         else
                         {
                             message = string.Format("ExecuterOrdreHorsMouvement : {0},ID={1}, impossible de trouver le modèle de convoi de la nation", lignePion.S_NOM, lignePion.ID_PION);
                             LogFile.Notifier(message);
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             return false;
                         }
                     }
@@ -1008,10 +1008,10 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionConvoi.C_NIVEAU_DEPOT = 'D';
                         lignePionConvoi.ID_DEPOT_SOURCE = lignePion.ID_PION;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le nouveau convoi est disponible
                         if (!ClassMessager.EnvoyerMessage(lignePionConvoi, ClassMessager.MESSAGES.MESSAGE_GENERATION_CONVOI))
@@ -1022,7 +1022,7 @@ namespace vaoc
                         }
 
                         //on réduit le niveau du dépôt actuel et on note la date de création du dépot
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (ligneOrdre.I_ORDRE_TYPE== Constantes.ORDRES.GENERERCONVOI)
                         {
                             if (lignePion.C_NIVEAU_DEPOT != 'A')
@@ -1036,7 +1036,7 @@ namespace vaoc
                             lignePion.C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
                         }
                         lignePion.I_TOUR_CONVOI_CREE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     }
 
                     //l'ordre est terminé
@@ -1130,14 +1130,14 @@ namespace vaoc
                         }
 
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (lignePionARenforcer.C_NIVEAU_DEPOT == 'A' || (lignePionARenforcer.C_NIVEAU_DEPOT == 'B' && lignePion.nation.NombreDepot('A') >= lignePion.nation.I_LIMITE_DEPOT_A))
                         {
                             if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE))
                             {
                                 message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_DEPOT_A dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
                                 LogFile.Notifier(message);
-                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
                         }
@@ -1149,7 +1149,7 @@ namespace vaoc
                             //int augmentationCapaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - Constantes.tableLimiteRavitaillementDepot[ligneDepotTable+1];
                             //lignePionARenforcer.I_SOLDATS_RAVITAILLES = Math.Max(0, lignePionARenforcer.I_SOLDATS_RAVITAILLES - augmentationCapaciteDepot);//pas bien clair dans les règles mais cela me semble logique
                             lignePionARenforcer.I_SOLDATS_RAVITAILLES += lignePion.I_SOLDATS_RAVITAILLES;
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                             //on indique au joueur que le renfort a été fait
                             if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT))
@@ -1166,7 +1166,7 @@ namespace vaoc
                         int effectifsARenforcer = lignePionARenforcer.effectifTotal;
                         int effectifsRenforts = lignePion.effectifTotal;
                         int effectifsFinaux = effectifsARenforcer+effectifsRenforts;
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionARenforcer.I_EXPERIENCE = (lignePionARenforcer.I_EXPERIENCE * effectifsARenforcer + lignePion.I_EXPERIENCE * effectifsRenforts) / effectifsFinaux;
                         
                         int variationFatigue = lignePionARenforcer.I_FATIGUE;
@@ -1181,7 +1181,7 @@ namespace vaoc
                         lignePionARenforcer.I_INFANTERIE += lignePion.I_INFANTERIE;
                         lignePionARenforcer.I_CAVALERIE += lignePion.I_CAVALERIE;
                         lignePionARenforcer.I_ARTILLERIE += lignePion.I_ARTILLERIE;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait
                         if (!ClassMessager.EnvoyerMessage(lignePionARenforcer, ClassMessager.MESSAGES.MESSAGE_RENFORT_UNITE, 0, variationFatigue))
@@ -1204,9 +1204,9 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_MODELE_PION = idModeleDEPOT;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //changer le nom du pion
                     string nomDepot;
@@ -1216,14 +1216,14 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.S_NOM = nomDepot;
 
                     //supprimer tous les ordres suivants (un dépôt ne peut pas recevoir d'ordre à part création de convoi, ce qui n'aurait pas de sens ici).
                     lignePion.SupprimerTousLesOrdres();
                     //lignePion.I_SOLDATS_RAVITAILLES = 0; -> pour éviter de remettre à zéro un joueur qui ferait convoi -> dépôt -> convoi -> dépôt
                     lignePion.C_NIVEAU_DEPOT = 'D';
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //envoyer un message annonçant la création du dépôt
                     if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ETABLIRDEPOT))
@@ -1245,10 +1245,10 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionConvoi.C_NIVEAU_DEPOT = 'D';
                         lignePionConvoi.ID_DEPOT_SOURCE = lignePion.ID_PION;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le nouveau convoi est disponible
                         if (!ClassMessager.EnvoyerMessage(lignePionConvoi, ClassMessager.MESSAGES.MESSAGE_GENERATION_CONVOI))
@@ -1943,7 +1943,7 @@ namespace vaoc
                         if (ligneNomCarte.B_HOPITAL)
                         {
                             requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                             for (int l = 0; l < lignesPionResultat.Count(); l++)
                             {
@@ -1963,7 +1963,7 @@ namespace vaoc
                                     lignePionBlesses.I_ARTILLERIE = lignePionBlesses.I_ARTILLERIE / 2;
                                 }
                             }
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
 
                         //Quand une prison change de camp, les prisonniers deviennent des renforts
@@ -1971,7 +1971,7 @@ namespace vaoc
                         if (ligneNomCarte.B_PRISON)
                         {
                             requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                             for (int l = 0; l < lignesPionResultat.Count(); l++)
                             {
@@ -1993,10 +1993,11 @@ namespace vaoc
                                 {
                                     message = string.Format("ControleDesVilles : erreur sur l'envoi de message pour MESSAGE_PRISONNIER_LIBERE {0}:{1}", lignePionPrisonniers.S_NOM, lignePionPrisonniers.ID_PION);
                                     LogFile.Notifier(message, out messageErreur);
+                                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
                             }
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                     }
                     //si la nation change, on modifie la valeur, sinon on garde la valeur par défaut
@@ -2006,7 +2007,7 @@ namespace vaoc
                         {
                             //Il faut prévenir tous les "rôles" de l'ancienne nation que la ville change de camp
                             Monitor.Enter(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Monitor.Enter(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
                             var result = from Role in Donnees.m_donnees.TAB_ROLE
                                          join Pion in Donnees.m_donnees.TAB_PION
@@ -2034,14 +2035,14 @@ namespace vaoc
                                 {
                                     LogFile.Notifier("ControleDesVilles : erreur lors de l'envoi d'un message MESSAGE_LIEU_POINT_DE_VICTOIRE");
                                     Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
-                                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
                                     return false;
                                 }
                             }
 
                             Monitor.Exit(Donnees.m_donnees.TAB_ROLE.Rows.SyncRoot);
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Monitor.Exit(Donnees.m_donnees.TAB_MODELE_PION.Rows.SyncRoot);
                         }
 
@@ -2061,7 +2062,7 @@ namespace vaoc
             Donnees.TAB_MESSAGERow[] resMessages;
 
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
-            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
             for (int l=0; l< resPions.Count(); l++)
             {
@@ -2084,7 +2085,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_ANCIEN_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
             }
-            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
@@ -2814,6 +2815,7 @@ namespace vaoc
                 case Constantes.ORDRES.ARRET:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                case Constantes.ORDRES.SUIVRE_UNITE:
                 #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
                     //ordre qui doit être remis à une unité par un messager
                     //int idPionOrdre = (ordre.I_TYPE == Constantes.ORDRES.TRANSFERER) ? ordre.ID_PION_CIBLE : ordre.ID_PION;
@@ -3078,7 +3080,7 @@ namespace vaoc
 
                     //recherche de toutes les unités rattachés à ce nom
                     string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                     for (int l = 0; l < lignesPionResultat.Count(); l++)
                     {
@@ -3129,6 +3131,7 @@ namespace vaoc
                                 {
                                     string message = string.Format("{0}(ID={1}, erreur sur EnvoyerMessage avec MESSAGE_BLESSES_SOIGNES dans SoinsAuxBlesses", lignePionRenfort.S_NOM, lignePionRenfort.ID_PION);
                                     LogFile.Notifier(message);
+                                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
                             }
@@ -3174,13 +3177,13 @@ namespace vaoc
                             if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_HOPITAL))
                             {
                                 LogFile.Notifier("SoinsAuxBlesses : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_HOPITAL");
-                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
                             i++;
                         }
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;
@@ -3197,7 +3200,7 @@ namespace vaoc
                     int iPrisonniersArtillerie = 0;
 
                     //recherche de toutes les unités rattachés à ce nom
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     string requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
                     for (int l = 0; l < lignesPionResultat.Count(); l++)
@@ -3247,13 +3250,13 @@ namespace vaoc
                             if (!ClassMessager.EnvoyerMessage(lignePionRapport, ClassMessager.MESSAGES.MESSAGE_RAPPORT_PRISON))
                             {
                                 LogFile.Notifier("RapportDesPrisons : erreur lors de l'envoi d'un message MESSAGE_RAPPORT_PRISON");
-                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
                             i++;
                         }
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;
@@ -3564,22 +3567,17 @@ namespace vaoc
         {
             string messageErreur, message;
 
-            //le mouvement d'une unité au combat n'est plus autorisé que si l'unité n'est pas engagé, sinon les unités en fuite ne peuvent plus fuir
-            //par contre c'est vrai que cela permet à des unités de traverser des lignes ennemies, mais comme on supprime tous les ordres d'une unité ajoutée
-            //et que l'on ne peut pas donner d'ordre de mouvement à une unité au combat, cela ne peut pas arriver normalement.
-            /*
-            if (lignePion.estAuCombat)
-            {
-                message = string.Format("{0}(ID={1}, en bataille:{2}, pas de mouvement autorisé)", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_BATAILLE);
-                return LogFile.Notifier(message, out messageErreur);
-            }
-            */
-
             //TestCreationUnite(0, 1);
             ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
             if (null != ligneOrdre)
             {
+                if (ligneOrdre.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE)
+                {
+                    ligneOrdre = ExecuterOrdreSuivreMouvement(lignePion, ligneOrdre);
+                    //Si ExecuterOrdreSuivreMouvement renvoie null cela indique que l'unité suit correctement sa cible et qu'il n'y a pas d'orde de "rapprochement" à  faire
+                    if (null==ligneOrdre) { return true; }
+                }
                 //si l'ordre de mouvement n'est pas actif, le pion ne doit pas bouger
                 if (!lignePion.OrdreActif(ligneOrdre))
                 {
@@ -3608,7 +3606,7 @@ namespace vaoc
                 {
                     //si l'unité n'est pas arrivée à destination, il faut ajouter la fatigue
                     //l'unité est entrain de marcher, compte pour la fatigue en fin de journée
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {
                         lignePion.I_NB_PHASES_MARCHE_NUIT++;
@@ -3617,7 +3615,7 @@ namespace vaoc
                     {
                         lignePion.I_NB_PHASES_MARCHE_JOUR++;
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
 
                 if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG)
@@ -3652,6 +3650,90 @@ namespace vaoc
             }
         }
 
+        /// <summary>
+        /// Si l'unité est asser proche de sa cible, on la déplace, sinon, on crée un ordre de mouvement chainé à celui-ci pour se rapprocher
+        /// </summary>
+        /// <param name="lignePion">Pion executant l'ordre</param>
+        /// <param name="ligneOrdre">Ordre suivre</param>
+        /// <returns>null si l'ordre de suivi a été executé, l'ordre de mouvement sinon</returns>
+        private Donnees.TAB_ORDRERow ExecuterOrdreSuivreMouvement(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre)
+        {
+            Donnees.TAB_ORDRERow ligneOrdreMouvement = null;
+            Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+            Donnees.TAB_PIONRow lignePionCible = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_CIBLE);
+            Donnees.TAB_CASERow ligneCaseCible = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionCible.ID_CASE);
+            if (Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseCible.I_X, ligneCaseCible.I_Y) / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE <= Constantes.CST_DISTANCE_SUIVRE_UNITE)
+            {
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                lignePion.ID_CASE = ligneCaseCible.ID_CASE;
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            }
+            else
+            {
+                //Il faut créer un ordre mouvement immédiat vers l'unité cible
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                        Constantes.NULLENTIER,//ID_ORDRE_TRANSMIS
+                        ligneOrdre.ID_ORDRE,//ID_ORDRE_SUIVANT global::System.Convert.DBNull,
+                        Constantes.NULLENTIER,///ID_ORDRE_WEB
+                        Constantes.ORDRES.MOUVEMENT,
+                        lignePion.ID_PION,
+                        lignePion.ID_CASE,
+                        lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE,
+                        ligneCaseCible.ID_CASE,//ID_CASE_DESTINATION
+                        Constantes.NULLENTIER,//id ville de destination
+                        0,//I_EFFECTIF_DESTINATION
+                        Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
+                        Constantes.NULLENTIER,//I_TOUR_FIN
+                        Constantes.NULLENTIER,//I_PHASE_FIN
+                        Constantes.NULLENTIER,//ID_MESSAGE
+                        Constantes.NULLENTIER,//ID_DESTINATAIRE
+                        Constantes.NULLENTIER,//ID_CIBLE
+                        Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                        Constantes.NULLENTIER,//ID_BATAILLE
+                        Constantes.NULLENTIER,//I_ZONE_BATAILLE
+                        0,//I_HEURE_DEBUT
+                        24,//I_DUREE
+                        Constantes.NULLENTIER//I_ENGAGEMENT
+                        );//ID_BATAILLE
+                //on inverse les id ordres pour que l'ordre de mouvement sorte en premier
+                //pour cela on recrée l'ordre d'origine pour qu'il est un identifiant postérieur
+                Donnees.TAB_ORDRERow ligneOrdreSuivre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                        ligneOrdre.ID_ORDRE_TRANSMIS,
+                        ligneOrdre.ID_ORDRE_SUIVANT,//ID_ORDRE_SUIVANT
+                        ligneOrdre.ID_ORDRE_WEB,///ID_ORDRE_WEB
+                        ligneOrdre.I_ORDRE_TYPE,//I_ORDRE_TYPE
+                        ligneOrdre.ID_PION,//ID_PION
+                        ligneOrdre.ID_CASE_DEPART,//ID_CASE_DEPART
+                        ligneOrdre.I_EFFECTIF_DEPART,//I_EFFECTIF_DEPART
+                        ligneOrdre.ID_CASE_DESTINATION,//ID_CASE_DESTINATION
+                        ligneOrdre.ID_NOM_DESTINATION,//id ville de destination
+                        ligneOrdre.I_EFFECTIF_DESTINATION,//I_EFFECTIF_DESTINATION
+                        Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                        Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
+                        Constantes.NULLENTIER,//I_TOUR_FIN
+                        Constantes.NULLENTIER,//I_PHASE_FIN
+                        ligneOrdre.ID_MESSAGE,//ID_MESSAGE
+                        ligneOrdre.ID_DESTINATAIRE,//ID_DESTINATAIRE
+                        ligneOrdre.ID_CIBLE,//ID_CIBLE
+                        ligneOrdre.ID_DESTINATAIRE_CIBLE,//ID_DESTINATAIRE_CIBLE
+                        ligneOrdre.ID_BATAILLE,//ID_BATAILLE
+                        ligneOrdre.I_ZONE_BATAILLE,//I_ZONE_BATAILLE
+                        0,//I_HEURE_DEBUT
+                        24,//I_DUREE
+                        Constantes.NULLENTIER//I_ENGAGEMENT
+                        ); ;
+
+                //et on affecte l'ordre de suivi
+                ligneOrdreMouvement.ID_ORDRE_SUIVANT = ligneOrdreSuivre.ID_ORDRE;
+                //on detruit l'ordre d'origine
+                ligneOrdre.Delete();
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+            }
+            return ligneOrdreMouvement;
+        }
+
         private bool ExecuterMouvementSansEffectif(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_NATIONRow ligneNation, Donnees.TAB_MODELE_PIONRow ligneModelePion, Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement)
         {
             string messageErreur, message;
@@ -3683,9 +3765,9 @@ namespace vaoc
             if (lignePion.I_DISTANCE_A_PARCOURIR > 0)
             {
                 vitesse = lignePion.CalculVitesseMouvement();//vitesse en km/h
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //message = string.Format("{0},ID={1}, enNapoléon,ID=0, ExecuterMouvementSansEffectif mouvement, I_DISTANCE_A_PARCOURIR={2}, vitesse={3}",
                 //    lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR, vitesse);
                 //LogFile.Notifier(message, out messageErreur);
@@ -3800,7 +3882,7 @@ namespace vaoc
                         else
                         {
 
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             lignePion.ID_CASE = chemin[pos + 1].ID_CASE;
                             message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif nouvelle case={2}, position={3})",
                                 lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE, pos);
@@ -3816,7 +3898,7 @@ namespace vaoc
                                 //diagonale
                                 lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                             }
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
 
                         //si l'unité emprunte un gué, on envoie un message d'alerte
@@ -3965,20 +4047,7 @@ namespace vaoc
                                     {
                                         case Constantes.ORDRES.ARRET:
                                         case Constantes.ORDRES.MOUVEMENT:
-                                            //l'ordre n'est recevable que si l'unité n'est pas engagé au combat
-                                            //si le pion est déjà engagé en bataille et pas en fuite, l'ordre est refusé
-                                            if (!lignePionDestinataire.IsID_BATAILLENull() && 0 == lignePionDestinataire.I_TOUR_FUITE_RESTANT)
-                                            {
-                                                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePionDestinataire.ID_BATAILLE);
-                                                ClassMessager.EnvoyerMessage(lignePionDestinataire, ClassMessager.MESSAGES.MESSAGE_ORDRE_MOUVEMENT_IMPOSSIBLE_AU_COMBAT, ligneBataille);
-                                            }
-                                            else
-                                            {
-                                                if (!ChangerOrdreCourant(lignePionDestinataire, ligneOrdreCourant, ligneOrdreNouveau, true)) { return false; }
-                                                tipeMessage = (ligneOrdreNouveau.I_ORDRE_TYPE== Constantes.ORDRES.ARRET) ? ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU : ClassMessager.MESSAGES.MESSAGE_ORDRE_MOUVEMENT_RECU;
-                                            }
-                                            break;
-
+                                        case Constantes.ORDRES.SUIVRE_UNITE:
                                         case Constantes.ORDRES.ENDOMMAGER_PONT:
                                         case Constantes.ORDRES.REPARER_PONT:
                                         case Constantes.ORDRES.CONSTRUIRE_PONTON:
@@ -3994,7 +4063,16 @@ namespace vaoc
                                             else
                                             {
                                                 if (!ChangerOrdreCourant(lignePionDestinataire, ligneOrdreCourant, ligneOrdreNouveau, true)) { return false; }
-                                                tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU;
+                                                switch (ligneOrdreNouveau.I_ORDRE_TYPE)
+                                                {
+                                                    case Constantes.ORDRES.MOUVEMENT:
+                                                    case Constantes.ORDRES.SUIVRE_UNITE:
+                                                        tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_MOUVEMENT_RECU;
+                                                        break;
+                                                    default:
+                                                        tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU;
+                                                        break;
+                                                }
                                             }
                                             break;
 
@@ -4025,7 +4103,7 @@ namespace vaoc
 
                                             if (idModelePATROUILLE >= 0)
                                             {
-                                                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                                                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                                                 lignePionPatrouille = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                                                     idModelePATROUILLE,//ID_MODELE_PION
                                                     lignePionDestinataire.ID_PION, //ID_PION_PROPRIETAIRE
@@ -4090,7 +4168,7 @@ namespace vaoc
                                                 lignePionPatrouille.SetID_DEPOT_SOURCENull();
                                                 lignePionPatrouille.SetI_TRINull();
                                                 lignePionPatrouille.SetI_TOUR_ENNEMI_OBSERVABLENull();
-                                                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                                                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                                             }
                                             else
                                             {
@@ -4307,6 +4385,7 @@ namespace vaoc
                             }
                             break;
                         case Constantes.ORDRES.RENFORCER:
+                        case Constantes.ORDRES.SUIVRE_UNITE:
                             if (ligneOrdreCourant.ID_CIBLE == ligneOrdreNouveau.ID_CIBLE)
                             {
                                 bMemeOrdre = true;
@@ -4370,12 +4449,13 @@ namespace vaoc
 
                 //si le nouvel ordre est un ordre de mouvement ou de combat, la fortification de campagne est détruite
                 if (ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT ||
+                    ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.COMBAT ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.RETRAITE)
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePionDestinataire.I_NIVEAU_FORTIFICATION = 0;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;
@@ -4403,9 +4483,9 @@ namespace vaoc
             //l'unité avance-t-elle suffisement pour progresser d'une case de plus ?
             //lignePion.I_DISTANCE_A_PARCOURIR = 0;//pour les tests
             vitesse = lignePion.CalculVitesseMouvement();//vitesse en km/h
-            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             lignePion.I_DISTANCE_A_PARCOURIR -= (vitesse * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * Donnees.m_donnees.TAB_JEU[0].I_COUT_DE_BASE / Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES);
-            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             message = string.Format("{0}, ID={1}, en mouvement, I_DISTANCE_A_PARCOURIR={2}",
                 lignePion.S_NOM, lignePion.ID_PION, lignePion.I_DISTANCE_A_PARCOURIR);
             LogFile.Notifier(message, out messageErreur);
@@ -4566,7 +4646,7 @@ namespace vaoc
                 else
                 {
                     //List<Donnees.TAB_CASERow> chemin;
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (0==i || chemin[i].I_X == chemin[i-1].I_X || chemin[i].I_Y == chemin[i-1].I_Y)
                     {
                         //ligne droite
@@ -4577,7 +4657,7 @@ namespace vaoc
                         //diagonale
                         lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (!lignePion.RequisitionCase(chemin[i-1], true, ref nbplacesOccupes)) { return false; }
                 }
 
@@ -4585,9 +4665,9 @@ namespace vaoc
                 //dans le cas inverse, on lui affecte bien la nouvelle case lié à son déplacement
                 if (id_case_source == lignePion.ID_CASE && coutCase>0)
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = id_case_finale;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
             return true;
@@ -4777,7 +4857,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (i < 2 || chemin[i].I_X == chemin[i - 1].I_X || chemin[i].I_Y == chemin[i - 1].I_Y)
                     {
                         //ligne droite
@@ -4788,7 +4868,7 @@ namespace vaoc
                         //diagonale
                         lignePion.I_DISTANCE_A_PARCOURIR += (int)(Constantes.SQRT2 * coutCase);
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     //la nouvelle case est-elle occupée par un ennemi ?
                     if (!lignePion.RequisitionCase(chemin[i+1], true, ref nbplacesOccupes)) { return false; }
                 }
@@ -4877,9 +4957,9 @@ namespace vaoc
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(Donnees.m_donnees.TAB_JEU[0].ID_MODELE_TERRAIN_DEPLOIEMENT);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
                 int coutCase = ligneModelePion.CoutCase(ligneModeleTerrain.ID_MODELE_TERRAIN);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.I_DISTANCE_A_PARCOURIR += coutCase;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //recherche du plus court chemin
                 //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
@@ -4971,9 +5051,9 @@ namespace vaoc
                 if (i > 0)
                 {
                     //la dernière place occupée, devient la "position" du pion, c'est à dire de son général, en queue de colonne
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     lignePion.ID_CASE = chemin[i].ID_CASE;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 //placement des effectifs à destination sur la carte
                 lignePion.PlacementPion(ligneOrdre.ID_CASE_DESTINATION, ligneNation, false, ligneOrdre.I_EFFECTIF_DESTINATION);
@@ -5288,7 +5368,7 @@ namespace vaoc
                 //idCase = Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE;
                 //Note : il ne faut pas qu'une unité commence sur un bord de carte ou cela fait planter l'algorithme de recherche
                 idCase = Donnees.m_donnees.TAB_CASE.FindParXY((i + 1) * 30, (i + 1) * 30).ID_CASE;
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow ligneNouveauPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     idModelePion,
                     -1,//ID_PION_PROPRIETAIRE
@@ -5346,7 +5426,7 @@ namespace vaoc
                 ligneNouveauPion.S_NOM = string.Format("Test {0} n°{1} p:{2}", idNation, ligneNouveauPion.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                 ligneNouveauPion.SetI_TRINull();
                 ligneNouveauPion.SetI_TOUR_ENNEMI_OBSERVABLENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
         }
 
@@ -5381,129 +5461,17 @@ namespace vaoc
             ligneOrdre.Delete();
         }
 
+        /// <summary>
+        /// Backup des messages, ordres et pions détruits ou passés
+        /// </summary>
         public void ActuelsVersAnciens()
         {
             int nbPions = Donnees.m_donnees.TAB_PION.Count();
             int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
             int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();
+            int i;
 
-            #region Backup des messages, ordres et pions détruits ou passés
-            /* Retrait de l'optimisation sur les messages, en effets, certains pouvant être crées sur le web d'autres par l'interface, cela crée des bugs d'identifiants. */
-            int tourSansEnvoi = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
-            int i = 0;
-            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
-            {
-                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
-                if (!ligneMessage.IsI_TOUR_ARRIVEENull() && ligneMessage.I_TOUR_ARRIVEE != Constantes.NULLENTIER && ligneMessage.I_TOUR_ARRIVEE < tourSansEnvoi)
-                {
-                    Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncien = Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
-                        ligneMessage.ID_MESSAGE,
-                        ligneMessage.ID_PION_EMETTEUR,
-                        ligneMessage.ID_PION_PROPRIETAIRE,
-                        ligneMessage.I_TYPE,
-                        ligneMessage.IsI_TOUR_ARRIVEENull() ? -1 : ligneMessage.I_TOUR_ARRIVEE,
-                        ligneMessage.IsI_PHASE_ARRIVEENull() ? -1 : ligneMessage.I_PHASE_ARRIVEE,
-                        ligneMessage.IsI_TOUR_DEPARTNull() ? -1 : ligneMessage.I_TOUR_DEPART,
-                        ligneMessage.IsI_PHASE_DEPARTNull() ? -1 : ligneMessage.I_PHASE_DEPART,
-                        ligneMessage.IsS_TEXTENull() ? "" : ligneMessage.S_TEXTE,
-                        ligneMessage.IsI_INFANTERIENull() ? -1 : ligneMessage.I_INFANTERIE,
-                        ligneMessage.IsI_CAVALERIENull() ? -1 : ligneMessage.I_CAVALERIE,
-                        ligneMessage.IsI_ARTILLERIENull() ? -1 : ligneMessage.I_ARTILLERIE,
-                        ligneMessage.IsI_FATIGUENull() ? -1 : ligneMessage.I_FATIGUE,
-                        ligneMessage.IsI_MORALNull() ? -1 : ligneMessage.I_MORAL,
-                        ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
-                        ligneMessage.IsID_BATAILLENull() ? -1 : ligneMessage.ID_BATAILLE,
-                        ligneMessage.IsI_ZONE_BATAILLENull() ? -1 : ligneMessage.I_ZONE_BATAILLE,
-                        ligneMessage.IsI_RETRAITENull() ? -1 : ligneMessage.I_RETRAITE,
-                        ligneMessage.B_DETRUIT,
-                        ligneMessage.ID_CASE,
-                        ligneMessage.IsID_CASE_DEBUTNull() ? -1 : ligneMessage.ID_CASE_DEBUT,
-                        ligneMessage.IsID_CASE_FINNull() ? -1 : ligneMessage.ID_CASE_FIN,
-                        ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_JOUR,
-                        ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_NUIT,
-                        ligneMessage.IsI_NB_HEURES_COMBATNull() ? -1 : ligneMessage.I_NB_HEURES_COMBAT,
-                        ligneMessage.IsI_MATERIELNull() ? -1 : ligneMessage.I_MATERIEL,
-                        ligneMessage.IsI_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_RAVITAILLEMENT,
-                        ligneMessage.IsI_SOLDATS_RAVITAILLESNull() ? -1 : ligneMessage.I_SOLDATS_RAVITAILLES,
-                        ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull() ? -1 : ligneMessage.I_NB_HEURES_FORTIFICATION,
-                        ligneMessage.IsI_NIVEAU_FORTIFICATIONNull() ? -1 : ligneMessage.I_NIVEAU_FORTIFICATION,
-                        ligneMessage.IsI_DUREE_HORS_COMBATNull() ? -1 : ligneMessage.I_DUREE_HORS_COMBAT,
-                        ligneMessage.IsI_TOUR_BLESSURENull() ? -1 : ligneMessage.I_TOUR_BLESSURE,
-                        ligneMessage.IsC_NIVEAU_DEPOTNull() ? 'X' : ligneMessage.C_NIVEAU_DEPOT
-                        );
-
-                    if (ligneMessage.IsI_TOUR_ARRIVEENull()) { ligneMessageAncien.SetI_TOUR_ARRIVEENull(); }
-                    if (ligneMessage.IsI_PHASE_ARRIVEENull()) { ligneMessageAncien.SetI_PHASE_ARRIVEENull(); }
-                    if (ligneMessage.IsI_TOUR_DEPARTNull()) { ligneMessageAncien.SetI_TOUR_DEPARTNull(); }
-                    if (ligneMessage.IsI_PHASE_DEPARTNull()) { ligneMessageAncien.SetI_PHASE_DEPARTNull(); }
-                    if (ligneMessage.IsS_TEXTENull()) { ligneMessageAncien.SetS_TEXTENull(); }
-                    if (ligneMessage.IsI_INFANTERIENull()) { ligneMessageAncien.SetI_INFANTERIENull(); }
-                    if (ligneMessage.IsI_CAVALERIENull()) { ligneMessageAncien.SetI_CAVALERIENull(); }
-                    if (ligneMessage.IsI_ARTILLERIENull()) { ligneMessageAncien.SetI_ARTILLERIENull(); }
-                    if (ligneMessage.IsI_FATIGUENull()) { ligneMessageAncien.SetI_FATIGUENull(); }
-                    if (ligneMessage.IsI_MORALNull()) { ligneMessageAncien.SetI_MORALNull(); }
-                    if (ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_TOUR_SANS_RAVITAILLEMENTNull(); }
-                    if (ligneMessage.IsID_BATAILLENull()) { ligneMessageAncien.SetID_BATAILLENull(); }
-                    if (ligneMessage.IsI_ZONE_BATAILLENull()) { ligneMessageAncien.SetI_ZONE_BATAILLENull(); }
-                    if (ligneMessage.IsI_RETRAITENull()) { ligneMessageAncien.SetI_RETRAITENull(); }
-                    if (ligneMessage.IsID_CASE_DEBUTNull()) { ligneMessageAncien.SetID_CASE_DEBUTNull(); }
-                    if (ligneMessage.IsID_CASE_FINNull()) { ligneMessageAncien.SetID_CASE_FINNull(); }
-                    if (ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_JOURNull(); }
-                    if (ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_NUITNull(); }
-                    if (ligneMessage.IsI_NB_HEURES_COMBATNull()) { ligneMessageAncien.SetI_NB_HEURES_COMBATNull(); }
-                    if (ligneMessage.IsI_MATERIELNull()) { ligneMessageAncien.SetI_MATERIELNull(); }
-                    if (ligneMessage.IsI_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
-                    if (ligneMessage.IsI_SOLDATS_RAVITAILLESNull()) { ligneMessageAncien.SetI_SOLDATS_RAVITAILLESNull(); }
-                    if (ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NB_HEURES_FORTIFICATIONNull(); }
-                    if (ligneMessage.IsI_NIVEAU_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NIVEAU_FORTIFICATIONNull(); }
-                    if (ligneMessage.IsI_DUREE_HORS_COMBATNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
-                    if (ligneMessage.IsI_TOUR_BLESSURENull()) { ligneMessageAncien.SetI_TOUR_BLESSURENull(); }
-                    if (ligneMessage.IsC_NIVEAU_DEPOTNull()) { ligneMessageAncien.SetC_NIVEAU_DEPOTNull(); }
-
-                    ligneMessage.Delete();
-                }
-                else
-                {
-                    i++;
-                }
-            }
-
-            #region suppression des anciens ordres, pas facile a suivre ensuite
-            i = 0;
-            while (i < Donnees.m_donnees.TAB_ORDRE.Count())
-            {
-                bool bdetruire = false;
-                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE[i];
-                if (!ligneOrdre.IsI_TOUR_FINNull())
-                {
-                    bdetruire = true;
-                }
-                else
-                {
-                    if (!ligneOrdre.IsID_PIONNull())
-                    {
-                        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
-                        if (lignePion.B_DETRUIT)
-                        {
-                            bdetruire = true;
-                            if (!ligneOrdre.IsID_ORDRE_TRANSMISNull())
-                            {
-                                Donnees.TAB_ORDRERow ligneOrdreTransmis = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(ligneOrdre.ID_ORDRE_TRANSMIS);
-                                if (null != ligneOrdreTransmis) DeplacerOrdreAncienVersNouveau(ligneOrdreTransmis);
-                            }
-                        }
-                    }
-                }
-                if (bdetruire)
-                {
-                    DeplacerOrdreAncienVersNouveau(ligneOrdre);
-                }
-                else
-                {
-                    i++;
-                }
-            }
-            #endregion
+            #region Suppression des pions
             /* complexe aussi sur les pions, quand on remonte sur proprietaire dans sauvegardeMesage de ClassVaocWebFichier, il faut des fois être sur un ancien des fois non et pas possible
              *  a priori de faire un cast automatique entre les deux */
             //On commence par ajouter tous les pions elligibles
@@ -5599,6 +5567,173 @@ namespace vaoc
                 lignePion.Delete();
                 i++;
             }
+            #endregion
+
+            #region Backup des messages
+            int tourSansEnvoi = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
+            //Liste de tous les messages elligibles à la destruction
+            List<int> listeArchiveMessages = new List<int>();
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
+            {
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+                //attention il faut aussi garder le dernier ordre reçu par chaque unité sinon, celle-ci ne s'affiche plus dans la mise à jour web !
+                if (!ligneMessage.IsI_TOUR_ARRIVEENull() && ligneMessage.I_TOUR_ARRIVEE != Constantes.NULLENTIER && ligneMessage.I_TOUR_ARRIVEE < tourSansEnvoi)
+                {
+                    listeArchiveMessages.Add(ligneMessage.ID_MESSAGE);
+                }
+                i++;
+
+            }
+            //on vérifie que toutes les unités restantes ont conserve bien le dernier message sinon, on le remets !
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_PION.Count())
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
+                if (null != ligneMessage) { listeArchiveMessages.Remove(ligneMessage.ID_MESSAGE); }
+
+                if (!lignePion.IsID_ANCIEN_PION_PROPRIETAIRENull())
+                {
+                    ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                    if (null!= ligneMessage) { listeArchiveMessages.Remove(ligneMessage.ID_MESSAGE); }
+                }
+                if (!lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull())
+                {
+                    ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_NOUVEAU_PION_PROPRIETAIRE);
+                    if (null != ligneMessage) { listeArchiveMessages.Remove(ligneMessage.ID_MESSAGE); }
+                }
+                i++;
+            }
+
+            //on retire effectivement les messages
+            i = 0;
+            while (i < listeArchiveMessages.Count())
+            {
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.FindByID_MESSAGE(listeArchiveMessages[i]);
+                Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncien = Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
+                    ligneMessage.ID_MESSAGE,
+                    ligneMessage.ID_PION_EMETTEUR,
+                    ligneMessage.ID_PION_PROPRIETAIRE,
+                    ligneMessage.I_TYPE,
+                    ligneMessage.IsI_TOUR_ARRIVEENull() ? -1 : ligneMessage.I_TOUR_ARRIVEE,
+                    ligneMessage.IsI_PHASE_ARRIVEENull() ? -1 : ligneMessage.I_PHASE_ARRIVEE,
+                    ligneMessage.IsI_TOUR_DEPARTNull() ? -1 : ligneMessage.I_TOUR_DEPART,
+                    ligneMessage.IsI_PHASE_DEPARTNull() ? -1 : ligneMessage.I_PHASE_DEPART,
+                    ligneMessage.IsS_TEXTENull() ? "" : ligneMessage.S_TEXTE,
+                    ligneMessage.IsI_INFANTERIENull() ? -1 : ligneMessage.I_INFANTERIE,
+                    ligneMessage.IsI_CAVALERIENull() ? -1 : ligneMessage.I_CAVALERIE,
+                    ligneMessage.IsI_ARTILLERIENull() ? -1 : ligneMessage.I_ARTILLERIE,
+                    ligneMessage.IsI_FATIGUENull() ? -1 : ligneMessage.I_FATIGUE,
+                    ligneMessage.IsI_MORALNull() ? -1 : ligneMessage.I_MORAL,
+                    ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_TOUR_SANS_RAVITAILLEMENT,
+                    ligneMessage.IsID_BATAILLENull() ? -1 : ligneMessage.ID_BATAILLE,
+                    ligneMessage.IsI_ZONE_BATAILLENull() ? -1 : ligneMessage.I_ZONE_BATAILLE,
+                    ligneMessage.IsI_RETRAITENull() ? -1 : ligneMessage.I_RETRAITE,
+                    ligneMessage.B_DETRUIT,
+                    ligneMessage.ID_CASE,
+                    ligneMessage.IsID_CASE_DEBUTNull() ? -1 : ligneMessage.ID_CASE_DEBUT,
+                    ligneMessage.IsID_CASE_FINNull() ? -1 : ligneMessage.ID_CASE_FIN,
+                    ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_JOUR,
+                    ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull() ? -1 : ligneMessage.I_NB_PHASES_MARCHE_NUIT,
+                    ligneMessage.IsI_NB_HEURES_COMBATNull() ? -1 : ligneMessage.I_NB_HEURES_COMBAT,
+                    ligneMessage.IsI_MATERIELNull() ? -1 : ligneMessage.I_MATERIEL,
+                    ligneMessage.IsI_RAVITAILLEMENTNull() ? -1 : ligneMessage.I_RAVITAILLEMENT,
+                    ligneMessage.IsI_SOLDATS_RAVITAILLESNull() ? -1 : ligneMessage.I_SOLDATS_RAVITAILLES,
+                    ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull() ? -1 : ligneMessage.I_NB_HEURES_FORTIFICATION,
+                    ligneMessage.IsI_NIVEAU_FORTIFICATIONNull() ? -1 : ligneMessage.I_NIVEAU_FORTIFICATION,
+                    ligneMessage.IsI_DUREE_HORS_COMBATNull() ? -1 : ligneMessage.I_DUREE_HORS_COMBAT,
+                    ligneMessage.IsI_TOUR_BLESSURENull() ? -1 : ligneMessage.I_TOUR_BLESSURE,
+                    ligneMessage.IsC_NIVEAU_DEPOTNull() ? 'X' : ligneMessage.C_NIVEAU_DEPOT
+                    );
+
+                if (ligneMessage.IsI_TOUR_ARRIVEENull()) { ligneMessageAncien.SetI_TOUR_ARRIVEENull(); }
+                if (ligneMessage.IsI_PHASE_ARRIVEENull()) { ligneMessageAncien.SetI_PHASE_ARRIVEENull(); }
+                if (ligneMessage.IsI_TOUR_DEPARTNull()) { ligneMessageAncien.SetI_TOUR_DEPARTNull(); }
+                if (ligneMessage.IsI_PHASE_DEPARTNull()) { ligneMessageAncien.SetI_PHASE_DEPARTNull(); }
+                if (ligneMessage.IsS_TEXTENull()) { ligneMessageAncien.SetS_TEXTENull(); }
+                if (ligneMessage.IsI_INFANTERIENull()) { ligneMessageAncien.SetI_INFANTERIENull(); }
+                if (ligneMessage.IsI_CAVALERIENull()) { ligneMessageAncien.SetI_CAVALERIENull(); }
+                if (ligneMessage.IsI_ARTILLERIENull()) { ligneMessageAncien.SetI_ARTILLERIENull(); }
+                if (ligneMessage.IsI_FATIGUENull()) { ligneMessageAncien.SetI_FATIGUENull(); }
+                if (ligneMessage.IsI_MORALNull()) { ligneMessageAncien.SetI_MORALNull(); }
+                if (ligneMessage.IsI_TOUR_SANS_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_TOUR_SANS_RAVITAILLEMENTNull(); }
+                if (ligneMessage.IsID_BATAILLENull()) { ligneMessageAncien.SetID_BATAILLENull(); }
+                if (ligneMessage.IsI_ZONE_BATAILLENull()) { ligneMessageAncien.SetI_ZONE_BATAILLENull(); }
+                if (ligneMessage.IsI_RETRAITENull()) { ligneMessageAncien.SetI_RETRAITENull(); }
+                if (ligneMessage.IsID_CASE_DEBUTNull()) { ligneMessageAncien.SetID_CASE_DEBUTNull(); }
+                if (ligneMessage.IsID_CASE_FINNull()) { ligneMessageAncien.SetID_CASE_FINNull(); }
+                if (ligneMessage.IsI_NB_PHASES_MARCHE_JOURNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_JOURNull(); }
+                if (ligneMessage.IsI_NB_PHASES_MARCHE_NUITNull()) { ligneMessageAncien.SetI_NB_PHASES_MARCHE_NUITNull(); }
+                if (ligneMessage.IsI_NB_HEURES_COMBATNull()) { ligneMessageAncien.SetI_NB_HEURES_COMBATNull(); }
+                if (ligneMessage.IsI_MATERIELNull()) { ligneMessageAncien.SetI_MATERIELNull(); }
+                if (ligneMessage.IsI_RAVITAILLEMENTNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
+                if (ligneMessage.IsI_SOLDATS_RAVITAILLESNull()) { ligneMessageAncien.SetI_SOLDATS_RAVITAILLESNull(); }
+                if (ligneMessage.IsI_NB_HEURES_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NB_HEURES_FORTIFICATIONNull(); }
+                if (ligneMessage.IsI_NIVEAU_FORTIFICATIONNull()) { ligneMessageAncien.SetI_NIVEAU_FORTIFICATIONNull(); }
+                if (ligneMessage.IsI_DUREE_HORS_COMBATNull()) { ligneMessageAncien.SetI_DUREE_HORS_COMBATNull(); }
+                if (ligneMessage.IsI_TOUR_BLESSURENull()) { ligneMessageAncien.SetI_TOUR_BLESSURENull(); }
+                if (ligneMessage.IsC_NIVEAU_DEPOTNull()) { ligneMessageAncien.SetC_NIVEAU_DEPOTNull(); }
+
+                ligneMessage.Delete();
+                i++;
+            }
+            #endregion
+
+            #region suppression des anciens ordres, pas facile a suivre ensuite
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_ORDRE.Count())
+            {
+                bool bdetruire = false;
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE[i];
+                if (!ligneOrdre.IsI_TOUR_FINNull())
+                {
+                    //on ne retire l'ordre terminée que si le joueur sait que l'ordre a été terminé, sinon, il faut continuer à lui donner l'information
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+                    Donnees.TAB_ORDRERow ligneOrdreEnCours = null;
+                    if (null != lignePion) 
+                    {
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
+                        if (null != ligneMessage)
+                        {
+                            ligneOrdreEnCours = lignePion.OrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
+                        }
+                    }
+                    if (null == lignePion ||  null== ligneOrdreEnCours  || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE)
+                    {
+                        bdetruire = true;
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Ne pas détruire ordre " + ligneOrdre.ID_ORDRE);
+                    }
+                }
+                else
+                {
+                    if (!ligneOrdre.IsID_PIONNull())
+                    {
+                        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+                        if (null==lignePion || lignePion.B_DETRUIT)
+                        {
+                            bdetruire = true;
+                            if (!ligneOrdre.IsID_ORDRE_TRANSMISNull())
+                            {
+                                Donnees.TAB_ORDRERow ligneOrdreTransmis = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(ligneOrdre.ID_ORDRE_TRANSMIS);
+                                if (null != ligneOrdreTransmis) DeplacerOrdreAncienVersNouveau(ligneOrdreTransmis);
+                            }
+                        }
+                    }
+                }
+                if (bdetruire)
+                {
+                    DeplacerOrdreAncienVersNouveau(ligneOrdre);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            #endregion
 
             void RetraitUniteProprietaire(ref List<int> listeUnites, int ID_PROPRIETAIRE)
             {
@@ -5609,7 +5744,6 @@ namespace vaoc
                     listeArchiveUnites.Remove(ID_PROPRIETAIRE);
                 }
             }
-            #endregion
         }
     }
 }

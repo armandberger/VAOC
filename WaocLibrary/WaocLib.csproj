@@ -81,6 +81,7 @@
     <Compile Include="VaocPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Verrou.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

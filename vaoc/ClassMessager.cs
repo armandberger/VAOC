@@ -1385,11 +1385,11 @@ namespace vaoc
                 //        var result = from Modele in Donnees.m_donnees.TAB_MODELE_PION
                 //                     where Modele.ID_MODELE_PION==idmodele
                 //                     select Modele.ID_MODELE_PION;
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //dans de rares cas, le destinataire peut bouger entre la création du messager et celle de l'ordre ce qui provoque des erreurs de mouvement
                 lignePionMessager = CreerMessager(lignePionEmetteur);
                 int id_Case_Destination = (idCaseDestination.HasValue) ? idCaseDestination.Value : lignePionDestinataire.ID_CASE;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (null!=lignePionMessager)
                 {
                     //il faut ajouter le message 
@@ -1568,7 +1568,7 @@ namespace vaoc
             if (idModeleMESSAGER >= 0)
             {
                 //on a trouvé le modèle, il faut créer le pion associé
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePionMessager = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     idModeleMESSAGER,
                     lignePionEmetteur.ID_PION, //lignePionEmetteur.ID_PION_PROPRIETAIRE, ne peut pas être bon, des fois, c'est "0" le propriétaire
@@ -1623,7 +1623,7 @@ namespace vaoc
                 lignePionMessager.SetID_DEPOT_SOURCENull();
                 lignePionMessager.SetI_TRINull();
                 lignePionMessager.SetI_TOUR_ENNEMI_OBSERVABLENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             return lignePionMessager;
@@ -2482,6 +2482,9 @@ namespace vaoc
                                     break;
                                 case Constantes.ORDRES.SEFORTIFIER:
                                     unitesEnvironnantes += " construisant des fortifications";
+                                    break;
+                                case Constantes.ORDRES.SUIVRE_UNITE:
+                                    unitesEnvironnantes += "suivant une unité";
                                     break;
                                 default:
                                     LogFile.Notifier("PionsEnvironnants Ordre inconnu reçu");

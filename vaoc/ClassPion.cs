@@ -107,11 +107,11 @@ namespace vaoc
                 //être incrementé automatiquement à cause de la bascule des pions de TAB_RENFORT vers TAB_PION
                 LogFile.Notifier("AjouterPion:AddTAB_PIONRow");
                 string tri = "ID_PION DESC";
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 TAB_PIONRow[] resCout = (TAB_PIONRow[])Select(string.Empty, tri);
                 if (0 == resCout.Length)
                 {
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return null;
                 }
                 TAB_PIONRow rowTAB_PIONRow = ((TAB_PIONRow)(this.NewRow()));
@@ -182,7 +182,7 @@ namespace vaoc
                 };
                 rowTAB_PIONRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_PIONRow);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return rowTAB_PIONRow;
             }
         }
@@ -199,9 +199,9 @@ namespace vaoc
                 {
                     //on recherche le pion de remplacement
                     string requete = string.Format("ID_PION_REMPLACE = {0}", ID_PION);
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     TAB_PIONRow[] resPions = (TAB_PIONRow[])m_donnees.TAB_PION.Select(requete);
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     if (resPions.Length <= 0)
                     {
                         return null;
@@ -785,10 +785,10 @@ namespace vaoc
                             {
                                 bRetour = ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_SANS_ENNEMI_OBSERVE);
                             }
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             this.S_ENNEMI_OBSERVABLE = sObservable;
                             this.I_TOUR_ENNEMI_OBSERVABLE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         }
                     }
                     return bRetour;
@@ -861,11 +861,11 @@ namespace vaoc
 
             public void DetruirePion()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 B_DETRUIT = true;
                 I_ARTILLERIE = 0;//pas toujours remis à zéro quand l'unité est surtout composé de cavalerie et d'infanterie
                 I_MORAL = 0; //ainsi, les blessés légers d'une bataille sont mis automatiquement en bléssés graves (sinon, l'unité pourrait "renaitre" post bataille)
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 DetruireEspacePion();
             }
 
@@ -1010,35 +1010,42 @@ namespace vaoc
                 TerminerOrdre(ligneOrdre, false, false);
             }
 
-            public string DescriptifOrdreEnCours(int tour, int phase)
+            /// <summary>
+            /// recherche de l'ordre courant de l'unité au moment du dernier message
+            /// </summary>
+            /// <param name="tour"></param>
+            /// <param name="phase"></param>
+            /// <returns></returns>
+            public Donnees.TAB_ORDRERow OrdreEnCours(int tour, int phase)
             {
-                string sOrdreCourant, requete;
-                //recherche de l'ordre courant de l'unité au moment du dernier message
+                Donnees.TAB_ORDRERow ligneOrdreEnCours = null;
                 //requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND I_PHASE_DEBUT<={2} AND ((I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL) OR (I_TOUR_FIN>{1} AND I_PHASE_FIN>{2}))",
                 //    lignePion.ID_PION, ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
                 //string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN IS NULL) OR (I_TOUR_FIN>{1}))", lignePion.ID_PION, tour);
-                requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN = {3}) OR (I_TOUR_FIN>{1}) OR (I_TOUR_FIN={1} AND I_PHASE_FIN>{2}))",
+                string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN = {3}) OR (I_TOUR_FIN>{1}) OR (I_TOUR_FIN={1} AND I_PHASE_FIN>{2}))",
                                              this.ID_PION, tour, phase, Constantes.NULLENTIER);
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "ID_ORDRE");
-                if (0 == resOrdre.Length)
+                if (resOrdre.Length>0)
                 {
-                    sOrdreCourant = "aucun ordre";
-                }
-                else
-                {
-                    sOrdreCourant = string.Empty;
                     int o = 0;
-                    while (sOrdreCourant == string.Empty && o < resOrdre.Length)
+                    while (null == ligneOrdreEnCours && o < resOrdre.Length)
                     {
                         //c'est seulement si l'ordre est dans le même tour que le message que la valeur de la phase intervient
                         if ((resOrdre[o].I_TOUR_DEBUT != tour) ||
-                            (resOrdre[o].I_PHASE_DEBUT <= phase && (resOrdre[o].IsI_PHASE_FINNull() || resOrdre[o].I_PHASE_FIN > phase || resOrdre[o].I_TOUR_FIN>tour)))
+                            (resOrdre[o].I_PHASE_DEBUT <= phase && (resOrdre[o].IsI_PHASE_FINNull() || resOrdre[o].I_PHASE_FIN > phase || resOrdre[o].I_TOUR_FIN > tour)))
                         {
-                            sOrdreCourant = ClassMessager.MessageDecrivantUnOrdre(resOrdre[o], false);
+                            ligneOrdreEnCours = resOrdre[o];
                         }
                         o++;
                     }
                 }
+                return ligneOrdreEnCours;
+            }
+            public string DescriptifOrdreEnCours(int tour, int phase)
+            {
+                Donnees.TAB_ORDRERow ligneOrdreEnCours = OrdreEnCours(tour, phase);
+                string sOrdreCourant;
+                sOrdreCourant = (null == ligneOrdreEnCours) ? "aucun ordre" : ClassMessager.MessageDecrivantUnOrdre(ligneOrdreEnCours, false);
                 return sOrdreCourant;
             }
 
@@ -1448,9 +1455,9 @@ namespace vaoc
                     //Il n'y a pas d'ordre à terminer en fait
                     return true;
                 }
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_DISTANCE_A_PARCOURIR = 0;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
@@ -1668,7 +1675,7 @@ namespace vaoc
                 else
                 {
                     nomDepot = ligneDepot.S_NOM;
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     ligneDepot.I_SOLDATS_RAVITAILLES += effectifsRavitailles;
                     ligneDepot.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                     //on ravitaille l'unité et on informe le joueur
@@ -1679,6 +1686,7 @@ namespace vaoc
                     {
                         message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT dans RavitaillementDirect", S_NOM, ID_PION);
                         LogFile.Notifier(message);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         return false;
                     }
                     this.I_RAVITAILLEMENT = meilleurPourcentageRavitaillement;
@@ -1698,6 +1706,7 @@ namespace vaoc
                                 {
                                     message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_REDUIT dans RavitaillementDirect", ligneDepot.S_NOM, ligneDepot.ID_PION);
                                     LogFile.Notifier(message);
+                                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
                             }
@@ -1708,13 +1717,14 @@ namespace vaoc
                                 {
                                     message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_DETRUIT dans RavitaillementDirect", ligneDepot.S_NOM, ligneDepot.ID_PION);
                                     LogFile.Notifier(message);
+                                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
                                 ligneDepot.DetruirePion();
                             }
                         }
                     }
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 //l'ordre est terminé
                 TerminerOrdre(ligneOrdre, false, true);
@@ -2872,7 +2882,7 @@ namespace vaoc
                     return null;
                 }
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Donnees.TAB_PIONRow lignePionRemplacant = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -2941,6 +2951,7 @@ namespace vaoc
                 if (null == lignePionRemplacant)
                 {
                     LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_PIONRow");
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return null;
                 }
 
@@ -2969,7 +2980,7 @@ namespace vaoc
                     {
                         Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                         LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_BATAILLE_PIONSRow");
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         return null;
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
@@ -3024,7 +3035,7 @@ namespace vaoc
                 lignePionRemplacant.SetID_DEPOT_SOURCENull();
                 lignePionRemplacant.SetI_TRINull();
                 lignePionRemplacant.SetI_TOUR_ENNEMI_OBSERVABLENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 return lignePionRemplacant;
             }
 
@@ -3056,7 +3067,7 @@ namespace vaoc
                 }
 
                 //copie de l'ancien chef comme nouveau pion, blessé
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                 Donnees.TAB_PIONRow ligneAncienPion = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
@@ -3124,7 +3135,7 @@ namespace vaoc
 
                 if (null == ligneAncienPion)
                 {
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                     LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_PIONRow");
                     return null;
                 }
@@ -3162,7 +3173,7 @@ namespace vaoc
                 ligneAncienPion.SetID_LIEU_RATTACHEMENTNull();
                 ligneAncienPion.SetID_PION_ESCORTENull();
                 ligneAncienPion.SetID_DEPOT_SOURCENull();
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
 
                 return ligneAncienPion;
             }
@@ -3176,10 +3187,10 @@ namespace vaoc
                 ligneOrdre.I_EFFECTIF_DEPART = 0;
                 ligneOrdre.I_EFFECTIF_DESTINATION = this.effectifTotalEnMouvement;
                 Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 ID_CASE = ligneOrdre.ID_CASE_DESTINATION;
                 I_DISTANCE_A_PARCOURIR = 0;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //placer l'unité sur la carte
                 //la zone d'arrivée devient la zone de depart pour le placement des troupes
                 Donnees.m_donnees.TAB_ESPACE.DeplacerEspacePion(ID_PION, AStar.CST_DESTINATION);
@@ -3229,7 +3240,7 @@ namespace vaoc
                     }
                     else
                     {
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         ID_LIEU_RATTACHEMENT = lignePrison.ID_NOM;
 
                         //Maintenant on crée le pion de renfort venant de l'escorte
@@ -3246,7 +3257,7 @@ namespace vaoc
                         pionRenfort.I_FATIGUE = I_FATIGUE;//même fatigue que l'unité d'origine
                         pionRenfort.I_MATERIEL = I_MATERIEL_ESCORTE;
                         pionRenfort.I_RAVITAILLEMENT = I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qu'ils escortaient
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on supprimer le pion prisonniers d'origine
                         //on fait comme si le pion de prisonniers source était détruit sinon il va rester actif partout !
@@ -3288,10 +3299,10 @@ namespace vaoc
                         }
                         else
                         {
-                            Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             ID_LIEU_RATTACHEMENT = ligneHopital.ID_NOM;
                             I_TOUR_BLESSURE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                            Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                            Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             this.DetruirePion();//on fait comme si le pion était détruit sinon il va rester actif partout !
                                                 //on envoie le message après ,sinon le pion reste visible (non détruit)
                             if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_BLESSES_ARRIVE_A_DESTINATION))
@@ -3591,7 +3602,7 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePionConvoi = null;
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
                 lignePionConvoi = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     -1,//idModeleCONVOI,
                     lignePionProprietaire.ID_PION,
@@ -3646,7 +3657,6 @@ namespace vaoc
                 lignePionConvoi.SetI_TRINull();
                 lignePionConvoi.SetI_TOUR_ENNEMI_OBSERVABLENull();
 
-
                 if (bBlesses)
                 {
                     lignePionConvoi.S_NOM = "Blessés de la " + S_NOM;
@@ -3676,7 +3686,7 @@ namespace vaoc
                         }
                     }
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 /* finalement non, certains joueurs préférant envoyer leurs convois/blessés ailleurs que le lieu de création, il faut donc imposer au moins un mouvement avant de rejoindre un hopital ou une prison.
                 if (bBlesses || bPrisonniers)
                 {
@@ -3737,9 +3747,9 @@ namespace vaoc
                             return false;
                         }
                     }
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_INTERCEPTION = true;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 return true;
             }
@@ -4077,17 +4087,17 @@ namespace vaoc
                 {
                     //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                     //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     SetID_ANCIEN_PION_PROPRIETAIRENull();
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
                 if (ligneMessage.I_TYPE == (int)ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT)
                 {
                     //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                     //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     SetID_NOUVEAU_PION_PROPRIETAIRENull();
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
             }
 
@@ -4105,12 +4115,12 @@ namespace vaoc
 
                 //Tant qu'id ancien proprietaire est renseigné, l'ancien propriétaire doit continuer à voir l'unité dans son bilan
                 //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 ID_ANCIEN_PION_PROPRIETAIRE = ID_PION_PROPRIETAIRE;
                 //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                 //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
                 ID_NOUVEAU_PION_PROPRIETAIRE = idPionNouveauProprietaire;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //prévenir l'ancier proprietaire du transfert
                 if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_A_PERDU_TRANSFERT))
@@ -4120,9 +4130,9 @@ namespace vaoc
                     return false;
                 }
 
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 ID_PION_PROPRIETAIRE = idPionNouveauProprietaire;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_A_RECU_TRANSFERT))
                 {
@@ -4161,19 +4171,19 @@ namespace vaoc
                     {
                         return DestructionAuContact(lignePionEnnemi);
                     }
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
                 }
                 if (estBlesses)
                 {
                     //Le convoi devient un convoi de prisonniers
-                    Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_BLESSES = false;
                     B_PRISONNIERS = true;
                     S_NOM = "Prisonniers de " + S_NOM;
-                    Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     CreerEscorte(lignePionEnnemi, this);
                 }
                 else
@@ -4188,7 +4198,7 @@ namespace vaoc
                         }
 
                         //Le convoi devient un convoi de renfort, il n'y a plus d'escorte
-                        Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         B_PRISONNIERS = false;
                         B_RENFORT = true;
                         I_INFANTERIE_ESCORTE = 0;
@@ -4196,7 +4206,7 @@ namespace vaoc
                         I_MATERIEL_ESCORTE = 0;
                         SetID_PION_ESCORTENull();
                         S_NOM = "Renfort de " + S_NOM;
-                        Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     }
                 }
                 //le pion change maintenant de proprietaire, celui-ci est affecté au proprietaire du pion de capture
@@ -4254,10 +4264,10 @@ namespace vaoc
                 {
                     return DestructionAuContact(lignePionEnnemi);
                 }
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 C_NIVEAU_DEPOT++;// 'A' c'est le meilleur, 'D' le pire
                 idNationCaptureur = lignePionEnnemi.idNation;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //Tout dépôt capturé est attribué au leader de niveau A de l'unité effectuant la capture
                 /* -> plus maintenant, n'importe quel chef peut diriger un dépôt
@@ -4267,7 +4277,7 @@ namespace vaoc
 
                 requete = "C_NIVEAU_HIERARCHIQUE = 'A'";
                 Donnees.TAB_PIONRow[] lignesPion = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Derrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                 //on garde le premier QG de la bonne nationalité
                 foreach (Donnees.TAB_PIONRow lignePion in lignesPion)
@@ -4319,7 +4329,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePionProprietaire = lignePionQuiCapture.proprietaire;
                 Donnees.TAB_PIONRow lignePionPrisonniers = lignePionQuiCapture.CreerConvoi(lignePionProprietaire, false /*bBlesses */ , true /* bPrisonniers */ , false /* bRenfort*/);
                 //lignePionPrisonniers.S_NOM = "Prisonniers de " + lignePionQuiCapture.S_NOM;
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (estPrisonniers)
                 {
                     //l'unité capturée est elle-même un convoi de prisonniers
@@ -4346,7 +4356,7 @@ namespace vaoc
                 lignePionPrisonniers.I_MATERIEL = 0; // on ne laisse pas de matériel aux prisonniers
                 lignePionPrisonniers.I_RAVITAILLEMENT = lignePionQuiCapture.I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qui les capture
                 lignePionPrisonniers.ID_PION_PROPRIETAIRE = lignePionProprietaire.ID_PION;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 CreerEscorte(lignePionQuiCapture, lignePionPrisonniers);
                 //note : le message de la capture est fait dans "capturePion" en amont
 
@@ -4362,14 +4372,14 @@ namespace vaoc
                 // creation de l'escorte du convoi de prisonniers, c'est à dire réduction des effectifs correspondants de l'unité qui capture
                 // on prélève en priorité des fantassins pour escorter des prisonniers, et, en deuxième choix des cavaliers
                 int nbEscorte = (lignePionPrisonniers.I_INFANTERIE + lignePionPrisonniers.I_CAVALERIE) / 10;
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePionPrisonniers.I_INFANTERIE_ESCORTE = (lignePionQuiCapture.I_INFANTERIE > nbEscorte) ? nbEscorte : lignePionQuiCapture.I_INFANTERIE;
                 nbEscorte -= lignePionPrisonniers.I_INFANTERIE_ESCORTE;
                 lignePionPrisonniers.I_CAVALERIE_ESCORTE = (lignePionQuiCapture.I_CAVALERIE > nbEscorte) ? nbEscorte : lignePionQuiCapture.I_CAVALERIE;
                 lignePionPrisonniers.I_MATERIEL_ESCORTE = lignePionQuiCapture.I_MATERIEL;
                 lignePionQuiCapture.I_INFANTERIE -= lignePionPrisonniers.I_INFANTERIE_ESCORTE;
                 lignePionQuiCapture.I_CAVALERIE -= lignePionPrisonniers.I_CAVALERIE_ESCORTE;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (lignePionQuiCapture.effectifTotal <= 0)
                 {
                     //tout le pion d'origine passe en escorte, cela ne devrait pas arrivée souvent j'espère !
@@ -4859,16 +4869,16 @@ namespace vaoc
 
             internal void SetID_ANCIEN_PION_PROPRIETAIRENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_ANCIEN_PION_PROPRIETAIRE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal void SetID_NOUVEAU_PION_PROPRIETAIRENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_NOUVEAU_PION_PROPRIETAIRE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             /******************** Nouveaux *********************/
@@ -4879,9 +4889,9 @@ namespace vaoc
 
             internal void SetID_DEPOT_SOURCENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_DEPOT_SOURCE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_PION_REMPLACENull()
@@ -4891,9 +4901,9 @@ namespace vaoc
 
             internal void SetID_PION_REMPLACENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_PION_REMPLACE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             //todo
@@ -4909,9 +4919,9 @@ namespace vaoc
 
             internal void SetI_TOUR_BLESSURENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TOUR_BLESSURE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_LIEU_RATTACHEMENTNull()
@@ -4921,9 +4931,9 @@ namespace vaoc
 
             internal void SetID_LIEU_RATTACHEMENTNull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_LIEU_RATTACHEMENT = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsID_PION_ESCORTENull()
@@ -4933,9 +4943,9 @@ namespace vaoc
 
             internal void SetID_PION_ESCORTENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_PION_ESCORTE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
@@ -4945,9 +4955,9 @@ namespace vaoc
 
             internal void SetI_TOUR_DERNIER_RAVITAILLEMENT_DIRECTNull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TOUR_DERNIER_RAVITAILLEMENT_DIRECT = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal bool IsI_VICTOIRENull()
@@ -4967,16 +4977,16 @@ namespace vaoc
 
             internal void SetID_BATAILLENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.ID_BATAILLE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal void SetI_ZONE_BATAILLENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_ZONE_BATAILLE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
 
             internal string NomDeLaPatrouille()
@@ -4992,9 +5002,9 @@ namespace vaoc
 
             internal void SetI_TRINull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TRI = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
             /*
             internal bool IsI_TOUR_ENNEMI_OBSERVABLENull()
@@ -5004,9 +5014,9 @@ namespace vaoc
             }
             internal void SetI_TOUR_ENNEMI_OBSERVABLENull()
             {
-                Monitor.Enter(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 this.I_TOUR_ENNEMI_OBSERVABLE = Constantes.NULLENTIER;
-                Monitor.Exit(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Verrou.Derrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
             */
         }

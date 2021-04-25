@@ -3893,7 +3893,8 @@ namespace vaoc
                     else
                     {
                         perf = DateTime.Now - timeStart;
-                        labelInformationTempsPasse.Text += string.Format("\r\n HPA : {0} min {1} sec {2} mil cout:{3}", perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal);
+                        labelInformationTempsPasse.Text += string.Format("\r\n HPA : {0} min {1} sec {2} mil cout:{3} distance:{4}", 
+                            perf.Minutes, perf.Seconds, perf.Milliseconds, m_etoileHPA.CoutGlobal, (decimal)chemin.Count / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE);
                         m_cheminHPA = m_etoileHPA.PathByNodes;
                     }
                     lignePion.ID_CASE = id_case;

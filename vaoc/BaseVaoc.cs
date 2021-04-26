@@ -503,6 +503,28 @@ namespace vaoc
             }
         }
 
+        partial class TAB_ORDRE_ANCIENDataTable
+        {
+            /// <summary>
+            ///  Renvoi l'ordre correspondant à un identifiant du web
+            /// </summary>
+            /// <param name="ID_ORDREWEB">identifiant de l'ordre du web</param>
+            /// <returns>ordre Web, null si aucun</returns>
+            public TAB_ORDRE_ANCIENRow OrdreWeb(int ID_ORDREWEB)
+            {
+                TAB_ORDRE_ANCIENRow ligneOrdreRetour = null;
+                string requete = string.Format("ID_ORDRE_WEB={0}", ID_ORDREWEB);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE_ANCIEN.Rows.SyncRoot);
+                TAB_ORDRE_ANCIENRow[] resOrdre = (TAB_ORDRE_ANCIENRow[])Select(requete);
+                if (0 != resOrdre.Length)
+                {
+                    ligneOrdreRetour = resOrdre[0];
+                }
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE_ANCIEN.Rows.SyncRoot);
+                return ligneOrdreRetour;
+            }
+        }
+
         partial class TAB_ORDREDataTable
         {
             //public int ProchainID_ORDRE

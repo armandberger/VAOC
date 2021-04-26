@@ -2163,7 +2163,8 @@ namespace vaoc
                 //if (message.ID_MESSAGE > ligneMessageMax[0].ID_MESSAGE), non fiable, même après un clear, le compteur ID ne repart pas à zéro
                 //if (tourDepart>=tourMax && phaseDepart>phaseMax) ->pour le forum en cours de partie, ne marche pas, phaseMax peut être égal à 100
                 Donnees.TAB_MESSAGERow ligneMessagePresent = Donnees.m_donnees.TAB_MESSAGE.FindByID_MESSAGE(message.ID_MESSAGE);
-                if (null== ligneMessagePresent)
+                Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncienPresent = (null== ligneMessagePresent) ? Donnees.m_donnees.TAB_MESSAGE_ANCIEN.FindByID_MESSAGE(message.ID_MESSAGE) : null;
+                if (null== ligneMessagePresent && null== ligneMessageAncienPresent)
                 {
                     Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(message.ID_EMETTEUR);
                     if (null == lignePionEmetteur)
@@ -2261,6 +2262,7 @@ namespace vaoc
             //string message, messageErreur;
             int tourDernierOrdre = -1;//pour s'assurer que l'on a bon fichier d'ordres !
             Donnees.TAB_ORDRERow ligneOrdreWeb;
+            Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncienWeb;
             //int id_ordre_suivant;
 
             LogFile.Notifier("Debut NouveauxOrdres");
@@ -2324,8 +2326,9 @@ namespace vaoc
                 //si l'ordre a bien été envoyé à ce tour et n'est pas déjà inclus dans la table, bref s'il s'agit d'un nouvel
                 //ordre saisie par un joueur, on l'ajoute
                 ligneOrdreWeb = Donnees.m_donnees.TAB_ORDRE.OrdreWeb(ordre.ID_ORDRE);
+                ligneOrdreAncienWeb = (null==ligneOrdreWeb) ? Donnees.m_donnees.TAB_ORDRE_ANCIEN.OrdreWeb(ordre.ID_ORDRE) : null;
                 tourDernierOrdre = Math.Max(tourDernierOrdre, ordre.I_TOUR);
-                if ((Donnees.m_donnees.TAB_PARTIE[0].I_TOUR == ordre.I_TOUR) && null == ligneOrdreWeb)
+                if ((Donnees.m_donnees.TAB_PARTIE[0].I_TOUR == ordre.I_TOUR) && null == ligneOrdreWeb && null== ligneOrdreAncienWeb)
                 {
                     //si l'ordre est l'ordre suivant d'un autre, on ne fait rien, ce sera traité sur l'ordre général parent
                     //int o = 0;

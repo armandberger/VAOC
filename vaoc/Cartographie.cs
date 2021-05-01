@@ -726,7 +726,7 @@ namespace vaoc
                 LogFile.Notifier(message, out messageErreur);
 
                 int heureCourante = Donnees.m_donnees.TAB_PARTIE.HeureCourante();
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne() || Donnees.m_donnees.TAB_PARTIE.Nocturne(heureCourante + 1) || Donnees.m_donnees.TAB_PARTIE.Nocturne(heureCourante + 2))
+                if (Donnees.m_donnees.TAB_PARTIE.NocturneOuBatailleImpossible())
                 {
                     message = string.Format("NouvelleBataille : pas de nouvelle bataille la nuit ou avant que la nuit tombe pour IDPion={0} sur la idcase={1} ", lignePion.ID_PION, ligneCaseBataille.ID_CASE);
                     //oui, cela peut permettre à des troupes de s'échapper en en traversant d'autres... -> donc, finallement, on arrête le mouvement et on envoie un message, géré dans Rencontre

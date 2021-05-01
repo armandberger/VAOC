@@ -4700,7 +4700,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePionBlocage = Donnees.m_donnees.TAB_PION.FindByID_PION(IdNouveauProprietaire);
 
                 //BEA 23/03/2021, on doit prendre en compte les unités démoralisées comme combattives, sinon, la nuit, l'ennemi peut traverser les lignes
-                if (lignePion.estEnnemi(lignePionBlocage) && lignePionBlocage.estCombattifQG(false, true) && Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                if (lignePion.estEnnemi(lignePionBlocage) && lignePionBlocage.estCombattifQG(false, true) && Donnees.m_donnees.TAB_PARTIE.NocturneOuBatailleImpossible())
                 {
                     //pas de combat la nuit, mais l'avancement est bloqué, il faut l'indiquer au joueur
                     //a-t-on déjà envoyé un message pour prévenir mon supérieur recemment ?                            

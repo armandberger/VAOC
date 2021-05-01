@@ -1771,6 +1771,15 @@ namespace vaoc
             }
 
             /// <summary>
+            /// Indique s'il fait nuit ou s'il est trop tard pour déclencher une bataille
+            /// </summary>
+            /// <returns></returns>
+            public bool NocturneOuBatailleImpossible()
+            {
+                int heureCourante = Donnees.m_donnees.TAB_PARTIE.HeureCourante();
+                return Donnees.m_donnees.TAB_PARTIE.Nocturne() || Donnees.m_donnees.TAB_PARTIE.Nocturne(heureCourante + 1) || Donnees.m_donnees.TAB_PARTIE.Nocturne(heureCourante + 2);
+            }
+            /// <summary>
             /// Renvoie l'heure courante sur une base 0-23
             /// </summary>
             /// <returns>heure en cours</returns>

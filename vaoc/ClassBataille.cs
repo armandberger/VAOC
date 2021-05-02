@@ -112,7 +112,7 @@ namespace vaoc
                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                     //il faut envoyer un message au propriétaire de l'unité pour indiquer cet ajout
-                    ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE, this);
+                    EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVEE_DANS_BATAILLE);
 
                     message = string.Format("AjouterPionDansLaBataille : ajout du pion {0} à la bataille {1}, defensif={2} sur idcase={3}",
                         lignePion.ID_PION, ID_BATAILLE, bEnDefense, lignePion.ID_CASE);
@@ -241,7 +241,7 @@ namespace vaoc
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille012);
                         }
-                        EnvoyerMessagesVictoireDefaite(lignePionsEnBataille012, lignePionsEnBataille345);
+                        EnvoyerMessageBataillesVictoireDefaite(lignePionsEnBataille012, lignePionsEnBataille345);
                         DesengagementDuVaincu(false);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE012;
                         bVictoire345 = false;
@@ -254,7 +254,7 @@ namespace vaoc
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille345);
                         }
-                        EnvoyerMessagesVictoireDefaite(lignePionsEnBataille345, lignePionsEnBataille012);
+                        EnvoyerMessageBataillesVictoireDefaite(lignePionsEnBataille345, lignePionsEnBataille012);
                         //victoireCombat = VICTOIRECOMBAT.VICTOIRE345;
                         bVictoire012 = false;
                         DesengagementDuVaincu(true);
@@ -301,7 +301,7 @@ namespace vaoc
                             //ligneMessage.SetI_ZONE_BATAILLENull();
 
                             //A la place, j'envoie un message de position
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION))
                             {
                                 return false;
                             }
@@ -655,7 +655,7 @@ namespace vaoc
                 return false;
             }
 
-            private bool EnvoyerMessagesVictoireDefaite(Donnees.TAB_PIONRow[] lignePionsVictoire, Donnees.TAB_PIONRow[] lignePionsDefaite)
+            private bool EnvoyerMessageBataillesVictoireDefaite(Donnees.TAB_PIONRow[] lignePionsVictoire, Donnees.TAB_PIONRow[] lignePionsDefaite)
             {
                 string message;
                 //message indiquant la victoire au vainqueur
@@ -664,46 +664,22 @@ namespace vaoc
                     Donnees.TAB_PIONRow lignePion = lignePionsVictoire[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     
-                    if (ChefPresent(lignePion, lignePionsVictoire))
+                    if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE))
                     {
-                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
-                        {
-                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message);
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_VICTOIRE_EN_BATAILLE, this))
-                        {
-                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message);
-                            return false;
-                        }
+                        message = string.Format("EnvoyerMessageBataillesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                        LogFile.Notifier(message);
+                        return false;
                     }
                 }
                 for (int l = 0; l < lignePionsDefaite.Count(); l++)
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsDefaite[l];
                     if (lignePion.B_DETRUIT) { continue; }
-                    if (ChefPresent(lignePion, lignePionsDefaite))
+                    if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE))
                     {
-                        if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
-                        {
-                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message);
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DEFAITE_EN_BATAILLE, this))
-                        {
-                            message = string.Format("EnvoyerMessagesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                            LogFile.Notifier(message);
-                            return false;
-                        }
+                        message = string.Format("EnvoyerMessageBataillesVictoireDefaite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                        LogFile.Notifier(message);
+                        return false;
                     }
                 }
                 return true;
@@ -724,7 +700,7 @@ namespace vaoc
                     if (moral > 0)
                     {
                         lignePion.I_MORAL = Math.Min(lignePion.I_MORAL + Constantes.CST_GAIN_MORAL_MAITRE_TERRAIN, lignePion.I_MORAL_MAX);
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_GAIN_MORAL_MAITRE_TERRAIN, moral, this))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_GAIN_MORAL_MAITRE_TERRAIN, moral))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
                             LogFile.Notifier(message, out messageErreur);
@@ -745,44 +721,20 @@ namespace vaoc
                     if (lignePion.B_DETRUIT) { continue; }
                     if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante()+1))
                     {
-                        if (ChefPresent(lignePion, lignePionsEnBataille))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT))
                         {
-                            if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
-                            {
-                                message = string.Format("Poursuite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_A_LA_NUIT, this))
-                            {
-                                message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
-                            }
+                            message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message, out messageErreur);
+                            return false;
                         }
                     }
                     else
                     {
-                        if (ChefPresent(lignePion, lignePionsEnBataille))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT))
                         {
-                            if (!ClassMessager.EnvoyerMessageImmediat(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT, this))
-                            {
-                                message = string.Format("Poursuite : erreur lors de l'envoi d'un EnvoyerMessageImmediat MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_FIN_DE_BATAILLE_FAUTE_DE_COMBATTANT, this))
-                            {
-                                message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
-                            }
+                            message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
+                            LogFile.Notifier(message, out messageErreur);
+                            return false;
                         }
                     }
                 }
@@ -846,7 +798,7 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePion = lignePionsPoursuivant[l];
                         if (lignePion.B_DETRUIT) { continue; }
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_POSSIBLE, this))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_POSSIBLE))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_POSSIBLE");
                             LogFile.Notifier(message, out messageErreur);
@@ -858,7 +810,7 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                         if (lignePion.B_DETRUIT) { continue; }
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_RECUE");
                             LogFile.Notifier(message, out messageErreur);
@@ -923,7 +875,7 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePion = lignePionsPoursuivant[l];
                         if (lignePion.B_DETRUIT) { continue; }
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_SANS_EFFET, this))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_SANS_EFFET))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_SANS_EFFET");
                             LogFile.Notifier(message, out messageErreur);
@@ -934,7 +886,7 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                         if (lignePion.B_DETRUIT) { continue; }
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_RECUE");
                             LogFile.Notifier(message, out messageErreur);
@@ -1196,7 +1148,8 @@ namespace vaoc
                     {
                         if (lignePion.B_DETRUIT) { continue; }
                         //note : on ne donne pas le moral perdu par l'ennemi, comment pourrait-il l'estimer ?
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_DESTRUCTION_TOTALE, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this, null))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_DESTRUCTION_TOTALE, 
+                            pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal,0,0,0,null))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_DESTRUCTION_TOTALE");
                             LogFile.Notifier(message, out messageErreur);
@@ -1217,7 +1170,7 @@ namespace vaoc
                     {
                         if (lignePion.B_DETRUIT) { continue; }
                         //note : on ne donne pas le moral perdu par l'ennemi, comment pourrait-il l'estimer ?
-                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVANT, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, this, null))
+                        if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVANT, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 0, 0, 0, null))
                         {
                             message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
                             LogFile.Notifier(message, out messageErreur);
@@ -1237,7 +1190,7 @@ namespace vaoc
                         int pertesRavitaillementPion = listePertesRavitaillement.ContainsKey(lignePion.ID_PION) ? (int)listePertesRavitaillement[lignePion.ID_PION] : 0;
                         if (0 == pertesCavalerieTotal + pertesInfanterieTotal + pertesArtillerieTotal)
                         {
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE, this))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUNE_POURSUITE_RECUE))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_AUCUNE_POURSUITE_RECUE");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1246,8 +1199,8 @@ namespace vaoc
                         }
                         else
                         {
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVI,
-                                pertesInfanteriePion, pertesCavaleriePion, pertesArtilleriePion, pertesMoralPion, pertesMaterielPion, pertesRavitaillementPion, this, null))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_PERTES_POURSUIVI,
+                                pertesInfanteriePion, pertesCavaleriePion, pertesArtilleriePion, pertesMoralPion, pertesMaterielPion, pertesRavitaillementPion, null))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVI");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1258,7 +1211,7 @@ namespace vaoc
                         if (!lignePion.estQG && lignePion.effectifTotal <= 0 && !lignePion.B_DETRUIT)
                         {
                             //pion détruit par la poursuite
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_DETRUIT_PAR_POURSUITE))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_DETRUIT_PAR_POURSUITE))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message pour destruction");
                                 LogFile.Notifier(message, out messageErreur);
@@ -1307,7 +1260,7 @@ namespace vaoc
                                 lignePion.ID_PION, lignePion.S_NOM, materielButin, lignePion.I_MATERIEL, ravitaillementButin, lignePion.I_RAVITAILLEMENT, canonsButin, lignePion.I_ARTILLERIE);
 
                             //envoi d'un message pour prévenir de la prise de butin
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, this, null))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_POURSUITE_BUTIN, 0, 0, canonsButin, 0, ravitaillementButin, materielButin, null))
                             {
                                 message = string.Format("Poursuite : erreur lors de l'envoi d'un message MESSAGE_POURSUITE_PERTES_POURSUIVANT");
                                 LogFile.Notifier(message, out messageErreur);
@@ -2212,7 +2165,7 @@ namespace vaoc
 
                         //on detruit le pion et on envoie un message
                         lignePionEnBataille.DetruirePion();
-                        if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_DETRUITE_AU_COMBAT, this))
+                        if (!EnvoyerMessageBataille(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_DETRUITE_AU_COMBAT))
                         {
                             message = string.Format("CalculDesPertesAuCombat : erreur lors de l'envoi d'un message MESSAGE_DETRUITE_AU_COMBAT");
                             LogFile.Notifier(message, out messageErreur);
@@ -2239,8 +2192,8 @@ namespace vaoc
                     {
                         if (pertesMoral > 0)
                         {
-                            if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_PERTES_AU_COMBAT, 
-                                                            pertesInfanterie, pertesCavalerie, pertesArtillerie, pertesMoral, 0, 0, this, listePionsEnBatailleAttaquant))
+                            if (!EnvoyerMessageBataille(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_PERTES_AU_COMBAT, 
+                                                            pertesInfanterie, pertesCavalerie, pertesArtillerie, pertesMoral, 0, 0, listePionsEnBatailleAttaquant))
                             {
                                 message = string.Format("CalculDesPertesAuCombat : erreur lors de l'envoi d'un message pour perte de moral au combat");
                                 LogFile.Notifier(message, out messageErreur);
@@ -2253,9 +2206,9 @@ namespace vaoc
                 //message indiquant le niveau de pertes infligé à l'ennemi
                 foreach (Donnees.TAB_PIONRow lignePionEnBataille in listePionsEnBatailleAttaquant)
                 {
-                    if (!ClassMessager.EnvoyerMessage(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_TIR_SUR_ENNEMI, 
+                    if (!EnvoyerMessageBataille(lignePionEnBataille, ClassMessager.MESSAGES.MESSAGE_TIR_SUR_ENNEMI, 
                                                         pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, 
-                                                        pertesMoral, 0, 0, this, listePionsEnBatailleDefenseur))
+                                                        pertesMoral, 0, 0, listePionsEnBatailleDefenseur))
                     {
                         message = string.Format("CalculDesPertesAuCombat : erreur lors de l'envoi d'un message pour tir sur l'ennemi");
                         LogFile.Notifier(message, out messageErreur);
@@ -2406,7 +2359,7 @@ namespace vaoc
                 //pour les presentations de fin de partie
                 lignePionBataille.B_ENGAGEMENT = true;
                 lignePionBataille.I_ZONE_BATAILLE_ENGAGEMENT = iZone;
-                if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ENGAGEMENT_AUTOMATIQUE_DANS_BATAILLE, this))
+                if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_ENGAGEMENT_AUTOMATIQUE_DANS_BATAILLE))
                 {
                     return null;
                 }
@@ -2444,7 +2397,7 @@ namespace vaoc
                         dist = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, xBataille, yBataille);
                         if (dist < Constantes.CST_BRUIT_DU_CANON * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                         {
-                            ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_BRUIT_DU_CANON, this);
+                            EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_BRUIT_DU_CANON);
                         }
                     }
                     i++;
@@ -2739,11 +2692,11 @@ namespace vaoc
                     ligneBataillePions.I_MORAL_FIN = lignePionFuite.I_MORAL;
                     ligneBataillePions.I_FATIGUE_FIN = lignePionFuite.I_FATIGUE;
 
-                    if (!ClassMessager.EnvoyerMessage(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_AU_COMBAT,
+                    if (!EnvoyerMessageBataille(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_AU_COMBAT,
                             ligneBataillePions.I_INFANTERIE_DEBUT - ligneBataillePions.I_INFANTERIE_FIN,
                             ligneBataillePions.I_CAVALERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN,
                             ligneBataillePions.I_ARTILLERIE_DEBUT - ligneBataillePions.I_ARTILLERIE_FIN, 
-                            Constantes.CST_PERTE_MORAL_FUITE, 0, 0, this, null))
+                            Constantes.CST_PERTE_MORAL_FUITE, 0, 0, null))
                     {
                         message = string.Format("FuiteAuCombat : erreur lors de l'envoi d'un message pour fuite au combat");
                         LogFile.Notifier(message, out messageErreur);
@@ -2785,7 +2738,7 @@ namespace vaoc
                 {
                     //l'unité est détruite
                     lignePionFuite.DetruirePion();//à faire avant le message, sinon, non détruite dans le message
-                    if (!ClassMessager.EnvoyerMessage(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_ET_DETRUITE_AU_COMBAT, this))
+                    if (!EnvoyerMessageBataille(lignePionFuite, ClassMessager.MESSAGES.MESSAGE_FUITE_ET_DETRUITE_AU_COMBAT))
                     {
                         message = string.Format("FuiteAuCombat : erreur lors de l'envoi d'un message pour fuite au combat");
                         LogFile.Notifier(message, out messageErreur);
@@ -2863,11 +2816,11 @@ namespace vaoc
 
                 //if (lignePion.B_DETRUIT) { return true; } -> si detruit, n'a plus de moral, donc tout va arriver en blessé grave
 
-                if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_PERTES_TOTALE_AU_COMBAT,
+                if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_PERTES_TOTALE_AU_COMBAT,
                     ligneBataillePion.I_INFANTERIE_DEBUT - ligneBataillePion.I_INFANTERIE_FIN,
                     ligneBataillePion.I_CAVALERIE_DEBUT - ligneBataillePion.I_CAVALERIE_FIN,
                     ligneBataillePion.I_ARTILLERIE_DEBUT - ligneBataillePion.I_ARTILLERIE_FIN,
-                    ligneBataillePion.I_MORAL_DEBUT - ligneBataillePion.I_MORAL_FIN, 0, 0, this, null))
+                    ligneBataillePion.I_MORAL_DEBUT - ligneBataillePion.I_MORAL_FIN, 0, 0, null))
                 {
                     message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message MESSAGE_PERTES_AU_COMBAT");
                     LogFile.Notifier(message);
@@ -2887,8 +2840,8 @@ namespace vaoc
                         {
                             lignePion.I_INFANTERIE += infanterieRetour;
                             lignePion.I_CAVALERIE += cavalerieRetour;
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_SOINS_APRES_BATAILLE, 
-                                                              infanterieRetour, cavalerieRetour, 0, 0, 0, 0, this, null))
+                            if (!EnvoyerMessageBataille(lignePion, ClassMessager.MESSAGES.MESSAGE_SOINS_APRES_BATAILLE, 
+                                                              infanterieRetour, cavalerieRetour, 0, 0, 0, 0, null))
                             {
                                 message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message SOINS_APRES_BATAILLE");
                                 LogFile.Notifier(message);
@@ -2917,7 +2870,7 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
-                        if (!ClassMessager.EnvoyerMessage(lignePionConvoiDePrisonniers, ClassMessager.MESSAGES.MESSAGE_PRISONNIERS_APRES_BATAILLE, this))
+                        if (!EnvoyerMessageBataille(lignePionConvoiDePrisonniers, ClassMessager.MESSAGES.MESSAGE_PRISONNIERS_APRES_BATAILLE))
                         {
                             message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message MESSAGE_PRISONNIERS_APRES_BATAILLE");
                             LogFile.Notifier(message);
@@ -2938,7 +2891,7 @@ namespace vaoc
                     }
                     lignePionConvoiDeBlesses.I_INFANTERIE = infanterieBlesse;
                     lignePionConvoiDeBlesses.I_CAVALERIE = cavalerieBlesse;
-                    if (!ClassMessager.EnvoyerMessage(lignePionConvoiDeBlesses, ClassMessager.MESSAGES.MESSAGE_BLESSES_APRES_BATAILLE, this))
+                    if (!EnvoyerMessageBataille(lignePionConvoiDeBlesses, ClassMessager.MESSAGES.MESSAGE_BLESSES_APRES_BATAILLE))
                     {
                         message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message MESSAGE_BLESSES_APRES_BATAILLE");
                         LogFile.Notifier(message);
@@ -2948,6 +2901,54 @@ namespace vaoc
                 return true;
             }
 
+            /// <summary>
+            /// si le leader du pion est dans la zone de bataille, le message est immédiat dans tous les cas
+            /// Trop de problèmes avec les messages arrivant trop tardivement alors que le chef est présent
+            /// </summary>
+            /// <param name="lignePion">pion envoyant le message</param>
+            /// <param name="typeMessage">type du message</param>
+            private bool EnvoyerMessageBataille(TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage)
+            {
+                TAB_CASERow ligneCaseProprietaire = Donnees.m_donnees.tableTAB_CASE.FindParID_CASE(lignePion.proprietaire.ID_CASE);
+                if (ligneCaseProprietaire.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCaseProprietaire.I_Y >= I_Y_CASE_HAUT_GAUCHE
+                                        && ligneCaseProprietaire.I_X <= I_X_CASE_BAS_DROITE && ligneCaseProprietaire.I_Y <= I_Y_CASE_BAS_DROITE)
+                {
+                    return ClassMessager.EnvoyerMessageImmediat(lignePion, typeMessage, this);
+                }
+                return ClassMessager.EnvoyerMessage(lignePion, typeMessage, this);
+            }
+
+            /// <summary>
+            /// si le leader du pion est dans la zone de bataille, le message est immédiat dans tous les cas
+            /// Trop de problèmes avec les messages arrivant trop tardivement alors que le chef est présent
+            /// </summary>
+            /// <param name="lignePion">pion envoyant le message</param>
+            /// <param name="typeMessage">type du message</param>
+            private bool EnvoyerMessageBataille(TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int moral)
+            {
+                TAB_CASERow ligneCaseProprietaire = Donnees.m_donnees.tableTAB_CASE.FindParID_CASE(lignePion.proprietaire.ID_CASE);
+                if (ligneCaseProprietaire.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCaseProprietaire.I_Y >= I_Y_CASE_HAUT_GAUCHE
+                                        && ligneCaseProprietaire.I_X <= I_X_CASE_BAS_DROITE && ligneCaseProprietaire.I_Y <= I_Y_CASE_BAS_DROITE)
+                {
+                    return ClassMessager.EnvoyerMessageImmediat(lignePion, typeMessage, moral, this);
+                }
+                return ClassMessager.EnvoyerMessage(lignePion, typeMessage, moral, this);
+            }
+
+
+            private bool EnvoyerMessageBataille(TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int pertesInfanterieTotal, int pertesCavalerieTotal, int pertesArtillerieTotal, 
+                int pertesMoral, int pertesMaterielPion, int pertesRavitaillementPion, List<TAB_PIONRow> listePionsEnBataille)
+            {
+                bool bImmediat = false;
+                TAB_CASERow ligneCaseProprietaire = Donnees.m_donnees.tableTAB_CASE.FindParID_CASE(lignePion.proprietaire.ID_CASE);
+                if (ligneCaseProprietaire.I_X >= I_X_CASE_HAUT_GAUCHE && ligneCaseProprietaire.I_Y >= I_Y_CASE_HAUT_GAUCHE
+                                        && ligneCaseProprietaire.I_X <= I_X_CASE_BAS_DROITE && ligneCaseProprietaire.I_Y <= I_Y_CASE_BAS_DROITE)
+                {
+                    bImmediat = true;
+                }
+                return ClassMessager.EnvoyerMessage(lignePion, typeMessage, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, pertesMoral, 0,
+                    this, null, null, null, 0, pertesRavitaillementPion, pertesMaterielPion, string.Empty, bImmediat, string.Empty, listePionsEnBataille);
+            }
             /// <summary>
             /// Gain d'expérience pour toutes les unités ayant participées à une bataille de 4 heures ou plus
             /// </summary>

@@ -1158,6 +1158,11 @@ namespace vaoc
             return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, 0, 0, null, null, null, ligneModeleTerrainDestination, -1, 0, 0, string.Empty, false, string.Empty, null);
         }
 
+        public static bool EnvoyerMessageImmediat(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int moralPerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille)
+        {
+            return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, true, string.Empty, null);
+        }
+
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int moralPerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille)
         {
             return EnvoyerMessage(lignePion, typeMessage, 0, 0, 0, moralPerduOuGagne, 0, ligneBataille, null, null, null, -1, 0, 0, string.Empty, false, string.Empty, null);

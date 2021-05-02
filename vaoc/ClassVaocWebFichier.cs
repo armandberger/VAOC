@@ -852,7 +852,7 @@ namespace vaoc
                     //d'une part parce que l'on se moque d'avoir le nom du messager mais, aussi parce que les messagers
                     //n'étant pas exportés comme pion en base, on ne voit pas les messagers si on laisse l'id d'un messager
                     int idEmetteur = ligneMessage.ID_PION_EMETTEUR;
-                    Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
+                    Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(idEmetteur);
                     //BEA 21/10/2012 test d'envoi du proprietaire de la patrouille
                     //à voir ce que cela donne quand c'est la patrouille qui renvoie un message, sinon on retire cette ligne
                     //on voit "div X: patrouille" comme envoyeur c'est pas nickel au moment de la reception de l'ordre d'envoi

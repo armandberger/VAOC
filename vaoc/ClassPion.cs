@@ -775,7 +775,8 @@ namespace vaoc
                         this.I_TOUR_ENNEMI_OBSERVABLE != Donnees.m_donnees.TAB_PARTIE[0].I_TOUR))
                     {
                         string sObservable = this.EnnemiObservable(ligneCase);
-                        if (sObservable != this.S_ENNEMI_OBSERVABLE)
+                        if ((string.Empty == sObservable && string.Empty != this.S_ENNEMI_OBSERVABLE)
+                            || (string.Empty != sObservable && string.Empty == this.S_ENNEMI_OBSERVABLE))
                         {
                             if (string.Empty != sObservable)
                             {

@@ -1132,7 +1132,7 @@ namespace vaoc
                     if (caseFinale.ID_NOUVEAU_PROPRIETAIRE >= 0)
                     {
                         Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_NOUVEAU_PROPRIETAIRE);
-                        if (lignePionProprietaire.idNation != m_idNation)
+                        if (null!=lignePionProprietaire && lignePionProprietaire.idNation != m_idNation)
                         {
                             return Constantes.CST_COUTMAX;//case intraversable
                         }
@@ -1140,7 +1140,7 @@ namespace vaoc
                     if (caseFinale.ID_PROPRIETAIRE >= 0)
                     {
                         Donnees.TAB_PIONRow lignePionProprietaire = Donnees.m_donnees.TAB_PION.FindByID_PION(caseFinale.ID_PROPRIETAIRE);
-                        if (lignePionProprietaire.idNation != m_idNation)
+                        if (null != lignePionProprietaire && lignePionProprietaire.idNation != m_idNation)
                         {
                             return Constantes.CST_COUTMAX;//case intraversable
                         }

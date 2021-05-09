@@ -374,7 +374,7 @@ namespace vaoc
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE) // || 82 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE  || 82 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //|| 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -808,7 +808,7 @@ namespace vaoc
                 if (!ligneCase.IsID_PROPRIETAIRENull())
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCase.ID_PROPRIETAIRE);
-                    if (lignePion.effectifTotal > 0)
+                    if (null!=lignePion && lignePion.effectifTotal > 0)
                     {
                         lignesCasesProprietaires[lignePion.nation.ID_NATION].Add(ligneCase);
                     }
@@ -3931,7 +3931,8 @@ namespace vaoc
                         }
 
                         // Si le destinataire est détruit, il est inutile de lui donner le message !
-                        if (!lignePionDestinataire.B_DETRUIT)
+                        //également le cas si celui qui a donné l'ordre n'est plus le chef de l'unité suite à un transfert, capture...
+                        if (!lignePionDestinataire.B_DETRUIT && lignePion.proprietaire.ID_PION== lignePionDestinataire.proprietaire.ID_PION)
                         {
                             long distanceCoutDeplacement = 0;
 
@@ -4699,6 +4700,7 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePionBlocage = Donnees.m_donnees.TAB_PION.FindByID_PION(IdNouveauProprietaire);
 
+                if (null==lignePionBlocage) { return false;  }
                 //BEA 23/03/2021, on doit prendre en compte les unités démoralisées comme combattives, sinon, la nuit, l'ennemi peut traverser les lignes
                 if (lignePion.estEnnemi(lignePionBlocage) && lignePionBlocage.estCombattifQG(false, true) && Donnees.m_donnees.TAB_PARTIE.NocturneOuBatailleImpossible())
                 {

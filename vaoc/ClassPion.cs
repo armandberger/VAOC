@@ -1221,16 +1221,17 @@ namespace vaoc
                 if (Constantes.NULLENTIER != IdNouveauProprietaire)
                 {
                     lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdNouveauProprietaire);
-                    ligneModeleAdversaire = lignePionAdversaire.modelePion;
-                    if (null == ligneModeleAdversaire)
+                    if (null != lignePionAdversaire)
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
-                    }
-                    if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
-                    {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
+                        ligneModeleAdversaire = lignePionAdversaire.modelePion;
+                        if (null != ligneModeleAdversaire)
+                        {
+                            if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
+                            {
+                                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                                return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
+                            }
+                        }
                     }
                 }
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);

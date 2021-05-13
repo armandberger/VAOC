@@ -1406,6 +1406,59 @@ namespace vaoc
             }
             */
             #endregion
+            //Correctif pour envoyer des messages non reçus aux joueurs
+            //foreach (Donnees.TAB_ORDRERow ligneOrdre in Donnees.m_donnees.TAB_ORDRE)
+            //{
+            //    if (ligneOrdre.I_TOUR_FIN >= 155)
+            //    {
+            //        Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+            //        if (!ligneOrdre.IsID_DESTINATAIRENull())
+            //        {
+            //            Donnees.TAB_PIONRow lignePionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
+            //            if (null == lignePionDestinataire.proprietaire || null == lignePion.proprietaire
+            //                || lignePion.proprietaire.ID_PION != lignePionDestinataire.proprietaire.ID_PION)
+            //            {
+            //                Donnees.TAB_MESSAGERow ligneMessage = ligneOrdre.messageTransmis;
+            //                if (null != ligneMessage)
+            //                {
+            //                    //il s'agit d'un message textuel
+            //                    //donner le message et disparaître si le recepteur est un joueur, sinon aller vers le chef recevant le message
+            //                    //if (lignePionDestinataire.ID_PION_PROPRIETAIRE == lignePionDestinataire.ID_PION ||
+            //                    //    lignePionDestinataire.IsID_PION_PROPRIETAIRENull() || lignePionDestinataire.ID_PION_PROPRIETAIRE <= 0)
+            //                    if (null != Donnees.m_donnees.TAB_ROLE.TrouvePion(lignePionDestinataire.ID_PION))
+            //                    {
+            //                        Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
+            //                        ligneMessage.I_TOUR_ARRIVEE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+            //                        ligneMessage.I_PHASE_ARRIVEE = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE + 1;//pour qu'il soit remis à la prochaine mise à jour
+            //                        ligneMessage.ID_PION_PROPRIETAIRE = lignePionDestinataire.ID_PION;
+            //                        Monitor.Exit(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
+
+            //                        ligneMessage.emetteur.ReceptionMessageTransfert(ligneMessage);
+            //                        Debug.WriteLine("Message pour " + lignePionDestinataire.S_NOM + ":" + ligneMessage.S_TEXTE);
+            //                    }
+            //                }
+            //                else
+            //                {
+            //                    Debug.WriteLine("argh !");
+            //                }
+            //            }
+            //        }
+            //    }
+            //    //else
+            //    //{
+            //    //    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+            //    //    if (!ligneOrdre.IsID_DESTINATAIRENull() && null!=lignePion)
+            //    //    {
+            //    //        Donnees.TAB_PIONRow lignePionDestinataire = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_DESTINATAIRE);
+            //    //        if (null == lignePionDestinataire.proprietaire || null == lignePion.proprietaire
+            //    //            || lignePion.proprietaire.ID_PION != lignePionDestinataire.proprietaire.ID_PION)
+            //    //        {
+            //    //            Debug.WriteLine("etrange");
+            //    //        }
+            //    //    }
+            //    //}
+            //}
+            Debug.WriteLine("Fin Correctifs");
         }
 
         private void ChargementInitial()

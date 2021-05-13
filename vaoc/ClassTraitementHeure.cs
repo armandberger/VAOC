@@ -374,7 +374,7 @@ namespace vaoc
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE  || 82 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //|| 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //|| 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -2366,12 +2366,15 @@ namespace vaoc
             {
                 List<ClassDataPartie> listeParties = m_iWeb.ListeParties(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
                 nbTourExecutes = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - listeParties[0].I_TOUR;
-                //Déplacement des ordres terminés et des pions détruits vers une autre table pour améliorer les performances. Fait uniquement après des nouveaux ordres pour ne pas touchr au maxide
-                LogFile.Notifier("Nb messages avant archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
-                LogFile.Notifier("Nb pions avant archivage :" + Donnees.m_donnees.TAB_PION.Count());
-                ActuelsVersAnciens(); //-> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
-                LogFile.Notifier("Nb messages après archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
-                LogFile.Notifier("Nb pions après archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                //Déplacement des ordres terminés et des pions détruits vers une autre table pour améliorer les performances. Fait uniquement après des nouveaux ordres pour ne pas toucher au maxid
+                if (0 == nbTourExecutes && 0== Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                {
+                    LogFile.Notifier("Nb messages avant archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
+                    LogFile.Notifier("Nb pions avant archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                    ActuelsVersAnciens(); //-> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
+                    LogFile.Notifier("Nb messages après archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
+                    LogFile.Notifier("Nb pions après archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                }
             }
 
             LogFile.Notifier("Fin NouveauxOrdres");
@@ -3931,8 +3934,7 @@ namespace vaoc
                         }
 
                         // Si le destinataire est détruit, il est inutile de lui donner le message !
-                        //également le cas si celui qui a donné l'ordre n'est plus le chef de l'unité suite à un transfert, capture...
-                        if (!lignePionDestinataire.B_DETRUIT && lignePion.proprietaire.ID_PION== lignePionDestinataire.proprietaire.ID_PION)
+                        if (!lignePionDestinataire.B_DETRUIT)
                         {
                             long distanceCoutDeplacement = 0;
 
@@ -4037,6 +4039,15 @@ namespace vaoc
                                         message = string.Format("{0},ID={1}, ExecuterMouvementSansEffectif arrivée d'un message porteur d'un ordre ID_ORDRE:{2} de type {3} à {4} ID={5} alors que celui-ci est en retraite, ordre différé",
                                             lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_ORDRE, ligneOrdre.I_ORDRE_TYPE, lignePionDestinataire.S_NOM, lignePionDestinataire.ID_PION);
                                         LogFile.Notifier(message, out messageErreur);
+                                        return true;
+                                    }
+                                    
+                                    if (null == lignePionDestinataire.proprietaire || null == lignePion.proprietaire
+                                        || lignePion.proprietaire.ID_PION != lignePionDestinataire.proprietaire.ID_PION)
+                                    {
+                                        //si celui qui a donné l'ordre n'est plus le chef de l'unité suite à un transfert, capture alors il ne faut pas remettre l'ordre
+                                        lignePion.TerminerOrdre(ligneOrdre, false, false);
+                                        lignePion.DetruirePion();//le messager d'origine est devenu inutile
                                         return true;
                                     }
 
@@ -5740,13 +5751,24 @@ namespace vaoc
             }
             #endregion
 
-            void RetraitUniteProprietaire(ref List<int> listeUnites, int ID_PROPRIETAIRE)
+        }
+        void RetraitUniteProprietaire(ref List<int> listeUnites, int ID_PROPRIETAIRE)
+        {
+            Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ID_PROPRIETAIRE);
+            if (listeUnites.IndexOf(ID_PROPRIETAIRE) >= 0)
             {
-                if (listeUnites.IndexOf(ID_PROPRIETAIRE) > 0)
+                RetraitUniteProprietaire(ref listeUnites, lignePion.ID_PION_PROPRIETAIRE);
+                if (!listeUnites.Remove(ID_PROPRIETAIRE))
                 {
-                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ID_PROPRIETAIRE);
-                    RetraitUniteProprietaire(ref listeUnites, lignePion.ID_PION_PROPRIETAIRE);
-                    listeArchiveUnites.Remove(ID_PROPRIETAIRE);
+                    LogFile.Notifier("RetraitUniteProprietaire Erreur sur le retrait de ID=" + ID_PROPRIETAIRE);
+                }
+            }
+            else
+            {
+                if (null == lignePion)
+                {
+                    //Bug, le pion a été retiré alors qu'il fallait le garder !
+                    LogFile.Notifier("RetraitUniteProprietaire Erreur impossible de trouver ID=" + ID_PROPRIETAIRE);
                 }
             }
         }

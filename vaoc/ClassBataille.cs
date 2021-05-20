@@ -1441,6 +1441,18 @@ namespace vaoc
                 }
 
                 #endregion
+
+                //Normalement pas possible mais si la bataille a commencé au tour précédent, il faut arrêter tout de suite.
+                //il faut qu'une bataille commencé à 2 heure+1 minute avant la nuit soit executée, d'où le -1
+                if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() % 24) &&
+                    I_TOUR_DEBUT == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR-1)
+                {
+                    //pas de combat la nuit
+                    message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
+                    LogFile.Notifier(message, out messageErreur);
+                    return FinDeBataille(out bFinDeBataille);
+                }
+
                 //on execute une bataille que toutes les deux heures
                 if (I_TOUR_DEBUT == Donnees.m_donnees.TAB_PARTIE[0].I_TOUR ||
                     (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT) % 2 > 0)
@@ -1450,14 +1462,6 @@ namespace vaoc
                     LogFile.Notifier(message, out messageErreur);
 
                     return true;//on ne fait le combat que toutes les deux heures
-                }
-
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() % 24))
-                {
-                    //pas de combat la nuit
-                    message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
-                    LogFile.Notifier(message, out messageErreur);
-                    return FinDeBataille(out bFinDeBataille);
                 }
 
                 #region Fin de bataille sur ordre de retraite

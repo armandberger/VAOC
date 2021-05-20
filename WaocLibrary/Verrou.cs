@@ -19,7 +19,7 @@ namespace WaocLib
             }
             compteur[identifiant]++;
             StackFrame sf = new StackTrace(true).GetFrame(1);
-            //LogFile.Notifier("Verrouiller;" + identifiant + ";" + compteur[identifiant] + ";" + sf.GetFileName() + ";" + sf.GetMethod() + ";" + sf.GetFileLineNumber());            
+            LogFile.Notifier("Verrouiller;" + identifiant + ";" + compteur[identifiant] + ";" + sf.GetFileName() + ";" + sf.GetMethod() + ";" + sf.GetFileLineNumber());            
         }
 
         public static void Deverrouiller(object obj)
@@ -28,7 +28,7 @@ namespace WaocLib
             int identifiant = Thread.CurrentThread.ManagedThreadId;
             compteur[identifiant]--;
             StackFrame sf = new StackTrace(true).GetFrame(1);
-            //LogFile.Notifier("Deverrouiller;" + identifiant + ";"  + compteur[identifiant] + ";" + sf.GetFileName() + ";" + sf.GetMethod() + ";" + sf.GetFileLineNumber());
+            LogFile.Notifier("Deverrouiller;" + identifiant + ";"  + compteur[identifiant] + ";" + sf.GetFileName() + ";" + sf.GetMethod() + ";" + sf.GetFileLineNumber());
         }
     }
 }

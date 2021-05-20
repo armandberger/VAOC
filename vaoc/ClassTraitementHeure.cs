@@ -2573,11 +2573,21 @@ namespace vaoc
 
                 case Constantes.ORDRES.MOUVEMENT:
                 case Constantes.ORDRES.PATROUILLE:
+                case Constantes.ORDRES.SUIVRE_UNITE:
                     #region envoi d'un ordre de mouvement ou de patrouille devant être transmis par messager
                     int idPionOrdre = ordre.ID_PION;
                     compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION);
 
-                    if (!ClassMessager.ZoneGeographiqueVersCase(lignePion, ordre.I_DISTANCE, compas, ordre.ID_NOM_LIEU, out id_case_destination))
+                    bool bDestinationImpossible = false;
+                    if (Constantes.ORDRES.SUIVRE_UNITE == ordre.I_TYPE)
+                    {
+                        id_case_destination = Constantes.NULLENTIER;
+                    }
+                    else
+                    {
+                        bDestinationImpossible = !ClassMessager.ZoneGeographiqueVersCase(lignePion, ordre.I_DISTANCE, compas, ordre.ID_NOM_LIEU, out id_case_destination);
+                    }
+                    if (bDestinationImpossible)
                     {
                         ligneOrdreARemettre = DestinationImpossible(ordre, lignePion, id_case_destination);
                     }
@@ -2624,7 +2634,7 @@ namespace vaoc
                                 Constantes.NULLENTIER,//i_phase_fin
                                 Constantes.NULLENTIER,//id_message,
                                 Constantes.NULLENTIER,//ID_DESTINATAIRE
-                                Constantes.NULLENTIER,//ID_CIBLE
+                                (ordre.ID_PION_CIBLE<0) ? Constantes.NULLENTIER : ordre.ID_PION_CIBLE,//ID_CIBLE
                                 Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
                                 Constantes.NULLENTIER,//id_bataille
                                 Constantes.NULLENTIER,//I_ZONE_BATAILLE
@@ -2821,7 +2831,6 @@ namespace vaoc
                 case Constantes.ORDRES.ARRET:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
-                case Constantes.ORDRES.SUIVRE_UNITE:
                 #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
                     //ordre qui doit être remis à une unité par un messager
                     //int idPionOrdre = (ordre.I_TYPE == Constantes.ORDRES.TRANSFERER) ? ordre.ID_PION_CIBLE : ordre.ID_PION;
@@ -5520,66 +5529,69 @@ namespace vaoc
             while (i < listeArchiveUnites.Count())
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(listeArchiveUnites[i]);
-                Donnees.TAB_PION_ANCIENRow lignePionAncien = Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
-                    lignePion.ID_PION,
-                    lignePion.ID_MODELE_PION,
-                    lignePion.ID_PION_PROPRIETAIRE,
-                    lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
-                    lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
-                    lignePion.S_NOM,
-                    lignePion.I_INFANTERIE,
-                    lignePion.I_INFANTERIE_INITIALE,
-                    lignePion.I_CAVALERIE,
-                    lignePion.I_CAVALERIE_INITIALE,
-                    lignePion.I_ARTILLERIE,
-                    lignePion.I_ARTILLERIE_INITIALE,
-                    lignePion.I_FATIGUE,
-                    lignePion.I_MORAL,
-                    lignePion.I_MORAL_MAX,
-                    lignePion.I_EXPERIENCE,
-                    lignePion.I_TACTIQUE,
-                    lignePion.I_STRATEGIQUE,
-                    lignePion.C_NIVEAU_HIERARCHIQUE,
-                    lignePion.I_DISTANCE_A_PARCOURIR,
-                    lignePion.I_NB_PHASES_MARCHE_JOUR,
-                    lignePion.I_NB_PHASES_MARCHE_NUIT,
-                    lignePion.I_NB_HEURES_COMBAT,
-                    lignePion.ID_CASE,
-                    lignePion.I_TOUR_SANS_RAVITAILLEMENT,
-                    lignePion.ID_BATAILLE,
-                    lignePion.I_ZONE_BATAILLE,
-                    lignePion.I_TOUR_RETRAITE_RESTANT,
-                    lignePion.I_TOUR_FUITE_RESTANT,
-                    lignePion.B_DETRUIT,
-                    lignePion.B_FUITE_AU_COMBAT,
-                    lignePion.B_INTERCEPTION,
-                    lignePion.B_REDITION_RAVITAILLEMENT,
-                    lignePion.B_TELEPORTATION,
-                    lignePion.B_ENNEMI_OBSERVABLE,
-                    lignePion.I_MATERIEL,
-                    lignePion.I_RAVITAILLEMENT,
-                    lignePion.B_CAVALERIE_DE_LIGNE,
-                    lignePion.B_CAVALERIE_LOURDE,
-                    lignePion.B_GARDE,
-                    lignePion.B_VIEILLE_GARDE,
-                    lignePion.I_TOUR_CONVOI_CREE,
-                    lignePion.ID_DEPOT_SOURCE,
-                    lignePion.I_SOLDATS_RAVITAILLES,
-                    lignePion.I_NB_HEURES_FORTIFICATION,
-                    lignePion.I_NIVEAU_FORTIFICATION,
-                    lignePion.ID_PION_REMPLACE,
-                    lignePion.I_DUREE_HORS_COMBAT,
-                    lignePion.I_TOUR_BLESSURE,
-                    lignePion.B_BLESSES,
-                    lignePion.B_PRISONNIERS,
-                    lignePion.B_RENFORT,
-                    lignePion.ID_LIEU_RATTACHEMENT,
-                    lignePion.C_NIVEAU_DEPOT,
-                    lignePion.ID_PION_ESCORTE,
-                    lignePion.I_INFANTERIE_ESCORTE,
-                    lignePion.I_CAVALERIE_ESCORTE,
-                    lignePion.I_MATERIEL_ESCORTE);
-
+                Donnees.TAB_PION_ANCIENRow lignePionAncienExiste = Donnees.m_donnees.TAB_PION_ANCIEN.FindByID_PION(lignePion.ID_PION);
+                if (null == lignePionAncienExiste)
+                {
+                    Donnees.TAB_PION_ANCIENRow lignePionAncien = Donnees.m_donnees.TAB_PION_ANCIEN.AddTAB_PION_ANCIENRow(
+                        lignePion.ID_PION,
+                        lignePion.ID_MODELE_PION,
+                        lignePion.ID_PION_PROPRIETAIRE,
+                        lignePion.ID_NOUVEAU_PION_PROPRIETAIRE,
+                        lignePion.ID_ANCIEN_PION_PROPRIETAIRE,
+                        lignePion.S_NOM,
+                        lignePion.I_INFANTERIE,
+                        lignePion.I_INFANTERIE_INITIALE,
+                        lignePion.I_CAVALERIE,
+                        lignePion.I_CAVALERIE_INITIALE,
+                        lignePion.I_ARTILLERIE,
+                        lignePion.I_ARTILLERIE_INITIALE,
+                        lignePion.I_FATIGUE,
+                        lignePion.I_MORAL,
+                        lignePion.I_MORAL_MAX,
+                        lignePion.I_EXPERIENCE,
+                        lignePion.I_TACTIQUE,
+                        lignePion.I_STRATEGIQUE,
+                        lignePion.C_NIVEAU_HIERARCHIQUE,
+                        lignePion.I_DISTANCE_A_PARCOURIR,
+                        lignePion.I_NB_PHASES_MARCHE_JOUR,
+                        lignePion.I_NB_PHASES_MARCHE_NUIT,
+                        lignePion.I_NB_HEURES_COMBAT,
+                        lignePion.ID_CASE,
+                        lignePion.I_TOUR_SANS_RAVITAILLEMENT,
+                        lignePion.ID_BATAILLE,
+                        lignePion.I_ZONE_BATAILLE,
+                        lignePion.I_TOUR_RETRAITE_RESTANT,
+                        lignePion.I_TOUR_FUITE_RESTANT,
+                        lignePion.B_DETRUIT,
+                        lignePion.B_FUITE_AU_COMBAT,
+                        lignePion.B_INTERCEPTION,
+                        lignePion.B_REDITION_RAVITAILLEMENT,
+                        lignePion.B_TELEPORTATION,
+                        lignePion.B_ENNEMI_OBSERVABLE,
+                        lignePion.I_MATERIEL,
+                        lignePion.I_RAVITAILLEMENT,
+                        lignePion.B_CAVALERIE_DE_LIGNE,
+                        lignePion.B_CAVALERIE_LOURDE,
+                        lignePion.B_GARDE,
+                        lignePion.B_VIEILLE_GARDE,
+                        lignePion.I_TOUR_CONVOI_CREE,
+                        lignePion.ID_DEPOT_SOURCE,
+                        lignePion.I_SOLDATS_RAVITAILLES,
+                        lignePion.I_NB_HEURES_FORTIFICATION,
+                        lignePion.I_NIVEAU_FORTIFICATION,
+                        lignePion.ID_PION_REMPLACE,
+                        lignePion.I_DUREE_HORS_COMBAT,
+                        lignePion.I_TOUR_BLESSURE,
+                        lignePion.B_BLESSES,
+                        lignePion.B_PRISONNIERS,
+                        lignePion.B_RENFORT,
+                        lignePion.ID_LIEU_RATTACHEMENT,
+                        lignePion.C_NIVEAU_DEPOT,
+                        lignePion.ID_PION_ESCORTE,
+                        lignePion.I_INFANTERIE_ESCORTE,
+                        lignePion.I_CAVALERIE_ESCORTE,
+                        lignePion.I_MATERIEL_ESCORTE);
+                }
                 lignePion.Delete();
                 i++;
             }

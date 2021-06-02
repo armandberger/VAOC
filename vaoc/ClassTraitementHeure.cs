@@ -5524,6 +5524,19 @@ namespace vaoc
                 i++;
             }
 
+            //On vérifie que toutes les messages restants ont bien toutes leurs emetteurs non détruits, sinon, on les remets !
+            i = 0;
+            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
+            {
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
+                if (null!= lignePion && (lignePion.B_DETRUIT && lignePion.estMessager))
+                {
+                    RetraitUniteProprietaire(ref listeArchiveUnites, lignePion.ID_PION);
+                }
+                i++;
+            }
+
             //On retire effectivement les unités
             i = 0;
             while (i < listeArchiveUnites.Count())

@@ -3354,8 +3354,14 @@ namespace vaoc
                 }
                 else
                 {
+                    if (ligneOrdre.ID_CASE_DEPART >= 0)
+                    { 
                     Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
-                    Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                    }
+                    if (ligneOrdre.ID_CASE_DESTINATION >=0)
+                    {
+                        Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                    }
                 }
             }
             ConstruireImageCarte();

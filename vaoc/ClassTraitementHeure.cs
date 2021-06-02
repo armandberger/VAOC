@@ -2571,6 +2571,7 @@ namespace vaoc
                     ligneBataille["I_ENGAGEMENT_" + Convert.ToString(ordre.I_ZONE_BATAILLE)] = ordre.I_ENGAGEMENT;
                     break;
 
+                case Constantes.ORDRES.ARRET:
                 case Constantes.ORDRES.MOUVEMENT:
                 case Constantes.ORDRES.PATROUILLE:
                 case Constantes.ORDRES.SUIVRE_UNITE:
@@ -2828,7 +2829,6 @@ namespace vaoc
                 case Constantes.ORDRES.SEFORTIFIER:
                 case Constantes.ORDRES.ETABLIRDEPOT:
                 case Constantes.ORDRES.TRANSFERER:
-                case Constantes.ORDRES.ARRET:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                 #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager

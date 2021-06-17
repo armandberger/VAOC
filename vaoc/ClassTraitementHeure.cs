@@ -69,6 +69,7 @@ namespace vaoc
 
             //On note la dernière fois que l'on a envoyé des messages aux joueurs
             //Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 1 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; -> on ne peut pas le faire là au cas où le tour serait pris en cours de route, déplacé dans la dialogue de notification
+            //Donnees.TAB_CASERow ligneCase1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
 
             //on va rechercher les nouveaux ordres ou les nouveaux messages (quand la partie n'est pas commence)
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
@@ -86,6 +87,7 @@ namespace vaoc
                 nbTourExecutes = 0;
             }
 
+            //Donnees.TAB_CASERow ligneCase3 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
             //pour la toute première phase on envoit un message d'initialisation des positions pour les pions des joueurs
             if (0 == Donnees.m_donnees.TAB_MESSAGE.Count)
             //if (0 == DataSetCoutDonnees.m_donnees.TAB_PARTIE[0].I_PHASE && 0 == DataSetCoutDonnees.m_donnees.TAB_PARTIE[0].I_TOUR)
@@ -129,6 +131,7 @@ namespace vaoc
                 lignePion.B_TELEPORTATION = false;
             }
             #endregion
+            //Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
 
             #region  correctifs
             /* transfert
@@ -141,7 +144,7 @@ namespace vaoc
             */
 
             //capture de dépôts
-            /*
+            /*            
             Donnees.TAB_PIONRow lignePionEnnemi = Donnees.m_donnees.TAB_PION.FindByID_PION(71);
             Donnees.TAB_PIONRow lignePionCapture = Donnees.m_donnees.TAB_PION.FindByID_PION(103);
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(6392630);
@@ -202,10 +205,11 @@ namespace vaoc
                     }
                 }
 
-                Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
+                //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
                 //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 98;//BEA, permet de tester une fin de bataille
                 while (Donnees.m_donnees.TAB_PARTIE[0].I_PHASE < nbPhases)
                 {
+                    //Donnees.TAB_CASERow ligneCase4 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
                     //Initialisation de la phase
                     LogFile.CreationLogFile(fichierCourant, "tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
                     message = string.Format("TraitementHeure : début phase={0}", Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
@@ -250,12 +254,14 @@ namespace vaoc
 
 
                     //on execute les mouvements
+                    //Donnees.TAB_CASERow ligneCase5 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
                     #region Mouvement de toutes les unités avec effectifs (les unités de combat en fait)
                     message = string.Format("**** Mouvements : toutes les unités AVEC effectifs ****");
                     if (!LogFile.Notifier(message, out messageErreur))
                     {
                         return false;
                     }
+                    //Donnees.TAB_CASERow ligneCase6 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
                     /* methode standard
                     timeStart = DateTime.Now;
                     i = 0;
@@ -1130,19 +1136,18 @@ namespace vaoc
                         }
 
                         //seul un convoi de niveau 'D' peut fusionner avec un dépôt
-                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         if (lignePionARenforcer.C_NIVEAU_DEPOT == 'A' || (lignePionARenforcer.C_NIVEAU_DEPOT == 'B' && lignePion.nation.NombreDepot('A') >= lignePion.nation.I_LIMITE_DEPOT_A))
                         {
                             if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE))
                             {
                                 message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_DEPOT_A dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
                                 LogFile.Notifier(message);
-                                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                 return false;
                             }
                         }
                         else
                         {
+                            Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             lignePionARenforcer.C_NIVEAU_DEPOT--;// 'A' c'est le meilleur, 'D' le pire
 
                             int ligneDepotTable = lignePionARenforcer.C_NIVEAU_DEPOT - 'A';

@@ -1393,7 +1393,7 @@ namespace vaoc
                 Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //dans de rares cas, le destinataire peut bouger entre la création du messager et celle de l'ordre ce qui provoque des erreurs de mouvement
                 lignePionMessager = CreerMessager(lignePionEmetteur);
-                int id_Case_Destination = (idCaseDestination.HasValue) ? idCaseDestination.Value : lignePionDestinataire.ID_CASE;
+                int id_Case_Destination = idCaseDestination.HasValue ? idCaseDestination.Value : lignePionDestinataire.ID_CASE;
                 Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (null!=lignePionMessager)
                 {
@@ -2189,7 +2189,7 @@ namespace vaoc
                     return false;
                 }
 
-                Donnees.TAB_CASERow ligneCase = (null == ligneCaseDestination) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE) : ligneCaseDestination;
+                Donnees.TAB_CASERow ligneCase = ligneCaseDestination ?? Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                 lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);

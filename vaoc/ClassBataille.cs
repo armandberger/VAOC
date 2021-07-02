@@ -597,19 +597,19 @@ namespace vaoc
                                                    select Case;
 
                 int nblisteCasesOccupeesParEnnemis = listeCasesOccupeesParEnnemis.Count();
-                var listeT = from Case in Donnees.m_donnees.TAB_CASE
-                             where (xCaseBasDroite >= Case.I_X && yCaseBasDroite >= Case.I_Y
-                           && xCaseHautGauche <= Case.I_X && yCaseHautGauche <= Case.I_Y
-                           )
-                             select Case;
-                int nbT = listeT.Count();
+                //var listeT = from Case in Donnees.m_donnees.TAB_CASE
+                //             where (xCaseBasDroite >= Case.I_X && yCaseBasDroite >= Case.I_Y
+                //           && xCaseHautGauche <= Case.I_X && yCaseHautGauche <= Case.I_Y
+                //           )
+                //             select Case;
+                //int nbT = listeT.Count();
 
                 if (nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis)
                 {
                     LogFile.Notifier("RechercheCaseDeSortie : nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis");
                     return; //la solution précedente est meilleure
                 }
-                nbT = nbT + 1;
+                //nbT = nbT + 1;
                 //deuxième critère, le nombre de cases occupées par les amis
                 var listeCasesOccupeesParAmis = from Case in Donnees.m_donnees.TAB_CASE
                                                 where (xCaseBasDroite >= Case.I_X && yCaseBasDroite >= Case.I_Y

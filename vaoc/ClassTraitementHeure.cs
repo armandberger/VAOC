@@ -1963,9 +1963,9 @@ namespace vaoc
                                 }
                                 else
                                 {
-                                    lignePionBlesses.I_INFANTERIE = lignePionBlesses.I_INFANTERIE / 2;
-                                    lignePionBlesses.I_CAVALERIE = lignePionBlesses.I_CAVALERIE / 2;
-                                    lignePionBlesses.I_ARTILLERIE = lignePionBlesses.I_ARTILLERIE / 2;
+                                    lignePionBlesses.I_INFANTERIE /= 2;
+                                    lignePionBlesses.I_CAVALERIE /= 2;
+                                    lignePionBlesses.I_ARTILLERIE /= 2;
                                 }
                             }
                             Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);

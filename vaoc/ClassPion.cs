@@ -723,7 +723,7 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_CASERow ligneCaseBase = (null == ligneCase) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(this.ID_CASE) : ligneCase;
+                    Donnees.TAB_CASERow ligneCaseBase = ligneCase ?? Donnees.m_donnees.TAB_CASE.FindParID_CASE(this.ID_CASE);
                     xCaseHautGauche = Math.Max(0, ligneCaseBase.I_X - visionPixel);
                     yCaseHautGauche = Math.Max(0, ligneCaseBase.I_Y - visionPixel);
                     xCaseBasDroite = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE - 1, ligneCaseBase.I_X + visionPixel);

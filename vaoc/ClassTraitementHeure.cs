@@ -42,7 +42,7 @@ namespace vaoc
             bool bTourSuivant;//tant que cela vaut true, on continue l'execution
             int nbTourExecutes;//nombre de tours executés successivement
             bool bRenfort = false;
-            bool bDebutDeNuit = false;
+            bool bDebutDeNuit;
 
             //Debug.WriteLine("TraitementHeure");
             messageErreur = "";
@@ -2582,52 +2582,51 @@ namespace vaoc
                 case Constantes.ORDRES.SUIVRE_UNITE:
                     #region envoi d'un ordre de mouvement ou de patrouille devant être transmis par messager
                     int idPionOrdre = ordre.ID_PION;
-                    compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION);
 
                     bool bDestinationImpossible = false;
-                    if (Constantes.ORDRES.SUIVRE_UNITE == ordre.I_TYPE)
+                    if (Constantes.ORDRES.SUIVRE_UNITE == ordre.I_TYPE || Constantes.ORDRES.ARRET == ordre.I_TYPE)
                     {
                         id_case_destination = Constantes.NULLENTIER;
                     }
                     else
                     {
+                        compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION);
                         bDestinationImpossible = !ClassMessager.ZoneGeographiqueVersCase(lignePion, ordre.I_DISTANCE, compas, ordre.ID_NOM_LIEU, out id_case_destination);
                     }
-                    if (bDestinationImpossible)
+                    if (lignePion.ID_PION == lignePionDestination.ID_PION)
                     {
-                        ligneOrdreARemettre = DestinationImpossible(ordre, lignePion, id_case_destination);
-                    }
-                    else
-                    {
-                        if (lignePion.ID_PION == lignePionDestination.ID_PION)
+                        //cas d'un leader qui se "donne" un ordre
+                        // il faut arrêter tout ordre en cours uniquement si cet ordre n'est pas le suivant d'un autre
+                        //if (!bOrdreSuivant)
                         {
-                            //cas d'un leader qui se "donne" un ordre
-                            // il faut arrêter tout ordre en cours uniquement si cet ordre n'est pas le suivant d'un autre
-                            //if (!bOrdreSuivant)
+                            bool bTerminer =true;
+                            Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
+                            foreach (ClassDataOrdre ordreWeb in liste)
                             {
-                                bool bTerminer =true;
-                                Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);
-                                foreach (ClassDataOrdre ordreWeb in liste)
-                                {
-                                    if (ordreWeb.ID_ORDRE_SUIVANT == ordre.ID_ORDRE) { bTerminer = false; }
-                                }
-                                if (bTerminer) { lignePion.TerminerOrdre(ligneOrdreCourant, false, true); }
+                                if (ordreWeb.ID_ORDRE_SUIVANT == ordre.ID_ORDRE) { bTerminer = false; }
                             }
-                            /*if (ordre.I_TYPE == Constantes.ORDRES.MOUVEMENT)
+                            if (bTerminer) { lignePion.TerminerOrdre(ligneOrdreCourant, false, true); }
+                        }
+                        /*if (ordre.I_TYPE == Constantes.ORDRES.MOUVEMENT)
+                        {
+                            Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                            if (null != ligneOrdreMouvement)
                             {
-                                Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
-                                if (null != ligneOrdreMouvement)
-                                {
-                                    ligneOrdreMouvement.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                                    ligneOrdreMouvement.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
-                                }
-                            }*/
-
+                                ligneOrdreMouvement.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                                ligneOrdreMouvement.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                            }
+                        }*/
+                        if (bDestinationImpossible)
+                        {
+                            ligneOrdreARemettre = DestinationImpossible(ordre, lignePion, id_case_destination);
+                        }
+                        else
+                        {
                             ligneOrdreARemettre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                                 Constantes.NULLENTIER,//id_ordre_transmis
                                 Constantes.NULLENTIER,//id_ordre_suivant,//id_ordre_suivant
                                 ordre.ID_ORDRE, ///ordre web
-                                ordre.I_TYPE,
+                            ordre.I_TYPE,
                                 idPionOrdre,//ordre.ID_PION,
                                 lignePion.ID_CASE,
                                 0,//i_effectif_depart lignePion.I_INFANTERIE + lignePion.I_CAVALERIE +lignePion.I_ARTILLERIE,
@@ -2640,29 +2639,36 @@ namespace vaoc
                                 Constantes.NULLENTIER,//i_phase_fin
                                 Constantes.NULLENTIER,//id_message,
                                 Constantes.NULLENTIER,//ID_DESTINATAIRE
-                                (ordre.ID_PION_CIBLE<0) ? Constantes.NULLENTIER : ordre.ID_PION_CIBLE,//ID_CIBLE
+                                (ordre.ID_PION_CIBLE < 0) ? Constantes.NULLENTIER : ordre.ID_PION_CIBLE,//ID_CIBLE
                                 Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
                                 Constantes.NULLENTIER,//id_bataille
                                 Constantes.NULLENTIER,//I_ZONE_BATAILLE
                                 ordre.I_HEURE,
                                 ordre.I_DUREE,
                                 ordre.I_ENGAGEMENT);
+                        }
 
-                            LogFile.Notifier(string.Format("NouveauxOrdres envoie d'un ordre IDWeb={0}, ID={1} de type {2} à {3}({4})",
-                                ordre.ID_ORDRE,
-                                ligneOrdreARemettre.ID_ORDRE,
-                                ordre.I_TYPE,
-                                lignePion.S_NOM,
-                                lignePion.ID_PION));
+                        LogFile.Notifier(string.Format("NouveauxOrdres envoie d'un ordre IDWeb={0}, ID={1} de type {2} à {3}({4})",
+                            ordre.ID_ORDRE,
+                            ligneOrdreARemettre.ID_ORDRE,
+                            ordre.I_TYPE,
+                            lignePion.S_NOM,
+                            lignePion.ID_PION));
+                    }
+                    else
+                    {
+                        //ordre qui doit être remis à une unité par un messager
+                        if (bDestinationImpossible)
+                        {
+                            ligneOrdreARemettre = DestinationImpossible(ordre, lignePion, id_case_destination);
                         }
                         else
                         {
-                            //ordre qui doit être remis à une unité par un messager
                             ligneOrdreARemettre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                                 Constantes.NULLENTIER,//id_ordre_transmis
                                 Constantes.NULLENTIER,//id_ordre_suivant,//id_ordre_suivant
                                 ordre.ID_ORDRE, ///ordre web
-                                ordre.I_TYPE,
+                            ordre.I_TYPE,
                                 Constantes.NULLENTIER,//ordre.ID_PION,
                                 lignePion.ID_CASE,
                                 0,//i_effectif_depart lignePion.I_INFANTERIE + lignePion.I_CAVALERIE +lignePion.I_ARTILLERIE,
@@ -2682,56 +2688,56 @@ namespace vaoc
                                 ordre.I_HEURE,
                                 ordre.I_DUREE,
                                 ordre.I_ENGAGEMENT);
-                            if (ordre.ID_PION_CIBLE <0) {ligneOrdreARemettre.SetID_CIBLENull();}
-                            if (ordre.ID_PION_DESTINATAIRE_CIBLE < 0) { ligneOrdreARemettre.SetID_DESTINATAIRE_CIBLENull(); };
+                            if (ordre.ID_PION_CIBLE < 0) { ligneOrdreARemettre.SetID_CIBLENull(); }
+                            if (ordre.ID_PION_DESTINATAIRE_CIBLE < 0) { ligneOrdreARemettre.SetID_DESTINATAIRE_CIBLENull(); }
+                        }
 
-                            if (null == ligneOrdrePrecedent)
+                        if (null == ligneOrdrePrecedent)
+                        {
+                            lignePionMessager = ClassMessager.CreerMessager(lignePion);
+
+                            LogFile.Notifier(string.Format("NouveauxOrdres envoie d'un ordre par messager IDWeb={0}, ID={1} de type {2} de {3}({4}) à {5}({6}) transporté par le message id={7}",
+                                ordre.ID_ORDRE,
+                                ligneOrdreARemettre.ID_ORDRE,
+                                ordre.I_TYPE,
+                                lignePion.S_NOM,
+                                lignePion.ID_PION,
+                                lignePionDestination.S_NOM,
+                                lignePionDestination.ID_PION,
+                                lignePionMessager.ID_PION));
+
+                            //et maintenant, un ordre de mouvement
+                            compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION_DESTINATAIRE);
+
+                            if (!ClassMessager.ZoneGeographiqueVersCase(lignePionMessager, ordre.I_DISTANCE_DESTINATAIRE, compas, ordre.ID_NOM_LIEU_DESTINATAIRE, out id_case_destination))
                             {
-                                lignePionMessager = ClassMessager.CreerMessager(lignePion);
-
-                                LogFile.Notifier(string.Format("NouveauxOrdres envoie d'un ordre par messager IDWeb={0}, ID={1} de type {2} de {3}({4}) à {5}({6}) transporté par le message id={7}",
-                                    ordre.ID_ORDRE,
-                                    ligneOrdreARemettre.ID_ORDRE,
-                                    ordre.I_TYPE,
-                                    lignePion.S_NOM,
-                                    lignePion.ID_PION,
-                                    lignePionDestination.S_NOM,
-                                    lignePionDestination.ID_PION,
-                                    lignePionMessager.ID_PION));
-
-                                //et maintenant, un ordre de mouvement
-                                compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION_DESTINATAIRE);
-
-                                if (!ClassMessager.ZoneGeographiqueVersCase(lignePionMessager, ordre.I_DISTANCE_DESTINATAIRE, compas, ordre.ID_NOM_LIEU_DESTINATAIRE, out id_case_destination))
-                                {
-                                    LogFile.Notifier(string.Format("NouvelleHeure, impossible de trouver la case du destinataire pour ordre.ID_ORDRE={0} ID_NOM_LIEU={1} I_DISTANC={2}", ordre.ID_ORDRE, ordre.ID_NOM_LIEU_DESTINATAIRE, ordre.I_DISTANCE_DESTINATAIRE));
-                                    return false;
-                                }
-                                ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
-                                    ligneOrdreARemettre.ID_ORDRE,//id_ordre_transmis
-                                    Constantes.NULLENTIER,//id_ordre_suivant
-                                    Constantes.NULLENTIER, //ordre web
-                                    Constantes.ORDRES.MESSAGE,
-                                    lignePionMessager.ID_PION,
-                                    lignePionMessager.ID_CASE,//id_case_depart
-                                    0,//I_EFFECTIF_DEPART
-                                    lignePionDestination.ID_CASE,//id_case_destination, le messager sait où sont toutes les troupes ! -> s'il fallait être parfaitement logique il devrait partir vers la dernière position connue du joueur
-                                    Constantes.NULLENTIER,//ville de destination
-                                    0,//I_EFFECTIF_DESTINATION
-                                    Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
-                                    0,//I_PHASE_DEBUT
-                                    Constantes.NULLENTIER,//I_TOUR_FIN
-                                    Constantes.NULLENTIER,//I_PHASE_FIN
-                                    Constantes.NULLENTIER,//ID_MESSAGE,
-                                    ordre.ID_PION_DESTINATAIRE,//id_destinataire_message
-                                    Constantes.NULLENTIER,//ID_CIBLE
-                                    Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
-                                    Constantes.NULLENTIER,//ID_BATAILLE
-                                    Constantes.NULLENTIER,//I_ZONE_BATAILLE
-                                    Constantes.NULLENTIER,//I_HEURE_DEBUT
-                                    Constantes.NULLENTIER,//I_DUREE
-                                    Constantes.NULLENTIER);//I_ENGAGEMENT
+                                LogFile.Notifier(string.Format("NouvelleHeure, impossible de trouver la case du destinataire pour ordre.ID_ORDRE={0} ID_NOM_LIEU={1} I_DISTANC={2}", ordre.ID_ORDRE, ordre.ID_NOM_LIEU_DESTINATAIRE, ordre.I_DISTANCE_DESTINATAIRE));
+                                return false;
                             }
+                            ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                                ligneOrdreARemettre.ID_ORDRE,//id_ordre_transmis
+                                Constantes.NULLENTIER,//id_ordre_suivant
+                                Constantes.NULLENTIER, //ordre web
+                                Constantes.ORDRES.MESSAGE,
+                                lignePionMessager.ID_PION,
+                                lignePionMessager.ID_CASE,//id_case_depart
+                                0,//I_EFFECTIF_DEPART
+                                lignePionDestination.ID_CASE,//id_case_destination, le messager sait où sont toutes les troupes ! -> s'il fallait être parfaitement logique il devrait partir vers la dernière position connue du joueur
+                                Constantes.NULLENTIER,//ville de destination
+                                0,//I_EFFECTIF_DESTINATION
+                                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                                0,//I_PHASE_DEBUT
+                                Constantes.NULLENTIER,//I_TOUR_FIN
+                                Constantes.NULLENTIER,//I_PHASE_FIN
+                                Constantes.NULLENTIER,//ID_MESSAGE,
+                                ordre.ID_PION_DESTINATAIRE,//id_destinataire_message
+                                Constantes.NULLENTIER,//ID_CIBLE
+                                Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                                Constantes.NULLENTIER,//ID_BATAILLE
+                                Constantes.NULLENTIER,//I_ZONE_BATAILLE
+                                Constantes.NULLENTIER,//I_HEURE_DEBUT
+                                Constantes.NULLENTIER,//I_DUREE
+                                Constantes.NULLENTIER);//I_ENGAGEMENT
                         }
                     }
                     #endregion

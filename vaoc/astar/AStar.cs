@@ -46,7 +46,7 @@ namespace vaoc
 
         public bool Equals(Bloc bloc)
         {
-            return (bloc.xBloc == this.xBloc && bloc.yBloc == this.yBloc) ? true : false;
+            return (bloc.xBloc == this.xBloc && bloc.yBloc == this.yBloc);
         }
 
     //    public override int GetHashCode()
@@ -167,8 +167,8 @@ namespace vaoc
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
         public bool SearchPath(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain, int xmin, int xmax, int ymin, int ymax)
 		{
-            DateTime timeStart;
-            TimeSpan perf;
+            //DateTime timeStart;
+            //TimeSpan perf;
 
             m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
             m_nombrePixelParCase = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
@@ -181,10 +181,10 @@ namespace vaoc
 
             //Debug.WriteLine(string.Format("Début de AStar.SearchPath de {0} à {1}", StartNode.ID_CASE, EndNode.ID_CASE));
             m_idNation = -1;
-            timeStart = DateTime.Now;
+            //timeStart = DateTime.Now;
             Initialize(StartNode, EndNode);
 			while ( NextStep() ) {}
-            perf = DateTime.Now-timeStart;
+            //perf = DateTime.Now-timeStart;
             //Debug.WriteLine(string.Format("AStar.SearchPath en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
             return PathFound;
 		}
@@ -213,8 +213,8 @@ namespace vaoc
         /// <returns>'true' if succeeded / 'false' if failed.</returns>
         public bool SearchPathHPA(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode, AstarTerrain[] tableCoutsMouvementsTerrain, int idNation)
         {
-            DateTime timeStart;
-            TimeSpan perf;
+            //DateTime timeStart;
+            //TimeSpan perf;
 
             m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
             m_nombrePixelParCase = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
@@ -228,8 +228,8 @@ namespace vaoc
             //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
             //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
 
-            Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(StartNode.ID_CASE);
-            Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(EndNode.ID_CASE);
+            //Donnees.TAB_CASERow lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(StartNode.ID_CASE);
+            //Donnees.TAB_CASERow lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(EndNode.ID_CASE);
             //Debug.WriteLine(string.Format("Début de AStar.SearchPathHPA de {0}({1},{2}) -> {3}({4},{5})",
             //    lDebug1.ID_CASE,
             //    lDebug1.I_X,
@@ -238,10 +238,10 @@ namespace vaoc
             //    lDebug2.I_X,
             //    lDebug2.I_Y
             //    ));
-            timeStart = DateTime.Now;
+            //timeStart = DateTime.Now;
             Initialize(StartNode, EndNode);
             while (NextStepHPA()) { }
-            perf = DateTime.Now - timeStart;
+            //perf = DateTime.Now - timeStart;
             //Debug.WriteLine(string.Format("AStar.SearchPathHPA en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
             return PathFound;
         }
@@ -573,10 +573,8 @@ namespace vaoc
         {
             get
             {
-                int NbArcsOfPath; 
                 int CostOfPath;
-                int outRoad;
-                ResultInformation(out NbArcsOfPath, out CostOfPath, out outRoad);
+                ResultInformation(out _, out CostOfPath, out _);
                 return CostOfPath;
             }
         }
@@ -585,10 +583,8 @@ namespace vaoc
         {
             get
             {
-                int NbArcsOfPath;
-                int CostOfPath;
                 int outRoad;
-                ResultInformation(out NbArcsOfPath, out CostOfPath, out outRoad);
+                ResultInformation(out _, out _, out outRoad);
                 return outRoad;
             }
         }
@@ -848,7 +844,7 @@ namespace vaoc
                                 List<Donnees.TAB_PCC_COUTSRow> tableCout = Donnees.m_donnees.TAB_PCC_COUTS.CasesVoisines(lignesCout[0], true);
                                 foreach (Donnees.TAB_PCC_COUTSRow ligneCout in tableCout)
                                 {
-                                    AjouterBlocHPA(trackSource, ligneCout, ref listeRetour);
+                                    AjouterBlocHPA(ligneCout, ref listeRetour);
                                     /* debug 
                                     lDebug1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT);
                                     lDebug2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN);
@@ -905,7 +901,7 @@ namespace vaoc
                 List<Donnees.TAB_PCC_COUTSRow> tableCout = Donnees.m_donnees.TAB_PCC_COUTS.CasesVoisines(trackSource.EndNodeHPA, false);
                 foreach (Donnees.TAB_PCC_COUTSRow ligneCout in tableCout)
                 {
-                    AjouterBlocHPA(trackSource, ligneCout, ref listeRetour);
+                    AjouterBlocHPA(ligneCout, ref listeRetour);
                 }
 
                 //on regarde si le chemin ne conduit pas dans le bloc de destination
@@ -919,7 +915,7 @@ namespace vaoc
             return listeRetour;
         }
 
-        private void AjouterBlocHPA(Track trackSource, Donnees.TAB_PCC_COUTSRow ligneCout, ref System.Collections.Generic.IList<Track> listeRetour)
+        private void AjouterBlocHPA(Donnees.TAB_PCC_COUTSRow ligneCout, ref System.Collections.Generic.IList<Track> listeRetour)
         {
             //Donnees.TAB_CASERow lDebug1, lDebug2;
             Track nouveauPoint;
@@ -1022,7 +1018,7 @@ namespace vaoc
                 //case vers bloc
                 //Debug.WriteLineIf(trackSource.EndNode.ID_CASE != trackDestination.EndNodeHPA.ID_CASE_DEBUT,
                 //    "Cout : null != trackSource.EndNode && null != trackDestination.EndNodeHPA");
-                Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
+                //Donnees.TAB_CASERow caseBloc = Donnees.m_donnees.TAB_CASE.FindParID_CASE(trackDestination.EndNodeHPA.ID_CASE_DEBUT);
                 //if (m_idNation >= 0 && !trackDestination.EndNodeHPA.IsID_NATIONNull() && trackDestination.EndNodeHPA.ID_NATION != m_idNation)
                 //{
                 //    return AStar.CST_COUTMAX;//trajet intraversable
@@ -1058,7 +1054,7 @@ namespace vaoc
             //    return Int32.MaxValue;//case déjà occupée
             //}
 
-            int retour = -1;
+            int retour;
 
             if (m_idNation >= 0)
             {
@@ -1123,7 +1119,7 @@ namespace vaoc
 
         public int Cout(Node caseSource, Node caseFinale)
         {
-            int retour = -1;
+            int retour;
 
             try
             {
@@ -1202,8 +1198,8 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         internal bool SearchSpace0(Donnees.TAB_CASERow ligneCase, int espace, AstarTerrain[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out Donnees.TAB_CASERow[] listeCaseEspace, out string erreur)
         {
-            DateTime    timeStart;
-            TimeSpan    perf;
+            //DateTime    timeStart;
+            //TimeSpan    perf;
             string      requete;
             bool        bEspaceFound;
             //DataSetCoutDonnees.TAB_CASERow[] retour;
@@ -1226,7 +1222,7 @@ namespace vaoc
             while (!bEspaceFound)
             {
                 //recherche des coûts à partir de la case source
-                timeStart = DateTime.Now;
+                //timeStart = DateTime.Now;
                 InitializeSpace(ligneCase);
                 if (m_espace <= 1)
                 {
@@ -1239,7 +1235,7 @@ namespace vaoc
                 //m_maxY = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE, ligneCase.I_Y + espace);
 
                 while (NextSpaceStep()) { }
-                perf = DateTime.Now - timeStart;
+                //perf = DateTime.Now - timeStart;
                 //Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                 //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
@@ -1279,9 +1275,11 @@ namespace vaoc
             // par défaut on initialise les valeurs à "impassable"
             for (int i = 0; i < maxNumeroModeleTerrain + 1; i++)
             {
-                tableCoutsMouvementsTerrain[i] = new AstarTerrain();
-                tableCoutsMouvementsTerrain[i].cout = Constantes.CST_COUTMAX;
-                tableCoutsMouvementsTerrain[i].route = false;
+                tableCoutsMouvementsTerrain[i] = new AstarTerrain
+                {
+                    cout = Constantes.CST_COUTMAX,
+                    route = false
+                };
             }
 
             //recherche des vrais valeurs et des plus mauvaises valeurs suivant les effectifs présents
@@ -1319,7 +1317,7 @@ namespace vaoc
             return RechercheChemin(tipePacours, lignePion,
                 Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
                 Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDestination.ID_CASE),
-                ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
+                out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
         }
 
         public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
@@ -1327,7 +1325,7 @@ namespace vaoc
             return RechercheChemin(tipePacours, lignePion,
                 Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
                 ligneCaseDestination,
-                ligneOrdre, out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
+                out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
         }
         /// <summary>
         /// Recherche d'un trajet pour une unité sur la carte
@@ -1336,16 +1334,15 @@ namespace vaoc
         /// <param name="lignePion">Pion effectuant le trajet</param>
         /// <param name="ligneCaseDepart">case de départ</param>
         /// <param name="ligneCaseDestination">case de destination</param>
-        /// <param name="ligneOrdre">ordre de mouvement lié à ce chemin </param>
         /// <param name="chemin">liste de cases formant le chemin trouvé</param>
         /// <param name="coutGlobal">cout global du chemin</param>
         /// <param name="coutHorsRoute">part du cout effecuté en dehors d'une route</param>
         /// <param name="tableCoutsMouvementsTerrain">table du cout de mouvement des cases suivant l'unité et la météo</param>
         /// <param name="erreur">message d'erreur</param>
         /// <returns>true si ok, false si ko</returns>
-        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
-            string requete, message, messageErreur, tri;
+            string requete, message, tri;
             int i;
             DateTime timeStart;
             TimeSpan perf;
@@ -1361,7 +1358,7 @@ namespace vaoc
             if (null == lignePion || null == ligneCaseDepart || null == ligneCaseDestination)
             {
                 erreur = string.Format("RechercheChemin : lignePion ou ligneCaseDepart ou ligneCaseDestination null");
-                LogFile.Notifier(erreur, out messageErreur);
+                LogFile.Notifier(erreur);
                 return false;
             }
 
@@ -1397,14 +1394,14 @@ namespace vaoc
                         Monitor.Exit(Donnees.m_donnees.TAB_PARCOURS.Rows.SyncRoot);
                         message = string.Format("{0},ID={1}, RechercheChemin : existant en {2} minutes, {3} secondes, {4} millisecondes, lg={5}", 
                             lignePion.S_NOM, lignePion.ID_PION, perf.Minutes, perf.Seconds, perf.Milliseconds, parcoursExistant.Length);
-                        LogFile.Notifier(message, out messageErreur);
+                        LogFile.Notifier(message);
                         return true;
                     }
                     //sinon, ce n'est pas le même chemin, il faut donc le recalculer
                     message = string.Format("{0},ID={1}, RechercheChemin unité avec effectif: différent parcours existant allant de {2} à {3}, chemin demandé de {4} à {5}",
                         lignePion.S_NOM, lignePion.ID_PION, parcoursExistant[0].ID_CASE, parcoursExistant[parcoursExistant.Length - 1].ID_CASE,
                         ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
-                    LogFile.Notifier(message, out messageErreur);
+                    LogFile.Notifier(message);
 
                     //}
                     /* 14/05/2015, cela ne sert surement plus à rien les unités sans effectif suivent la même règle que les autres maintenant
@@ -1465,7 +1462,7 @@ namespace vaoc
             }
             message = string.Format("{0},ID={1}, RechercheChemin : SearchPath de {2} ({3},{4}) à {5} ({6},{7})",
                 lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDepart.I_X, ligneCaseDepart.I_Y, ligneCaseDestination.ID_CASE, ligneCaseDestination.I_X, ligneCaseDestination.I_Y);
-            LogFile.Notifier(message, out messageErreur);
+            LogFile.Notifier(message);
             this.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain, idNation);
             if (!this.PathFound)
             {
@@ -1474,7 +1471,7 @@ namespace vaoc
                 {
                     erreur = string.Format("{0},ID={1}, erreur sur SearchPath dans RechercheChemin idDepart={2}, idDestination={3})",
                         lignePion.S_NOM, lignePion.ID_PION, ligneCaseDepart.ID_CASE, ligneCaseDestination.ID_CASE);
-                    LogFile.Notifier(erreur, out messageErreur);
+                    LogFile.Notifier(erreur);
                     return false;
                 }
                 LogFile.Notifier(string.Format("{0},ID={1}, RechercheChemin : aucun chemin trouvé", lignePion.S_NOM, lignePion.ID_PION));
@@ -1496,7 +1493,7 @@ namespace vaoc
 
                 chemin = this.PathByNodes;
                 message = string.Format("RechercheChemin : SearchPath longueur={0}", chemin.Count);
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message);
 
                 //chemin = ParcoursOptimise(chemin); -> déplacé directement dans AStar
                 coutGlobal = this.CoutGlobal;
@@ -1525,7 +1522,7 @@ namespace vaoc
 
             perf = DateTime.Now - timeStart;
             message = string.Format("RechercheChemin : nouveau et stockage en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-            LogFile.Notifier(message, out messageErreur);
+            LogFile.Notifier(message);
             return true;
         }
 

@@ -65,7 +65,7 @@ namespace vaoc
         #region Constructors
         public ClassHPAStarCreation(string fichierCourant, int nouveauTailleBloc)
         {
-            LogFile.CreationLogFile(fichierCourant, "creationHPA", 0, 0);
+            LogFile.CreationLogFile("creationHPA", 0, 0);
             tailleBloc = nouveauTailleBloc;
             LogFile.Notifier("ClassHPAStarCreation");
         }

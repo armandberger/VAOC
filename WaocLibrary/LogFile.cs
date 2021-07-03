@@ -28,16 +28,9 @@ namespace WaocLib
         {
         }
 
-        public static void CreationLogFile(string nomFichier, string suffixe, int tour, int phase)
+        public static void CreationLogFile(string suffixe, int tour, int phase)
         {
-            string nomfichierTourPhase;
-            int positionPoint = nomFichier.LastIndexOf(".");
-
-            //recopie de la chaine avant l'extension
-            nomfichierTourPhase = nomFichier.Substring(0, positionPoint);
-            //ajout du tour et de la phase
-            nomfichierTourPhase = string.Format("{0}\\logs\\Log_{1}_{002}_{003}.log", Constantes.repertoireDonnees, suffixe, tour, phase);
-
+            string nomfichierTourPhase = string.Format("{0}\\logs\\Log_{1}_{002}_{003}.log", Constantes.repertoireDonnees, suffixe, tour, phase);
             CreationLogFile(nomfichierTourPhase);
         }
 
@@ -75,9 +68,9 @@ namespace WaocLib
         /// </summary>
         /// <param name="message">message to add to the log file</param>
         /// <returns>bool if ok, false if ko</returns>
-        public static void Notifier(string message)
+        public static bool Notifier(string message)
         {
-            if (m_fileName == string.Empty) { return; }
+            if (m_fileName == string.Empty) { return false; }
             StreamWriter file;
             try
             {
@@ -88,10 +81,12 @@ namespace WaocLib
                 file.Close();
                 m_phrases.Clear();
                 Monitor.Exit(m_verrouEcriture);
+                return true;
             }
             catch
             {
                 Monitor.Exit(m_verrouEcriture);
+                return false;
             }
         }
 

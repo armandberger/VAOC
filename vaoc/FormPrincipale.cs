@@ -2505,14 +2505,16 @@ namespace vaoc
 
         private void carteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCarte fCarte = new FormCarte();
+            FormCarte fCarte = new FormCarte
+            {
 
-            //affectation des tables
-            //fCarte.tableGraphisme = Donnees.m_donnees.TAB_GRAPHISME;
-            //fCarte.tablePoint = Donnees.m_donnees.TAB_POINT;
-            //fCarte.tableMeteo = Donnees.m_donnees.TAB_METEO;
-            //fCarte.tableModelesMouvements = Donnees.m_donnees.TAB_MODELE_MOUVEMENT;
-            fCarte.tableCase = Donnees.m_donnees.TAB_CASE;
+                //affectation des tables
+                //fCarte.tableGraphisme = Donnees.m_donnees.TAB_GRAPHISME;
+                //fCarte.tablePoint = Donnees.m_donnees.TAB_POINT;
+                //fCarte.tableMeteo = Donnees.m_donnees.TAB_METEO;
+                //fCarte.tableModelesMouvements = Donnees.m_donnees.TAB_MODELE_MOUVEMENT;
+                tableCase = Donnees.m_donnees.TAB_CASE
+            };
             //fCarte.tableModelesTerrains = Donnees.m_donnees.TAB_MODELE_TERRAIN;//à mettre après graphisme et point
             //fCarte.imageCarte = (Bitmap)ImageCarte.Image;
             if (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull())
@@ -2539,9 +2541,10 @@ namespace vaoc
 
         private void meteoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMeteo fMeteo = new FormMeteo();
-
-            fMeteo.tableMeteo = Donnees.m_donnees.TAB_METEO;
+            FormMeteo fMeteo = new FormMeteo
+            {
+                tableMeteo = Donnees.m_donnees.TAB_METEO
+            };
             if (DialogResult.OK == fMeteo.ShowDialog())
             {
                 m_modification = true;
@@ -2556,9 +2559,10 @@ namespace vaoc
 
         private void modelesDeMOuvementsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormModelesMouvements fModeleMouvement = new FormModelesMouvements();
-
-            fModeleMouvement.tableModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT;
+            FormModelesMouvements fModeleMouvement = new FormModelesMouvements
+            {
+                tableModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT
+            };
             if (DialogResult.OK == fModeleMouvement.ShowDialog())
             {
                 m_modification = true;
@@ -2860,9 +2864,10 @@ namespace vaoc
 
         private void policeDeCaractèresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPolice fPolice = new FormPolice();
-
-            fPolice.tablePolice = Donnees.m_donnees.TAB_POLICE;
+            FormPolice fPolice = new FormPolice
+            {
+                tablePolice = Donnees.m_donnees.TAB_POLICE
+            };
             if (DialogResult.OK == fPolice.ShowDialog())
             {
                 m_modification = true;
@@ -3024,18 +3029,20 @@ namespace vaoc
 
         private void utilisateursToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormUtilisateur fUtilisateur = new FormUtilisateur();
-
-            fUtilisateur.fichierCourant = curFileName;
+            FormUtilisateur fUtilisateur = new FormUtilisateur
+            {
+                fichierCourant = curFileName
+            };
             fUtilisateur.ShowDialog();
         }
 
         private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormRole fRole = new FormRole();
-
-            fRole.fichierCourant = curFileName;
-            fRole.tableRole = Donnees.m_donnees.TAB_ROLE;
+            FormRole fRole = new FormRole
+            {
+                fichierCourant = curFileName,
+                tableRole = Donnees.m_donnees.TAB_ROLE
+            };
             if (DialogResult.OK == fRole.ShowDialog())
             {
                 m_modification = true;
@@ -3059,9 +3066,10 @@ namespace vaoc
 
         private void modelesDeCombatToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNation fNation = new FormNation();
-
-            fNation.tableNation = Donnees.m_donnees.TAB_NATION;
+            FormNation fNation = new FormNation
+            {
+                tableNation = Donnees.m_donnees.TAB_NATION
+            };
             if (DialogResult.OK == fNation.ShowDialog())
             {
                 m_modification = true;
@@ -3098,9 +3106,10 @@ namespace vaoc
 
         private void pionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPion fPion = new FormPion();
-
-            fPion.tablePions = Donnees.m_donnees.TAB_PION;
+            FormPion fPion = new FormPion
+            {
+                tablePions = Donnees.m_donnees.TAB_PION
+            };
             if (DialogResult.OK == fPion.ShowDialog())
             {
                 m_modification = true;
@@ -3268,7 +3277,7 @@ namespace vaoc
                 e.Result = "La partie est déjà terminée avec la victoire de la nation ID=" + Donnees.m_donnees.TAB_PARTIE[0].ID_VICTOIRE;
             }
 
-            string messageErreur = string.Empty;
+            string messageErreur;
             e.Cancel = false;
             m_nbBatailles = Donnees.m_donnees.TAB_BATAILLE.Count;
             if (!traitement.TraitementHeure(fichierCourant, travailleur, out messageErreur))
@@ -3518,10 +3527,10 @@ namespace vaoc
         {
             ClassTraitementHeure traitement = new ClassTraitementHeure();
 
-            string messageErreur = string.Empty;
+            string messageErreur;
             if (!traitement.miseÀJourInternet(fichierCourant, out messageErreur))
             {
-                MessageBox.Show("Erreur durant la mise à jour du Web. Consultez le fichier de log", "miseÀJourInternet", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erreur durant la mise à jour du Web. Consultez le fichier de log : " + messageErreur, "miseÀJourInternet", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
@@ -3559,7 +3568,6 @@ namespace vaoc
 
                 //recherche du trajet de l'unité en mémoire s'il existe pour l'affichage
                 if (null != m_cheminSelection) { m_cheminSelection.Clear(); }
-                string messageErreur;
                 this.buttonRecalculTrajet.Enabled = false;
                 this.buttonVerifierTrajet.Enabled = false;
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
@@ -3572,7 +3580,7 @@ namespace vaoc
                     AStar etoile = new AStar();
 
                     if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
-                        m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                        m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
                     {
                         this.buttonVerifierTrajet.Enabled = true;
                         this.buttonRecalculTrajet.Enabled = true;
@@ -3935,14 +3943,13 @@ namespace vaoc
                     //    return;
                     //}
                     //if (!m_etoileHPA.SearchPathHPA(m_departPlusCourtChemin, m_arriveePlusCourtChemin, tableCoutsMouvementsTerrain, -1))
-                    string messageErreur;
                     List<LigneCASE> chemin;
                     double cout, coutHorsRoute;
 
                     int id_case = lignePion.ID_CASE;
                     lignePion.ID_CASE = m_departPlusCourtChemin.ID_CASE;
                     if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
-                        out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                        out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
                     {
                             MessageBox.Show(string.Format("Il n'y a aucun chemin possible entre les points {0}:{1},{2} -> {3}:{4},{5}", 
                             m_departPlusCourtChemin.ID_CASE, m_departPlusCourtChemin.I_X, m_departPlusCourtChemin.I_Y,
@@ -4368,10 +4375,10 @@ namespace vaoc
             //Recalcul du nouveau trajet
             AStar etoile = new AStar();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
-                m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, ligneOrdre,
+                m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, 
                 out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
             {
-                MessageBox.Show("Erreur dans RechercheChemin.", "buttonRecalculTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Erreur dans RechercheChemin : "+ messageErreur, "buttonRecalculTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             if (m_lignePionSelection.effectifTotal > 0)
@@ -4623,9 +4630,10 @@ namespace vaoc
 
         private void donneesVidéoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormVideoTable fVideoTable = new FormVideoTable();
-
-            fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
+            FormVideoTable fVideoTable = new FormVideoTable
+            {
+                tableVideo = Donnees.m_donnees.TAB_VIDEO
+            };
             if (DialogResult.OK == fVideoTable.ShowDialog())
             {
                 m_modification = true;

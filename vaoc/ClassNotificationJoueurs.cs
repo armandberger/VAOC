@@ -16,7 +16,7 @@ namespace vaoc
 
         public ClassNotificationJoueurs(string fichierCourant)
         {
-            LogFile.CreationLogFile(fichierCourant, "courriel", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            LogFile.CreationLogFile("courriel", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
             m_fichierCourant = fichierCourant;
 
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(m_fichierCourant, string.Empty, false);

@@ -630,7 +630,7 @@ namespace vaoc
                 couleursDeRemplacement[6] = Color.FromArgb(64, 64, 0);//colline
 
                 //Supression de toutes les couleurs non utilisées
-                LogFile.CreationLogFile(textBoxFichierImage.Text, "SuppressionCouleur", 0, 0);
+                LogFile.CreationLogFile("SuppressionCouleur", 0, 0);
                 m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
                 for (int x = 0; x < m_imageCarte.Width; x++)
                 {

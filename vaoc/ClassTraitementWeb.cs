@@ -21,7 +21,7 @@ namespace vaoc
 
         public ClassTraitementWeb(string fichierCourant)
         {
-            LogFile.CreationLogFile(fichierCourant, "web", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+            LogFile.CreationLogFile("web", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
             int positionPoint = fichierCourant.LastIndexOf("\\");
             m_repertoireSource = fichierCourant.Substring(0, positionPoint);
         }

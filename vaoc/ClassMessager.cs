@@ -1393,7 +1393,7 @@ namespace vaoc
                 Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 //dans de rares cas, le destinataire peut bouger entre la création du messager et celle de l'ordre ce qui provoque des erreurs de mouvement
                 lignePionMessager = CreerMessager(lignePionEmetteur);
-                int id_Case_Destination = idCaseDestination.HasValue ? idCaseDestination.Value : lignePionDestinataire.ID_CASE;
+                int id_Case_Destination = idCaseDestination ?? lignePionDestinataire.ID_CASE;
                 Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 if (null!=lignePionMessager)
                 {
@@ -2215,10 +2215,12 @@ namespace vaoc
                             }
                             else
                             {
-                                Barycentre bar = new Barycentre();
-                                bar.x = ligneCaseVue.I_X;
-                                bar.y = ligneCaseVue.I_Y;
-                                bar.nb = 1;
+                                Barycentre bar = new Barycentre
+                                {
+                                    x = ligneCaseVue.I_X,
+                                    y = ligneCaseVue.I_Y,
+                                    nb = 1
+                                };
                                 unitesVisibles.Add(ligneCaseVue.ID_PROPRIETAIRE, bar);
                             }
                         }
@@ -2523,8 +2525,10 @@ namespace vaoc
                             if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
                             {
                                 //si la case est trouvé on recherche toutes les cases de même type contigues
-                                List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
-                                listeCasesVoisines.Add(ligneCaseVue);
+                                List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>
+                                {
+                                    ligneCaseVue
+                                };
                                 ligneCaseVue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
                                 for (int ll = 0; ll < listeCasesVoisines.Count; ll++)
                                 {

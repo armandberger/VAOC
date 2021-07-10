@@ -179,11 +179,13 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataRole role = new ClassDataRole();
-                role.ID_ROLE = Convert.ToInt32(noeud["ID_ROLE"].InnerText);
-                role.ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText);
-                role.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-                role.S_NOM = noeud["S_NOM"].InnerText;
+                ClassDataRole role = new ClassDataRole
+                {
+                    ID_ROLE = Convert.ToInt32(noeud["ID_ROLE"].InnerText),
+                    ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText),
+                    ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
+                    S_NOM = noeud["S_NOM"].InnerText
+                };
                 listeRoles.Add(role);
                 role.ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText);
                 role.ID_NATION = Convert.ToInt32(noeud["ID_NATION"].InnerText);
@@ -218,15 +220,17 @@ namespace vaoc
 
         private ClassDataUtilisateur AffecterUtilisateur(XmlNode noeud)
         {
-            ClassDataUtilisateur utilisateur = new ClassDataUtilisateur();
-            utilisateur.ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText);
-            utilisateur.DT_CREATION = Convert.ToDateTime(noeud["DT_CREATION"].InnerText);
-            utilisateur.DT_DERNIERECONNEXION = Convert.ToDateTime(noeud["DT_DERNIERECONNEXION"].InnerText);
-            utilisateur.S_LOGIN = noeud["S_LOGIN"].InnerText;
-            utilisateur.S_COURRIEL = noeud["S_COURRIEL"].InnerText;
-            utilisateur.S_NOM = noeud["S_NOM"].InnerText;
-            utilisateur.S_PRENOM = noeud["S_PRENOM"].InnerText;
-            utilisateur.I_ONR = CalculNombreDeToursSansOrdre(utilisateur.ID_UTILISATEUR);
+            ClassDataUtilisateur utilisateur = new ClassDataUtilisateur
+            {
+                ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText),
+                DT_CREATION = Convert.ToDateTime(noeud["DT_CREATION"].InnerText),
+                DT_DERNIERECONNEXION = Convert.ToDateTime(noeud["DT_DERNIERECONNEXION"].InnerText),
+                S_LOGIN = noeud["S_LOGIN"].InnerText,
+                S_COURRIEL = noeud["S_COURRIEL"].InnerText,
+                S_NOM = noeud["S_NOM"].InnerText,
+                S_PRENOM = noeud["S_PRENOM"].InnerText,
+                I_ONR = CalculNombreDeToursSansOrdre(Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText))
+            };
             return utilisateur;
         }
 
@@ -332,16 +336,17 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataJeu jeu = new ClassDataJeu();
-                jeu.DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText);
-                jeu.ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText);
-                jeu.I_NOMBRE_PHASES = Convert.ToInt32(noeud["I_NOMBRE_PHASES"].InnerText);
-                jeu.I_NOMBRE_TOURS = Convert.ToInt32(noeud["I_NOMBRE_TOURS"].InnerText);
-                jeu.I_HEURE_INITIALE = Convert.ToInt32(noeud["I_HEURE_INITIALE"].InnerText);                
-                jeu.I_LEVER_DU_SOLEIL = Convert.ToInt32(noeud["I_LEVER_DU_SOLEIL"].InnerText);                
-                jeu.I_COUCHER_DU_SOLEIL = Convert.ToInt32(noeud["I_COUCHER_DU_SOLEIL"].InnerText);                
-                        
-                jeu.S_NOM = noeud["S_NOM"].InnerText;
+                ClassDataJeu jeu = new ClassDataJeu
+                {
+                    DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText),
+                    ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
+                    I_NOMBRE_PHASES = Convert.ToInt32(noeud["I_NOMBRE_PHASES"].InnerText),
+                    I_NOMBRE_TOURS = Convert.ToInt32(noeud["I_NOMBRE_TOURS"].InnerText),
+                    I_HEURE_INITIALE = Convert.ToInt32(noeud["I_HEURE_INITIALE"].InnerText),
+                    I_LEVER_DU_SOLEIL = Convert.ToInt32(noeud["I_LEVER_DU_SOLEIL"].InnerText),
+                    I_COUCHER_DU_SOLEIL = Convert.ToInt32(noeud["I_COUCHER_DU_SOLEIL"].InnerText),
+                    S_NOM = noeud["S_NOM"].InnerText
+                };
                 listeJeux.Add(jeu);
             }
             return listeJeux;
@@ -360,15 +365,17 @@ namespace vaoc
             {
                 return null;
             }
-            ClassDataJeu jeu = new ClassDataJeu();
-            jeu.DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText);
-            jeu.ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText);
-            jeu.I_NOMBRE_PHASES = Convert.ToInt32(noeud["NOMBRE_PHASES"].InnerText);
-            jeu.I_NOMBRE_TOURS = Convert.ToInt32(noeud["NOMBRE_TOURS"].InnerText);
-            jeu.I_HEURE_INITIALE = Convert.ToInt32(noeud["I_HEURE_INITIALE"].InnerText);
-            jeu.I_LEVER_DU_SOLEIL = Convert.ToInt32(noeud["I_LEVER_DU_SOLEIL"].InnerText);
-            jeu.I_COUCHER_DU_SOLEIL = Convert.ToInt32(noeud["I_COUCHER_DU_SOLEIL"].InnerText);
-            jeu.S_NOM = noeud["S_NOM"].InnerText;
+            ClassDataJeu jeu = new ClassDataJeu
+            {
+                DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText),
+                ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
+                I_NOMBRE_PHASES = Convert.ToInt32(noeud["NOMBRE_PHASES"].InnerText),
+                I_NOMBRE_TOURS = Convert.ToInt32(noeud["NOMBRE_TOURS"].InnerText),
+                I_HEURE_INITIALE = Convert.ToInt32(noeud["I_HEURE_INITIALE"].InnerText),
+                I_LEVER_DU_SOLEIL = Convert.ToInt32(noeud["I_LEVER_DU_SOLEIL"].InnerText),
+                I_COUCHER_DU_SOLEIL = Convert.ToInt32(noeud["I_COUCHER_DU_SOLEIL"].InnerText),
+                S_NOM = noeud["S_NOM"].InnerText
+            };
 
             return jeu;
         }
@@ -380,11 +387,13 @@ namespace vaoc
 
         private ClassDataPartie ConversionPartie(XmlNode noeud)
         {
-            ClassDataPartie partie = new ClassDataPartie();
-            partie.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-            partie.ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText);
-            partie.S_NOM = noeud["S_NOM"].InnerText;
-            partie.I_TOUR = Convert.ToInt32(noeud["I_TOUR"].InnerText);
+            ClassDataPartie partie = new ClassDataPartie
+            {
+                ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
+                ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
+                S_NOM = noeud["S_NOM"].InnerText,
+                I_TOUR = Convert.ToInt32(noeud["I_TOUR"].InnerText)
+            };
             try
             {
                 partie.DT_TOUR = Convert.ToDateTime(noeud["DT_TOUR"].InnerText);
@@ -495,15 +504,16 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataMessage message = new ClassDataMessage();
-                message.ID_MESSAGE = Convert.ToInt32(noeud["ID_MESSAGE"].InnerText);
-                message.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-                message.ID_EMETTEUR = Convert.ToInt32(noeud["ID_EMETTEUR"].InnerText);
-                message.ID_PION_PROPRIETAIRE = Convert.ToInt32(noeud["ID_PION_PROPRIETAIRE"].InnerText);
-                message.DT_DEPART = Convert.ToDateTime(noeud["DT_DEPART"].InnerText);
-                message.DT_ARRIVEE = Convert.ToDateTime(noeud["DT_ARRIVEE"].InnerText);
-                message.S_MESSAGE = Convert.ToString(noeud["S_MESSAGE"].InnerText).Replace("\\'", "'");//remplacement des \' par de simples apostrophes 
-;
+                ClassDataMessage message = new ClassDataMessage
+                {
+                    ID_MESSAGE = Convert.ToInt32(noeud["ID_MESSAGE"].InnerText),
+                    ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
+                    ID_EMETTEUR = Convert.ToInt32(noeud["ID_EMETTEUR"].InnerText),
+                    ID_PION_PROPRIETAIRE = Convert.ToInt32(noeud["ID_PION_PROPRIETAIRE"].InnerText),
+                    DT_DEPART = Convert.ToDateTime(noeud["DT_DEPART"].InnerText),
+                    DT_ARRIVEE = Convert.ToDateTime(noeud["DT_ARRIVEE"].InnerText),
+                    S_MESSAGE = Convert.ToString(noeud["S_MESSAGE"].InnerText).Replace("\\'", "'")//remplacement des \' par de simples apostrophes 
+                };
                 listeMessages.Add(message);
             }
 
@@ -529,28 +539,30 @@ namespace vaoc
             //Donnees.TAB_ORDRERow ligneOrdreDebug = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(1067);
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataOrdre ordre = new ClassDataOrdre();
-                ordre.ID_ORDRE = Convert.ToInt32(noeud["ID_ORDRE"].InnerText);
-                ordre.ID_ORDRE_SUIVANT = null != noeud["ID_ORDRE_SUIVANT"] ? Convert.ToInt32(noeud["ID_ORDRE_SUIVANT"].InnerText) : -1;
-                ordre.ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText);
-                ordre.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-                ordre.I_TOUR = Convert.ToInt32(noeud["I_TOUR"].InnerText);
-                ordre.I_TYPE = Convert.ToInt32(noeud["I_TYPE"].InnerText);
-                ordre.S_MESSAGE = Convert.ToString(noeud["S_MESSAGE"].InnerText).Replace("\\'", "'");//remplacement des \' par de simples apostrophes 
-                ordre.I_DISTANCE = Convert.ToInt32(noeud["I_DISTANCE"].InnerText);
-                ordre.I_DIRECTION = Convert.ToInt32(noeud["I_DIRECTION"].InnerText);
-                ordre.ID_NOM_LIEU = Convert.ToInt32(noeud["ID_NOM_LIEU"].InnerText);
-                ordre.I_HEURE = Convert.ToInt32(noeud["I_HEURE"].InnerText);
-                ordre.I_DUREE = Convert.ToInt32(noeud["I_DUREE"].InnerText);
-                ordre.I_DISTANCE_DESTINATAIRE = Convert.ToInt32(noeud["I_DISTANCE"].InnerText);
-                ordre.I_DIRECTION_DESTINATAIRE = Convert.ToInt32(noeud["I_DIRECTION"].InnerText);
-                ordre.ID_NOM_LIEU_DESTINATAIRE = Convert.ToInt32(noeud["ID_NOM_LIEU"].InnerText);
-                ordre.I_ZONE_BATAILLE = Convert.ToInt32(noeud["I_ZONE_BATAILLE"].InnerText);
-                ordre.ID_BATAILLE = Convert.ToInt32(noeud["ID_BATAILLE"].InnerText);
-                ordre.ID_PION_CIBLE = null != noeud["ID_PION_CIBLE"] ? Convert.ToInt32(noeud["ID_PION_CIBLE"].InnerText) : -1;
-                ordre.ID_PION_DESTINATAIRE_CIBLE = null != noeud["ID_PION_DESTINATAIRE_CIBLE"] ? Convert.ToInt32(noeud["ID_PION_DESTINATAIRE_CIBLE"].InnerText) : -1;
-                ordre.I_ENGAGEMENT = null != noeud["I_ENGAGEMENT"] ? Convert.ToInt32(noeud["I_ENGAGEMENT"].InnerText) : -1;
-                
+                ClassDataOrdre ordre = new ClassDataOrdre
+                {
+                    ID_ORDRE = Convert.ToInt32(noeud["ID_ORDRE"].InnerText),
+                    ID_ORDRE_SUIVANT = null != noeud["ID_ORDRE_SUIVANT"] ? Convert.ToInt32(noeud["ID_ORDRE_SUIVANT"].InnerText) : -1,
+                    ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText),
+                    ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
+                    I_TOUR = Convert.ToInt32(noeud["I_TOUR"].InnerText),
+                    I_TYPE = Convert.ToInt32(noeud["I_TYPE"].InnerText),
+                    S_MESSAGE = Convert.ToString(noeud["S_MESSAGE"].InnerText).Replace("\\'", "'"),//remplacement des \' par de simples apostrophes 
+                    I_DISTANCE = Convert.ToInt32(noeud["I_DISTANCE"].InnerText),
+                    I_DIRECTION = Convert.ToInt32(noeud["I_DIRECTION"].InnerText),
+                    ID_NOM_LIEU = Convert.ToInt32(noeud["ID_NOM_LIEU"].InnerText),
+                    I_HEURE = Convert.ToInt32(noeud["I_HEURE"].InnerText),
+                    I_DUREE = Convert.ToInt32(noeud["I_DUREE"].InnerText),
+                    I_DISTANCE_DESTINATAIRE = Convert.ToInt32(noeud["I_DISTANCE"].InnerText),
+                    I_DIRECTION_DESTINATAIRE = Convert.ToInt32(noeud["I_DIRECTION"].InnerText),
+                    ID_NOM_LIEU_DESTINATAIRE = Convert.ToInt32(noeud["ID_NOM_LIEU"].InnerText),
+                    I_ZONE_BATAILLE = Convert.ToInt32(noeud["I_ZONE_BATAILLE"].InnerText),
+                    ID_BATAILLE = Convert.ToInt32(noeud["ID_BATAILLE"].InnerText),
+                    ID_PION_CIBLE = null != noeud["ID_PION_CIBLE"] ? Convert.ToInt32(noeud["ID_PION_CIBLE"].InnerText) : -1,
+                    ID_PION_DESTINATAIRE_CIBLE = null != noeud["ID_PION_DESTINATAIRE_CIBLE"] ? Convert.ToInt32(noeud["ID_PION_DESTINATAIRE_CIBLE"].InnerText) : -1,
+                    I_ENGAGEMENT = null != noeud["I_ENGAGEMENT"] ? Convert.ToInt32(noeud["I_ENGAGEMENT"].InnerText) : -1
+                };
+
                 //l'ordre est toujours donné du responsable du pion vers le pion, sauf si c'est un QG
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ordre.ID_PION);
                 if (null == lignePion) continue;//possible si j'ai remis un fichier d'ordres ultérieurs au tour, les unités peuvent ne pas avoir été crées
@@ -687,13 +699,15 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataModeles modele = new ClassDataModeles();
-                modele.ID_MODELE_PION  = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText);
-                modele.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-                modele.S_NOM = null!=noeud["S_NOM"] ? noeud["S_NOM"].InnerText : "inconnu";
-                modele.S_IMAGE = null!=noeud["S_IMAGE"] ? noeud["S_IMAGE"].InnerText : "inconnu.jpg";
-                modele.I_VISION_JOUR = null!=noeud["I_VISION_JOUR"] ? Convert.ToInt32(noeud["I_VISION_JOUR"].InnerText) : 0;
-                modele.I_VISION_NUIT = null!=noeud["I_VISION_NUIT"] ? Convert.ToInt32(noeud["I_VISION_NUIT"].InnerText) : 0;
+                ClassDataModeles modele = new ClassDataModeles
+                {
+                    ID_MODELE_PION = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText),
+                    ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
+                    S_NOM = null != noeud["S_NOM"] ? noeud["S_NOM"].InnerText : "inconnu",
+                    S_IMAGE = null != noeud["S_IMAGE"] ? noeud["S_IMAGE"].InnerText : "inconnu.jpg",
+                    I_VISION_JOUR = null != noeud["I_VISION_JOUR"] ? Convert.ToInt32(noeud["I_VISION_JOUR"].InnerText) : 0,
+                    I_VISION_NUIT = null != noeud["I_VISION_NUIT"] ? Convert.ToInt32(noeud["I_VISION_NUIT"].InnerText) : 0
+                };
                 listeModeles.Add(modele);
             }
             return listeModeles;

@@ -1217,7 +1217,7 @@ namespace vaoc
                 Cursor oldCursor = Cursor.Current;
                 Donnees.TAB_CASEDataTable donneesSource = new TAB_CASEDataTable();
                 string repertoire, nomfichier;
-                int i = 0, debutNouvellesLignes;
+                int i, debutNouvellesLignes;
                 TAB_CASERow ligneCase;
 
                 try

@@ -174,8 +174,10 @@ namespace vaoc
                     hpaStarCreation.InitialisationIdTrajet();//pour calculer le prochain IdTrajet en création
 
                     //recherche de toutes les cases constituant le ponton
-                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>();
-                    listeCasesPont.Add(this);
+                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>
+                    {
+                        this
+                    };
                     ListeCasesVoisinesDeMemeType(ref listeCasesPont);
                     Debug.WriteLine(string.Format("ConstruirePonton sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count()));
 
@@ -241,8 +243,10 @@ namespace vaoc
                     ClassHPAStarCreation hpaStarCreation = new ClassHPAStarCreation(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
 
                     //recherche de toutes les cases constituant le pont
-                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>();
-                    listeCasesPont.Add(this);
+                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>
+                    {
+                        this
+                    };
                     ListeCasesVoisinesDeMemeType(ref listeCasesPont);
                     //Debug.WriteLine(string.Format("EndommagerReparerPont sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count()));
 
@@ -390,8 +394,10 @@ namespace vaoc
                 //si la case est trouvé on recherche toutes les cases de même type contigues
                 if (null != ligneCasePontGue)
                 {
-                    List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>();
-                    listeCasesVoisines.Add(ligneCasePontGue);
+                    List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>
+                    {
+                        ligneCasePontGue
+                    };
                     ligneCasePontGue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
                     tailleDuPontOuGue = listeCasesVoisines.Count();
                 }

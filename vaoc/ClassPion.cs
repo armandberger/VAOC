@@ -3372,7 +3372,7 @@ namespace vaoc
             internal bool RechercheEspace(bool depart, Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeIDCaseEspace, out string erreur)
             {
                 string message;
-                char typeEspace;
+                //char typeEspace;
 
                 DateTime timeStart;
                 TimeSpan perf;
@@ -3388,7 +3388,7 @@ namespace vaoc
                     return false;
                 }
 
-                typeEspace = (depart) ? AStar.CST_DEPART : AStar.CST_DESTINATION;
+                //typeEspace = (depart) ? AStar.CST_DEPART : AStar.CST_DESTINATION;
                 //existe-il déjà un chemin pour le pion sur le trajet demandé ? BEA, vérifier, si cela se trouve c'est devenu aussi rapide de refaire le calcul à chaque fois
                 //string requete = string.Format("ID_PION={0} AND C_TYPE='{1}'", ID_PION, typeEspace);
                 /* Note : en traitement parallèle, il semblerait que locker/rechercher les données de TAB_ESPACE prennent plus de temps que de refaire le calcul

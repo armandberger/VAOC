@@ -967,7 +967,13 @@ namespace vaoc
                         {
                             requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
                         }
-                    }                
+                    }
+                    else
+                    {
+                        //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                        requete = GenereLignePion(lignePion, idPartie, -1, ligneMessage);//renverra vide si ligneMessage est Null, ce qui est possible (convoi crée par un dépôt et message non encore arrivé par exemple
+                    }
                 }
                 if (requete != string.Empty)
                 {

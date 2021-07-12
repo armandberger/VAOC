@@ -985,7 +985,7 @@ namespace vaoc
                     else
                     {
                         //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_ANCIEN_PION_PROPRIETAIRE);
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
                         requete = GenereLignePion(lignePion, idPartie, -1, ligneMessage);//renverra vide si ligneMessage est Null, ce qui est possible (convoi crée par un dépôt et message non encore arrivé par exemple
                     }
                 }
@@ -1047,9 +1047,10 @@ namespace vaoc
                 iZoneBataille = (lignePion.IsI_ZONE_BATAILLENull()) ? -1 : lignePion.I_ZONE_BATAILLE;//on voit toujours la position réelle en bataille
                 idBataille = (ligneMessage.IsID_BATAILLENull()) ? -1 : ligneMessage.ID_BATAILLE;
             }
-            if (null == ligneMessage)
+            if (null == ligneMessage && idBataille<0)
             {
                 //si le chef n'a reçu aucun message, il ne doit pas voir l'unité, exemple, en combat, nouvelle unité de blessés
+                //sauf si celle-ci est engagée au combat
                 return string.Empty;
 
                 //bDetruit = 0;
@@ -1069,7 +1070,7 @@ namespace vaoc
             }
             else
             {
-                bDetruit = (ligneMessage.B_DETRUIT) ? 1 : 0;
+                bDetruit = (null != ligneMessage && ligneMessage.B_DETRUIT) ? 1 : 0;
                 if (null != ligneMessage && ligneMessage.I_CAVALERIE > 0)
                 {
                     iPatrouillesMax = Math.Max(1, ligneMessage.I_CAVALERIE / 1000);
@@ -1103,7 +1104,7 @@ namespace vaoc
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out sPosition);
                 }
             }
-            sOrdreCourant = lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
+            sOrdreCourant = (null== ligneMessage) ? "aucune ordre connu" : lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
             sPosition = sPosition.Replace("'", "''");//remplacement des apostrophes pour l'insertion en base
 
             Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
@@ -1120,7 +1121,7 @@ namespace vaoc
             int iMateriel = (null == ligneMessage) ? lignePion.I_MATERIEL : ligneMessage.I_MATERIEL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
             char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
-            if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
+            if (null!=ligneMessage && lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
             {
                 sOrdreCourant += "(ravitaillement direct)";
             }
@@ -1129,7 +1130,7 @@ namespace vaoc
                                     "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}', {55}, '{56}')",
                                     lignePion.ID_PION,//0
                                     idPartie,
-                                    (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE>0) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
+                                    (null==ligneMessage || (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE>0)) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas
                                     lignePion.ID_MODELE_PION,
                                     Constantes.ChaineSQL(lignePion.S_NOM),
                                     iInfanterie,//5
@@ -1183,7 +1184,7 @@ namespace vaoc
                                     lignePion.IsID_PION_REMPLACENull() ? -1 : lignePion.ID_PION_REMPLACE,
                                     Constantes.ChaineSQL(sOrdreCourant),
                                     lignePion.IsI_TRINull() || lignePion.I_TRI<0 ? lignePion.ID_PION : lignePion.I_TRI,
-                                    ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART)
+                                    (null==ligneMessage) ? "inconnu" : ClassMessager.DateHeureSQL(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART)
                                     );
             return requete;
         }

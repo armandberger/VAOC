@@ -759,7 +759,7 @@ namespace vaoc
                         Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion2.ID_CASE);
                         double dist = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCase2.I_X, ligneCase2.I_Y);
                         if (!lignePion.IsID_BATAILLENull() && !lignePion2.IsID_BATAILLENull() &&
-                            (lignePion.ID_BATAILLE == lignePion2.ID_BATAILLE) || (dist <= 1* Donnees.m_donnees.TAB_JEU[0].I_ECHELLE))
+                            (lignePion.ID_BATAILLE == lignePion2.ID_BATAILLE) || (dist <= Constantes.CST_DISTANCE_FORUM * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE))
                         {
                             if (bPremier)
                             {

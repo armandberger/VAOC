@@ -750,7 +750,7 @@ namespace vaoc
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0)
+                if (!lignePion.B_DETRUIT && lignePion.effectifTotalEnMouvement > 0)
                 {
                     liste.Add(lignePion);
                 }
@@ -762,6 +762,7 @@ namespace vaoc
             catch (AggregateException ex)
             {
                 LogFile.Notifier("ExecuterMouvementAvecEffectifsEnParallele Exception" + ex.Message + " trace:" + ex.StackTrace);
+                return false;
             }
             return true;
         }
@@ -772,7 +773,7 @@ namespace vaoc
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotal)
+                if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotalEnMouvement)
                 {
                     liste.Add(lignePion);
                 }
@@ -784,6 +785,7 @@ namespace vaoc
             catch (AggregateException ex)
             {
                 LogFile.Notifier("ExecuterMouvementAvecEffectifsEnParallele Exception" + ex.Message + " trace:" + ex.StackTrace);
+                return false;
             }
             return true;
         }
@@ -3593,85 +3595,93 @@ namespace vaoc
             string message;
 
             //TestCreationUnite(0, 1);
-            ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
-            Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
-            if (null != ligneOrdre)
+            try
             {
-                if (ligneOrdre.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE)
+                ////il y a un ordre de mouvement pour l'unité, on prend le premier émis
+                Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION);
+                if (null != ligneOrdre)
                 {
-                    ligneOrdre = ExecuterOrdreSuivreMouvement(lignePion, ligneOrdre);
-                    //Si ExecuterOrdreSuivreMouvement renvoie null cela indique que l'unité suit correctement sa cible et qu'il n'y a pas d'orde de "rapprochement" à  faire
-                    if (null==ligneOrdre) { return true; }
-                }
-                //si l'ordre de mouvement n'est pas actif, le pion ne doit pas bouger
-                if (!lignePion.OrdreActif(ligneOrdre))
-                {
-                    //lignePion.PlacerPionEnRoute(ligneOrdre, lignePion.nation); -> dejà fait dans le placement statique
-                    return true;
-                }
-
-                //recherche les modèles de l'unité
-                Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-                Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
-                Donnees.TAB_NATIONRow ligneNation = lignePion.nation;// Donnees.m_donnees.TAB_PION.TrouveNation(lignePion);
-                Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-
-                if (null == ligneCaseDestination)
-                {
-                    message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de destination en base)", lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_CASE_DESTINATION);
-                    return LogFile.Notifier(message);
-                }
-                if (null == ligneNation)
-                {
-                    message = string.Format("ExecuterMouvement :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", lignePion.S_NOM, lignePion.ID_PION);
-                    return LogFile.Notifier(message);
-                }
-
-                if (0 == ligneOrdre.I_EFFECTIF_DESTINATION)
-                {
-                    //si l'unité n'est pas arrivée à destination, il faut ajouter la fatigue
-                    //l'unité est entrain de marcher, compte pour la fatigue en fin de journée
-                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                    if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    if (ligneOrdre.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE)
                     {
-                        lignePion.I_NB_PHASES_MARCHE_NUIT++;
+                        ligneOrdre = ExecuterOrdreSuivreMouvement(lignePion, ligneOrdre);
+                        //Si ExecuterOrdreSuivreMouvement renvoie null cela indique que l'unité suit correctement sa cible et qu'il n'y a pas d'orde de "rapprochement" à  faire
+                        if (null == ligneOrdre) { return true; }
+                    }
+                    //si l'ordre de mouvement n'est pas actif, le pion ne doit pas bouger
+                    if (!lignePion.OrdreActif(ligneOrdre))
+                    {
+                        //lignePion.PlacerPionEnRoute(ligneOrdre, lignePion.nation); -> dejà fait dans le placement statique
+                        return true;
+                    }
+
+                    //recherche les modèles de l'unité
+                    Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                    Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
+                    Donnees.TAB_NATIONRow ligneNation = lignePion.nation;// Donnees.m_donnees.TAB_PION.TrouveNation(lignePion);
+                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+
+                    if (null == ligneCaseDestination)
+                    {
+                        message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de destination en base)", lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_CASE_DESTINATION);
+                        return LogFile.Notifier(message);
+                    }
+                    if (null == ligneNation)
+                    {
+                        message = string.Format("ExecuterMouvement :{0}(ID={1}, Impossible de trouver la nation affectée à l'unité)", lignePion.S_NOM, lignePion.ID_PION);
+                        return LogFile.Notifier(message);
+                    }
+
+                    if (0 == ligneOrdre.I_EFFECTIF_DESTINATION)
+                    {
+                        //si l'unité n'est pas arrivée à destination, il faut ajouter la fatigue
+                        //l'unité est entrain de marcher, compte pour la fatigue en fin de journée
+                        Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        if (Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                        {
+                            lignePion.I_NB_PHASES_MARCHE_NUIT++;
+                        }
+                        else
+                        {
+                            lignePion.I_NB_PHASES_MARCHE_JOUR++;
+                        }
+                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    }
+
+                    if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG)
+                    {
+                        Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                        if (null == ligneCaseDepart)
+                        {
+                            message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE_DEPART:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_CASE_DEPART);
+                            return LogFile.Notifier(message);
+                        }
+
+                        return ExecuterMouvementSansEffectif(lignePion, ligneOrdre, ligneCaseDepart, ligneCaseDestination, ligneNation, ligneModelePion, ligneModeleMouvement);
                     }
                     else
                     {
-                        lignePion.I_NB_PHASES_MARCHE_JOUR++;
-                    }
-                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                }
+                        //Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE); -> si on fait cela, le parcours est recalculé à chaque mouvement dés qu'il n'y a plus d'effectif
+                        //sur le point de départ et le chemin n'est trouvé n'est plus toujours le même, d'où un crash car il ne retrouve pas la position courante
+                        Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                        if (null == ligneCaseDepart)
+                        {
+                            message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
+                            return LogFile.Notifier(message);
+                        }
 
-                if (lignePion.estMessager || lignePion.estPatrouille || lignePion.estQG)
-                {
-                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
-                    if (null == ligneCaseDepart)
-                    {
-                        message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE_DEPART:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, ligneOrdre.ID_CASE_DEPART);
-                        return LogFile.Notifier(message);
+                        return ExecuterMouvementAvecEffectif(lignePion, ligneOrdre, ligneCaseDepart, ligneCaseDestination, ligneNation, ligneModelePion, ligneModeleMouvement);
                     }
-
-                    return ExecuterMouvementSansEffectif(lignePion, ligneOrdre, ligneCaseDepart, ligneCaseDestination, ligneNation, ligneModelePion, ligneModeleMouvement);
                 }
                 else
                 {
-                    //Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE); -> si on fait cela, le parcours est recalculé à chaque mouvement dés qu'il n'y a plus d'effectif
-                        //sur le point de départ et le chemin n'est trouvé n'est plus toujours le même, d'où un crash car il ne retrouve pas la position courante
-                    Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
-                    if (null == ligneCaseDepart)
-                    {
-                        message = string.Format("ExecuterMouvement: {0}(ID={1}, ID_CASE:{2}, impossible de trouver la case de départ en base)", lignePion.S_NOM, lignePion.ID_PION, lignePion.ID_CASE);
-                        return LogFile.Notifier(message);
-                    }
-
-                    return ExecuterMouvementAvecEffectif(lignePion, ligneOrdre, ligneCaseDepart, ligneCaseDestination, ligneNation, ligneModelePion, ligneModeleMouvement);
+                    message = string.Format("{0}(ID={1}, pas d'ordre de mouvement)", lignePion.S_NOM, lignePion.ID_PION);
+                    return LogFile.Notifier(message);
                 }
             }
-            else
+            catch(Exception ex)
             {
-                message = string.Format("{0}(ID={1}, pas d'ordre de mouvement)", lignePion.S_NOM, lignePion.ID_PION);
-                return LogFile.Notifier(message);
+                LogFile.Notifier("ExecuterMouvement Exception" + ex.Message + " trace:" + ex.StackTrace);
+                return false;
             }
         }
 

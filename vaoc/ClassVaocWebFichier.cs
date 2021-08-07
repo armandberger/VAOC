@@ -1051,22 +1051,22 @@ namespace vaoc
             {
                 //si le chef n'a reçu aucun message, il ne doit pas voir l'unité, exemple, en combat, nouvelle unité de blessés
                 //sauf si celle-ci est engagée au combat
-                return string.Empty;
+                //return string.Empty; -> on garde car sinon on ne voit plus les unités dans l'ordre de transfert
 
-                //bDetruit = 0;
+                bDetruit = 0;
 
-                //if (lignePion.I_CAVALERIE > 0)
-                //{
-                //    iPatrouillesMax = Math.Max(1, lignePion.I_CAVALERIE / 1000);
-                //    //il faut retrancher les patrouilles déjà en cours de mission
-                //    int iPatrouillesEnCours = lignePion.nombrePatrouillesEnCours();
-                //    iPatrouillesDisponibles = (iPatrouillesMax <= iPatrouillesEnCours) ? 0 : iPatrouillesMax - iPatrouillesEnCours;
-                //}
-                //else
-                //{
-                //    iPatrouillesDisponibles = 0;
-                //    iPatrouillesMax = 0;
-                //}
+                if (lignePion.I_CAVALERIE > 0)
+                {
+                    iPatrouillesMax = Math.Max(1, lignePion.I_CAVALERIE / 1000);
+                    //il faut retrancher les patrouilles déjà en cours de mission
+                    int iPatrouillesEnCours = lignePion.nombrePatrouillesEnCours();
+                    iPatrouillesDisponibles = (iPatrouillesMax <= iPatrouillesEnCours) ? 0 : iPatrouillesMax - iPatrouillesEnCours;
+                }
+                else
+                {
+                    iPatrouillesDisponibles = 0;
+                    iPatrouillesMax = 0;
+                }
             }
             else
             {

@@ -339,7 +339,7 @@ namespace vaoc
 
             /// <summary>
             ///tous les pions dans la zone de bataille des battus mais non engagées, on un temps de retraite pour éviter de redéclencher immédiatement un combat sur d'autres unités
-            ///// correction -> prendre même les non engagées sinon les engagées se retrouvent "coincées" dans la zone et ne peuvent pas sortir
+            ///// correction -> prendre même les non engagées sinon les engagées se retrouvent "coincées" dans la zone et ne peuvent pas sortir (sauf si c'est un dépôt qui ne bouge donc pas)
             ///il faut prendre toutes les zones dans la zone, pas seulement celles dans la bataille car les unités avec 0 de moral ne sont pas incluses et cela reprovoque une fin de
             ///bataille juste après la fin de l'autre si plusieurs unités à 0 de moral sont dans la zone.
             /// </summary>
@@ -422,7 +422,7 @@ namespace vaoc
                         if (!ligneCaseBataille.IsID_PROPRIETAIRENull() && !btrouveProprietaire)
                         {
                             TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_PROPRIETAIRE);
-                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && nation ==lignePionBatailleAjout.nation.ID_NATION) 
+                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && !lignePionBatailleAjout.estDepot && nation ==lignePionBatailleAjout.nation.ID_NATION) 
                             { 
                                 listePionsEnBataille.Add(lignePionBatailleAjout); 
                             }
@@ -430,7 +430,7 @@ namespace vaoc
                         if (!ligneCaseBataille.IsID_NOUVEAU_PROPRIETAIRENull() && !btrouveNouveauProprietaire)
                         {
                             TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_PROPRIETAIRE);
-                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && nation == lignePionBatailleAjout.nation.ID_NATION) 
+                            if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && !lignePionBatailleAjout.estDepot && nation == lignePionBatailleAjout.nation.ID_NATION) 
                             { 
                                 listePionsEnBataille.Add(lignePionBatailleAjout); 
                             }
@@ -456,7 +456,7 @@ namespace vaoc
                         }
                         if (!btrouvePion)
                         {
-                            if (!lignePionTerrain.estMessager && !lignePionTerrain.estPatrouille)
+                            if (!lignePionTerrain.estMessager && !lignePionTerrain.estPatrouille && !lignePionTerrain.estDepot)
                             {
                                 listePionsEnBataille.Add(lignePionTerrain);
                             }

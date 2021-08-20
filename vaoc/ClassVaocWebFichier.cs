@@ -8,6 +8,7 @@ using System.Xml.Xsl;
 using WaocLib;
 using System.Diagnostics;
 using System.Globalization;
+using System.Collections;
 
 namespace vaoc
 {
@@ -15,6 +16,7 @@ namespace vaoc
     {
         private string m_fileNameSQL;
         private string m_fileNameXML;
+        private enum tipeNoms {hopitaux, prisons };
 
         #region proprietes
         public string fileNameSQL
@@ -1382,7 +1384,8 @@ namespace vaoc
                 requete = string.Format("UPDATE `tab_vaoc_partie` SET `ID_JEU`={1}, `S_NOM`='{2}', `I_TOUR`={3},`DT_TOUR`='{4}',`I_PHASE`={5},`DT_MISEAJOUR`=NOW(), `H_JOUR`={7}, " +
                                         "`H_NUIT`={8}, `S_REPERTOIRE`='{9}', `FL_DEMARRAGE`={10}, `I_NB_CARTE_X`={11}, `I_NB_CARTE_Y`={12}, "+
                                         "`I_NB_CARTE_ZOOM_X`={13}, `I_NB_CARTE_ZOOM_Y`={14}, `D_MULT_ZOOM_X`={15}, `D_MULT_ZOOM_Y`={16}, `I_LARGEUR_CARTE_ZOOM`={17}, `I_HAUTEUR_CARTE_ZOOM`={18}, "+
-                                        "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}', `MAX_ID_ORDRE`={23}, `MAX_ID_MESSAGE`={24} WHERE (ID_PARTIE={0});",
+                                        "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}', `MAX_ID_ORDRE`={23}, `MAX_ID_MESSAGE`={24}, "+
+                                        " S_HOPITAUX='{25}', S_PRISONS='{26}' WHERE (ID_PARTIE={0});",
                                         idPartie,
                                         lignePartie.ID_JEU,
                                         lignePartie.S_NOM,
@@ -1409,14 +1412,16 @@ namespace vaoc
                                         sMeteo,
                                         Constantes.DateHeureSQL(lignePartie.DT_PROCHAINTOUR),
                                         idMaxOrdre,
-                                        idMaxMessage
+                                        idMaxMessage,
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons))
                                         );                                        
             }
             else
             {
                 requete = string.Format("INSERT INTO `tab_vaoc_partie` (`ID_PARTIE`, `ID_JEU`, `S_NOM`, `I_TOUR`, `DT_TOUR`, `I_PHASE`, `DT_CREATION`, `DT_MISEAJOUR`, `H_JOUR`, "+
                                         "`H_NUIT`, `S_REPERTOIRE`, `FL_MISEAJOUR`, `FL_DEMARRAGE`, `I_NB_CARTE_X`, `I_NB_CARTE_Y`, `I_NB_CARTE_ZOOM_X`, `I_NB_CARTE_ZOOM_Y`, `D_MULT_ZOOM_X`, `D_MULT_ZOOM_Y`, "+
-                                        "`I_LARGEUR_CARTE_ZOOM`, `I_HAUTEUR_CARTE_ZOOM`, `I_ECHELLE`, `ID_VICTOIRE`,`S_METEO`, `MAX_ID_ORDRE`, `MAX_ID_MESSAGE`) " +
+                                        "`I_LARGEUR_CARTE_ZOOM`, `I_HAUTEUR_CARTE_ZOOM`, `I_ECHELLE`, `ID_VICTOIRE`,`S_METEO`, `MAX_ID_ORDRE`, `MAX_ID_MESSAGE`, S_HOPITAUX='{25}', S_PRISONS='{26}') " +
                                         "VALUES ({0}, {1}, '{2}', {3}, '{4}', {5}, '{6}', '{7}', {8}, {9}, '{10}', {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, '{23}', {24}, {25});",
                                         idPartie,//`ID_PARTIE`
                                         lignePartie.ID_JEU,//`ID_JEU`
@@ -1443,10 +1448,43 @@ namespace vaoc
                                         idVictoire,
                                         sMeteo,//23
                                         0,
-                                        0
+                                        0,
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons))
                                         );
             }
             AjouterLigne(requete);
+        }
+
+        /// <summary>
+        /// Liste de noms sur la carte
+        /// </summary>
+        /// <param name="tipe">noms à générer</param>
+        /// <returns></returns>
+        private string ListeNoms(tipeNoms tipe)
+        {
+            SortedList noms = new SortedList();
+            string retour=string.Empty;
+            foreach(Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
+            {
+                switch(tipe)
+                {
+                    case tipeNoms.hopitaux:
+                        if (ligneNom.B_HOPITAL) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
+                        break;
+                    case tipeNoms.prisons:
+                        if (ligneNom.B_PRISON) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
+                        break;
+                    default:
+                        throw new InvalidDataException("ListeNoms tipe de noms inconnus :"+tipe);
+                }
+            }
+            foreach(string nom in noms.Values) 
+            { 
+                if (retour.Length>0) { retour += ", "; }
+                retour += nom;
+            }
+            return retour;
         }
 
         /// <summary>

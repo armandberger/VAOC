@@ -16,7 +16,7 @@ namespace vaoc
     {
         private string m_fileNameSQL;
         private string m_fileNameXML;
-        private enum tipeNoms {hopitaux, prisons };
+        private enum tipeNoms {hopitaux, prisons, depotsA };
 
         #region proprietes
         public string fileNameSQL
@@ -1385,7 +1385,7 @@ namespace vaoc
                                         "`H_NUIT`={8}, `S_REPERTOIRE`='{9}', `FL_DEMARRAGE`={10}, `I_NB_CARTE_X`={11}, `I_NB_CARTE_Y`={12}, "+
                                         "`I_NB_CARTE_ZOOM_X`={13}, `I_NB_CARTE_ZOOM_Y`={14}, `D_MULT_ZOOM_X`={15}, `D_MULT_ZOOM_Y`={16}, `I_LARGEUR_CARTE_ZOOM`={17}, `I_HAUTEUR_CARTE_ZOOM`={18}, "+
                                         "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}', `MAX_ID_ORDRE`={23}, `MAX_ID_MESSAGE`={24}, "+
-                                        " S_HOPITAUX='{25}', S_PRISONS='{26}' WHERE (ID_PARTIE={0});",
+                                        " S_HOPITAUX='{25}', S_PRISONS='{26}', S_DEPOTSA='{27}' WHERE (ID_PARTIE={0});",
                                         idPartie,
                                         lignePartie.ID_JEU,
                                         lignePartie.S_NOM,
@@ -1414,15 +1414,16 @@ namespace vaoc
                                         idMaxOrdre,
                                         idMaxMessage,
                                         Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons))
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons)),
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.depotsA))
                                         );                                        
             }
             else
             {
                 requete = string.Format("INSERT INTO `tab_vaoc_partie` (`ID_PARTIE`, `ID_JEU`, `S_NOM`, `I_TOUR`, `DT_TOUR`, `I_PHASE`, `DT_CREATION`, `DT_MISEAJOUR`, `H_JOUR`, "+
                                         "`H_NUIT`, `S_REPERTOIRE`, `FL_MISEAJOUR`, `FL_DEMARRAGE`, `I_NB_CARTE_X`, `I_NB_CARTE_Y`, `I_NB_CARTE_ZOOM_X`, `I_NB_CARTE_ZOOM_Y`, `D_MULT_ZOOM_X`, `D_MULT_ZOOM_Y`, "+
-                                        "`I_LARGEUR_CARTE_ZOOM`, `I_HAUTEUR_CARTE_ZOOM`, `I_ECHELLE`, `ID_VICTOIRE`,`S_METEO`, `MAX_ID_ORDRE`, `MAX_ID_MESSAGE`, S_HOPITAUX='{25}', S_PRISONS='{26}') " +
-                                        "VALUES ({0}, {1}, '{2}', {3}, '{4}', {5}, '{6}', '{7}', {8}, {9}, '{10}', {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, '{23}', {24}, {25});",
+                                        "`I_LARGEUR_CARTE_ZOOM`, `I_HAUTEUR_CARTE_ZOOM`, `I_ECHELLE`, `ID_VICTOIRE`,`S_METEO`, `MAX_ID_ORDRE`, `MAX_ID_MESSAGE`, S_HOPITAUX, S_PRISONS, S_DEPOTSA) " +
+                                        "VALUES ({0}, {1}, '{2}', {3}, '{4}', {5}, '{6}', '{7}', {8}, {9}, '{10}', {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, '{23}', {24}, {25}, '{26}','{27}','{28}');",
                                         idPartie,//`ID_PARTIE`
                                         lignePartie.ID_JEU,//`ID_JEU`
                                         lignePartie.S_NOM,
@@ -1450,7 +1451,8 @@ namespace vaoc
                                         0,
                                         0,
                                         Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons))
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons)),
+                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.depotsA))
                                         );
             }
             AjouterLigne(requete);
@@ -1474,6 +1476,9 @@ namespace vaoc
                         break;
                     case tipeNoms.prisons:
                         if (ligneNom.B_PRISON) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
+                        break;
+                    case tipeNoms.depotsA:
+                        if (ligneNom.B_CREATION_DEPOT) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
                         break;
                     default:
                         throw new InvalidDataException("ListeNoms tipe de noms inconnus :"+tipe);

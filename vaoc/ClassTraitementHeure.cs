@@ -5475,7 +5475,38 @@ namespace vaoc
             }
         }
 
-        private void DeplacerOrdreAncienVersNouveau(Donnees.TAB_ORDRERow ligneOrdre)
+        private void DeplacerOrdreVersCourant(Donnees.TAB_ORDRE_ANCIENRow ligneOrdre)
+        {
+            Donnees.TAB_ORDRERow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+            //ligneOrdre.ID_ORDRE,
+            ligneOrdre.ID_ORDRE_TRANSMIS,
+            ligneOrdre.ID_ORDRE_SUIVANT,
+            ligneOrdre.ID_ORDRE_WEB,
+            ligneOrdre.I_ORDRE_TYPE,
+            ligneOrdre.ID_PION,
+            ligneOrdre.ID_CASE_DEPART,
+            ligneOrdre.I_EFFECTIF_DEPART,
+            ligneOrdre.ID_CASE_DESTINATION,
+            ligneOrdre.ID_NOM_DESTINATION,
+            ligneOrdre.I_EFFECTIF_DESTINATION,
+            ligneOrdre.I_TOUR_DEBUT,
+            ligneOrdre.I_PHASE_DEBUT,
+            ligneOrdre.I_TOUR_FIN,
+            ligneOrdre.I_PHASE_FIN,
+            ligneOrdre.ID_MESSAGE,
+            ligneOrdre.ID_DESTINATAIRE,
+            ligneOrdre.ID_CIBLE,
+            ligneOrdre.ID_DESTINATAIRE_CIBLE,
+            ligneOrdre.ID_BATAILLE,
+            ligneOrdre.I_ZONE_BATAILLE,
+            ligneOrdre.I_HEURE_DEBUT,
+            ligneOrdre.I_DUREE,
+            ligneOrdre.I_ENGAGEMENT);
+
+            ligneOrdre.Delete();
+        }
+
+        private void DeplacerOrdreVersAncien(Donnees.TAB_ORDRERow ligneOrdre)
         {
             Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.AddTAB_ORDRE_ANCIENRow(
             ligneOrdre.ID_ORDRE,
@@ -5760,7 +5791,9 @@ namespace vaoc
                             ligneOrdreEnCours = lignePion.OrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
                         }
                     }
-                    if (null == lignePion ||  null== ligneOrdreEnCours  || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE)
+                    //exception pour les ordres de ravitaillement direct qui doivent être gardés 24 heures...
+                    if (null == lignePion ||  null== ligneOrdreEnCours  || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE 
+                        || (ligneOrdre.I_ORDRE_TYPE== Constantes.ORDRES.RAVITAILLEMENT_DIRECT && ligneOrdre.I_TOUR_FIN+25<Donnees.m_donnees.TAB_PARTIE[0].I_TOUR))
                     {
                         bdetruire = true;
                     }
@@ -5780,14 +5813,14 @@ namespace vaoc
                             if (!ligneOrdre.IsID_ORDRE_TRANSMISNull())
                             {
                                 Donnees.TAB_ORDRERow ligneOrdreTransmis = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(ligneOrdre.ID_ORDRE_TRANSMIS);
-                                if (null != ligneOrdreTransmis) DeplacerOrdreAncienVersNouveau(ligneOrdreTransmis);
+                                if (null != ligneOrdreTransmis) DeplacerOrdreVersAncien(ligneOrdreTransmis);
                             }
                         }
                     }
                 }
                 if (bdetruire)
                 {
-                    DeplacerOrdreAncienVersNouveau(ligneOrdre);
+                    DeplacerOrdreVersAncien(ligneOrdre);
                 }
                 else
                 {

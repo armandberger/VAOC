@@ -2352,7 +2352,10 @@ namespace vaoc
                         //ce n'est pas l'ordre suivant d'un autre, on fait le traitement
                         Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ordre.ID_PION);
                         Donnees.TAB_PIONRow lignePionDestination = Donnees.m_donnees.TAB_PION.FindByID_PION(ordre.ID_PION_DESTINATAIRE);
-                        EnvoyerNouvelOrdre(liste, ordre, lignePion, lignePionDestination/*, false, out id_ordre_suivant*/);
+                        if (!EnvoyerNouvelOrdre(liste, ordre, lignePion, lignePionDestination/*, false, out id_ordre_suivant*/))
+                        {
+                            return false;
+                        }
                     }
                 }
             }
@@ -2710,11 +2713,11 @@ namespace vaoc
                             //et maintenant, un ordre de mouvement
                             compas = ClassMessager.DirectionOrdreVersCompas(ordre.I_DIRECTION_DESTINATAIRE);
 
-                            if (!ClassMessager.ZoneGeographiqueVersCase(lignePionMessager, ordre.I_DISTANCE_DESTINATAIRE, compas, ordre.ID_NOM_LIEU_DESTINATAIRE, out id_case_destination))
-                            {
-                                LogFile.Notifier(string.Format("NouvelleHeure, impossible de trouver la case du destinataire pour ordre.ID_ORDRE={0} ID_NOM_LIEU={1} I_DISTANC={2}", ordre.ID_ORDRE, ordre.ID_NOM_LIEU_DESTINATAIRE, ordre.I_DISTANCE_DESTINATAIRE));
-                                return false;
-                            }
+                            //if (!ClassMessager.ZoneGeographiqueVersCase(lignePionMessager, ordre.I_DISTANCE_DESTINATAIRE, compas, ordre.ID_NOM_LIEU_DESTINATAIRE, out id_case_destination))
+                            //{
+                            //    LogFile.Notifier(string.Format("NouvelleHeure, impossible de trouver la case du destinataire pour ordre.ID_ORDRE={0} ID_NOM_LIEU={1} I_DISTANC={2}", ordre.ID_ORDRE, ordre.ID_NOM_LIEU_DESTINATAIRE, ordre.I_DISTANCE_DESTINATAIRE));
+                            //    return false;
+                            //}
                             ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                                 ligneOrdreARemettre.ID_ORDRE,//id_ordre_transmis
                                 Constantes.NULLENTIER,//id_ordre_suivant
@@ -5792,10 +5795,16 @@ namespace vaoc
                         }
                     }
                     //exception pour les ordres de ravitaillement direct qui doivent être gardés 24 heures...
-                    if (null == lignePion ||  null== ligneOrdreEnCours  || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE 
-                        || (ligneOrdre.I_ORDRE_TYPE== Constantes.ORDRES.RAVITAILLEMENT_DIRECT && ligneOrdre.I_TOUR_FIN+25<Donnees.m_donnees.TAB_PARTIE[0].I_TOUR))
+                    if (ligneOrdre.I_ORDRE_TYPE != Constantes.ORDRES.RAVITAILLEMENT_DIRECT || ligneOrdre.I_TOUR_FIN + 25 < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
                     {
-                        bdetruire = true;
+                        if (null == lignePion || null == ligneOrdreEnCours || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE)
+                        {
+                            bdetruire = true;
+                        }
+                        else
+                        {
+                            Debug.WriteLine("Ne pas détruire ordre " + ligneOrdre.ID_ORDRE);
+                        }
                     }
                     else
                     {

@@ -3161,7 +3161,13 @@ namespace vaoc
                 }
 
                 //le chef blessé n'est plus engagé (considéré en retraite)
-                Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ID_PION, ID_BATAILLE);
+                //ID_BATAILLE = 69;//juste pour avancer
+                                 //ce qui suit ne marche pas, le leader est désengagé, le bataille est donc non renseigné, on recherche donc la dernière bataille ou l'officer a été engagé
+                System.Nullable<int> IdBtatailleBlesse =
+                    (from BataillePions in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                     where BataillePions.ID_PION == ID_PION
+                     select BataillePions.ID_BATAILLE).Max();
+                Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(ID_PION, (int)IdBtatailleBlesse);
                 ligneBataillePion.B_RETRAITE = true;
                 SetID_BATAILLENull();
                 SetI_ZONE_BATAILLENull();

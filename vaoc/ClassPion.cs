@@ -3098,7 +3098,7 @@ namespace vaoc
                     -1,//int I_ZONE_BATAILLE,
                     I_TOUR_RETRAITE_RESTANT,
                     I_TOUR_FUITE_RESTANT,
-                    true,//bool B_DETRUIT,
+                    false,//bool B_DETRUIT,
                     B_FUITE_AU_COMBAT,
                     false,//bool B_INTERCEPTION,
                     B_REDITION_RAVITAILLEMENT,

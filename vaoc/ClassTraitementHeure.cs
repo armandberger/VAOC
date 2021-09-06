@@ -5859,5 +5859,26 @@ namespace vaoc
                 }
             }
         }
+
+        /// <summary>
+        /// Mise à jour des batailles terminées que peuvent voir les leaders
+        /// On ne fait qu'ajouter des lignes, même si le pion change de proprietaire, son ancien chef peut voir le résultat
+        /// </summary>
+        void MiseAJourBataillesVisibles()
+        {
+            foreach(Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS)
+            {
+                Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(ligneBataillePion.ID_BATAILLE);
+                if (ligneBataille.IsI_TOUR_FINNull()) { continue; }
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePion.ID_PION);
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estRole ? -1 : lignePion.ID_PION_PROPRIETAIRE);
+                if (null!=ligneMessage && 
+                    (ligneMessage.I_TOUR_ARRIVEE>ligneBataille.I_TOUR_FIN
+                    || (ligneMessage.I_TOUR_ARRIVEE == ligneBataille.I_TOUR_FIN && ligneMessage.I_PHASE_ARRIVEE==100)))
+                {
+
+                }
+            }
+        }
     }
 }

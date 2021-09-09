@@ -1651,7 +1651,8 @@ namespace vaoc
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
                 if (resOrdre.Count() > 0)
                 {
-                    if (tour - resOrdre[0].I_TOUR_DEBUT<=24) { return true; }//l'ordre n'est valable que 24 heures
+                    //if (tour - resOrdre[0].I_TOUR_DEBUT<=24) { return true; }//l'ordre n'est valable que 24 heures
+                    return true;//la calcul de validité avant minuit est fait dans le calcul du tour précédent
                 }
                 return false;
             }

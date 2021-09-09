@@ -1123,9 +1123,14 @@ namespace vaoc
             int iMateriel = (null == ligneMessage) ? lignePion.I_MATERIEL : ligneMessage.I_MATERIEL;
             int iRetraite = (null == ligneMessage) ? lignePion.I_TOUR_FUITE_RESTANT : ligneMessage.I_RETRAITE;
             char cNiveauDepot = (null == ligneMessage) ? lignePion.C_NIVEAU_DEPOT : ligneMessage.C_NIVEAU_DEPOT;
-            if (null!=ligneMessage && lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
+            if (null!=ligneMessage) 
             {
-                sOrdreCourant += "(ravitaillement direct)";
+                //if (100 == ligneMessage.I_PHASE_DEPART && lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART +1, 0)
+                //    || (100 != ligneMessage.I_PHASE_DEPART && lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART)))
+                if (lignePion.estRavitaillableDirect(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART))
+                {
+                    sOrdreCourant += " (ravitaillement direct)";
+                }
             }
             requete = string.Format("({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+

@@ -1941,6 +1941,11 @@ namespace vaoc
                             nationControle = idNation1;
                         }
                     }
+                    //if (ligneNomCarte.ID_NOM == 140 && Donnees.m_donnees.TAB_PARTIE[0].I_TOUR==259)
+                    //{
+                    //    ligneNomCarte.ID_NATION_CONTROLE = 1;
+                    //    nationControle = 0;
+                    //}
                     if (nationControle < 0) { continue; }
 
                     if (nationControle >= 0 && !ligneNomCarte.IsID_NATION_CONTROLENull() && ligneNomCarte.ID_NATION_CONTROLE != nationControle)
@@ -2020,7 +2025,7 @@ namespace vaoc
                                          on Role.ID_PION equals Pion.ID_PION
                                          join Modele in Donnees.m_donnees.TAB_MODELE_PION
                                          on Pion.ID_MODELE_PION equals Modele.ID_MODELE_PION
-                                         where (Modele.ID_NATION == nationControle)
+                                         where (Modele.ID_NATION == ligneNomCarte.ID_NATION_CONTROLE)
                                             && (Pion.B_DETRUIT == false)
                                          select Pion.ID_PION;
 

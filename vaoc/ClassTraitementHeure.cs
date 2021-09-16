@@ -1296,6 +1296,35 @@ namespace vaoc
                         lignePion.I_TOUR_CONVOI_CREE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                     }
                     break;
+                case Constantes.ORDRES.ATTAQUE_PROCHE:
+                    if (null!= Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION))
+                    {
+                        //l'unité ne bouge pas vers l'unité la plus proche, il faut donc la chercher
+                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
+                        int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
+                        lignePion.CadreVision(ligneCasePion, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+
+                        Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                        Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                        foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
+                        {
+                            //je detecte deux cases sur des colonnnes/lignes différentes en espéant ne plus avoir l'effet d'unités en bordure qui apparaissent/disparaissent en emettant un message à chaque fois
+                            double distanceMin = double.MaxValue;
+                            Donnees.TAB_CASERow ligneCaseEnnemi = null;
+                            if (lignePion.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
+                            {
+                                double distance = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
+                                if (distance<distanceMin)
+                                {
+                                    distanceMin = distance;
+                                    ligneCaseEnnemi = ligneCaseVue;
+                                }
+                            }
+                        }
+
+
+                    }
+                    break;
                 default:
                      //autre ordre mouvement, etc...
                     break;
@@ -2851,6 +2880,7 @@ namespace vaoc
                 case Constantes.ORDRES.TRANSFERER:
                 case Constantes.ORDRES.REDUIRE_DEPOT:
                 case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                case Constantes.ORDRES.ATTAQUE_PROCHE:
                 #region envoi d'un ordre à action immédiate sur site, devant être transmis par messager
                     //ordre qui doit être remis à une unité par un messager
                     //int idPionOrdre = (ordre.I_TYPE == Constantes.ORDRES.TRANSFERER) ? ordre.ID_PION_CIBLE : ordre.ID_PION;
@@ -4105,6 +4135,7 @@ namespace vaoc
                                         case Constantes.ORDRES.CONSTRUIRE_PONTON:
                                         case Constantes.ORDRES.SEFORTIFIER:
                                         case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
+                                        case Constantes.ORDRES.ATTAQUE_PROCHE:
                                             //l'ordre n'est recevable que si l'unité n'est pas engagé au combat
                                             //si le pion est déjà engagé en bataille et pas en fuite, l'ordre est refusé
                                             if (!lignePionDestinataire.IsID_BATAILLENull() && 0 == lignePionDestinataire.I_TOUR_FUITE_RESTANT)
@@ -4427,6 +4458,7 @@ namespace vaoc
                         case Constantes.ORDRES.ARRET:
                         case Constantes.ORDRES.SEFORTIFIER:
                         case Constantes.ORDRES.RETRAIT:
+                        case Constantes.ORDRES.ATTAQUE_PROCHE:
                             bMemeOrdre = true;
                             break;
                         case Constantes.ORDRES.TRANSFERER:
@@ -4502,6 +4534,7 @@ namespace vaoc
                 //si le nouvel ordre est un ordre de mouvement ou de combat, la fortification de campagne est détruite
                 if (ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.MOUVEMENT ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE ||
+                    ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.ATTAQUE_PROCHE ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.COMBAT ||
                     ligneOrdreNouveau.I_ORDRE_TYPE == Constantes.ORDRES.RETRAITE)
                 {

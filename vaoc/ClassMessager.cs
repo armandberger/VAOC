@@ -1923,6 +1923,9 @@ namespace vaoc
                 case Constantes.ORDRES.SUIVRE_UNITE:
                     retour = "suivre une autre unité";
                     break;
+                case Constantes.ORDRES.ATTAQUE_PROCHE:
+                    retour = "attaquer à proximité";
+                    break;
                 default:
                     LogFile.Notifier("GenererPhrase Ordre inconnu reçu");
                     retour = "inconnu";
@@ -2124,6 +2127,9 @@ namespace vaoc
                                 lignePionDestinataire.S_NOM)
                              :
                                 "suit une unité.";
+                    break;
+                case Constantes.ORDRES.ATTAQUE_PROCHE:
+                    retour = "attaquer à proximité";
                     break;
                 default:
                     LogFile.Notifier("MessageDecrivantUnOrdre Ordre inconnu reçu");
@@ -2460,6 +2466,9 @@ namespace vaoc
                                     COMPAS direction;
                                     CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);
                                     unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false); ;
+                                    break;
+                                case Constantes.ORDRES.ATTAQUE_PROCHE:
+                                    unitesEnvironnantes += "en attaque";
                                     break;
                                 case Constantes.ORDRES.COMBAT:
                                     unitesEnvironnantes += " au combat";

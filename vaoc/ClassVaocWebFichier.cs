@@ -587,6 +587,7 @@ namespace vaoc
                     case Constantes.ORDRES.REDUIRE_DEPOT:
                     case Constantes.ORDRES.RAVITAILLEMENT_DIRECT:
                     case Constantes.ORDRES.SUIVRE_UNITE:
+                    case Constantes.ORDRES.ATTAQUE_PROCHE:
                         if (lignePion.estQG)
                         {
                             if (null == noeud["ID_PION_DESTINATION"])

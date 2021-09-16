@@ -140,6 +140,10 @@ namespace WaocLib
             /// Une unité suit une autre unité
             /// </summary>
             public const int SUIVRE_UNITE = 21;
+            /// <summary>
+            /// Attaque l'unité la plus proche dans son champ visuel
+            /// </summary>
+            public const int ATTAQUE_PROCHE = 22;
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre

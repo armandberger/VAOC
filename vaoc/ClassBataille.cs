@@ -429,7 +429,7 @@ namespace vaoc
                         }
                         if (!ligneCaseBataille.IsID_NOUVEAU_PROPRIETAIRENull() && !btrouveNouveauProprietaire)
                         {
-                            TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_PROPRIETAIRE);
+                            TAB_PIONRow lignePionBatailleAjout = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseBataille.ID_NOUVEAU_PROPRIETAIRE);
                             if (!lignePionBatailleAjout.estMessager && !lignePionBatailleAjout.estPatrouille && !lignePionBatailleAjout.estDepot && nation == lignePionBatailleAjout.nation.ID_NATION) 
                             { 
                                 listePionsEnBataille.Add(lignePionBatailleAjout); 

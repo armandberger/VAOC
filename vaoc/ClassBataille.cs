@@ -606,7 +606,7 @@ namespace vaoc
 
                 if (nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis)
                 {
-                    LogFile.Notifier("RechercheCaseDeSortie : nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis");
+                    //LogFile.Notifier("RechercheCaseDeSortie : nblisteCasesOccupeesParEnnemis > nbCasesOccupeesParEnnemis");
                     return; //la solution précedente est meilleure
                 }
                 //nbT = nbT + 1;
@@ -621,7 +621,7 @@ namespace vaoc
                 {
                     if (listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis)
                     {
-                        LogFile.Notifier("RechercheCaseDeSortie : listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis");
+                        //LogFile.Notifier("RechercheCaseDeSortie : listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis");
                         return; //la solution précedente est meilleure
                     }
                 }
@@ -631,7 +631,7 @@ namespace vaoc
                 for (int i = minimum; i < maximum; i++)
                 {
                     ligneCase = bVertical ? Donnees.m_donnees.TAB_CASE.FindParXY(autreCoordonnee, i) : Donnees.m_donnees.TAB_CASE.FindParXY(i, autreCoordonnee);
-                    LogFile.Notifier(string.Format("RechercheCaseDeSortie : case={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
+                    //LogFile.Notifier(string.Format("RechercheCaseDeSortie : case={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                     if (!ligneCase.EstOccupeeOuBloqueParEnnemi(lignePion, false) && ligneCase.EstMouvementPossible())
                     {
                         double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
@@ -639,7 +639,7 @@ namespace vaoc
                         {
                             distanceCaseSortie = distance;
                             ligneCaseSortie = ligneCase;
-                            LogFile.Notifier(string.Format("RechercheCaseDeSortie : case sortie={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
+                            //LogFile.Notifier(string.Format("RechercheCaseDeSortie : case sortie={0} : {1},{2}", ligneCase.ID_CASE, ligneCase.I_X, ligneCase.I_Y));
                         }
                     }
                 }
@@ -783,7 +783,7 @@ namespace vaoc
                         //Toute unité de cavalerie qui n'a pas été engagée comme pour sa totalité, sinon pour la moitié
                         // J'ai remplacé non engagé par moral au maximum car dans VAOC une unité peut ne pas être engagée uniquement parce qu'elle souhaite poursuivre son mouvement
                         // -> C'est un écart à indiquer dans le fichier d'aide
-                        int nombreCavaliersPoursuivants = (lignePion.Moral == lignePion.I_MORAL_MAX) ? lignePion.cavalerie : lignePion.cavalerie / 2;
+                        int nombreCavaliersPoursuivants = (lignePion.Moral >= lignePion.I_MORAL_MAX*0.9) ? lignePion.cavalerie : lignePion.cavalerie / 2;//BEA 16/09/2021 ajout du *0,9 sinon trop restrictif
                         effectifCavaleriePoursuivant += nombreCavaliersPoursuivants;
                         moralCavaleriePoursuivant += nombreCavaliersPoursuivants * lignePion.Moral;
                         message = string.Format("Poursuite : ID={0} avec {1} cavaliers et {2} de moral", lignePion.ID_PION, effectifCavaleriePoursuivant, lignePion.Moral);
@@ -830,7 +830,7 @@ namespace vaoc
                 {
                     Donnees.TAB_PIONRow lignePion = lignePionsPoursuivi[l];
                     if (lignePion.B_DETRUIT || lignePion.estQG) { continue; }
-                    effectifCavaleriePoursuivi += lignePion.I_CAVALERIE;
+                    effectifCavaleriePoursuivi += lignePion.cavalerie;// lignePion.I_CAVALERIE; BEA 16/09, pourquoi devrait-on prendre l"effectif total et pas seulement les présents ?
                 }
 
                 rapport = (0 == effectifCavaleriePoursuivi) ? 4 : (decimal)effectifCavaleriePoursuivant / (decimal)effectifCavaleriePoursuivi;
@@ -848,7 +848,8 @@ namespace vaoc
                 if (de > 9) de = 9;
 
                 moral = Math.Min(3,(moralCavaleriePoursuivant - 1) / 10);
-                pertes = ((Constantes.tablePoursuite[de, moral] * effectifCavaleriePoursuivant / 100) / Constantes.CST_PAS_DE_PERTES) * Constantes.CST_PAS_DE_PERTES;//on travaille par multiples de CST_PAS_DE_PERTES
+                //pertes = ((Constantes.tablePoursuite[de, moral] * effectifCavaleriePoursuivant / 100) / Constantes.CST_PAS_DE_PERTES) * Constantes.CST_PAS_DE_PERTES;//on travaille par multiples de CST_PAS_DE_PERTES
+                pertes = Constantes.tablePoursuite[de, moral] * effectifCavaleriePoursuivant / 100 ;//BEA 16/09/2021 pourquoi travailler par multiples de CST_PAS_DE_PERTES ?
                 pertesMoral = Constantes.tablePoursuite[de, moral]; //pertes en points de moral des unités, également égal aux poucentage de pertes en ravitaillement *2, d'équipement *3, de canons *2
                 pertesRavitaillement = pertesMoral * 2;
                 pertesMateriel = pertesMoral * 3;

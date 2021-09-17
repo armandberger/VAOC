@@ -324,11 +324,11 @@ namespace vaoc
                 nomZoneGeographique,
                 nomBataille, //3, sous la forme "la bataille de...
                 iPertesInfanterie,
-                lignePion.I_INFANTERIE,//5
+                lignePion.infanterie,//5
                 iPertesCavalerie,
-                lignePion.I_CAVALERIE,//7
+                lignePion.cavalerie,//7
                 artilleriePerduOuGagne,
-                lignePion.I_ARTILLERIE,
+                lignePion.artillerie,
                 moralPerduOuGagne,//10 
                 lignePion.Moral,
                 lignePion.I_MORAL_MAX,//12
@@ -1750,7 +1750,7 @@ namespace vaoc
                 }
             }
 
-            string effectifs = ChaineEffectifs(lignePion.I_INFANTERIE, lignePion.I_CAVALERIE, lignePion.I_ARTILLERIE);
+            string effectifs = ChaineEffectifs(lignePion.infanterie, lignePion.cavalerie, lignePion.artillerie);
             string effectifsPerdus = ChaineEffectifs(iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne);
 
             CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);

@@ -470,11 +470,12 @@ namespace vaoc
                     Donnees.TAB_PIONRow lignePion = listePionsEnBataille[l];
                     if (lignePion.B_DETRUIT) { continue; }
                     //si l'unité n'a aucune position dans le champ de bataille, cela ne sert à rien de la bouger !
-                    var listeCasesOccupees = from Case in listeCasesBataille
-                                             where (Constantes.NULLENTIER != Case.ID_PROPRIETAIRE && Case.ID_PROPRIETAIRE == lignePion.ID_PION)
-                                             || (Constantes.NULLENTIER != Case.ID_NOUVEAU_PROPRIETAIRE && Case.ID_NOUVEAU_PROPRIETAIRE == lignePion.ID_PION)
-                                             select Case;
-                    if (0 == listeCasesOccupees.Count()) { continue; }
+                    // BEA 18/09/2021, l'unité est bien présente en bataille, ce n'est pas parce qu'elle n'est pas présente qu'elle ne doit pas être sortie
+                    //var listeCasesOccupees = from Case in listeCasesBataille
+                    //                         where (Constantes.NULLENTIER != Case.ID_PROPRIETAIRE && Case.ID_PROPRIETAIRE == lignePion.ID_PION)
+                    //                         || (Constantes.NULLENTIER != Case.ID_NOUVEAU_PROPRIETAIRE && Case.ID_NOUVEAU_PROPRIETAIRE == lignePion.ID_PION)
+                    //                         select Case;
+                    //if (0 == listeCasesOccupees.Count()) { continue; }
 
                     bool bRepositionSurBord = false;
                     Donnees.TAB_NATIONRow ligneNation = lignePion.nation; // Donnees.m_donnees.TAB_PION.TrouveNation(lignePion);
@@ -617,13 +618,10 @@ namespace vaoc
                                             && Case.EstOccupeeParAmi(lignePion))
                                                 select Case;
                 int nblisteCasesOccupeesParAmis = listeCasesOccupeesParAmis.Count();
-                if (listeCasesOccupeesParAmis.Count() == nblisteCasesOccupeesParAmis)
+                if (nblisteCasesOccupeesParAmis < nbCasesOccupeesParAmis)
                 {
-                    if (listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis)
-                    {
-                        //LogFile.Notifier("RechercheCaseDeSortie : listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis");
-                        return; //la solution précedente est meilleure
-                    }
+                    //LogFile.Notifier("RechercheCaseDeSortie : listeCasesOccupeesParAmis.Count() < nbCasesOccupeesParAmis");
+                    return; //la solution précedente est meilleure
                 }
                 nbCasesOccupeesParEnnemis = nblisteCasesOccupeesParEnnemis;
                 nbCasesOccupeesParAmis = nblisteCasesOccupeesParAmis;

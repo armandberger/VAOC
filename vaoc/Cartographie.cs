@@ -312,6 +312,43 @@ namespace vaoc
             graph.Dispose();
         }
 
+        public static void AfficherDepots(Bitmap imageSource)
+        {
+            Donnees.TAB_CASERow ligneCase;
+            Font police;
+            SizeF tailleLigne;
+            SolidBrush brosse;
+            Graphics graph = Graphics.FromImage(imageSource);
+            string messageErreur = string.Empty;
+
+            //on redessine la carte avec les dépôts
+            brosse = new SolidBrush(Color.Black);
+            police = new Font(FontFamily.GenericSansSerif, 20, FontStyle.Regular | FontStyle.Bold);
+            tailleLigne = graph.MeasureString("D", police);
+            foreach (Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
+            {
+                if (ligneNom.B_CREATION_DEPOT)
+                {
+                    ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneNom.ID_CASE);
+                    if (null == ligneCase)
+                    {
+                        //possible en construction de cartes quand on repart d'un existant
+                        //mais  il faut quand meme le signaler car sinon on ne peut pas savoir qu'il reste de vieux noms
+                        messageErreur += string.Format("Case {0} de la ville {1} introuvable\r\n", ligneNom.ID_CASE, ligneNom.S_NOM);
+                        continue;
+                    }
+                    int x = (int)Math.Floor(ligneCase.I_X - tailleLigne.Width / 2);
+                    int y = (int)Math.Floor(ligneCase.I_Y - tailleLigne.Height / 2);
+                    graph.DrawString("D", police, brosse, x, y);
+                }
+            }
+
+            if (messageErreur != string.Empty)
+            {
+                MessageBox.Show(messageErreur, "AfficherNoms", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            graph.Dispose();
+        }
 
         public static void AfficherNoms(Bitmap imageSource)
         {

@@ -121,6 +121,7 @@ namespace vaoc
             this.genererLeFilmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mise¿JourProprietairesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statistiquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extractionDeLaBaseEnCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repriseDeDonnÈesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -149,7 +150,7 @@ namespace vaoc
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.mise¿JourProprietairesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButtonDepots = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -999,6 +1000,13 @@ namespace vaoc
             this.outilsToolStripMenuItem.Text = "&Outils";
             this.outilsToolStripMenuItem.Click += new System.EventHandler(this.outilsToolStripMenuItem_Click);
             // 
+            // mise¿JourProprietairesToolStripMenuItem
+            // 
+            this.mise¿JourProprietairesToolStripMenuItem.Name = "mise¿JourProprietairesToolStripMenuItem";
+            this.mise¿JourProprietairesToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.mise¿JourProprietairesToolStripMenuItem.Text = "Mise ‡ jour Proprietaires";
+            this.mise¿JourProprietairesToolStripMenuItem.Click += new System.EventHandler(this.mise¿JourProprietairesToolStripMenuItem_Click);
+            // 
             // statistiquesToolStripMenuItem
             // 
             this.statistiquesToolStripMenuItem.Name = "statistiquesToolStripMenuItem";
@@ -1084,7 +1092,8 @@ namespace vaoc
             this.toolStripButtonConstruirePonton,
             this.toolStripButtonTrajets,
             this.toolStripButtonTrajetsVilles,
-            this.toolStripButtonMemoire});
+            this.toolStripButtonMemoire,
+            this.toolStripButtonDepots});
             this.toolStripCarte.Location = new System.Drawing.Point(0, 24);
             this.toolStripCarte.Name = "toolStripCarte";
             this.toolStripCarte.Size = new System.Drawing.Size(821, 25);
@@ -1266,12 +1275,16 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // mise¿JourProprietairesToolStripMenuItem
+            // toolStripButtonDepots
             // 
-            this.mise¿JourProprietairesToolStripMenuItem.Name = "mise¿JourProprietairesToolStripMenuItem";
-            this.mise¿JourProprietairesToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.mise¿JourProprietairesToolStripMenuItem.Text = "Mise ‡ jour Proprietaires";
-            this.mise¿JourProprietairesToolStripMenuItem.Click += new System.EventHandler(this.mise¿JourProprietairesToolStripMenuItem_Click);
+            this.toolStripButtonDepots.CheckOnClick = true;
+            this.toolStripButtonDepots.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButtonDepots.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDepots.Image")));
+            this.toolStripButtonDepots.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDepots.Name = "toolStripButtonDepots";
+            this.toolStripButtonDepots.Size = new System.Drawing.Size(48, 22);
+            this.toolStripButtonDepots.Text = "DÈpÙts";
+            this.toolStripButtonDepots.Click += new System.EventHandler(this.toolStripButtonDepots_Click);
             // 
             // FormPrincipale
             // 
@@ -1430,6 +1443,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem copieDeSauvegardeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem forcesInitialesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mise¿JourProprietairesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButtonDepots;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

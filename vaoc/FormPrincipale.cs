@@ -2739,6 +2739,10 @@ namespace vaoc
             {
                 Cartographie.AfficherNoms((Bitmap)ImageCarte.Image);//ajout des noms de villes
             }
+            if (toolStripButtonDepots.CheckState == CheckState.Checked)
+            {
+                Cartographie.AfficherDepots((Bitmap)ImageCarte.Image);
+            }
 
             if (this.toolStripButtonTrajets.CheckState == CheckState.Checked)
             {
@@ -4940,6 +4944,11 @@ namespace vaoc
         {
             FormMajCases majDesCases = new FormMajCases();
             majDesCases.ShowDialog();
+        }
+
+        private void toolStripButtonDepots_Click(object sender, EventArgs e)
+        {
+            ConstruireImageCarte();
         }
     }
 

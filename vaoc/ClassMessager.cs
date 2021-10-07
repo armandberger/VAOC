@@ -313,10 +313,12 @@ namespace vaoc
             MESSAGE_RENFORT_DEPOT_A_IMPOSSIBLE = 94,
             //Le dépôt de destination ne peut pas être renforcé, mon convoi reste donc sans affectation
             //{1} est arrivé à {2} mais le dépôt que je dois renforcer n'est pas en mesure d'accepter mes chariots. Je suis en attente de nouvelles consignes. 
-            MESSAGE_POSITION_OFFICIERS = 95
+            MESSAGE_POSITION_OFFICIERS = 95,
             //Renseignements pris auprès des divisions sur place, leurs officiers sont positionnés à {22}.
             //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {22}
             //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {22}
+            MESSAGE_AUCUN_ENNEMI_PROCHE = 96
+            //A {0}, je ne trouve aucun ennemi à proximité de ma position, je ne peux donc passer à l'attaque comme vous me l'avez ordonnné
         }
         /*
                DateHeure(true), //0

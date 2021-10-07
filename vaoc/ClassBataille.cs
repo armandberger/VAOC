@@ -2149,8 +2149,8 @@ namespace vaoc
                 foreach (Donnees.TAB_PIONRow lignePionEnBataille in listePionsEnBatailleDefenseur)
                 {
                     lignePionEnBataille.I_MORAL -= pertesMoral;
-
-                    decimal rapporDePerteUnite = (decimal)lignePionEnBataille.effectifTotal / effectifTotalDefenseur;
+                    //effectifTotalDefenseur peut valoir 0 si la fatigue est à 100%
+                    decimal rapporDePerteUnite = (0 == effectifTotalDefenseur) ? 1 : (decimal)lignePionEnBataille.effectifTotal / effectifTotalDefenseur;
                     //en-dessous d'une certaine taille, une unité est détruite pour ne pas avoir à gérer de trop petites unités, sauf si ce n'est que de l'artillerie
                     if ((pertesEffectif * rapporDePerteUnite)>=1 &&
                         (
@@ -2178,9 +2178,9 @@ namespace vaoc
                     }
 
                     //Pertes sur l'unité, repartie en pourcentage relatif du total
-                    pertesInfanterie = (int)(lignePionEnBataille.I_INFANTERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
-                    pertesCavalerie = (int)(lignePionEnBataille.I_CAVALERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
-                    pertesArtillerie = (int)(lignePionEnBataille.I_ARTILLERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesInfanterie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_INFANTERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesCavalerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_CAVALERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesArtillerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_ARTILLERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
                     pertesInfanterieTotal += pertesInfanterie;
                     pertesCavalerieTotal += pertesCavalerie;
                     pertesArtillerieTotal += pertesArtillerie;

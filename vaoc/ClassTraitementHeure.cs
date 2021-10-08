@@ -1297,7 +1297,7 @@ namespace vaoc
                     }
                     break;
                 case Constantes.ORDRES.ATTAQUE_PROCHE:
-                    if (null == Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION))
+                    if (null == Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION) && !Donnees.m_donnees.TAB_PARTIE.Nocturne())
                     {
                         //l'unité ne bouge pas vers l'unité la plus proche, il faut donc la chercher
                         Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
@@ -1333,39 +1333,47 @@ namespace vaoc
                         }
                         else
                         {
-                            //On se déplace vers l'unité à attaquer
-                            //et maintenant, un ordre de mouvement
-                            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                            Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
-                                Constantes.NULLENTIER,//id_ordre_transmis
-                                ligneOrdre.ID_ORDRE,//id_ordre_suivant
-                                Constantes.NULLENTIER,
-                                Constantes.ORDRES.MOUVEMENT,
-                                lignePion.ID_PION,
-                                lignePion.ID_CASE,
-                                lignePion.effectifTotal,//I_EFFECTIF_DEPART
-                                ligneCaseEnnemi.ID_CASE,
-                                Constantes.NULLENTIER,//id nom destination
-                                0,//I_EFFECTIF_DESTINATION
-                                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
-                                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
-                                Constantes.NULLENTIER,//I_TOUR_FIN
-                                Constantes.NULLENTIER,//I_PHASE_FIN
-                                Constantes.NULLENTIER,//ID_MESSAGE
-                                Constantes.NULLENTIER, //lignePionDestinataire.ID_PION,
-                                Constantes.NULLENTIER,//ID_CIBLE
-                                Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
-                                Constantes.NULLENTIER,//ID_BATAILLE
-                                Constantes.NULLENTIER,//I_ZONE_BATAILLE
-                                Constantes.NULLENTIER,//I_HEURE_DEBUT
-                                Constantes.NULLENTIER,//I_DUREE
-                                Constantes.NULLENTIER);//I_ENGAGEMENT
-                            //l'ordre d'attaque à proximité est mis en ordre suivant et on annule sa date début sinon, c'est toujours l'ordre actif et non pas l'ordre de mouvement !
-                            ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                            ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
-                            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                            LogFile.Notifier(string.Format("ExecuterOrdreHorsMouvement:  ID={0} mouvement vers case ID={1}:{2},{3}",
-                                lignePion.ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y));
+                            //si on est déjà sur l'unité à attaquer c'est que celle-ci ne peut être engagée en combat car "protégée"
+                            if (ligneCaseEnnemi.ID_CASE == lignePion.ID_CASE)
+                            {
+
+                            }
+                            else
+                            {
+                                //On se déplace vers l'unité à attaquer
+                                //et maintenant, un ordre de mouvement
+                                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                                Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                                    Constantes.NULLENTIER,//id_ordre_transmis
+                                    ligneOrdre.ID_ORDRE,//id_ordre_suivant
+                                    Constantes.NULLENTIER,
+                                    Constantes.ORDRES.MOUVEMENT,
+                                    lignePion.ID_PION,
+                                    lignePion.ID_CASE,
+                                    lignePion.effectifTotal,//I_EFFECTIF_DEPART
+                                    ligneCaseEnnemi.ID_CASE,
+                                    Constantes.NULLENTIER,//id nom destination
+                                    0,//I_EFFECTIF_DESTINATION
+                                    Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                                    Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
+                                    Constantes.NULLENTIER,//I_TOUR_FIN
+                                    Constantes.NULLENTIER,//I_PHASE_FIN
+                                    Constantes.NULLENTIER,//ID_MESSAGE
+                                    Constantes.NULLENTIER, //lignePionDestinataire.ID_PION,
+                                    Constantes.NULLENTIER,//ID_CIBLE
+                                    Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                                    Constantes.NULLENTIER,//ID_BATAILLE
+                                    Constantes.NULLENTIER,//I_ZONE_BATAILLE
+                                    Constantes.NULLENTIER,//I_HEURE_DEBUT
+                                    Constantes.NULLENTIER,//I_DUREE
+                                    Constantes.NULLENTIER);//I_ENGAGEMENT
+                                                           //l'ordre d'attaque à proximité est mis en ordre suivant et on annule sa date début sinon, c'est toujours l'ordre actif et non pas l'ordre de mouvement !
+                                ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                                ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                                LogFile.Notifier(string.Format("ExecuterOrdreHorsMouvement ATTAQUE_PROCHE:  ID={0} mouvement vers case ID={1}:{2},{3}",
+                                    lignePion.ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y));
+                            }
                         }
                     }
                     break;

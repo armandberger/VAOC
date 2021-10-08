@@ -770,6 +770,15 @@ namespace vaoc
             {
                 this.I_ENGAGEMENT = Constantes.NULLENTIER;
             }
+
+            internal void SetI_TOUR_FINNull()
+            {
+                this.I_TOUR_FIN = Constantes.NULLENTIER;
+            }
+            internal void SetI_PHASE_FINNull()
+            {
+                this.I_PHASE_FIN = Constantes.NULLENTIER;
+            }
         }
 
         partial class TAB_MODELE_PIONDataTable

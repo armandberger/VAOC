@@ -1484,6 +1484,9 @@ namespace vaoc
                         ligneOrdreSuivant.I_TOUR_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                         ligneOrdreSuivant.I_PHASE_DEBUT = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
                         ligneOrdreSuivant.I_EFFECTIF_DEPART = this.effectifTotalEnMouvement;
+                        //dans le cas de l'ordre d'attaque à proximité celui-ci peut devenir actif à nouveau plusieurs fois, d'où la fin à remettre à blanc à chaque fois
+                        ligneOrdreSuivant.SetI_TOUR_FINNull();
+                        ligneOrdreSuivant.SetI_PHASE_FINNull();
                         Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
 
                         if (bEnvoieMessageSiOrdreSuivant)
@@ -3189,6 +3192,7 @@ namespace vaoc
             public bool ArriveADestination(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation)
             {
                 //les derniers viennent d'arriver
+                
                 string message = string.Format("{0}(ID={1}, en mouvement, les derniers sont arrivés)", S_NOM, ID_PION);
                 LogFile.Notifier(message);
                 Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
@@ -3911,11 +3915,11 @@ namespace vaoc
                         {
                             if (estDepot)
                             {
-                                if (!CaptureDepot(lignePionEnnemi, ligneCase)) return false;
+                                if (!this.CaptureDepot(lignePionEnnemi, ligneCase)) return false;
                             }
                             if (estArtillerie)
                             {
-                                if (!CapturePion(lignePionEnnemi, lignePionEnnemi.proprietaire.ID_PION, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
+                                if (!this.CapturePion(lignePionEnnemi, this.proprietaire.ID_PION, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
                             }                            
                         }
                     }
@@ -3924,11 +3928,11 @@ namespace vaoc
                         ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
                         if (bEnDanger)
                         {
-                            if (estDepot)
+                            if (lignePionEnnemi.estDepot)
                             {
                                 if (!lignePionEnnemi.CaptureDepot(this, ligneCase)) return false;
                             }
-                            if (estArtillerie)
+                            if (lignePionEnnemi.estArtillerie)
                             {
                                 if (!lignePionEnnemi.CapturePion(this, this.proprietaire.ID_PION, string.Empty, this.nation.ID_NATION, ligneCase)) return false;
                             }
@@ -4004,7 +4008,7 @@ namespace vaoc
                 string message;
 
                 message = string.Format("CapturePion  : de {0}:{1} par {2} avec l'aptitude {3}",
-                    lignePionEnnemi.ID_PION, lignePionEnnemi.S_NOM, idNouveauPionProprietaire, aptitude);
+                    this.ID_PION, this.S_NOM, idNouveauPionProprietaire, aptitude);
                 LogFile.Notifier(message);
                 //on envoit les messages pour indiquer la capture
                 if (!ClassMessager.EnvoyerMessage(this, lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_EST_CAPTURE))

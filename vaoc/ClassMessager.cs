@@ -318,7 +318,11 @@ namespace vaoc
             //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {22}
             //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {22}
             MESSAGE_AUCUN_ENNEMI_PROCHE = 96
-            //A {0}, je ne trouve aucun ennemi à proximité de ma position, je ne peux donc passer à l'attaque comme vous me l'avez ordonnné
+            //A {0}, je ne trouve aucun ennemi à proximité de ma position, je ne peux donc passer à l'attaque comme vous me l'avez ordonnné.
+            //Aussi loin que porte mon regard, je ne trouve aucun adversaire à affronter dans les environs. Votre ordre ne peut donc être suivi.
+            //MESSAGE_ENNEMI_PROCHE_INATTAQUABLE = 97
+            //J'ai bien tenté de passer à l'attaque à {2} mais d'autres unités m'empèchent d'engager le combat. Les unités suivantes sont actuellement observables : {21}.
+            //Il y a bien une unité ennemie à coté de moi mais je ne peux la combattre car elle est protégée par d'autres forces. Voilà ce que j'observe depuis ma position : {21}
         }
         /*
                DateHeure(true), //0
@@ -2571,6 +2575,105 @@ namespace vaoc
                 throw ex;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Renvoi un ami protecteur = combattif le plus proche
+        /// </summary>
+        /// <param name="ligneCaseVue">case du pion cherchant un ami</param>
+        /// <returns>ami le plus proche trouvé, null sinon</returns>
+        public static Donnees.TAB_PIONRow AmiEnvironnant(Donnees.TAB_CASERow ligneCaseVue)
+        {
+            Donnees.TAB_PIONRow lignePionCase = null;
+            if (!ligneCaseVue.IsID_PROPRIETAIRENull())
+            {
+                lignePionCase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseVue.ID_PROPRIETAIRE);
+            }
+            if (!ligneCaseVue.IsID_NOUVEAU_PROPRIETAIRENull())
+            {
+                lignePionCase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE);
+            }
+            return (null == lignePionCase) ? null : AmiEnvironnant(lignePionCase);
+        }
+
+        /// <summary>
+        /// Renvoi un ami protecteur = combattif le plus proche
+        /// </summary>
+        /// <param name="lignePion">Pion cherchant un ami</param>
+        /// <returns>ami le plus proche trouvé, null sinon</returns>
+        public static Donnees.TAB_PIONRow AmiEnvironnant(Donnees.TAB_PIONRow lignePion)
+        {
+            int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
+            Donnees.TAB_PIONRow lignePionAmiCombattif=null;
+            double distanceMin = double.MaxValue;
+
+            try
+            {
+                Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+                if (null == ligneModelePion)
+                {
+                    return null;
+                }
+
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+                lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+
+                Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+
+                Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
+                for (int l = 0; l < ligneCaseVues.Count(); l++)
+                {
+                    Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
+                    Donnees.TAB_PIONRow lignePionCase = null;
+                    if (!ligneCaseVue.IsID_PROPRIETAIRENull() && ligneCaseVue.ID_PROPRIETAIRE != lignePion.ID_PION)
+                    {
+                        lignePionCase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseVue.ID_PROPRIETAIRE);
+                    }
+                    if (!ligneCaseVue.IsID_NOUVEAU_PROPRIETAIRENull() && ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE != lignePion.ID_PION)
+                    {
+                        lignePionCase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE);
+                    }
+
+                    if (null != lignePionCase && !lignePion.estEnnemi(ligneCaseVue, ligneModelePion, true, false))
+                    {
+                        double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
+                        if (distance < distanceMin)
+                        {
+                            distanceMin = distance;
+                            lignePionAmiCombattif = lignePionCase;
+                        }
+                    }
+                }
+
+                //il est possible qu'une unité ne soit pas visible car n'ayant trouvée aucune case pour se placer, on ajoute donc toute unité dont l'emplacement est dans la zone de vue
+                for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
+                {
+                    Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
+                    if (lignePionVue.B_DETRUIT) { continue; }
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionVue.ID_CASE);
+                    if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
+                    {
+                        if (lignePionVue.ID_PION != lignePion.ID_PION && !lignePion.estEnnemi(ligneCasePion, ligneModelePion, true, false))
+                        {
+                            double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
+                            if (distance < distanceMin)
+                            {
+                                distanceMin = distance;
+                                lignePionAmiCombattif = lignePionVue;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string messageEX = string.Format("exception AmiEnvironnant {3} : {0} : {1} :{2}",
+                       ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
+                       ex.StackTrace, ex.GetType().ToString());
+                LogFile.Notifier(messageEX);
+                throw ex;
+            }
+            return lignePionAmiCombattif;
         }
 
         private static bool PostionsOfficiersAmis(Donnees.TAB_PIONRow lignePion, Dictionary<int, Barycentre> unitesVisibles, out string positionOfficiers)

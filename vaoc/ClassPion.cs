@@ -3166,7 +3166,7 @@ namespace vaoc
 
                 //le chef blessé n'est plus engagé (considéré en retraite)
                 //ID_BATAILLE = 69;//juste pour avancer
-                                 //ce qui suit ne marche pas, le leader est désengagé, le bataille est donc non renseigné, on recherche donc la dernière bataille ou l'officer a été engagé
+                //ce qui suit ne marche pas, le leader est désengagé, le bataille est donc non renseigné, on recherche donc la dernière bataille ou l'officer a été engagé
                 System.Nullable<int> IdBtatailleBlesse =
                     (from BataillePions in Donnees.m_donnees.TAB_BATAILLE_PIONS
                      where BataillePions.ID_PION == ID_PION

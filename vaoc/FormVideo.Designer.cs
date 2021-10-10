@@ -61,6 +61,7 @@
             this.checkBoxTravelling = new System.Windows.Forms.CheckBox();
             this.buttonDonneesTravelling = new System.Windows.Forms.Button();
             this.checkBoxVideoParRole = new System.Windows.Forms.CheckBox();
+            this.checkBoxAffichageCorps = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
@@ -245,6 +246,8 @@
             // checkBoxCarteUnites
             // 
             this.checkBoxCarteUnites.AutoSize = true;
+            this.checkBoxCarteUnites.Checked = true;
+            this.checkBoxCarteUnites.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 482);
             this.checkBoxCarteUnites.Name = "checkBoxCarteUnites";
             this.checkBoxCarteUnites.Size = new System.Drawing.Size(113, 17);
@@ -328,8 +331,6 @@
             // checkBoxTravelling
             // 
             this.checkBoxTravelling.AutoSize = true;
-            this.checkBoxTravelling.Checked = true;
-            this.checkBoxTravelling.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxTravelling.Location = new System.Drawing.Point(310, 482);
             this.checkBoxTravelling.Name = "checkBoxTravelling";
             this.checkBoxTravelling.Size = new System.Drawing.Size(72, 17);
@@ -351,8 +352,6 @@
             // checkBoxVideoParRole
             // 
             this.checkBoxVideoParRole.AutoSize = true;
-            this.checkBoxVideoParRole.Checked = true;
-            this.checkBoxVideoParRole.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxVideoParRole.Location = new System.Drawing.Point(388, 482);
             this.checkBoxVideoParRole.Name = "checkBoxVideoParRole";
             this.checkBoxVideoParRole.Size = new System.Drawing.Size(74, 17);
@@ -360,11 +359,24 @@
             this.checkBoxVideoParRole.Text = "vidéo/rôle";
             this.checkBoxVideoParRole.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAffichageCorps
+            // 
+            this.checkBoxAffichageCorps.AutoSize = true;
+            this.checkBoxAffichageCorps.Checked = true;
+            this.checkBoxAffichageCorps.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAffichageCorps.Location = new System.Drawing.Point(468, 484);
+            this.checkBoxAffichageCorps.Name = "checkBoxAffichageCorps";
+            this.checkBoxAffichageCorps.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxAffichageCorps.TabIndex = 39;
+            this.checkBoxAffichageCorps.Text = "affichage Corps";
+            this.checkBoxAffichageCorps.UseVisualStyleBackColor = true;
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(827, 517);
+            this.Controls.Add(this.checkBoxAffichageCorps);
             this.Controls.Add(this.checkBoxVideoParRole);
             this.Controls.Add(this.buttonDonneesTravelling);
             this.Controls.Add(this.checkBoxTravelling);
@@ -437,6 +449,7 @@
         private System.Windows.Forms.CheckBox checkBoxTravelling;
         private System.Windows.Forms.Button buttonDonneesTravelling;
         private System.Windows.Forms.CheckBox checkBoxVideoParRole;
+        private System.Windows.Forms.CheckBox checkBoxAffichageCorps;
     }
 }
 

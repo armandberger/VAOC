@@ -161,6 +161,7 @@ namespace vaoc
         private int m_yTravelling = -1;
         private int m_effectifsMax = 0;
         private bool m_videoParRole = false;
+        private bool m_affichageCorps = false;
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilm()
@@ -169,7 +170,7 @@ namespace vaoc
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling, bool videoParRole,
+                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling, bool videoParRole, bool affichageCorps,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
                                     List<EffectifEtVictoire> effectifsEtVictoires, List<UniteRole> unitesRoles,
                                     int totalvictoire, int nbImages, 
@@ -209,6 +210,7 @@ namespace vaoc
                 float largeurTexte, hauteurTexte;
                 m_bTravelling = bTravelling;
                 m_videoParRole = videoParRole;
+                m_affichageCorps = affichageCorps;
                 if (m_videoParRole)
                 {
                     m_unitesRoles = unitesRoles;

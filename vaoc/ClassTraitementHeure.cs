@@ -380,7 +380,7 @@ namespace vaoc
 
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //|| 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 15 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
@@ -1297,99 +1297,11 @@ namespace vaoc
                     }
                     break;
                 case Constantes.ORDRES.ATTAQUE_PROCHE:
-                    if (null == Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePion.ID_PION) && !Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                    if (!lignePion.ExecuterAttaqueProche(ligneOrdre))
                     {
-                        //l'unité ne bouge pas vers l'unité la plus proche, il faut donc la chercher
-                        Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePion.ID_CASE);
-                        int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
-                        lignePion.CadreVision(ligneCasePion, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
-
-                        Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
-                        Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-                        double distanceMin = double.MaxValue;
-                        Donnees.TAB_CASERow ligneCaseEnnemi = null;
-                        foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
-                        {
-                            if (lignePion.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
-                            {
-                                double distance = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
-                                if (distance<distanceMin)
-                                {
-                                    distanceMin = distance;
-                                    ligneCaseEnnemi = ligneCaseVue;
-                                }
-                            }
-                        }
-                        if (distanceMin == double.MaxValue)
-                        {
-                            //il n'y a aucun ennemi a proximité, on arrête l'ordre et on prévient le joueur
-                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_ENNEMI_PROCHE))
-                            {
-                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_AUCUN_ENNEMI_PROCHE dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
-                                LogFile.Notifier(message);
-                                return false;
-                            }
-                            lignePion.TerminerOrdre(ligneOrdre, true, false);
-                        }
-                        else
-                        {
-                            //si on est déjà sur l'unité à attaquer c'est que celle-ci ne peut être engagée en combat car "protégée", à ce moment là , on va vers l'unite de protection
-                            if (ligneCaseEnnemi.ID_CASE == lignePion.ID_CASE)
-                            {
-                                Donnees.TAB_PIONRow lignePionAmi = ClassMessager.AmiEnvironnant(ligneCaseEnnemi);
-                                if (null==lignePionAmi)
-                                {
-                                    message = string.Format("{0},ID={1}, erreur sur la recherche de l'ami de l'ennemi sur ID_CASE {2}:{3},{4}: dans ExecuterOrdreHorsMouvement", 
-                                        lignePion.S_NOM, lignePion.ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y);
-                                    LogFile.Notifier(message);
-                                    return false;
-                                }
-                                ligneCaseEnnemi = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionAmi.ID_CASE);
-                                //Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION, ClassMessager.MESSAGES.MESSAGE_ENNEMI_PROCHE_INATTAQUABLE);
-                                //if (null == ligneMessage ||
-                                //    ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
-                                //{
-                                //    if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ENNEMI_PROCHE_INATTAQUABLE))
-                                //    {
-                                //        return false;
-                                //    }
-                                //}
-                            }
-
-                            //On se déplace vers l'unité à attaquer
-                            //et maintenant, un ordre de mouvement
-                            Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                            Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
-                                Constantes.NULLENTIER,//id_ordre_transmis
-                                ligneOrdre.ID_ORDRE,//id_ordre_suivant
-                                Constantes.NULLENTIER,
-                                Constantes.ORDRES.MOUVEMENT,
-                                lignePion.ID_PION,
-                                lignePion.ID_CASE,
-                                lignePion.effectifTotal,//I_EFFECTIF_DEPART
-                                ligneCaseEnnemi.ID_CASE,
-                                Constantes.NULLENTIER,//id nom destination
-                                0,//I_EFFECTIF_DESTINATION
-                                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
-                                Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
-                                Constantes.NULLENTIER,//I_TOUR_FIN
-                                Constantes.NULLENTIER,//I_PHASE_FIN
-                                Constantes.NULLENTIER,//ID_MESSAGE
-                                Constantes.NULLENTIER, //lignePionDestinataire.ID_PION,
-                                Constantes.NULLENTIER,//ID_CIBLE
-                                Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
-                                Constantes.NULLENTIER,//ID_BATAILLE
-                                Constantes.NULLENTIER,//I_ZONE_BATAILLE
-                                Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_HEURE_DEBUT
-                                Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL - Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_DUREE
-                                Constantes.NULLENTIER);//I_ENGAGEMENT
-                                                        //l'ordre d'attaque à proximité est mis en ordre suivant et on annule sa date début sinon, c'est toujours l'ordre actif et non pas l'ordre de mouvement !
-                            ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                            ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
-                            Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                            LogFile.Notifier(string.Format("ExecuterOrdreHorsMouvement ATTAQUE_PROCHE:  ID={0} mouvement vers case ID={1}:{2},{3}",
-                                lignePion.ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y));
-                        }
+                        message = string.Format("{0},ID={1}, erreur sur ExecuterAttaqueProche dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
+                        LogFile.Notifier(message);
+                        return false;
                     }
                     break;
                 default:

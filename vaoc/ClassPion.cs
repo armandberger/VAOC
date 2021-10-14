@@ -1736,6 +1736,106 @@ namespace vaoc
                 return true;
             }
 
+            internal bool ExecuterAttaqueProche(TAB_ORDRERow ligneOrdre)
+            {
+                string message;
+                if (null == Donnees.m_donnees.TAB_ORDRE.Mouvement(ID_PION) && !Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                {
+                    //l'unité ne bouge pas vers l'unité la plus proche, il faut donc la chercher
+                    Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(this.ID_CASE);
+                    int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
+                    this.CadreVision(ligneCasePion, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+
+                    Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
+                    Donnees.TAB_MODELE_PIONRow ligneModelePion = modelePion;
+                    double distanceMin = double.MaxValue;
+                    Donnees.TAB_CASERow ligneCaseEnnemi = null;
+                    foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
+                    {
+                        if (this.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
+                        {
+                            double distance = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
+                            if (distance < distanceMin)
+                            {
+                                distanceMin = distance;
+                                ligneCaseEnnemi = ligneCaseVue;
+                            }
+                        }
+                    }
+                    if (distanceMin == double.MaxValue)
+                    {
+                        //il n'y a aucun ennemi a proximité, on arrête l'ordre et on prévient le joueur
+                        if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_ENNEMI_PROCHE))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_AUCUN_ENNEMI_PROCHE dans ExecuterOrdreHorsMouvement", S_NOM, ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                        this.TerminerOrdre(ligneOrdre, true, false);
+                    }
+                    else
+                    {
+                        //si on est déjà sur l'unité à attaquer c'est que celle-ci ne peut être engagée en combat car "protégée", à ce moment là , on va vers l'unite de protection
+                        if (ligneCaseEnnemi.ID_CASE == ID_CASE)
+                        {
+                            Donnees.TAB_PIONRow lignePionAmi = ClassMessager.AmiEnvironnant(ligneCaseEnnemi);
+                            if (null == lignePionAmi)
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur la recherche de l'ami de l'ennemi sur ID_CASE {2}:{3},{4}: dans ExecuterOrdreHorsMouvement",
+                                    S_NOM, ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
+                            ligneCaseEnnemi = Donnees.m_donnees.TAB_CASE.FindByID_CASE(lignePionAmi.ID_CASE);
+                            //Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION, ClassMessager.MESSAGES.MESSAGE_ENNEMI_PROCHE_INATTAQUABLE);
+                            //if (null == ligneMessage ||
+                            //    ligneMessage.I_TOUR_DEPART + ClassMessager.CST_MESSAGE_FREQUENCE_ALERTE < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
+                            //{
+                            //    if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ENNEMI_PROCHE_INATTAQUABLE))
+                            //    {
+                            //        return false;
+                            //    }
+                            //}
+                        }
+
+                        //On se déplace vers l'unité à attaquer
+                        //et maintenant, un ordre de mouvement
+                        Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                        Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                            Constantes.NULLENTIER,//id_ordre_transmis
+                            ligneOrdre.ID_ORDRE,//id_ordre_suivant
+                            Constantes.NULLENTIER,
+                            Constantes.ORDRES.MOUVEMENT,
+                            ID_PION,
+                            ID_CASE,
+                            effectifTotal,//I_EFFECTIF_DEPART
+                            ligneCaseEnnemi.ID_CASE,
+                            Constantes.NULLENTIER,//id nom destination
+                            0,//I_EFFECTIF_DESTINATION
+                            Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
+                            Donnees.m_donnees.TAB_PARTIE[0].I_PHASE,//I_PHASE_DEBUT
+                            Constantes.NULLENTIER,//I_TOUR_FIN
+                            Constantes.NULLENTIER,//I_PHASE_FIN
+                            Constantes.NULLENTIER,//ID_MESSAGE
+                            Constantes.NULLENTIER, //lignePionDestinataire.ID_PION,
+                            Constantes.NULLENTIER,//ID_CIBLE
+                            Constantes.NULLENTIER,//ID_DESTINATAIRE_CIBLE
+                            Constantes.NULLENTIER,//ID_BATAILLE
+                            Constantes.NULLENTIER,//I_ZONE_BATAILLE
+                            Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_HEURE_DEBUT
+                            Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL - Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL,//I_DUREE
+                            Constantes.NULLENTIER);//I_ENGAGEMENT
+                                                   //l'ordre d'attaque à proximité est mis en ordre suivant et on annule sa date début sinon, c'est toujours l'ordre actif et non pas l'ordre de mouvement !
+                        ligneOrdre.I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                        ligneOrdre.I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
+                        Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                        LogFile.Notifier(string.Format("ExecuterOrdreHorsMouvement ATTAQUE_PROCHE:  ID={0} mouvement vers case ID={1}:{2},{3}",
+                            ID_PION, ligneCaseEnnemi.ID_CASE, ligneCaseEnnemi.I_X, ligneCaseEnnemi.I_Y));
+                    }
+                }
+                return true;
+            }
+
             /// <summary>
             /// renvoie la case courante occupée par le pion
             /// </summary>

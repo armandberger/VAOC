@@ -2649,11 +2649,11 @@ namespace vaoc
                 for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
                 {
                     Donnees.TAB_PIONRow lignePionVue = Donnees.m_donnees.TAB_PION[l];
-                    if (lignePionVue.B_DETRUIT) { continue; }
+                    if (lignePionVue.B_DETRUIT || !lignePionVue.estCombattif) { continue; }
                     Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionVue.ID_CASE);
                     if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
                     {
-                        if (lignePionVue.ID_PION != lignePion.ID_PION && !lignePion.estEnnemi(ligneCasePion, ligneModelePion, true, false))
+                        if (lignePionVue.ID_PION != lignePion.ID_PION && !lignePion.estEnnemi(lignePionVue))
                         {
                             double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCasePion.I_X, ligneCasePion.I_Y);
                             if (distance < distanceMin)

@@ -3026,12 +3026,15 @@ namespace vaoc
             }
             Random de = new Random();
             int pourcentResultatMeteo = de.Next(totalPourcentage);
-            totalPourcentage=0;
+            LogFile.Notifier(string.Format("Nouvelle meteo de={0} sur un total de {1}", pourcentResultatMeteo, totalPourcentage));
+
+            totalPourcentage = 0;
             int i = 0;
             while (i < Donnees.m_donnees.TAB_METEO.Count && totalPourcentage <= pourcentResultatMeteo)
             {
                 totalPourcentage += Donnees.m_donnees.TAB_METEO[i++].I_CHANCE;
             }
+
             //Si la nouvelle météo est la même que la précédente ou que l'aggravé, on augemente le nombre de même météo successive
             if (Donnees.m_donnees.TAB_PARTIE[0].ID_METEO == Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO || Donnees.m_donnees.TAB_PARTIE[0].ID_METEO == Donnees.m_donnees.TAB_METEO[i - 1].ID_METEO_AGGRAVATION)
             {

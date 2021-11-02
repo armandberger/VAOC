@@ -707,6 +707,19 @@ namespace vaoc
                     return m_donnees.TAB_ORDRE.FindByID_ORDRE(this.ID_ORDRE_SUIVANT);
                 }
             }
+            internal TAB_ORDRERow EstOrdreSuivant()
+            {
+                TAB_ORDRERow ligneOrdreRetour = null;
+                string requete = string.Format("ID_ORDRE_SUIVANT={0}", ID_ORDRE);
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                TAB_ORDRERow[] resOrdre = (TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
+                if (0 != resOrdre.Length)
+                {
+                    ligneOrdreRetour = resOrdre[0];
+                }
+                Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
+                return ligneOrdreRetour;
+            }
 
             public TAB_PIONRow cible
             {

@@ -28,18 +28,24 @@ namespace WaocLib
         {
         }
 
-        public static void CreationLogFile(string suffixe, int tour, int phase)
+        public static string NomLogFile(string suffixe, int tour, int phase)
         {
-            string nomfichierTourPhase = string.Format("{0}\\logs\\Log_{1}_{002}_{003}.log", Constantes.repertoireDonnees, suffixe, tour, phase);
-            CreationLogFile(nomfichierTourPhase);
+            return string.Format("{0}\\logs\\Log_{1}_{002}_{003}.log", Constantes.repertoireDonnees, suffixe, tour, phase);
         }
 
-        public static void CreationLogFile(string filename)
+        public static string CreationLogFile(string suffixe, int tour, int phase, bool bPardefaut = true)
         {
-            m_fileName=filename;
+            string nomfichierTourPhase = NomLogFile(suffixe, tour, phase);
+            CreationLogFile(nomfichierTourPhase, bPardefaut);
+            return nomfichierTourPhase;
+        }
+
+        public static void CreationLogFile(string filename, bool bPardefaut = true)
+        {
+            if (bPardefaut) { m_fileName = filename; }
             //remove any old log file            
             StreamWriter  file;
-            file = new StreamWriter(m_fileName, false);
+            file = new StreamWriter(filename, false);
             file.Close();
         }
 
@@ -70,12 +76,23 @@ namespace WaocLib
         /// <returns>bool if ok, false if ko</returns>
         public static bool Notifier(string message)
         {
-            if (m_fileName == string.Empty) { return false; }
+            return Notifier(m_fileName, message);
+        }
+
+        /// <summary>
+        /// write a message at the end of the log file
+        /// </summary>
+        /// <param name="nomfichier">nom du fichier de log</param>
+        /// <param name="message">message to add to the log file</param>
+        /// <returns>bool if ok, false if ko</returns>
+        public static bool Notifier(string nomfichier, string message)
+        {
+            if (nomfichier == string.Empty) { return false; }
             StreamWriter file;
             try
             {
                 Monitor.Enter(m_verrouEcriture);
-                m_phrases.AppendFormat("{0}:{1}:{2} {3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
+                m_phrases.AppendFormat("{0}{1}:{2}|{3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
                 file = new StreamWriter(m_fileName, true);
                 file.WriteLine(m_phrases.ToString());
                 file.Close();

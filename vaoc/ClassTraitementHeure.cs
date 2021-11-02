@@ -47,6 +47,7 @@ namespace vaoc
             //Debug.WriteLine("TraitementHeure");
             messageErreur = "";
 
+            LogFile.CreationLogFile("blocage", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1, false);
             LogFile.CreationLogFile("tour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, false);
 
@@ -4789,6 +4790,15 @@ namespace vaoc
                 if ((ligneModeleTerrain.B_ANNULEE_SI_OCCUPEE || coutCaseOccupe <= 0)
                     && !lignePionBlocage.estStatique && lignePionBlocage.ID_PION != lignePion.ID_PION)
                 {
+                    //Log en fichier pour analyse
+                    string nomLogFile = LogFile.NomLogFile("blocage", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1);
+                    string message = string.Format("{0};{1};{2};{3};{4};{5};{6};{7}",
+                        ClassMessager.DateHeure(ClassMessager.DateHeure()),
+                        ligneCaseChemin.ID_CASE, ligneCaseChemin.I_X, ligneCaseChemin.I_Y,
+                        lignePion.ID_PION, lignePion.S_NOM,
+                        lignePionBlocage.ID_PION, lignePionBlocage.S_NOM);
+                    LogFile.Notifier(nomLogFile,message);
+
                     //la case est occupée par une unité en mouvement et il faut attendre qu'elle se libère (cas des ponts par exemple)
                     //a-t-on déjà envoyé un message pour prévenir mon supérieur recemment ?                            
                     Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION, ClassMessager.MESSAGES.MESSAGE_CHEMIN_BLOQUE);
@@ -5819,11 +5829,19 @@ namespace vaoc
                     {
                         if (null == lignePion || null == ligneOrdreEnCours || ligneOrdreEnCours.ID_ORDRE != ligneOrdre.ID_ORDRE)
                         {
-                            bdetruire = true;
+                            //Exception aussi pour les ordres qui sont des ordres suivants (normalement non terminés mais pas pour les attaques à proximité...)
+                            if (null==ligneOrdre.EstOrdreSuivant())
+                            {
+                                bdetruire = true;
+                            }
+                            else
+                            {
+                                Debug.WriteLine("Ne pas détruire ordre suivant " + ligneOrdre.ID_ORDRE);
+                            }
                         }
                         else
                         {
-                            Debug.WriteLine("Ne pas détruire ordre " + ligneOrdre.ID_ORDRE);
+                            Debug.WriteLine("Ne pas détruire ordre ravitaillement direct" + ligneOrdre.ID_ORDRE);
                         }
                     }
                     else

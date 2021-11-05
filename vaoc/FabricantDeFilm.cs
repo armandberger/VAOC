@@ -38,6 +38,10 @@ namespace vaoc
         public TIPEUNITEVIDEO tipe;
         public bool b_blesse;
         public bool b_prisonnier;
+        public int iEffectif;
+        public int ID;
+        public int ID_ROLE;//ID du role proprietaire du pion
+        public bool bInclusDansLeCorps;//true s'il est dans la zone du corps pour un affichage corps, false sinon
     }
 
     public class UniteRole
@@ -49,6 +53,8 @@ namespace vaoc
         public int iNation;
         public int ID_ROLE;
         public int iEffectif;
+        public int i_X_CASE_CORPS;
+        public int i_Y_CASE_CORPS;
     }
 
     public class Role
@@ -91,42 +97,11 @@ namespace vaoc
         }
     }
 
-    public class AviWriter
-    {
-        public class AviException : ApplicationException { }
-        public Bitmap Open(string fileName, int frameRate, int width, int height)
-        {
-            return new Bitmap("erreur");
-        }
-
-        public void AddFrame()
-        {
-        }
-
-        public void AddFrame(BitmapData bmpDat)
-        {
-        }
-
-        public void Close(){}
-
-        private void CreateStream(){}
-
-        private void SetOptions()
-        {
-
-        }//juste pour mémoire
-    }
-
-
     public class FabricantDeFilm
     {
         private FileInfo[] m_listeFichiers;
-        private AviWriter m_aw;
         private int m_traitement;//traitement principal
         private int m_traitementRole;//traitement secondaire si un fichier vidéo par role
-        private bool m_bHistoriqueBataille;
-        private bool m_bCarteGlobale;
-        private bool m_bFilm;
         private string m_repertoireVideo;
         private float m_rapport;
         private List<LieuRemarquable> m_lieuxRemarquables;
@@ -146,16 +121,18 @@ namespace vaoc
         private Font m_police;
         private bool m_bTravelling;
         private Dictionary<int, Travelling> m_travelling;
+        private int m_hauteurCorps;
+        private int m_largeurCorps;
         public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
+        public const int CST_TAILLE_NOM_CORPS = 4;
 
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
         private const int BARRE_EPAISSEUR = 3;
         private const int RATIO_TRAVELLING = 8;
-        private const string NOM_FICHIER_VIDEO = "video.mp4";
         private int m_tailleUnite;// Laisser une valeur paire ou cela créer des problèmes d'arrondi
         private int m_epaisseurUnite;//largeur des traits des unites;
-        private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
+        //private int m_minX, m_minY, m_maxX, m_maxY;//position extremes des unités sur la carte
         //private BaseVideo m_baseVideo = new BaseVideo();
         private int m_xTravelling = -1;
         private int m_yTravelling = -1;
@@ -170,7 +147,7 @@ namespace vaoc
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bHistoriqueBataille, bool bCarteGlobale, bool bFilm, bool bTravelling, bool videoParRole, bool affichageCorps,
+                                    bool bTravelling, bool bvideoParRole, bool baffichageCorps,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
                                     List<EffectifEtVictoire> effectifsEtVictoires, List<UniteRole> unitesRoles,
                                     int totalvictoire, int nbImages, 
@@ -191,9 +168,6 @@ namespace vaoc
                 m_hauteur = int.MaxValue;
                 m_hauteurMax = 0;
                 m_largeurMax = 0;
-                m_bHistoriqueBataille = bHistoriqueBataille;
-                m_bCarteGlobale = bCarteGlobale;
-                m_bFilm = bFilm;
                 m_repertoireVideo = repertoireVideo;
                 m_lieuxRemarquables = lieuxRemarquables;
                 m_unitesRemarquables = unitesRemarquables;
@@ -209,8 +183,8 @@ namespace vaoc
                 m_travailleur = worker;
                 float largeurTexte, hauteurTexte;
                 m_bTravelling = bTravelling;
-                m_videoParRole = videoParRole;
-                m_affichageCorps = affichageCorps;
+                m_videoParRole = bvideoParRole;
+                m_affichageCorps = baffichageCorps;
                 if (m_videoParRole)
                 {
                     m_unitesRoles = unitesRoles;
@@ -220,11 +194,13 @@ namespace vaoc
                     {
                         if (!m_roles.ContainsKey(roleUnite.ID_ROLE)) 
                         {
-                            Role role = new Role();
-                            role.ID_ROLE = roleUnite.ID_ROLE;
-                            role.iNation = roleUnite.iNation;
-                            role.nom = roleUnite.nom;
-                            role.iEffectifMax = roleUnite.iEffectif;
+                            Role role = new Role
+                            {
+                                ID_ROLE = roleUnite.ID_ROLE,
+                                iNation = roleUnite.iNation,
+                                nom = roleUnite.nom,
+                                iEffectifMax = roleUnite.iEffectif
+                            };
                             m_roles.Add(role.ID_ROLE,role); 
                             m_travelling.Add(role.ID_ROLE, new Travelling(-1, -1)); 
                         }
@@ -260,29 +236,29 @@ namespace vaoc
                         m_hauteur, m_largeur, m_hauteurMax, m_largeurMax);
                 }
 
-                if (!m_bCarteGlobale && !m_bTravelling)
-                {
-                    //on cherche la taille d'affichage par rapport aux positions extremes des unités sur la carte
-                    m_minX = m_minY = int.MaxValue;
-                    m_maxX = m_maxY = int.MinValue;
-                    foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
-                    {
-                        if (ligneVideo.ID_CASE<0 || (0==ligneVideo.EffectifTotal)) { continue; }//ca peut arriver visiblement...
-                        //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
-                        int x, y;
-                        Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out x, out y);
-                        m_minX = Math.Min(m_minX, x);
-                        m_minY = Math.Min(m_minY, y);
-                        m_maxX = Math.Max(m_maxX, x);
-                        m_maxY = Math.Max(m_maxY, y);
-                    }
-                }
+                //if (!m_bCarteGlobale && !m_bTravelling)
+                //{
+                //    //on cherche la taille d'affichage par rapport aux positions extremes des unités sur la carte
+                //    m_minX = m_minY = int.MaxValue;
+                //    m_maxX = m_maxY = int.MinValue;
+                //    foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
+                //    {
+                //        if (ligneVideo.ID_CASE<0 || (0==ligneVideo.EffectifTotal)) { continue; }//ca peut arriver visiblement...
+                //        //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
+                //        int x, y;
+                //        Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out x, out y);
+                //        m_minX = Math.Min(m_minX, x);
+                //        m_minY = Math.Min(m_minY, y);
+                //        m_maxX = Math.Max(m_maxX, x);
+                //        m_maxY = Math.Max(m_maxY, y);
+                //    }
+                //}
 
                 //calcul de la hauteur du bandeau et de la largeur du bandeau (au cas où cela dépassererait la largeur min)
+                fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
+                G = Graphics.FromImage(fichierImageSource);
                 if (null != texteImages && texteImages.Length > 0)
                 {
-                    fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
-                    G = Graphics.FromImage(fichierImageSource);
                     largeurTexte = hauteurTexte = 0;
                     foreach(string texte in texteImages)
                     {
@@ -327,39 +303,48 @@ namespace vaoc
                     }
                 }
 
-                if (m_bFilm)
+                if (Directory.Exists(repertoireVideo))
                 {
-                    m_aw = new AviWriter();
-                    Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau);
+                    //on supprime toutes les images qui pourraient exister d'un précédent traitement
+                    dir = new DirectoryInfo(repertoireVideo);
+                    FileInfo[] listeFichiers = dir.GetFiles("*.png", SearchOption.TopDirectoryOnly);
+
+                    foreach (FileInfo fichier in listeFichiers)
+                    {
+                        File.Delete(fichier.FullName);
+                    }
+                    //on supprime également toutes les vidéos précédentes
+                    listeFichiers = dir.GetFiles("*.mp4", SearchOption.TopDirectoryOnly);
+                    foreach (FileInfo fichier in listeFichiers)
+                    {
+                        File.Delete(fichier.FullName);
+                    }
+
+                    foreach (FileInfo fichier in listeFichiers)
+                    {
+                        File.Delete(fichier.FullName);
+                    }
                 }
                 else
                 {
-                    if (Directory.Exists(repertoireVideo))
-                    {
-                        //on supprime toutes les images qui pourraient exister d'un précédent traitement
-                        dir = new DirectoryInfo(repertoireVideo);
-                        FileInfo[] listeFichiers = dir.GetFiles("*.png", SearchOption.TopDirectoryOnly);
+                    Directory.CreateDirectory(repertoireVideo);
+                }
 
-                        foreach (FileInfo fichier in listeFichiers)
-                        {
-                            File.Delete(fichier.FullName);
-                        }
-                        //on supprime également toutes les vidéos précédentes
-                        listeFichiers = dir.GetFiles("*.mp4", SearchOption.TopDirectoryOnly);
-                        foreach (FileInfo fichier in listeFichiers)
-                        {
-                            File.Delete(fichier.FullName);
-                        }
-
-                        foreach (FileInfo fichier in listeFichiers)
-                        {
-                            File.Delete(fichier.FullName);
-                        }
-                    }
-                    else
+                m_hauteurCorps = -1;
+                m_largeurCorps = -1;
+                if (m_affichageCorps)
+                {
+                    //calcul des hauteurs et largeur pour les corps, déterminera ensuite l'espacement d'inclusion des unités dans un corps pour l'affichage
+                    foreach (UniteRole role in m_unitesRoles)
                     {
-                        Directory.CreateDirectory(repertoireVideo);
+                        tailleTexte = G.MeasureString(role.nom.Substring(0, CST_TAILLE_NOM_CORPS), m_police);
+                        m_hauteurCorps = Math.Max(m_hauteurCorps, (int)tailleTexte.Height);
+                        m_largeurCorps = Math.Max(m_largeurCorps, (int)tailleTexte.Width);
                     }
+                    m_hauteurCorps += 2*m_epaisseurUnite;
+                    m_largeurCorps += 2*m_epaisseurUnite;
+
+                    CalculPositionCorps();
                 }
 
                 m_traitement = CST_DEBUT_FILM;
@@ -375,9 +360,9 @@ namespace vaoc
                 }
                 return string.Empty;
             }
-            catch (AviWriter.AviException e)
+            catch (Exception e)
             {
-                return "AVI Exception in: " + e.ToString();
+                return "Initialisation - Exception in: " + e.ToString();
             }
         }
 
@@ -385,7 +370,6 @@ namespace vaoc
         {
             try
             {
-                if (m_bFilm) { m_aw.Close(); }
                 if (m_bTravelling)
                 {
                     //on lance la commande DOS de création du film
@@ -405,19 +389,21 @@ namespace vaoc
                 m_travailleur.ReportProgress(100);
                 return string.Empty;
             }
-            catch (AviWriter.AviException e)
+            catch (Exception e)
             {
-                return "AVI Exception in: " + e.ToString();
+                return "Terminer - Exception in: " + e.ToString();
             }
         }
 
         private void FilmMpeg(string nom)
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo();
-            processInfo.WindowStyle = ProcessWindowStyle.Normal;
-            processInfo.FileName = "ffmpeg.exe";
-            processInfo.WorkingDirectory = m_repertoireVideo; //Path.GetDirectoryName(YourApplicationPath);
-            processInfo.Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom);
+            ProcessStartInfo processInfo = new ProcessStartInfo
+            {
+                WindowStyle = ProcessWindowStyle.Normal,
+                FileName = "ffmpeg.exe",
+                WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
+                Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom)
+            };
             Process.Start(processInfo);
         }
 
@@ -426,8 +412,10 @@ namespace vaoc
             SizeF tailleTexte;
             Graphics G;
             Bitmap fichierImageSource;
-            UniteRemarquable uniteQG = new UniteRemarquable();
-            uniteQG.tipe = TIPEUNITEVIDEO.QG;
+            UniteRemarquable uniteQG = new UniteRemarquable
+            {
+                tipe = TIPEUNITEVIDEO.QG
+            };
 
             try
             {
@@ -665,29 +653,33 @@ namespace vaoc
                     G.DrawImage(fichierImageSource, 0, 0, m_largeur, m_hauteur);
                 }
 
-                if (m_bHistoriqueBataille)
+                Pen styloExterieur = new Pen(Color.Black, 4);
+                Pen styloInterieur = new Pen(Color.White, 1);
+                //on ajoute les batailles s'il y en a
+                foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
                 {
-                    Pen styloExterieur = new Pen(Color.Black, 4);
-                    Pen styloInterieur = new Pen(Color.White, 1);
-                    //on ajoute les batailles s'il y en a
-                    foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
+                    if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                     {
-                        if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
-                        {
-                            G.DrawRectangle(styloExterieur,
-                                (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+                        G.DrawRectangle(styloExterieur,
+                            (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
+                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
 
-                            G.DrawRectangle(styloInterieur,
-                                (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
-                        }
+                        G.DrawRectangle(styloInterieur,
+                            (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
+                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
                     }
+                }
 
+                if (m_affichageCorps)
+                {
+                    // afficher toutes les unités seules puis tous les chefs de corps puis les batailles.
+                }
+                else
+                {
                     //on ajoute les unités
                     // d'abord tous les dépôts et convois
                     foreach (UniteRemarquable unite in m_unitesRemarquables)
@@ -710,39 +702,24 @@ namespace vaoc
                             DessineUnite(G, unite, m_xTravelling, m_yTravelling);
                         }
                     }
-                }
-                //Le leader à la fin
-                if (m_bTravelling && m_videoParRole)
-                {
-                    DessineUnite(G, uniteQG, m_xTravelling, m_yTravelling);
+
+                    //Le leader à la fin
+                    if (m_bTravelling && m_videoParRole)
+                    {
+                        DessineUnite(G, uniteQG, m_xTravelling, m_yTravelling);
+                    }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
-                if (m_bFilm)
+ 
+                if (m_videoParRole)
                 {
-                    fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
-                    fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
-                    BitmapData bmpDat = fichierImage.LockBits(
-                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);                    
-                    //BitmapData imageCible = new BitmapData();
-                    //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
-                    //m_imageCarte.UnlockBits(imageCible);
-                    //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-                    //imageFinale.Save(nomFichierFinal);
-                    m_aw.AddFrame(bmpDat);
-                    fichierImage.UnlockBits(bmpDat);
+                    fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole].nom + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
                 }
                 else
                 {
-                    if (m_videoParRole)
-                    {
-                        fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole].nom + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
-                    }
-                    else
-                    {
-                        fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
-                    }
+                    fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
                 }
-
+                
                 G.Dispose();
                 fichierImage.Dispose();
                 fichierImageSource.Dispose();
@@ -775,9 +752,9 @@ namespace vaoc
                 }
                 return string.Empty;
             }
-            catch (AviWriter.AviException e)
+            catch (Exception e)
             {
-                return "AVI Exception in: " + e.ToString();
+                return "Traitement Exception in: " + e.ToString();
             }
         }
 
@@ -922,59 +899,40 @@ namespace vaoc
                     G.DrawImage(fichierImageSource, m_largeurCote, 0, m_largeur, m_hauteur);
                 }
 
-                if (m_bHistoriqueBataille)
+                Pen styloExterieur = new Pen(Color.Black, 4);
+                Pen styloInterieur = new Pen(Color.White, 1);
+                //on ajoute les batailles s'il y en a
+                foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
                 {
-                    Pen styloExterieur = new Pen(Color.Black, 4);
-                    Pen styloInterieur = new Pen(Color.White, 1);
-                    //on ajoute les batailles s'il y en a
-                    foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
+                    if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
                     {
-                        if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
-                        {
-                            G.DrawRectangle(styloExterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+                        G.DrawRectangle(styloExterieur,
+                            m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
+                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
 
-                            G.DrawRectangle(styloInterieur,
-                                m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
-                                (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                                (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                                (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
-                        }
-                    }
-
-                    //on ajoute les unités
-                    foreach (UniteRemarquable unite in m_unitesRemarquables)
-                    {
-                        if (unite.iTour != m_traitement)
-                        {
-                            continue;
-                        }
-                        DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                        G.DrawRectangle(styloInterieur,
+                            m_largeurCote + (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling) * m_rapport,
+                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
+                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
                     }
                 }
+
+                //on ajoute les unités
+                foreach (UniteRemarquable unite in m_unitesRemarquables)
+                {
+                    if (unite.iTour != m_traitement)
+                    {
+                        continue;
+                    }
+                    DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                }
+                
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
-                if (m_bFilm)
-                {
-                    fichierImage.Save(m_repertoireVideo + "\\test.png", ImageFormat.Png);
-                    fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
-                    BitmapData bmpDat = fichierImage.LockBits(
-                        new Rectangle(0, 0, m_largeur + 2 * m_largeurCote, m_hauteur + m_hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
 
-                    //BitmapData imageCible = new BitmapData();
-                    //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
-                    //m_imageCarte.UnlockBits(imageCible);
-                    //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-                    //imageFinale.Save(nomFichierFinal);
-                    m_aw.AddFrame(bmpDat);
-                    fichierImage.UnlockBits(bmpDat);
-                }
-                else
-                {
-                    fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
-                }
+                fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
 
                 G.Dispose();
                 fichierImage.Dispose();
@@ -989,9 +947,9 @@ namespace vaoc
                 }
                 return string.Empty;
             }
-            catch (AviWriter.AviException e)
+            catch (Exception e)
             {
-                return "AVI Exception in: " + e.ToString();
+                return "Traitement V1 Exception in: " + e.ToString();
             }
         }
 
@@ -1163,140 +1121,22 @@ namespace vaoc
                     break;
             }
         }
-        /*
-public string CreerFilm(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, string[] texteImages
-                       ,int largeurOptimale, int HauteurOptimale, bool bHistoriqueBataille, List<LieuRemarquable> lieuxRemarquables)
-{
-   try
-   {
-       SizeF tailleTexte;
-       Graphics G;
-       Bitmap fichierImageSource;
-       int w = int.MaxValue;
-       int h = int.MaxValue;
-       int hmax = 0;
-       int wmax = 0;
-       int hauteurBandeau = 0;
-       float rapport;
 
-       //recherche le nombre d'images et leur taille
-       DirectoryInfo dir = new DirectoryInfo(repertoireImages);
-       m_listeFichiers = dir.GetFiles(texteMasqueImage,SearchOption.TopDirectoryOnly);
-       if (0 == m_listeFichiers.Length) {return "le repertoire source ne contient aucune image "+texteMasqueImage;}
-
-       Array.Sort(m_listeFichiers, new MyCustomComparer());//tri par nom
-       foreach (FileInfo fichier in m_listeFichiers)
-       {
-           Bitmap fichierImage = (Bitmap)Image.FromFile(fichier.FullName);
-           if (wmax < fichierImage.Width) { wmax = fichierImage.Width; }
-           if (hmax < fichierImage.Height) { hmax = fichierImage.Height; }
-           if (w > fichierImage.Width) { w = fichierImage.Width; }
-           if (h > fichierImage.Height) { h = fichierImage.Height; }
-       }
-
-       if (wmax != w || hmax != h)
-       {
-           return string.Format("Toutes les images n'ont pas la même taille, celles-ci vont de ({0},{1}) à ({2},{3}). Le traitement ne peut être effectué", h,w,hmax,wmax);
-       }
-
-       //calcul de la hauteur du bandeau = 2 fois la hauteur de la police
-       if (null != texteImages && texteImages.Length > 0)
-       {
-           fichierImageSource = (Bitmap)Image.FromFile(m_listeFichiers[0].FullName);
-           G = Graphics.FromImage(fichierImageSource);
-           tailleTexte = G.MeasureString("XX", police);
-           hauteurBandeau = (int)(tailleTexte.Height * 1);
-           fichierImageSource.Dispose();
-       }
-
-       //calcul de la taille optimale
-       if ((float)w / largeurOptimale > (float)h / (HauteurOptimale - hauteurBandeau))
-       {
-           //on se cale donc sur la largeur (effort le plus grand)
-           rapport = (float)largeurOptimale / w;
-           h = (int)(h * rapport);
-           w = largeurOptimale;
-       }
-       else
-       {
-           rapport = (float)(HauteurOptimale - hauteurBandeau) / h;
-           w = (int)(w * rapport);
-           h = HauteurOptimale - hauteurBandeau;
-       }
-
-       m_aw = new AviWriter();
-       Bitmap bmp = m_aw.Open(repertoireVideo + "\\" + "video.avi", 1, w, h + hauteurBandeau);
-
-       m_traitement = 0;
-       foreach (FileInfo fichier in m_listeFichiers)
-       {
-           fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
-           Bitmap fichierImage = new Bitmap(w, h + hauteurBandeau, fichierImageSource.PixelFormat);
-           G = Graphics.FromImage(fichierImage);
-           G.PageUnit = GraphicsUnit.Pixel;
-           //bandeau avec texte
-           if (null != texteImages && texteImages.Length > 0)
-           {
-               G.FillRectangle(Brushes.White, new Rectangle(0, h, w, hauteurBandeau));
-               tailleTexte = G.MeasureString(texteImages[m_traitement], police);
-               G.DrawString(texteImages[m_traitement], police, Brushes.Black, new Rectangle((w - (int)tailleTexte.Width) / 2, h + (hauteurBandeau - (int)tailleTexte.Height) / 2,
-                   w - (w - (int)tailleTexte.Width) / 2, hauteurBandeau - (hauteurBandeau - (int)tailleTexte.Height) / 2));
-               m_traitement++;
-           }
-
-           //image de base
-           G.DrawImage(fichierImageSource, 0, 0, w, h);
-
-           if (bHistoriqueBataille)
-           {
-               Pen styloExterieur = new Pen(Color.Black, 3);
-               Pen styloInterieur = new Pen(Color.White, 1);
-               //on ajoute les batailles s'il y en a
-               foreach (LieuRemarquable ligneLieu in lieuxRemarquables)
-               {
-                   if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
-                   {
-                       G.DrawRectangle(styloExterieur,
-                           ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
-                           ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
-                           (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
-                           (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
-
-                       G.DrawRectangle(styloInterieur,
-                           ligneLieu.i_X_CASE_HAUT_GAUCHE * rapport,
-                           ligneLieu.i_Y_CASE_HAUT_GAUCHE * rapport,
-                           (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * rapport,
-                           (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * rapport);
-                   }
-               }
-           }
-           //G.DrawImageUnscaled(fichierImageSource, 0, 0);
-           fichierImage.Save(repertoireVideo+"\\test.png", ImageFormat.Png);
-           fichierImage.RotateFlip(RotateFlipType.RotateNoneFlipY);//il faut retourner l'image sinon, elle apparait inversée dans la vidéo
-           BitmapData bmpDat = fichierImage.LockBits(
-             new Rectangle(0, 0, w, h + hauteurBandeau), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-
-           //BitmapData imageCible = new BitmapData();
-           //m_imageCarte.LockBits(rect, ImageLockMode.ReadOnly, m_imageCarte.PixelFormat, imageCible);
-           //m_imageCarte.UnlockBits(imageCible);
-           //Bitmap imageFinale = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
-           //imageFinale.Save(nomFichierFinal);
-           m_aw.AddFrame(bmpDat);
-           fichierImage.UnlockBits(bmpDat);
-           G.Dispose();
-           fichierImage.Dispose();
-           fichierImageSource.Dispose();
-       }
-       m_aw.Close();
-       return string.Empty;
-   }
-   catch (AviWriter.AviException e)
-   {
-       return "AVI Exception in: " + e.ToString();
-   }
-}
-*/
+        /// <summary>
+        /// Déterminer les positions des corps
+        /// - pour toutes les unités d'un corps, calculer le poids de sa position en prenant ses effectifs+tous ceux des unités situé dans le "rayon"
+        /// - pour toutes les unités dans le "rayon" du poids le plus fort, mettre un lien vers l'unité de référence (juste pour n'afficher le corps qu'une fois) et indiquer la position du corps sur le chef de corps
+        /// </summary>
+        private void CalculPositionCorps()
+        {
+            for (int tour = CST_DEBUT_FILM; t < m_nbImages; t++)
+            {
+                foreach (UniteRole roleUnite in m_unitesRoles)
+                {
+                    if (roleUnite.iTour != tour) { continue; }
+                }
+            }
+        }
         public string ChaineFichier(string source)
         {
             byte[] tempBytes;

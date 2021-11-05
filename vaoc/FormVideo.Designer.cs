@@ -56,8 +56,6 @@
             this.textBoxEpaisseurUnite = new System.Windows.Forms.TextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonDonnees = new System.Windows.Forms.Button();
-            this.checkBoxCarteGlobale = new System.Windows.Forms.CheckBox();
-            this.checkBoxFilm = new System.Windows.Forms.CheckBox();
             this.checkBoxTravelling = new System.Windows.Forms.CheckBox();
             this.buttonDonneesTravelling = new System.Windows.Forms.Button();
             this.checkBoxVideoParRole = new System.Windows.Forms.CheckBox();
@@ -66,9 +64,10 @@
             // 
             // buttonCreerFilm
             // 
-            this.buttonCreerFilm.Location = new System.Drawing.Point(635, 478);
+            this.buttonCreerFilm.Location = new System.Drawing.Point(952, 778);
+            this.buttonCreerFilm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCreerFilm.Name = "buttonCreerFilm";
-            this.buttonCreerFilm.Size = new System.Drawing.Size(99, 23);
+            this.buttonCreerFilm.Size = new System.Drawing.Size(148, 35);
             this.buttonCreerFilm.TabIndex = 0;
             this.buttonCreerFilm.Tag = "Film simple";
             this.buttonCreerFilm.Text = "Creer Film";
@@ -78,76 +77,85 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 54);
+            this.label1.Location = new System.Drawing.Point(18, 83);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.Size = new System.Drawing.Size(169, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "Repertoire des images";
             // 
             // textBoxRepertoireImages
             // 
-            this.textBoxRepertoireImages.Location = new System.Drawing.Point(163, 80);
+            this.textBoxRepertoireImages.Location = new System.Drawing.Point(244, 123);
+            this.textBoxRepertoireImages.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxRepertoireImages.Name = "textBoxRepertoireImages";
-            this.textBoxRepertoireImages.Size = new System.Drawing.Size(401, 20);
+            this.textBoxRepertoireImages.Size = new System.Drawing.Size(600, 26);
             this.textBoxRepertoireImages.TabIndex = 2;
             this.textBoxRepertoireImages.Text = "C:\\Users\\Public\\Documents\\vaoc\\1813";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 114);
+            this.label2.Location = new System.Drawing.Point(18, 175);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 13);
+            this.label2.Size = new System.Drawing.Size(149, 20);
             this.label2.TabIndex = 3;
             this.label2.Text = "Repertoire de sortie";
             // 
             // textBoxRepertoireVideo
             // 
-            this.textBoxRepertoireVideo.Location = new System.Drawing.Point(163, 142);
+            this.textBoxRepertoireVideo.Location = new System.Drawing.Point(244, 218);
+            this.textBoxRepertoireVideo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxRepertoireVideo.Name = "textBoxRepertoireVideo";
-            this.textBoxRepertoireVideo.Size = new System.Drawing.Size(401, 20);
+            this.textBoxRepertoireVideo.Size = new System.Drawing.Size(600, 26);
             this.textBoxRepertoireVideo.TabIndex = 4;
             this.textBoxRepertoireVideo.Text = "C:\\Users\\Public\\Documents\\vaoc\\1813\\video";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(576, 114);
+            this.label3.Location = new System.Drawing.Point(864, 175);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(64, 20);
             this.label3.TabIndex = 5;
             this.label3.Text = "Largeur";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(688, 114);
+            this.label4.Location = new System.Drawing.Point(1032, 175);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 13);
+            this.label4.Size = new System.Drawing.Size(67, 20);
             this.label4.TabIndex = 6;
             this.label4.Text = "Hauteur";
             // 
             // textBoxLargeurBase
             // 
-            this.textBoxLargeurBase.Location = new System.Drawing.Point(579, 142);
+            this.textBoxLargeurBase.Location = new System.Drawing.Point(868, 218);
+            this.textBoxLargeurBase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxLargeurBase.Name = "textBoxLargeurBase";
-            this.textBoxLargeurBase.Size = new System.Drawing.Size(67, 20);
+            this.textBoxLargeurBase.Size = new System.Drawing.Size(98, 26);
             this.textBoxLargeurBase.TabIndex = 7;
             this.textBoxLargeurBase.Text = "1200";
             // 
             // textBoxHauteurBase
             // 
-            this.textBoxHauteurBase.Location = new System.Drawing.Point(691, 142);
+            this.textBoxHauteurBase.Location = new System.Drawing.Point(1036, 218);
+            this.textBoxHauteurBase.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxHauteurBase.Name = "textBoxHauteurBase";
-            this.textBoxHauteurBase.Size = new System.Drawing.Size(67, 20);
+            this.textBoxHauteurBase.Size = new System.Drawing.Size(98, 26);
             this.textBoxHauteurBase.TabIndex = 8;
             this.textBoxHauteurBase.Text = "800";
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(212, 227);
+            this.label5.Location = new System.Drawing.Point(318, 392);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(555, 44);
+            this.label5.Size = new System.Drawing.Size(832, 68);
             this.label5.TabIndex = 9;
             this.label5.Text = "note : la taille de la vidéo finale garde la proportion de la source en ayant, po" +
     "ur maximum, soit la hauteur, soit la largeur de base, de façon à ce que aucune d" +
@@ -161,9 +169,10 @@
             // 
             // buttonChoixPolice
             // 
-            this.buttonChoixPolice.Location = new System.Drawing.Point(12, 227);
+            this.buttonChoixPolice.Location = new System.Drawing.Point(18, 392);
+            this.buttonChoixPolice.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonChoixPolice.Name = "buttonChoixPolice";
-            this.buttonChoixPolice.Size = new System.Drawing.Size(178, 20);
+            this.buttonChoixPolice.Size = new System.Drawing.Size(267, 31);
             this.buttonChoixPolice.TabIndex = 10;
             this.buttonChoixPolice.Text = "Choix de la Police";
             this.buttonChoixPolice.UseVisualStyleBackColor = true;
@@ -172,17 +181,19 @@
             // labelPolice
             // 
             this.labelPolice.Font = new System.Drawing.Font("Gabriola", 26.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPolice.Location = new System.Drawing.Point(15, 271);
+            this.labelPolice.Location = new System.Drawing.Point(22, 460);
+            this.labelPolice.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPolice.Name = "labelPolice";
-            this.labelPolice.Size = new System.Drawing.Size(743, 151);
+            this.labelPolice.Size = new System.Drawing.Size(1114, 232);
             this.labelPolice.TabIndex = 11;
             this.labelPolice.Text = "Police de caractère";
             // 
             // buttonRepertoireSource
             // 
-            this.buttonRepertoireSource.Location = new System.Drawing.Point(15, 77);
+            this.buttonRepertoireSource.Location = new System.Drawing.Point(22, 118);
+            this.buttonRepertoireSource.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRepertoireSource.Name = "buttonRepertoireSource";
-            this.buttonRepertoireSource.Size = new System.Drawing.Size(138, 23);
+            this.buttonRepertoireSource.Size = new System.Drawing.Size(207, 35);
             this.buttonRepertoireSource.TabIndex = 17;
             this.buttonRepertoireSource.Text = "Repertoire des sources";
             this.buttonRepertoireSource.UseVisualStyleBackColor = true;
@@ -190,9 +201,10 @@
             // 
             // buttonRepertoireSortie
             // 
-            this.buttonRepertoireSortie.Location = new System.Drawing.Point(15, 139);
+            this.buttonRepertoireSortie.Location = new System.Drawing.Point(22, 214);
+            this.buttonRepertoireSortie.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonRepertoireSortie.Name = "buttonRepertoireSortie";
-            this.buttonRepertoireSortie.Size = new System.Drawing.Size(138, 23);
+            this.buttonRepertoireSortie.Size = new System.Drawing.Size(207, 35);
             this.buttonRepertoireSortie.TabIndex = 18;
             this.buttonRepertoireSortie.Text = "Repertoire de sortie";
             this.buttonRepertoireSortie.UseVisualStyleBackColor = true;
@@ -201,26 +213,29 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(576, 54);
+            this.label6.Location = new System.Drawing.Point(864, 83);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.Size = new System.Drawing.Size(66, 20);
             this.label6.TabIndex = 20;
             this.label6.Text = "Masque";
             // 
             // textBoxMasque
             // 
-            this.textBoxMasque.Location = new System.Drawing.Point(579, 80);
+            this.textBoxMasque.Location = new System.Drawing.Point(868, 123);
+            this.textBoxMasque.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxMasque.Name = "textBoxMasque";
-            this.textBoxMasque.Size = new System.Drawing.Size(188, 20);
+            this.textBoxMasque.Size = new System.Drawing.Size(280, 26);
             this.textBoxMasque.TabIndex = 21;
             this.textBoxMasque.Text = "*.png";
             // 
             // buttonOuvrirFilm
             // 
             this.buttonOuvrirFilm.Enabled = false;
-            this.buttonOuvrirFilm.Location = new System.Drawing.Point(740, 478);
+            this.buttonOuvrirFilm.Location = new System.Drawing.Point(1110, 778);
+            this.buttonOuvrirFilm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonOuvrirFilm.Name = "buttonOuvrirFilm";
-            this.buttonOuvrirFilm.Size = new System.Drawing.Size(75, 23);
+            this.buttonOuvrirFilm.Size = new System.Drawing.Size(112, 35);
             this.buttonOuvrirFilm.TabIndex = 22;
             this.buttonOuvrirFilm.Tag = "";
             this.buttonOuvrirFilm.Text = "Ouvrir Film";
@@ -229,9 +244,10 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(26, 446);
+            this.progressBar.Location = new System.Drawing.Point(39, 729);
+            this.progressBar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(789, 23);
+            this.progressBar.Size = new System.Drawing.Size(1184, 35);
             this.progressBar.Step = 1;
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 25;
@@ -248,45 +264,50 @@
             this.checkBoxCarteUnites.AutoSize = true;
             this.checkBoxCarteUnites.Checked = true;
             this.checkBoxCarteUnites.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCarteUnites.Location = new System.Drawing.Point(31, 482);
+            this.checkBoxCarteUnites.Location = new System.Drawing.Point(25, 282);
+            this.checkBoxCarteUnites.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxCarteUnites.Name = "checkBoxCarteUnites";
-            this.checkBoxCarteUnites.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxCarteUnites.Size = new System.Drawing.Size(213, 24);
             this.checkBoxCarteUnites.TabIndex = 26;
-            this.checkBoxCarteUnites.Text = "cartes avec unités";
+            this.checkBoxCarteUnites.Text = "fond de carte avec unités";
             this.checkBoxCarteUnites.UseVisualStyleBackColor = true;
             this.checkBoxCarteUnites.CheckedChanged += new System.EventHandler(this.checkBoxCarteUnites_CheckedChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 189);
+            this.label7.Location = new System.Drawing.Point(25, 344);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(153, 13);
+            this.label7.Size = new System.Drawing.Size(229, 20);
             this.label7.TabIndex = 27;
             this.label7.Text = "Taille des unités (nombre paire)";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(258, 189);
+            this.label8.Location = new System.Drawing.Point(398, 344);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(144, 13);
+            this.label8.Size = new System.Drawing.Size(216, 20);
             this.label8.TabIndex = 28;
             this.label8.Text = "Epaisseur de ligne des unités";
             // 
             // textBoxTailleUnite
             // 
-            this.textBoxTailleUnite.Location = new System.Drawing.Point(163, 186);
+            this.textBoxTailleUnite.Location = new System.Drawing.Point(255, 339);
+            this.textBoxTailleUnite.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxTailleUnite.Name = "textBoxTailleUnite";
-            this.textBoxTailleUnite.Size = new System.Drawing.Size(67, 20);
+            this.textBoxTailleUnite.Size = new System.Drawing.Size(98, 26);
             this.textBoxTailleUnite.TabIndex = 29;
             this.textBoxTailleUnite.Text = "18";
             // 
             // textBoxEpaisseurUnite
             // 
-            this.textBoxEpaisseurUnite.Location = new System.Drawing.Point(408, 186);
+            this.textBoxEpaisseurUnite.Location = new System.Drawing.Point(623, 339);
+            this.textBoxEpaisseurUnite.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxEpaisseurUnite.Name = "textBoxEpaisseurUnite";
-            this.textBoxEpaisseurUnite.Size = new System.Drawing.Size(67, 20);
+            this.textBoxEpaisseurUnite.Size = new System.Drawing.Size(98, 26);
             this.textBoxEpaisseurUnite.TabIndex = 30;
             this.textBoxEpaisseurUnite.Text = "1";
             // 
@@ -298,51 +319,33 @@
             // 
             // buttonDonnees
             // 
-            this.buttonDonnees.Location = new System.Drawing.Point(11, 12);
+            this.buttonDonnees.Location = new System.Drawing.Point(16, 18);
+            this.buttonDonnees.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonDonnees.Name = "buttonDonnees";
-            this.buttonDonnees.Size = new System.Drawing.Size(100, 23);
+            this.buttonDonnees.Size = new System.Drawing.Size(150, 35);
             this.buttonDonnees.TabIndex = 33;
             this.buttonDonnees.Tag = "";
             this.buttonDonnees.Text = "Donnees Video";
             this.buttonDonnees.UseVisualStyleBackColor = true;
             this.buttonDonnees.Click += new System.EventHandler(this.buttonDonnees_Click);
             // 
-            // checkBoxCarteGlobale
-            // 
-            this.checkBoxCarteGlobale.AutoSize = true;
-            this.checkBoxCarteGlobale.Location = new System.Drawing.Point(163, 482);
-            this.checkBoxCarteGlobale.Name = "checkBoxCarteGlobale";
-            this.checkBoxCarteGlobale.Size = new System.Drawing.Size(90, 17);
-            this.checkBoxCarteGlobale.TabIndex = 34;
-            this.checkBoxCarteGlobale.Text = "Carte Globale";
-            this.checkBoxCarteGlobale.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxFilm
-            // 
-            this.checkBoxFilm.AutoSize = true;
-            this.checkBoxFilm.Location = new System.Drawing.Point(260, 482);
-            this.checkBoxFilm.Name = "checkBoxFilm";
-            this.checkBoxFilm.Size = new System.Drawing.Size(44, 17);
-            this.checkBoxFilm.TabIndex = 35;
-            this.checkBoxFilm.Text = "Film";
-            this.checkBoxFilm.UseVisualStyleBackColor = true;
-            this.checkBoxFilm.CheckedChanged += new System.EventHandler(this.checkBoxFilm_CheckedChanged);
-            // 
             // checkBoxTravelling
             // 
             this.checkBoxTravelling.AutoSize = true;
-            this.checkBoxTravelling.Location = new System.Drawing.Point(310, 482);
+            this.checkBoxTravelling.Location = new System.Drawing.Point(255, 282);
+            this.checkBoxTravelling.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxTravelling.Name = "checkBoxTravelling";
-            this.checkBoxTravelling.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxTravelling.Size = new System.Drawing.Size(248, 24);
             this.checkBoxTravelling.TabIndex = 36;
-            this.checkBoxTravelling.Text = "Travelling";
+            this.checkBoxTravelling.Text = "Travelling (sinon carte globale)";
             this.checkBoxTravelling.UseVisualStyleBackColor = true;
             // 
             // buttonDonneesTravelling
             // 
-            this.buttonDonneesTravelling.Location = new System.Drawing.Point(130, 12);
+            this.buttonDonneesTravelling.Location = new System.Drawing.Point(195, 18);
+            this.buttonDonneesTravelling.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonDonneesTravelling.Name = "buttonDonneesTravelling";
-            this.buttonDonneesTravelling.Size = new System.Drawing.Size(123, 23);
+            this.buttonDonneesTravelling.Size = new System.Drawing.Size(184, 35);
             this.buttonDonneesTravelling.TabIndex = 37;
             this.buttonDonneesTravelling.Tag = "";
             this.buttonDonneesTravelling.Text = "Donnees Travelling";
@@ -352,9 +355,10 @@
             // checkBoxVideoParRole
             // 
             this.checkBoxVideoParRole.AutoSize = true;
-            this.checkBoxVideoParRole.Location = new System.Drawing.Point(388, 482);
+            this.checkBoxVideoParRole.Location = new System.Drawing.Point(864, 281);
+            this.checkBoxVideoParRole.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxVideoParRole.Name = "checkBoxVideoParRole";
-            this.checkBoxVideoParRole.Size = new System.Drawing.Size(74, 17);
+            this.checkBoxVideoParRole.Size = new System.Drawing.Size(102, 24);
             this.checkBoxVideoParRole.TabIndex = 38;
             this.checkBoxVideoParRole.Text = "vidéo/rôle";
             this.checkBoxVideoParRole.UseVisualStyleBackColor = true;
@@ -364,24 +368,23 @@
             this.checkBoxAffichageCorps.AutoSize = true;
             this.checkBoxAffichageCorps.Checked = true;
             this.checkBoxAffichageCorps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAffichageCorps.Location = new System.Drawing.Point(468, 484);
+            this.checkBoxAffichageCorps.Location = new System.Drawing.Point(614, 281);
+            this.checkBoxAffichageCorps.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxAffichageCorps.Name = "checkBoxAffichageCorps";
-            this.checkBoxAffichageCorps.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxAffichageCorps.Size = new System.Drawing.Size(147, 24);
             this.checkBoxAffichageCorps.TabIndex = 39;
             this.checkBoxAffichageCorps.Text = "affichage Corps";
             this.checkBoxAffichageCorps.UseVisualStyleBackColor = true;
             // 
             // FormVideo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(827, 517);
+            this.ClientSize = new System.Drawing.Size(1240, 841);
             this.Controls.Add(this.checkBoxAffichageCorps);
             this.Controls.Add(this.checkBoxVideoParRole);
             this.Controls.Add(this.buttonDonneesTravelling);
             this.Controls.Add(this.checkBoxTravelling);
-            this.Controls.Add(this.checkBoxFilm);
-            this.Controls.Add(this.checkBoxCarteGlobale);
             this.Controls.Add(this.buttonDonnees);
             this.Controls.Add(this.textBoxEpaisseurUnite);
             this.Controls.Add(this.textBoxTailleUnite);
@@ -406,6 +409,7 @@
             this.Controls.Add(this.textBoxRepertoireImages);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonCreerFilm);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FormVideo";
             this.Text = "Création d\'une vidéo à partir d\'images";
             this.Load += new System.EventHandler(this.FormVideo_Load);
@@ -444,8 +448,6 @@
         private System.Windows.Forms.TextBox textBoxEpaisseurUnite;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button buttonDonnees;
-        private System.Windows.Forms.CheckBox checkBoxCarteGlobale;
-        private System.Windows.Forms.CheckBox checkBoxFilm;
         private System.Windows.Forms.CheckBox checkBoxTravelling;
         private System.Windows.Forms.Button buttonDonneesTravelling;
         private System.Windows.Forms.CheckBox checkBoxVideoParRole;

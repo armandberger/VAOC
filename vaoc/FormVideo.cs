@@ -14,10 +14,10 @@ namespace vaoc
     public partial class FormVideo : Form
     {
         private Cursor m_oldcurseur;
-        private List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
-        private List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
-        private List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
-        private List<UniteRole> m_unitesRoles = new List<UniteRole>();
+        private readonly List<LieuRemarquable> m_listeLieux = new List<LieuRemarquable>();
+        private readonly List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
+        private readonly List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
+        private readonly List<UniteRole> m_unitesRoles = new List<UniteRole>();
         private string[] m_texteImages;
         delegate void FinTraitementCallBack(string strErreur);
         private string m_repertoireSource;
@@ -91,13 +91,15 @@ namespace vaoc
             m_listeLieux.Clear();
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
-                LieuRemarquable lieu =new LieuRemarquable();
-                lieu.iTourDebut = ligneBataille.I_TOUR_DEBUT;
-                lieu.iTourFin = (ligneBataille.IsI_TOUR_FINNull() ? Donnees.m_donnees.TAB_PARTIE[0].I_TOUR : ligneBataille.I_TOUR_FIN);
-                lieu.i_X_CASE_BAS_DROITE = ligneBataille.I_X_CASE_BAS_DROITE;
-                lieu.i_X_CASE_HAUT_GAUCHE = ligneBataille.I_X_CASE_HAUT_GAUCHE;
-                lieu.i_Y_CASE_BAS_DROITE =ligneBataille.I_Y_CASE_BAS_DROITE;
-                lieu.i_Y_CASE_HAUT_GAUCHE = ligneBataille.I_Y_CASE_HAUT_GAUCHE;
+                LieuRemarquable lieu = new LieuRemarquable
+                {
+                    iTourDebut = ligneBataille.I_TOUR_DEBUT,
+                    iTourFin = (ligneBataille.IsI_TOUR_FINNull() ? Donnees.m_donnees.TAB_PARTIE[0].I_TOUR : ligneBataille.I_TOUR_FIN),
+                    i_X_CASE_BAS_DROITE = ligneBataille.I_X_CASE_BAS_DROITE,
+                    i_X_CASE_HAUT_GAUCHE = ligneBataille.I_X_CASE_HAUT_GAUCHE,
+                    i_Y_CASE_BAS_DROITE = ligneBataille.I_Y_CASE_BAS_DROITE,
+                    i_Y_CASE_HAUT_GAUCHE = ligneBataille.I_Y_CASE_HAUT_GAUCHE
+                };
                 m_listeLieux.Add(lieu);
             }
 
@@ -143,11 +145,13 @@ namespace vaoc
                     //                && video.I_VICTOIRE > 0)
                     //     select video);
 
-                    EffectifEtVictoire effV = new EffectifEtVictoire();
-                    effV.iTour = i;
-                    effV.iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION;
-                    effV.iEffectif = effectifs ?? 0;
-                    effV.iVictoire = victoires ?? 0;
+                    EffectifEtVictoire effV = new EffectifEtVictoire
+                    {
+                        iTour = i,
+                        iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION,
+                        iEffectif = effectifs ?? 0,
+                        iVictoire = victoires ?? 0
+                    };
                     m_effectifsEtVictoires.Add(effV);
                 }
                 /*
@@ -175,11 +179,15 @@ namespace vaoc
                     Debug.Write("bug indicateur"); }
                 if (ligneVideo.B_QG)// || lignePion.estQG)
                 {
-                    UniteRole role = new UniteRole();
-                    role.iTour = ligneVideo.I_TOUR;
-                    role.nom = ligneVideo.S_NOM;
-                    role.iNation = ligneVideo.ID_NATION;
-                    role.ID_ROLE = ligneVideo.ID_PION;
+                    UniteRole role = new UniteRole
+                    {
+                        iTour = ligneVideo.I_TOUR,
+                        nom = ligneVideo.S_NOM,
+                        iNation = ligneVideo.ID_NATION,
+                        ID_ROLE = ligneVideo.ID_PION,
+                        i_X_CASE_CORPS = -1,
+                        i_Y_CASE_CORPS = -1
+                    };
                     Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     System.Nullable<int> effectifs = (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == role.iTour)
@@ -198,16 +206,21 @@ namespace vaoc
                 {
                     continue; //on n'affiche pas les QG, les prisonniers, les blesses, les unités détruites
                 }
-                
-                UniteRemarquable unite = new UniteRemarquable();
-                unite.iNation = ligneVideo.ID_NATION;
-                unite.iTour = ligneVideo.I_TOUR;
-                //unite.tipe = (ligneVideo.IsI_TYPENull() || Constantes.NULLENTIER==ligneVideo.I_TYPE) ? lignePion.tipeVideo(ligneVideo) : (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
-                unite.tipe = (TIPEUNITEVIDEO)ligneVideo.I_TYPE;
+
+                UniteRemarquable unite = new UniteRemarquable
+                {
+                    iNation = ligneVideo.ID_NATION,
+                    iTour = ligneVideo.I_TOUR,
+                    tipe = (TIPEUNITEVIDEO)ligneVideo.I_TYPE,
+                    b_blesse = ligneVideo.B_BLESSES,
+                    b_prisonnier = ligneVideo.B_PRISONNIERS,
+                    iEffectif = (ligneVideo.I_INFANTERIE + ligneVideo.I_CAVALERIE) * (100 - ligneVideo.I_FATIGUE) / 100,
+                    ID = ligneVideo.ID_PION,
+                    ID_ROLE = ligneVideo.ID_PION_PROPRIETAIRE,
+                    bInclusDansLeCorps = false
+                };
                 //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
                 Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
-                unite.b_blesse = ligneVideo.B_BLESSES;
-                unite.b_prisonnier = ligneVideo.B_PRISONNIERS;
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
@@ -277,7 +290,7 @@ namespace vaoc
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
                                         Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
-                                        true, checkBoxCarteGlobale.Checked, checkBoxFilm.Checked, checkBoxTravelling.Checked,
+                                        checkBoxTravelling.Checked,
                                         checkBoxVideoParRole.Checked, checkBoxAffichageCorps.Checked,
                                         m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, m_unitesRoles,
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
@@ -370,9 +383,10 @@ namespace vaoc
 
         private void buttonDonnees_Click(object sender, EventArgs e)
         {
-            FormVideoTable fVideoTable = new FormVideoTable();
-
-            fVideoTable.tableVideo = Donnees.m_donnees.TAB_VIDEO;
+            FormVideoTable fVideoTable = new FormVideoTable
+            {
+                tableVideo = Donnees.m_donnees.TAB_VIDEO
+            };
             if (fVideoTable.ShowDialog() == DialogResult.OK)
             {
                 Donnees.m_donnees.TAB_VIDEO.Clear();
@@ -380,16 +394,12 @@ namespace vaoc
             }
         }
 
-        private void checkBoxFilm_CheckedChanged(object sender, EventArgs e)
-        {
-            buttonCreerFilm.Text = (checkBoxFilm.Checked) ? "Créer Film" : "Créer Images";
-        }
-
         private void buttonDonneesTravelling_Click(object sender, EventArgs e)
         {
-            FormVideoTravellingTable fVideoTable = new FormVideoTravellingTable();
-
-            fVideoTable.tableTravelling = Donnees.m_donnees.TAB_TRAVELLING;
+            FormVideoTravellingTable fVideoTable = new FormVideoTravellingTable
+            {
+                tableTravelling = Donnees.m_donnees.TAB_TRAVELLING
+            };
             if (fVideoTable.ShowDialog() == DialogResult.OK)
             {
                 Donnees.m_donnees.TAB_TRAVELLING.Clear();

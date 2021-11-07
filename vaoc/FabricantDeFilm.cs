@@ -1129,7 +1129,7 @@ namespace vaoc
         /// </summary>
         private void CalculPositionCorps()
         {
-            for (int tour = CST_DEBUT_FILM; t < m_nbImages; t++)
+            for (int tour = CST_DEBUT_FILM; tour < m_nbImages; tour++)
             {
                 foreach (UniteRole roleUnite in m_unitesRoles)
                 {

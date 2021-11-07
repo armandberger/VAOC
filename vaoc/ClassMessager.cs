@@ -2469,9 +2469,16 @@ namespace vaoc
                                 case Constantes.ORDRES.MOUVEMENT:
                                 case Constantes.ORDRES.MESSAGE:
                                 case Constantes.ORDRES.PATROUILLE:
-                                    COMPAS direction;
-                                    CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);
-                                    unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false); ;
+                                    if (lignePionVoisin.ID_CASE == ligneOrdre.ID_CASE_DESTINATION)
+                                    {
+                                        unitesEnvironnantes += " à l'arrêt";
+                                    }
+                                    else
+                                    {
+                                        COMPAS direction;
+                                        CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);
+                                        unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false);
+                                    }
                                     break;
                                 case Constantes.ORDRES.ATTAQUE_PROCHE:
                                     unitesEnvironnantes += "en attaque";

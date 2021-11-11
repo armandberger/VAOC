@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Linq;
 
 namespace vaoc
 {
@@ -677,6 +678,38 @@ namespace vaoc
                 if (m_affichageCorps)
                 {
                     // afficher toutes les unités seules puis tous les chefs de corps puis les batailles.
+                    foreach (UniteRemarquable unite in m_unitesRemarquables)
+                    {
+                        if (unite.iTour == m_traitement &&
+                            (unite.tipe != TIPEUNITEVIDEO.INFANTERIE && unite.tipe != TIPEUNITEVIDEO.CAVALERIE &&
+                            unite.tipe != TIPEUNITEVIDEO.ARTILLERIE && unite.tipe != TIPEUNITEVIDEO.QG))
+                        {
+                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                        }
+                    }
+                    foreach (UniteRemarquable unite in m_unitesRemarquables)
+                    {
+                        if (unite.iTour == m_traitement &&
+                            !unite.bInclusDansLeCorps &&
+                            (unite.tipe == TIPEUNITEVIDEO.INFANTERIE || unite.tipe == TIPEUNITEVIDEO.CAVALERIE ||
+                            unite.tipe == TIPEUNITEVIDEO.ARTILLERIE || unite.tipe == TIPEUNITEVIDEO.QG))
+                        {
+                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                        }
+                    }
+                    //Le leader à la fin
+                    if (m_bTravelling && m_videoParRole)
+                    {
+                        DessineUnite(G, uniteQG, m_xTravelling, m_yTravelling);
+                    }
+                    foreach (UniteRole role in m_unitesRoles)
+                    {
+                        if (role.iTour != m_traitement || role.i_X_CASE_CORPS < 0 || role.i_Y_CASE_CORPS < 0)
+                        {
+                            continue;
+                        }
+                        DessineCorps(G, role, m_xTravelling, m_yTravelling);
+                    }
                 }
                 else
                 {
@@ -953,17 +986,46 @@ namespace vaoc
             }
         }
 
+        private bool EstDansLeCadre(int x, int y, int xTravelling, int yTravelling)
+        {
+            if (
+                   ((x - xTravelling) * m_rapport - m_tailleUnite / 2) < 0
+                || ((x - xTravelling) * m_rapport + m_tailleUnite / 2) > m_largeur
+                || ((y - yTravelling) * m_rapport - m_tailleUnite / 2) < 0
+                || ((y - yTravelling) * m_rapport + m_tailleUnite / 2) > m_hauteur
+                )
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void DessineCorps(Graphics G, UniteRole role, int xTravelling, int yTravelling)
+        {
+            if (role.i_X_CASE_CORPS<0 || role.i_Y_CASE_CORPS<0) { return; }
+            //si on est pas dans le cadre, inutile de continuer
+            if (m_bTravelling)
+            {
+                if (!EstDansLeCadre(role.i_X_CASE_CORPS, role.i_Y_CASE_CORPS, xTravelling, yTravelling))
+                {
+                    return;
+                }
+            }
+            Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
+            //affichage des effectifs
+            G.DrawString(role.nom.Substring(0, CST_TAILLE_NOM_CORPS),  m_police, brosse,
+                new Rectangle((int)((role.i_X_CASE_CORPS - xTravelling) * m_rapport - m_largeurCorps / 2),
+                                (int)((role.i_Y_CASE_CORPS - yTravelling) * m_rapport - m_hauteurCorps / 2),
+                                (int)m_largeurCorps + 1,
+                                (int)m_hauteurCorps + 1));
+        }
+
         private void DessineUnite(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
         {
             //si on est pas dans le cadre, inutile de continuer
             if (m_bTravelling)
             {
-                if (
-                       ((unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2) < 0
-                    || ((unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2) > m_largeur
-                    || ((unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2) < 0
-                    || ((unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2) > m_hauteur
-                    )
+                if (!EstDansLeCadre(unite.i_X_CASE, unite.i_Y_CASE, xTravelling, yTravelling))
                 {
                     return;
                 }
@@ -1134,9 +1196,68 @@ namespace vaoc
                 foreach (UniteRole roleUnite in m_unitesRoles)
                 {
                     if (roleUnite.iTour != tour) { continue; }
+
+                    //recherche de la position la division qui regroupe le plus de poids avec ses voisines
+                    List<UniteRemarquable> divisions =
+                        (from a in m_unitesRemarquables
+                         where a.iTour == tour
+                                 && (a.tipe == TIPEUNITEVIDEO.INFANTERIE || a.tipe == TIPEUNITEVIDEO.CAVALERIE)
+                                 && a.ID_ROLE == roleUnite.ID_ROLE
+                         select a).ToList();
+                    int poidsMax = -1;
+                    int uniteMax = -1;
+                    foreach (UniteRemarquable unitePoid in divisions)
+                    {
+                        int poids = 0;
+                        foreach (UniteRemarquable unite in divisions)
+                        {
+                            if ((Math.Abs(unitePoid.i_X_CASE-unite.i_X_CASE)<=m_largeurCorps * 2) 
+                                && (Math.Abs(unitePoid.i_Y_CASE-unite.i_Y_CASE)<=m_hauteurCorps * 2))
+                            {
+                                poids += unite.iEffectif;
+                            }
+                        }
+                        if (poids>poidsMax)
+                        {
+                            poidsMax = poids;
+                            uniteMax = unitePoid.ID;
+                        }
+
+                        //position de la division pondérée par le poids de chaque division
+                        if (poidsMax > 0)
+                        {
+                            int x_division=0, y_division=0;
+                            foreach (UniteRemarquable unite in divisions)
+                            {
+                                if ((Math.Abs(unitePoid.i_X_CASE - unite.i_X_CASE) <= m_largeurCorps * 2)
+                                    && (Math.Abs(unitePoid.i_Y_CASE - unite.i_Y_CASE) <= m_hauteurCorps * 2))
+                                {
+                                    x_division += unite.i_X_CASE;
+                                    y_division += unite.i_Y_CASE;
+                                    unite.bInclusDansLeCorps = true;
+                                }
+                                else
+                                {
+                                    unite.bInclusDansLeCorps = false;
+                                }
+                            }
+                            x_division /= poidsMax;
+                            y_division /= poidsMax;
+
+                            //affectation finale sur le chef de corps
+                            roleUnite.i_X_CASE_CORPS = x_division;
+                            roleUnite.i_Y_CASE_CORPS = y_division;
+                        }
+                        else
+                        {
+                            roleUnite.i_X_CASE_CORPS = -1;
+                            roleUnite.i_Y_CASE_CORPS = -1;
+                        }
+                    }
                 }
             }
         }
+
         public string ChaineFichier(string source)
         {
             byte[] tempBytes;

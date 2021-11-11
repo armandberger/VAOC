@@ -2608,7 +2608,7 @@ namespace vaoc
                     {
                         return false;
                     }
-                    if (string.Empty != nomDepot) { depotRavitaillement = nomDepot; }
+                    //if (string.Empty != nomDepot) { depotRavitaillement = nomDepot; }, il ne faut pas changer le nom du dépot car le dépôt ayant servi à ravitailler en standard n'est pas toujours celui ayant ravitaillé en direct
                 }
 
                 return true;

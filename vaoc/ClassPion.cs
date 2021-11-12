@@ -1179,61 +1179,57 @@ namespace vaoc
                 return estEnnemi(ligneCase, ligneModele, bCombattif, true);//BEA le 24/03/2021 true au lieu de false, sinon, la nuit les unités démoralisées peuvent être traversées
             }
 
-            public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif, bool combattifSansMoral)
+            public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif, bool bCombattifSansMoral)
             {
-                TAB_MODELE_PIONRow ligneModeleAdversaire;
                 TAB_PIONRow lignePionAdversaire;
 
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
-                if (Constantes.NULLENTIER != IdProprietaire)
+                if (!ligneCase.IsID_PROPRIETAIRENull())
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                    int IdProprietaire = ligneCase.ID_PROPRIETAIRE;
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdProprietaire);
-                    if (null == lignePionAdversaire)
-                    {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        return false; //cas possible si j'ai détruit une unité manuellement
-                    }
-                    if (lignePionAdversaire.B_DETRUIT)
-                    {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        return false;
-                    }
-                    ligneModeleAdversaire = lignePionAdversaire.modelePion;
-                    if (null == ligneModeleAdversaire)
-                    {
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        throw new Exception("TAB_PIONRow.estEnnemi impossible de trouver le modèle du premier pion");
-                    }
-                    if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
-                    {
-                        if (bCombattif)
-                        {
-                            Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                            return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
-                        }
-                        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                        return true;
-                    }
+                    return estPionEnnemi(lignePionAdversaire, ligneModele.ID_NATION, bCombattif, bCombattifSansMoral);
                 }
-                int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
-                if (Constantes.NULLENTIER != IdNouveauProprietaire)
+
+                if (!ligneCase.IsID_NOUVEAU_PROPRIETAIRENull())
                 {
+                    Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                    int IdNouveauProprietaire = ligneCase.ID_NOUVEAU_PROPRIETAIRE;
+                    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                     lignePionAdversaire = m_donnees.tableTAB_PION.FindByID_PION(IdNouveauProprietaire);
-                    if (null != lignePionAdversaire)
-                    {
-                        ligneModeleAdversaire = lignePionAdversaire.modelePion;
-                        if (null != ligneModeleAdversaire)
-                        {
-                            if ((ligneModele.ID_NATION != ligneModeleAdversaire.ID_NATION) && ((bCombattif && lignePionAdversaire.estCombattifQG(false, combattifSansMoral)) || !bCombattif))
-                            {
-                                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                                return lignePionAdversaire.estCombattifQG(false, combattifSansMoral);
-                            }
-                        }
-                    }
+                    return estPionEnnemi(lignePionAdversaire, ligneModele.ID_NATION, bCombattif, bCombattifSansMoral);
                 }
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
+                return false;
+            }
+
+            private bool estPionEnnemi(TAB_PIONRow lignePionAdversaire, int iNationPion, bool bCombattif, bool bCombattifSansMoral)
+            {
+                if (null == lignePionAdversaire)
+                {
+                    return false; //cas possible si j'ai détruit une unité manuellement
+                }
+
+                if (lignePionAdversaire.B_DETRUIT)
+                {
+                    return false;
+                }
+
+                TAB_MODELE_PIONRow ligneModeleAdversaire = lignePionAdversaire.modelePion;
+                if (null == ligneModeleAdversaire)
+                {
+                    throw new Exception("TAB_PIONRow.estPionEnnemi impossible de trouver le modèle du pion");
+                }
+
+                if ((iNationPion != ligneModeleAdversaire.ID_NATION) &&
+                    ((bCombattif && lignePionAdversaire.estCombattifQG(false, bCombattifSansMoral)) || !bCombattif))
+                {
+                    if (bCombattif)
+                    {
+                        return lignePionAdversaire.estCombattifQG(false, bCombattifSansMoral);
+                    }
+                    return true;
+                }
                 return false;
             }
 

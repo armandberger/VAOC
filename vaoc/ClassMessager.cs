@@ -2406,8 +2406,6 @@ namespace vaoc
                                     nomType,
                                     ligneNationVoisin.S_NOM);
                             }
-                            unitesEnvironnantes += " avec des effectifs de ";
-
                             int ecartInfanterie = 0, ecartCavalerie = 0, ecartArtillerie = 0;
 
                             if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
@@ -2424,34 +2422,39 @@ namespace vaoc
                                 ecartArtillerie = lignePionVoisin.artillerie * (Constantes.JetDeDes(2) - 7) / 10 + 10 * (Constantes.JetDeDes(1) - 3) / 10;
                             }
 
-                            if (lignePionVoisin.infanterie + ecartInfanterie > 0)
+                            if ((lignePionVoisin.infanterie + ecartInfanterie > 0) || (lignePionVoisin.cavalerie + ecartCavalerie > 0) || (lignePionVoisin.artillerie + ecartArtillerie > 0))
                             {
-                                int estimationInfanterie = (lignePionVoisin.infanterie + ecartInfanterie < 100) ? lignePionVoisin.infanterie + ecartInfanterie : (int)Math.Round((decimal)(lignePionVoisin.infanterie + ecartInfanterie) / 100) * 100;
-                                unitesEnvironnantes += estimationInfanterie.ToString() + " fantassins";
-                            }
-                            if (lignePionVoisin.cavalerie + ecartCavalerie > 0)
-                            {
+                                unitesEnvironnantes += " avec des effectifs de ";
+
                                 if (lignePionVoisin.infanterie + ecartInfanterie > 0)
                                 {
-                                    if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                                    int estimationInfanterie = (lignePionVoisin.infanterie + ecartInfanterie < 100) ? lignePionVoisin.infanterie + ecartInfanterie : (int)Math.Round((decimal)(lignePionVoisin.infanterie + ecartInfanterie) / 100) * 100;
+                                    unitesEnvironnantes += estimationInfanterie.ToString() + " fantassins";
+                                }
+                                if (lignePionVoisin.cavalerie + ecartCavalerie > 0)
+                                {
+                                    if (lignePionVoisin.infanterie + ecartInfanterie > 0)
                                     {
-                                        unitesEnvironnantes += ", ";
+                                        if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                                        {
+                                            unitesEnvironnantes += ", ";
+                                        }
+                                        else
+                                        {
+                                            unitesEnvironnantes += " et ";
+                                        }
                                     }
-                                    else
+                                    int estimationCavalerie = (lignePionVoisin.cavalerie + ecartCavalerie < 100) ? lignePionVoisin.cavalerie + ecartCavalerie : (int)Math.Round((decimal)(lignePionVoisin.cavalerie + ecartCavalerie) / 100) * 100;
+                                    unitesEnvironnantes += estimationCavalerie.ToString() + " cavaliers";
+                                }
+                                if (lignePionVoisin.artillerie + ecartArtillerie > 0)
+                                {
+                                    if ((lignePionVoisin.infanterie + ecartInfanterie) > 0 || (lignePionVoisin.cavalerie + ecartCavalerie) > 0)
                                     {
                                         unitesEnvironnantes += " et ";
                                     }
+                                    unitesEnvironnantes += (lignePionVoisin.artillerie + ecartArtillerie).ToString() + " canons";
                                 }
-                                int estimationCavalerie = (lignePionVoisin.cavalerie + ecartCavalerie < 100) ? lignePionVoisin.cavalerie + ecartCavalerie : (int)Math.Round((decimal)(lignePionVoisin.cavalerie + ecartCavalerie) / 100) * 100;
-                                unitesEnvironnantes += estimationCavalerie.ToString() + " cavaliers";
-                            }
-                            if (lignePionVoisin.artillerie + ecartArtillerie > 0)
-                            {
-                                if ((lignePionVoisin.infanterie + ecartInfanterie) > 0 || (lignePionVoisin.cavalerie + ecartCavalerie) > 0)
-                                {
-                                    unitesEnvironnantes += " et ";
-                                }
-                                unitesEnvironnantes += (lignePionVoisin.artillerie + ecartArtillerie).ToString() + " canons";
                             }
                             unitesEnvironnantes += string.Format(" située{0} à {1}", femminin, NomZoneGeographique);
                         }

@@ -161,7 +161,7 @@ namespace WaocLib
          };
 
         //colonne = valeur de matériel, ligne = ravitaillement, cette table ne doit être utilisée qu'avec la méthode CalculerEfficaciteAuCombat de cette même classe
-        private static int[,] tableEffaciteAuCombat = new int[5, 5] 
+        private static readonly int[,] tableEffaciteAuCombat = new int[5, 5] 
         {   { -2, -2, -1, -1,  0}, 
             { -2, -1, -1,  0,  1},
             { -1, -1,  0,  1,  1},

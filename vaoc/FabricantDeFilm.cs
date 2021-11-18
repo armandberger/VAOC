@@ -173,6 +173,7 @@ namespace vaoc
                 m_lieuxRemarquables = lieuxRemarquables;
                 m_unitesRemarquables = unitesRemarquables;
                 m_effectifsEtVictoires = effectifsEtVictoires;
+                m_unitesRoles = unitesRoles;
                 m_texteImages = texteImages;
                 m_hauteurBandeau = 0;
                 m_largeurCote = 0;
@@ -1232,8 +1233,8 @@ namespace vaoc
                                 if ((Math.Abs(unitePoid.i_X_CASE - unite.i_X_CASE) <= m_largeurCorps * 2)
                                     && (Math.Abs(unitePoid.i_Y_CASE - unite.i_Y_CASE) <= m_hauteurCorps * 2))
                                 {
-                                    x_division += unite.i_X_CASE;
-                                    y_division += unite.i_Y_CASE;
+                                    x_division += unite.i_X_CASE * unite.iEffectif;
+                                    y_division += unite.i_Y_CASE * unite.iEffectif;
                                     unite.bInclusDansLeCorps = true;
                                 }
                                 else

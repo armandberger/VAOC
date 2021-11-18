@@ -138,7 +138,7 @@ namespace vaoc
                 int[] effectifs;
                 int[] canons;
                 int[] modificateurs;
-                int nbUnites012 = 0, nbUnites345 = 0;
+                int nbUnites012, nbUnites345;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 Donnees.TAB_PIONRow[] lignePionsCombattifBataille012;
@@ -1335,7 +1335,7 @@ namespace vaoc
                 int[] relance = new int[6];                //nombre de dés autorises à être relancés en cas de superiorité d'artillerie
                 int i;
                 int nbUnites012 = 0, nbUnites345 = 0;//pour les bonus stratégiques
-                int nbUnites012Base = 0, nbUnites345Base = 0;//pour vérifier qu'il y a bien des unités présentes
+                int nbUnites012Base, nbUnites345Base;//pour vérifier qu'il y a bien des unités présentes
                 int modificateurStrategique012, modificateurStrategique345;
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
                 //Donnees.TAB_PIONRow[] lignePionsEnBataille012;

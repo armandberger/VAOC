@@ -129,30 +129,18 @@ namespace vaoc
                          select video.I_VICTOIRE)
                         .Sum();
 
-                    //var test1 =
-                    //    (from video in Donnees.m_donnees.TAB_VIDEO
-                    //     where (video.I_TOUR == i)
-                    //        && (((video.ID_NATION != Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                    //                && (true == video.B_DETRUIT || true == video.B_FUITE_AU_COMBAT))
-                    //                && video.I_VICTOIRE>0)
-                    //     select video);
-
-                    //var test2 =
-                    //    (from video in Donnees.m_donnees.TAB_VIDEO
-                    //     where (video.I_TOUR == i)
-                    //        && (((video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
-                    //                && (false == video.B_DETRUIT && false == video.B_FUITE_AU_COMBAT))
-                    //                && video.I_VICTOIRE > 0)
-                    //     select video);
-
-                    EffectifEtVictoire effV = new EffectifEtVictoire
+                    //on peut avoir des effectifs à 0 pour des nations crées uniquement pour des caractéristiques d'unités mais ce n'est pas un "camp"
+                    if (effectifs > 0)
                     {
-                        iTour = i,
-                        iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION,
-                        iEffectif = effectifs ?? 0,
-                        iVictoire = victoires ?? 0
-                    };
-                    m_effectifsEtVictoires.Add(effV);
+                        EffectifEtVictoire effV = new EffectifEtVictoire
+                        {
+                            iTour = i,
+                            iNation = Donnees.m_donnees.TAB_NATION[j].ID_NATION,
+                            iEffectif = effectifs ?? 0,
+                            iVictoire = victoires ?? 0
+                        };
+                        m_effectifsEtVictoires.Add(effV);
+                    }
                 }
                 /*
                 string requete = string.Format("ID_CASE_FIN={0} AND I_BLOCX={1} AND I_BLOCY={2}",

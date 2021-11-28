@@ -236,7 +236,10 @@ namespace vaoc
                     if (nbUnites012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
-                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
+                        if (lignePionsEnBatailleRetraite345.Count() > 0)
+                        {
+                            SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
+                        }
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille012);
@@ -249,7 +252,10 @@ namespace vaoc
                     else
                     {
                         Poursuite( ID_LEADER_345, lignePionsEnBataille345, ID_LEADER_012, lignePionsEnBataille012);
-                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite012);
+                        if (lignePionsEnBatailleRetraite012.Count() > 0)
+                        {
+                            SortieDuChampDeBataille(lignePionsEnBatailleRetraite012);
+                        }
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille345);

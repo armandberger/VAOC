@@ -339,7 +339,7 @@ namespace vaoc
                     //calcul des hauteurs et largeur pour les corps, déterminera ensuite l'espacement d'inclusion des unités dans un corps pour l'affichage
                     foreach (UniteRole role in m_unitesRoles)
                     {
-                        tailleTexte = G.MeasureString(role.nom.Substring(0, CST_TAILLE_NOM_CORPS), m_police);
+                        tailleTexte = G.MeasureString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)), m_police);
                         m_hauteurCorps = Math.Max(m_hauteurCorps, (int)tailleTexte.Height);
                         m_largeurCorps = Math.Max(m_largeurCorps, (int)tailleTexte.Width);
                     }
@@ -1014,7 +1014,7 @@ namespace vaoc
             }
             Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
             //affichage des effectifs
-            G.DrawString(role.nom.Substring(0, CST_TAILLE_NOM_CORPS),  m_police, brosse,
+            G.DrawString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)),  m_police, brosse,
                 new Rectangle((int)((role.i_X_CASE_CORPS - xTravelling) * m_rapport - m_largeurCorps / 2),
                                 (int)((role.i_Y_CASE_CORPS - yTravelling) * m_rapport - m_hauteurCorps / 2),
                                 (int)m_largeurCorps + 1,

@@ -3365,6 +3365,7 @@ namespace vaoc
                         pionRenfort.I_FATIGUE = I_FATIGUE;//même fatigue que l'unité d'origine
                         pionRenfort.I_MATERIEL = I_MATERIEL_ESCORTE;
                         pionRenfort.I_RAVITAILLEMENT = I_RAVITAILLEMENT; // ils sont ravitaillés comme l'unité qu'ils escortaient
+                        pionRenfort.ID_CASE = this.ID_CASE;
                         Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on supprimer le pion prisonniers d'origine

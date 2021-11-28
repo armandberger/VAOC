@@ -170,7 +170,7 @@ namespace vaoc
                     UniteRole role = new UniteRole
                     {
                         iTour = ligneVideo.I_TOUR,
-                        nom = ligneVideo.S_NOM,
+                        nom = NomQG(ligneVideo.S_NOM),
                         iNation = ligneVideo.ID_NATION,
                         ID_ROLE = ligneVideo.ID_PION,
                         i_X_CASE_CORPS = -1,
@@ -234,6 +234,18 @@ namespace vaoc
             progressBar.Value = 0;
             Invalidate();
             backgroundTraitement.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Détermine le nom de rôle affiché sur la vidéo
+        /// </summary>
+        /// <param name="s_NOM">nom de l'unité de base</param>
+        /// <returns>>Nom contracté</returns>
+        private string NomQG(string nom)
+        {
+            //le dernier mot
+            int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
+            return nom.Substring(pos, nom.Length-pos);
         }
 
         private void buttonOuvrirFilm_Click(object sender, EventArgs e)

@@ -109,7 +109,7 @@ namespace vaoc
                 requete = string.Format("ID_PION_PROPRIETAIRE={0} AND I_TOUR_ARRIVEE={1} AND ID_PION_PROPRIETAIRE<>ID_PION_EMETTEUR",
                     ligneRole.ID_PION, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - 1);
             }
-            ligneMessageResultat = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete, "I_PHASE_ARRIVEE");
+            ligneMessageResultat = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete, "I_PHASE_ARRIVEE, ID_MESSAGE");
             if (0 == ligneMessageResultat.Length)
             {
                 texte.AppendLine(Donnees.m_donnees.TAB_PHRASE.DonneUnePhrase(ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE));
@@ -120,7 +120,7 @@ namespace vaoc
                 {
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
                     Donnees.TAB_PIONRow lignePionEmetteur = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
-                    texte.AppendLine(string.Format("<div>Message reçu le {0}, parti de {1} le {2}:<br/>",
+                    texte.AppendLine(string.Format("<div><b>Message reçu le {0}, parti de {1} le {2}:</b><br/>",
                         ClassMessager.DateHeure(ligneMessage.I_TOUR_ARRIVEE, ligneMessage.I_PHASE_ARRIVEE, false),
                         nomZoneGeographique,
                         ClassMessager.DateHeure(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART, false)));

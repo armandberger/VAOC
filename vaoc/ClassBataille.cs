@@ -1726,12 +1726,15 @@ namespace vaoc
                             i, des[i], effectifs[i], i + 3, des[i + 3], effectifs[i + 3]);
                         LogFile.Notifier(message);
 
-                        int rapportArtillerie = (0 == canons[i + 3]) ? canons[i] > 0 ? 2 : 0 : canons[i] / canons[i + 3];
-                        if (rapportArtillerie >= 1) { relance[i] = Math.Min(rapportArtillerie, 2); } // 2 dés de relance au maximum
-                        rapportArtillerie = (0 == canons[i]) ? canons[i + 3] > 0 ? 2 : 0 : canons[i + 3] / canons[i];
-                        if (rapportArtillerie >= 1) { relance[i + 3] = Math.Min(rapportArtillerie, 2); }// 2 dés de relance au maximum
-                        message = string.Format("EffectuerBataille relance[{0}]={1} relance[{2}]={3}", i, relance[i], i + 3, relance[i + 3]);
-                        LogFile.Notifier(message);
+                        if (canons[i + 3] != canons[i])
+                        {
+                            int rapportArtillerie = (0 == canons[i + 3]) ? canons[i] > 0 ? 2 : 0 : canons[i] / canons[i + 3];
+                            if (rapportArtillerie >= 1) { relance[i] = Math.Min(rapportArtillerie, 2); } // 2 dés de relance au maximum
+                            rapportArtillerie = (0 == canons[i]) ? canons[i + 3] > 0 ? 2 : 0 : canons[i + 3] / canons[i];
+                            if (rapportArtillerie >= 1) { relance[i + 3] = Math.Min(rapportArtillerie, 2); }// 2 dés de relance au maximum
+                            message = string.Format("EffectuerBataille relance[{0}]={1} relance[{2}]={3}", i, relance[i], i + 3, relance[i + 3]);
+                            LogFile.Notifier(message);
+                        }
 
                         //modificateurs de terrain, appliquées uniquement si l'une des unités de la zone est en mode défense et si son niveau d'engagement est inférieur ou égal à l'attaquant
                         int valeurDesFortifications = 0;
@@ -2574,8 +2577,8 @@ namespace vaoc
                                 {
                                     presenceArtillerie[lignePion.I_ZONE_BATAILLE] = true;
                                 }
-                                canons[lignePion.I_ZONE_BATAILLE] += lignePion.I_ARTILLERIE;
-                                effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
+                                canons[lignePion.I_ZONE_BATAILLE] += lignePion.artillerie;
+                                effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.infanterie + lignePion.cavalerie;
                                 modificateurs[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
 
                                 if (lignePion.B_CAVALERIE_DE_LIGNE) { presenceCavalerieDeLigne[lignePion.I_ZONE_BATAILLE] = true; }

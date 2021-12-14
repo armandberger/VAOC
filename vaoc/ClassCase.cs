@@ -82,6 +82,7 @@ namespace vaoc
                 // je stocke les variables pour libérer la table le plus rapidement possible
                 Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 bool isProprietaireNull = IsID_PROPRIETAIRENull();
+                
                 bool isNouveauProprietaireNull = IsID_NOUVEAU_PROPRIETAIRENull();
                 int? idProprietaire = null;
                 if (!isProprietaireNull) idProprietaire = ID_PROPRIETAIRE;
@@ -94,10 +95,19 @@ namespace vaoc
                     {
                         return false;
                     }
-                    if (enMouvement && !lignePion.estEnnemi(this, false))//false au lieu de true, 4/4/2019 car sinon une unite en mouvement traverse les depots sans les capturer
+                    //if (enMouvement && !lignePion.estEnnemi(this, false))//false au lieu de true, 4/4/2019 car sinon une unite en mouvement traverse les depots sans les capturer
+                    //{
+                    //    //si l'on se déplace sur une route, les occupants peuvent se superposer
+                    //    return false;
+                    //}
+                    if (lignePion.estEnnemi(this, false))//false au lieu de true, 4/4/2019 car sinon une unite en mouvement traverse les depots sans les capturer
+                    {
+                        return true;
+                    }
+                    else
                     {
                         //si l'on se déplace sur une route, les occupants peuvent se superposer
-                        return false;
+                        return !enMouvement;
                     }
                 }
                 if (isNouveauProprietaireNull) 

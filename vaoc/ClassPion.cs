@@ -1599,7 +1599,7 @@ namespace vaoc
                     return false;
                 }
 
-                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers || estRenfort)
+                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers)// || estRenfort) -> le renfort est une troupe combattive
                 {
                     return false;
                 }

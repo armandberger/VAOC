@@ -104,6 +104,7 @@
     <Compile Include="DataFichier\ClassDataPion.cs" />
     <Compile Include="dataOBJ\LigneCASE.cs" />
     <Compile Include="FabricantDeFilm.cs" />
+    <Compile Include="FabricantDeFilmDeBataille.cs" />
     <Compile Include="FormBackup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -552,12 +553,17 @@
     <None Include="Resources\IconVAOC.ico" />
     <Content Include="Resources\cavalerie_0.png" />
     <Content Include="Resources\cavalerie_1.png" />
+    <Content Include="Resources\colline.bmp" />
     <Content Include="Resources\convoi_0.png" />
     <Content Include="Resources\convoi_1.png" />
     <Content Include="Resources\depot_0.png" />
     <Content Include="Resources\depot_1.png" />
+    <Content Include="Resources\fleuve.bmp" />
+    <Content Include="Resources\foret.bmp" />
+    <Content Include="Resources\forteresse.bmp" />
     <Content Include="Resources\genie_0.png" />
     <Content Include="Resources\genie_1.png" />
+    <Content Include="Resources\herbe.bmp" />
     <Content Include="Resources\infanterie_0.png" />
     <Content Include="Resources\infanterie_1.png" />
     <Content Include="Resources\memoire.bmp" />
@@ -567,6 +573,8 @@
     <Content Include="Resources\prisonnier_1.png" />
     <Content Include="Resources\qg_0.png" />
     <Content Include="Resources\qg_1.png" />
+    <Content Include="Resources\riviere.bmp" />
+    <Content Include="Resources\ville.bmp" />
     <Content Include="Resources\voirTrajetsVilles.bmp" />
     <Content Include="Resources\tail2.ani" />
   </ItemGroup>

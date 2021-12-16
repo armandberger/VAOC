@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -138,7 +139,7 @@ namespace vaoc
                 int[] effectifs;
                 int[] canons;
                 int[] modificateurs;
-                int nbUnites012, nbUnites345;
+                int nbUnites012 = 0, nbUnites345 = 0;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 Donnees.TAB_PIONRow[] lignePionsCombattifBataille012;
@@ -236,10 +237,7 @@ namespace vaoc
                     if (nbUnites012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
-                        if (lignePionsEnBatailleRetraite345.Count() > 0)
-                        {
-                            SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
-                        }
+                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille012);
@@ -252,10 +250,7 @@ namespace vaoc
                     else
                     {
                         Poursuite( ID_LEADER_345, lignePionsEnBataille345, ID_LEADER_012, lignePionsEnBataille012);
-                        if (lignePionsEnBatailleRetraite012.Count() > 0)
-                        {
-                            SortieDuChampDeBataille(lignePionsEnBatailleRetraite012);
-                        }
+                        SortieDuChampDeBataille(lignePionsEnBatailleRetraite012);
                         if (I_TOUR_FIN - I_TOUR_DEBUT >= 4)
                         {
                             GainMoralFinDeBataille(lignePionsCombattifBataille345);
@@ -1341,7 +1336,7 @@ namespace vaoc
                 int[] relance = new int[6];                //nombre de dés autorises à être relancés en cas de superiorité d'artillerie
                 int i;
                 int nbUnites012 = 0, nbUnites345 = 0;//pour les bonus stratégiques
-                int nbUnites012Base, nbUnites345Base;//pour vérifier qu'il y a bien des unités présentes
+                int nbUnites012Base = 0, nbUnites345Base = 0;//pour vérifier qu'il y a bien des unités présentes
                 int modificateurStrategique012, modificateurStrategique345;
                 Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
                 //Donnees.TAB_PIONRow[] lignePionsEnBataille012;
@@ -1726,15 +1721,12 @@ namespace vaoc
                             i, des[i], effectifs[i], i + 3, des[i + 3], effectifs[i + 3]);
                         LogFile.Notifier(message);
 
-                        if (canons[i + 3] != canons[i])
-                        {
-                            int rapportArtillerie = (0 == canons[i + 3]) ? canons[i] > 0 ? 2 : 0 : canons[i] / canons[i + 3];
-                            if (rapportArtillerie >= 1) { relance[i] = Math.Min(rapportArtillerie, 2); } // 2 dés de relance au maximum
-                            rapportArtillerie = (0 == canons[i]) ? canons[i + 3] > 0 ? 2 : 0 : canons[i + 3] / canons[i];
-                            if (rapportArtillerie >= 1) { relance[i + 3] = Math.Min(rapportArtillerie, 2); }// 2 dés de relance au maximum
-                            message = string.Format("EffectuerBataille relance[{0}]={1} relance[{2}]={3}", i, relance[i], i + 3, relance[i + 3]);
-                            LogFile.Notifier(message);
-                        }
+                        int rapportArtillerie = (0 == canons[i + 3]) ? canons[i] > 0 ? 2 : 0 : canons[i] / canons[i + 3];
+                        if (rapportArtillerie >= 1) { relance[i] = Math.Min(rapportArtillerie, 2); } // 2 dés de relance au maximum
+                        rapportArtillerie = (0 == canons[i]) ? canons[i + 3] > 0 ? 2 : 0 : canons[i + 3] / canons[i];
+                        if (rapportArtillerie >= 1) { relance[i + 3] = Math.Min(rapportArtillerie, 2); }// 2 dés de relance au maximum
+                        message = string.Format("EffectuerBataille relance[{0}]={1} relance[{2}]={3}", i, relance[i], i + 3, relance[i + 3]);
+                        LogFile.Notifier(message);
 
                         //modificateurs de terrain, appliquées uniquement si l'une des unités de la zone est en mode défense et si son niveau d'engagement est inférieur ou égal à l'attaquant
                         int valeurDesFortifications = 0;
@@ -2577,8 +2569,8 @@ namespace vaoc
                                 {
                                     presenceArtillerie[lignePion.I_ZONE_BATAILLE] = true;
                                 }
-                                canons[lignePion.I_ZONE_BATAILLE] += lignePion.artillerie;
-                                effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.infanterie + lignePion.cavalerie;
+                                canons[lignePion.I_ZONE_BATAILLE] += lignePion.I_ARTILLERIE;
+                                effectifs[lignePion.I_ZONE_BATAILLE] += lignePion.I_INFANTERIE + lignePion.I_CAVALERIE;
                                 modificateurs[lignePion.I_ZONE_BATAILLE] += (int)Math.Floor(lignePion.I_EXPERIENCE);
 
                                 if (lignePion.B_CAVALERIE_DE_LIGNE) { presenceCavalerieDeLigne[lignePion.I_ZONE_BATAILLE] = true; }
@@ -2961,6 +2953,7 @@ namespace vaoc
                 return ClassMessager.EnvoyerMessage(lignePion, typeMessage, pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal, pertesMoral, 0,
                     this, null, null, null, 0, pertesRavitaillementPion, pertesMaterielPion, string.Empty, bImmediat, string.Empty, listePionsEnBataille);
             }
+
             /// <summary>
             /// Gain d'expérience pour toutes les unités ayant participées à une bataille de 4 heures ou plus
             /// </summary>
@@ -2974,6 +2967,170 @@ namespace vaoc
                 return true;
             }
 
+            /// <summary>
+            /// Generation du film résulmant la bataille
+            /// </summary>
+            /// <returns></returns>
+            public bool GenererFilm()
+            {
+                List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
+                List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
+                List<RoleBataille> rolesBataille=new List<RoleBataille>();
+                TIPETERRAINBATAILLE[] terrains= new TIPETERRAINBATAILLE[6];
+                TIPETERRAINBATAILLE[] obstacles = new TIPETERRAINBATAILLE[3];
+                TIPEORIENTATIONBATAILLE orientation = TIPEORIENTATIONBATAILLE.HORIZONTAL;
+                TIPEFINBATAILLE fin = TIPEFINBATAILLE.RETRAITE012;
+
+                for (int i=0;i<6;i++)
+                {
+                    terrains[i] = FilmTerrain((int)this["ID_TERRAIN_" + Convert.ToString(i)]);
+                }
+                obstacles[0] = FilmTerrain(this.ID_OBSTACLE_03);
+                obstacles[1] = FilmTerrain(this.ID_OBSTACLE_14);
+                obstacles[2] = FilmTerrain(this.ID_OBSTACLE_25);
+
+                for (int tour = this.I_TOUR_DEBUT; tour < this.I_TOUR_FIN + 1;tour++)
+                {
+                    ZoneBataille zb;
+                    zb = new ZoneBataille() { iTour = tour };
+                    zb.sCombat = new string[6];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        //zb.sCombat[i] = (string)this["S_COMBAT_" + Convert.ToString(i)];
+                    }
+                    zb.iPertes = new int[6];
+                    for (int i = 0; i < 6; i++)
+                    {
+                        //zb.iPertes[i] = (int)this["I_PERTES_" + Convert.ToString(i)];
+                    }
+                    zonesBataille.Add(zb);
+                }
+                /* TEST
+                ZoneBataille zb;
+                zb = new ZoneBataille() { iTour = 50 };
+                zb.sCombat = new string[6];
+                zb.sCombat[1] = "1 dés + 1, 0 relances = 5";
+                zb.sCombat[4] = "4 dés + 0, 2 relances = 21";
+                zb.iPertes = new int[6];
+                zb.iPertes[1] = 1323;
+                zb.iPertes[4] = 32;
+                zonesBataille.Add(zb);
+
+                zb = new ZoneBataille() { iTour = 52 };
+                zb.sCombat = new string[6];
+                zb.sCombat[1] = "1 dés + 1";
+                zb.sCombat[4] = "4 dés + 0";
+                zb.iPertes = new int[6];
+                zb.iPertes[1] = 888;
+                zb.iPertes[4] = 1076;
+                zonesBataille.Add(zb);
+
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.QG, effectifInfanterie = 0, effectifCavalerie = 0, effectifArtillerie = 0, ID = 123, iNation = 0, nom = "Napoléon" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 7000, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 17000, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe= TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie=0, effectifCavalerie=1200, effectifArtillerie=8, ID=123, iNation=0, nom= "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 1200, effectifArtillerie = 8, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 50, iZone = 4, tipe = TIPEUNITEBATAILLE.INFANTERIE, effectifInfanterie = 11800, effectifCavalerie = 200, effectifArtillerie = 14, ID = 123, iNation = 1, nom = "7B: Horn" });
+
+                unitesBataille.Add(new UniteBataille() { iTour = 51, iZone = 1, tipe = TIPEUNITEBATAILLE.QG, effectifInfanterie = 0, effectifCavalerie = 0, effectifArtillerie = 0, ID = 123, iNation = 0, nom = "Napoléon" });
+                unitesBataille.Add(new UniteBataille() { iTour = 51, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 51, iZone = 1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 980, effectifArtillerie = 7, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 51, iZone = 4, tipe = TIPEUNITEBATAILLE.INFANTERIE, effectifInfanterie = 11500, effectifCavalerie = 200, effectifArtillerie = 14, ID = 123, iNation = 1, nom = "7B: Horn" });
+                //pour la retraite
+                unitesBataille.Add(new UniteBataille() { iTour = 52, iZone = -1, tipe = TIPEUNITEBATAILLE.QG, effectifInfanterie = 0, effectifCavalerie = 0, effectifArtillerie = 0, ID = 123, iNation = 0, nom = "Napoléon" });
+                unitesBataille.Add(new UniteBataille() { iTour = 52, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 700, effectifArtillerie = 12, ID = 123, iNation = 0, nom = "5 Lourd: Cuvellier" });
+                unitesBataille.Add(new UniteBataille() { iTour = 52, iZone = -1, tipe = TIPEUNITEBATAILLE.CAVALERIE, effectifInfanterie = 0, effectifCavalerie = 980, effectifArtillerie = 7, ID = 123, iNation = 0, nom = "5 Leg: Lorge" });
+                unitesBataille.Add(new UniteBataille() { iTour = 52, iZone = 4, tipe = TIPEUNITEBATAILLE.INFANTERIE, effectifInfanterie = 11500, effectifCavalerie = 200, effectifArtillerie = 14, ID = 123, iNation = 1, nom = "7B: Horn" });
+
+                rolesBataille.Add(new RoleBataille() { nomLeader012 = "Napoléon", nomLeader345=string.Empty, iNation012=0, iNation345=1, iTour=50});
+                rolesBataille.Add(new RoleBataille() { nomLeader012 = "Napoléon", nomLeader345 = string.Empty, iNation012 = 0, iNation345 = 1, iTour = 51 });
+                rolesBataille.Add(new RoleBataille() { nomLeader012 = "Napoléon", nomLeader345 = string.Empty, iNation012 = 0, iNation345 = 1, iTour = 52 });
+                terrains[0] = TIPETERRAINBATAILLE.PLAINE;
+                terrains[1] = TIPETERRAINBATAILLE.COLLINE;
+                terrains[2] = TIPETERRAINBATAILLE.FORET;
+                terrains[3] = TIPETERRAINBATAILLE.FORTERESSE;
+                terrains[4] = TIPETERRAINBATAILLE.VILLE;
+                terrains[5] = TIPETERRAINBATAILLE.VILLE;
+                obstacles[0] = TIPETERRAINBATAILLE.AUCUN;
+                obstacles[1] = TIPETERRAINBATAILLE.RIVIERE;
+                obstacles[2] = TIPETERRAINBATAILLE.FLEUVE;
+
+                FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
+                //tout est fait dans initialisation
+                string erreur = film.Initialisation(this.S_NOM,
+                    "C:\\Users\\Armand.BERGER\\Downloads",
+                    new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
+                    1600,1200,
+                    unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
+                    orientation, fin,
+                    2,//nbetapes
+                    50 //debut
+                    );                */
+
+                FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
+                //tout est fait dans initialisation
+                string erreur = film.Initialisation(this.S_NOM,
+                    "C:\\Users\\Armand.BERGER\\Downloads",
+                    new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
+                    1600,1200,
+                    unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
+                    orientation, fin,
+                    this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
+                    this.I_TOUR_DEBUT //debut
+                    );
+                if (erreur !=string.Empty)
+                {
+                    LogFile.Notifier("Erreur dans Bataille-GenererFilm :" + this.ID_BATAILLE + " : " + erreur);
+                    return false;
+                }
+                return true;
+            }
+
+            private TIPETERRAINBATAILLE FilmTerrain(int iD_TERRAIN)
+            {
+                TAB_MODELE_TERRAINRow ligneTerrain = m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(iD_TERRAIN);
+                if (ligneTerrain.S_NOM.IndexOf("plaine", StringComparison.InvariantCultureIgnoreCase) >0)
+                {
+                    return TIPETERRAINBATAILLE.PLAINE;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("colline", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.COLLINE;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("foret", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.FORET;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("forteresse", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.FORTERESSE;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("ville", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.VILLE;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("riviere", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.RIVIERE;
+                }
+                if (ligneTerrain.S_NOM.IndexOf("fleuve", StringComparison.InvariantCultureIgnoreCase) > 0)
+                {
+                    return TIPETERRAINBATAILLE.FLEUVE;
+                }
+                return TIPETERRAINBATAILLE.AUCUN;
+            }
         }
     }
 }

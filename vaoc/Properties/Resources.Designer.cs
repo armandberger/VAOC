@@ -143,6 +143,16 @@ namespace vaoc.Properties {
         /// <summary>
         ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap colline {
+            get {
+                object obj = ResourceManager.GetObject("colline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap convoi_0 {
             get {
                 object obj = ResourceManager.GetObject("convoi_0", resourceCulture);
@@ -176,6 +186,36 @@ namespace vaoc.Properties {
         public static System.Drawing.Bitmap depot_1 {
             get {
                 object obj = ResourceManager.GetObject("depot_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap fleuve {
+            get {
+                object obj = ResourceManager.GetObject("fleuve", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap foret {
+            get {
+                object obj = ResourceManager.GetObject("foret", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap forteresse {
+            get {
+                object obj = ResourceManager.GetObject("forteresse", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -236,6 +276,16 @@ namespace vaoc.Properties {
         public static System.Drawing.Bitmap memoire {
             get {
                 object obj = ResourceManager.GetObject("memoire", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap plaine {
+            get {
+                object obj = ResourceManager.GetObject("plaine", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -321,6 +371,16 @@ namespace vaoc.Properties {
         }
         
         /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap riviere {
+            get {
+                object obj = ResourceManager.GetObject("riviere", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une ressource localisée de type System.Byte[].
         /// </summary>
         public static byte[] tail2 {
@@ -336,6 +396,16 @@ namespace vaoc.Properties {
         public static System.Drawing.Bitmap testPCC {
             get {
                 object obj = ResourceManager.GetObject("testPCC", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ville {
+            get {
+                object obj = ResourceManager.GetObject("ville", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

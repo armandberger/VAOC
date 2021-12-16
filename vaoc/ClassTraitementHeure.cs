@@ -60,10 +60,6 @@ namespace vaoc
             //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
             //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
 
-            //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
-            int moisEnCours = ClassMessager.DateHeure().Month;
-            Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours-1];
-            Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours-1];
             //MiseAJourDonneesHistorique majVideo2 = new MiseAJourDonneesHistorique();
             //majVideo2.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
             //majVideo2.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
@@ -1513,6 +1509,11 @@ namespace vaoc
         {
             LogFile.Notifier("Debut nouvelle heure");
             bRenfort = false;
+
+            //On determine l'heure de levée et de coucher du soleil d'après le mois en cours
+            int moisEnCours = ClassMessager.DateHeure().Month;
+            Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL = Constantes.tableHeuresLeveeDuSoleil[moisEnCours - 1];
+            Donnees.m_donnees.TAB_JEU[0].I_COUCHER_DU_SOLEIL = Constantes.tableHeuresCoucherDuSoleil[moisEnCours - 1];
 
             #region Blessures des chefs
             int i = 0;

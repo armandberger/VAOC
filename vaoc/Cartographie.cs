@@ -1090,7 +1090,9 @@ namespace vaoc
                     idNation345 = idNation0;
                 }
             }
-
+            //Il peut arriver des cas sur des unités petites ou une nation n'a pas pu être trouvée, il faut alors la forcer
+            if (idNation012 < 0) { idNation012 = (0 == idNation345) ? 1 : 0; }
+            if (idNation345 < 0) { idNation345 = (0 == idNation012) ? 1 : 0; }
             #endregion
 
             #region recherche des leaders de chaque bataille

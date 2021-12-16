@@ -3321,7 +3321,7 @@ namespace vaoc
             while (i < Donnees.m_donnees.TAB_PION.Count)//on ne peut pas faire de foreach car l'envoi de messagers change la table
             {
                 Donnees.TAB_PIONRow ligneDepot = Donnees.m_donnees.TAB_PION[i];
-                if (!ligneDepot.estDepot) { ++i; continue; } //seules les dépôts sont concernés
+                if (!ligneDepot.estDepot || ligneDepot.B_DETRUIT) { ++i; continue; } //seules les dépôts non détruits sont concernés
 
                 ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
 

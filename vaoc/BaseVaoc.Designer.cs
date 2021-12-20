@@ -112,6 +112,10 @@ namespace vaoc {
         
         private TAB_BATAILLE_VISIBLEDataTable tableTAB_BATAILLE_VISIBLE;
         
+        private TAB_BATAILLE_PIONS_VIDEODataTable tableTAB_BATAILLE_PIONS_VIDEO;
+        
+        private TAB_BATAILLE_VIDEODataTable tableTAB_BATAILLE_VIDEO;
+        
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -271,6 +275,12 @@ namespace vaoc {
                 }
                 if ((ds.Tables["TAB_BATAILLE_VISIBLE"] != null)) {
                     base.Tables.Add(new TAB_BATAILLE_VISIBLEDataTable(ds.Tables["TAB_BATAILLE_VISIBLE"]));
+                }
+                if ((ds.Tables["TAB_BATAILLE_PIONS_VIDEO"] != null)) {
+                    base.Tables.Add(new TAB_BATAILLE_PIONS_VIDEODataTable(ds.Tables["TAB_BATAILLE_PIONS_VIDEO"]));
+                }
+                if ((ds.Tables["TAB_BATAILLE_VIDEO"] != null)) {
+                    base.Tables.Add(new TAB_BATAILLE_VIDEODataTable(ds.Tables["TAB_BATAILLE_VIDEO"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -732,6 +742,26 @@ namespace vaoc {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public TAB_BATAILLE_PIONS_VIDEODataTable TAB_BATAILLE_PIONS_VIDEO {
+            get {
+                return this.tableTAB_BATAILLE_PIONS_VIDEO;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public TAB_BATAILLE_VIDEODataTable TAB_BATAILLE_VIDEO {
+            get {
+                return this.tableTAB_BATAILLE_VIDEO;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.BrowsableAttribute(true)]
         [global::System.ComponentModel.DesignerSerializationVisibilityAttribute(global::System.ComponentModel.DesignerSerializationVisibility.Visible)]
         public override global::System.Data.SchemaSerializationMode SchemaSerializationMode {
@@ -928,6 +958,12 @@ namespace vaoc {
                 }
                 if ((ds.Tables["TAB_BATAILLE_VISIBLE"] != null)) {
                     base.Tables.Add(new TAB_BATAILLE_VISIBLEDataTable(ds.Tables["TAB_BATAILLE_VISIBLE"]));
+                }
+                if ((ds.Tables["TAB_BATAILLE_PIONS_VIDEO"] != null)) {
+                    base.Tables.Add(new TAB_BATAILLE_PIONS_VIDEODataTable(ds.Tables["TAB_BATAILLE_PIONS_VIDEO"]));
+                }
+                if ((ds.Tables["TAB_BATAILLE_VIDEO"] != null)) {
+                    base.Tables.Add(new TAB_BATAILLE_VIDEODataTable(ds.Tables["TAB_BATAILLE_VIDEO"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -1226,6 +1262,18 @@ namespace vaoc {
                     this.tableTAB_BATAILLE_VISIBLE.InitVars();
                 }
             }
+            this.tableTAB_BATAILLE_PIONS_VIDEO = ((TAB_BATAILLE_PIONS_VIDEODataTable)(base.Tables["TAB_BATAILLE_PIONS_VIDEO"]));
+            if ((initTable == true)) {
+                if ((this.tableTAB_BATAILLE_PIONS_VIDEO != null)) {
+                    this.tableTAB_BATAILLE_PIONS_VIDEO.InitVars();
+                }
+            }
+            this.tableTAB_BATAILLE_VIDEO = ((TAB_BATAILLE_VIDEODataTable)(base.Tables["TAB_BATAILLE_VIDEO"]));
+            if ((initTable == true)) {
+                if ((this.tableTAB_BATAILLE_VIDEO != null)) {
+                    this.tableTAB_BATAILLE_VIDEO.InitVars();
+                }
+            }
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1324,6 +1372,10 @@ namespace vaoc {
             base.Tables.Add(this.tableTAB_MAJ_PROPRIO);
             this.tableTAB_BATAILLE_VISIBLE = new TAB_BATAILLE_VISIBLEDataTable();
             base.Tables.Add(this.tableTAB_BATAILLE_VISIBLE);
+            this.tableTAB_BATAILLE_PIONS_VIDEO = new TAB_BATAILLE_PIONS_VIDEODataTable();
+            base.Tables.Add(this.tableTAB_BATAILLE_PIONS_VIDEO);
+            this.tableTAB_BATAILLE_VIDEO = new TAB_BATAILLE_VIDEODataTable();
+            base.Tables.Add(this.tableTAB_BATAILLE_VIDEO);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1592,6 +1644,18 @@ namespace vaoc {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        private bool ShouldSerializeTAB_BATAILLE_PIONS_VIDEO() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        private bool ShouldSerializeTAB_BATAILLE_VIDEO() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void SchemaChanged(object sender, global::System.ComponentModel.CollectionChangeEventArgs e) {
             if ((e.Action == global::System.ComponentModel.CollectionChangeAction.Remove)) {
                 this.InitVars();
@@ -1776,6 +1840,12 @@ namespace vaoc {
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         public delegate void TAB_BATAILLE_VISIBLERowChangeEventHandler(object sender, TAB_BATAILLE_VISIBLERowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public delegate void TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler(object sender, TAB_BATAILLE_PIONS_VIDEORowChangeEvent e);
+        
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public delegate void TAB_BATAILLE_VIDEORowChangeEventHandler(object sender, TAB_BATAILLE_VIDEORowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
@@ -21045,6 +21115,1085 @@ namespace vaoc {
         }
         
         /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class TAB_BATAILLE_PIONS_VIDEODataTable : global::System.Data.TypedTableBase<TAB_BATAILLE_PIONS_VIDEORow> {
+            
+            private global::System.Data.DataColumn columnID_BATAILLE;
+            
+            private global::System.Data.DataColumn columnI_TOUR;
+            
+            private global::System.Data.DataColumn columnID_PION;
+            
+            private global::System.Data.DataColumn columnID_PROPRIETAIRE;
+            
+            private global::System.Data.DataColumn columnS_NOM;
+            
+            private global::System.Data.DataColumn columnID_NATION;
+            
+            private global::System.Data.DataColumn columnB_ENGAGEE;
+            
+            private global::System.Data.DataColumn columnB_EN_DEFENSE;
+            
+            private global::System.Data.DataColumn columnI_INFANTERIE;
+            
+            private global::System.Data.DataColumn columnI_CAVALERIE;
+            
+            private global::System.Data.DataColumn columnI_ARTILLERIE;
+            
+            private global::System.Data.DataColumn columnI_MORAL;
+            
+            private global::System.Data.DataColumn columnI_FATIGUE;
+            
+            private global::System.Data.DataColumn columnB_RETRAITE;
+            
+            private global::System.Data.DataColumn columnB_ENGAGEMENT;
+            
+            private global::System.Data.DataColumn columnI_ZONE_BATAILLE_ENGAGEMENT;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEODataTable() {
+                this.TableName = "TAB_BATAILLE_PIONS_VIDEO";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal TAB_BATAILLE_PIONS_VIDEODataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected TAB_BATAILLE_PIONS_VIDEODataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_BATAILLEColumn {
+                get {
+                    return this.columnID_BATAILLE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_TOURColumn {
+                get {
+                    return this.columnI_TOUR;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_PIONColumn {
+                get {
+                    return this.columnID_PION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_PROPRIETAIREColumn {
+                get {
+                    return this.columnID_PROPRIETAIRE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_NOMColumn {
+                get {
+                    return this.columnS_NOM;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_NATIONColumn {
+                get {
+                    return this.columnID_NATION;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn B_ENGAGEEColumn {
+                get {
+                    return this.columnB_ENGAGEE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn B_EN_DEFENSEColumn {
+                get {
+                    return this.columnB_EN_DEFENSE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_INFANTERIEColumn {
+                get {
+                    return this.columnI_INFANTERIE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_CAVALERIEColumn {
+                get {
+                    return this.columnI_CAVALERIE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ARTILLERIEColumn {
+                get {
+                    return this.columnI_ARTILLERIE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_MORALColumn {
+                get {
+                    return this.columnI_MORAL;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_FATIGUEColumn {
+                get {
+                    return this.columnI_FATIGUE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn B_RETRAITEColumn {
+                get {
+                    return this.columnB_RETRAITE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn B_ENGAGEMENTColumn {
+                get {
+                    return this.columnB_ENGAGEMENT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ZONE_BATAILLE_ENGAGEMENTColumn {
+                get {
+                    return this.columnI_ZONE_BATAILLE_ENGAGEMENT;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORow this[int index] {
+                get {
+                    return ((TAB_BATAILLE_PIONS_VIDEORow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler TAB_BATAILLE_PIONS_VIDEORowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler TAB_BATAILLE_PIONS_VIDEORowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler TAB_BATAILLE_PIONS_VIDEORowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler TAB_BATAILLE_PIONS_VIDEORowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void AddTAB_BATAILLE_PIONS_VIDEORow(TAB_BATAILLE_PIONS_VIDEORow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORow AddTAB_BATAILLE_PIONS_VIDEORow(
+                        int ID_BATAILLE, 
+                        int I_TOUR, 
+                        int ID_PION, 
+                        int ID_PROPRIETAIRE, 
+                        string S_NOM, 
+                        int ID_NATION, 
+                        bool B_ENGAGEE, 
+                        bool B_EN_DEFENSE, 
+                        int I_INFANTERIE, 
+                        int I_CAVALERIE, 
+                        int I_ARTILLERIE, 
+                        int I_MORAL, 
+                        int I_FATIGUE, 
+                        bool B_RETRAITE, 
+                        bool B_ENGAGEMENT, 
+                        int I_ZONE_BATAILLE_ENGAGEMENT) {
+                TAB_BATAILLE_PIONS_VIDEORow rowTAB_BATAILLE_PIONS_VIDEORow = ((TAB_BATAILLE_PIONS_VIDEORow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        ID_BATAILLE,
+                        I_TOUR,
+                        ID_PION,
+                        ID_PROPRIETAIRE,
+                        S_NOM,
+                        ID_NATION,
+                        B_ENGAGEE,
+                        B_EN_DEFENSE,
+                        I_INFANTERIE,
+                        I_CAVALERIE,
+                        I_ARTILLERIE,
+                        I_MORAL,
+                        I_FATIGUE,
+                        B_RETRAITE,
+                        B_ENGAGEMENT,
+                        I_ZONE_BATAILLE_ENGAGEMENT};
+                rowTAB_BATAILLE_PIONS_VIDEORow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTAB_BATAILLE_PIONS_VIDEORow);
+                return rowTAB_BATAILLE_PIONS_VIDEORow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORow FindByID_BATAILLEID_PIONI_TOUR(int ID_BATAILLE, int ID_PION, int I_TOUR) {
+                return ((TAB_BATAILLE_PIONS_VIDEORow)(this.Rows.Find(new object[] {
+                            ID_BATAILLE,
+                            ID_PION,
+                            I_TOUR})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                TAB_BATAILLE_PIONS_VIDEODataTable cln = ((TAB_BATAILLE_PIONS_VIDEODataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new TAB_BATAILLE_PIONS_VIDEODataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal void InitVars() {
+                this.columnID_BATAILLE = base.Columns["ID_BATAILLE"];
+                this.columnI_TOUR = base.Columns["I_TOUR"];
+                this.columnID_PION = base.Columns["ID_PION"];
+                this.columnID_PROPRIETAIRE = base.Columns["ID_PROPRIETAIRE"];
+                this.columnS_NOM = base.Columns["S_NOM"];
+                this.columnID_NATION = base.Columns["ID_NATION"];
+                this.columnB_ENGAGEE = base.Columns["B_ENGAGEE"];
+                this.columnB_EN_DEFENSE = base.Columns["B_EN_DEFENSE"];
+                this.columnI_INFANTERIE = base.Columns["I_INFANTERIE"];
+                this.columnI_CAVALERIE = base.Columns["I_CAVALERIE"];
+                this.columnI_ARTILLERIE = base.Columns["I_ARTILLERIE"];
+                this.columnI_MORAL = base.Columns["I_MORAL"];
+                this.columnI_FATIGUE = base.Columns["I_FATIGUE"];
+                this.columnB_RETRAITE = base.Columns["B_RETRAITE"];
+                this.columnB_ENGAGEMENT = base.Columns["B_ENGAGEMENT"];
+                this.columnI_ZONE_BATAILLE_ENGAGEMENT = base.Columns["I_ZONE_BATAILLE_ENGAGEMENT"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            private void InitClass() {
+                this.columnID_BATAILLE = new global::System.Data.DataColumn("ID_BATAILLE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_BATAILLE);
+                this.columnI_TOUR = new global::System.Data.DataColumn("I_TOUR", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_TOUR);
+                this.columnID_PION = new global::System.Data.DataColumn("ID_PION", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_PION);
+                this.columnID_PROPRIETAIRE = new global::System.Data.DataColumn("ID_PROPRIETAIRE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_PROPRIETAIRE);
+                this.columnS_NOM = new global::System.Data.DataColumn("S_NOM", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_NOM);
+                this.columnID_NATION = new global::System.Data.DataColumn("ID_NATION", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_NATION);
+                this.columnB_ENGAGEE = new global::System.Data.DataColumn("B_ENGAGEE", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_ENGAGEE);
+                this.columnB_EN_DEFENSE = new global::System.Data.DataColumn("B_EN_DEFENSE", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_EN_DEFENSE);
+                this.columnI_INFANTERIE = new global::System.Data.DataColumn("I_INFANTERIE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_INFANTERIE);
+                this.columnI_CAVALERIE = new global::System.Data.DataColumn("I_CAVALERIE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_CAVALERIE);
+                this.columnI_ARTILLERIE = new global::System.Data.DataColumn("I_ARTILLERIE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ARTILLERIE);
+                this.columnI_MORAL = new global::System.Data.DataColumn("I_MORAL", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_MORAL);
+                this.columnI_FATIGUE = new global::System.Data.DataColumn("I_FATIGUE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_FATIGUE);
+                this.columnB_RETRAITE = new global::System.Data.DataColumn("B_RETRAITE", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_RETRAITE);
+                this.columnB_ENGAGEMENT = new global::System.Data.DataColumn("B_ENGAGEMENT", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_ENGAGEMENT);
+                this.columnI_ZONE_BATAILLE_ENGAGEMENT = new global::System.Data.DataColumn("I_ZONE_BATAILLE_ENGAGEMENT", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ZONE_BATAILLE_ENGAGEMENT);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnID_BATAILLE,
+                                this.columnID_PION,
+                                this.columnI_TOUR}, true));
+                this.columnID_BATAILLE.AllowDBNull = false;
+                this.columnI_TOUR.AllowDBNull = false;
+                this.columnID_PION.AllowDBNull = false;
+                this.columnB_ENGAGEE.DefaultValue = ((bool)(false));
+                this.columnI_INFANTERIE.Caption = "I_INFANTERIE_DEBUT";
+                this.columnI_CAVALERIE.Caption = "I_CAVALERIE_DEBUT";
+                this.columnI_ARTILLERIE.Caption = "I_ARTILLERIE_DEBUT";
+                this.columnI_MORAL.Caption = "I_MORAL_DEBUT";
+                this.columnI_FATIGUE.Caption = "I_FATIGUE_DEBUT";
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORow NewTAB_BATAILLE_PIONS_VIDEORow() {
+                return ((TAB_BATAILLE_PIONS_VIDEORow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new TAB_BATAILLE_PIONS_VIDEORow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(TAB_BATAILLE_PIONS_VIDEORow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.TAB_BATAILLE_PIONS_VIDEORowChanged != null)) {
+                    this.TAB_BATAILLE_PIONS_VIDEORowChanged(this, new TAB_BATAILLE_PIONS_VIDEORowChangeEvent(((TAB_BATAILLE_PIONS_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.TAB_BATAILLE_PIONS_VIDEORowChanging != null)) {
+                    this.TAB_BATAILLE_PIONS_VIDEORowChanging(this, new TAB_BATAILLE_PIONS_VIDEORowChangeEvent(((TAB_BATAILLE_PIONS_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.TAB_BATAILLE_PIONS_VIDEORowDeleted != null)) {
+                    this.TAB_BATAILLE_PIONS_VIDEORowDeleted(this, new TAB_BATAILLE_PIONS_VIDEORowChangeEvent(((TAB_BATAILLE_PIONS_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.TAB_BATAILLE_PIONS_VIDEORowDeleting != null)) {
+                    this.TAB_BATAILLE_PIONS_VIDEORowDeleting(this, new TAB_BATAILLE_PIONS_VIDEORowChangeEvent(((TAB_BATAILLE_PIONS_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void RemoveTAB_BATAILLE_PIONS_VIDEORow(TAB_BATAILLE_PIONS_VIDEORow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                Donnees ds = new Donnees();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "TAB_BATAILLE_PIONS_VIDEODataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class TAB_BATAILLE_VIDEODataTable : global::System.Data.TypedTableBase<TAB_BATAILLE_VIDEORow> {
+            
+            private global::System.Data.DataColumn columnID_BATAILLE;
+            
+            private global::System.Data.DataColumn columnI_TOUR;
+            
+            private global::System.Data.DataColumn columnID_LEADER_012;
+            
+            private global::System.Data.DataColumn columnID_LEADER_345;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_0;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_1;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_2;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_3;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_4;
+            
+            private global::System.Data.DataColumn columnI_ENGAGEMENT_5;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_0;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_1;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_2;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_3;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_4;
+            
+            private global::System.Data.DataColumn columnS_COMBAT_5;
+            
+            private global::System.Data.DataColumn columnI_PERTES_0;
+            
+            private global::System.Data.DataColumn columnI_PERTES_1;
+            
+            private global::System.Data.DataColumn columnI_PERTES_2;
+            
+            private global::System.Data.DataColumn columnI_PERTES_3;
+            
+            private global::System.Data.DataColumn columnI_PERTES_4;
+            
+            private global::System.Data.DataColumn columnI_PERTES_5;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEODataTable() {
+                this.TableName = "TAB_BATAILLE_VIDEO";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal TAB_BATAILLE_VIDEODataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected TAB_BATAILLE_VIDEODataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_BATAILLEColumn {
+                get {
+                    return this.columnID_BATAILLE;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_TOURColumn {
+                get {
+                    return this.columnI_TOUR;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_LEADER_012Column {
+                get {
+                    return this.columnID_LEADER_012;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn ID_LEADER_345Column {
+                get {
+                    return this.columnID_LEADER_345;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_0Column {
+                get {
+                    return this.columnI_ENGAGEMENT_0;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_1Column {
+                get {
+                    return this.columnI_ENGAGEMENT_1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_2Column {
+                get {
+                    return this.columnI_ENGAGEMENT_2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_3Column {
+                get {
+                    return this.columnI_ENGAGEMENT_3;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_4Column {
+                get {
+                    return this.columnI_ENGAGEMENT_4;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_ENGAGEMENT_5Column {
+                get {
+                    return this.columnI_ENGAGEMENT_5;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_0Column {
+                get {
+                    return this.columnS_COMBAT_0;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_1Column {
+                get {
+                    return this.columnS_COMBAT_1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_2Column {
+                get {
+                    return this.columnS_COMBAT_2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_3Column {
+                get {
+                    return this.columnS_COMBAT_3;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_4Column {
+                get {
+                    return this.columnS_COMBAT_4;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_COMBAT_5Column {
+                get {
+                    return this.columnS_COMBAT_5;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_0Column {
+                get {
+                    return this.columnI_PERTES_0;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_1Column {
+                get {
+                    return this.columnI_PERTES_1;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_2Column {
+                get {
+                    return this.columnI_PERTES_2;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_3Column {
+                get {
+                    return this.columnI_PERTES_3;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_4Column {
+                get {
+                    return this.columnI_PERTES_4;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_PERTES_5Column {
+                get {
+                    return this.columnI_PERTES_5;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORow this[int index] {
+                get {
+                    return ((TAB_BATAILLE_VIDEORow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_VIDEORowChangeEventHandler TAB_BATAILLE_VIDEORowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_VIDEORowChangeEventHandler TAB_BATAILLE_VIDEORowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_VIDEORowChangeEventHandler TAB_BATAILLE_VIDEORowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public event TAB_BATAILLE_VIDEORowChangeEventHandler TAB_BATAILLE_VIDEORowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void AddTAB_BATAILLE_VIDEORow(TAB_BATAILLE_VIDEORow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORow AddTAB_BATAILLE_VIDEORow(
+                        int ID_BATAILLE, 
+                        int I_TOUR, 
+                        int ID_LEADER_012, 
+                        int ID_LEADER_345, 
+                        int I_ENGAGEMENT_0, 
+                        int I_ENGAGEMENT_1, 
+                        int I_ENGAGEMENT_2, 
+                        int I_ENGAGEMENT_3, 
+                        int I_ENGAGEMENT_4, 
+                        int I_ENGAGEMENT_5, 
+                        string S_COMBAT_0, 
+                        string S_COMBAT_1, 
+                        string S_COMBAT_2, 
+                        string S_COMBAT_3, 
+                        string S_COMBAT_4, 
+                        string S_COMBAT_5, 
+                        int I_PERTES_0, 
+                        int I_PERTES_1, 
+                        int I_PERTES_2, 
+                        int I_PERTES_3, 
+                        int I_PERTES_4, 
+                        int I_PERTES_5) {
+                TAB_BATAILLE_VIDEORow rowTAB_BATAILLE_VIDEORow = ((TAB_BATAILLE_VIDEORow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        ID_BATAILLE,
+                        I_TOUR,
+                        ID_LEADER_012,
+                        ID_LEADER_345,
+                        I_ENGAGEMENT_0,
+                        I_ENGAGEMENT_1,
+                        I_ENGAGEMENT_2,
+                        I_ENGAGEMENT_3,
+                        I_ENGAGEMENT_4,
+                        I_ENGAGEMENT_5,
+                        S_COMBAT_0,
+                        S_COMBAT_1,
+                        S_COMBAT_2,
+                        S_COMBAT_3,
+                        S_COMBAT_4,
+                        S_COMBAT_5,
+                        I_PERTES_0,
+                        I_PERTES_1,
+                        I_PERTES_2,
+                        I_PERTES_3,
+                        I_PERTES_4,
+                        I_PERTES_5};
+                rowTAB_BATAILLE_VIDEORow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowTAB_BATAILLE_VIDEORow);
+                return rowTAB_BATAILLE_VIDEORow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORow FindByID_BATAILLEI_TOUR(int ID_BATAILLE, int I_TOUR) {
+                return ((TAB_BATAILLE_VIDEORow)(this.Rows.Find(new object[] {
+                            ID_BATAILLE,
+                            I_TOUR})));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                TAB_BATAILLE_VIDEODataTable cln = ((TAB_BATAILLE_VIDEODataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new TAB_BATAILLE_VIDEODataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal void InitVars() {
+                this.columnID_BATAILLE = base.Columns["ID_BATAILLE"];
+                this.columnI_TOUR = base.Columns["I_TOUR"];
+                this.columnID_LEADER_012 = base.Columns["ID_LEADER_012"];
+                this.columnID_LEADER_345 = base.Columns["ID_LEADER_345"];
+                this.columnI_ENGAGEMENT_0 = base.Columns["I_ENGAGEMENT_0"];
+                this.columnI_ENGAGEMENT_1 = base.Columns["I_ENGAGEMENT_1"];
+                this.columnI_ENGAGEMENT_2 = base.Columns["I_ENGAGEMENT_2"];
+                this.columnI_ENGAGEMENT_3 = base.Columns["I_ENGAGEMENT_3"];
+                this.columnI_ENGAGEMENT_4 = base.Columns["I_ENGAGEMENT_4"];
+                this.columnI_ENGAGEMENT_5 = base.Columns["I_ENGAGEMENT_5"];
+                this.columnS_COMBAT_0 = base.Columns["S_COMBAT_0"];
+                this.columnS_COMBAT_1 = base.Columns["S_COMBAT_1"];
+                this.columnS_COMBAT_2 = base.Columns["S_COMBAT_2"];
+                this.columnS_COMBAT_3 = base.Columns["S_COMBAT_3"];
+                this.columnS_COMBAT_4 = base.Columns["S_COMBAT_4"];
+                this.columnS_COMBAT_5 = base.Columns["S_COMBAT_5"];
+                this.columnI_PERTES_0 = base.Columns["I_PERTES_0"];
+                this.columnI_PERTES_1 = base.Columns["I_PERTES_1"];
+                this.columnI_PERTES_2 = base.Columns["I_PERTES_2"];
+                this.columnI_PERTES_3 = base.Columns["I_PERTES_3"];
+                this.columnI_PERTES_4 = base.Columns["I_PERTES_4"];
+                this.columnI_PERTES_5 = base.Columns["I_PERTES_5"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            private void InitClass() {
+                this.columnID_BATAILLE = new global::System.Data.DataColumn("ID_BATAILLE", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_BATAILLE);
+                this.columnI_TOUR = new global::System.Data.DataColumn("I_TOUR", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_TOUR);
+                this.columnID_LEADER_012 = new global::System.Data.DataColumn("ID_LEADER_012", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_LEADER_012);
+                this.columnID_LEADER_345 = new global::System.Data.DataColumn("ID_LEADER_345", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID_LEADER_345);
+                this.columnI_ENGAGEMENT_0 = new global::System.Data.DataColumn("I_ENGAGEMENT_0", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_0);
+                this.columnI_ENGAGEMENT_1 = new global::System.Data.DataColumn("I_ENGAGEMENT_1", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_1);
+                this.columnI_ENGAGEMENT_2 = new global::System.Data.DataColumn("I_ENGAGEMENT_2", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_2);
+                this.columnI_ENGAGEMENT_3 = new global::System.Data.DataColumn("I_ENGAGEMENT_3", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_3);
+                this.columnI_ENGAGEMENT_4 = new global::System.Data.DataColumn("I_ENGAGEMENT_4", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_4);
+                this.columnI_ENGAGEMENT_5 = new global::System.Data.DataColumn("I_ENGAGEMENT_5", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_ENGAGEMENT_5);
+                this.columnS_COMBAT_0 = new global::System.Data.DataColumn("S_COMBAT_0", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_0);
+                this.columnS_COMBAT_1 = new global::System.Data.DataColumn("S_COMBAT_1", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_1);
+                this.columnS_COMBAT_2 = new global::System.Data.DataColumn("S_COMBAT_2", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_2);
+                this.columnS_COMBAT_3 = new global::System.Data.DataColumn("S_COMBAT_3", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_3);
+                this.columnS_COMBAT_4 = new global::System.Data.DataColumn("S_COMBAT_4", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_4);
+                this.columnS_COMBAT_5 = new global::System.Data.DataColumn("S_COMBAT_5", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_COMBAT_5);
+                this.columnI_PERTES_0 = new global::System.Data.DataColumn("I_PERTES_0", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_0);
+                this.columnI_PERTES_1 = new global::System.Data.DataColumn("I_PERTES_1", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_1);
+                this.columnI_PERTES_2 = new global::System.Data.DataColumn("I_PERTES_2", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_2);
+                this.columnI_PERTES_3 = new global::System.Data.DataColumn("I_PERTES_3", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_3);
+                this.columnI_PERTES_4 = new global::System.Data.DataColumn("I_PERTES_4", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_4);
+                this.columnI_PERTES_5 = new global::System.Data.DataColumn("I_PERTES_5", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_PERTES_5);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnID_BATAILLE,
+                                this.columnI_TOUR}, true));
+                this.columnID_BATAILLE.AutoIncrementSeed = 1;
+                this.columnID_BATAILLE.AllowDBNull = false;
+                this.columnI_TOUR.AllowDBNull = false;
+                this.columnI_TOUR.Caption = "ID_TERRAIN_0";
+                this.columnI_ENGAGEMENT_0.DefaultValue = ((int)(1));
+                this.columnI_ENGAGEMENT_1.DefaultValue = ((int)(1));
+                this.columnI_ENGAGEMENT_2.DefaultValue = ((int)(1));
+                this.columnI_ENGAGEMENT_3.DefaultValue = ((int)(1));
+                this.columnI_ENGAGEMENT_4.DefaultValue = ((int)(1));
+                this.columnI_ENGAGEMENT_5.DefaultValue = ((int)(1));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORow NewTAB_BATAILLE_VIDEORow() {
+                return ((TAB_BATAILLE_VIDEORow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new TAB_BATAILLE_VIDEORow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(TAB_BATAILLE_VIDEORow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.TAB_BATAILLE_VIDEORowChanged != null)) {
+                    this.TAB_BATAILLE_VIDEORowChanged(this, new TAB_BATAILLE_VIDEORowChangeEvent(((TAB_BATAILLE_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.TAB_BATAILLE_VIDEORowChanging != null)) {
+                    this.TAB_BATAILLE_VIDEORowChanging(this, new TAB_BATAILLE_VIDEORowChangeEvent(((TAB_BATAILLE_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.TAB_BATAILLE_VIDEORowDeleted != null)) {
+                    this.TAB_BATAILLE_VIDEORowDeleted(this, new TAB_BATAILLE_VIDEORowChangeEvent(((TAB_BATAILLE_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.TAB_BATAILLE_VIDEORowDeleting != null)) {
+                    this.TAB_BATAILLE_VIDEORowDeleting(this, new TAB_BATAILLE_VIDEORowChangeEvent(((TAB_BATAILLE_VIDEORow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void RemoveTAB_BATAILLE_VIDEORow(TAB_BATAILLE_VIDEORow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                Donnees ds = new Donnees();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "TAB_BATAILLE_VIDEODataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
         public partial class TAB_JEURow : global::System.Data.DataRow {
@@ -35153,6 +36302,1048 @@ namespace vaoc {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class TAB_BATAILLE_PIONS_VIDEORow : global::System.Data.DataRow {
+            
+            private TAB_BATAILLE_PIONS_VIDEODataTable tableTAB_BATAILLE_PIONS_VIDEO;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal TAB_BATAILLE_PIONS_VIDEORow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableTAB_BATAILLE_PIONS_VIDEO = ((TAB_BATAILLE_PIONS_VIDEODataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_BATAILLE {
+                get {
+                    return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_BATAILLEColumn]));
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_BATAILLEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_TOUR {
+                get {
+                    return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_TOURColumn]));
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_TOURColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_PION {
+                get {
+                    return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PIONColumn]));
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_PROPRIETAIRE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PROPRIETAIREColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_PROPRIETAIRE\' dans la table \'TAB_BATAILLE_PIONS_VID" +
+                                "EO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PROPRIETAIREColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_NOM {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.S_NOMColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_NOM\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' est DB" +
+                                "Null.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.S_NOMColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_NATION {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_NATIONColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_NATION\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' es" +
+                                "t DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_NATIONColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool B_ENGAGEE {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_ENGAGEE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' es" +
+                                "t DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool B_EN_DEFENSE {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_EN_DEFENSEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_EN_DEFENSE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\'" +
+                                " est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_EN_DEFENSEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_INFANTERIE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_INFANTERIEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_INFANTERIE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\'" +
+                                " est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_INFANTERIEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_CAVALERIE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_CAVALERIEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_CAVALERIE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' " +
+                                "est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_CAVALERIEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ARTILLERIE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ARTILLERIEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ARTILLERIE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\'" +
+                                " est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ARTILLERIEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_MORAL {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_MORALColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_MORAL\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_MORALColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_FATIGUE {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_FATIGUEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_FATIGUE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' es" +
+                                "t DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_FATIGUEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool B_RETRAITE {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_RETRAITEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_RETRAITE\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\' e" +
+                                "st DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_RETRAITEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool B_ENGAGEMENT {
+                get {
+                    try {
+                        return ((bool)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEMENTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_ENGAGEMENT\' dans la table \'TAB_BATAILLE_PIONS_VIDEO\'" +
+                                " est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEMENTColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ZONE_BATAILLE_ENGAGEMENT {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ZONE_BATAILLE_ENGAGEMENTColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ZONE_BATAILLE_ENGAGEMENT\' dans la table \'TAB_BATAILL" +
+                                "E_PIONS_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ZONE_BATAILLE_ENGAGEMENTColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsID_PROPRIETAIRENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PROPRIETAIREColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetID_PROPRIETAIRENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_PROPRIETAIREColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_NOMNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.S_NOMColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_NOMNull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.S_NOMColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsID_NATIONNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.ID_NATIONColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetID_NATIONNull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.ID_NATIONColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsB_ENGAGEENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetB_ENGAGEENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsB_EN_DEFENSENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.B_EN_DEFENSEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetB_EN_DEFENSENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_EN_DEFENSEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_INFANTERIENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_INFANTERIEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_INFANTERIENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_INFANTERIEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_CAVALERIENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_CAVALERIEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_CAVALERIENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_CAVALERIEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ARTILLERIENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_ARTILLERIEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ARTILLERIENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ARTILLERIEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_MORALNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_MORALColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_MORALNull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_MORALColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_FATIGUENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_FATIGUEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_FATIGUENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_FATIGUEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsB_RETRAITENull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.B_RETRAITEColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetB_RETRAITENull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_RETRAITEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsB_ENGAGEMENTNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEMENTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetB_ENGAGEMENTNull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.B_ENGAGEMENTColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ZONE_BATAILLE_ENGAGEMENTNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_PIONS_VIDEO.I_ZONE_BATAILLE_ENGAGEMENTColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ZONE_BATAILLE_ENGAGEMENTNull() {
+                this[this.tableTAB_BATAILLE_PIONS_VIDEO.I_ZONE_BATAILLE_ENGAGEMENTColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class TAB_BATAILLE_VIDEORow : global::System.Data.DataRow {
+            
+            private TAB_BATAILLE_VIDEODataTable tableTAB_BATAILLE_VIDEO;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            internal TAB_BATAILLE_VIDEORow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableTAB_BATAILLE_VIDEO = ((TAB_BATAILLE_VIDEODataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_BATAILLE {
+                get {
+                    return ((int)(this[this.tableTAB_BATAILLE_VIDEO.ID_BATAILLEColumn]));
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.ID_BATAILLEColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_TOUR {
+                get {
+                    return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_TOURColumn]));
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_TOURColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_LEADER_012 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_012Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_LEADER_012\' dans la table \'TAB_BATAILLE_VIDEO\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_012Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int ID_LEADER_345 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_345Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'ID_LEADER_345\' dans la table \'TAB_BATAILLE_VIDEO\' est " +
+                                "DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_345Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_0 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_0Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_0\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_0Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_1 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_1\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_2 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_2\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_3 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_3Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_3\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_3Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_4 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_4Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_4\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_4Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_ENGAGEMENT_5 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_5Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_ENGAGEMENT_5\' dans la table \'TAB_BATAILLE_VIDEO\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_5Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_0 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_0Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_0\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_0Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_1 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_1\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_2 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_2\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_3 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_3Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_3\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_3Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_4 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_4Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_4\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_4Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_COMBAT_5 {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_5Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_COMBAT_5\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_5Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_0 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_0Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_0\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_0Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_1 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_1Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_1\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_1Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_2 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_2Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_2\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_2Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_3 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_3Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_3\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_3Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_4 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_4Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_4\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_4Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_PERTES_5 {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_5Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_PERTES_5\' dans la table \'TAB_BATAILLE_VIDEO\' est DBN" +
+                                "ull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_5Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsID_LEADER_012Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.ID_LEADER_012Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetID_LEADER_012Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_012Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsID_LEADER_345Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.ID_LEADER_345Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetID_LEADER_345Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.ID_LEADER_345Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_0Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_0Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_0Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_0Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_1Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_1Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_2Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_2Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_3Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_3Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_3Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_3Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_4Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_4Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_4Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_4Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_ENGAGEMENT_5Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_5Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_ENGAGEMENT_5Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_ENGAGEMENT_5Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_0Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_0Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_0Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_0Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_1Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_1Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_2Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_2Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_3Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_3Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_3Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_3Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_4Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_4Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_4Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_4Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_COMBAT_5Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_COMBAT_5Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_COMBAT_5Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_COMBAT_5Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_0Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_0Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_0Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_0Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_1Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_1Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_1Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_1Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_2Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_2Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_2Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_2Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_3Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_3Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_3Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_3Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_4Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_4Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_4Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_4Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_PERTES_5Null() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.I_PERTES_5Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_PERTES_5Null() {
+                this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_5Column] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
@@ -36634,6 +38825,74 @@ namespace vaoc {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_BATAILLE_VISIBLERow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public class TAB_BATAILLE_PIONS_VIDEORowChangeEvent : global::System.EventArgs {
+            
+            private TAB_BATAILLE_PIONS_VIDEORow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORowChangeEvent(TAB_BATAILLE_PIONS_VIDEORow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_PIONS_VIDEORow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+        public class TAB_BATAILLE_VIDEORowChangeEvent : global::System.EventArgs {
+            
+            private TAB_BATAILLE_VIDEORow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORowChangeEvent(TAB_BATAILLE_VIDEORow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public TAB_BATAILLE_VIDEORow Row {
                 get {
                     return this.eventRow;
                 }

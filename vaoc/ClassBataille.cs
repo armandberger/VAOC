@@ -2991,19 +2991,42 @@ namespace vaoc
 
                 for (int tour = this.I_TOUR_DEBUT; tour < this.I_TOUR_FIN + 1;tour++)
                 {
-                    ZoneBataille zb;
-                    zb = new ZoneBataille() { iTour = tour };
-                    zb.sCombat = new string[6];
-                    for (int i = 0; i < 6; i++)
+                    TAB_BATAILLE_VIDEORow ligneBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO.FindByID_BATAILLEI_TOUR(this.ID_BATAILLE, tour);
+                    if (null != ligneBatailleVideo)
                     {
-                        //zb.sCombat[i] = (string)this["S_COMBAT_" + Convert.ToString(i)];
+                        ZoneBataille zb;
+                        zb = new ZoneBataille() { iTour = tour };
+                        zb.sCombat = new string[6];
+                        for (int i = 0; i < 6; i++)
+                        {
+                            zb.sCombat[i] = (string)ligneBatailleVideo["S_COMBAT_" + Convert.ToString(i)];
+                        }
+                        zb.iPertes = new int[6];
+                        for (int i = 0; i < 6; i++)
+                        {
+                            zb.iPertes[i] = (int)ligneBatailleVideo["I_PERTES_" + Convert.ToString(i)];
+                        }
+                        zonesBataille.Add(zb);
                     }
-                    zb.iPertes = new int[6];
-                    for (int i = 0; i < 6; i++)
+
+                    TAB_BATAILLE_PIONS_VIDEORow[] listeBataillePionsVideo = 
+                        (TAB_BATAILLE_PIONS_VIDEORow[]) Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Select(string.Format("ID_BATAILLE={0} AND I_TOUR={1}",
+                            this.ID_BATAILLE, tour));
+                    foreach(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo in listeBataillePionsVideo)
                     {
-                        //zb.iPertes[i] = (int)this["I_PERTES_" + Convert.ToString(i)];
+                        TIPEUNITEBATAILLE tipe = DefinitionTipeUniteBataille(ligneBataillePionsVideo);
+                        unitesBataille.Add(new UniteBataille() { iTour = tour, 
+                            iZone = ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT, 
+                            tipe = tipe, 
+                            effectifInfanterie = ligneBataillePionsVideo.I_INFANTERIE, 
+                            effectifCavalerie = ligneBataillePionsVideo.I_CAVALERIE, 
+                            effectifArtillerie = ligneBataillePionsVideo.I_ARTILLERIE, 
+                            ID = ligneBataillePionsVideo.ID_PION, 
+                            iNation = ligneBataillePionsVideo.ID_NATION, 
+                            nom = ligneBataillePionsVideo.S_NOM
+                        });
+
                     }
-                    zonesBataille.Add(zb);
                 }
                 /* TEST
                 ZoneBataille zb;
@@ -3096,6 +3119,34 @@ namespace vaoc
                     return false;
                 }
                 return true;
+            }
+
+            private TIPEUNITEBATAILLE DefinitionTipeUniteBataille(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo)
+            {
+                TIPEUNITEBATAILLE retour = TIPEUNITEBATAILLE.AUTRE;
+                if (ligneBataillePionsVideo.I_INFANTERIE > 0)
+                {
+                    retour = TIPEUNITEBATAILLE.INFANTERIE;
+                }
+                else
+                {
+                    if (ligneBataillePionsVideo.I_CAVALERIE > 0)
+                    {
+                        retour = TIPEUNITEBATAILLE.CAVALERIE;
+                    }
+                    else
+                    {
+                        if (ligneBataillePionsVideo.I_ARTILLERIE > 0)
+                        {
+                            retour = TIPEUNITEBATAILLE.ARTILLERIE;
+                        }
+                        else
+                        {
+                            retour = TIPEUNITEBATAILLE.QG;
+                        }
+                    }
+                }
+                return retour;
             }
 
             private TIPETERRAINBATAILLE FilmTerrain(int iD_TERRAIN)

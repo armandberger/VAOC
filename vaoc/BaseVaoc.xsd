@@ -912,6 +912,56 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="TAB_BATAILLE_PIONS_VIDEO" msprop:Generator_TableClassName="TAB_BATAILLE_PIONS_VIDEODataTable" msprop:Generator_TableVarName="tableTAB_BATAILLE_PIONS_VIDEO" msprop:Generator_RowChangedName="TAB_BATAILLE_PIONS_VIDEORowChanged" msprop:Generator_TablePropName="TAB_BATAILLE_PIONS_VIDEO" msprop:Generator_RowDeletingName="TAB_BATAILLE_PIONS_VIDEORowDeleting" msprop:Generator_RowChangingName="TAB_BATAILLE_PIONS_VIDEORowChanging" msprop:Generator_RowEvHandlerName="TAB_BATAILLE_PIONS_VIDEORowChangeEventHandler" msprop:Generator_RowDeletedName="TAB_BATAILLE_PIONS_VIDEORowDeleted" msprop:Generator_RowClassName="TAB_BATAILLE_PIONS_VIDEORow" msprop:Generator_UserTableName="TAB_BATAILLE_PIONS_VIDEO" msprop:Generator_RowEvArgName="TAB_BATAILLE_PIONS_VIDEORowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID_BATAILLE" msprop:Generator_ColumnVarNameInTable="columnID_BATAILLE" msprop:Generator_ColumnPropNameInRow="ID_BATAILLE" msprop:Generator_ColumnPropNameInTable="ID_BATAILLEColumn" msprop:Generator_UserColumnName="ID_BATAILLE" type="xs:int" />
+              <xs:element name="I_TOUR" msprop:Generator_ColumnVarNameInTable="columnI_TOUR" msprop:Generator_ColumnPropNameInRow="I_TOUR" msprop:Generator_ColumnPropNameInTable="I_TOURColumn" msprop:Generator_UserColumnName="I_TOUR" type="xs:int" />
+              <xs:element name="ID_PION" msprop:Generator_ColumnVarNameInTable="columnID_PION" msprop:Generator_ColumnPropNameInRow="ID_PION" msprop:Generator_ColumnPropNameInTable="ID_PIONColumn" msprop:Generator_UserColumnName="ID_PION" type="xs:int" />
+              <xs:element name="ID_PROPRIETAIRE" msprop:Generator_ColumnVarNameInTable="columnID_PROPRIETAIRE" msprop:Generator_ColumnPropNameInRow="ID_PROPRIETAIRE" msprop:Generator_ColumnPropNameInTable="ID_PROPRIETAIREColumn" msprop:Generator_UserColumnName="ID_PROPRIETAIRE" type="xs:int" minOccurs="0" />
+              <xs:element name="S_NOM" msprop:Generator_ColumnVarNameInTable="columnS_NOM" msprop:Generator_ColumnPropNameInRow="S_NOM" msprop:Generator_ColumnPropNameInTable="S_NOMColumn" msprop:Generator_UserColumnName="S_NOM" type="xs:string" minOccurs="0" />
+              <xs:element name="ID_NATION" msprop:Generator_ColumnVarNameInTable="columnID_NATION" msprop:Generator_ColumnPropNameInRow="ID_NATION" msprop:Generator_ColumnPropNameInTable="ID_NATIONColumn" msprop:Generator_UserColumnName="ID_NATION" type="xs:int" minOccurs="0" />
+              <xs:element name="B_ENGAGEE" msprop:Generator_ColumnVarNameInTable="columnB_ENGAGEE" msprop:Generator_ColumnPropNameInRow="B_ENGAGEE" msprop:Generator_ColumnPropNameInTable="B_ENGAGEEColumn" msprop:Generator_UserColumnName="B_ENGAGEE" type="xs:boolean" default="false" minOccurs="0" />
+              <xs:element name="B_EN_DEFENSE" msprop:Generator_ColumnVarNameInTable="columnB_EN_DEFENSE" msprop:Generator_ColumnPropNameInRow="B_EN_DEFENSE" msprop:Generator_ColumnPropNameInTable="B_EN_DEFENSEColumn" msprop:Generator_UserColumnName="B_EN_DEFENSE" type="xs:boolean" minOccurs="0" />
+              <xs:element name="I_INFANTERIE" msdata:Caption="I_INFANTERIE_DEBUT" msprop:Generator_ColumnVarNameInTable="columnI_INFANTERIE" msprop:Generator_ColumnPropNameInRow="I_INFANTERIE" msprop:Generator_ColumnPropNameInTable="I_INFANTERIEColumn" msprop:Generator_UserColumnName="I_INFANTERIE" type="xs:int" minOccurs="0" />
+              <xs:element name="I_CAVALERIE" msdata:Caption="I_CAVALERIE_DEBUT" msprop:Generator_ColumnVarNameInTable="columnI_CAVALERIE" msprop:Generator_ColumnPropNameInRow="I_CAVALERIE" msprop:Generator_ColumnPropNameInTable="I_CAVALERIEColumn" msprop:Generator_UserColumnName="I_CAVALERIE" type="xs:int" minOccurs="0" />
+              <xs:element name="I_ARTILLERIE" msdata:Caption="I_ARTILLERIE_DEBUT" msprop:Generator_ColumnVarNameInTable="columnI_ARTILLERIE" msprop:Generator_ColumnPropNameInRow="I_ARTILLERIE" msprop:Generator_ColumnPropNameInTable="I_ARTILLERIEColumn" msprop:Generator_UserColumnName="I_ARTILLERIE" type="xs:int" minOccurs="0" />
+              <xs:element name="I_MORAL" msdata:Caption="I_MORAL_DEBUT" msprop:Generator_ColumnVarNameInTable="columnI_MORAL" msprop:Generator_ColumnPropNameInRow="I_MORAL" msprop:Generator_ColumnPropNameInTable="I_MORALColumn" msprop:Generator_UserColumnName="I_MORAL" type="xs:int" minOccurs="0" />
+              <xs:element name="I_FATIGUE" msdata:Caption="I_FATIGUE_DEBUT" msprop:Generator_ColumnVarNameInTable="columnI_FATIGUE" msprop:Generator_ColumnPropNameInRow="I_FATIGUE" msprop:Generator_ColumnPropNameInTable="I_FATIGUEColumn" msprop:Generator_UserColumnName="I_FATIGUE" type="xs:int" minOccurs="0" />
+              <xs:element name="B_RETRAITE" msprop:Generator_ColumnVarNameInTable="columnB_RETRAITE" msprop:Generator_ColumnPropNameInRow="B_RETRAITE" msprop:Generator_ColumnPropNameInTable="B_RETRAITEColumn" msprop:Generator_UserColumnName="B_RETRAITE" type="xs:boolean" minOccurs="0" />
+              <xs:element name="B_ENGAGEMENT" msprop:Generator_ColumnVarNameInTable="columnB_ENGAGEMENT" msprop:Generator_ColumnPropNameInRow="B_ENGAGEMENT" msprop:Generator_ColumnPropNameInTable="B_ENGAGEMENTColumn" msprop:Generator_UserColumnName="B_ENGAGEMENT" type="xs:boolean" minOccurs="0" />
+              <xs:element name="I_ZONE_BATAILLE_ENGAGEMENT" msprop:Generator_ColumnVarNameInTable="columnI_ZONE_BATAILLE_ENGAGEMENT" msprop:Generator_ColumnPropNameInRow="I_ZONE_BATAILLE_ENGAGEMENT" msprop:Generator_ColumnPropNameInTable="I_ZONE_BATAILLE_ENGAGEMENTColumn" msprop:Generator_UserColumnName="I_ZONE_BATAILLE_ENGAGEMENT" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TAB_BATAILLE_VIDEO" msprop:Generator_TableClassName="TAB_BATAILLE_VIDEODataTable" msprop:Generator_TableVarName="tableTAB_BATAILLE_VIDEO" msprop:Generator_TablePropName="TAB_BATAILLE_VIDEO" msprop:Generator_RowDeletingName="TAB_BATAILLE_VIDEORowDeleting" msprop:Generator_RowChangingName="TAB_BATAILLE_VIDEORowChanging" msprop:Generator_RowEvHandlerName="TAB_BATAILLE_VIDEORowChangeEventHandler" msprop:Generator_RowDeletedName="TAB_BATAILLE_VIDEORowDeleted" msprop:Generator_UserTableName="TAB_BATAILLE_VIDEO" msprop:Generator_RowChangedName="TAB_BATAILLE_VIDEORowChanged" msprop:Generator_RowEvArgName="TAB_BATAILLE_VIDEORowChangeEvent" msprop:Generator_RowClassName="TAB_BATAILLE_VIDEORow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ID_BATAILLE" msdata:AutoIncrementSeed="1" msprop:Generator_ColumnVarNameInTable="columnID_BATAILLE" msprop:Generator_ColumnPropNameInRow="ID_BATAILLE" msprop:Generator_ColumnPropNameInTable="ID_BATAILLEColumn" msprop:Generator_UserColumnName="ID_BATAILLE" type="xs:int" />
+              <xs:element name="I_TOUR" msdata:Caption="ID_TERRAIN_0" msprop:Generator_ColumnVarNameInTable="columnI_TOUR" msprop:Generator_ColumnPropNameInRow="I_TOUR" msprop:Generator_ColumnPropNameInTable="I_TOURColumn" msprop:Generator_UserColumnName="I_TOUR" type="xs:int" />
+              <xs:element name="ID_LEADER_012" msprop:Generator_ColumnVarNameInTable="columnID_LEADER_012" msprop:Generator_ColumnPropNameInRow="ID_LEADER_012" msprop:Generator_ColumnPropNameInTable="ID_LEADER_012Column" msprop:Generator_UserColumnName="ID_LEADER_012" type="xs:int" minOccurs="0" />
+              <xs:element name="ID_LEADER_345" msprop:Generator_ColumnVarNameInTable="columnID_LEADER_345" msprop:Generator_ColumnPropNameInRow="ID_LEADER_345" msprop:Generator_ColumnPropNameInTable="ID_LEADER_345Column" msprop:Generator_UserColumnName="ID_LEADER_345" type="xs:int" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_0" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_0" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_0" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_0Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_0" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_1" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_1" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_1" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_1Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_1" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_2" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_2" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_2" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_2Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_2" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_3" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_3" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_3" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_3Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_3" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_4" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_4" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_4" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_4Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_4" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="I_ENGAGEMENT_5" msprop:Generator_ColumnVarNameInTable="columnI_ENGAGEMENT_5" msprop:Generator_ColumnPropNameInRow="I_ENGAGEMENT_5" msprop:Generator_ColumnPropNameInTable="I_ENGAGEMENT_5Column" msprop:Generator_UserColumnName="I_ENGAGEMENT_5" type="xs:int" default="1" minOccurs="0" />
+              <xs:element name="S_COMBAT_0" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_0" msprop:Generator_ColumnPropNameInRow="S_COMBAT_0" msprop:Generator_ColumnPropNameInTable="S_COMBAT_0Column" msprop:Generator_UserColumnName="S_COMBAT_0" type="xs:string" minOccurs="0" />
+              <xs:element name="S_COMBAT_1" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_1" msprop:Generator_ColumnPropNameInRow="S_COMBAT_1" msprop:Generator_ColumnPropNameInTable="S_COMBAT_1Column" msprop:Generator_UserColumnName="S_COMBAT_1" type="xs:string" minOccurs="0" />
+              <xs:element name="S_COMBAT_2" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_2" msprop:Generator_ColumnPropNameInRow="S_COMBAT_2" msprop:Generator_ColumnPropNameInTable="S_COMBAT_2Column" msprop:Generator_UserColumnName="S_COMBAT_2" type="xs:string" minOccurs="0" />
+              <xs:element name="S_COMBAT_3" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_3" msprop:Generator_ColumnPropNameInRow="S_COMBAT_3" msprop:Generator_ColumnPropNameInTable="S_COMBAT_3Column" msprop:Generator_UserColumnName="S_COMBAT_3" type="xs:string" minOccurs="0" />
+              <xs:element name="S_COMBAT_4" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_4" msprop:Generator_ColumnPropNameInRow="S_COMBAT_4" msprop:Generator_ColumnPropNameInTable="S_COMBAT_4Column" msprop:Generator_UserColumnName="S_COMBAT_4" type="xs:string" minOccurs="0" />
+              <xs:element name="S_COMBAT_5" msprop:Generator_ColumnVarNameInTable="columnS_COMBAT_5" msprop:Generator_ColumnPropNameInRow="S_COMBAT_5" msprop:Generator_ColumnPropNameInTable="S_COMBAT_5Column" msprop:Generator_UserColumnName="S_COMBAT_5" type="xs:string" minOccurs="0" />
+              <xs:element name="I_PERTES_0" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_0" msprop:Generator_ColumnPropNameInRow="I_PERTES_0" msprop:Generator_ColumnPropNameInTable="I_PERTES_0Column" msprop:Generator_UserColumnName="I_PERTES_0" type="xs:int" minOccurs="0" />
+              <xs:element name="I_PERTES_1" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_1" msprop:Generator_ColumnPropNameInRow="I_PERTES_1" msprop:Generator_ColumnPropNameInTable="I_PERTES_1Column" msprop:Generator_UserColumnName="I_PERTES_1" type="xs:int" minOccurs="0" />
+              <xs:element name="I_PERTES_2" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_2" msprop:Generator_ColumnPropNameInRow="I_PERTES_2" msprop:Generator_ColumnPropNameInTable="I_PERTES_2Column" msprop:Generator_UserColumnName="I_PERTES_2" type="xs:int" minOccurs="0" />
+              <xs:element name="I_PERTES_3" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_3" msprop:Generator_ColumnPropNameInRow="I_PERTES_3" msprop:Generator_ColumnPropNameInTable="I_PERTES_3Column" msprop:Generator_UserColumnName="I_PERTES_3" type="xs:int" minOccurs="0" />
+              <xs:element name="I_PERTES_4" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_4" msprop:Generator_ColumnPropNameInRow="I_PERTES_4" msprop:Generator_ColumnPropNameInTable="I_PERTES_4Column" msprop:Generator_UserColumnName="I_PERTES_4" type="xs:int" minOccurs="0" />
+              <xs:element name="I_PERTES_5" msprop:Generator_ColumnVarNameInTable="columnI_PERTES_5" msprop:Generator_ColumnPropNameInRow="I_PERTES_5" msprop:Generator_ColumnPropNameInTable="I_PERTES_5Column" msprop:Generator_UserColumnName="I_PERTES_5" type="xs:int" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
@@ -1048,6 +1098,17 @@
       <xs:selector xpath=".//mstns:TAB_BATAILLE_VISIBLE" />
       <xs:field xpath="mstns:ID_PION_PROPRIETAIRE" />
       <xs:field xpath="mstns:ID_BATAILLE" />
+    </xs:unique>
+    <xs:unique name="TAB_BATAILLE_PIONS_VIDEO_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:TAB_BATAILLE_PIONS_VIDEO" />
+      <xs:field xpath="mstns:ID_BATAILLE" />
+      <xs:field xpath="mstns:ID_PION" />
+      <xs:field xpath="mstns:I_TOUR" />
+    </xs:unique>
+    <xs:unique name="TAB_BATAILLE_VIDEO_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:TAB_BATAILLE_VIDEO" />
+      <xs:field xpath="mstns:ID_BATAILLE" />
+      <xs:field xpath="mstns:I_TOUR" />
     </xs:unique>
   </xs:element>
 </xs:schema>

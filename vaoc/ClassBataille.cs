@@ -136,10 +136,7 @@ namespace vaoc
             {
                 string message;
                 int[] des;
-                int[] effectifs;
-                int[] canons;
-                int[] modificateurs;
-                int nbUnites012 = 0, nbUnites345 = 0;
+                int nbUnites012, nbUnites345;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 Donnees.TAB_PIONRow[] lignePionsCombattifBataille012;
@@ -156,7 +153,7 @@ namespace vaoc
 
                 //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(20);
                 //recherche de tous les pions présents sur le champ de bataille et qui "voient" le résultat et peuvent subir une poursuite
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons,
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out int[] modificateurs, out int[] effectifs, out int[] canons,
                     out lignePionsEnBataille012, out lignePionsEnBataille345,
                     true,//engagement
                     false,//combattif
@@ -2978,9 +2975,26 @@ namespace vaoc
                 List<RoleBataille> rolesBataille=new List<RoleBataille>();
                 TIPETERRAINBATAILLE[] terrains= new TIPETERRAINBATAILLE[6];
                 TIPETERRAINBATAILLE[] obstacles = new TIPETERRAINBATAILLE[3];
-                TIPEORIENTATIONBATAILLE orientation = TIPEORIENTATIONBATAILLE.HORIZONTAL;
+                TIPEORIENTATIONBATAILLE orientation = (this.C_ORIENTATION =='V') ? TIPEORIENTATIONBATAILLE.VERTICAL : TIPEORIENTATIONBATAILLE.HORIZONTAL;
                 TIPEFINBATAILLE fin = TIPEFINBATAILLE.RETRAITE012;
-
+                switch(this.S_FIN)
+                {
+                    case "RETRAITE012":
+                        fin = TIPEFINBATAILLE.RETRAITE012;
+                        break;
+                    case "RETRAITE345":
+                        fin = TIPEFINBATAILLE.RETRAITE345;
+                        break;
+                    case "VICTOIRE012":
+                        fin = TIPEFINBATAILLE.VICTOIRE012;
+                        break;
+                    case "VICTOIRE345":
+                        fin = TIPEFINBATAILLE.VICTOIRE345;
+                        break;
+                    default:
+                        fin = TIPEFINBATAILLE.NUIT;
+                        break;
+                }
                 for (int i=0;i<6;i++)
                 {
                     terrains[i] = FilmTerrain((int)this["ID_TERRAIN_" + Convert.ToString(i)]);

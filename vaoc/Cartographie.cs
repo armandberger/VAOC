@@ -1298,7 +1298,8 @@ namespace vaoc
                                     "Aucun Combat",
                                     "Aucun Combat",
                                     "Aucun Combat",
-                                    bZoneUnique//B_ZONE_UNIQUE
+                                    bZoneUnique,//B_ZONE_UNIQUE
+                                    ""//S_FIN
                                     );
             if (null == ligneBataille)
             {

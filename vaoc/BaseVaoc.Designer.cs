@@ -10468,6 +10468,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnB_ZONE_UNIQUE;
             
+            private global::System.Data.DataColumn columnS_FIN;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_BATAILLEDataTable() {
@@ -10799,6 +10801,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_FINColumn {
+                get {
+                    return this.columnS_FIN;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -10871,7 +10881,8 @@ namespace vaoc {
                         string S_COMBAT_3, 
                         string S_COMBAT_4, 
                         string S_COMBAT_5, 
-                        bool B_ZONE_UNIQUE) {
+                        bool B_ZONE_UNIQUE, 
+                        string S_FIN) {
                 TAB_BATAILLERow rowTAB_BATAILLERow = ((TAB_BATAILLERow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_BATAILLE,
@@ -10910,7 +10921,8 @@ namespace vaoc {
                         S_COMBAT_3,
                         S_COMBAT_4,
                         S_COMBAT_5,
-                        B_ZONE_UNIQUE};
+                        B_ZONE_UNIQUE,
+                        S_FIN};
                 rowTAB_BATAILLERow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_BATAILLERow);
                 return rowTAB_BATAILLERow;
@@ -10977,6 +10989,7 @@ namespace vaoc {
                 this.columnS_COMBAT_4 = base.Columns["S_COMBAT_4"];
                 this.columnS_COMBAT_5 = base.Columns["S_COMBAT_5"];
                 this.columnB_ZONE_UNIQUE = base.Columns["B_ZONE_UNIQUE"];
+                this.columnS_FIN = base.Columns["S_FIN"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -11056,6 +11069,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnS_COMBAT_5);
                 this.columnB_ZONE_UNIQUE = new global::System.Data.DataColumn("B_ZONE_UNIQUE", typeof(bool), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnB_ZONE_UNIQUE);
+                this.columnS_FIN = new global::System.Data.DataColumn("S_FIN", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_FIN);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint11", new global::System.Data.DataColumn[] {
                                 this.columnID_BATAILLE}, true));
                 this.columnID_BATAILLE.AutoIncrementSeed = 1;
@@ -28855,6 +28870,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_FIN {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE.S_FINColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_FIN\' dans la table \'TAB_BATAILLE\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE.S_FINColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsS_NOMNull() {
                 return this.IsNull(this.tableTAB_BATAILLE.S_NOMColumn);
             }
@@ -29283,6 +29314,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetB_ZONE_UNIQUENull() {
                 this[this.tableTAB_BATAILLE.B_ZONE_UNIQUEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_FINNull() {
+                return this.IsNull(this.tableTAB_BATAILLE.S_FINColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_FINNull() {
+                this[this.tableTAB_BATAILLE.S_FINColumn] = global::System.Convert.DBNull;
             }
         }
         

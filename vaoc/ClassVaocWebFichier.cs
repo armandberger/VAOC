@@ -1076,7 +1076,7 @@ namespace vaoc
                 bDetruit = (null != ligneMessage && ligneMessage.B_DETRUIT) ? 1 : 0;
                 if (null != ligneMessage && ligneMessage.I_CAVALERIE > 0)
                 {
-                    iPatrouillesMax = (int)Math.Ceiling((decimal)lignePion.I_CAVALERIE / 1000); //Math.Max(1, ligneMessage.I_CAVALERIE / 1000);
+                    iPatrouillesMax = (int)Math.Ceiling((decimal)lignePion.cavalerie / 1000); //Math.Max(1, ligneMessage.I_CAVALERIE / 1000);
                     //il faut retrancher les patrouilles déjà en cours de mission
                     int iPatrouillesEnCours = lignePion.nombrePatrouillesEnCours();
                     iPatrouillesDisponibles = (iPatrouillesMax <= iPatrouillesEnCours) ? 0 : iPatrouillesMax - iPatrouillesEnCours;

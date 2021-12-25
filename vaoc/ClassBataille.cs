@@ -151,6 +151,13 @@ namespace vaoc
                 I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
 
+                //initialiation des données pour la video
+                for (int z = 0; z < 6; z++)
+                {
+                    this["S_COMBAT_" + Convert.ToString(z)] = string.Empty;
+                    this["I_PERTES_" + Convert.ToString(z)] = 0;
+                }
+
                 //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(20);
                 //recherche de tous les pions présents sur le champ de bataille et qui "voient" le résultat et peuvent subir une poursuite
                 if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out int[] modificateurs, out int[] effectifs, out int[] canons,
@@ -164,45 +171,6 @@ namespace vaoc
                     message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille I");
                     LogFile.Notifier(message);
                 }
-
-                /* Cela n'a plus d'intérêt en règles avancées, les pertes sont calculées directement durant le combat
-                //s'il n'y a aucun tour de batailles, il n'y a pas de pertes
-                if (ligneBataille.I_TOUR_DEBUT != Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)
-                {
-                    //repartition des pertes pour toutes les unités présentes
-                    //les unités ayant fuit au combat, prennent leur perte à ce moment là
-                    message = string.Format("FinDeBataille : avant les pertes au combat il reste nbUnites012={0}  nbUnites345={1}",
-                        nbUnites012, nbUnites345);
-                    LogFile.Notifier(message, out messageErreur);
-                    // Une unité ne subit des pertes que s'il se trouve, en face, une unité qui a été engagée
-                    var unitesEngagees = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
-                                        from Pion in Donnees.m_donnees.TAB_PION
-                                        where (BataillePion.ID_PION == Pion.ID_PION)
-                                            && (BataillePion.B_ENGAGEE)
-                                             //&& (BataillePion.I_MORAL_DEBUT > 0)
-                                        && (BataillePion.ID_NATION == ligneBataille.ID_NATION_345)
-                                        && (BataillePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
-                                        select new rechercheQG { idPion = Pion.ID_PION, bEngagee = BataillePion.B_ENGAGEE };
-
-                    if (unitesEngagees.Count() > 0)
-                    {
-                        PertesFinDeBataille(lignePionsEnBataille012, ligneBataille);
-                    }
-
-                    unitesEngagees = from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
-                                         from Pion in Donnees.m_donnees.TAB_PION
-                                         where (BataillePion.ID_PION == Pion.ID_PION)
-                                            && (BataillePion.B_ENGAGEE)
-                                         //&& (BataillePion.I_MORAL_DEBUT > 0)
-                                         && (BataillePion.ID_NATION == ligneBataille.ID_NATION_012)
-                                         && (BataillePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
-                                         select new rechercheQG { idPion = Pion.ID_PION, bEngagee = BataillePion.B_ENGAGEE };
-                    if (unitesEngagees.Count() > 0)
-                    {
-                        PertesFinDeBataille(lignePionsEnBataille345, ligneBataille);
-                    }
-                }
-                */
 
                 if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons,
                     out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
@@ -230,7 +198,6 @@ namespace vaoc
                         LogFile.Notifier(message);
                     }
 
-
                     if (nbUnites012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
@@ -257,6 +224,10 @@ namespace vaoc
                         bVictoire012 = false;
                         DesengagementDuVaincu(true);
                     }
+                    if (bVictoire012) { S_FIN = "VICTOIRE012"; }
+                    if (bVictoire345) { S_FIN = "VICTOIRE345"; }
+                    if (bRetraite012) { S_FIN = "RETRAITE012"; }
+                    if (bRetraite345) { S_FIN = "RETRAITE345"; }
                 }
                 else
                 {
@@ -264,7 +235,11 @@ namespace vaoc
                     //fin du combat à la nuit ou s'il n'y a plus d'unités présentes, les deux armées étant présentes ou absentes, il n'y a aucun bonus de moral
                     FinDeBatailleEgalite(lignePionsEnBataille012);
                     FinDeBatailleEgalite(lignePionsEnBataille345);
+                    S_FIN = "NUIT";
                 }
+
+                //les données de poursuite sont mis en données surnuméraires par rapport au déroulement standard d'où le +1
+                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1);
 
                 //desengagement de toutes les unités
                 requete = string.Format("ID_BATAILLE={0}", ID_BATAILLE);
@@ -892,6 +867,15 @@ namespace vaoc
                     }
                     return true;
                     #endregion
+                }
+                else
+                {
+                    for (int z = 0; z < 6; z++)
+                    {
+                        //on met le même chiffre global partout, le générateur de vidéo saura pendre la bonne zone
+                        this["S_COMBAT_" + Convert.ToString(z)] = string.Format("{0} dés, rapport = {1}", de, rapport);
+                        this["I_PERTES_" + Convert.ToString(z)] = pertes;
+                    }
                 }
 
                 //il faut repartir les pertes sur le poursuivant suivant l'ordre suivant :
@@ -1820,6 +1804,10 @@ namespace vaoc
                 //Envoie d'un message prévenant d'un bruit de canon pour toutes les unités non présentes.
                 AlerteBruitDuCanon();
 
+                //Ajout des logs pour le compte-rendu video
+                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+
+                //on regarde si la bataille ne se termine pas
                 if (0 == nbUnites012 || 0 == nbUnites345)
                 {
                     FinDeBataille(out bFinDeBataille);
@@ -1897,12 +1885,14 @@ namespace vaoc
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
                     pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/) * score[i + 3] / 400;
                     //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille012);
+                    this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
                 }
                 for (i = 3; i < 6; i++)
                 {
                     pertesMoral[i] = score[i - 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
                     pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille345, false /*bCombatif*/) * score[i - 3] / 400;
+                    this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
                     //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille345);
                 }
                 #endregion
@@ -2977,19 +2967,24 @@ namespace vaoc
                 TIPETERRAINBATAILLE[] obstacles = new TIPETERRAINBATAILLE[3];
                 TIPEORIENTATIONBATAILLE orientation = (this.C_ORIENTATION =='V') ? TIPEORIENTATIONBATAILLE.VERTICAL : TIPEORIENTATIONBATAILLE.HORIZONTAL;
                 TIPEFINBATAILLE fin = TIPEFINBATAILLE.RETRAITE012;
+                int tourpoursuite = 0;
                 switch(this.S_FIN)
                 {
                     case "RETRAITE012":
                         fin = TIPEFINBATAILLE.RETRAITE012;
+                        tourpoursuite = 1;
                         break;
                     case "RETRAITE345":
                         fin = TIPEFINBATAILLE.RETRAITE345;
+                        tourpoursuite = 1;
                         break;
                     case "VICTOIRE012":
                         fin = TIPEFINBATAILLE.VICTOIRE012;
+                        tourpoursuite = 1;
                         break;
                     case "VICTOIRE345":
                         fin = TIPEFINBATAILLE.VICTOIRE345;
+                        tourpoursuite = 1;
                         break;
                     default:
                         fin = TIPEFINBATAILLE.NUIT;
@@ -3003,7 +2998,7 @@ namespace vaoc
                 obstacles[1] = FilmTerrain(this.ID_OBSTACLE_14);
                 obstacles[2] = FilmTerrain(this.ID_OBSTACLE_25);
 
-                for (int tour = this.I_TOUR_DEBUT; tour < this.I_TOUR_FIN + 1;tour++)
+                for (int tour = this.I_TOUR_DEBUT; tour < this.I_TOUR_FIN + tourpoursuite + 1; tour++)
                 {
                     TAB_BATAILLE_VIDEORow ligneBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO.FindByID_BATAILLEI_TOUR(this.ID_BATAILLE, tour);
                     if (null != ligneBatailleVideo)
@@ -3162,7 +3157,6 @@ namespace vaoc
                 }
                 return retour;
             }
-
             private TIPETERRAINBATAILLE FilmTerrain(int iD_TERRAIN)
             {
                 TAB_MODELE_TERRAINRow ligneTerrain = m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(iD_TERRAIN);
@@ -3195,6 +3189,57 @@ namespace vaoc
                     return TIPETERRAINBATAILLE.FLEUVE;
                 }
                 return TIPETERRAINBATAILLE.AUCUN;
+            }
+
+            public bool AjouterDonneesVideo(int tour)
+            {
+                TAB_BATAILLE_VIDEORow ligneBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO.AddTAB_BATAILLE_VIDEORow(
+                    this.ID_BATAILLE,
+                    tour,
+                    this.ID_LEADER_012, this.ID_LEADER_345,
+                    this.I_ENGAGEMENT_0, this.I_ENGAGEMENT_1, this.I_ENGAGEMENT_2, this.I_ENGAGEMENT_3, this.I_ENGAGEMENT_4, this.I_ENGAGEMENT_5,
+                    this.S_COMBAT_0, this.S_COMBAT_1, this.S_COMBAT_2, this.S_COMBAT_3, this.S_COMBAT_4, this.S_COMBAT_5,
+                    this.I_PERTES_0, this.I_PERTES_1, this.I_PERTES_2, this.I_PERTES_3, this.I_PERTES_4, this.I_PERTES_5);
+                if (null== ligneBatailleVideo)
+                {
+                    LogFile.Notifier("Erreur dans Bataille-AjouterDonneesVideo :" + this.ID_BATAILLE + " : AddTAB_BATAILLE_VIDEORow renvoie NULL");
+                    return false;
+                }
+                TAB_BATAILLE_PIONSRow[] listeBataillePions =
+                    (TAB_BATAILLE_PIONSRow[])Donnees.m_donnees.TAB_BATAILLE_PIONS.Select(string.Format("ID_BATAILLE={0}", this.ID_BATAILLE));
+
+                foreach (TAB_BATAILLE_PIONSRow ligneBataillePion in listeBataillePions)
+                {
+                    TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePion.ID_PION);
+                    if (null == lignePion)
+                    {
+                        LogFile.Notifier("Erreur dans Bataille-AjouterDonneesVideo :" + this.ID_BATAILLE + " : impossible de trouver le pion ID_PION="+ ligneBataillePion.ID_PION);
+                        return false;
+                    }
+                    TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.AddTAB_BATAILLE_PIONS_VIDEORow(
+                        this.ID_BATAILLE,
+                        tour,
+                        ligneBataillePion.ID_PION,
+                        lignePion.ID_PION_PROPRIETAIRE,
+                        lignePion.S_NOM,
+                        lignePion.idNation,
+                        ligneBataillePion.B_ENGAGEE,
+                        ligneBataillePion.B_EN_DEFENSE,
+                        lignePion.infanterie,
+                        lignePion.cavalerie,
+                        lignePion.artillerie,
+                        lignePion.I_MORAL,
+                        lignePion.I_FATIGUE,
+                        ligneBataillePion.B_RETRAITE,
+                        ligneBataillePion.B_ENGAGEMENT,
+                        ligneBataillePion.I_ZONE_BATAILLE_ENGAGEMENT);
+                    if (null == lignePion)
+                    {
+                        LogFile.Notifier("Erreur dans Bataille-AjouterDonneesVideo :" + this.ID_BATAILLE + " : AddTAB_BATAILLE_PIONS_VIDEORow renvoie NULL sur ID_PION=" + ligneBataillePion.ID_PION);
+                        return false;
+                    }
+                }
+                return true;
             }
         }
     }

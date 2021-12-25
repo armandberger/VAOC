@@ -1298,6 +1298,12 @@ namespace vaoc
                                     "Aucun Combat",
                                     "Aucun Combat",
                                     "Aucun Combat",
+                                    0,//I_PERTES
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
                                     bZoneUnique,//B_ZONE_UNIQUE
                                     ""//S_FIN
                                     );
@@ -1348,24 +1354,7 @@ namespace vaoc
                 }
             }
 
-            //i=0;
-            //while (i<DataSetCoutDonnees.m_donnees.TAB_PION.Count)
-            //{
-            //    DataSetCoutDonnees.TAB_PIONRow lignePionEnBataille = DataSetCoutDonnees.m_donnees.TAB_PION[i];
-            //    if (!lignePionEnBataille.B_DETRUIT)
-            //    {
-            //        ligneCasePion = lignePionEnBataille.CaseCourante();
-            //        if (ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite &&
-            //            ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche)
-            //        {
-            //            if (!AjouterPionDansLaBataille(ligneBataille, lignePionEnBataille))
-            //            {
-            //                return false;
-            //            }
-            //        }
-            //    }
-            //    i++;
-            //}
+            ligneBataille.AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
             message = string.Format("Fin de création de la bataille ID={0}", ligneBataille.ID_BATAILLE);
             LogFile.Notifier(message, out messageErreur);
             return ligneBataille;

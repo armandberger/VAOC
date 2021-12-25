@@ -111,6 +111,12 @@
     <Compile Include="FormBackup.Designer.cs">
       <DependentUpon>FormBackup.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormBataillesVideo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBataillesVideo.Designer.cs">
+      <DependentUpon>FormBataillesVideo.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormBroderie.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -370,6 +376,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormBackup.resx">
       <DependentUpon>FormBackup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormBataillesVideo.resx">
+      <DependentUpon>FormBataillesVideo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBroderie.resx">
       <DependentUpon>FormBroderie.cs</DependentUpon>

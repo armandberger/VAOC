@@ -149,8 +149,9 @@ namespace vaoc
             this.toolStripButtonTrajets = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonTrajetsVilles = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
-            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
             this.toolStripButtonDepots = new System.Windows.Forms.ToolStripButton();
+            this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
+            this.bataillesVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -698,6 +699,7 @@ namespace vaoc
             this.ordresToolStripMenuItem,
             this.phrasesToolStripMenuItem,
             this.bataillesToolStripMenuItem,
+            this.bataillesVideoToolStripMenuItem,
             this.mEssagesToolStripMenuItem,
             this.nomsPionsUniquesToolStripMenuItem,
             this.toolStripSeparator6,
@@ -1267,14 +1269,6 @@ namespace vaoc
             this.toolStripButtonMemoire.Text = "Afficher les cases chargées";
             this.toolStripButtonMemoire.Click += new System.EventHandler(this.toolStripButtonMemoire_Click);
             // 
-            // backgroundTraitement
-            // 
-            this.backgroundTraitement.WorkerReportsProgress = true;
-            this.backgroundTraitement.WorkerSupportsCancellation = true;
-            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
-            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
-            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
-            // 
             // toolStripButtonDepots
             // 
             this.toolStripButtonDepots.CheckOnClick = true;
@@ -1285,6 +1279,21 @@ namespace vaoc
             this.toolStripButtonDepots.Size = new System.Drawing.Size(48, 22);
             this.toolStripButtonDepots.Text = "Dépôts";
             this.toolStripButtonDepots.Click += new System.EventHandler(this.toolStripButtonDepots_Click);
+            // 
+            // backgroundTraitement
+            // 
+            this.backgroundTraitement.WorkerReportsProgress = true;
+            this.backgroundTraitement.WorkerSupportsCancellation = true;
+            this.backgroundTraitement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundTraitement_DoWork);
+            this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
+            this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
+            // 
+            // bataillesVideoToolStripMenuItem
+            // 
+            this.bataillesVideoToolStripMenuItem.Name = "bataillesVideoToolStripMenuItem";
+            this.bataillesVideoToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.bataillesVideoToolStripMenuItem.Text = "BataillesVideo";
+            this.bataillesVideoToolStripMenuItem.Click += new System.EventHandler(this.bataillesVideoToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1444,6 +1453,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem forcesInitialesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem miseÀJourProprietairesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonDepots;
+        private System.Windows.Forms.ToolStripMenuItem bataillesVideoToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

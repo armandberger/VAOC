@@ -4950,6 +4950,35 @@ namespace vaoc
         {
             ConstruireImageCarte();
         }
+
+        private void bataillesVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormBataillesVideo fBataillesVideo = new FormBataillesVideo();
+
+            fBataillesVideo.tableBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO;
+            fBataillesVideo.tableBataillePionsVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO;
+            if (DialogResult.OK == fBataillesVideo.ShowDialog())
+            {
+                m_modification = true;
+                Donnees.m_donnees.TAB_BATAILLE_VIDEO.Clear();
+                Donnees.m_donnees.TAB_BATAILLE_VIDEO.Merge(fBataillesVideo.tableBatailleVideo, false);
+
+                Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Clear();
+                Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Merge(fBataillesVideo.tableBataillePionsVideo, false);
+                foreach (Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionVideo in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO)
+                {
+                    if (ligneBataillePionVideo.IsB_ENGAGEENull()) { ligneBataillePionVideo.B_ENGAGEE = false; }
+                    if (ligneBataillePionVideo.IsB_ENGAGEMENTNull()) { ligneBataillePionVideo.B_ENGAGEMENT = false; }
+                    if (ligneBataillePionVideo.IsB_EN_DEFENSENull()) { ligneBataillePionVideo.B_EN_DEFENSE = false; }
+                    if (ligneBataillePionVideo.IsB_RETRAITENull()) { ligneBataillePionVideo.B_RETRAITE = false; }
+                    if (ligneBataillePionVideo.IsI_INFANTERIENull()) { ligneBataillePionVideo.I_INFANTERIE = 0; }
+                    if (ligneBataillePionVideo.IsI_CAVALERIENull()) { ligneBataillePionVideo.I_CAVALERIE = 0; }
+                    if (ligneBataillePionVideo.IsI_ARTILLERIENull()) { ligneBataillePionVideo.I_ARTILLERIE = 0; }
+                    if (ligneBataillePionVideo.IsI_FATIGUENull()) { ligneBataillePionVideo.I_FATIGUE = 0; }
+                    if (ligneBataillePionVideo.IsI_MORALNull()) { ligneBataillePionVideo.I_MORAL = 0; }
+                }
+            }
+        }
     }
 
     internal static class NativeMethods

@@ -173,10 +173,10 @@ namespace vaoc
                         nom = NomQG(ligneVideo.S_NOM),
                         iNation = ligneVideo.ID_NATION,
                         ID_ROLE = ligneVideo.ID_PION,
-                        i_X_CASE_CORPS = -1,
-                        i_Y_CASE_CORPS = -1
+                        i_X_CASE_CORPS = ligneVideo.I_X,
+                        i_Y_CASE_CORPS = ligneVideo.I_Y
                     };
-                    Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
+                    //Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     System.Nullable<int> effectifs = (from video in Donnees.m_donnees.TAB_VIDEO
                          where (video.I_TOUR == role.iTour)
                             && (video.ID_PION_PROPRIETAIRE == ligneVideo.ID_PION)
@@ -205,10 +205,12 @@ namespace vaoc
                     iEffectif = (ligneVideo.I_INFANTERIE + ligneVideo.I_CAVALERIE) * (100 - ligneVideo.I_FATIGUE) / 100,
                     ID = ligneVideo.ID_PION,
                     ID_ROLE = ligneVideo.ID_PION_PROPRIETAIRE,
-                    bInclusDansLeCorps = false
+                    bInclusDansLeCorps = false,
+                    i_X_CASE = ligneVideo.I_X,
+                    i_Y_CASE = ligneVideo.I_Y
                 };
                 //Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
-                Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
+                //Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out unite.i_X_CASE, out unite.i_Y_CASE);
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);

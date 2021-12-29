@@ -1613,12 +1613,16 @@ namespace vaoc
                 }
 
                 #region le blessé guérit lentement...
-                if (lignePion.I_DUREE_HORS_COMBAT>0 && lignePion.I_DUREE_HORS_COMBAT < int.MaxValue)
+                //if (lignePion.I_DUREE_HORS_COMBAT > 0 && lignePion.I_DUREE_HORS_COMBAT < int.MaxValue)
+                if (lignePion.I_DUREE_HORS_COMBAT>0 || !lignePion.IsI_TOUR_BLESSURENull())
                 {
                     lignePion.I_DUREE_HORS_COMBAT--;
                     if (lignePion.I_DUREE_HORS_COMBAT <= 0)
                     {
                         //Le precedent leader redevient actif (quid si le remplaçant a été remplacé ? -> on remplace pas un remplaçant, voir au-dessus)
+                        lignePion.I_DUREE_HORS_COMBAT = 0;
+                        lignePion.B_BLESSES = false;
+                        lignePion.SetI_TOUR_BLESSURENull();
 
                         //on recherche qui le remplacait, s'il n'y a pas de remplaçant, c'est qu'il s'agissait d'une blessure légère
                         ligneChefRemplace = lignePion.pionRemplacant;
@@ -1629,8 +1633,6 @@ namespace vaoc
                             lignePion.I_TACTIQUE = ligneChefRemplace.I_TACTIQUE;
                             lignePion.I_STRATEGIQUE = ligneChefRemplace.I_STRATEGIQUE;
                             lignePion.C_NIVEAU_HIERARCHIQUE = ligneChefRemplace.C_NIVEAU_HIERARCHIQUE;
-                            lignePion.I_DUREE_HORS_COMBAT = 0;
-                            lignePion.B_BLESSES = false;
 
                             /*
                             //on réétablit le rôle au chef d'origine s'il y en avait un

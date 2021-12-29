@@ -198,6 +198,7 @@ namespace vaoc
                 get
                 {
                     //on recherche le pion de remplacement
+                    /*
                     string requete = string.Format("ID_PION_REMPLACE = {0}", ID_PION);
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     TAB_PIONRow[] resPions = (TAB_PIONRow[])m_donnees.TAB_PION.Select(requete);
@@ -207,6 +208,8 @@ namespace vaoc
                         return null;
                     }
                     return resPions[0];
+                    */
+                    return Donnees.m_donnees.TAB_PION.FindByID_PION(this.ID_PION_REMPLACE);
                 }
             }
 

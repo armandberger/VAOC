@@ -2004,7 +2004,7 @@ namespace vaoc
             }
 
             //Mise à jour de la version du fichier pour de futures mise à jour
-            TAB_JEU[0].I_VERSION = 13;
+            TAB_JEU[0].I_VERSION = 14;
             //ChargerToutesLesCases();//pour test
             if (!bConserverCases) //on sauvegarde toujours les cases maintenant
             {
@@ -2488,6 +2488,23 @@ namespace vaoc
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                     lignePion.I_TOUR_ENNEMI_OBSERVABLE = Constantes.NULLENTIER;
                     lignePion.S_ENNEMI_OBSERVABLE = string.Empty;
+                }
+            }
+            #endregion
+
+            #region version 14
+            if (TAB_JEU[0].I_VERSION < 14)
+            {
+                Donnees.m_donnees.TAB_CASE.InitialisationListeCase(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
+                for (int l = 0; l < Donnees.m_donnees.TAB_VIDEO.Count; l++)
+                {
+                    Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[l];
+                    if (ligneVideo.ID_CASE >= 0)
+                    {
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneVideo.ID_CASE);
+                        ligneVideo.I_X = ligneCase.I_X;
+                        ligneVideo.I_Y = ligneCase.I_Y;
+                    }
                 }
             }
             #endregion

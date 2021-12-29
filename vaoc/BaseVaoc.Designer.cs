@@ -19522,6 +19522,10 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnID_CASE;
             
+            private global::System.Data.DataColumn columnI_X;
+            
+            private global::System.Data.DataColumn columnI_Y;
+            
             private global::System.Data.DataColumn columnID_BATAILLE;
             
             private global::System.Data.DataColumn columnB_DETRUIT;
@@ -19705,6 +19709,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_XColumn {
+                get {
+                    return this.columnI_X;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn I_YColumn {
+                get {
+                    return this.columnI_Y;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn ID_BATAILLEColumn {
                 get {
                     return this.columnID_BATAILLE;
@@ -19868,6 +19888,8 @@ namespace vaoc {
                         int I_FATIGUE, 
                         int I_MORAL, 
                         int ID_CASE, 
+                        int I_X, 
+                        int I_Y, 
                         int ID_BATAILLE, 
                         bool B_DETRUIT, 
                         bool B_FUITE_AU_COMBAT, 
@@ -19899,6 +19921,8 @@ namespace vaoc {
                         I_FATIGUE,
                         I_MORAL,
                         ID_CASE,
+                        I_X,
+                        I_Y,
                         ID_BATAILLE,
                         B_DETRUIT,
                         B_FUITE_AU_COMBAT,
@@ -19950,6 +19974,8 @@ namespace vaoc {
                 this.columnI_FATIGUE = base.Columns["I_FATIGUE"];
                 this.columnI_MORAL = base.Columns["I_MORAL"];
                 this.columnID_CASE = base.Columns["ID_CASE"];
+                this.columnI_X = base.Columns["I_X"];
+                this.columnI_Y = base.Columns["I_Y"];
                 this.columnID_BATAILLE = base.Columns["ID_BATAILLE"];
                 this.columnB_DETRUIT = base.Columns["B_DETRUIT"];
                 this.columnB_FUITE_AU_COMBAT = base.Columns["B_FUITE_AU_COMBAT"];
@@ -19999,6 +20025,10 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_MORAL);
                 this.columnID_CASE = new global::System.Data.DataColumn("ID_CASE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnID_CASE);
+                this.columnI_X = new global::System.Data.DataColumn("I_X", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_X);
+                this.columnI_Y = new global::System.Data.DataColumn("I_Y", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnI_Y);
                 this.columnID_BATAILLE = new global::System.Data.DataColumn("ID_BATAILLE", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnID_BATAILLE);
                 this.columnB_DETRUIT = new global::System.Data.DataColumn("B_DETRUIT", typeof(bool), null, global::System.Data.MappingType.Element);
@@ -35870,6 +35900,38 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_X {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_XColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_X\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_XColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_Y {
+                get {
+                    try {
+                        return ((int)(this[this.tableTAB_VIDEO.I_YColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_Y\' dans la table \'TAB_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_VIDEO.I_YColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public int ID_BATAILLE {
                 get {
                     try {
@@ -36250,6 +36312,30 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetID_CASENull() {
                 this[this.tableTAB_VIDEO.ID_CASEColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_XNull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_XColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_XNull() {
+                this[this.tableTAB_VIDEO.I_XColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsI_YNull() {
+                return this.IsNull(this.tableTAB_VIDEO.I_YColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetI_YNull() {
+                this[this.tableTAB_VIDEO.I_YColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

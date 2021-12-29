@@ -139,6 +139,7 @@ namespace vaoc
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
                 if (idCaseDebut < 0) idCaseDebut = lignePion.ID_CASE;//possible si pas d'ordre en cours
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(idCaseDebut);
                 Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
                     lignePion.nation.ID_NATION,
@@ -155,6 +156,8 @@ namespace vaoc
                     lignePion.I_FATIGUE,
                     lignePion.I_MORAL,
                     idCaseDebut,
+                    ligneCase.I_X,
+                    ligneCase.I_Y,
                     lignePion.IsID_BATAILLENull() ? -1 : lignePion.ID_BATAILLE,
                     lignePion.B_DETRUIT,
                     lignePion.B_FUITE_AU_COMBAT,
@@ -196,6 +199,8 @@ namespace vaoc
                     0, //lignePion.I_FATIGUE,
                     0, //lignePion.I_MORAL,
                     -1,//idCaseDebut,
+                    -1,//I_X
+                    -1,//I_Y
                     -1, //lignePion.ID_BATAILLE,
                     false, //lignePion.B_DETRUIT,
                     false, //lignePion.B_FUITE_AU_COMBAT,

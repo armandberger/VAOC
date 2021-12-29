@@ -31,10 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this.buttonValider = new System.Windows.Forms.Button();
             this.dataGridViewVideo = new System.Windows.Forms.DataGridView();
-            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dataSetCoutDonnees = new vaoc.Donnees();
             this.buttonAnnuler = new System.Windows.Forms.Button();
             this.buttonExportCSV = new System.Windows.Forms.Button();
+            this.tABBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dataSetCoutDonnees = new vaoc.Donnees();
             this.iTOURDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -52,6 +52,8 @@
             this.iMATERIELDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iRAVITAILLEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDCASEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_X = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDBATAILLEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.bDETRUITDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.bFUITEAUCOMBATDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -100,6 +102,8 @@
             this.iMATERIELDataGridViewTextBoxColumn,
             this.iRAVITAILLEMENTDataGridViewTextBoxColumn,
             this.iDCASEDataGridViewTextBoxColumn,
+            this.I_X,
+            this.I_Y,
             this.iDBATAILLEDataGridViewTextBoxColumn,
             this.bDETRUITDataGridViewCheckBoxColumn,
             this.bFUITEAUCOMBATDataGridViewCheckBoxColumn,
@@ -115,16 +119,7 @@
             this.dataGridViewVideo.Name = "dataGridViewVideo";
             this.dataGridViewVideo.Size = new System.Drawing.Size(1424, 188);
             this.dataGridViewVideo.TabIndex = 10;
-            // 
-            // tABBindingSource
-            // 
-            this.tABBindingSource.DataMember = "TAB_VIDEO";
-            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
-            // 
-            // dataSetCoutDonnees
-            // 
-            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
-            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this.dataGridViewVideo.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewVideo_CellContentClick);
             // 
             // buttonAnnuler
             // 
@@ -145,6 +140,16 @@
             this.buttonExportCSV.Text = "Export CSV";
             this.buttonExportCSV.UseVisualStyleBackColor = true;
             this.buttonExportCSV.Click += new System.EventHandler(this.buttonExportCSV_Click);
+            // 
+            // tABBindingSource
+            // 
+            this.tABBindingSource.DataMember = "TAB_VIDEO";
+            this.tABBindingSource.DataSource = this.dataSetCoutDonnees;
+            // 
+            // dataSetCoutDonnees
+            // 
+            this.dataSetCoutDonnees.DataSetName = "DataSetCoutDonnees";
+            this.dataSetCoutDonnees.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // iTOURDataGridViewTextBoxColumn
             // 
@@ -247,6 +252,18 @@
             this.iDCASEDataGridViewTextBoxColumn.DataPropertyName = "ID_CASE";
             this.iDCASEDataGridViewTextBoxColumn.HeaderText = "ID_CASE";
             this.iDCASEDataGridViewTextBoxColumn.Name = "iDCASEDataGridViewTextBoxColumn";
+            // 
+            // I_X
+            // 
+            this.I_X.DataPropertyName = "I_X";
+            this.I_X.HeaderText = "I_X";
+            this.I_X.Name = "I_X";
+            // 
+            // I_Y
+            // 
+            this.I_Y.DataPropertyName = "I_Y";
+            this.I_Y.HeaderText = "I_Y";
+            this.I_Y.Name = "I_Y";
             // 
             // iDBATAILLEDataGridViewTextBoxColumn
             // 
@@ -354,6 +371,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn iMATERIELDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iRAVITAILLEMENTDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDCASEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_X;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_Y;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDBATAILLEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn bDETRUITDataGridViewCheckBoxColumn;
         private System.Windows.Forms.DataGridViewCheckBoxColumn bFUITEAUCOMBATDataGridViewCheckBoxColumn;

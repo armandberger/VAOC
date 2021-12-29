@@ -91,5 +91,10 @@ namespace vaoc
                     "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void dataGridViewVideo_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

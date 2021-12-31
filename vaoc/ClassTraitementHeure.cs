@@ -1626,7 +1626,7 @@ namespace vaoc
 
                         //on recherche qui le remplacait, s'il n'y a pas de remplaçant, c'est qu'il s'agissait d'une blessure légère
                         ligneChefRemplace = lignePion.pionRemplacant;
-                        if (null != ligneChefRemplace)
+                        if (null != ligneChefRemplace && lignePion.estRole)//test sur estrole car, curieusement, d'autres types sont dans ce cas... BEA 30/12/2021
                         {
                             //on remet les caractéristiques du pion d'origine et c'est tout !
                             lignePion.S_NOM = ligneChefRemplace.S_NOM;

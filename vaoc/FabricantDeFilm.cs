@@ -126,6 +126,7 @@ namespace vaoc
         private int m_largeurCorps;
         public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
         public const int CST_TAILLE_NOM_CORPS = 4;
+        public const int CST_RAYON_CORPS = 3;//rayon autour de la taille du corps qui inclue les unités
 
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
@@ -655,27 +656,6 @@ namespace vaoc
                     G.DrawImage(fichierImageSource, 0, 0, m_largeur, m_hauteur);
                 }
 
-                Pen styloExterieur = new Pen(Color.Black, 4);
-                Pen styloInterieur = new Pen(Color.White, 1);
-                //on ajoute les batailles s'il y en a
-                foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
-                {
-                    if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
-                    {
-                        G.DrawRectangle(styloExterieur,
-                            (ligneLieu.i_X_CASE_HAUT_GAUCHE- m_xTravelling) * m_rapport,
-                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
-
-                        G.DrawRectangle(styloInterieur,
-                            (ligneLieu.i_X_CASE_HAUT_GAUCHE - m_xTravelling ) * m_rapport,
-                            (ligneLieu.i_Y_CASE_HAUT_GAUCHE - m_yTravelling) * m_rapport,
-                            (ligneLieu.i_X_CASE_BAS_DROITE - ligneLieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
-                            (ligneLieu.i_Y_CASE_BAS_DROITE - ligneLieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
-                    }
-                }
-
                 if (m_affichageCorps)
                 {
                     // afficher toutes les unités seules puis tous les chefs de corps puis les batailles.
@@ -685,7 +665,7 @@ namespace vaoc
                             (unite.tipe != TIPEUNITEVIDEO.INFANTERIE && unite.tipe != TIPEUNITEVIDEO.CAVALERIE &&
                             unite.tipe != TIPEUNITEVIDEO.ARTILLERIE && unite.tipe != TIPEUNITEVIDEO.QG))
                         {
-                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                            DessineUniteFilaire(G, unite, m_xTravelling, m_yTravelling);
                         }
                     }
                     foreach (UniteRemarquable unite in m_unitesRemarquables)
@@ -695,7 +675,7 @@ namespace vaoc
                             (unite.tipe == TIPEUNITEVIDEO.INFANTERIE || unite.tipe == TIPEUNITEVIDEO.CAVALERIE ||
                             unite.tipe == TIPEUNITEVIDEO.ARTILLERIE || unite.tipe == TIPEUNITEVIDEO.QG))
                         {
-                            DessineUnite(G, unite, m_xTravelling, m_yTravelling);
+                            DessineUniteFilaire(G, unite, m_xTravelling, m_yTravelling);
                         }
                     }
                     //Le leader à la fin
@@ -744,7 +724,16 @@ namespace vaoc
                     }
                 }
                 //G.DrawImageUnscaled(fichierImageSource, 0, 0);
- 
+
+                //on ajoute les batailles s'il y en a
+                foreach (LieuRemarquable ligneLieu in m_lieuxRemarquables)
+                {
+                    if (m_traitement >= ligneLieu.iTourDebut && m_traitement <= ligneLieu.iTourFin)
+                    {
+                        DessineBataille(G, ligneLieu, m_xTravelling, m_yTravelling);
+                    }
+                }
+
                 if (m_videoParRole)
                 {
                     fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole].nom + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
@@ -1004,21 +993,31 @@ namespace vaoc
         private void DessineCorps(Graphics G, UniteRole role, int xTravelling, int yTravelling)
         {
             if (role.i_X_CASE_CORPS<0 || role.i_Y_CASE_CORPS<0) { return; }
+            int xtravel = (xTravelling < 0) ? 0 : xTravelling;
+            int ytravel = (yTravelling < 0) ? 0 : yTravelling;
             //si on est pas dans le cadre, inutile de continuer
             if (m_bTravelling)
             {
-                if (!EstDansLeCadre(role.i_X_CASE_CORPS, role.i_Y_CASE_CORPS, xTravelling, yTravelling))
+                if (!EstDansLeCadre(role.i_X_CASE_CORPS, role.i_Y_CASE_CORPS, xtravel, ytravel))
                 {
                     return;
                 }
             }
             Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
-            //affichage des effectifs
-            G.DrawString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)),  m_police, brosse,
-                new Rectangle((int)((role.i_X_CASE_CORPS - xTravelling) * m_rapport - m_largeurCorps / 2),
-                                (int)((role.i_Y_CASE_CORPS - yTravelling) * m_rapport - m_hauteurCorps / 2),
-                                (int)m_largeurCorps + 1,
-                                (int)m_hauteurCorps + 1));
+            Rectangle rectCorps = new Rectangle(
+                (int)((role.i_X_CASE_CORPS - xtravel) * m_rapport - m_largeurCorps / 2),
+                (int)((role.i_Y_CASE_CORPS - ytravel) * m_rapport - m_hauteurCorps / 2),
+                (int)m_largeurCorps + 1,
+                (int)m_hauteurCorps + 1);
+
+            G.FillRectangle(Brushes.White, rectCorps);
+            G.DrawRectangle(Pens.Black, rectCorps);
+            StringFormat format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            format.LineAlignment = StringAlignment.Center;
+            G.DrawString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)),  
+                m_police, brosse,
+                rectCorps, format);
         }
 
         private void DessineUnite(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
@@ -1096,79 +1095,180 @@ namespace vaoc
                         (unite.i_Y_CASE - yTravelling) * m_rapport - image.Height/2);
         }
 
+        private void DessineBataille(Graphics G, LieuRemarquable lieu, int xTravelling, int yTravelling)
+        {
+            int xtravel = (xTravelling < 0) ? 0 : xTravelling;
+            int ytravel = (yTravelling < 0) ? 0 : yTravelling;
+
+            if (m_bTravelling)
+            {
+                if (!EstDansLeCadre(lieu.i_X_CASE_HAUT_GAUCHE, lieu.i_Y_CASE_HAUT_GAUCHE, xtravel, ytravel)
+                    || !EstDansLeCadre(lieu.i_X_CASE_BAS_DROITE, lieu.i_Y_CASE_BAS_DROITE, xtravel, ytravel))
+                {
+                    return;
+                }
+            }
+            if (m_affichageCorps)
+            {
+                //dessin d'une "explosion" de la hauteur/largeur d'un corps sur une grille 8x8
+                Pen stylo = new Pen(Color.Black, 3);
+                PointF[] points = new PointF[24];
+                int p = 0;
+                int x = (int)(m_rapport * (lieu.i_X_CASE_BAS_DROITE + lieu.i_X_CASE_HAUT_GAUCHE) / 2 - m_largeurCorps / 2);
+                int y = (int)(m_rapport * (lieu.i_Y_CASE_BAS_DROITE + lieu.i_Y_CASE_HAUT_GAUCHE) / 2 - m_hauteurCorps / 2);
+                int lbord = m_largeurCorps / 8;
+                int hbord = m_hauteurCorps / 8;
+                points[p].X = x;
+                points[p++].Y = y;
+                points[p].X = x + 3 * lbord;
+                points[p++].Y = y + 2 * hbord;
+                points[p].X = x + 3 * lbord;
+                points[p++].Y = y + 1 * hbord;
+                points[p].X = x + 4 * lbord;//3
+                points[p++].Y = y + 2 * hbord;
+                points[p].X = x + 6 * lbord;//4
+                points[p++].Y = y + 0 * hbord;
+                points[p].X = x + 5 * lbord;//5
+                points[p++].Y = y + 2 * hbord;
+                points[p].X = x + 7 * lbord;//6
+                points[p++].Y = y + 1 * hbord;
+                points[p].X = x + 6 * lbord;//7
+                points[p++].Y = y + 4 * hbord;
+                points[p].X = x + 8 * lbord;//8
+                points[p++].Y = y + 3 * hbord;
+                points[p].X = x + 7 * lbord;//9
+                points[p++].Y = y + 4 * hbord;
+                points[p].X = x + 8 * lbord;//10
+                points[p++].Y = y + 5 * hbord;
+                points[p].X = x + 6 * lbord;//11
+                points[p++].Y = y + 5 * hbord;
+                points[p].X = x + 7 * lbord;//12
+                points[p++].Y = y + 7 * hbord;
+                points[p].X = x + 5 * lbord;//13
+                points[p++].Y = y + 5 * hbord;
+                points[p].X = x + 5 * lbord;//14
+                points[p++].Y = y + 7 * hbord;
+                points[p].X = x + 4 * lbord;//15
+                points[p++].Y = y + 6 * hbord;
+                points[p].X = x + 3 * lbord;//16
+                points[p++].Y = y + 8 * hbord;
+                points[p].X = x + 3 * lbord;//17
+                points[p++].Y = y + 6 * hbord;
+                points[p].X = x + 1 * lbord;//18
+                points[p++].Y = y + 7 * hbord;
+                points[p].X = x + 2 * lbord;//19
+                points[p++].Y = y + 4 * hbord;
+                points[p].X = x + 0 * lbord;//20
+                points[p++].Y = y + 5 * hbord;
+                points[p].X = x + 1 * lbord;//21
+                points[p++].Y = y + 4 * hbord;
+                points[p].X = x + 0 * lbord;//22
+                points[p++].Y = y + 3 * hbord;
+                points[p].X = x + 2 * lbord;//23
+                points[p++].Y = y + 3 * hbord;
+
+                G.DrawLines(stylo, points);
+            }
+            else
+            {
+                Pen styloExterieur = new Pen(Color.Black, 4);
+                Pen styloInterieur = new Pen(Color.White, 1);
+                G.DrawRectangle(styloExterieur,
+                    (lieu.i_X_CASE_HAUT_GAUCHE - xtravel) * m_rapport,
+                    (lieu.i_Y_CASE_HAUT_GAUCHE - ytravel) * m_rapport,
+                    (lieu.i_X_CASE_BAS_DROITE - lieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                    (lieu.i_Y_CASE_BAS_DROITE - lieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+
+                G.DrawRectangle(styloInterieur,
+                    (lieu.i_X_CASE_HAUT_GAUCHE - xtravel) * m_rapport,
+                    (lieu.i_Y_CASE_HAUT_GAUCHE - ytravel) * m_rapport,
+                    (lieu.i_X_CASE_BAS_DROITE - lieu.i_X_CASE_HAUT_GAUCHE) * m_rapport,
+                    (lieu.i_Y_CASE_BAS_DROITE - lieu.i_Y_CASE_HAUT_GAUCHE) * m_rapport);
+            }
+        }
+
         private void DessineUniteFilaire(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
         {
             Pen styloUnite = new Pen((unite.iNation == 0) ? Color.Blue : Color.Red, m_epaisseurUnite);
             Brush brosseUnite = new SolidBrush((unite.iNation == 0) ? Color.Blue : Color.Red);
+            int xtravel = (xTravelling < 0) ? 0 : xTravelling;
+            int ytravel = (yTravelling < 0) ? 0 : yTravelling;
+
+            G.FillRectangle(Brushes.White,
+                m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+
             switch (unite.tipe)
             {
                 case TIPEUNITEVIDEO.INFANTERIE:
                     //barre haut gauche, bas droite
                     G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
                         );
                     //barre haut droite , bas gauche
                     G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
                         );
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.CAVALERIE:
                     //barre haut gauche, bas droite
                     G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport + m_tailleUnite / 2
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
                         );
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.ARTILLERIE:
                     G.FillEllipse(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 4,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 4,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 4,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 4,
                         m_tailleUnite / 2,
                         m_tailleUnite / 2);
                     //finir par le cadre pour éviter des problèmes de points de fin de ligne
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
                 case TIPEUNITEVIDEO.CONVOI:
                     G.DrawEllipse(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     G.FillPie(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite,
                         0, 180);
                     break;
                 case TIPEUNITEVIDEO.DEPOT:
                     G.FillEllipse(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
@@ -1177,8 +1277,8 @@ namespace vaoc
                 default:
                     //carre vide
                     G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xTravelling) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - yTravelling) * m_rapport - m_tailleUnite / 2,
+                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                         m_tailleUnite,
                         m_tailleUnite);
                     break;
@@ -1202,59 +1302,59 @@ namespace vaoc
                     List<UniteRemarquable> divisions =
                         (from a in m_unitesRemarquables
                          where a.iTour == tour
-                                 && (a.tipe == TIPEUNITEVIDEO.INFANTERIE || a.tipe == TIPEUNITEVIDEO.CAVALERIE)
+                                 && (a.tipe == TIPEUNITEVIDEO.INFANTERIE || a.tipe == TIPEUNITEVIDEO.CAVALERIE || a.tipe == TIPEUNITEVIDEO.ARTILLERIE)
                                  && a.ID_ROLE == roleUnite.ID_ROLE
                          select a).ToList();
                     int poidsMax = -1;
-                    int uniteMax = -1;
+                    UniteRemarquable uniteMax = null;
                     foreach (UniteRemarquable unitePoid in divisions)
                     {
                         int poids = 0;
                         foreach (UniteRemarquable unite in divisions)
                         {
-                            if ((Math.Abs(unitePoid.i_X_CASE-unite.i_X_CASE)<=m_largeurCorps * 2) 
-                                && (Math.Abs(unitePoid.i_Y_CASE-unite.i_Y_CASE)<=m_hauteurCorps * 2))
+                            if ((Math.Abs(unitePoid.i_X_CASE - unite.i_X_CASE) <= m_largeurCorps * CST_RAYON_CORPS)
+                                && (Math.Abs(unitePoid.i_Y_CASE - unite.i_Y_CASE) <= m_hauteurCorps * CST_RAYON_CORPS))
                             {
                                 poids += unite.iEffectif;
                             }
                         }
-                        if (poids>poidsMax)
+                        if (poids > poidsMax)
                         {
                             poidsMax = poids;
-                            uniteMax = unitePoid.ID;
-                        }
-
-                        //position de la division pondérée par le poids de chaque division
-                        if (poidsMax > 0)
-                        {
-                            int x_division=0, y_division=0;
-                            foreach (UniteRemarquable unite in divisions)
-                            {
-                                if ((Math.Abs(unitePoid.i_X_CASE - unite.i_X_CASE) <= m_largeurCorps * 2)
-                                    && (Math.Abs(unitePoid.i_Y_CASE - unite.i_Y_CASE) <= m_hauteurCorps * 2))
-                                {
-                                    x_division += unite.i_X_CASE * unite.iEffectif;
-                                    y_division += unite.i_Y_CASE * unite.iEffectif;
-                                    unite.bInclusDansLeCorps = true;
-                                }
-                                else
-                                {
-                                    unite.bInclusDansLeCorps = false;
-                                }
-                            }
-                            x_division /= poidsMax;
-                            y_division /= poidsMax;
-
-                            //affectation finale sur le chef de corps
-                            roleUnite.i_X_CASE_CORPS = x_division;
-                            roleUnite.i_Y_CASE_CORPS = y_division;
-                        }
-                        else
-                        {
-                            roleUnite.i_X_CASE_CORPS = -1;
-                            roleUnite.i_Y_CASE_CORPS = -1;
+                            uniteMax = unitePoid;
                         }
                     }
+
+                    //position de la division pondérée par le poids de chaque division
+                    if (poidsMax > 0)
+                    {
+                        int x_division=0, y_division=0;
+                        foreach (UniteRemarquable unite in divisions)
+                        {
+                            if ((Math.Abs(uniteMax.i_X_CASE - unite.i_X_CASE) <= m_largeurCorps * CST_RAYON_CORPS)
+                                && (Math.Abs(uniteMax.i_Y_CASE - unite.i_Y_CASE) <= m_hauteurCorps * CST_RAYON_CORPS))
+                            {
+                                x_division += unite.i_X_CASE * unite.iEffectif;
+                                y_division += unite.i_Y_CASE * unite.iEffectif;
+                                unite.bInclusDansLeCorps = true;
+                            }
+                            else
+                            {
+                                unite.bInclusDansLeCorps = false;
+                            }
+                        }
+                        x_division /= poidsMax;
+                        y_division /= poidsMax;
+
+                        //affectation finale sur le chef de corps
+                        roleUnite.i_X_CASE_CORPS = x_division;
+                        roleUnite.i_Y_CASE_CORPS = y_division;
+                    }
+                    else
+                    {
+                        roleUnite.i_X_CASE_CORPS = -1;
+                        roleUnite.i_Y_CASE_CORPS = -1;
+                    }                    
                 }
             }
         }

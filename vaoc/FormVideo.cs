@@ -162,9 +162,9 @@ namespace vaoc
                     continue; //case comptant seulement pour les points de victoire
                 }
                 //ligneVideo.B_QG a été ajouté à la fin et n'est pas fiable
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
-                if (lignePion.estQG && !ligneVideo.B_QG) { 
-                    Debug.Write("bug indicateur"); }
+                //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneVideo.ID_PION);
+                //if (lignePion.estQG && !ligneVideo.B_QG) { 
+                //    Debug.Write("bug indicateur"); }
                 if (ligneVideo.B_QG)// || lignePion.estQG)
                 {
                     UniteRole role = new UniteRole

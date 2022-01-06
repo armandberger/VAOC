@@ -520,7 +520,7 @@ namespace vaoc
                 if (bFinDePartie 
                     || !Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE
                     || 1==Donnees.m_donnees.TAB_PARTIE[0].I_TOUR //premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres
-                    || (nbTourExecutes >= 8) 
+                    || (nbTourExecutes >= 8 && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne())) 
                     || (Donnees.m_donnees.TAB_PARTIE.HeureCourante() == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) 
                     || (bRenfort)
                     || m_bFinDeBataille //si une bataille vient de se terminer,on ne continue pas pour laisser au vaincu le temps de s'enfuir

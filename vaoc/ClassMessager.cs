@@ -2026,15 +2026,12 @@ namespace vaoc
                     break;
 
                 case Constantes.ORDRES.ENDOMMAGER_PONT:
-                    //ligneOrdre.ID_CASE_DEPART et non destination car il n'y a pas destination, sur un ordre de destruction de pont
-                    // c'est la case la plus proche
-                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DEPART, out zoneGeographique);
                     retour = avecProprietaire ?
-                                string.Format("{0} a pour ordre d'endommager un pont en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique)
+                                string.Format("{0} a pour ordre d'endommager un pont.",
+                                lignePionDestinataire.S_NOM)
                              :
-                                string.Format("endommager un pont en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique);
+                                string.Format("endommager un pont.",
+                                lignePionDestinataire.S_NOM);
                     break;
 
                 case Constantes.ORDRES.REPARER_PONT:

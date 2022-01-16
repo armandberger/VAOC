@@ -1305,7 +1305,7 @@ namespace vaoc
             /// </summary>
             /// <param name="ligneBataille">bataille à effectuer</param>
             /// <returns>true si OK, false si KO</returns>
-            public bool EffectuerBataille(ref bool bFinDeBataille)
+            public bool EffectuerBataille(string fichierCourant, ref bool bFinDeBataille)
             {
                 string message;
                 int[] des;
@@ -2958,7 +2958,7 @@ namespace vaoc
             /// Generation du film résulmant la bataille
             /// </summary>
             /// <returns></returns>
-            public bool GenererFilm()
+            public bool GenererFilm(string nomFichierPartie)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
                 List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
@@ -2968,6 +2968,8 @@ namespace vaoc
                 TIPEORIENTATIONBATAILLE orientation = (this.C_ORIENTATION =='V') ? TIPEORIENTATIONBATAILLE.VERTICAL : TIPEORIENTATIONBATAILLE.HORIZONTAL;
                 TIPEFINBATAILLE fin = TIPEFINBATAILLE.RETRAITE012;
                 int tourpoursuite = 0;
+                int iNation012=-1, iNation345 = -1;
+
                 switch(this.S_FIN)
                 {
                     case "RETRAITE012":
@@ -3016,6 +3018,25 @@ namespace vaoc
                             zb.iPertes[i] = (int)ligneBatailleVideo["I_PERTES_" + Convert.ToString(i)];
                         }
                         zonesBataille.Add(zb);
+
+                        //if (!ligneBatailleVideo.IsID_LEADER_012Null() || !ligneBatailleVideo.IsID_LEADER_345Null())
+                        //{
+                        //    RoleBataille roleBataille = new RoleBataille() { iTour = tour };
+                        //    if (!ligneBatailleVideo.IsID_LEADER_012Null())
+                        //    {
+                        //        TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_012);
+                        //        roleBataille.iNation012 = lignePion.idNation;
+                        //        roleBataille.nomLeader012 = lignePion.S_NOM;
+                        //        rolesBataille.Add(roleBataille);
+                        //    }
+                        //    if (!ligneBatailleVideo.IsID_LEADER_345Null())
+                        //    {
+                        //        TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.idà);
+                        //        roleBataille.iNation345 = lignePion.idNation;
+                        //        roleBataille.nomLeader345 = lignePion.S_NOM;
+                        //        rolesBataille.Add(roleBataille);
+                        //    }
+                        //}
                     }
 
                     TAB_BATAILLE_PIONS_VIDEORow[] listeBataillePionsVideo = 
@@ -3035,9 +3056,21 @@ namespace vaoc
                             nom = ligneBataillePionsVideo.S_NOM
                         });
 
+                        //recherche de la nation
+                        TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBataillePionsVideo.ID_PION);
+                        if (ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT <= 2)
+                        {
+                            iNation012 = lignePion.idNation;
+                        }
+                        else
+                        {
+                            iNation345 = lignePion.idNation;
+                        }
                     }
                 }
-                /* TEST
+
+                #region TEST
+                /* 
                 ZoneBataille zb;
                 zb = new ZoneBataille() { iTour = 50 };
                 zb.sCombat = new string[6];
@@ -3110,13 +3143,16 @@ namespace vaoc
                     2,//nbetapes
                     50 //debut
                     );                */
+                #endregion
+                int positionPoint = nomFichierPartie.LastIndexOf("\\");
+                string repertoire = nomFichierPartie.Substring(0, positionPoint);
 
                 FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
                 //tout est fait dans initialisation
-                string erreur = film.Initialisation(this.S_NOM,
-                    "C:\\Users\\Armand.BERGER\\Downloads",
+                string erreur = film.Initialisation("Bataille"+this.ID_BATAILLE,
+                    repertoire + "\\batailles",
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
-                    1600,1200,
+                    1600,1200, iNation012, iNation345,
                     unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
                     orientation, fin,
                     this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
@@ -3160,33 +3196,36 @@ namespace vaoc
             private TIPETERRAINBATAILLE FilmTerrain(int iD_TERRAIN)
             {
                 TAB_MODELE_TERRAINRow ligneTerrain = m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(iD_TERRAIN);
-                if (ligneTerrain.S_NOM.IndexOf("plaine", StringComparison.InvariantCultureIgnoreCase) >0)
+                if (null != ligneTerrain)
                 {
-                    return TIPETERRAINBATAILLE.PLAINE;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("colline", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.COLLINE;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("foret", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.FORET;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("forteresse", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.FORTERESSE;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("ville", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.VILLE;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("riviere", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.RIVIERE;
-                }
-                if (ligneTerrain.S_NOM.IndexOf("fleuve", StringComparison.InvariantCultureIgnoreCase) > 0)
-                {
-                    return TIPETERRAINBATAILLE.FLEUVE;
+                    if (ligneTerrain.S_NOM.IndexOf("plaine", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.PLAINE;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("colline", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.COLLINE;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("foret", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.FORET;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("forteresse", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.FORTERESSE;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("ville", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.VILLE;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("riviere", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.RIVIERE;
+                    }
+                    if (ligneTerrain.S_NOM.IndexOf("fleuve", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    {
+                        return TIPETERRAINBATAILLE.FLEUVE;
+                    }
                 }
                 return TIPETERRAINBATAILLE.AUCUN;
             }
@@ -3240,6 +3279,16 @@ namespace vaoc
                     }
                 }
                 return true;
+            }
+
+            /// <summary>
+            /// pour l'affichage dans la liste déroulante des vidéos de bataille
+            /// </summary>
+            /// <returns>chaine à afficher dans la liste déroulante</returns>
+            public override string ToString()
+            {
+                string iTourFin = IsI_TOUR_FINNull() ? "en cours" : I_TOUR_FIN.ToString();
+                return ID_BATAILLE + " - " + S_NOM + " Fin :" + iTourFin;
             }
         }
     }

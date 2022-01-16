@@ -102,6 +102,7 @@ namespace vaoc
             this.ordresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.phrasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bataillesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bataillesVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mEssagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nomsPionsUniquesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -151,7 +152,7 @@ namespace vaoc
             this.toolStripButtonMemoire = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDepots = new System.Windows.Forms.ToolStripButton();
             this.backgroundTraitement = new System.ComponentModel.BackgroundWorker();
-            this.bataillesVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.genererLesFilmsDeBatailleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
@@ -850,6 +851,13 @@ namespace vaoc
             this.bataillesToolStripMenuItem.Text = "&Batailles";
             this.bataillesToolStripMenuItem.Click += new System.EventHandler(this.bataillesToolStripMenuItem_Click);
             // 
+            // bataillesVideoToolStripMenuItem
+            // 
+            this.bataillesVideoToolStripMenuItem.Name = "bataillesVideoToolStripMenuItem";
+            this.bataillesVideoToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.bataillesVideoToolStripMenuItem.Text = "BataillesVideo";
+            this.bataillesVideoToolStripMenuItem.Click += new System.EventHandler(this.bataillesVideoToolStripMenuItem_Click);
+            // 
             // mEssagesToolStripMenuItem
             // 
             this.mEssagesToolStripMenuItem.Name = "mEssagesToolStripMenuItem";
@@ -903,6 +911,7 @@ namespace vaoc
             this.forcesInitialesToolStripMenuItem,
             this.donneesVidÈoToolStripMenuItem,
             this.genererLeFilmToolStripMenuItem,
+            this.genererLesFilmsDeBatailleToolStripMenuItem,
             this.testsToolStripMenuItem,
             this.outilsToolStripMenuItem,
             this.mise¿JourProprietairesToolStripMenuItem,
@@ -1288,12 +1297,12 @@ namespace vaoc
             this.backgroundTraitement.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundTraitement_ProgressChanged);
             this.backgroundTraitement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundTraitement_RunWorkerCompleted);
             // 
-            // bataillesVideoToolStripMenuItem
+            // genererLesFilmsDeBatailleToolStripMenuItem
             // 
-            this.bataillesVideoToolStripMenuItem.Name = "bataillesVideoToolStripMenuItem";
-            this.bataillesVideoToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.bataillesVideoToolStripMenuItem.Text = "BataillesVideo";
-            this.bataillesVideoToolStripMenuItem.Click += new System.EventHandler(this.bataillesVideoToolStripMenuItem_Click);
+            this.genererLesFilmsDeBatailleToolStripMenuItem.Name = "genererLesFilmsDeBatailleToolStripMenuItem";
+            this.genererLesFilmsDeBatailleToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.genererLesFilmsDeBatailleToolStripMenuItem.Text = "Generer les films de Bataille";
+            this.genererLesFilmsDeBatailleToolStripMenuItem.Click += new System.EventHandler(this.genererLesFilmsDeBatailleToolStripMenuItem_Click);
             // 
             // FormPrincipale
             // 
@@ -1454,6 +1463,7 @@ namespace vaoc
         private System.Windows.Forms.ToolStripMenuItem mise¿JourProprietairesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonDepots;
         private System.Windows.Forms.ToolStripMenuItem bataillesVideoToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem genererLesFilmsDeBatailleToolStripMenuItem;
         //private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

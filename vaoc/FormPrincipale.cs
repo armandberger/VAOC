@@ -183,23 +183,25 @@ namespace vaoc
 
         private void Correctifs()
         {
+            //ChargementInitial();
+            //Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(111).GenererFilm(curFileName);
+
             #region
             //les blessés ne sont pas marqués comme tel...
-            ChargementInitial();
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            {
-                if (lignePion.S_NOM.StartsWith("Bless"))
-                {
-                    lignePion.B_BLESSES = true;
-                }
-            }
-            foreach (Donnees.TAB_PION_ANCIENRow lignePion in Donnees.m_donnees.TAB_PION_ANCIEN)
-            {
-                if (lignePion.S_NOM.StartsWith("Bless"))
-                {
-                    lignePion.B_BLESSES = true;
-                }
-            }
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (lignePion.S_NOM.StartsWith("Bless"))
+            //    {
+            //        lignePion.B_BLESSES = true;
+            //    }
+            //}
+            //foreach (Donnees.TAB_PION_ANCIENRow lignePion in Donnees.m_donnees.TAB_PION_ANCIEN)
+            //{
+            //    if (lignePion.S_NOM.StartsWith("Bless"))
+            //    {
+            //        lignePion.B_BLESSES = true;
+            //    }
+            //}
             //foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
             //{
             //    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
@@ -5005,6 +5007,13 @@ namespace vaoc
                     if (ligneBataillePionVideo.IsI_MORALNull()) { ligneBataillePionVideo.I_MORAL = 0; }
                 }
             }
+        }
+
+        private void genererLesFilmsDeBatailleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormVideoBatailles fVideoBatailles = new FormVideoBatailles();
+            fVideoBatailles.m_nomfichier = this.curFileName;
+            fVideoBatailles.ShowDialog();
         }
     }
 

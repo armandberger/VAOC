@@ -394,7 +394,7 @@ namespace vaoc
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];
-                    if (!ligneBataille.EffectuerBataille(ref m_bFinDeBataille))
+                    if (!ligneBataille.EffectuerBataille(fichierCourant, ref m_bFinDeBataille))
                     {
                         messageErreur = "Erreur durant le traitement EffectuerBataille";
                         LogFile.Notifier(messageErreur);

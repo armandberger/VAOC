@@ -69,6 +69,8 @@ namespace vaoc
         private const int NB_UNITES_HAUTEUR = 3;
         private const int EPAISSEUR_BORDURE = 2;
         private const int NB_UNITES_PAR_LIGNE = 4;
+        private int m_iNation012;
+        private int m_iNation345;
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilmDeBataille()
@@ -77,6 +79,8 @@ namespace vaoc
 
         public string Initialisation(string nomFichier, string repertoireVideo, Font police, 
                                     int largeur, int hauteur,
+                                    int iNation012,
+                                    int iNation345,
                                     List<UniteBataille> unitesBataille, 
                                     List<RoleBataille> rolesBataille,
                                     List<ZoneBataille> zonesBataille,
@@ -103,6 +107,8 @@ namespace vaoc
                 m_nbEtapes = nbEtapes;
                 m_police = police;
                 m_nomFichier= nomFichier;
+                m_iNation012 = iNation012;
+                m_iNation345 = iNation345;
 
                 if (Directory.Exists(repertoireVideo))
                 {
@@ -223,9 +229,13 @@ namespace vaoc
                 DessineFondBataille(G);
 
                 //recherche des leaders à ce moment de la bataille
-                int i = 0;
-                while (m_rolesBataille[i].iTour != m_traitement) i++;
-                RoleBataille role = m_rolesBataille[i];
+                RoleBataille role = null;
+                if (m_rolesBataille.Count > 0)
+                {
+                    int i = 0;
+                    while (m_rolesBataille[i].iTour != m_traitement) i++;
+                    role = m_rolesBataille[i];
+                }
 
                 //affichage des flèches
                 if (iZoneResultats >= 0)
@@ -235,7 +245,7 @@ namespace vaoc
                         if (zoneBataille.iTour != m_traitement
                             || null == zoneBataille.sCombat[iZoneResultats]
                             || zoneBataille.sCombat[iZoneResultats] == string.Empty) { continue; }
-                        DessineFlecheHorizontale(G, role, iZoneResultats, zoneBataille, fin);
+                        DessineFlecheHorizontale(G, iZoneResultats, zoneBataille, fin);
                     }
                 }
 
@@ -262,7 +272,7 @@ namespace vaoc
                 foreach (UniteBataille unite in m_unitesBataille)
                 {
                     if (unite.iTour != m_traitement) { continue; }
-                    if (unite.iNation == role.iNation012)
+                    if (unite.iNation == m_iNation012)
                     {
                         if (unite.iZone<0)
                         {
@@ -722,7 +732,7 @@ namespace vaoc
             return asciiStr.Replace(" ", "_").Replace("'","").ToUpper();
         }
 
-        private void DessineFlecheHorizontale(Graphics G, RoleBataille role, int iZoneResultats, ZoneBataille zoneBataille, TIPEFINBATAILLE fin)
+        private void DessineFlecheHorizontale(Graphics G, int iZoneResultats, ZoneBataille zoneBataille, TIPEFINBATAILLE fin)
         {
             Brush brosse, couleurTexte;
             Point[] fleche;
@@ -735,8 +745,8 @@ namespace vaoc
             format.Alignment = StringAlignment.Center;
             if (iZoneResultats < 3)
             {
-                brosse = (0 == role.iNation012) ? Brushes.Blue : Brushes.OrangeRed;
-                couleurTexte = (0 == role.iNation012) ? Brushes.White : Brushes.Black;
+                brosse = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
+                couleurTexte = (0 == m_iNation012) ? Brushes.White : Brushes.Black;
                 fleche = new Point[8];
                 f = 0;
                 xtexte = (iZoneResultats * m_largeur / 3) + m_largeur / 6;
@@ -773,8 +783,8 @@ namespace vaoc
             }
             else
             {
-                brosse = (0 == role.iNation345) ? Brushes.Blue : Brushes.OrangeRed;
-                couleurTexte = (0 == role.iNation345) ? Brushes.White : Brushes.Black;
+                brosse = (0 == m_iNation345) ? Brushes.Blue : Brushes.OrangeRed;
+                couleurTexte = (0 == m_iNation345) ? Brushes.White : Brushes.Black;
                 fleche = new Point[8];
                 f = 0;
                 xtexte = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 6;
@@ -820,7 +830,7 @@ namespace vaoc
                 new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 2 * (int)tailleTexte.Height, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
         }
 
-        private void DessineFlecheVerticale(Graphics G, RoleBataille role, int iZoneResultats, ZoneBataille zoneBataille, TIPEFINBATAILLE fin)
+        private void DessineFlecheVerticale(Graphics G, int iZoneResultats, ZoneBataille zoneBataille, TIPEFINBATAILLE fin)
         {
             Brush brosse, couleurTexte;
             Point[] fleche;
@@ -833,8 +843,8 @@ namespace vaoc
             format.Alignment = StringAlignment.Center;
             if (iZoneResultats < 3)
             {
-                brosse = (0 == role.iNation012) ? Brushes.Blue : Brushes.OrangeRed;
-                couleurTexte = (0 == role.iNation012) ? Brushes.White : Brushes.Black;
+                brosse = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
+                couleurTexte = (0 == m_iNation012) ? Brushes.White : Brushes.Black;
                 fleche = new Point[8];
                 f = 0;
                 ytexte = iZoneResultats * m_hauteur / 3 + m_hauteur / 6;
@@ -871,8 +881,8 @@ namespace vaoc
             }
             else
             {
-                brosse = (0 == role.iNation345) ? Brushes.Blue : Brushes.OrangeRed;
-                couleurTexte = (0 == role.iNation345) ? Brushes.White : Brushes.Black;
+                brosse = (0 == m_iNation345) ? Brushes.Blue : Brushes.OrangeRed;
+                couleurTexte = (0 == m_iNation345) ? Brushes.White : Brushes.Black;
                 fleche = new Point[8];
                 f = 0;
                 ytexte = (iZoneResultats  - 3) * m_hauteur / 3 + m_hauteur / 6; 
@@ -948,7 +958,7 @@ namespace vaoc
                         if (zoneBataille.iTour != m_traitement
                             || null == zoneBataille.sCombat[iZoneResultats]
                             || zoneBataille.sCombat[iZoneResultats] == string.Empty) { continue; }
-                        DessineFlecheVerticale(G, role, iZoneResultats, zoneBataille, fin);
+                        DessineFlecheVerticale(G, iZoneResultats, zoneBataille, fin);
                     }
                 }
 
@@ -975,7 +985,7 @@ namespace vaoc
                 foreach (UniteBataille unite in m_unitesBataille)
                 {
                     if (unite.iTour != m_traitement) { continue; }
-                    if (unite.iNation == role.iNation012)
+                    if (unite.iNation == m_iNation012)
                     {
                         if (unite.iZone < 0)
                         {

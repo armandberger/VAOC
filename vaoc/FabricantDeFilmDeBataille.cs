@@ -71,6 +71,7 @@ namespace vaoc
         private const int NB_UNITES_PAR_LIGNE = 4;
         private int m_iNation012;
         private int m_iNation345;
+        private int m_maxLongueurChaine;
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilmDeBataille()
@@ -225,6 +226,8 @@ namespace vaoc
                 Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
+
+                m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur /3 / NB_UNITES_PAR_LIGNE);
 
                 DessineFondBataille(G);
 
@@ -669,6 +672,7 @@ namespace vaoc
             int ximage=-1, yimage=-1;
 
             //emplacement du texte
+            unite.nom = ChaineAffiche(m_maxLongueurChaine, unite.nom);
             SizeF tailleTexte = G.MeasureString(unite.nom, m_police);
             Rectangle rectText = new Rectangle(x - (int)tailleTexte.Width / 2,
                                     y - (image.Height * nb_unites_hauteur) / 2 + image.Height * nb_unites_hauteur, 
@@ -942,6 +946,7 @@ namespace vaoc
                 Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
+                m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 9 / 2);
 
                 DessineFondBataille(G);
 
@@ -1076,5 +1081,30 @@ namespace vaoc
                 return "Traitement Exception in: " + e.ToString();
             }
         }
+        private string ChaineAffiche(int lgmax, string texteSource)
+        {
+            string texte = texteSource;
+            int position = 0;
+            while (texte.Length > lgmax)
+            {
+                position = texteSource.IndexOf(' ', position + 1);
+                if (position < 0) { return string.Empty; }
+                texte = texteSource.Substring(position);
+            }
+            return texte;
+        }
+
+        private int RechercheLongueurMaximale(Graphics g, Font police, int taille)
+        {
+            string texte = "X";
+            SizeF tailleTexte = g.MeasureString(texte, police);
+            while (tailleTexte.Width < taille)
+            {
+                texte += "X";
+                tailleTexte = g.MeasureString(texte, police);
+            }
+            return texte.Length - 1;
+        }
+
     }
 }

@@ -124,9 +124,10 @@ namespace vaoc
         private Dictionary<int, Travelling> m_travelling;
         private int m_hauteurCorps;
         private int m_largeurCorps;
-        public const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
-        public const int CST_TAILLE_NOM_CORPS = 4;
-        public const int CST_RAYON_CORPS = 3;//rayon autour de la taille du corps qui inclue les unités
+        private const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
+        private const int CST_TAILLE_NOM_CORPS = 4;
+        private const int CST_RAYON_CORPS = 4;//rayon autour de la taille du corps qui inclue les unités
+        private const int CST_DESSIN_ALPHA = 100;
 
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
@@ -141,6 +142,18 @@ namespace vaoc
         private int m_effectifsMax = 0;
         private bool m_videoParRole = false;
         private bool m_affichageCorps = false;
+        private int m_effectifsRoleMoyen;
+        private Dictionary<int, SolidBrush> m_couleursCorps;
+        private readonly Color[,] couleursNations = new Color[2, 19]
+        {   { Color.Blue, Color.LightBlue, Color.DarkBlue, Color.AliceBlue, Color.Aquamarine, 
+                Color.BlueViolet, Color.Aqua, Color.CornflowerBlue, Color.Cyan, Color.DarkSlateBlue,
+                Color.DeepSkyBlue, Color.DodgerBlue, Color.Lavender, Color.LightSteelBlue, Color.Indigo,
+            Color.MediumBlue, Color.DarkSeaGreen, Color.CadetBlue, Color.LightSkyBlue},
+            { Color.Red, Color.DarkRed, Color.DarkOrange, Color.Firebrick, Color.DeepPink,
+                Color.IndianRed, Color.Orange, Color.OrangeRed, Color.Magenta, Color.MediumVioletRed,
+                Color.MistyRose, Color.PaleVioletRed, Color.Peru, Color.DeepPink, Color.Tomato,
+            Color.Yellow, Color.LightGoldenrodYellow, Color.YellowGreen, Color.LightYellow},
+        };
         // commande dans un .bat ffmpeg -framerate 1 -i imageVideo_%%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
 
         public FabricantDeFilm()
@@ -337,17 +350,38 @@ namespace vaoc
                 m_largeurCorps = -1;
                 if (m_affichageCorps)
                 {
+                    m_couleursCorps = new Dictionary<int, SolidBrush>();
+                    int c0 = 0;
+                    int c1 = 0;
                     //calcul des hauteurs et largeur pour les corps, déterminera ensuite l'espacement d'inclusion des unités dans un corps pour l'affichage
+                    m_effectifsRoleMoyen = 0;
                     foreach (UniteRole role in m_unitesRoles)
                     {
                         tailleTexte = G.MeasureString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)), m_police);
                         m_hauteurCorps = Math.Max(m_hauteurCorps, (int)tailleTexte.Height);
                         m_largeurCorps = Math.Max(m_largeurCorps, (int)tailleTexte.Width);
+                        m_effectifsRoleMoyen += role.iEffectif;
+
+                        // affectation des couleurs par corps
+                        if (!m_couleursCorps.ContainsKey(role.ID_ROLE))
+                        {
+                            
+                            if (0 == role.iNation)
+                            {
+                                //m_couleursCorps.Add(role.ID_ROLE, new SolidBrush(Color.FromArgb(20, 5*c0, 0, 255-10*c0)));
+                                m_couleursCorps.Add(role.ID_ROLE, new SolidBrush(Color.FromArgb(CST_DESSIN_ALPHA, couleursNations[role.iNation, c0++])));
+                            }
+                            else
+                            {
+                                m_couleursCorps.Add(role.ID_ROLE, new SolidBrush(Color.FromArgb(CST_DESSIN_ALPHA, couleursNations[role.iNation, c1++])));
+                            }
+                        }
                     }
                     m_hauteurCorps += 2*m_epaisseurUnite;
                     m_largeurCorps += 2*m_epaisseurUnite;
-
+                    m_effectifsRoleMoyen /= m_unitesRoles.Count;
                     CalculPositionCorps();
+
                 }
 
                 m_traitement = CST_DEBUT_FILM;
@@ -685,10 +719,15 @@ namespace vaoc
                     }
                     foreach (UniteRole role in m_unitesRoles)
                     {
+                        //if (m_traitement >= 285 && role.ID_ROLE == 0 && m_traitement == role.iTour)
+                        //{
+                        //    int debug = 0;
+                        //}
                         if (role.iTour != m_traitement || role.i_X_CASE_CORPS < 0 || role.i_Y_CASE_CORPS < 0)
                         {
                             continue;
                         }
+                        //if (role.ID_ROLE==0)
                         DessineCorps(G, role, m_xTravelling, m_yTravelling);
                     }
                 }
@@ -1004,20 +1043,27 @@ namespace vaoc
                 }
             }
             Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
+            decimal rapportTaille = (decimal)role.iEffectif/m_effectifsRoleMoyen;
+            int largeur = (int)(m_largeurCorps * rapportTaille);
+            int hauteur = (int)(m_hauteurCorps * rapportTaille);
             Rectangle rectCorps = new Rectangle(
-                (int)((role.i_X_CASE_CORPS - xtravel) * m_rapport - m_largeurCorps / 2),
-                (int)((role.i_Y_CASE_CORPS - ytravel) * m_rapport - m_hauteurCorps / 2),
-                (int)m_largeurCorps + 1,
-                (int)m_hauteurCorps + 1);
+                (int)Math.Max(0,((role.i_X_CASE_CORPS - xtravel) * m_rapport - largeur / 2)),
+                (int)Math.Max(0, ((role.i_Y_CASE_CORPS - ytravel) * m_rapport - hauteur / 2)),
+                (int)largeur + 1,
+                (int)hauteur + 1);
 
-            G.FillRectangle(Brushes.White, rectCorps);
+            SolidBrush semiTransBrush = m_couleursCorps[role.ID_ROLE];
+            G.FillRectangle(semiTransBrush, rectCorps);
             G.DrawRectangle(Pens.Black, rectCorps);
             StringFormat format = new StringFormat();
             format.Alignment = StringAlignment.Center;
             format.LineAlignment = StringAlignment.Center;
-            G.DrawString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)),  
-                m_police, brosse,
-                rectCorps, format);
+            string nomRoleAffiche = role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length));
+            SizeF tailleTexte = G.MeasureString(nomRoleAffiche, m_police);
+            G.DrawString(nomRoleAffiche, m_police, brosse,
+                (int)((role.i_X_CASE_CORPS - xtravel) * m_rapport) - tailleTexte.Width/2, 
+                (int)((role.i_Y_CASE_CORPS - ytravel) * m_rapport) - tailleTexte.Height/2);
+            //G.DrawString(role.nom.Substring(0, Math.Min(CST_TAILLE_NOM_CORPS, role.nom.Length)),  m_police, brosse, rectCorps, format);
         }
 
         private void DessineUnite(Graphics G, UniteRemarquable unite, int xTravelling, int yTravelling)
@@ -1191,10 +1237,11 @@ namespace vaoc
         {
             Pen styloUnite = new Pen((unite.iNation == 0) ? Color.Blue : Color.Red, m_epaisseurUnite);
             Brush brosseUnite = new SolidBrush((unite.iNation == 0) ? Color.Blue : Color.Red);
+            SolidBrush brosseRectangleUnite = m_couleursCorps[unite.ID_ROLE];
             int xtravel = (xTravelling < 0) ? 0 : xTravelling;
             int ytravel = (yTravelling < 0) ? 0 : yTravelling;
 
-            G.FillRectangle(Brushes.White,
+            G.FillRectangle(brosseRectangleUnite,
                 m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
                 (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
                 m_tailleUnite,
@@ -1349,6 +1396,9 @@ namespace vaoc
                         //affectation finale sur le chef de corps
                         roleUnite.i_X_CASE_CORPS = x_division;
                         roleUnite.i_Y_CASE_CORPS = y_division;
+                        //la taille du corps affichée n'est égale qu'à la somme des unités dans le cadre, sinon, on voit les corps de chef d'armée surdimensionné par
+                        //toutes les garnison
+                        roleUnite.iEffectif = poidsMax;
                     }
                     else
                     {

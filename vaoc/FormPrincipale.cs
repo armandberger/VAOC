@@ -183,8 +183,12 @@ namespace vaoc
 
         private void Correctifs()
         {
-            //ChargementInitial();
-            //Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(111).GenererFilm(curFileName);
+            ChargementInitial();
+            for (int y=3309; y<=3319; y++)
+            {
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(2820, y);
+                ligneCase.ID_MODELE_TERRAIN = 68;
+            }
 
             #region
             //les blessés ne sont pas marqués comme tel...

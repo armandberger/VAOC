@@ -884,10 +884,11 @@ namespace vaoc
                 }
                 else
                 {
-                    iInfanterie = I_INFANTERIE;
+                    iInfanterie = infanterie; // I_INFANTERIE;
                 }
 
-                CalculerRepartitionEffectif(iInfanterie, I_CAVALERIE, I_ARTILLERIE, effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
+                //CalculerRepartitionEffectif(iInfanterie, I_CAVALERIE, I_ARTILLERIE, effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
+                CalculerRepartitionEffectif(iInfanterie, cavalerie, artillerie, effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
             }
 
             public void CalculerRepartitionEffectif(int iINFANTERIESource, int iCAVALERIESource, int iARTILLERIESource, int effectif, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)

@@ -1137,13 +1137,24 @@ namespace vaoc
             {
                 return string.Empty;
             }
+            int id_pion_proprietaire_final;
+            if (null == ligneMessage || 
+                (!ligneMessage.IsI_TOUR_BLESSURENull() && (1==bDetruit || ligneMessage.I_TOUR_BLESSURE + lignePion.I_DUREE_HORS_COMBAT >= Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)))
+            {
+                //si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas mais les chefs remplacés doivent être marqués
+                id_pion_proprietaire_final = -1;
+            }
+            else
+            {
+                id_pion_proprietaire_final = id_pion_proprietaire;
+            }
 
             requete = string.Format("({0}, {1}, {2}, {3}, '{4}', {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, '{19}', {20}, " +
                                     "{21}, {22}, '{23}', {24}, {25}, {26}, {27}, {28}, {29}, {30}, {31}, {32}, {33}, {34}, {35}, {36}, {37}, {38}, {39}, {40}, "+
                                     "{41}, {42}, {43}, {44}, {45}, {46}, {47}, '{48}', {49}, {50}, {51}, {52}, {53}, '{54}', {55}, '{56}')",
                                     lignePion.ID_PION,//0
                                     idPartie,
-                                    (null==ligneMessage || (!ligneMessage.IsI_TOUR_BLESSURENull() && ligneMessage.I_TOUR_BLESSURE + lignePion.I_DUREE_HORS_COMBAT>=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR)) ? -1 : id_pion_proprietaire,//si on a pas reçu de message ou que l'unité est blessée, on ne doit pas voir l'unité, cas de convois de blessés dans un combat où l'on était pas mais les chefs remplacés doivent être marqués
+                                    id_pion_proprietaire_final,
                                     lignePion.ID_MODELE_PION,
                                     Constantes.ChaineSQL(lignePion.S_NOM),
                                     iInfanterie,//5

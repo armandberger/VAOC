@@ -2018,11 +2018,10 @@ namespace vaoc
                 case Constantes.ORDRES.CONSTRUIRE_PONTON:
                     CaseVersZoneGeographique(ligneOrdre.ID_CASE_DESTINATION, out zoneGeographique);
                     retour = avecProprietaire ?
-                                string.Format("{0} a pour ordre de construire un ponton en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique)
+                                string.Format("{0} a pour ordre de construire un ponton.",
+                                lignePionDestinataire.S_NOM)
                              :
-                                string.Format("construire un ponton en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique);
+                                "construire un ponton.";
                     break;
 
                 case Constantes.ORDRES.ENDOMMAGER_PONT:
@@ -2039,11 +2038,10 @@ namespace vaoc
                     // c'est la case la plus proche
                     CaseVersZoneGeographique(ligneOrdre.ID_CASE_DEPART, out zoneGeographique);
                     retour = avecProprietaire ?
-                                string.Format("{0} a pour ordre de réparer un pont en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique)
+                                string.Format("{0} a pour ordre de réparer un pont.",
+                                lignePionDestinataire.S_NOM)
                             :
-                                string.Format("réparer un pont en {1}.",
-                                lignePionDestinataire.S_NOM, zoneGeographique);
+                                "réparer un pont.";
                     break;
 
                 case Constantes.ORDRES.ARRET:

@@ -5054,11 +5054,11 @@ namespace vaoc
 
                 //effectifs maximum sur la route
                 decimal encombrementArrivee = lignePion.CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
-                int iInfanterieLocal = (lignePion.estDepot || lignePion.estConvoiDeRavitaillement || lignePion.estPontonnier) ? lignePion.effectifTotalEnMouvement : lignePion.I_INFANTERIE;
+                int iInfanterieLocal = (lignePion.estDepot || lignePion.estConvoiDeRavitaillement || lignePion.estPontonnier) ? lignePion.effectifTotalEnMouvement : lignePion.infanterie;
                 if (!lignePion.CalculerEffectif(
                         iInfanterieLocal - iInfanterieDestination,
-                        lignePion.I_CAVALERIE - iCavalerieDestination,
-                        lignePion.I_ARTILLERIE - iArtillerieDestination,
+                        lignePion.cavalerie - iCavalerieDestination,
+                        lignePion.artillerie - iArtillerieDestination,
                         encombrementTotal - encombrementArrivee,
                         //chemin.Count, 
                         true,
@@ -5070,8 +5070,8 @@ namespace vaoc
                 }
                 message = string.Format("ExecuterMouvementAvecEffectifForcesADestination effectif maximum sur route iINFANTERIESource={0}, iCAVALERIESource={1}, iARTILLERIESource={2}, lg chemin={3}, iINFANTERIERoute={4}, iCAVALERIERoute={5}, iARTILLERIERoute={6}",
                     iInfanterieLocal - iInfanterieDestination,
-                    lignePion.I_CAVALERIE - iCavalerieDestination,
-                    lignePion.I_ARTILLERIE - iArtillerieDestination,
+                    lignePion.cavalerie - iCavalerieDestination,
+                    lignePion.artillerie - iArtillerieDestination,
                     chemin.Count, iInfanterieRoute, iCavalerieRoute, iArtillerieRoute);
                 LogFile.Notifier(message);
                 if (0 == ligneOrdre.I_EFFECTIF_DEPART)
@@ -5144,15 +5144,15 @@ namespace vaoc
                 {
                     message = string.Format("ExecuterMouvementAvecEffectifForcesADestination :effectif depart={0} i={1}, c={2}, a={3}",
                         ligneOrdre.I_EFFECTIF_DEPART,
-                        lignePion.I_INFANTERIE - iInfanterieDestination - iInfanterieRoute,
-                        lignePion.I_CAVALERIE - iCavalerieDestination - iCavalerieRoute,
-                        lignePion.I_ARTILLERIE - iArtillerieDestination - iArtillerieRoute);
+                        lignePion.infanterie - iInfanterieDestination - iInfanterieRoute,
+                        lignePion.cavalerie - iCavalerieDestination - iCavalerieRoute,
+                        lignePion.artillerie - iArtillerieDestination - iArtillerieRoute);
                     LogFile.Notifier(message);
                     //out iInfanterie, out iCavalerie, out iArtillerie
                     lignePion.PlacementPion(ligneOrdre.ID_CASE_DEPART, ligneNation, true,
-                        lignePion.I_INFANTERIE - iInfanterieDestination - iInfanterieRoute,
-                        lignePion.I_CAVALERIE - iCavalerieDestination - iCavalerieRoute,
-                        lignePion.I_ARTILLERIE - iArtillerieDestination - iArtillerieRoute);
+                        lignePion.infanterie - iInfanterieDestination - iInfanterieRoute,
+                        lignePion.cavalerie - iCavalerieDestination - iCavalerieRoute,
+                        lignePion.artillerie - iArtillerieDestination - iArtillerieRoute);
                 }
             }
             else

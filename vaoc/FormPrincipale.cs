@@ -2561,8 +2561,11 @@ namespace vaoc
                 //mise à jour des modeles de terrain
                 Cursor oldcurseur = this.Cursor;
                 this.Cursor = Cursors.WaitCursor;
-                Donnees.m_donnees.TAB_CASE.Clear();
-                Donnees.m_donnees.TAB_CASE.Merge(fCarte.tableCase, false);
+                if (fCarte.traitementEffectue.HasFlag(FormCarte.TRAITEMENTCARTE.GENERATION) || fCarte.traitementEffectue.HasFlag(FormCarte.TRAITEMENTCARTE.REMPLACEMENT))
+                {
+                    Donnees.m_donnees.TAB_CASE.Clear();
+                    Donnees.m_donnees.TAB_CASE.Merge(fCarte.tableCase, false);
+                }
                 //sauvegarde des cases crées
                 if (!Donnees.m_donnees.SauvegarderCases())
                 {

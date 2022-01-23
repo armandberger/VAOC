@@ -19,17 +19,28 @@ namespace vaoc
     public partial class FormCarte : Form
     {
         #region données
-        private int                                     m_traitement;//traitement principal
-        private int                                     m_sous_traitement;//sous tâche d'un traitement
-        private Cursor                                  m_oldcurseur;
-        private Bitmap                                  m_imageCarte;
-        private Donnees.TAB_CASEDataTable               m_tableCase;
-        private Donnees.TAB_CASERow[]                   m_tableCaseTraitement;
-        private DateTime                                m_dateDebut;
+        private int m_traitement;//traitement principal
+        private int m_sous_traitement;//sous tâche d'un traitement
+        private Cursor m_oldcurseur;
+        private Bitmap m_imageCarte;
+        private Donnees.TAB_CASEDataTable m_tableCase;
+        private Donnees.TAB_CASERow[] m_tableCaseTraitement;
+        private DateTime m_dateDebut;
         private List<Task> m_tasks = new List<Task>();
+        [Flags] public enum TRAITEMENTCARTE { GENERATION = 1, REMPLACEMENT = 2, MISEAJOUR = 4 }
+        private TRAITEMENTCARTE m_traitementEffectue;
+
         #endregion
 
         #region propriétés
+
+        public TRAITEMENTCARTE traitementEffectue
+        {
+            get
+            {
+                return m_traitementEffectue;
+            }
+        }
 
         public Donnees.TAB_CASEDataTable tableCase
         {
@@ -68,6 +79,7 @@ namespace vaoc
         public FormCarte()
         {
             InitializeComponent();
+            m_traitementEffectue = 0;
         }
 
 
@@ -120,7 +132,7 @@ namespace vaoc
                             return;
                     }
                 }
-
+                m_traitementEffectue |= TRAITEMENTCARTE.GENERATION;
                 m_oldcurseur = Cursor;
                 Cursor = Cursors.WaitCursor;
                 timerTraitement.Enabled = true;
@@ -633,6 +645,7 @@ namespace vaoc
             {
                 Cursor oldcurseur = this.Cursor;
                 Cursor = Cursors.WaitCursor;
+                m_traitementEffectue |= TRAITEMENTCARTE.REMPLACEMENT;
                 foreach (Donnees.TAB_CASERow ligneCase in m_tableCase)
                 {
                     ligneCase.SetID_MODELE_TERRAIN_SI_OCCUPENull();
@@ -685,28 +698,37 @@ namespace vaoc
             }
 
             //Mise a jour de la case
+            /*
+             * On ne peut pas le faire sur table temporaire après debut de parie
             Donnees.TAB_CASERow ligneCase=m_tableCase.FindParXY(x,y);
             Monitor.Enter(m_tableCase);
             ligneCase.ID_MODELE_TERRAIN = resModeleTerrain[0].ID_MODELE_TERRAIN;
             Monitor.Exit(m_tableCase);
-            /*
-            //Je ne peux pas charger la table temportaire à cause du chargement dynanmique
+            */
+            //Je ne peux pas charger la table temportaire à cause du chargement dynanmique -> BEA 23/01/2022, je ne comprends pas ce que j'ai voulu dire !
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(x, y);
             Monitor.Enter(Donnees.m_donnees.TAB_CASE);
             ligneCase.ID_MODELE_TERRAIN = resModeleTerrain[0].ID_MODELE_TERRAIN;
             Monitor.Exit(Donnees.m_donnees.TAB_CASE);
-            */
+            
             return true;
         }
 
         private void buttonMiseAJourModelesTerrain_Click(object sender, EventArgs e)
         {
-            m_traitement = 3;
-            m_sous_traitement = 0;
+            if (DialogResult.Yes == MessageBox.Show(this,
+                "Attention, la mise à jour va se faire sur les données principales, si vous cliquez ensuite sur valider, elles seront sauvegardées directement sur disque. Voulez vous continuer ?",
+                "Mise à jour des modèles de terrain",
+                MessageBoxButtons.YesNo))
+            {
+                m_traitementEffectue |= TRAITEMENTCARTE.MISEAJOUR;
+                m_traitement = 3;
+                m_sous_traitement = 0;
 
-            m_oldcurseur = Cursor;
-            Cursor = Cursors.WaitCursor;
-            timerTraitement.Enabled = true;
+                m_oldcurseur = Cursor;
+                Cursor = Cursors.WaitCursor;
+                timerTraitement.Enabled = true;
+            }
         }
     }
 }

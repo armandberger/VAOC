@@ -184,11 +184,32 @@ namespace vaoc
         private void Correctifs()
         {
             ChargementInitial();
-            for (int y=3309; y<=3319; y++)
-            {
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(2820, y);
-                ligneCase.ID_MODELE_TERRAIN = 68;
-            }
+            //for (int y=3309; y<=3319; y++)
+            //{
+            //    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(2820, y);
+            //    ligneCase.ID_MODELE_TERRAIN = 68;
+            //}
+            #region messages non arrivés sur des pions détruits !!!
+            //Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
+            //foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
+            //{
+            //    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
+            //    if (lignePion.B_DETRUIT)
+            //    {
+            //        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
+            //        if (null == ligneOrdre)
+            //        {
+            //            ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
+            //            ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
+            //        }
+            //        else
+            //        {
+            //            ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
+            //            ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
+            //        }
+            //    }
+            //}
+            #endregion
 
             #region
             //les blessés ne sont pas marqués comme tel...
@@ -289,27 +310,6 @@ namespace vaoc
                 ligneNom.ID_CASE = Donnees.m_donnees.TAB_CASE.FindByXY(ligneNom.I_X, ligneNom.I_Y).ID_CASE;
             }
             */
-            #region messages non arrivés sur des pions détruits !!!
-            Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
-            foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
-            {
-                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
-                if (lignePion.B_DETRUIT)
-                {
-                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
-                    if (null == ligneOrdre)
-                    {
-                        ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
-                        ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
-                    }
-                    else
-                    {
-                        ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
-                        ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
-                    }
-                }
-            }
-            #endregion
             //disparation incompréhensible d'un nom de ville
             //Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE.FindByID_NOM(206);
             //Donnees.TAB_NOMS_CARTERow ligneNomPlus = Donnees.m_donnees.TAB_NOMS_CARTE.AddTAB_NOMS_CARTERow(

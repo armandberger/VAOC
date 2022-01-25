@@ -2258,7 +2258,7 @@ namespace vaoc
 
                     //On vérifie que le ponton n'est pas déjà construit (par une autre unité par exemple)
                     Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCasePont.ID_MODELE_TERRAIN);
-                    if (ligneModeleTerrain.B_PONTON == true)
+                    if (ligneModeleTerrain.B_PONT == true)
                     {
                         //on indique que le pont est réparé grace à nous (c'est de l'auto promo)
                         if (!ActionPontTermine(ClassMessager.MESSAGES.MESSAGE_PONTON_CONSTRUIT, ligneOrdre, tour, phase, ligneCasePont))

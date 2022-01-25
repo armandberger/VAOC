@@ -63,8 +63,9 @@ namespace vaoc
             {
                 dataGridViewRole.Rows.Clear();
 
+                List<ClassDataUtilisateur> listeUtilisateurs = iWeb.ListeUtilisateurs(false);
                 //mise à jour de la liste déroulante des utilisateurs disponibles
-                foreach (ClassDataUtilisateur utilisateur in iWeb.ListeUtilisateurs(false))
+                foreach (ClassDataUtilisateur utilisateur in listeUtilisateurs)
                 {
                     this.S_UTILISATEUR.Items.Add(string.Format("{0} {1}({2})", utilisateur.S_PRENOM, utilisateur.S_NOM, utilisateur.S_LOGIN));
                 }

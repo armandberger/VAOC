@@ -16,6 +16,8 @@ namespace vaoc
     {
         private string m_fileNameSQL;
         private string m_fileNameXML;
+        private List<ClassDataUtilisateur> m_listeUtilisateursTous;
+        private List<ClassDataUtilisateur> m_listeUtilisateursActifs;
         private enum tipeNoms {hopitaux, prisons, depotsA };
 
         #region proprietes
@@ -202,6 +204,9 @@ namespace vaoc
         /// <returns>La liste des utilisateurs</returns>
         public List<ClassDataUtilisateur> ListeUtilisateurs(bool bPresent)
         {
+            if (bPresent && null != m_listeUtilisateursActifs) { return m_listeUtilisateursActifs; }
+            if (!bPresent && null != m_listeUtilisateursTous) { return m_listeUtilisateursTous; }
+
             string xpath;
             List<ClassDataUtilisateur> listeUtilisateurs = new List<ClassDataUtilisateur>();
             XmlDocument xDoc = new XmlDocument();
@@ -217,6 +222,8 @@ namespace vaoc
                     listeUtilisateurs.Add(utilisateur);
                 }
             }
+            if (bPresent) { m_listeUtilisateursActifs = listeUtilisateurs; }
+            if (!bPresent) { m_listeUtilisateursTous = listeUtilisateurs; }
             return listeUtilisateurs;
         }
 
@@ -295,9 +302,20 @@ namespace vaoc
 
         public ClassDataUtilisateur GetUtilisateur(int id_utilisateur)
         {
+            if (null== m_listeUtilisateursTous)
+            {
+                m_listeUtilisateursTous = ListeUtilisateurs(false);
+            }
+            int i = 0;
+            while (i < m_listeUtilisateursTous.Count() && !m_listeUtilisateursTous[i].ID_UTILISATEUR.Equals(id_utilisateur)) { i++; }
+            if (i < m_listeUtilisateursTous.Count())
+            {
+                return m_listeUtilisateursTous[i];
+            }
+            return null;
+            /*
             string xpath;
             XmlDocument xDoc = new XmlDocument();
-            //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             xpath = string.Format("/vaoc/tab_utilisateurs[ID_UTILISATEUR={0}]", id_utilisateur);
 
@@ -307,11 +325,12 @@ namespace vaoc
                 return null;
             }
             ClassDataUtilisateur utilisateur = AffecterUtilisateur(noeud);
-            return utilisateur;
+            */
         }
 
         public ClassDataUtilisateur GetUtilisateur(string s_login)
         {
+            /*
             string xpath;
             XmlDocument xDoc = new XmlDocument();
             //xDoc.Load(m_fileNameXML);
@@ -325,6 +344,18 @@ namespace vaoc
             }
             ClassDataUtilisateur utilisateur = AffecterUtilisateur(noeud);
             return utilisateur;
+            */
+            if (null == m_listeUtilisateursTous)
+            {
+                m_listeUtilisateursTous = ListeUtilisateurs(false);
+            }
+            int i = 0;
+            while (i < m_listeUtilisateursTous.Count() && !m_listeUtilisateursTous[i].S_LOGIN.Equals(s_login)) { i++; }
+            if (i < m_listeUtilisateursTous.Count())
+            {
+                return m_listeUtilisateursTous[i];
+            }
+            return null;
         }
 
         public List<ClassDataJeu> ListeJeux()

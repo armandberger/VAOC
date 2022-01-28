@@ -1810,7 +1810,7 @@ namespace vaoc
                 //on regarde si la bataille ne se termine pas
                 if (0 == nbUnites012 || 0 == nbUnites345)
                 {
-                    FinDeBataille(out bFinDeBataille);
+                    return FinDeBataille(out bFinDeBataille);
                 }
                 else
                 {

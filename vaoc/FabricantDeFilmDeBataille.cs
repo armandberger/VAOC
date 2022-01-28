@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
@@ -220,17 +220,10 @@ namespace vaoc
         {
             Graphics G;
             int xunite, yunite;
+            //pour qu'il y ait action il faut qu'il y ait des unités des deux cotés
+            bool baction = false;
             try
             {
-                //Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
-                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
-                G = Graphics.FromImage(fichierImage);
-                G.PageUnit = GraphicsUnit.Pixel;
-
-                m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur /3 / NB_UNITES_PAR_LIGNE);
-
-                DessineFondBataille(G);
-
                 //recherche des leaders à ce moment de la bataille
                 RoleBataille role = null;
                 if (m_rolesBataille.Count > 0)
@@ -240,24 +233,12 @@ namespace vaoc
                     role = m_rolesBataille[i];
                 }
 
-                //affichage des flèches
-                if (iZoneResultats >= 0)
-                {
-                    foreach (ZoneBataille zoneBataille in m_zonesBataille)
-                    {
-                        if (zoneBataille.iTour != m_traitement
-                            || null == zoneBataille.sCombat[iZoneResultats]
-                            || zoneBataille.sCombat[iZoneResultats] == string.Empty) { continue; }
-                        DessineFlecheHorizontale(G, iZoneResultats, zoneBataille, fin);
-                    }
-                }
-
-                //unites
+                //recherche des unites
                 int[] reserve = new int[2];
                 int[] nbReserve = new int[2];
                 int[] zone = new int[6];
                 int[] nbZone = new int[6];
-                //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
+                //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux et s'assurer d'une action
                 foreach (UniteBataille unite in m_unitesBataille)
                 {
                     if (unite.iTour != m_traitement) { continue; }
@@ -271,89 +252,145 @@ namespace vaoc
                     }
                 }
 
-                //on peut les dessiner maintenant
-                foreach (UniteBataille unite in m_unitesBataille)
+                if (iZoneResultats < 0)
                 {
-                    if (unite.iTour != m_traitement) { continue; }
-                    if (unite.iNation == m_iNation012)
+                    baction = true;
+                }
+                else
+                {
+                    //y a t-il une action à representer
+                    switch (fin)
                     {
-                        if (unite.iZone<0)
-                        {
-                            //unite en réserve
-                            DessineUniteImage(G, 
-                                            unite, 
-                                            (int)((reserve[unite.iNation] + 0.5) * m_largeur/ nbReserve[unite.iNation]), 
-                                            m_hauteur/9/2,
-                                            Brushes.Black);
-                            reserve[unite.iNation]++;
-                        }
-                        else
-                        {
-                            if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                        case TIPEFINBATAILLE.RETRAITE345:
+                        case TIPEFINBATAILLE.VICTOIRE012:
+                            if (iZoneResultats < 3 && nbZone[iZoneResultats] > 0)
                             {
-                                //affichage sur une seule colonne
-                                xunite = unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / nbZone[unite.iZone]);
-                                yunite = 2 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                baction = true;
                             }
-                            else
+                            break;
+                        case TIPEFINBATAILLE.RETRAITE012:
+                        case TIPEFINBATAILLE.VICTOIRE345:
+                            if (iZoneResultats > 2 && nbZone[iZoneResultats] > 0)
                             {
-                                //affichage sur deux lignes
-                                xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
-                                    unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE) :
-                                    unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE);
-                                yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 3 * m_hauteur / 9 + m_hauteur / 9 / 2 : 2 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                baction = true;
                             }
-                            DessineUniteImage(G, 
-                                            unite, 
-                                            xunite, 
-                                            yunite,
-                                            m_brossesTexte[unite.iZone]);
-                            zone[unite.iZone]++;
-                        }
-                    }
-                    else
-                    {
-                        if (unite.iZone < 0)
-                        {
-                            //unite en réserve
-                            DessineUniteImage(G, 
-                                            unite, 
-                                            (int)((reserve[unite.iNation] + 0.5) * m_largeur / nbReserve[unite.iNation]), 
-                                            7 * m_hauteur / 9 + m_hauteur / 9 / 2,
-                                            Brushes.Black);
-                            reserve[unite.iNation]++;
-                        }
-                        else
-                        {
-                            if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                            break;
+                        default:
+                            if (nbZone[iZoneResultats] > 0 && nbZone[iZoneResultats % 3 + 3] > 0)
                             {
-                                //affichage sur une seule colonne
-                                xunite = (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / nbZone[unite.iZone]);
-                                yunite = 5 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                baction = true;
                             }
-                            else
-                            {
-                                //affichage sur deux lignes
-                                xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
-                                    (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE) :
-                                    (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE);
-                                yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 6 * m_hauteur / 9 + m_hauteur / 9 / 2 : 5 * m_hauteur / 9 + m_hauteur / 9 / 2;
-                            }
-                            DessineUniteImage(G, 
-                                            unite,
-                                            xunite, yunite,
-                                            m_brossesTexte[unite.iZone]);
-                            zone[unite.iZone]++;
-                        }
+                            break;
                     }
                 }
 
-                fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier 
-                                    + "_" + m_traitement.ToString("0000") 
-                                    + "_" + (iZoneResultats+1).ToString("0000") + ".png", ImageFormat.Png);
-                
-                G.Dispose();
-                fichierImage.Dispose();
+                //affichage
+                if (baction)
+                {
+                    Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                    G = Graphics.FromImage(fichierImage);
+                    G.PageUnit = GraphicsUnit.Pixel;
+
+                    m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 3 / NB_UNITES_PAR_LIGNE);
+
+                    DessineFondBataille(G);
+
+                    if (iZoneResultats >= 0)
+                    {
+                        foreach (ZoneBataille zoneBataille in m_zonesBataille)
+                        {
+                            if (zoneBataille.iTour != m_traitement
+                                || null == zoneBataille.sCombat[iZoneResultats]
+                                || zoneBataille.sCombat[iZoneResultats] == string.Empty
+                                ) { continue; }
+                            DessineFlecheHorizontale(G, iZoneResultats, zoneBataille, fin);
+                        }
+                    }
+
+                    //on peut dessiner les unités maintenant
+                    foreach (UniteBataille unite in m_unitesBataille)
+                    {
+                        if (unite.iTour != m_traitement) { continue; }
+                        if (unite.iNation == m_iNation012)
+                        {
+                            if (unite.iZone < 0)
+                            {
+                                //unite en réserve
+                                DessineUniteImage(G,
+                                                unite,
+                                                (int)((reserve[unite.iNation] + 0.5) * m_largeur / nbReserve[unite.iNation]),
+                                                m_hauteur / 9 / 2,
+                                                Brushes.Black);
+                                reserve[unite.iNation]++;
+                            }
+                            else
+                            {
+                                if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                                {
+                                    //affichage sur une seule colonne
+                                    xunite = unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / nbZone[unite.iZone]);
+                                    yunite = 2 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                }
+                                else
+                                {
+                                    //affichage sur deux lignes
+                                    xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
+                                        unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE) :
+                                        unite.iZone * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE);
+                                    yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 3 * m_hauteur / 9 + m_hauteur / 9 / 2 : 2 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                }
+                                DessineUniteImage(G,
+                                                unite,
+                                                xunite,
+                                                yunite,
+                                                m_brossesTexte[unite.iZone]);
+                                zone[unite.iZone]++;
+                            }
+                        }
+                        else
+                        {
+                            if (unite.iZone < 0)
+                            {
+                                //unite en réserve
+                                DessineUniteImage(G,
+                                                unite,
+                                                (int)((reserve[unite.iNation] + 0.5) * m_largeur / nbReserve[unite.iNation]),
+                                                7 * m_hauteur / 9 + m_hauteur / 9 / 2,
+                                                Brushes.Black);
+                                reserve[unite.iNation]++;
+                            }
+                            else
+                            {
+                                if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                                {
+                                    //affichage sur une seule colonne
+                                    xunite = (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / nbZone[unite.iZone]);
+                                    yunite = 5 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                }
+                                else
+                                {
+                                    //affichage sur deux lignes
+                                    xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
+                                        (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE) :
+                                        (unite.iZone - 3) * m_largeur / 3 + (int)((zone[unite.iZone] + 0.5) * m_largeur / 3 / NB_UNITES_PAR_LIGNE);
+                                    yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 6 * m_hauteur / 9 + m_hauteur / 9 / 2 : 5 * m_hauteur / 9 + m_hauteur / 9 / 2;
+                                }
+                                DessineUniteImage(G,
+                                                unite,
+                                                xunite, yunite,
+                                                m_brossesTexte[unite.iZone]);
+                                zone[unite.iZone]++;
+                            }
+                        }
+                    }
+
+                    fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
+                                        + "_" + m_traitement.ToString("0000")
+                                        + "_" + (iZoneResultats + 1).ToString("0000") + ".png", ImageFormat.Png);
+
+                    G.Dispose();
+                    fichierImage.Dispose();
+                }
                 iZoneResultats++;
                 if (iZoneResultats<6 && !bFin)
                 {
@@ -482,36 +519,6 @@ namespace vaoc
                 //Terrains
                 for (int t = 0; t < m_terrains.Count(); t++)
                 {
-                    /*
-                    Brush brosse;
-                    switch (m_terrains[t])
-                    {
-                        case TIPETERRAINBATAILLE.PLAINE:
-                            brosse = Brushes.White;
-                            m_brossesTexte[t] = Brushes.Black;
-                            break;
-                        case TIPETERRAINBATAILLE.FORET:
-                            brosse = Brushes.Green;
-                            m_brossesTexte[t] = Brushes.Black;
-                            break;
-                        case TIPETERRAINBATAILLE.VILLE:
-                            brosse = Brushes.Black;
-                            m_brossesTexte[t] = Brushes.White;
-                            break;
-                        case TIPETERRAINBATAILLE.FORTERESSE:
-                            brosse = Brushes.Red;
-                            m_brossesTexte[t] = Brushes.Black;
-                            break;
-                        case TIPETERRAINBATAILLE.COLLINE:
-                            brosse = Brushes.Brown;
-                            m_brossesTexte[t] = Brushes.White;
-                            break;
-                        default:
-                            brosse = Brushes.Yellow;
-                            m_brossesTexte[t] = Brushes.Red;
-                            break;
-                    }
-                    */
                     Bitmap tuile;
                     switch (m_terrains[t])
                     {
@@ -559,24 +566,6 @@ namespace vaoc
                 //Obstacles
                 for (int t = 0; t < m_obstacles.Count(); t++)
                 {
-                    /*
-                    Brush brosse;
-                    switch (m_obstacles[t])
-                    {
-                        case TIPETERRAINBATAILLE.RIVIERE:
-                            brosse = Brushes.LightBlue;
-                            break;
-                        case TIPETERRAINBATAILLE.FLEUVE:
-                            brosse = Brushes.DarkBlue;
-                            break;
-                        case TIPETERRAINBATAILLE.AUCUN:
-                            brosse = Brushes.White;
-                            break;
-                        default:
-                            brosse = Brushes.Yellow;
-                            break;
-                    }
-                    */
                     Brush brosse = Brushes.HotPink;
                     Bitmap tuile = new Bitmap(vaoc.Properties.Resources.zoomMoins);
                     switch (m_obstacles[t])
@@ -609,55 +598,6 @@ namespace vaoc
                     }
                 }
             }
-        }
-
-        private void DessineUniteImage0(Graphics G, UniteBataille unite, int x, int y, Brush brosseTexte)
-        {
-            Image image;
-            switch (unite.tipe)
-            {
-                case TIPEUNITEBATAILLE.INFANTERIE:
-                    //barre haut gauche, bas droite
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
-                    break;
-                case TIPEUNITEBATAILLE.CAVALERIE:
-                    //barre haut gauche, bas droite
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
-                    break;
-                case TIPEUNITEBATAILLE.ARTILLERIE:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
-                    break;
-                case TIPEUNITEBATAILLE.CONVOI:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.convoi_0) : new Bitmap(vaoc.Properties.Resources.convoi_1);
-                    break;
-                case TIPEUNITEBATAILLE.DEPOT:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.depot_0) : new Bitmap(vaoc.Properties.Resources.depot_1);
-                    break;
-                case TIPEUNITEBATAILLE.PONTONNIER:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.genie_0) : new Bitmap(vaoc.Properties.Resources.genie_1);
-                    break;
-                case TIPEUNITEBATAILLE.QG:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.qg_0) : new Bitmap(vaoc.Properties.Resources.qg_1);
-                    break;
-                case TIPEUNITEBATAILLE.PRISONNIER:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.prisonnier_0) : new Bitmap(vaoc.Properties.Resources.prisonnier_1);
-                    break;
-                case TIPEUNITEBATAILLE.BLESSE:
-                    image = (0 == unite.iNation) ? new Bitmap(vaoc.Properties.Resources.blesse_0) : new Bitmap(vaoc.Properties.Resources.blesse_1);
-                    break;
-                default:
-                    image = new Bitmap(vaoc.Properties.Resources.zoomMoins);
-                    break;
-            }
-            G.DrawImage(image, x - image.Width/2, y - image.Height/2);
-            SizeF tailleTexte = G.MeasureString(unite.nom, m_police);
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            Rectangle rectText = new Rectangle(x - (int)tailleTexte.Width / 2,
-                                    y + image.Height / 2,
-                                    (int)tailleTexte.Width + 1,
-                                    (int)tailleTexte.Height + 1);
-            G.DrawString(unite.nom, m_police, brosseTexte, rectText, format);
         }
 
         private void DessineUniteImage(Graphics G, UniteBataille unite, int x, int y, Brush brosseTexte)
@@ -941,33 +881,16 @@ namespace vaoc
         {
             Graphics G;
             int xunite, yunite;
+            //pour qu'il y ait action il faut qu'il y ait des unités des deux cotés
+            bool baction = false;
             try
             {
-                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
-                G = Graphics.FromImage(fichierImage);
-                G.PageUnit = GraphicsUnit.Pixel;
-                m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 9 / 2);
-
-                DessineFondBataille(G);
-
                 //recherche des leaders à ce moment de la bataille
                 int i = 0;
                 while (m_rolesBataille[i].iTour != m_traitement) i++;
                 RoleBataille role = m_rolesBataille[i];
 
-                //affichage des flèches
-                if (iZoneResultats >= 0)
-                {
-                    foreach (ZoneBataille zoneBataille in m_zonesBataille)
-                    {
-                        if (zoneBataille.iTour != m_traitement
-                            || null == zoneBataille.sCombat[iZoneResultats]
-                            || zoneBataille.sCombat[iZoneResultats] == string.Empty) { continue; }
-                        DessineFlecheVerticale(G, iZoneResultats, zoneBataille, fin);
-                    }
-                }
-
-                //unites
+                //recherche des unites
                 int[] reserve = new int[2];
                 int[] nbReserve = new int[2];
                 int[] zone = new int[6];
@@ -986,88 +909,143 @@ namespace vaoc
                     }
                 }
 
-                //on peut les dessiner maintenant
-                foreach (UniteBataille unite in m_unitesBataille)
+                if (iZoneResultats < 0)
                 {
-                    if (unite.iTour != m_traitement) { continue; }
-                    if (unite.iNation == m_iNation012)
+                    baction = true;
+                }
+                else
+                {
+                    //y a t-il une action à representer
+                    switch (fin)
                     {
-                        if (unite.iZone < 0)
-                        {
-                            //unite en réserve
-                            DessineUniteImage(G,
-                                            unite,
-                                            16 * m_largeur / 9 / 2,
-                                            (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
-                                            Brushes.Black);
-                            reserve[unite.iNation]++;
-                        }
-                        else
-                        {
-                            if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                        case TIPEFINBATAILLE.RETRAITE345:
+                        case TIPEFINBATAILLE.VICTOIRE012:
+                            if (iZoneResultats < 3 && nbZone[iZoneResultats] > 0)
                             {
-                                //affichage sur une seule colonne
-                                xunite = 12 * m_largeur / 9 / 2;
-                                yunite = unite.iZone * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / nbZone[unite.iZone]);
+                                baction = true;
                             }
-                            else
+                            break;
+                        case TIPEFINBATAILLE.RETRAITE012:
+                        case TIPEFINBATAILLE.VICTOIRE345:
+                            if (iZoneResultats > 2 && nbZone[iZoneResultats] > 0)
                             {
-                                //affichage sur deux colonnes
-                                xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 13 * m_largeur / 9 / 2 : 11 * m_largeur / 9 / 2;
-                                yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 
-                                    unite.iZone  * m_hauteur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE) :
-                                    unite.iZone * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE);
+                                baction = true;
                             }
-                            DessineUniteImage(G,
-                                            unite,
-                                            xunite,yunite,
-                                            m_brossesTexte[unite.iZone]);
-                            zone[unite.iZone]++;
-                        }
-                    }
-                    else
-                    {
-                        if (unite.iZone < 0)
-                        {
-                            //unite en réserve
-                            DessineUniteImage(G,
-                                            unite,
-                                            2 * m_largeur / 9 / 2,
-                                            (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
-                                            Brushes.Black);
-                            reserve[unite.iNation]++;
-                        }
-                        else
-                        {
-                            if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                            break;
+                        default:
+                            if (nbZone[iZoneResultats] > 0 && nbZone[iZoneResultats % 3 + 3] > 0)
                             {
-                                //affichage sur une seule colonne
-                                xunite = 6 * m_largeur / 9 / 2;
-                                yunite = (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / nbZone[unite.iZone]);
+                                baction = true;
                             }
-                            else
-                            {
-                                //affichage sur deux colonnes
-                                xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 7 * m_largeur / 9 / 2 : 5 * m_largeur / 9 / 2;
-                                yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 
-                                    (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE) :
-                                    (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE);
-                            }
-                            DessineUniteImage(G,
-                                            unite,
-                                            xunite, yunite,
-                                            m_brossesTexte[unite.iZone]);
-                            zone[unite.iZone]++;
-                        }
+                            break;
                     }
                 }
 
-                fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
-                                    + "_" + m_traitement.ToString("0000")
-                                    + "_" + (iZoneResultats + 1).ToString("0000") + ".png", ImageFormat.Png);
+                //affichage
+                if (baction)
+                {
+                    Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                    G = Graphics.FromImage(fichierImage);
+                    G.PageUnit = GraphicsUnit.Pixel;
+                    m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 9 / 2);
 
-                G.Dispose();
-                fichierImage.Dispose();
+                    DessineFondBataille(G);
+                    //affichage des flèches
+                    if (iZoneResultats >= 0)
+                    {
+                        foreach (ZoneBataille zoneBataille in m_zonesBataille)
+                        {
+                            if (zoneBataille.iTour != m_traitement
+                                || null == zoneBataille.sCombat[iZoneResultats]
+                                || zoneBataille.sCombat[iZoneResultats] == string.Empty
+                                ) { continue; }
+                            DessineFlecheVerticale(G, iZoneResultats, zoneBataille, fin);
+                        }
+                    }
+
+                    //on peut dessiner les unités maintenant
+                    foreach (UniteBataille unite in m_unitesBataille)
+                    {
+                        if (unite.iTour != m_traitement) { continue; }
+                        if (unite.iNation == m_iNation012)
+                        {
+                            if (unite.iZone < 0)
+                            {
+                                //unite en réserve
+                                DessineUniteImage(G,
+                                                unite,
+                                                16 * m_largeur / 9 / 2,
+                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
+                                                Brushes.Black);
+                                reserve[unite.iNation]++;
+                            }
+                            else
+                            {
+                                if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                                {
+                                    //affichage sur une seule colonne
+                                    xunite = 12 * m_largeur / 9 / 2;
+                                    yunite = unite.iZone * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / nbZone[unite.iZone]);
+                                }
+                                else
+                                {
+                                    //affichage sur deux colonnes
+                                    xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 13 * m_largeur / 9 / 2 : 11 * m_largeur / 9 / 2;
+                                    yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
+                                        unite.iZone * m_hauteur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE) :
+                                        unite.iZone * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE);
+                                }
+                                DessineUniteImage(G,
+                                                unite,
+                                                xunite, yunite,
+                                                m_brossesTexte[unite.iZone]);
+                                zone[unite.iZone]++;
+                            }
+                        }
+                        else
+                        {
+                            if (unite.iZone < 0)
+                            {
+                                //unite en réserve
+                                DessineUniteImage(G,
+                                                unite,
+                                                2 * m_largeur / 9 / 2,
+                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
+                                                Brushes.Black);
+                                reserve[unite.iNation]++;
+                            }
+                            else
+                            {
+                                if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
+                                {
+                                    //affichage sur une seule colonne
+                                    xunite = 6 * m_largeur / 9 / 2;
+                                    yunite = (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / nbZone[unite.iZone]);
+                                }
+                                else
+                                {
+                                    //affichage sur deux colonnes
+                                    xunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ? 7 * m_largeur / 9 / 2 : 5 * m_largeur / 9 / 2;
+                                    yunite = (zone[unite.iZone] >= NB_UNITES_PAR_LIGNE) ?
+                                        (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] - NB_UNITES_PAR_LIGNE + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE) :
+                                        (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / NB_UNITES_PAR_LIGNE);
+                                }
+                                DessineUniteImage(G,
+                                                unite,
+                                                xunite, yunite,
+                                                m_brossesTexte[unite.iZone]);
+                                zone[unite.iZone]++;
+                            }
+                        }
+                    }
+
+                    fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
+                                        + "_" + m_traitement.ToString("0000")
+                                        + "_" + (iZoneResultats + 1).ToString("0000") + ".png", ImageFormat.Png);
+
+                    G.Dispose();
+                    fichierImage.Dispose();
+                }
                 iZoneResultats++;
                 if (iZoneResultats < 6 && !bFin)
                 {

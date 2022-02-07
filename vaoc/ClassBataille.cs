@@ -2881,7 +2881,9 @@ namespace vaoc
                         return false;
                     }
                     lignePionConvoiDeBlesses.I_INFANTERIE = infanterieBlesse;
+                    lignePionConvoiDeBlesses.I_INFANTERIE_INITIALE = lignePionConvoiDeBlesses.I_INFANTERIE;
                     lignePionConvoiDeBlesses.I_CAVALERIE = cavalerieBlesse;
+                    lignePionConvoiDeBlesses.I_CAVALERIE_INITIALE = lignePionConvoiDeBlesses.I_CAVALERIE;
                     if (!EnvoyerMessageBataille(lignePionConvoiDeBlesses, ClassMessager.MESSAGES.MESSAGE_BLESSES_APRES_BATAILLE))
                     {
                         message = string.Format("PertesFinDeBataille : erreur lors de l'envoi d'un message MESSAGE_BLESSES_APRES_BATAILLE");

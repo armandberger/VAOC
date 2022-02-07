@@ -52,6 +52,7 @@ namespace vaoc
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, false);
 
             //TestCreation();
+            //SoinsAuxBlesses();//pour compenser les tours où on l'a jamais fait !
 
             //IEnumerable<Donnees.TAB_PIONRow> test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
             //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
@@ -3140,8 +3141,9 @@ namespace vaoc
                         {
                             //cela fait-il une semaine que l'unité a rejoint l'hopital
                             int nbToursHopital = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - lignePion.I_TOUR_BLESSURE;
+                            if (nbToursHopital>24*7)//à cause de tous les retards !
                             //if (true) //BEA pour test
-                            if (nbToursHopital > 0 && (0 == nbToursHopital % (24 * 7)))
+                            //if (nbToursHopital > 0 && (0 == nbToursHopital % (24 * 7)))
                             {
                                 int iInfanterieRenfort = 0, iCavalerieRenfort = 0;
                                 //Le nombre de blessés soignés par unité est égale à (50% + La valeur de I_GUERISON dans TAB_MODELE_PION + d3 avec (1: -10%, 2: 0, 3: +10)/4 
@@ -3155,6 +3157,7 @@ namespace vaoc
                                     //Toute l'unité est soignée d'un coup (pour éviter d'avoir des unités de très peu de soldats à gérer)
                                     iInfanterieRenfort = lignePion.I_INFANTERIE;
                                     iCavalerieRenfort = lignePion.I_CAVALERIE;
+                                    lignePion.SetID_LIEU_RATTACHEMENTNull();//pour éviter de conserver des lignes devenues totalement inutiles
                                 }
                                 Donnees.TAB_NATIONRow ligneNation = lignePion.nation;
                                 Donnees.TAB_PIONRow lignePionCommandantEnChef = Donnees.m_donnees.TAB_PION.FindByID_PION(lignePion.ID_PION_PROPRIETAIRE);
@@ -3170,8 +3173,11 @@ namespace vaoc
                                 }
                                 lignePionRenfort.I_INFANTERIE = iInfanterieRenfort;
                                 lignePionRenfort.I_CAVALERIE = iCavalerieRenfort;
+                                lignePionRenfort.I_INFANTERIE_INITIALE = iInfanterieRenfort;
+                                lignePionRenfort.I_CAVALERIE_INITIALE = iCavalerieRenfort;
                                 lignePionRenfort.I_FATIGUE = 0;
-                                lignePionRenfort.I_RAVITAILLEMENT = 50;//on est quand même pas super bien équipés quand on quitte l'hopital
+                                lignePionRenfort.I_RAVITAILLEMENT = Math.Max(50, lignePion.I_RAVITAILLEMENT);//on est quand même pas super bien équipés quand on quitte l'hopital
+                                lignePionRenfort.I_MATERIEL = Math.Max(50, lignePion.I_MATERIEL);//on est quand même pas super bien équipés quand on quitte l'hopital, mais y'a un minimum
 
                                 //on retire les soignés des blessés
                                 lignePion.I_INFANTERIE -= iInfanterieRenfort;

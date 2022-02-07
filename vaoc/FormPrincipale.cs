@@ -183,7 +183,39 @@ namespace vaoc
 
         private void Correctifs()
         {
-            ChargementInitial();
+            //ChargementInitial();
+            //unites dans des hopitaux sans tours de blessures
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (lignePion.B_BLESSES && lignePion.ID_LIEU_RATTACHEMENT>=0 && lignePion.I_TOUR_BLESSURE<0)
+            //    {
+            //        if (lignePion.I_TOUR_CONVOI_CREE<0)
+            //        {
+            //            lignePion.I_TOUR_BLESSURE = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+            //        }
+            //        else
+            //        {
+            //            lignePion.I_TOUR_BLESSURE = lignePion.I_TOUR_CONVOI_CREE + 24;
+            //        }
+            //    }
+            //}
+            //int t = 0;
+        
+            //blessés/pions avec le nombre de troupes initiales non renseignées
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (!lignePion.B_DETRUIT)
+            //    {
+            //        if (lignePion.I_INFANTERIE_INITIALE == 0 && lignePion.I_INFANTERIE > lignePion.I_INFANTERIE_INITIALE)
+            //        {
+            //            lignePion.I_INFANTERIE_INITIALE = lignePion.I_INFANTERIE;
+            //        }
+            //        if (lignePion.I_CAVALERIE_INITIALE==0 && lignePion.I_CAVALERIE>lignePion.I_CAVALERIE_INITIALE)
+            //        {
+            //            lignePion.I_CAVALERIE_INITIALE = lignePion.I_CAVALERIE;
+            //        }
+            //    }
+            //}
             //for (int y=3309; y<=3319; y++)
             //{
             //    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(2820, y);

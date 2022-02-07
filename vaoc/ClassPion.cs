@@ -1718,6 +1718,7 @@ namespace vaoc
                             else
                             {
                                 //le depot est carrement détruit
+                                ligneDepot.DetruirePion();//il faut détruire le dépôt avant sinon, l'information n'est pas dans le message...
                                 if (!ClassMessager.EnvoyerMessage(ligneDepot, ClassMessager.MESSAGES.MESSAGE_DEPOT_DETRUIT))
                                 {
                                     message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_DEPOT_DETRUIT dans RavitaillementDirect", ligneDepot.S_NOM, ligneDepot.ID_PION);
@@ -1725,7 +1726,6 @@ namespace vaoc
                                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
-                                ligneDepot.DetruirePion();
                             }
                         }
                     }

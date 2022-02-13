@@ -45,6 +45,8 @@ namespace vaoc
             this.ID_ANCIEN_PION_PROPRIETAIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.S_NOM = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ID_CASE = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_X = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.I_Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_VICTOIRE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_INFANTERIE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.I_INFANTERIE_INITIALE = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -138,6 +140,8 @@ namespace vaoc
             this.ID_ANCIEN_PION_PROPRIETAIRE,
             this.S_NOM,
             this.ID_CASE,
+            this.I_X,
+            this.I_Y,
             this.I_VICTOIRE,
             this.I_INFANTERIE,
             this.I_INFANTERIE_INITIALE,
@@ -291,6 +295,18 @@ namespace vaoc
             // 
             this.ID_CASE.HeaderText = "ID_CASE";
             this.ID_CASE.Name = "ID_CASE";
+            // 
+            // I_X
+            // 
+            this.I_X.HeaderText = "I_X";
+            this.I_X.Name = "I_X";
+            this.I_X.ReadOnly = true;
+            // 
+            // I_Y
+            // 
+            this.I_Y.HeaderText = "I_Y";
+            this.I_Y.Name = "I_Y";
+            this.I_Y.ReadOnly = true;
             // 
             // I_VICTOIRE
             // 
@@ -628,6 +644,8 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_ANCIEN_PION_PROPRIETAIRE;
         private System.Windows.Forms.DataGridViewTextBoxColumn S_NOM;
         private System.Windows.Forms.DataGridViewTextBoxColumn ID_CASE;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_X;
+        private System.Windows.Forms.DataGridViewTextBoxColumn I_Y;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_VICTOIRE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_INFANTERIE;
         private System.Windows.Forms.DataGridViewTextBoxColumn I_INFANTERIE_INITIALE;

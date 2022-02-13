@@ -183,6 +183,13 @@ namespace vaoc
 
         private void Correctifs()
         {
+            /* Reprise d'un ordre ancien en ordre courant */
+            //ClassTraitementHeure traitement = new ClassTraitementHeure();
+            //Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.FindByID_ORDRE(51951);
+            //ligneOrdreAncien.I_TOUR_FIN = Constantes.NULLENTIER;
+            //ligneOrdreAncien.I_PHASE_FIN = Constantes.NULLENTIER;
+            //traitement.DeplacerOrdreVersCourant(ligneOrdreAncien);
+
             //ChargementInitial();
             //unites dans des hopitaux sans tours de blessures
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
@@ -200,7 +207,7 @@ namespace vaoc
             //    }
             //}
             //int t = 0;
-        
+
             //blessés/pions avec le nombre de troupes initiales non renseignées
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
@@ -237,14 +244,13 @@ namespace vaoc
             //        else
             //        {
             //            ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
-            //            ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
+            //            ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;an
             //        }
             //    }
             //}
             #endregion
 
-            #region
-            //les blessés ne sont pas marqués comme tel...
+            #region les blessés ne sont pas marqués comme tel...
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
             //    if (lignePion.S_NOM.StartsWith("Bless"))
@@ -257,14 +263,6 @@ namespace vaoc
             //    if (lignePion.S_NOM.StartsWith("Bless"))
             //    {
             //        lignePion.B_BLESSES = true;
-            //    }
-            //}
-            //foreach (Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
-            //{
-            //    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
-            //    if (lignePion.S_NOM.StartsWith("Bless"))
-            //    {
-            //        ligneMessage..B_BLESSES = true;
             //    }
             //}
 

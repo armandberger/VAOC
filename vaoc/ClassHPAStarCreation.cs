@@ -561,7 +561,7 @@ namespace vaoc
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
-                        AStar etoile = m_etoileParallele[numeroTache];
+                        AStar etoile = (null == m_etoileParallele) ? new AStar() : m_etoileParallele[numeroTache];//m_etoileParallele peut être null si méthode appelée depuis le traitement de tour
                         etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                         //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
                         if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))

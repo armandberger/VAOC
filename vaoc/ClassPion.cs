@@ -2284,7 +2284,7 @@ namespace vaoc
                     //la réparation est en cours, il faut ajouter la fatigue
                     FatigueActionPont(ligneOrdre, tour);
 
-                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE == tour)
+                    if (ligneOrdre.I_TOUR_DEBUT + ligneOrdre.I_DUREE <= tour)
                     {
                         message = string.Format("{0},ID={1}, ExecuterConstruirePonton: début de la construction effective", S_NOM, ID_PION);
                         LogFile.Notifier(message);

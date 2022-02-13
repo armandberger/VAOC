@@ -151,10 +151,23 @@ namespace vaoc
 
                 foreach (Donnees.TAB_PIONRow lignePion in value)
                 {
+                    DataGridViewRow ligneGrid = dataGridViewPions.Rows[dataGridViewPions.Rows.Add()];
+
                     //recherche du modèle de pion couplé à l'id séléctionné
                     Donnees.TAB_MODELE_PIONRow[] resDataModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select("ID_MODELE_PION=" + lignePion.ID_MODELE_PION);
+                    //recherche des coordonnées de la case du pion
+                    if (lignePion.ID_CASE>=0)
+                    {
+                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+                        ligneGrid.Cells["I_X"].Value = ligneCase.I_X;
+                        ligneGrid.Cells["I_Y"].Value = ligneCase.I_Y;
+                    }
+                    else
+                    {
+                        ligneGrid.Cells["I_X"].Value = -1;
+                        ligneGrid.Cells["I_Y"].Value = -1;
+                    }
 
-                    DataGridViewRow ligneGrid = dataGridViewPions.Rows[dataGridViewPions.Rows.Add()];
                     ligneGrid.Cells["ID_PION"].Value = lignePion.ID_PION.ToString("00000");
                     ligneGrid.Cells["S_NOM"].Value = lignePion.S_NOM;
                     ligneGrid.Cells["MODELE_PION"].Value = resDataModelePion[0].ID_MODELE_PION;

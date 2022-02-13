@@ -33,6 +33,17 @@ namespace vaoc
         {
         }
 
+        private void testDebug()
+        {
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (lignePion.S_NOM.StartsWith("Bless") && !lignePion.B_BLESSES)
+                {
+                     Debug.WriteLine("erreur testdebug:"+lignePion.ID_PION+":"+System.Environment.StackTrace.ToString());
+                }
+            }
+
+        }
         public bool TraitementHeure(string fichierCourant, System.ComponentModel.BackgroundWorker travailleur, out string messageErreur)
         {
             string message;
@@ -44,7 +55,7 @@ namespace vaoc
             bool bRenfort = false;
             bool bDebutDeNuit;
 
-            //Debug.WriteLine("TraitementHeure");
+            testDebug();
             messageErreur = "";
 
             LogFile.CreationLogFile("blocage", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, -1, false);
@@ -52,23 +63,6 @@ namespace vaoc
             m_iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, string.Empty, false);
 
             //TestCreation();
-            //SoinsAuxBlesses();//pour compenser les tours où on l'a jamais fait !
-
-            //IEnumerable<Donnees.TAB_PIONRow> test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
-            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
-            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
-            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
-            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(0);
-            //test = Donnees.m_donnees.TAB_NATION.CommandantEnChef(1);
-
-            //MiseAJourDonneesHistorique majVideo2 = new MiseAJourDonneesHistorique();
-            //majVideo2.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
-            //majVideo2.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
-
-            //On note la dernière fois que l'on a envoyé des messages aux joueurs
-            //Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 1 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; -> on ne peut pas le faire là au cas où le tour serait pris en cours de route, déplacé dans la dialogue de notification
-            //Donnees.TAB_CASERow ligneCase1 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
-
             //on va rechercher les nouveaux ordres ou les nouveaux messages (quand la partie n'est pas commence)
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
             if (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
@@ -85,7 +79,7 @@ namespace vaoc
                 nbTourExecutes = 0;
             }
 
-            //Donnees.TAB_CASERow ligneCase3 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
+            testDebug();
             //pour la toute première phase on envoit un message d'initialisation des positions pour les pions des joueurs
             if (0 == Donnees.m_donnees.TAB_MESSAGE.Count)
             //if (0 == DataSetCoutDonnees.m_donnees.TAB_PARTIE[0].I_PHASE && 0 == DataSetCoutDonnees.m_donnees.TAB_PARTIE[0].I_TOUR)
@@ -183,11 +177,7 @@ namespace vaoc
             //pour chaque phase
             nbPhases = (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE) ? Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES : Donnees.m_donnees.TAB_PARTIE[0].I_PHASE + 1;
 
-            //le nombre de tours déjà executé est égal au tour courant moins le fichier de tour du fichier XML
-            //InterfaceVaocWeb iWeb;
-            //iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, false);
-            //List<ClassDataPartie> liste = iWeb.ListeParties(Donnees.m_donnees.TAB_PARTIE[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-            //nbTourExecutes = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - liste[0].I_TOUR;
+            testDebug();
             //Donnees.m_donnees.ChargerToutesLesCases();//uniquement pour test, BEA -> provoque des crashs si on se déplace sur la carte en même temps, à éviter
             bTourSuivant = true;
             bDebutDeNuit = Donnees.m_donnees.TAB_PARTIE.Nocturne();
@@ -202,6 +192,7 @@ namespace vaoc
                         return false;
                     }
                 }
+                testDebug();
 
                 //Donnees.TAB_PIONRow lignePionTest = Donnees.m_donnees.TAB_PION.FindByID_PION(22);
                 //Donnees.m_donnees.TAB_PARTIE[0].I_PHASE = 98;//BEA, permet de tester une fin de bataille
@@ -216,10 +207,12 @@ namespace vaoc
                         return false;
                     }
 
+                    testDebug();
                     //construction de la carte pour les images liés aux messages
                     if (!Cartographie.ChargerLesFichiers()) { return false; }
 
                     //Traitement de la phase
+                    testDebug();
                     if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ||
                         false == Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
                     {
@@ -233,6 +226,7 @@ namespace vaoc
                     //DateTime timeStart;
                     //TimeSpan perf;
                     //timeStart = DateTime.Now;
+                    testDebug();
                     if (!Cartographie.PlacerLesUnitesStatiques())
                     {
                         messageErreur = "Erreur durant le traitement PlacerLesUnitesStatiques";
@@ -252,7 +246,7 @@ namespace vaoc
 
 
                     //on execute les mouvements
-                    //Donnees.TAB_CASERow ligneCase5 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
+                    testDebug();
                     #region Mouvement de toutes les unités avec effectifs (les unités de combat en fait)
                     message = string.Format("**** Mouvements : toutes les unités AVEC effectifs ****");
                     if (!LogFile.Notifier(message, out messageErreur))
@@ -292,6 +286,7 @@ namespace vaoc
                     //Debug.WriteLine(string.Format("ExecuterMouvementAvecEffectifsEnParallele en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
                     #endregion
 
+                    testDebug();
                     #region Mouvement de toutes les unités sans effectif (QG, messagers)
                     message = string.Format("**** Mouvements : toutes les unités SANS effectif ****");
                     if (!LogFile.Notifier(message, out messageErreur))
@@ -342,7 +337,7 @@ namespace vaoc
                         i++;
                     }
                     */
-
+                    testDebug();
                     if (!ExecuterActionHorsMouvementEnParallele())
                     {
                         LogFile.Notifier("Erreur : ExecuterActionHorsMouvementEnParallele renvoie false");
@@ -375,7 +370,7 @@ namespace vaoc
                             return false;
                         }
                     }
-
+                    testDebug();
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
 
                     if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 15 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //)
@@ -391,6 +386,7 @@ namespace vaoc
                 }
 
                 /************ A la fin de l'heure ****************/
+                testDebug();
                 //on regarde toutes les unités qui participent à un combat
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
@@ -428,6 +424,7 @@ namespace vaoc
                     }
                     i++;
                 }
+                testDebug();
 
                 //On indique les positions des officiers non présents pour le joueur mais dont des unités sont présentes(cela aide si le joueur a perdu la connexion avec le reste de l'armée)
                 if (!IndiquerPositionsOfficiers())
@@ -472,7 +469,7 @@ namespace vaoc
                 }
 
                 //Cartographie.MiseAJourProprietaires(); -> BEA surtout ne pas faire car déjà fait en fin de phase, sinon nouveau->proprio (fin de phase) puis proprio ->vide (ce cout là)
-
+                testDebug();
                 message = string.Format("TraitementHeure : fin des traitements ************************************");
                 if (!LogFile.Notifier(message, out messageErreur))
                 {
@@ -514,6 +511,7 @@ namespace vaoc
                     LogFile.Notifier("Erreur durant la génération des fichiers SQL :" + messageErreur);
                     return false;
                 }
+                testDebug();
 
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas
@@ -640,7 +638,7 @@ namespace vaoc
                 Donnees.m_donnees.SauvegarderPartie(fichierCourant, bTourSuivant);//remet toutes cases à vides, donc ne marche plus ensuite pour la génération de cartes
                 Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 travailleur.ReportProgress(100);//c'est la fin de l'heure courante 
-
+                testDebug();
                 nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;//le nombre de phases peut juste différer au premier tour, pas aux suivants
             }
             return true;
@@ -1522,7 +1520,7 @@ namespace vaoc
             while(i<Donnees.m_donnees.TAB_PION.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
-                if (/*lignePion.B_DETRUIT || */lignePion.IsI_TOUR_BLESSURENull()) { i++;  continue; }//un chef blessé est marqué détruit
+                if (!lignePion.estQG || lignePion.IsI_TOUR_BLESSURENull()) { i++;  continue; }//un chef blessé est marqué détruit
                 if (lignePion.I_DUREE_HORS_COMBAT > 7)
                 {
                     //blessure grave sur plusieurs jours, si le leader est blessés depuis plus de CST_DUREE_INDISPONIBLE_SUR_BLESSURE on affecte un remplaçant
@@ -5517,7 +5515,7 @@ namespace vaoc
             }
         }
 
-        private void DeplacerOrdreVersCourant(Donnees.TAB_ORDRE_ANCIENRow ligneOrdre)
+        public void DeplacerOrdreVersCourant(Donnees.TAB_ORDRE_ANCIENRow ligneOrdre)
         {
             Donnees.TAB_ORDRERow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
             //ligneOrdre.ID_ORDRE,

@@ -156,18 +156,6 @@ namespace vaoc
                     //recherche du modèle de pion couplé à l'id séléctionné
                     Donnees.TAB_MODELE_PIONRow[] resDataModelePion = (Donnees.TAB_MODELE_PIONRow[])Donnees.m_donnees.TAB_MODELE_PION.Select("ID_MODELE_PION=" + lignePion.ID_MODELE_PION);
                     //recherche des coordonnées de la case du pion
-                    if (lignePion.ID_CASE>=0)
-                    {
-                        Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
-                        ligneGrid.Cells["I_X"].Value = ligneCase.I_X;
-                        ligneGrid.Cells["I_Y"].Value = ligneCase.I_Y;
-                    }
-                    else
-                    {
-                        ligneGrid.Cells["I_X"].Value = -1;
-                        ligneGrid.Cells["I_Y"].Value = -1;
-                    }
-
                     ligneGrid.Cells["ID_PION"].Value = lignePion.ID_PION.ToString("00000");
                     ligneGrid.Cells["S_NOM"].Value = lignePion.S_NOM;
                     ligneGrid.Cells["MODELE_PION"].Value = resDataModelePion[0].ID_MODELE_PION;
@@ -231,6 +219,8 @@ namespace vaoc
                     ligneGrid.Cells["I_TRI"].Value = lignePion.IsI_TRINull() ? -1 : lignePion.I_TRI;
                     ligneGrid.Cells["I_TOUR_ENNEMI_OBSERVABLE"].Value = lignePion.IsI_TOUR_ENNEMI_OBSERVABLENull() ? -1 : lignePion.I_TOUR_ENNEMI_OBSERVABLE;
                     ligneGrid.Cells["S_ENNEMI_OBSERVABLE"].Value = lignePion.IsS_ENNEMI_OBSERVABLENull() ? string.Empty : lignePion.S_ENNEMI_OBSERVABLE;
+                    ligneGrid.Cells["I_X"].Value = -1;
+                    ligneGrid.Cells["I_Y"].Value = -1;
                 }
                 dataGridViewPions.Sort(dataGridViewPions.Columns["ID_PION"], ListSortDirection.Ascending);
             }
@@ -248,11 +238,12 @@ namespace vaoc
         private void Redimensionner()
         {
             #region positionnement des boutons
-            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
-            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
-            buttonRenfort.Left = buttonValider.Width + 3 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
-            buttonExportCSV.Left = buttonValider.Width + 4 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 5;
-            buttonValider.Top = buttonAnnuler.Top = buttonRenfort.Top = buttonExportCSV.Top = Height - 3 * buttonValider.Height;
+            buttonValider.Left = (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 6;
+            buttonAnnuler.Left = buttonValider.Width + 2 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 6;
+            buttonRenfort.Left = buttonValider.Width + 3 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 6;
+            buttonExportCSV.Left = buttonValider.Width + 4 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 6;
+            buttonChargementXY.Left = buttonValider.Width + 5 * (Width - buttonValider.Width - buttonAnnuler.Width - buttonRenfort.Width - buttonExportCSV.Width) / 6;
+            buttonValider.Top = buttonAnnuler.Top = buttonRenfort.Top = buttonExportCSV.Top = buttonChargementXY.Top = Height - 3 * buttonValider.Height;
             #endregion
 
             #region positionnement du champ commentaire
@@ -327,6 +318,25 @@ namespace vaoc
                 MessageBox.Show("Erreur sur l'export du fichier CSV : " + nomfichier + " : "+ messageErreur, 
                     "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void buttonChargementXY_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow ligneGrid in dataGridViewPions.Rows)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(Convert.ToInt32(ligneGrid.Cells["ID_PION"].Value));
+                //recherche des coordonnées de la case du pion
+                if (null != lignePion && lignePion.ID_CASE >= 0)
+                {
+                    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
+                    if (null != ligneCase)
+                    {
+                        ligneGrid.Cells["I_X"].Value = ligneCase.I_X;
+                        ligneGrid.Cells["I_Y"].Value = ligneCase.I_Y;
+                    }
+                }
+            }
+            dataGridViewPions.Refresh();
         }
     }
 }

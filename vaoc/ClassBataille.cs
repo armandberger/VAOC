@@ -3153,7 +3153,9 @@ namespace vaoc
                 //tout est fait dans initialisation
                 string erreur = film.Initialisation("Bataille"+this.ID_BATAILLE,
                     repertoire + "\\batailles",
+                    this.S_NOM,
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
+                    new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),
                     1600,1200, iNation012, iNation345,
                     unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
                     orientation, fin,

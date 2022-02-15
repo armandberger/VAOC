@@ -1244,7 +1244,7 @@ namespace vaoc
             G.FillRectangle(brosseRectangleUnite,
                 m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
                 (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                m_tailleUnite,
+                m_tailleUnite,  
                 m_tailleUnite);
 
             switch (unite.tipe)

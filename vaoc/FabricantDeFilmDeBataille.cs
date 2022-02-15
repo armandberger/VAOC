@@ -78,7 +78,8 @@ namespace vaoc
         {
         }
 
-        public string Initialisation(string nomFichier, string repertoireVideo, Font police, 
+        public string Initialisation(string nomFichier, string repertoireVideo, 
+                                    string nomBataille, Font police, Font policeTitre,
                                     int largeur, int hauteur,
                                     int iNation012,
                                     int iNation345,
@@ -115,7 +116,7 @@ namespace vaoc
                 {
                     //on supprime toutes les images qui pourraient exister d'un précédent traitement
                     DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
-                    FileInfo[] listeFichiers = dir.GetFiles("*.png", SearchOption.TopDirectoryOnly);
+                    FileInfo[] listeFichiers = dir.GetFiles("bataille*.png", SearchOption.TopDirectoryOnly);
 
                     foreach (FileInfo fichier in listeFichiers)
                     {
@@ -138,16 +139,24 @@ namespace vaoc
                     Directory.CreateDirectory(repertoireVideo);
                 }
 
+                TraitementTitre(nomBataille, debut, policeTitre);
                 for (m_traitement = debut; m_traitement< debut+m_nbEtapes; m_traitement++)
                 {
-                    switch (m_orientation)
+                    //on  vérifie qu'il y a bien une unité à afficher (des fois il n'y a rien car c'est un inter tour de combat)
+                    //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux et s'assurer d'une action
+                    int u = 0;
+                    while (u < m_unitesBataille.Count && m_unitesBataille[u].iTour != m_traitement) u++;
+                    if (u < m_unitesBataille.Count)
                     {
-                        case TIPEORIENTATIONBATAILLE.VERTICAL:
-                            TraitementVertical(-1, TIPEFINBATAILLE.NUIT, false);
-                            break;
-                        default:
-                            TraitementHorizontal(-1, TIPEFINBATAILLE.NUIT, false);
-                            break;
+                        switch (m_orientation)
+                        {
+                            case TIPEORIENTATIONBATAILLE.VERTICAL:
+                                TraitementVertical(-1, TIPEFINBATAILLE.NUIT, false);
+                                break;
+                            default:
+                                TraitementHorizontal(-1, TIPEFINBATAILLE.NUIT, false);
+                                break;
+                        }
                     }
                 }
                 if (m_fin != TIPEFINBATAILLE.NUIT)
@@ -383,6 +392,7 @@ namespace vaoc
                             }
                         }
                     }
+                    AfficherHeure(G, m_traitement, m_hauteur / 9 + 1, m_hauteur / 2, m_hauteur/9);
 
                     fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
                                         + "_" + m_traitement.ToString("0000")
@@ -401,7 +411,7 @@ namespace vaoc
             }
             catch (Exception e)
             {
-                return "Traitement Exception in: " + e.ToString();
+                return "TraitementHorizontal Exception in: " + e.ToString();
             }
         }
 
@@ -1056,7 +1066,7 @@ namespace vaoc
             }
             catch (Exception e)
             {
-                return "Traitement Exception in: " + e.ToString();
+                return "TraitementVertical Exception in: " + e.ToString();
             }
         }
         private string ChaineAffiche(int lgmax, string texteSource)
@@ -1084,5 +1094,207 @@ namespace vaoc
             return texte.Length - 1;
         }
 
+        private void AfficherHeure(Graphics G, int tour, int x, int y, int taille)
+        {
+            double[] tableAngle = { 90,60,30,0,330,300,270,249,210,180,150,120 };
+            int heure = ClassMessager.DateHeure(tour, 0).Hour % 12;
+            //cadran
+            Pen styloCadran = new Pen(Color.Black, 8);
+            G.FillEllipse(Brushes.White, x - taille/2, y - taille / 2, taille, taille);
+            G.DrawEllipse(styloCadran, x - taille / 2, y - taille / 2, taille, taille);
+            //aiguille
+            Pen styloAiguille = new Pen(Color.Black, 3);
+            int xFinAiguille = (int)(x + taille / 2 * Math.Cos(tableAngle[heure] * Math.PI/360));
+            int yFinAiguille = (int)(y + taille / 2 * Math.Sin(tableAngle[heure] * Math.PI / 360));
+            G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
+        }
+
+        private string TraitementTitre(string nomBataille, int debut, Font policeTitre)
+        {
+            Graphics G;
+            int xunite, yunite;
+            try
+            {
+                //recherche des leaders durant la bataille
+                List<string>[] rolesBataille = new List<string>[2];
+                for (int i = 0; i < 2; i++) { rolesBataille[i] = new List<string>(); }
+                foreach (RoleBataille role in m_rolesBataille)
+                {
+                    if (!role.nomLeader012.Equals(string.Empty) && !rolesBataille[0].Contains(role.nomLeader012)) { rolesBataille[0].Add(role.nomLeader012); }
+                    if (!role.nomLeader345.Equals(string.Empty) && !rolesBataille[1].Contains(role.nomLeader345)) { rolesBataille[1].Add(role.nomLeader345); }
+                }
+
+                //recherche des effectifs max
+                int[] infanterieMax = new int[2];
+                int[] cavalerieMax = new int[2];
+                int[] artillerieMax = new int[2];
+                int[] nationCote = new int[2];
+
+                //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
+                for (int t = debut; t < debut + m_nbEtapes; t++)
+                {
+                    int[] infanterie = new int[2];
+                    int[] cavalerie = new int[2];
+                    int[] artillerie = new int[2];
+                    foreach (UniteBataille unite in m_unitesBataille)
+                    {
+                        if (unite.iTour != t) { continue; }
+                        if (unite.iZone < 3)
+                        {
+                            infanterie[0] += unite.effectifInfanterie;
+                            cavalerie[0] += unite.effectifCavalerie;
+                            artillerie[0] += unite.effectifArtillerie;
+                            nationCote[0] = unite.iNation;
+                        }
+                        else
+                        {
+                            infanterie[1] += unite.effectifInfanterie;
+                            cavalerie[1] += unite.effectifCavalerie;
+                            artillerie[1] += unite.effectifArtillerie;
+                            nationCote[1] = unite.iNation;
+                        }
+                    }
+                    for (int i = 0; i < 2; i++)
+                    {
+                        infanterieMax[i] = Math.Max(infanterieMax[i], infanterie[i]);
+                        cavalerieMax[i] = Math.Max(cavalerieMax[i], cavalerie[i]);
+                        artillerieMax[i] = Math.Max(artillerieMax[i], artillerie[i]);
+                    }
+                }
+
+                //affichage
+                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                G = Graphics.FromImage(fichierImage);
+                G.PageUnit = GraphicsUnit.Pixel;
+
+                //mettre la texture sur le fond
+                TextureFondBataille(G, "titrebataille.jpg", new Rectangle(0,0, m_largeur, m_hauteur));
+
+                //afficher le titre
+                AfficheMultiLigne(G, nomBataille, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5));
+
+                //afficher les protagonistes + effectifs
+                for (int nation=0; nation < 2; nation++)
+                {
+                    //affichage des leaders
+                    if (0==rolesBataille[nation].Count)
+                    {
+                        AfficheOfficierBataille(G, "inconnu",
+                            new Rectangle(nation * m_largeur / 2, m_hauteur / 5,
+                            m_largeur / 2, 2 * m_hauteur / 5));
+                    }
+                    else
+                    {
+                        for (int l = 0; l < rolesBataille[nation].Count; l++)
+                        {
+                            AfficheOfficierBataille(G, rolesBataille[nation][l],
+                                new Rectangle(nation * m_largeur / 2 + l * m_largeur / 2 / rolesBataille[nation].Count, m_hauteur / 5,
+                                m_largeur / 2 / rolesBataille[nation].Count, 2 * m_hauteur / 5));
+                        }
+                    }
+
+                    //affichage des effectifs
+                    //on centre par rapport à la taille max des effectifs
+                    SizeF tailleTexteBase = G.MeasureString("00 000 ", m_police);
+                    SizeF tailleTexteFinal = G.MeasureString(infanterieMax[nation].ToString("N0") +" ", m_police);
+
+                    Bitmap image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
+                    xunite = nation* m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) /2 + (int)(tailleTexteBase.Width- tailleTexteFinal.Width);
+                    yunite = m_hauteur * 3 / 5;
+                    G.DrawImage(image, xunite, yunite);
+                    G.DrawString(infanterieMax[nation].ToString("N0"), m_police, Brushes.Black, xunite - tailleTexteFinal.Width, yunite);
+                }
+
+                fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
+                                    + "_0000" 
+                                    + "_0000" + ".png", ImageFormat.Png);
+
+                G.Dispose();
+                fichierImage.Dispose();
+                return string.Empty;
+            }
+            catch (Exception e)
+            {
+                return "TraitementTitre Exception in: " + e.ToString();
+            }
+        }
+
+        private void AfficheOfficierBataille(Graphics G, string nom, Rectangle rect)
+        {
+            SizeF tailleTexte = G.MeasureString(nom, m_police);
+            Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + nom + ".png");
+            //calcul des positions, de la taille, centrage
+            int largeurImage = rect.Width;
+            int hauteurImage = rect.Height - (int)tailleTexte.Height;
+            //taille finale image en gardant les proportions
+            float rapportRect = (float)largeurImage / hauteurImage;
+            float rapportImage = (float)imageOfficier.Width / imageOfficier.Height;
+            if (rapportImage > rapportRect)
+            {
+                largeurImage = (int)(imageOfficier.Width / rapportRect);
+                hauteurImage = (int)(imageOfficier.Height * rapportRect);
+            }
+            else
+            {
+                largeurImage = (int)(imageOfficier.Width / rapportImage);
+                hauteurImage = (int)(imageOfficier.Height * rapportImage);
+            }
+            Rectangle rectImage = new Rectangle(rect.X + (rect.Width - largeurImage) / 2, 
+                                                rect.Y + (rect.Height - hauteurImage - (int)tailleTexte.Height)/2, 
+                                                largeurImage, hauteurImage);
+            G.DrawImage(imageOfficier, rectImage);
+            G.DrawString(nom, m_police, Brushes.Black, rect.X + (rect.Width - (int)tailleTexte.Width) / 2, rectImage.Bottom);
+        }
+
+        private void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect)
+        {
+            string[] textes = texteSource.Split(' ');
+            int largeurLigne = 0;
+            int[] largeursLigne = new int[10];//dix lignes max...
+            int nbLignes = 1;
+            int t = 0;
+            //calcul du nombre de lignes et de leur largeur
+            while (t<textes.Count())
+            {
+                int largeurMot = (int)G.MeasureString(textes[t] + " ", police).Width;
+                if (largeurLigne + largeurMot >= rect.Width)
+                {
+                    nbLignes++;
+                    largeurLigne = 0;
+                }
+                largeurLigne += largeurMot;
+                largeursLigne[nbLignes - 1] = largeurLigne;
+                t++;
+            }
+
+            //ecriture du titre
+            int pos = 0;
+            t = 0;
+            int ligne = 0;
+            while (t < textes.Count())
+            {                
+                if (pos + (int)G.MeasureString(textes[t] + " ", police).Width >= rect.Width)
+                {
+                    ligne++;
+                    pos = 0;
+                }
+                else
+                {
+                    int x = rect.X + pos + (rect.Width - largeursLigne[ligne]) / 2;
+                    int y = rect.Y + ligne * rect.Height / nbLignes;
+                    G.DrawString(textes[t], police, Brushes.Black, x, y);
+                    pos += (int)G.MeasureString(textes[t] + " ", police).Width;
+                    t++;
+                }
+            }
+        }
+
+        private void TextureFondBataille(Graphics G, string fichierTexture, Rectangle rect)
+        {
+            Image image = Bitmap.FromFile(AppContext.BaseDirectory + "images\\" + fichierTexture);
+            TextureBrush brosse = new TextureBrush(image);
+            G.FillRectangle(brosse, rect);
+        }
     }
 }
+

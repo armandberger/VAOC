@@ -174,7 +174,10 @@ namespace vaoc
                         iNation = ligneVideo.ID_NATION,
                         ID_ROLE = ligneVideo.ID_PION,
                         i_X_CASE_CORPS = ligneVideo.I_X,
-                        i_Y_CASE_CORPS = ligneVideo.I_Y
+                        i_Y_CASE_CORPS = ligneVideo.I_Y,
+                        i_X_CASE = ligneVideo.I_X,
+                        i_Y_CASE = ligneVideo.I_Y
+
                     };
                     //Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     System.Nullable<int> effectifs = (from video in Donnees.m_donnees.TAB_VIDEO

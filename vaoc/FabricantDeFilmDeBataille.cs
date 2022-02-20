@@ -1179,7 +1179,7 @@ namespace vaoc
                     //affichage des leaders
                     if (0==rolesBataille[nation].Count)
                     {
-                        AfficheOfficierBataille(G, "inconnu",
+                        AfficheOfficierBataille(G, "aucun_chef.png",
                             new Rectangle(nation * m_largeur / 2, m_hauteur / 5,
                             m_largeur / 2, 2 * m_hauteur / 5));
                     }
@@ -1187,7 +1187,7 @@ namespace vaoc
                     {
                         for (int l = 0; l < rolesBataille[nation].Count; l++)
                         {
-                            AfficheOfficierBataille(G, rolesBataille[nation][l],
+                            AfficheOfficierBataille(G, rolesBataille[nation][l]+".jpg",
                                 new Rectangle(nation * m_largeur / 2 + l * m_largeur / 2 / rolesBataille[nation].Count, m_hauteur / 5,
                                 m_largeur / 2 / rolesBataille[nation].Count, 2 * m_hauteur / 5));
                         }
@@ -1222,7 +1222,7 @@ namespace vaoc
         private void AfficheOfficierBataille(Graphics G, string nom, Rectangle rect)
         {
             SizeF tailleTexte = G.MeasureString(nom, m_police);
-            Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + nom + ".png");
+            Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + nom);
             //calcul des positions, de la taille, centrage
             int largeurImage = rect.Width;
             int hauteurImage = rect.Height - (int)tailleTexte.Height;

@@ -3643,8 +3643,19 @@ namespace vaoc
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
                 if (null != ligneOrdre)
                 {
-                    Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
-                    Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
+                    Donnees.TAB_CASERow ligneCaseDestination;
+                    Donnees.TAB_CASERow ligneCaseDepart;
+                    if ((m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) 
+                        || (Constantes.ORDRES.SUIVRE_UNITE != ligneOrdre.I_ORDRE_TYPE))
+                    {
+                        ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
+                        ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
+                    }
+                    else
+                    {
+                        ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
+                        ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
+                    }
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     double cout, coutHorsRoute;
                     AStar etoile = new AStar();

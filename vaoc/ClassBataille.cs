@@ -3021,24 +3021,26 @@ namespace vaoc
                         }
                         zonesBataille.Add(zb);
 
-                        //if (!ligneBatailleVideo.IsID_LEADER_012Null() || !ligneBatailleVideo.IsID_LEADER_345Null())
-                        //{
-                        //    RoleBataille roleBataille = new RoleBataille() { iTour = tour };
-                        //    if (!ligneBatailleVideo.IsID_LEADER_012Null())
-                        //    {
-                        //        TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_012);
-                        //        roleBataille.iNation012 = lignePion.idNation;
-                        //        roleBataille.nomLeader012 = lignePion.S_NOM;
-                        //        rolesBataille.Add(roleBataille);
-                        //    }
-                        //    if (!ligneBatailleVideo.IsID_LEADER_345Null())
-                        //    {
-                        //        TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.idà);
-                        //        roleBataille.iNation345 = lignePion.idNation;
-                        //        roleBataille.nomLeader345 = lignePion.S_NOM;
-                        //        rolesBataille.Add(roleBataille);
-                        //    }
-                        //}
+                        if (!ligneBatailleVideo.IsID_LEADER_012Null() || !ligneBatailleVideo.IsID_LEADER_345Null())
+                        {
+                            RoleBataille roleBataille = new RoleBataille() { iTour = tour };
+                            if (!ligneBatailleVideo.IsID_LEADER_012Null() && ligneBatailleVideo.ID_LEADER_012>=0)
+                            {
+                                TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_012);
+                                roleBataille.iNation012 = lignePion.idNation;
+                                roleBataille.nomLeader012 = NomRole(lignePion.S_NOM);
+                                roleBataille.nomLeader345 = string.Empty;
+                                rolesBataille.Add(roleBataille);
+                            }
+                            if (!ligneBatailleVideo.IsID_LEADER_345Null() && ligneBatailleVideo.ID_LEADER_345>=0)
+                            {
+                                TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_345);
+                                roleBataille.iNation345 = lignePion.idNation;
+                                roleBataille.nomLeader012 = string.Empty;
+                                roleBataille.nomLeader345 = NomRole(lignePion.S_NOM);
+                                rolesBataille.Add(roleBataille);
+                            }
+                        }
                     }
 
                     TAB_BATAILLE_PIONS_VIDEORow[] listeBataillePionsVideo = 
@@ -3168,6 +3170,18 @@ namespace vaoc
                     return false;
                 }
                 return true;
+            }
+
+            /// <summary>
+            /// Détermine le nom de rôle affiché sur la vidéo
+            /// </summary>
+            /// <param name="s_NOM">nom de l'unité de base</param>
+            /// <returns>>Nom contracté</returns>
+            private string NomRole(string nom)
+            {
+                //le dernier mot
+                int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
+                return nom.Substring(pos, nom.Length - pos);
             }
 
             private TIPEUNITEBATAILLE DefinitionTipeUniteBataille(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo)

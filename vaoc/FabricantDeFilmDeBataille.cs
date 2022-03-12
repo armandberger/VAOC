@@ -177,14 +177,19 @@ namespace vaoc
                             zone = 0;
                             break;
                     }
+                    string retour;
                     switch (m_orientation)
                     {
                         case TIPEORIENTATIONBATAILLE.VERTICAL:
-                            TraitementVertical(zone, m_fin, true);
+                            retour = TraitementVertical(zone, m_fin, true);
                             break;
                         default:
-                            TraitementHorizontal(zone, m_fin, true);
+                            retour = TraitementHorizontal(zone, m_fin, true);
                             break;
+                    }
+                    if (string.Empty != retour)
+                    {
+                        return retour;
                     }
                 }
                 Terminer();
@@ -234,13 +239,13 @@ namespace vaoc
             try
             {
                 //recherche des leaders à ce moment de la bataille
-                RoleBataille role = null;
-                if (m_rolesBataille.Count > 0)
-                {
-                    int i = 0;
-                    while (m_rolesBataille[i].iTour != m_traitement) i++;
-                    role = m_rolesBataille[i];
-                }
+                //RoleBataille role = null;
+                //if (m_rolesBataille.Count > 0)
+                //{
+                //    int i = 0;
+                //    while (m_rolesBataille[i].iTour != m_traitement) i++;
+                //    role = m_rolesBataille[i];
+                //}
 
                 //recherche des unites
                 int[] reserve = new int[2];
@@ -392,7 +397,6 @@ namespace vaoc
                             }
                         }
                     }
-                    AfficherHeure(G, m_traitement, m_hauteur / 9 + 1, m_hauteur / 2, m_hauteur/9);
 
                     fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
                                         + "_" + m_traitement.ToString("0000")
@@ -514,6 +518,7 @@ namespace vaoc
                         bt.Dispose();
                     }
                 }
+                AfficherHeure(G, m_traitement, m_largeur / 2, m_largeur / 9, m_largeur / 9);
             }
             else
             {
@@ -607,6 +612,7 @@ namespace vaoc
                         bt.Dispose();
                     }
                 }
+                AfficherHeure(G, m_traitement, m_hauteur / 9 + 1, m_hauteur / 2, m_hauteur / 9);
             }
         }
 
@@ -817,8 +823,8 @@ namespace vaoc
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 0;//pointe
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 2 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 2 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 3 * m_largeur / 18;//bas gauche
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 3 * m_largeur / 18;
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 13 * m_largeur / 18;//bas gauche
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 13 * m_largeur / 18;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 2 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 2 * m_largeur / 9;
                         break;
@@ -896,9 +902,9 @@ namespace vaoc
             try
             {
                 //recherche des leaders à ce moment de la bataille
-                int i = 0;
-                while (m_rolesBataille[i].iTour != m_traitement) i++;
-                RoleBataille role = m_rolesBataille[i];
+                //int i = 0;
+                //while (m_rolesBataille[i].iTour != m_traitement) i++;
+                //RoleBataille role = m_rolesBataille[i];
 
                 //recherche des unites
                 int[] reserve = new int[2];
@@ -1076,8 +1082,8 @@ namespace vaoc
             while (texte.Length > lgmax)
             {
                 position = texteSource.IndexOf(' ', position + 1);
-                if (position < 0) { return string.Empty; }
-                texte = texteSource.Substring(position);
+                if (position < 0) { return texte.Substring(0,lgmax); }
+                texte = texteSource.Substring(position + 1);
             }
             return texte;
         }

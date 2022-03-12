@@ -3028,7 +3028,7 @@ namespace vaoc
                             {
                                 TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_012);
                                 roleBataille.iNation012 = lignePion.idNation;
-                                roleBataille.nomLeader012 = NomRole(lignePion.S_NOM);
+                                roleBataille.nomLeader012 = lignePion.S_NOM;
                                 roleBataille.nomLeader345 = string.Empty;
                                 rolesBataille.Add(roleBataille);
                             }
@@ -3037,7 +3037,7 @@ namespace vaoc
                                 TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_345);
                                 roleBataille.iNation345 = lignePion.idNation;
                                 roleBataille.nomLeader012 = string.Empty;
-                                roleBataille.nomLeader345 = NomRole(lignePion.S_NOM);
+                                roleBataille.nomLeader345 = lignePion.S_NOM;
                                 rolesBataille.Add(roleBataille);
                             }
                         }
@@ -3062,7 +3062,7 @@ namespace vaoc
 
                         //recherche de la nation
                         TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBataillePionsVideo.ID_PION);
-                        if (ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT <= 2)
+                        if (ligneBataillePionsVideo.B_ENGAGEE && ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT < 3)
                         {
                             iNation012 = lignePion.idNation;
                         }
@@ -3157,8 +3157,9 @@ namespace vaoc
                     repertoire + "\\batailles",
                     this.S_NOM,
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
-                    new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),
-                    1600,1200, iNation012, iNation345,
+                    new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),//policeTitre
+                    new Font(FontFamily.GenericSansSerif, 20, FontStyle.Regular | FontStyle.Bold),//policeTitreEffectifs
+                    1600, 1200, iNation012, iNation345,
                     unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
                     orientation, fin,
                     this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
@@ -3170,18 +3171,6 @@ namespace vaoc
                     return false;
                 }
                 return true;
-            }
-
-            /// <summary>
-            /// Détermine le nom de rôle affiché sur la vidéo
-            /// </summary>
-            /// <param name="s_NOM">nom de l'unité de base</param>
-            /// <returns>>Nom contracté</returns>
-            private string NomRole(string nom)
-            {
-                //le dernier mot
-                int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
-                return nom.Substring(pos, nom.Length - pos);
             }
 
             private TIPEUNITEBATAILLE DefinitionTipeUniteBataille(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo)

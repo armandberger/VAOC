@@ -79,7 +79,7 @@ namespace vaoc
         }
 
         public string Initialisation(string nomFichier, string repertoireVideo, 
-                                    string nomBataille, Font police, Font policeTitre,
+                                    string nomBataille, Font police, Font policeTitre, Font policeTitreEffectifs,
                                     int largeur, int hauteur,
                                     int iNation012,
                                     int iNation345,
@@ -139,7 +139,7 @@ namespace vaoc
                     Directory.CreateDirectory(repertoireVideo);
                 }
 
-                TraitementTitre(nomBataille, debut, policeTitre);
+                TraitementTitre(nomBataille, debut, policeTitre, policeTitreEffectifs);
                 for (m_traitement = debut; m_traitement< debut+m_nbEtapes; m_traitement++)
                 {
                     //on  vérifie qu'il y a bien une unité à afficher (des fois il n'y a rien car c'est un inter tour de combat)
@@ -1096,7 +1096,7 @@ namespace vaoc
 
         private void AfficherHeure(Graphics G, int tour, int x, int y, int taille)
         {
-            double[] tableAngle = { 90,60,30,0,330,300,270,249,210,180,150,120 };
+            double[] tableAngle = { 90,60,30,0,330,300,270,240,210,180,150,120 };
             int heure = ClassMessager.DateHeure(tour, 0).Hour % 12;
             //cadran
             Pen styloCadran = new Pen(Color.Black, 8);
@@ -1104,12 +1104,12 @@ namespace vaoc
             G.DrawEllipse(styloCadran, x - taille / 2, y - taille / 2, taille, taille);
             //aiguille
             Pen styloAiguille = new Pen(Color.Black, 3);
-            int xFinAiguille = (int)(x + taille / 2 * Math.Cos(tableAngle[heure] * Math.PI/360));
-            int yFinAiguille = (int)(y + taille / 2 * Math.Sin(tableAngle[heure] * Math.PI / 360));
+            int xFinAiguille = (int)(x + taille / 3 * Math.Cos(tableAngle[heure] * 2 * Math.PI/360));
+            int yFinAiguille = (int)(y + taille / 3 * -1 * Math.Sin(tableAngle[heure] * 2 * Math.PI / 360));//il faut inverser le signe car l'axe des y est du haut vers le bas
             G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
         }
 
-        private string TraitementTitre(string nomBataille, int debut, Font policeTitre)
+        private string TraitementTitre(string nomBataille, int debut, Font policeTitre, Font policeTitreEffectifs)
         {
             Graphics G;
             int xunite, yunite;
@@ -1179,7 +1179,7 @@ namespace vaoc
                     //affichage des leaders
                     if (0==rolesBataille[nation].Count)
                     {
-                        AfficheOfficierBataille(G, "aucun_chef.png",
+                        AfficheOfficierBataille(G, string.Empty, policeTitreEffectifs,
                             new Rectangle(nation * m_largeur / 2, m_hauteur / 5,
                             m_largeur / 2, 2 * m_hauteur / 5));
                     }
@@ -1187,7 +1187,7 @@ namespace vaoc
                     {
                         for (int l = 0; l < rolesBataille[nation].Count; l++)
                         {
-                            AfficheOfficierBataille(G, rolesBataille[nation][l]+".jpg",
+                            AfficheOfficierBataille(G, rolesBataille[nation][l], policeTitreEffectifs, 
                                 new Rectangle(nation * m_largeur / 2 + l * m_largeur / 2 / rolesBataille[nation].Count, m_hauteur / 5,
                                 m_largeur / 2 / rolesBataille[nation].Count, 2 * m_hauteur / 5));
                         }
@@ -1195,14 +1195,28 @@ namespace vaoc
 
                     //affichage des effectifs
                     //on centre par rapport à la taille max des effectifs
-                    SizeF tailleTexteBase = G.MeasureString("00 000 ", m_police);
-                    SizeF tailleTexteFinal = G.MeasureString(infanterieMax[nation].ToString("N0") +" ", m_police);
+                    SizeF tailleTexteBase = G.MeasureString("00 000 ", policeTitreEffectifs);
+                    SizeF tailleTexteFinal = G.MeasureString(infanterieMax[nation].ToString("N0") +" ", policeTitreEffectifs);
 
                     Bitmap image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
-                    xunite = nation* m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) /2 + (int)(tailleTexteBase.Width- tailleTexteFinal.Width);
-                    yunite = m_hauteur * 3 / 5;
-                    G.DrawImage(image, xunite, yunite);
-                    G.DrawString(infanterieMax[nation].ToString("N0"), m_police, Brushes.Black, xunite - tailleTexteFinal.Width, yunite);
+                    xunite = nation* m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) /2 + (int)(tailleTexteBase.Width- tailleTexteFinal.Width) / 2;
+                    yunite = m_hauteur * 3 / 5 + (int)(tailleTexteBase.Height/2);
+                    G.DrawString(infanterieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
+                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+
+                    tailleTexteFinal = G.MeasureString(cavalerieMax[nation].ToString("N0") + " ", policeTitreEffectifs);
+                    image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
+                    xunite = nation * m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) / 2 + (int)(tailleTexteBase.Width - tailleTexteFinal.Width) / 2;
+                    yunite += (int)(tailleTexteFinal.Height * 3/2);
+                    G.DrawString(cavalerieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
+                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+
+                    tailleTexteFinal = G.MeasureString(artillerieMax[nation].ToString("N0") + " ", policeTitreEffectifs);
+                    image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
+                    xunite = nation * m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) / 2 + (int)(tailleTexteBase.Width - tailleTexteFinal.Width) / 2;
+                    yunite += (int)(tailleTexteFinal.Height * 3 / 2);
+                    G.DrawString(artillerieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
+                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
                 }
 
                 fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
@@ -1219,31 +1233,31 @@ namespace vaoc
             }
         }
 
-        private void AfficheOfficierBataille(Graphics G, string nom, Rectangle rect)
+        private void AfficheOfficierBataille(Graphics G, string nom, Font policeNom, Rectangle rect)
         {
-            SizeF tailleTexte = G.MeasureString(nom, m_police);
-            Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + nom);
+            SizeF tailleTexte = G.MeasureString(nom, policeNom);
+            Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + NomRoleFichier(nom));
             //calcul des positions, de la taille, centrage
             int largeurImage = rect.Width;
             int hauteurImage = rect.Height - (int)tailleTexte.Height;
             //taille finale image en gardant les proportions
-            float rapportRect = (float)largeurImage / hauteurImage;
-            float rapportImage = (float)imageOfficier.Width / imageOfficier.Height;
-            if (rapportImage > rapportRect)
+            float rapportLargeur = (float)largeurImage / imageOfficier.Width;
+            float rapportHauteur = (float)hauteurImage / imageOfficier.Height;
+            if (rapportLargeur > rapportHauteur)
             {
-                largeurImage = (int)(imageOfficier.Width / rapportRect);
-                hauteurImage = (int)(imageOfficier.Height * rapportRect);
+                largeurImage = (int)(imageOfficier.Width * rapportHauteur);
+                hauteurImage = (int)(imageOfficier.Height * rapportHauteur);
             }
             else
             {
-                largeurImage = (int)(imageOfficier.Width / rapportImage);
-                hauteurImage = (int)(imageOfficier.Height * rapportImage);
+                largeurImage = (int)(imageOfficier.Width * rapportLargeur);
+                hauteurImage = (int)(imageOfficier.Height * rapportLargeur);
             }
             Rectangle rectImage = new Rectangle(rect.X + (rect.Width - largeurImage) / 2, 
                                                 rect.Y + (rect.Height - hauteurImage - (int)tailleTexte.Height)/2, 
                                                 largeurImage, hauteurImage);
             G.DrawImage(imageOfficier, rectImage);
-            G.DrawString(nom, m_police, Brushes.Black, rect.X + (rect.Width - (int)tailleTexte.Width) / 2, rectImage.Bottom);
+            G.DrawString(nom, policeNom, Brushes.Black, rect.X + (rect.Width - (int)tailleTexte.Width) / 2, rectImage.Bottom);
         }
 
         private void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect)
@@ -1295,6 +1309,20 @@ namespace vaoc
             TextureBrush brosse = new TextureBrush(image);
             G.FillRectangle(brosse, rect);
         }
+
+        /// <summary>
+        /// Détermine le nom du fichier du rôle affiché sur la vidéo
+        /// </summary>
+        /// <param name="nom">nom de l'unité de base</param>
+        /// <returns>>Nom contracté</returns>
+        private string NomRoleFichier(string nom)
+        {
+            if (string.Empty == nom ) { return "aucun_chef.png"; }
+            //le dernier mot
+            int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
+            return nom.Substring(pos, nom.Length - pos) + ".jpg";
+        }
+
     }
 }
 

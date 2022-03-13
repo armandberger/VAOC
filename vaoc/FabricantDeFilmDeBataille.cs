@@ -64,6 +64,8 @@ namespace vaoc
         private int m_nbEtapes;
         private Font m_police;
         private string m_nomFichier;
+        private string m_nomCampagne;
+        private int m_numeroImage;
         private Brush[] m_brossesTexte = new Brush[6];
         private const int NB_UNITES_LARGEUR = 5;
         private const int NB_UNITES_HAUTEUR = 3;
@@ -78,7 +80,7 @@ namespace vaoc
         {
         }
 
-        public string Initialisation(string nomFichier, string repertoireVideo, 
+        public string Initialisation(string nomCampagne, string nomFichier, string repertoireVideo, 
                                     string nomBataille, Font police, Font policeTitre, Font policeTitreEffectifs,
                                     int largeur, int hauteur,
                                     int iNation012,
@@ -108,7 +110,9 @@ namespace vaoc
                 m_fin = iFin;
                 m_nbEtapes = nbEtapes;
                 m_police = police;
-                m_nomFichier= nomFichier;
+                m_nomCampagne = nomCampagne;
+                m_nomFichier = nomFichier;
+                m_numeroImage = 0;
                 m_iNation012 = iNation012;
                 m_iNation345 = iNation345;
 
@@ -225,7 +229,7 @@ namespace vaoc
                 WindowStyle = ProcessWindowStyle.Normal,
                 FileName = "ffmpeg.exe",
                 WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
-                Arguments = string.Format("-framerate 1 -i {0}_%04d_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom)
+                Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne.Replace(' ', '_'), m_nomFichier)
             };
             Process.Start(processInfo);
         }
@@ -398,9 +402,7 @@ namespace vaoc
                         }
                     }
 
-                    fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
-                                        + "_" + m_traitement.ToString("0000")
-                                        + "_" + (iZoneResultats + 1).ToString("0000") + ".png", ImageFormat.Png);
+                    SauvegardeImage(fichierImage);
 
                     G.Dispose();
                     fichierImage.Dispose();
@@ -1055,9 +1057,7 @@ namespace vaoc
                         }
                     }
 
-                    fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
-                                        + "_" + m_traitement.ToString("0000")
-                                        + "_" + (iZoneResultats + 1).ToString("0000") + ".png", ImageFormat.Png);
+                    SauvegardeImage(fichierImage);
 
                     G.Dispose();
                     fichierImage.Dispose();
@@ -1075,6 +1075,7 @@ namespace vaoc
                 return "TraitementVertical Exception in: " + e.ToString();
             }
         }
+
         private string ChaineAffiche(int lgmax, string texteSource)
         {
             string texte = texteSource;
@@ -1225,9 +1226,7 @@ namespace vaoc
                     G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
                 }
 
-                fichierImage.Save(m_repertoireVideo + "\\" + m_nomFichier
-                                    + "_0000" 
-                                    + "_0000" + ".png", ImageFormat.Png);
+                SauvegardeImage(fichierImage);
 
                 G.Dispose();
                 fichierImage.Dispose();
@@ -1327,6 +1326,24 @@ namespace vaoc
             //le dernier mot
             int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
             return nom.Substring(pos, nom.Length - pos) + ".jpg";
+        }
+
+        /// <summary>
+        /// ffmpeg -framerate 1 -i Automne_1813_Bataille118_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
+        /// Pour utiliser %04d dans ffmpeg il faut que les sequences ce suivent
+        /// La solution glob non supporté sur windows (globbing is not supported by this libavformat build), %4d ne supporte aucune rupture de sequence
+        /// Je n'arrive pas à le faire avec un fichier de concat media comme ffmpeg -r 5 -f concat -safe 0 -i liste.txt -c:v libx264 output.mp4
+        /// avec dans liste.txt
+        /// file Bataille118_0000_0000.png
+        /// file Bataille118_0440_0000.png
+        /// file Bataille118_0442_0000.png
+        /// </summary>
+        /// <param name="fichierImage">Image à sauvegarder</param>
+        private void SauvegardeImage(Bitmap fichierImage)
+        {            
+            fichierImage.Save(m_repertoireVideo + "\\" + m_nomCampagne.Replace(' ','_') + "_" + m_nomFichier
+                                + "_" + m_numeroImage++.ToString("0000")
+                                + ".png", ImageFormat.Png);
         }
 
     }

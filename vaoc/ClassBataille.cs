@@ -3153,7 +3153,9 @@ namespace vaoc
 
                 FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
                 //tout est fait dans initialisation
-                string erreur = film.Initialisation("Bataille"+this.ID_BATAILLE,
+                string erreur = film.Initialisation(
+                    Donnees.m_donnees.TAB_JEU[0].S_NOM,
+                    "Bataille"+this.ID_BATAILLE,
                     repertoire + "\\batailles",
                     this.S_NOM,
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),

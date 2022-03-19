@@ -994,6 +994,20 @@ namespace vaoc
                     //il faut aussi que le nouveau proprietaire voit l'unité si ce n'est pas le même et qu'il a reçu l'affectation
                     if (lignePion.IsID_NOUVEAU_PION_PROPRIETAIRENull() && (lignePion.ID_ANCIEN_PION_PROPRIETAIRE != lignePion.ID_PION_PROPRIETAIRE))
                     {
+                        //s'il y a déjà une requête, il faut l'ajouter avant de génerer la suivante !
+                        if (requete != string.Empty)
+                        {
+                            if (bPremier)
+                            {
+                                bPremier = false;
+                            }
+                            else
+                            {
+                                listeRequete.AppendLine(",");
+                            }
+                            listeRequete.Append(requete);
+                        }
+
                         ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
                         requete = GenereLignePion(lignePion, idPartie, lignePion.ID_PION_PROPRIETAIRE, ligneMessage);
                     }

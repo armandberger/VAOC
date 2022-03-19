@@ -2569,6 +2569,8 @@ namespace vaoc
                 I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
                 //ainsi que 5% de son matériel par heure de combat
                 I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
+                message = string.Format("{0}(ID={1}, Ravitaillement après consommation quotidienne rav={2}, mat={3})", S_NOM, ID_PION, I_RAVITAILLEMENT, I_MATERIEL);
+                LogFile.Notifier(message);
                 #endregion
 
                 #region fourrage : Vivre sur le terrain
@@ -2577,6 +2579,8 @@ namespace vaoc
                 {
                     I_RAVITAILLEMENT = Math.Min(100, I_RAVITAILLEMENT + (this.modelePion.I_FOURRAGE * ligneMeteo.I_POURCENT_RAVITAILLEMENT / 100));
                 }
+                message = string.Format("{0}(ID={1}, Ravitaillement après fourrage rav={2}, mat={3})", S_NOM, ID_PION, I_RAVITAILLEMENT, I_MATERIEL);
+                LogFile.Notifier(message);
                 #endregion
 
                 //si l'unité n'est pas en repos complet, elle ne peut pas se ravitailler à un dépôt
@@ -2611,6 +2615,8 @@ namespace vaoc
                     //if (string.Empty != nomDepot) { depotRavitaillement = nomDepot; }, il ne faut pas changer le nom du dépot car le dépôt ayant servi à ravitailler en standard n'est pas toujours celui ayant ravitaillé en direct
                 }
 
+                message = string.Format("{0}(ID={1}, Ravitaillement final rav={2}, mat={3})", S_NOM, ID_PION, I_RAVITAILLEMENT, I_MATERIEL);
+                LogFile.Notifier(message);
                 return true;
             }
 

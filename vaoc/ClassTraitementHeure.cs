@@ -5320,6 +5320,8 @@ namespace vaoc
 
             iWeb.SauvegardeObjectifs(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
+            iWeb.SauvegardeBataillesRoles(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
             return true;
         }
 

@@ -78,6 +78,12 @@ namespace vaoc
         /// </summary>
         /// <param name="idPartie">identifiant de la partie</param>
         void SauvegardeObjectifs(int idPartie);
+
+        /// <summary>
+        /// Sauvegarde des rôles ayant participés ou ayant eu connaissance des batailles
+        /// </summary>
+        /// <param name="idPartie">identifiant de la partie</param>
+        void SauvegardeBataillesRoles(int idPartie);
         #endregion
 
         #region lecture des données

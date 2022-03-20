@@ -1840,6 +1840,69 @@ namespace vaoc
             listeRequete.AppendLine(";");
             AjouterLigne(listeRequete.ToString());
         }
+
+        /// <summary>
+        /// Sauvegarde des rôles ayant participés ou ayant eu connaissance des batailles
+        /// </summary>
+        /// <param name="idPartie">identifiant de la partie</param>
+        public void SauvegardeBataillesRoles(int idPartie)
+        {
+            return;
+            string requete;
+            StringBuilder listeRequete = new StringBuilder();
+            bool bPremier = true;
+
+            //Supression des valeurs précédentes
+            requete = string.Format("DELETE FROM tab_vaoc_bataille_role WHERE ID_PARTIE={0};", idPartie);
+            listeRequete.AppendLine(requete);
+
+            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            {
+                Donnees.TAB_PIONRow lignePionRole = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                if (!lignePionRole.B_DETRUIT)
+                {
+                    bPremier = true;
+                    //List<int> listeBatailles = new List<int>();
+                    //recherche de tous les messages reçus par le rôle, le plus récent reçu pour chaque pion
+                    //le rôle a alors connaissance de toutes les batailles passées auxquelles a participé ce pion
+                    var resultMessage = from Message in Donnees.m_donnees.TAB_MESSAGE
+                                         where (Message.ID_PION_PROPRIETAIRE == lignePionRole.ID_PION)
+                                         && (!Message.IsI_TOUR_ARRIVEENull())
+                                         group Message by Message.ID_PION_EMETTEUR into MessageEmetteur
+                                         select new { idpion = MessageEmetteur.Key, MaxTour = MessageEmetteur.Max(x => x.I_TOUR_ARRIVEE)};
+
+                    var resultBatailles = (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                                          from Bataille in Donnees.m_donnees.TAB_BATAILLE
+                                          from MessagePion in resultMessage
+                                          where (BataillePion.ID_PION == MessagePion.idpion)
+                                            && (Bataille.ID_BATAILLE == BataillePion.ID_BATAILLE)
+                                            && (!Bataille.IsI_TOUR_FINNull())
+                                            && (Bataille.I_TOUR_FIN<=MessagePion.MaxTour)
+                                            select Bataille.ID_BATAILLE).Distinct();
+
+                    // on refait la même chose mais avec les messages anciens
+                    foreach (int idbataille in resultBatailles)
+                    {
+                        if (bPremier)
+                        {
+                            requete = "INSERT INTO `tab_vaoc_bataille_role` (`ID_PARTIE`, `ID_BATAILLE`, `ID_ROLE`) VALUES ";
+                            listeRequete.AppendLine(requete);
+                            bPremier = false;
+                        }
+                        else { listeRequete.AppendLine(","); }
+                        requete = string.Format("({0}, {1}, {2})",
+                                        idPartie,
+                                        idbataille,
+                                        ligneRole.ID_ROLE
+                                        );
+
+                        listeRequete.Append(requete);
+                    }
+                }
+            }
+            listeRequete.AppendLine(";");
+            AjouterLigne(listeRequete.ToString());
+        }
         #endregion
         #endregion
 

@@ -4659,8 +4659,8 @@ namespace vaoc
                             return LogFile.Notifier(message, out messageErreur);
                         }
 
-                        //si l'ordre de mouvement n'est pas actif, le pion ne doit pas bouger
-                        if (!OrdreActif(ligneOrdre))
+                        //si l'ordre de mouvement n'est pas actif ou que l'unité est fatiguée à 100%, le pion ne doit pas bouger
+                        if (!OrdreActif(ligneOrdre) || 100==this.I_FATIGUE)
                         {
                             PlacerPionEnRoute(ligneOrdre, ligneNation);
                             return true;

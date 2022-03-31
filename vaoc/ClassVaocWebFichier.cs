@@ -1581,7 +1581,7 @@ namespace vaoc
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
-                if (null == lignePion)
+                if (null == lignePion || lignePion.B_DETRUIT)
                 {
                     //il s'agit probablement d'un renfort,et, dans ce cas, on ne le met pas dans les rôles disponibles
                     continue;
@@ -1847,30 +1847,125 @@ namespace vaoc
         /// <param name="idPartie">identifiant de la partie</param>
         public void SauvegardeBataillesRoles(int idPartie)
         {
-            return;
             string requete;
             StringBuilder listeRequete = new StringBuilder();
             bool bPremier = true;
-
+            
             //Supression des valeurs précédentes
             requete = string.Format("DELETE FROM tab_vaoc_bataille_role WHERE ID_PARTIE={0};", idPartie);
             listeRequete.AppendLine(requete);
 
+            DateTime timeStart;
+            TimeSpan perf;
+            timeStart = DateTime.Now;
+
+            //1517 resultMessage, resultMessage en 0 heures, 0 minutes, 0 secondes, 25 millisecondes
+            var resultMessage = (from Message in Donnees.m_donnees.TAB_MESSAGE
+                                from role in Donnees.m_donnees.TAB_ROLE
+                                where (Message.ID_PION_PROPRIETAIRE == role.ID_PION)
+                                && (!Message.IsI_TOUR_ARRIVEENull())
+                                group Message by new { Message.ID_PION_EMETTEUR, role.ID_ROLE } into MessageEmetteur
+                                select new { idpion = MessageEmetteur.Key.ID_PION_EMETTEUR, idrole= MessageEmetteur.Key.ID_ROLE, MaxTour = MessageEmetteur.Max(x => x.I_TOUR_ARRIVEE) }).ToList();
+
+            Debug.WriteLine(string.Format("{0} resultMessage", resultMessage.Count()));
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("resultMessage en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+            timeStart = DateTime.Now;
+            var listeBatailleRole = new List<Tuple<int, int>>();
+            foreach (var message in resultMessage)
+            {
+                foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                {
+                    if (!ligneBataille.IsI_TOUR_FINNull() && ligneBataille.I_TOUR_FIN <= message.MaxTour)
+                    {
+                        Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS.FindByID_PIONID_BATAILLE(message.idpion, ligneBataille.ID_BATAILLE);
+                        if (null!= ligneBataillePion)
+                        {
+                            if (!listeBatailleRole.Contains(new Tuple<int, int>(ligneBataille.ID_BATAILLE, message.idrole)))
+                            {
+                                listeBatailleRole.Add(new Tuple<int, int>(ligneBataille.ID_BATAILLE, message.idrole));
+                                if (bPremier)
+                                {
+                                    requete = "INSERT INTO `tab_vaoc_bataille_role` (`ID_PARTIE`, `ID_BATAILLE`, `ID_ROLE`) VALUES ";
+                                    listeRequete.AppendLine(requete);
+                                    bPremier = false;
+                                }
+                                else { listeRequete.AppendLine(","); }
+                                requete = string.Format("({0}, {1}, {2})",
+                                                idPartie,
+                                                ligneBataille.ID_BATAILLE,
+                                                message.idrole
+                                                );
+
+                                listeRequete.Append(requete);
+                            }
+                        }
+                    }
+                }
+            }
+            Debug.WriteLine(string.Format("{0} resultBatailles", listeBatailleRole.Count()));
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("resultBatailles en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+            /*
+            //525 resultBatailles, resultBatailles en 0 heures, 47 minutes, 8 secondes, 619 millisecondes
+            var resultBatailles = (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                                   from Bataille in Donnees.m_donnees.TAB_BATAILLE
+                                   from MessagePion in resultMessage
+                                   where (BataillePion.ID_PION == MessagePion.idpion)
+                                     && (Bataille.ID_BATAILLE == BataillePion.ID_BATAILLE)
+                                     && (!Bataille.IsI_TOUR_FINNull())
+                                     && (Bataille.I_TOUR_FIN <= MessagePion.MaxTour)
+                                   select new { Bataille.ID_BATAILLE, MessagePion.idrole }).Distinct().ToList();
+
+            Debug.WriteLine(string.Format("{0} resultBatailles", resultBatailles.Count()));
+            perf = DateTime.Now - timeStart;
+            Debug.WriteLine(string.Format("resultBatailles en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+            foreach (var ligne in resultBatailles)
+            {
+                if (bPremier)
+                {
+                    requete = "INSERT INTO `tab_vaoc_bataille_role` (`ID_PARTIE`, `ID_BATAILLE`, `ID_ROLE`) VALUES ";
+                    listeRequete.AppendLine(requete);
+                    bPremier = false;
+                }
+                else { listeRequete.AppendLine(","); }
+                requete = string.Format("({0}, {1}, {2})",
+                                idPartie,
+                                ligne.ID_BATAILLE,
+                                ligne.idrole
+                                );
+
+                listeRequete.Append(requete);
+            }
+            */
+            /*
             foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
             {
                 Donnees.TAB_PIONRow lignePionRole = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
                 if (!lignePionRole.B_DETRUIT)
                 {
-                    bPremier = true;
                     //List<int> listeBatailles = new List<int>();
                     //recherche de tous les messages reçus par le rôle, le plus récent reçu pour chaque pion
                     //le rôle a alors connaissance de toutes les batailles passées auxquelles a participé ce pion
+                    DateTime timeStart;
+                    TimeSpan perf;
+                    timeStart = DateTime.Now;
+
                     var resultMessage = from Message in Donnees.m_donnees.TAB_MESSAGE
                                          where (Message.ID_PION_PROPRIETAIRE == lignePionRole.ID_PION)
                                          && (!Message.IsI_TOUR_ARRIVEENull())
                                          group Message by Message.ID_PION_EMETTEUR into MessageEmetteur
                                          select new { idpion = MessageEmetteur.Key, MaxTour = MessageEmetteur.Max(x => x.I_TOUR_ARRIVEE)};
 
+                    Debug.WriteLine(string.Format("{0} resultMessage", resultMessage.Count()));
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("resultMessage en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
+
+                    timeStart = DateTime.Now;
+                    //la requete qui suit prend 1'30 minute par role -> pret de 30 minutes pour tous les rôles
                     var resultBatailles = (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
                                           from Bataille in Donnees.m_donnees.TAB_BATAILLE
                                           from MessagePion in resultMessage
@@ -1879,6 +1974,10 @@ namespace vaoc
                                             && (!Bataille.IsI_TOUR_FINNull())
                                             && (Bataille.I_TOUR_FIN<=MessagePion.MaxTour)
                                             select Bataille.ID_BATAILLE).Distinct();
+
+                    Debug.WriteLine(string.Format("{0} resultBatailles", resultBatailles.Count()));
+                    perf = DateTime.Now - timeStart;
+                    Debug.WriteLine(string.Format("resultBatailles en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
                     // on refait la même chose mais avec les messages anciens
                     foreach (int idbataille in resultBatailles)
@@ -1899,8 +1998,11 @@ namespace vaoc
                         listeRequete.Append(requete);
                     }
                 }
+            }*/
+            if (!bPremier)
+            {
+                listeRequete.AppendLine(";");
             }
-            listeRequete.AppendLine(";");
             AjouterLigne(listeRequete.ToString());
         }
         #endregion

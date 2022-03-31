@@ -511,7 +511,6 @@ namespace vaoc
                     LogFile.Notifier("Erreur durant la génération des fichiers SQL :" + messageErreur);
                     return false;
                 }
-                testDebug();
 
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas
@@ -719,7 +718,7 @@ namespace vaoc
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                if (!lignePion.B_DETRUIT)
+                if (!lignePion.B_DETRUIT && lignePion.I_FATIGUE < 100)
                 {
                     liste.Add(lignePion);
                 }
@@ -746,7 +745,7 @@ namespace vaoc
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                if (!lignePion.B_DETRUIT && lignePion.effectifTotalEnMouvement > 0)
+                if (!lignePion.B_DETRUIT && lignePion.effectifTotalEnMouvement > 0 &&  lignePion.I_FATIGUE<100)
                 {
                     liste.Add(lignePion);
                 }
@@ -769,7 +768,7 @@ namespace vaoc
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
-                if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotalEnMouvement)
+                if (!lignePion.B_DETRUIT && 0 == lignePion.effectifTotalEnMouvement && lignePion.I_FATIGUE < 100)
                 {
                     liste.Add(lignePion);
                 }
@@ -1906,33 +1905,35 @@ namespace vaoc
                             {
                                 message = string.Format("ControleDesVilles : erreur FindByID_PION introuvable sur {0} ou {1}",
                                     ligneCaseRecherche.ID_PROPRIETAIRE.ToString(), ligneCaseRecherche.ID_NOUVEAU_PROPRIETAIRE.ToString());
-                                LogFile.Notifier(message, out messageErreur);
-                                return false;
+                                //LogFile.Notifier(message, out messageErreur);
+                                //return false;
                             }
-
-                            //seul un pion combattif , même avec zéro de moral, peut prendre le contrôle d'une zone, sinon, les patrouilles peuvent prendre des villes !
-                            if (lignePion.estCombattifQG(false,true))
+                            else
                             {
-                                ligneModelePion = lignePion.modelePion;
-                                if (null == ligneModelePion)
+                                //seul un pion combattif , même avec zéro de moral, peut prendre le contrôle d'une zone, sinon, les patrouilles peuvent prendre des villes !
+                                if (lignePion.estCombattifQG(false, true))
                                 {
-                                    message = string.Format("ControleDesVilles : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
-                                    LogFile.Notifier(message, out messageErreur);
-                                    return false;
-                                }
+                                    ligneModelePion = lignePion.modelePion;
+                                    if (null == ligneModelePion)
+                                    {
+                                        message = string.Format("ControleDesVilles : erreur FindByID_MODELE_PION introuvable sur {0}", lignePion.ID_MODELE_PION);
+                                        LogFile.Notifier(message, out messageErreur);
+                                        return false;
+                                    }
 
-                                //un point de plus sur la zone pour son camp !
-                                if (idNation0 == -1 || idNation0 == ligneModelePion.ID_NATION)
-                                {
-                                    idNation0 = ligneModelePion.ID_NATION;
-                                    zone[0]++;
-                                    if (null == listePionControle0.Find(x => x == lignePion)) { listePionControle0.Add(lignePion); }
-                                }
-                                else
-                                {
-                                    idNation1 = ligneModelePion.ID_NATION;
-                                    zone[1]++;
-                                    if (null == listePionControle1.Find(x => x == lignePion)) { listePionControle1.Add(lignePion); }
+                                    //un point de plus sur la zone pour son camp !
+                                    if (idNation0 == -1 || idNation0 == ligneModelePion.ID_NATION)
+                                    {
+                                        idNation0 = ligneModelePion.ID_NATION;
+                                        zone[0]++;
+                                        if (null == listePionControle0.Find(x => x == lignePion)) { listePionControle0.Add(lignePion); }
+                                    }
+                                    else
+                                    {
+                                        idNation1 = ligneModelePion.ID_NATION;
+                                        zone[1]++;
+                                        if (null == listePionControle1.Find(x => x == lignePion)) { listePionControle1.Add(lignePion); }
+                                    }
                                 }
                             }
                         }
@@ -3399,7 +3400,7 @@ namespace vaoc
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 //calcul de la fatigue et du moral
-                if (!lignePion.B_DETRUIT && lignePion.effectifTotal > 0
+                if (!lignePion.B_DETRUIT && lignePion.effectifInitial > 0
                     && !lignePion.estDepot && !lignePion.estBlesses && !lignePion.estArtillerie
                     && !lignePion.estConvoiDeRavitaillement && !lignePion.estQG && !lignePion.estMessager
                     && !lignePion.estPatrouille && !lignePion.estPontonnier && !lignePion.estPrisonniers)
@@ -3429,6 +3430,9 @@ namespace vaoc
                         {
                             fatigue = 0;//cas d'une unité entrain de se fortifier, elle n'est pas en repose mais elle ne se fatigue pas
                         }
+
+                        message = string.Format("FatigueEtRepos non reposer pour {0} ID={1} +fatigue={2}", lignePion.S_NOM, lignePion.ID_PION, fatigue);
+                        LogFile.Notifier(message);
 
                         moral = lignePion.I_MORAL; //pas de modification permanente du moral, le moral effectif avec la fatigue doit être calculée sur l'instant, donc diffmoral vaut toujours zéro !
                         fatigue = Math.Min(lignePion.I_FATIGUE + fatigue, 100);
@@ -3465,6 +3469,8 @@ namespace vaoc
                     else
                     {
                         //unité au repos
+                        message = string.Format("FatigueEtRepos repos complet pour {0} ID={1}", lignePion.S_NOM, lignePion.ID_PION);
+                        LogFile.Notifier(message);
                         moral = Math.Min(lignePion.I_MORAL + Constantes.CST_GAIN_MORAL_REPOS, lignePion.I_MORAL_MAX);
                         diffmoral = moral - lignePion.I_MORAL;
                         lignePion.I_MORAL = moral;
@@ -5308,6 +5314,8 @@ namespace vaoc
 
             iWeb.SauvegardeModelesPion(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);// a besoin du fichier XML, donc doit se trouver avec le fichier général
 
+            iWeb.SauvegardeBataillesRoles(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
+
             iWeb.TraitementEnCours(false, Donnees.m_donnees.TAB_JEU[0].ID_JEU, Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
             iWeb = ClassVaocWebFactory.CreerVaocWeb(fichierCourant, "_Nom_Meteo_Modeles_Objectifs", true);
@@ -5319,8 +5327,6 @@ namespace vaoc
             iWeb.SauvegardeModelesMouvement(Donnees.m_donnees.TAB_JEU[0].ID_JEU);
 
             iWeb.SauvegardeObjectifs(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
-
-            iWeb.SauvegardeBataillesRoles(Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE);
 
             return true;
         }

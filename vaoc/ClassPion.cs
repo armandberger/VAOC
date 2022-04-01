@@ -2566,7 +2566,7 @@ namespace vaoc
 
                 #region consommation journaliere
                 //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
-                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT - 10);
+                I_RAVITAILLEMENT -= 10;//cela doit pouvoir être négatif car comme l'on rajoute le fourrage ensuite, sinon l'unité n'est jamais à zéro !
                 //ainsi que 5% de son matériel par heure de combat
                 I_MATERIEL = Math.Max(0, I_MATERIEL - (5 * I_NB_HEURES_COMBAT));
                 message = string.Format("{0}(ID={1}, Ravitaillement après consommation quotidienne rav={2}, mat={3})", S_NOM, ID_PION, I_RAVITAILLEMENT, I_MATERIEL);
@@ -2583,6 +2583,7 @@ namespace vaoc
                 LogFile.Notifier(message);
                 #endregion
 
+                I_RAVITAILLEMENT = Math.Max(0, I_RAVITAILLEMENT);
                 //si l'unité n'est pas en repos complet, elle ne peut pas se ravitailler à un dépôt
                 if (!reposComplet)
                 {

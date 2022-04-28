@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using WaocLib;
 using System.Diagnostics;
+using System.IO;
 
 namespace vaoc
 {
@@ -257,11 +258,11 @@ namespace vaoc
         {
             if (this.checkBoxTravelling.Checked)
             {
-                Process.Start(this.textBoxRepertoireVideo.Text + "\\video.mp4");
+                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text,"\\video.mp4"));
             }
             else
             {
-                Process.Start(this.textBoxRepertoireVideo.Text + "\\video.avi");
+                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text,"video.avi"));
             }
         }
 

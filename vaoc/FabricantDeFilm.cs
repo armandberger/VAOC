@@ -319,6 +319,16 @@ namespace vaoc
                     }
                 }
 
+                //fmpeg n'accepte pas les tailles impairs, donc on ajoute 1 si c'est le cas
+                if (m_hauteur%2==1)
+                {
+                    m_hauteur++;
+                }
+                if (m_largeur % 2 == 1)
+                {
+                    m_largeur++;
+                }
+
                 if (Directory.Exists(repertoireVideo))
                 {
                     //on supprime toutes les images qui pourraient exister d'un précédent traitement
@@ -407,7 +417,7 @@ namespace vaoc
         {
             try
             {
-                if (m_bTravelling)
+                //if (m_bTravelling) -> je ne comprends pas le test, on fait une vidéo dans tous les cas...
                 {
                     //on lance la commande DOS de création du film
                     //string YourApplicationPath = m_repertoireVideo + "\\ffmpeg.exe";

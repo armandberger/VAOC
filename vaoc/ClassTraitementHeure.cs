@@ -5282,7 +5282,24 @@ namespace vaoc
                 }
             }
             //}
-
+            /*
+            if (0 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
+            {
+                //des fois qu'il y aurait des bugs dans TAB_MAJ_PROPRIO
+                foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
+                {
+                    if (ligne.IsID_NOUVEAU_PROPRIETAIRENull())
+                    {
+                        ligne.SetID_PROPRIETAIRENull();
+                    }
+                    else
+                    {
+                        ligne.ID_PROPRIETAIRE = ligne.ID_NOUVEAU_PROPRIETAIRE;
+                    }
+                    ligne.SetID_NOUVEAU_PROPRIETAIRENull();
+                }
+            }
+            */
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
         }
 

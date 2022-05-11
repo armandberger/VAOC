@@ -239,7 +239,7 @@ namespace vaoc
                 }
 
                 //les données de poursuite sont mis en données surnuméraires par rapport au déroulement standard d'où le +1
-                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1);
+                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1, Donnees.m_donnees.TAB_BATAILLE_VIDEO, Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO);
 
                 //desengagement de toutes les unités
                 requete = string.Format("ID_BATAILLE={0}", ID_BATAILLE);
@@ -1805,7 +1805,7 @@ namespace vaoc
                 AlerteBruitDuCanon();
 
                 //Ajout des logs pour le compte-rendu video
-                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+                AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_BATAILLE_VIDEO, Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO);
 
                 //on regarde si la bataille ne se termine pas
                 if (0 == nbUnites012 || 0 == nbUnites345)
@@ -1837,7 +1837,7 @@ namespace vaoc
                 return true;
             }
 
-            private int EffectifTotalSurZone(int zone, List<Donnees.TAB_PIONRow> lignePionsEnBataille, bool bCombatif)
+            public int EffectifTotalSurZone(int zone, List<Donnees.TAB_PIONRow> lignePionsEnBataille, bool bCombatif)
             {
                 int effectifTotal = 0;
                 for (int l = 0; l < lignePionsEnBataille.Count(); l++)
@@ -3239,9 +3239,9 @@ namespace vaoc
                 return TIPETERRAINBATAILLE.AUCUN;
             }
 
-            public bool AjouterDonneesVideo(int tour)
+            public bool AjouterDonneesVideo(int tour, Donnees.TAB_BATAILLE_VIDEODataTable tableBatailleVideo, Donnees.TAB_BATAILLE_PIONS_VIDEODataTable tableBataillePionsVideo)
             {
-                TAB_BATAILLE_VIDEORow ligneBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO.AddTAB_BATAILLE_VIDEORow(
+                TAB_BATAILLE_VIDEORow ligneBatailleVideo = tableBatailleVideo.AddTAB_BATAILLE_VIDEORow(
                     this.ID_BATAILLE,
                     tour,
                     this.ID_LEADER_012, this.ID_LEADER_345,
@@ -3264,7 +3264,7 @@ namespace vaoc
                         LogFile.Notifier("Erreur dans Bataille-AjouterDonneesVideo :" + this.ID_BATAILLE + " : impossible de trouver le pion ID_PION="+ ligneBataillePion.ID_PION);
                         return false;
                     }
-                    TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.AddTAB_BATAILLE_PIONS_VIDEORow(
+                    TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionVideo = tableBataillePionsVideo.AddTAB_BATAILLE_PIONS_VIDEORow(
                         this.ID_BATAILLE,
                         tour,
                         ligneBataillePion.ID_PION,

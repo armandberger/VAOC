@@ -1354,7 +1354,7 @@ namespace vaoc
                 }
             }
 
-            ligneBataille.AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
+            ligneBataille.AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_BATAILLE_VIDEO, Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO);
             message = string.Format("Fin de création de la bataille ID={0}", ligneBataille.ID_BATAILLE);
             LogFile.Notifier(message, out messageErreur);
             return ligneBataille;

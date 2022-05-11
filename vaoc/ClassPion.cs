@@ -2446,7 +2446,12 @@ namespace vaoc
                     int pourcentageRavitaillement = 0;
                     int pourcentageMateriel = 0;
                     int ligneDepotTable = ligneDepot.C_NIVEAU_DEPOT - 'A';
-                    int capaciteDepot = Constantes.tableLimiteRavitaillementDepot[ligneDepotTable] - ligneDepot.I_SOLDATS_RAVITAILLES;
+                    int capaciteDepot = 0;
+                    for (int i= ligneDepotTable; i < 4; i++)
+                    {
+                        capaciteDepot += Constantes.tableLimiteRavitaillementDepot[i];
+                    }
+                    capaciteDepot -= ligneDepot.I_SOLDATS_RAVITAILLES;
                     if (0 == capaciteDepot) { continue; } //cas d'un dépôt A saturé
                     if (besoinEnRavitaillement <= capaciteDepot)
                     {
@@ -2595,6 +2600,7 @@ namespace vaoc
                 ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out meilleurPourcentageRavitaillement);
 
                 //modification suivant la météo en cours
+                
                 meilleurPourcentageRavitaillement = Math.Min(100, (int)((decimal)ligneMeteo.I_POURCENT_RAVITAILLEMENT * meilleurPourcentageRavitaillement / (decimal)100));
                 if (null != ligneMeilleurDepot && meilleurPourcentageRavitaillement > 0)
                 {
@@ -2608,11 +2614,15 @@ namespace vaoc
 
                 if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
                 {
+                    message = string.Format("{0}(ID={1}, estRavitaillableDirect)", S_NOM, ID_PION);
+                    LogFile.Notifier(message);
                     string nomDepot;
                     if (!this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, out nomDepot))
                     {
                         return false;
                     }
+                    message = string.Format("{0}(ID={1}, ravitaillableDirect par le depôt {2})", S_NOM, ID_PION, nomDepot);
+                    LogFile.Notifier(message);
                     //if (string.Empty != nomDepot) { depotRavitaillement = nomDepot; }, il ne faut pas changer le nom du dépot car le dépôt ayant servi à ravitailler en standard n'est pas toujours celui ayant ravitaillé en direct
                 }
 

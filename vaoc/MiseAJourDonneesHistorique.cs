@@ -20,7 +20,8 @@ namespace vaoc
         private int m_debut;
         System.ComponentModel.BackgroundWorker m_travailleur;
         private Donnees.TAB_VIDEODataTable m_tableVideo = null;
-
+        private Donnees.TAB_BATAILLE_VIDEODataTable m_tableBatailleVideo = null;
+        private Donnees.TAB_BATAILLE_PIONS_VIDEODataTable m_tableBataillePionsVideo = null;
         public string Initialisation(string fichierSource, bool avecSauvegarde, int debut, System.ComponentModel.BackgroundWorker worker)
         {
             try
@@ -32,6 +33,8 @@ namespace vaoc
                 m_debut = debut;
                 m_traitement = (0==debut) ? 0 : debut;
                 m_tableVideo = new Donnees.TAB_VIDEODataTable();
+                m_tableBatailleVideo = new Donnees.TAB_BATAILLE_VIDEODataTable();
+                m_tableBataillePionsVideo = new Donnees.TAB_BATAILLE_PIONS_VIDEODataTable();
                 return string.Empty;
             }
             catch (Exception e)
@@ -76,14 +79,27 @@ namespace vaoc
                     {
                         m_tableVideo.Merge(Donnees.m_donnees.TAB_VIDEO);
                     }
+                    if (0 == m_tableBatailleVideo.Rows.Count)
+                    {
+                        m_tableBatailleVideo.Merge(Donnees.m_donnees.TAB_BATAILLE_VIDEO);
+                    }
+                    if (0 == m_tableBataillePionsVideo.Rows.Count)
+                    {
+                        m_tableBataillePionsVideo.Merge(Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO);
+                    }
 
                     MiseAjourVideo(m_tableVideo);
+                    MiseAjourBatailleVideo(m_tableBatailleVideo, m_tableBataillePionsVideo);
                     //CalculNombreTotalPointsDeVictoire(); -> pas possible I_VICTOIRE non renseigné
 
                     if (m_bAvecSauvegarde)
                     {
                         Donnees.m_donnees.TAB_VIDEO.Clear();
                         Donnees.m_donnees.TAB_VIDEO.Merge(m_tableVideo);
+                        Donnees.m_donnees.TAB_BATAILLE_VIDEO.Clear();
+                        Donnees.m_donnees.TAB_BATAILLE_VIDEO.Merge(m_tableBatailleVideo);
+                        Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Clear();
+                        Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Merge(m_tableBataillePionsVideo);
                         Donnees.m_donnees.SauvegarderPartie(nomfichier, m_traitement, 0, false, false, false);
                         //Dal.SauvegarderPartie(m_fichierSource, m_traitement, 0, Donnees.m_donnees);
                     }
@@ -100,6 +116,185 @@ namespace vaoc
             catch (Exception e)
             {
                 return "Exception: " + e.ToString() + " pile:" + e.StackTrace;
+            }
+        }
+
+        private void MiseAjourBatailleVideo(Donnees.TAB_BATAILLE_VIDEODataTable tableBatailleVideo, Donnees.TAB_BATAILLE_PIONS_VIDEODataTable tableBataillePionsVideo)
+        {
+            string message;
+            int nbUnites012, nbUnites345;
+            Donnees.TAB_PIONRow[] lignePionsCombattifBataille012;
+            Donnees.TAB_PIONRow[] lignePionsCombattifBataille345;
+            bool bVictoire012 = true, bVictoire345 = true, bRetraite012=false, bRetraite345=false, bAjoutDonnees;
+
+            //si on refait le même tour, on supprimer les anciennes données pour ne pas les avoir en double
+            int i = 0;
+            while (i < tableBatailleVideo.Count)
+            {
+                Donnees.TAB_BATAILLE_VIDEORow ligneVideo = tableBatailleVideo[i];
+                if (ligneVideo.I_TOUR == m_traitement)
+                {
+                    ligneVideo.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            i = 0;
+            while (i < tableBataillePionsVideo.Count)
+            {
+                Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneVideo = tableBataillePionsVideo[i];
+                if (ligneVideo.I_TOUR == m_traitement)
+                {
+                    ligneVideo.Delete();
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+            {
+                bAjoutDonnees = false;
+                if (ligneBataille.IsI_TOUR_FINNull() || ligneBataille.I_TOUR_FIN<=m_traitement+1)
+                {
+                    try
+                    {
+                        if (ligneBataille.I_TOUR_DEBUT + 1 == m_traitement)
+                        {
+                            //on ne voit le déclenchement d'une bataille qu'au début du tour suivant
+                            if (ligneBataille.IsI_PERTES_0Null())
+                            {
+                                for (i = 0; i < 6; i++)
+                                {
+                                    ligneBataille["I_PERTES_" + Convert.ToString(i)] = 0;
+                                }
+                            }
+                            ligneBataille.AjouterDonneesVideo(m_traitement, tableBatailleVideo, tableBataillePionsVideo);
+                        }
+                        if (!ligneBataille.IsI_TOUR_FINNull() && ligneBataille.I_TOUR_FIN + 1 == m_traitement)
+                        {
+                            //tour de bilan
+                            bAjoutDonnees = true;
+                            if (Donnees.m_donnees.TAB_PARTIE.Nocturne(Donnees.m_donnees.TAB_PARTIE.HeureCourante() - 1))
+                            {
+                                ligneBataille.S_FIN = "NUIT";
+                            }
+                            else
+                            {
+                                if (!ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out int[] des, out int[] modificateurs, out int[] effectifs, out int[] canons,
+                                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
+                                {
+                                    message = string.Format("MiseAjourBatailleVideo : erreur dans RecherchePionsEnBataille");
+                                    LogFile.Notifier(message);
+                                }
+
+                                //Un ordre de retraite a-t-il été donné à ce tour ? ou à un autre ? En fait, il ne peut y avoir qu'une retraite sur une bataille !
+                                string requete = string.Format("ID_BATAILLE={0} AND  I_ORDRE_TYPE={1}",
+                                    ligneBataille.ID_BATAILLE, Constantes.ORDRES.RETRAITE);
+                                Donnees.TAB_ORDRERow[] resOrdreRetraite = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete);
+                                if (resOrdreRetraite.Length > 0)
+                                {
+                                    foreach (Donnees.TAB_ORDRERow ligneOrdre in resOrdreRetraite)
+                                    {
+                                        if (ligneOrdre.I_ZONE_BATAILLE <= 2)
+                                        {
+                                            bRetraite012 = true;
+                                        }
+                                        else
+                                        {
+                                            bRetraite345 = true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //on verifie si ce n'est pas dans les ordres archivés
+                                    Donnees.TAB_ORDRE_ANCIENRow[] resOrdreRetraiteAnciens = (Donnees.TAB_ORDRE_ANCIENRow[])Donnees.m_donnees.TAB_ORDRE_ANCIEN.Select(requete);
+                                    if (resOrdreRetraite.Length > 0)
+                                    {
+                                        foreach (Donnees.TAB_ORDRE_ANCIENRow ligneOrdre in resOrdreRetraiteAnciens)
+                                        {
+                                            if (ligneOrdre.I_ZONE_BATAILLE <= 2)
+                                            {
+                                                bRetraite012 = true;
+                                            }
+                                            else
+                                            {
+                                                bRetraite345 = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                if ((0 == nbUnites012 || 0 == nbUnites345 || bRetraite012 || bRetraite345)
+                                    && (nbUnites012 > 0 || nbUnites345 > 0)
+                                    && (m_traitement - ligneBataille.I_TOUR_DEBUT >= 2))
+                                {
+                                    if (nbUnites012 > 0 || bRetraite345)
+                                    {
+                                        bVictoire345 = false;
+                                    }
+                                    else
+                                    {
+                                        bVictoire012 = false;
+                                    }
+                                    if (bVictoire012) { ligneBataille.S_FIN = "VICTOIRE012"; }
+                                    if (bVictoire345) { ligneBataille.S_FIN = "VICTOIRE345"; }
+                                    if (bRetraite012) { ligneBataille.S_FIN = "RETRAITE012"; }
+                                    if (bRetraite345) { ligneBataille.S_FIN = "RETRAITE345"; }
+                                }
+                            }
+                        }
+                        if (0 == (m_traitement - ligneBataille.I_TOUR_DEBUT) % 2) { bAjoutDonnees = true; }
+                        if (bAjoutDonnees)
+                        {
+                            //recalcul des pertes si necessaire 
+                            if (ligneBataille.IsI_PERTES_0Null())
+                            {
+                                for (i = 0; i < 6; i++)
+                                {
+                                    if (ligneBataille["S_COMBAT_" + Convert.ToString(i)].ToString() == string.Empty)
+                                    {
+                                        ligneBataille["I_PERTES_" + Convert.ToString(i)] = 0;
+                                    }
+                                    else
+                                    {
+                                        string scombat = ligneBataille["S_COMBAT_" + Convert.ToString(i)].ToString();
+                                        int score = (scombat.IndexOf('=') < 0 ) ? 0 : Convert.ToInt32(scombat.Substring(scombat.LastIndexOf(' ')));
+                                        if (0 == score)
+                                        { ligneBataille["I_PERTES_" + Convert.ToString(i)] = 0; }
+                                        else
+                                        {
+                                            int[] des;
+                                            int[] effectifs;
+                                            int[] canons;
+                                            int[] modificateurs;
+                                            Donnees.TAB_PIONRow[] tablePionsEngages012;
+                                            Donnees.TAB_PIONRow[] tablePionsEngages345;
+
+                                            ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/);
+                                            if (i < 3)
+                                            {
+                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = ligneBataille.EffectifTotalSurZone(i, tablePionsEngages012.ToList(), false /*bCombatif*/) * score / 400;
+                                            }
+                                            else
+                                            {
+                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = ligneBataille.EffectifTotalSurZone(i, tablePionsEngages345.ToList(), false /*bCombatif*/) * score / 400;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            ligneBataille.AjouterDonneesVideo(m_traitement, tableBatailleVideo, tableBataillePionsVideo);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("MiseAjourBatailleVideo Exception: " + ex.ToString() + " pile:" + ex.StackTrace);
+                    }
+                }
             }
         }
 
@@ -139,7 +334,7 @@ namespace vaoc
                     Debug.WriteLine("Exception: " + eCasesDebutFin.ToString() + " pile:" + eCasesDebutFin.StackTrace);
                 }
                 if (idCaseDebut < 0) idCaseDebut = lignePion.ID_CASE;//possible si pas d'ordre en cours
-                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByID_CASE(idCaseDebut);
+                Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(idCaseDebut);
                 Donnees.TAB_VIDEORow ligneVideo = tableVideo.AddTAB_VIDEORow(
                     m_traitement,
                     lignePion.nation.ID_NATION,

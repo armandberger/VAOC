@@ -1180,6 +1180,10 @@ namespace vaoc
                 //afficher le titre
                 AfficheMultiLigne(G, nomBataille, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5));
 
+                //afficher la date
+                string titreDate = ClassMessager.DateHeure(debut, 0).ToString("dddd d MMMM yyyy");
+                AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5));
+
                 //afficher les protagonistes + effectifs
                 for (int nation=0; nation < 2; nation++)
                 {
@@ -1324,8 +1328,14 @@ namespace vaoc
         {
             if (string.Empty == nom ) { return "aucun_chef.png"; }
             //le dernier mot
-            int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
-            return nom.Substring(pos, nom.Length - pos) + ".jpg";
+            //int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
+            //return nom.Substring(pos, nom.Length - pos) + ".jpg";
+
+            //les blancs remplacés par des soulignés et tout en minuscule sans accents
+            byte[] tempBytes;
+            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(nom);
+            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            return asciiStr.Replace(" ", "_").Replace("'", "_").ToLower() + ".jpg";
         }
 
         /// <summary>

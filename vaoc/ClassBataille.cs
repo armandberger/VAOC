@@ -2969,9 +2969,9 @@ namespace vaoc
                 TIPETERRAINBATAILLE[] obstacles = new TIPETERRAINBATAILLE[3];
                 TIPEORIENTATIONBATAILLE orientation = (this.C_ORIENTATION =='V') ? TIPEORIENTATIONBATAILLE.VERTICAL : TIPEORIENTATIONBATAILLE.HORIZONTAL;
                 TIPEFINBATAILLE fin = TIPEFINBATAILLE.RETRAITE012;
-                int tourpoursuite = 0;
+                int tourpoursuite = Donnees.m_donnees.TAB_PARTIE.Nocturne(Donnees.m_donnees.TAB_PARTIE.HeureBase(this.I_TOUR_FIN)) ? 0 :1 ;
                 int iNation012=-1, iNation345 = -1;
-
+                /*
                 switch(this.S_FIN)
                 {
                     case "RETRAITE012":
@@ -2994,6 +2994,7 @@ namespace vaoc
                         fin = TIPEFINBATAILLE.NUIT;
                         break;
                 }
+                */
                 for (int i=0;i<6;i++)
                 {
                     terrains[i] = FilmTerrain((int)this["ID_TERRAIN_" + Convert.ToString(i)]);
@@ -3041,6 +3042,29 @@ namespace vaoc
                                 rolesBataille.Add(roleBataille);
                             }
                         }
+                    }
+                    TAB_BATAILLE_VIDEORow ligneBatailleVideoFin = Donnees.m_donnees.TAB_BATAILLE_VIDEO.FindByID_BATAILLEI_TOUR(this.ID_BATAILLE, this.I_TOUR_FIN + tourpoursuite);
+                    switch (ligneBatailleVideoFin.S_FIN)
+                    {
+                        case "RETRAITE012":
+                            fin = TIPEFINBATAILLE.RETRAITE012;
+                            tourpoursuite = 1;
+                            break;
+                        case "RETRAITE345":
+                            fin = TIPEFINBATAILLE.RETRAITE345;
+                            tourpoursuite = 1;
+                            break;
+                        case "VICTOIRE012":
+                            fin = TIPEFINBATAILLE.VICTOIRE012;
+                            tourpoursuite = 1;
+                            break;
+                        case "VICTOIRE345":
+                            fin = TIPEFINBATAILLE.VICTOIRE345;
+                            tourpoursuite = 1;
+                            break;
+                        default:
+                            fin = TIPEFINBATAILLE.NUIT;
+                            break;
                     }
 
                     TAB_BATAILLE_PIONS_VIDEORow[] listeBataillePionsVideo = 
@@ -3247,7 +3271,7 @@ namespace vaoc
                     this.ID_LEADER_012, this.ID_LEADER_345,
                     this.I_ENGAGEMENT_0, this.I_ENGAGEMENT_1, this.I_ENGAGEMENT_2, this.I_ENGAGEMENT_3, this.I_ENGAGEMENT_4, this.I_ENGAGEMENT_5,
                     this.S_COMBAT_0, this.S_COMBAT_1, this.S_COMBAT_2, this.S_COMBAT_3, this.S_COMBAT_4, this.S_COMBAT_5,
-                    this.I_PERTES_0, this.I_PERTES_1, this.I_PERTES_2, this.I_PERTES_3, this.I_PERTES_4, this.I_PERTES_5);
+                    this.I_PERTES_0, this.I_PERTES_1, this.I_PERTES_2, this.I_PERTES_3, this.I_PERTES_4, this.I_PERTES_5, this.S_FIN);
                 if (null== ligneBatailleVideo)
                 {
                     LogFile.Notifier("Erreur dans Bataille-AjouterDonneesVideo :" + this.ID_BATAILLE + " : AddTAB_BATAILLE_VIDEORow renvoie NULL");

@@ -172,6 +172,7 @@ namespace vaoc
                                     ligneBataille["I_PERTES_" + Convert.ToString(i)] = 0;
                                 }
                             }
+                            ligneBataille.S_FIN = "";
                             ligneBataille.AjouterDonneesVideo(m_traitement, tableBatailleVideo, tableBataillePionsVideo);
                         }
                         if (!ligneBataille.IsI_TOUR_FINNull() && ligneBataille.I_TOUR_FIN + 1 == m_traitement)
@@ -246,6 +247,10 @@ namespace vaoc
                                     if (bRetraite345) { ligneBataille.S_FIN = "RETRAITE345"; }
                                 }
                             }
+                        }
+                        else
+                        {
+                            ligneBataille.S_FIN = "";
                         }
                         if (0 == (m_traitement - ligneBataille.I_TOUR_DEBUT) % 2) { bAjoutDonnees = true; }
                         if (bAjoutDonnees)

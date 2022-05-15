@@ -21795,6 +21795,8 @@ namespace vaoc {
             
             private global::System.Data.DataColumn columnI_PERTES_5;
             
+            private global::System.Data.DataColumn columnS_FIN;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_BATAILLE_VIDEODataTable() {
@@ -22006,6 +22008,14 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn S_FINColumn {
+                get {
+                    return this.columnS_FIN;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -22063,7 +22073,8 @@ namespace vaoc {
                         int I_PERTES_2, 
                         int I_PERTES_3, 
                         int I_PERTES_4, 
-                        int I_PERTES_5) {
+                        int I_PERTES_5, 
+                        string S_FIN) {
                 TAB_BATAILLE_VIDEORow rowTAB_BATAILLE_VIDEORow = ((TAB_BATAILLE_VIDEORow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         ID_BATAILLE,
@@ -22087,7 +22098,8 @@ namespace vaoc {
                         I_PERTES_2,
                         I_PERTES_3,
                         I_PERTES_4,
-                        I_PERTES_5};
+                        I_PERTES_5,
+                        S_FIN};
                 rowTAB_BATAILLE_VIDEORow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTAB_BATAILLE_VIDEORow);
                 return rowTAB_BATAILLE_VIDEORow;
@@ -22140,6 +22152,7 @@ namespace vaoc {
                 this.columnI_PERTES_3 = base.Columns["I_PERTES_3"];
                 this.columnI_PERTES_4 = base.Columns["I_PERTES_4"];
                 this.columnI_PERTES_5 = base.Columns["I_PERTES_5"];
+                this.columnS_FIN = base.Columns["S_FIN"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -22189,6 +22202,8 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_PERTES_4);
                 this.columnI_PERTES_5 = new global::System.Data.DataColumn("I_PERTES_5", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnI_PERTES_5);
+                this.columnS_FIN = new global::System.Data.DataColumn("S_FIN", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnS_FIN);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_BATAILLE,
                                 this.columnI_TOUR}, true));
@@ -37491,6 +37506,22 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string S_FIN {
+                get {
+                    try {
+                        return ((string)(this[this.tableTAB_BATAILLE_VIDEO.S_FINColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'S_FIN\' dans la table \'TAB_BATAILLE_VIDEO\' est DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTAB_BATAILLE_VIDEO.S_FINColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsID_LEADER_012Null() {
                 return this.IsNull(this.tableTAB_BATAILLE_VIDEO.ID_LEADER_012Column);
             }
@@ -37727,6 +37758,18 @@ namespace vaoc {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetI_PERTES_5Null() {
                 this[this.tableTAB_BATAILLE_VIDEO.I_PERTES_5Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsS_FINNull() {
+                return this.IsNull(this.tableTAB_BATAILLE_VIDEO.S_FINColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetS_FINNull() {
+                this[this.tableTAB_BATAILLE_VIDEO.S_FINColumn] = global::System.Convert.DBNull;
             }
         }
         

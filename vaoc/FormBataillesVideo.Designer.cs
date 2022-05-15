@@ -36,6 +36,23 @@ namespace vaoc
             this.bindingSourceTAB_BATAILLE_VIDEO = new System.Windows.Forms.BindingSource(this.components);
             this.bindingSourceTAB_BATAILLE_PIONS_VIDEO = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewBatailles = new System.Windows.Forms.DataGridView();
+            this.dataGridViewBataillesPions = new System.Windows.Forms.DataGridView();
+            this.iDBATAILLEDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iTOURDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iDPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bENGAGEEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.bENDEFENSEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.iINFANTERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iCAVALERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iARTILLERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iMORALDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.iFATIGUEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.bRETRAITEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.bENGAGEMENTDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDBATAILLEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iTOURDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iDLEADER012DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,23 +75,7 @@ namespace vaoc
             this.iPERTES3DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iPERTES4DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.iPERTES5DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewBataillesPions = new System.Windows.Forms.DataGridView();
-            this.iDBATAILLEDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iTOURDataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iDPIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sNOMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iDNATIONDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bENGAGEEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.bENDEFENSEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.iINFANTERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iCAVALERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iARTILLERIEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iMORALDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.iFATIGUEDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.bRETRAITEDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.bENGAGEMENTDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.S_FIN = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataSetCoutDonnees)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceTAB_BATAILLE_VIDEO)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSourceTAB_BATAILLE_PIONS_VIDEO)).BeginInit();
@@ -143,15 +144,174 @@ namespace vaoc
             this.iPERTES2DataGridViewTextBoxColumn,
             this.iPERTES3DataGridViewTextBoxColumn,
             this.iPERTES4DataGridViewTextBoxColumn,
-            this.iPERTES5DataGridViewTextBoxColumn});
+            this.iPERTES5DataGridViewTextBoxColumn,
+            this.S_FIN});
             this.dataGridViewBatailles.DataSource = this.bindingSourceTAB_BATAILLE_VIDEO;
             this.dataGridViewBatailles.Location = new System.Drawing.Point(11, 11);
-            this.dataGridViewBatailles.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dataGridViewBatailles.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridViewBatailles.Name = "dataGridViewBatailles";
             this.dataGridViewBatailles.RowHeadersWidth = 62;
             this.dataGridViewBatailles.RowTemplate.Height = 28;
             this.dataGridViewBatailles.Size = new System.Drawing.Size(905, 97);
             this.dataGridViewBatailles.TabIndex = 17;
+            // 
+            // dataGridViewBataillesPions
+            // 
+            this.dataGridViewBataillesPions.AutoGenerateColumns = false;
+            this.dataGridViewBataillesPions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewBataillesPions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.iDBATAILLEDataGridViewTextBoxColumn1,
+            this.iTOURDataGridViewTextBoxColumn1,
+            this.iDPIONDataGridViewTextBoxColumn,
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn,
+            this.sNOMDataGridViewTextBoxColumn,
+            this.iDNATIONDataGridViewTextBoxColumn,
+            this.bENGAGEEDataGridViewCheckBoxColumn,
+            this.bENDEFENSEDataGridViewCheckBoxColumn,
+            this.iINFANTERIEDataGridViewTextBoxColumn,
+            this.iCAVALERIEDataGridViewTextBoxColumn,
+            this.iARTILLERIEDataGridViewTextBoxColumn,
+            this.iMORALDataGridViewTextBoxColumn,
+            this.iFATIGUEDataGridViewTextBoxColumn,
+            this.bRETRAITEDataGridViewCheckBoxColumn,
+            this.bENGAGEMENTDataGridViewCheckBoxColumn,
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn});
+            this.dataGridViewBataillesPions.DataSource = this.bindingSourceTAB_BATAILLE_PIONS_VIDEO;
+            this.dataGridViewBataillesPions.Location = new System.Drawing.Point(11, 121);
+            this.dataGridViewBataillesPions.Margin = new System.Windows.Forms.Padding(2);
+            this.dataGridViewBataillesPions.Name = "dataGridViewBataillesPions";
+            this.dataGridViewBataillesPions.RowHeadersWidth = 62;
+            this.dataGridViewBataillesPions.RowTemplate.Height = 28;
+            this.dataGridViewBataillesPions.Size = new System.Drawing.Size(923, 97);
+            this.dataGridViewBataillesPions.TabIndex = 18;
+            // 
+            // iDBATAILLEDataGridViewTextBoxColumn1
+            // 
+            this.iDBATAILLEDataGridViewTextBoxColumn1.DataPropertyName = "ID_BATAILLE";
+            this.iDBATAILLEDataGridViewTextBoxColumn1.HeaderText = "ID_BATAILLE";
+            this.iDBATAILLEDataGridViewTextBoxColumn1.MinimumWidth = 8;
+            this.iDBATAILLEDataGridViewTextBoxColumn1.Name = "iDBATAILLEDataGridViewTextBoxColumn1";
+            this.iDBATAILLEDataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // iTOURDataGridViewTextBoxColumn1
+            // 
+            this.iTOURDataGridViewTextBoxColumn1.DataPropertyName = "I_TOUR";
+            this.iTOURDataGridViewTextBoxColumn1.HeaderText = "I_TOUR";
+            this.iTOURDataGridViewTextBoxColumn1.MinimumWidth = 8;
+            this.iTOURDataGridViewTextBoxColumn1.Name = "iTOURDataGridViewTextBoxColumn1";
+            this.iTOURDataGridViewTextBoxColumn1.Width = 150;
+            // 
+            // iDPIONDataGridViewTextBoxColumn
+            // 
+            this.iDPIONDataGridViewTextBoxColumn.DataPropertyName = "ID_PION";
+            this.iDPIONDataGridViewTextBoxColumn.HeaderText = "ID_PION";
+            this.iDPIONDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iDPIONDataGridViewTextBoxColumn.Name = "iDPIONDataGridViewTextBoxColumn";
+            this.iDPIONDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iDPROPRIETAIREDataGridViewTextBoxColumn
+            // 
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn.DataPropertyName = "ID_PROPRIETAIRE";
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn.HeaderText = "ID_PROPRIETAIRE";
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn.Name = "iDPROPRIETAIREDataGridViewTextBoxColumn";
+            this.iDPROPRIETAIREDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // sNOMDataGridViewTextBoxColumn
+            // 
+            this.sNOMDataGridViewTextBoxColumn.DataPropertyName = "S_NOM";
+            this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
+            this.sNOMDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
+            this.sNOMDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iDNATIONDataGridViewTextBoxColumn
+            // 
+            this.iDNATIONDataGridViewTextBoxColumn.DataPropertyName = "ID_NATION";
+            this.iDNATIONDataGridViewTextBoxColumn.HeaderText = "ID_NATION";
+            this.iDNATIONDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iDNATIONDataGridViewTextBoxColumn.Name = "iDNATIONDataGridViewTextBoxColumn";
+            this.iDNATIONDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // bENGAGEEDataGridViewCheckBoxColumn
+            // 
+            this.bENGAGEEDataGridViewCheckBoxColumn.DataPropertyName = "B_ENGAGEE";
+            this.bENGAGEEDataGridViewCheckBoxColumn.HeaderText = "B_ENGAGEE";
+            this.bENGAGEEDataGridViewCheckBoxColumn.MinimumWidth = 8;
+            this.bENGAGEEDataGridViewCheckBoxColumn.Name = "bENGAGEEDataGridViewCheckBoxColumn";
+            this.bENGAGEEDataGridViewCheckBoxColumn.Width = 150;
+            // 
+            // bENDEFENSEDataGridViewCheckBoxColumn
+            // 
+            this.bENDEFENSEDataGridViewCheckBoxColumn.DataPropertyName = "B_EN_DEFENSE";
+            this.bENDEFENSEDataGridViewCheckBoxColumn.HeaderText = "B_EN_DEFENSE";
+            this.bENDEFENSEDataGridViewCheckBoxColumn.MinimumWidth = 8;
+            this.bENDEFENSEDataGridViewCheckBoxColumn.Name = "bENDEFENSEDataGridViewCheckBoxColumn";
+            this.bENDEFENSEDataGridViewCheckBoxColumn.Width = 150;
+            // 
+            // iINFANTERIEDataGridViewTextBoxColumn
+            // 
+            this.iINFANTERIEDataGridViewTextBoxColumn.DataPropertyName = "I_INFANTERIE";
+            this.iINFANTERIEDataGridViewTextBoxColumn.HeaderText = "I_INFANTERIE";
+            this.iINFANTERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iINFANTERIEDataGridViewTextBoxColumn.Name = "iINFANTERIEDataGridViewTextBoxColumn";
+            this.iINFANTERIEDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iCAVALERIEDataGridViewTextBoxColumn
+            // 
+            this.iCAVALERIEDataGridViewTextBoxColumn.DataPropertyName = "I_CAVALERIE";
+            this.iCAVALERIEDataGridViewTextBoxColumn.HeaderText = "I_CAVALERIE";
+            this.iCAVALERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iCAVALERIEDataGridViewTextBoxColumn.Name = "iCAVALERIEDataGridViewTextBoxColumn";
+            this.iCAVALERIEDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iARTILLERIEDataGridViewTextBoxColumn
+            // 
+            this.iARTILLERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ARTILLERIE";
+            this.iARTILLERIEDataGridViewTextBoxColumn.HeaderText = "I_ARTILLERIE";
+            this.iARTILLERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iARTILLERIEDataGridViewTextBoxColumn.Name = "iARTILLERIEDataGridViewTextBoxColumn";
+            this.iARTILLERIEDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iMORALDataGridViewTextBoxColumn
+            // 
+            this.iMORALDataGridViewTextBoxColumn.DataPropertyName = "I_MORAL";
+            this.iMORALDataGridViewTextBoxColumn.HeaderText = "I_MORAL";
+            this.iMORALDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iMORALDataGridViewTextBoxColumn.Name = "iMORALDataGridViewTextBoxColumn";
+            this.iMORALDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // iFATIGUEDataGridViewTextBoxColumn
+            // 
+            this.iFATIGUEDataGridViewTextBoxColumn.DataPropertyName = "I_FATIGUE";
+            this.iFATIGUEDataGridViewTextBoxColumn.HeaderText = "I_FATIGUE";
+            this.iFATIGUEDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iFATIGUEDataGridViewTextBoxColumn.Name = "iFATIGUEDataGridViewTextBoxColumn";
+            this.iFATIGUEDataGridViewTextBoxColumn.Width = 150;
+            // 
+            // bRETRAITEDataGridViewCheckBoxColumn
+            // 
+            this.bRETRAITEDataGridViewCheckBoxColumn.DataPropertyName = "B_RETRAITE";
+            this.bRETRAITEDataGridViewCheckBoxColumn.HeaderText = "B_RETRAITE";
+            this.bRETRAITEDataGridViewCheckBoxColumn.MinimumWidth = 8;
+            this.bRETRAITEDataGridViewCheckBoxColumn.Name = "bRETRAITEDataGridViewCheckBoxColumn";
+            this.bRETRAITEDataGridViewCheckBoxColumn.Width = 150;
+            // 
+            // bENGAGEMENTDataGridViewCheckBoxColumn
+            // 
+            this.bENGAGEMENTDataGridViewCheckBoxColumn.DataPropertyName = "B_ENGAGEMENT";
+            this.bENGAGEMENTDataGridViewCheckBoxColumn.HeaderText = "B_ENGAGEMENT";
+            this.bENGAGEMENTDataGridViewCheckBoxColumn.MinimumWidth = 8;
+            this.bENGAGEMENTDataGridViewCheckBoxColumn.Name = "bENGAGEMENTDataGridViewCheckBoxColumn";
+            this.bENGAGEMENTDataGridViewCheckBoxColumn.Width = 150;
+            // 
+            // iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn
+            // 
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.DataPropertyName = "I_ZONE_BATAILLE_ENGAGEMENT";
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.HeaderText = "I_ZONE_BATAILLE_ENGAGEMENT";
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.MinimumWidth = 8;
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.Name = "iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn";
+            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.Width = 150;
             // 
             // iDBATAILLEDataGridViewTextBoxColumn
             // 
@@ -329,163 +489,11 @@ namespace vaoc
             this.iPERTES5DataGridViewTextBoxColumn.Name = "iPERTES5DataGridViewTextBoxColumn";
             this.iPERTES5DataGridViewTextBoxColumn.Width = 150;
             // 
-            // dataGridViewBataillesPions
+            // S_FIN
             // 
-            this.dataGridViewBataillesPions.AutoGenerateColumns = false;
-            this.dataGridViewBataillesPions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewBataillesPions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.iDBATAILLEDataGridViewTextBoxColumn1,
-            this.iTOURDataGridViewTextBoxColumn1,
-            this.iDPIONDataGridViewTextBoxColumn,
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn,
-            this.sNOMDataGridViewTextBoxColumn,
-            this.iDNATIONDataGridViewTextBoxColumn,
-            this.bENGAGEEDataGridViewCheckBoxColumn,
-            this.bENDEFENSEDataGridViewCheckBoxColumn,
-            this.iINFANTERIEDataGridViewTextBoxColumn,
-            this.iCAVALERIEDataGridViewTextBoxColumn,
-            this.iARTILLERIEDataGridViewTextBoxColumn,
-            this.iMORALDataGridViewTextBoxColumn,
-            this.iFATIGUEDataGridViewTextBoxColumn,
-            this.bRETRAITEDataGridViewCheckBoxColumn,
-            this.bENGAGEMENTDataGridViewCheckBoxColumn,
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn});
-            this.dataGridViewBataillesPions.DataSource = this.bindingSourceTAB_BATAILLE_PIONS_VIDEO;
-            this.dataGridViewBataillesPions.Location = new System.Drawing.Point(11, 121);
-            this.dataGridViewBataillesPions.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.dataGridViewBataillesPions.Name = "dataGridViewBataillesPions";
-            this.dataGridViewBataillesPions.RowHeadersWidth = 62;
-            this.dataGridViewBataillesPions.RowTemplate.Height = 28;
-            this.dataGridViewBataillesPions.Size = new System.Drawing.Size(923, 97);
-            this.dataGridViewBataillesPions.TabIndex = 18;
-            // 
-            // iDBATAILLEDataGridViewTextBoxColumn1
-            // 
-            this.iDBATAILLEDataGridViewTextBoxColumn1.DataPropertyName = "ID_BATAILLE";
-            this.iDBATAILLEDataGridViewTextBoxColumn1.HeaderText = "ID_BATAILLE";
-            this.iDBATAILLEDataGridViewTextBoxColumn1.MinimumWidth = 8;
-            this.iDBATAILLEDataGridViewTextBoxColumn1.Name = "iDBATAILLEDataGridViewTextBoxColumn1";
-            this.iDBATAILLEDataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // iTOURDataGridViewTextBoxColumn1
-            // 
-            this.iTOURDataGridViewTextBoxColumn1.DataPropertyName = "I_TOUR";
-            this.iTOURDataGridViewTextBoxColumn1.HeaderText = "I_TOUR";
-            this.iTOURDataGridViewTextBoxColumn1.MinimumWidth = 8;
-            this.iTOURDataGridViewTextBoxColumn1.Name = "iTOURDataGridViewTextBoxColumn1";
-            this.iTOURDataGridViewTextBoxColumn1.Width = 150;
-            // 
-            // iDPIONDataGridViewTextBoxColumn
-            // 
-            this.iDPIONDataGridViewTextBoxColumn.DataPropertyName = "ID_PION";
-            this.iDPIONDataGridViewTextBoxColumn.HeaderText = "ID_PION";
-            this.iDPIONDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iDPIONDataGridViewTextBoxColumn.Name = "iDPIONDataGridViewTextBoxColumn";
-            this.iDPIONDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iDPROPRIETAIREDataGridViewTextBoxColumn
-            // 
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn.DataPropertyName = "ID_PROPRIETAIRE";
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn.HeaderText = "ID_PROPRIETAIRE";
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn.Name = "iDPROPRIETAIREDataGridViewTextBoxColumn";
-            this.iDPROPRIETAIREDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // sNOMDataGridViewTextBoxColumn
-            // 
-            this.sNOMDataGridViewTextBoxColumn.DataPropertyName = "S_NOM";
-            this.sNOMDataGridViewTextBoxColumn.HeaderText = "S_NOM";
-            this.sNOMDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.sNOMDataGridViewTextBoxColumn.Name = "sNOMDataGridViewTextBoxColumn";
-            this.sNOMDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iDNATIONDataGridViewTextBoxColumn
-            // 
-            this.iDNATIONDataGridViewTextBoxColumn.DataPropertyName = "ID_NATION";
-            this.iDNATIONDataGridViewTextBoxColumn.HeaderText = "ID_NATION";
-            this.iDNATIONDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iDNATIONDataGridViewTextBoxColumn.Name = "iDNATIONDataGridViewTextBoxColumn";
-            this.iDNATIONDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // bENGAGEEDataGridViewCheckBoxColumn
-            // 
-            this.bENGAGEEDataGridViewCheckBoxColumn.DataPropertyName = "B_ENGAGEE";
-            this.bENGAGEEDataGridViewCheckBoxColumn.HeaderText = "B_ENGAGEE";
-            this.bENGAGEEDataGridViewCheckBoxColumn.MinimumWidth = 8;
-            this.bENGAGEEDataGridViewCheckBoxColumn.Name = "bENGAGEEDataGridViewCheckBoxColumn";
-            this.bENGAGEEDataGridViewCheckBoxColumn.Width = 150;
-            // 
-            // bENDEFENSEDataGridViewCheckBoxColumn
-            // 
-            this.bENDEFENSEDataGridViewCheckBoxColumn.DataPropertyName = "B_EN_DEFENSE";
-            this.bENDEFENSEDataGridViewCheckBoxColumn.HeaderText = "B_EN_DEFENSE";
-            this.bENDEFENSEDataGridViewCheckBoxColumn.MinimumWidth = 8;
-            this.bENDEFENSEDataGridViewCheckBoxColumn.Name = "bENDEFENSEDataGridViewCheckBoxColumn";
-            this.bENDEFENSEDataGridViewCheckBoxColumn.Width = 150;
-            // 
-            // iINFANTERIEDataGridViewTextBoxColumn
-            // 
-            this.iINFANTERIEDataGridViewTextBoxColumn.DataPropertyName = "I_INFANTERIE";
-            this.iINFANTERIEDataGridViewTextBoxColumn.HeaderText = "I_INFANTERIE";
-            this.iINFANTERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iINFANTERIEDataGridViewTextBoxColumn.Name = "iINFANTERIEDataGridViewTextBoxColumn";
-            this.iINFANTERIEDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iCAVALERIEDataGridViewTextBoxColumn
-            // 
-            this.iCAVALERIEDataGridViewTextBoxColumn.DataPropertyName = "I_CAVALERIE";
-            this.iCAVALERIEDataGridViewTextBoxColumn.HeaderText = "I_CAVALERIE";
-            this.iCAVALERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iCAVALERIEDataGridViewTextBoxColumn.Name = "iCAVALERIEDataGridViewTextBoxColumn";
-            this.iCAVALERIEDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iARTILLERIEDataGridViewTextBoxColumn
-            // 
-            this.iARTILLERIEDataGridViewTextBoxColumn.DataPropertyName = "I_ARTILLERIE";
-            this.iARTILLERIEDataGridViewTextBoxColumn.HeaderText = "I_ARTILLERIE";
-            this.iARTILLERIEDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iARTILLERIEDataGridViewTextBoxColumn.Name = "iARTILLERIEDataGridViewTextBoxColumn";
-            this.iARTILLERIEDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iMORALDataGridViewTextBoxColumn
-            // 
-            this.iMORALDataGridViewTextBoxColumn.DataPropertyName = "I_MORAL";
-            this.iMORALDataGridViewTextBoxColumn.HeaderText = "I_MORAL";
-            this.iMORALDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iMORALDataGridViewTextBoxColumn.Name = "iMORALDataGridViewTextBoxColumn";
-            this.iMORALDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // iFATIGUEDataGridViewTextBoxColumn
-            // 
-            this.iFATIGUEDataGridViewTextBoxColumn.DataPropertyName = "I_FATIGUE";
-            this.iFATIGUEDataGridViewTextBoxColumn.HeaderText = "I_FATIGUE";
-            this.iFATIGUEDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iFATIGUEDataGridViewTextBoxColumn.Name = "iFATIGUEDataGridViewTextBoxColumn";
-            this.iFATIGUEDataGridViewTextBoxColumn.Width = 150;
-            // 
-            // bRETRAITEDataGridViewCheckBoxColumn
-            // 
-            this.bRETRAITEDataGridViewCheckBoxColumn.DataPropertyName = "B_RETRAITE";
-            this.bRETRAITEDataGridViewCheckBoxColumn.HeaderText = "B_RETRAITE";
-            this.bRETRAITEDataGridViewCheckBoxColumn.MinimumWidth = 8;
-            this.bRETRAITEDataGridViewCheckBoxColumn.Name = "bRETRAITEDataGridViewCheckBoxColumn";
-            this.bRETRAITEDataGridViewCheckBoxColumn.Width = 150;
-            // 
-            // bENGAGEMENTDataGridViewCheckBoxColumn
-            // 
-            this.bENGAGEMENTDataGridViewCheckBoxColumn.DataPropertyName = "B_ENGAGEMENT";
-            this.bENGAGEMENTDataGridViewCheckBoxColumn.HeaderText = "B_ENGAGEMENT";
-            this.bENGAGEMENTDataGridViewCheckBoxColumn.MinimumWidth = 8;
-            this.bENGAGEMENTDataGridViewCheckBoxColumn.Name = "bENGAGEMENTDataGridViewCheckBoxColumn";
-            this.bENGAGEMENTDataGridViewCheckBoxColumn.Width = 150;
-            // 
-            // iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn
-            // 
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.DataPropertyName = "I_ZONE_BATAILLE_ENGAGEMENT";
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.HeaderText = "I_ZONE_BATAILLE_ENGAGEMENT";
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.MinimumWidth = 8;
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.Name = "iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn";
-            this.iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn.Width = 150;
+            this.S_FIN.DataPropertyName = "S_FIN";
+            this.S_FIN.HeaderText = "S_FIN";
+            this.S_FIN.Name = "S_FIN";
             // 
             // FormBataillesVideo
             // 
@@ -496,7 +504,7 @@ namespace vaoc
             this.Controls.Add(this.dataGridViewBatailles);
             this.Controls.Add(this.buttonAnnuler);
             this.Controls.Add(this.buttonValider);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormBataillesVideo";
             this.Text = "FormBataillesVideo";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -518,6 +526,23 @@ namespace vaoc
         private System.Windows.Forms.BindingSource bindingSourceTAB_BATAILLE_VIDEO;
         private System.Windows.Forms.BindingSource bindingSourceTAB_BATAILLE_PIONS_VIDEO;
         private System.Windows.Forms.DataGridView dataGridViewBatailles;
+        private System.Windows.Forms.DataGridView dataGridViewBataillesPions;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDBATAILLEDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iTOURDataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDPIONDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDPROPRIETAIREDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn bENGAGEEDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn bENDEFENSEDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iINFANTERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iCAVALERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iARTILLERIEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iMORALDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iFATIGUEDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn bRETRAITEDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn bENGAGEMENTDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDBATAILLEDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iTOURDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iDLEADER012DataGridViewTextBoxColumn;
@@ -540,22 +565,6 @@ namespace vaoc
         private System.Windows.Forms.DataGridViewTextBoxColumn iPERTES3DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iPERTES4DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn iPERTES5DataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridView dataGridViewBataillesPions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDBATAILLEDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iTOURDataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDPIONDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDPROPRIETAIREDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn sNOMDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iDNATIONDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn bENGAGEEDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn bENDEFENSEDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iINFANTERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iCAVALERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iARTILLERIEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iMORALDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iFATIGUEDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn bRETRAITEDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn bENGAGEMENTDataGridViewCheckBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn iZONEBATAILLEENGAGEMENTDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn S_FIN;
     }
 }

@@ -2266,9 +2266,10 @@ namespace vaoc
 
                         if (null == lignePionVoisin || lignePionVoisin.B_DETRUIT) { continue; }//note, null possible si j'ai détruit manuellement une unité
                         if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
-                        if (!lignePionVoisin.estCombattifQG(true, true) && bUniquementCombattives) { continue; }
+                        bool bEstcombattif = lignePionVoisin.estCombattifQG(true, true, true);
+                        if (!bEstcombattif && bUniquementCombattives) { continue; }
 
-                        if (!bAmiCombattif && lignePionVoisin.estCombattif)
+                        if (!bAmiCombattif && bEstcombattif)
                         {
                             if (lignePionVoisin.nation == lignePion.nation)
                             {

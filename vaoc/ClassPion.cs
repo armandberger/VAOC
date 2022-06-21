@@ -1590,15 +1590,17 @@ namespace vaoc
             /// indique si le pion est en état de se battre ou pas
             /// </summary>
             /// <param name="QGcombattif">true si on considére le QG comme unité combattante, false sinon</param>
+            /// <param name="combattifSansMoral">true si on considére l'unité peut être engager en bataille sans moral</param>
+            /// <param name="combattifEnRetraite">true si on considére que l'unité assure une protection combattive en retraite (cas pour déterminer si une unité est en danger), false sinon</param>
             /// <returns>true si combattif false sinon</returns>
-            public bool estCombattifQG(bool QGcombattif, bool combattifSansMoral)
+            public bool estCombattifQG(bool QGcombattif, bool combattifSansMoral, bool combattifEnRetraite=false)
             {
                 if (B_DETRUIT)
                 {
                     return false;
                 }
 
-                if ((I_TOUR_FUITE_RESTANT > 0 || I_TOUR_RETRAITE_RESTANT > 0) && !combattifSansMoral)
+                if ((I_TOUR_FUITE_RESTANT > 0 || I_TOUR_RETRAITE_RESTANT > 0) && !combattifSansMoral && !combattifEnRetraite)
                 {
                     return false;
                 }

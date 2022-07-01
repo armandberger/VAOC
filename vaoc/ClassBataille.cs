@@ -356,6 +356,8 @@ namespace vaoc
                 int i;
                 AStar etoile = new AStar();
                 List<Donnees.TAB_PIONRow> listePionsEnBataille = new List<TAB_PIONRow>();
+
+                if (0==lignePionsEnBataille.Count()) { return true; }//possible si toutes les unités adverses ont été détruites au combat
                 foreach (Donnees.TAB_PIONRow l in lignePionsEnBataille) listePionsEnBataille.Add(l);
                 int nation = listePionsEnBataille[0].idNation;
 

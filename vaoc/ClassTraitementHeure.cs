@@ -600,23 +600,29 @@ namespace vaoc
                                lignePionMax2.ID_PION,
                                lignePionMax2.S_NOM));
                         }
-                        if (/*distanceMin < 5 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE || */ distanceMinEnMouvement< 15 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE )
+                        //if (/*distanceMin < 5 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE || */ distanceMinEnMouvement< 15 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE )
+                        //{
+                        //    //A moins de 15 kilomètres en mouvement ou 5 kilomètres à l'arrêt, on ne fait pas plus de deux heures de suite le jour
+                        //    if ((!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()) && nbTourExecutes >= 2)
+                        //    {
+                        //        bTourSuivant = false;
+                        //        LogFile.Notifier("Fin de tour :A moins de 20/10 kilomètres, on ne fait pas plus de deux heures de suite le jour");
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    //A moins de 30 kilomètres en mouvement, on ne fait pas plus de quatre heures de suite
+                        //    if ((distanceMinEnMouvement < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4) && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
+                        //    {
+                        //        bTourSuivant = false;
+                        //        LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
+                        //    }
+                        //}
+                        //A moins de 30 kilomètres en mouvement, on ne fait pas plus de quatre heures de suite
+                        if ((distanceMinEnMouvement < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4) && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
                         {
-                            //A moins de 15 kilomètres en mouvement ou 5 kilomètres à l'arrêt, on ne fait pas plus de deux heures de suite le jour
-                            if ((!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()) && nbTourExecutes >= 2)
-                            {
-                                bTourSuivant = false;
-                                LogFile.Notifier("Fin de tour :A moins de 20/10 kilomètres, on ne fait pas plus de deux heures de suite le jour");
-                            }
-                        }
-                        else
-                        {
-                            //A moins de 30 kilomètres en mouvement, on ne fait pas plus de quatre heures de suite
-                            if ((distanceMinEnMouvement < 30 * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE) && (nbTourExecutes >= 4) && (!bDebutDeNuit || !Donnees.m_donnees.TAB_PARTIE.Nocturne()))
-                            {
-                                bTourSuivant = false;
-                                LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
-                            }
+                            bTourSuivant = false;
+                            LogFile.Notifier("Fin de tour :A moins de 50 kilomètres, on ne fait pas plus de quatre heures de suite");
                         }
                         // sauf si le prochain tour est le lever du soleil ou la nuit ou la première heure, dans ce cas, on fait encore une heure de plus
                         if ((Donnees.m_donnees.TAB_PARTIE.HeureCourante() + 1 == Donnees.m_donnees.TAB_JEU[0].I_LEVER_DU_SOLEIL) ||

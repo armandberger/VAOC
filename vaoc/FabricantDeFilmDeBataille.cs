@@ -120,19 +120,16 @@ namespace vaoc
                 {
                     //on supprime toutes les images qui pourraient exister d'un précédent traitement
                     DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
-                    FileInfo[] listeFichiers = dir.GetFiles("bataille*.png", SearchOption.TopDirectoryOnly);
+                    FileInfo[] listeFichiers = dir.GetFiles("*"+nomFichier+"*.png", SearchOption.TopDirectoryOnly);
 
                     foreach (FileInfo fichier in listeFichiers)
                     {
                         File.Delete(fichier.FullName);
                     }
+
+
                     //on supprime également toutes les vidéos précédentes
-                    listeFichiers = dir.GetFiles("*.mp4", SearchOption.TopDirectoryOnly);
-                    foreach (FileInfo fichier in listeFichiers)
-                    {
-                        File.Delete(fichier.FullName);
-                    }
-
+                    listeFichiers = dir.GetFiles("*" + nomFichier + "*.mp4", SearchOption.TopDirectoryOnly);
                     foreach (FileInfo fichier in listeFichiers)
                     {
                         File.Delete(fichier.FullName);

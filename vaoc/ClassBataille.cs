@@ -3046,7 +3046,7 @@ namespace vaoc
                         }
                     }
                     TAB_BATAILLE_VIDEORow ligneBatailleVideoFin = Donnees.m_donnees.TAB_BATAILLE_VIDEO.FindByID_BATAILLEI_TOUR(this.ID_BATAILLE, this.I_TOUR_FIN + tourpoursuite);
-                    switch (ligneBatailleVideoFin.S_FIN)
+                    switch (this.S_FIN)
                     {
                         case "RETRAITE012":
                             fin = TIPEFINBATAILLE.RETRAITE012;

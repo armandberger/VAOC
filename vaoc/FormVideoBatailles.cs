@@ -34,7 +34,10 @@ namespace vaoc
             {
                 foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                 {
-                    ligneBataille.GenererFilm(m_nomfichier);
+                    if (!ligneBataille.IsI_TOUR_FINNull())
+                    {
+                        ligneBataille.GenererFilm(m_nomfichier);
+                    }
                 }
             }
             else

@@ -3026,9 +3026,9 @@ namespace vaoc
 
                         if (!ligneBatailleVideo.IsID_LEADER_012Null() || !ligneBatailleVideo.IsID_LEADER_345Null())
                         {
-                            RoleBataille roleBataille = new RoleBataille() { iTour = tour };
                             if (!ligneBatailleVideo.IsID_LEADER_012Null() && ligneBatailleVideo.ID_LEADER_012>=0)
                             {
+                                RoleBataille roleBataille = new RoleBataille() { iTour = tour };
                                 TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_012);
                                 roleBataille.iNation012 = lignePion.idNation;
                                 roleBataille.nomLeader012 = lignePion.S_NOM;
@@ -3037,6 +3037,7 @@ namespace vaoc
                             }
                             if (!ligneBatailleVideo.IsID_LEADER_345Null() && ligneBatailleVideo.ID_LEADER_345>=0)
                             {
+                                RoleBataille roleBataille = new RoleBataille() { iTour = tour };
                                 TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBatailleVideo.ID_LEADER_345);
                                 roleBataille.iNation345 = lignePion.idNation;
                                 roleBataille.nomLeader012 = string.Empty;
@@ -3180,16 +3181,21 @@ namespace vaoc
                 FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
                 //tout est fait dans initialisation
                 string erreur = film.Initialisation(
-                    Donnees.m_donnees.TAB_JEU[0].S_NOM,
-                    "Bataille"+this.ID_BATAILLE,
+                    Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
+                    Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", "") + "_Bataille" +this.ID_BATAILLE,
                     repertoire + "\\batailles",
                     this.S_NOM,
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
                     new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),//policeTitre
                     new Font(FontFamily.GenericSansSerif, 20, FontStyle.Regular | FontStyle.Bold),//policeTitreEffectifs
                     1600, 1200, iNation012, iNation345,
-                    unitesBataille,rolesBataille,zonesBataille,terrains,obstacles,
-                    orientation, fin,
+                    unitesBataille,
+                    rolesBataille,
+                    zonesBataille,
+                    terrains,
+                    obstacles,
+                    orientation, 
+                    fin,
                     this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
                     this.I_TOUR_DEBUT //debut
                     );

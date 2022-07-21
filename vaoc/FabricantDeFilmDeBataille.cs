@@ -120,7 +120,7 @@ namespace vaoc
                 {
                     //on supprime toutes les images qui pourraient exister d'un précédent traitement
                     DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
-                    FileInfo[] listeFichiers = dir.GetFiles("*"+nomFichier+"*.png", SearchOption.TopDirectoryOnly);
+                    FileInfo[] listeFichiers = dir.GetFiles("*" + nomFichier + "*.png", SearchOption.TopDirectoryOnly);
 
                     foreach (FileInfo fichier in listeFichiers)
                     {
@@ -226,7 +226,7 @@ namespace vaoc
                 WindowStyle = ProcessWindowStyle.Normal,
                 FileName = "ffmpeg.exe",
                 WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
-                Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne.Replace(' ', '_'), m_nomFichier)
+                Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne, m_nomFichier)
             };
             Process.Start(processInfo);
         }
@@ -762,8 +762,8 @@ namespace vaoc
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 0;//pointe
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 2 * m_hauteur / 9;
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 2 * m_hauteur / 9;
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 3 * m_hauteur / 18;//bas gauche
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 3 * m_hauteur / 18;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 13 * m_hauteur / 18;//bas gauche
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 13 * m_hauteur / 18;
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 2 * m_hauteur / 9;
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 2 * m_hauteur / 9;
                         break;
@@ -1116,7 +1116,7 @@ namespace vaoc
         private string TraitementTitre(string nomBataille, int debut, Font policeTitre, Font policeTitreEffectifs)
         {
             Graphics G;
-            int xunite, yunite;
+            int yunite;
             try
             {
                 //recherche des leaders durant la bataille
@@ -1132,30 +1132,32 @@ namespace vaoc
                 int[] infanterieMax = new int[2];
                 int[] cavalerieMax = new int[2];
                 int[] artillerieMax = new int[2];
-                int[] nationCote = new int[2];
+                int[] infanterieEngageeMax = new int[2];
+                int[] cavalerieEngageeMax = new int[2];
+                int[] artillerieEngageeMax = new int[2];
+                //int[] nationCote = new int[2];
 
                 //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
-                for (int t = debut; t < debut + m_nbEtapes; t++)
+                //+1 car si aucune unité engagée, elle sont engagées "par défaut" uniquement sur le tour de fin..., cas quand il n'y a pas de leader présent
+                for (int t = debut; t < debut + m_nbEtapes + 1; t++)
                 {
                     int[] infanterie = new int[2];
                     int[] cavalerie = new int[2];
                     int[] artillerie = new int[2];
+                    int[] infanterieEngagee = new int[2];
+                    int[] cavalerieEngagee = new int[2];
+                    int[] artillerieEngagee = new int[2];
                     foreach (UniteBataille unite in m_unitesBataille)
                     {
                         if (unite.iTour != t) { continue; }
-                        if (unite.iZone < 3)
+                        infanterie[unite.iNation] += unite.effectifInfanterie;
+                        cavalerie[unite.iNation] += unite.effectifCavalerie;
+                        artillerie[unite.iNation] += unite.effectifArtillerie;
+                        if (unite.iZone>0)
                         {
-                            infanterie[0] += unite.effectifInfanterie;
-                            cavalerie[0] += unite.effectifCavalerie;
-                            artillerie[0] += unite.effectifArtillerie;
-                            nationCote[0] = unite.iNation;
-                        }
-                        else
-                        {
-                            infanterie[1] += unite.effectifInfanterie;
-                            cavalerie[1] += unite.effectifCavalerie;
-                            artillerie[1] += unite.effectifArtillerie;
-                            nationCote[1] = unite.iNation;
+                            infanterieEngagee[unite.iNation] += unite.effectifInfanterie;
+                            cavalerieEngagee[unite.iNation] += unite.effectifCavalerie;
+                            artillerieEngagee[unite.iNation] += unite.effectifArtillerie;
                         }
                     }
                     for (int i = 0; i < 2; i++)
@@ -1163,6 +1165,9 @@ namespace vaoc
                         infanterieMax[i] = Math.Max(infanterieMax[i], infanterie[i]);
                         cavalerieMax[i] = Math.Max(cavalerieMax[i], cavalerie[i]);
                         artillerieMax[i] = Math.Max(artillerieMax[i], artillerie[i]);
+                        infanterieEngageeMax[i] = Math.Max(infanterieEngageeMax[i], infanterieEngagee[i]);
+                        cavalerieEngageeMax[i] = Math.Max(cavalerieEngageeMax[i], cavalerieEngagee[i]);
+                        artillerieEngageeMax[i] = Math.Max(artillerieEngageeMax[i], artillerieEngagee[i]);
                     }
                 }
 
@@ -1203,28 +1208,16 @@ namespace vaoc
 
                     //affichage des effectifs
                     //on centre par rapport à la taille max des effectifs
-                    SizeF tailleTexteBase = G.MeasureString("00 000 ", policeTitreEffectifs);
-                    SizeF tailleTexteFinal = G.MeasureString(infanterieMax[nation].ToString("N0") +" ", policeTitreEffectifs);
+                    SizeF tailleTexteBase = G.MeasureString("00 000 / 00 000", policeTitreEffectifs);
 
-                    Bitmap image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
-                    xunite = nation* m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) /2 + (int)(tailleTexteBase.Width- tailleTexteFinal.Width) / 2;
-                    yunite = m_hauteur * 3 / 5 + (int)(tailleTexteBase.Height/2);
-                    G.DrawString(infanterieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
-                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+                    Bitmap image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
+                    yunite = AfficheEffectifsBataille(G, nation, infanterieEngageeMax[nation].ToString("N0") + " / " + infanterieMax[nation].ToString("N0"), image, policeTitreEffectifs, m_hauteur * 3 / 5 + (int)(tailleTexteBase.Height / 2), (int)tailleTexteBase.Width);
 
-                    tailleTexteFinal = G.MeasureString(cavalerieMax[nation].ToString("N0") + " ", policeTitreEffectifs);
-                    image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
-                    xunite = nation * m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) / 2 + (int)(tailleTexteBase.Width - tailleTexteFinal.Width) / 2;
-                    yunite += (int)(tailleTexteFinal.Height * 3/2);
-                    G.DrawString(cavalerieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
-                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+                    image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
+                    yunite = AfficheEffectifsBataille(G, nation, cavalerieEngageeMax[nation].ToString("N0") + " / " + cavalerieMax[nation].ToString("N0"), image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
 
-                    tailleTexteFinal = G.MeasureString(artillerieMax[nation].ToString("N0") + " ", policeTitreEffectifs);
-                    image = (0 == nationCote[nation]) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
-                    xunite = nation * m_largeur / 2 + (m_largeur / 2 - (int)tailleTexteBase.Width - image.Width) / 2 + (int)(tailleTexteBase.Width - tailleTexteFinal.Width) / 2;
-                    yunite += (int)(tailleTexteFinal.Height * 3 / 2);
-                    G.DrawString(artillerieMax[nation].ToString("N0"), policeTitreEffectifs, Brushes.Black, xunite, yunite);
-                    G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+                    image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
+                    yunite = AfficheEffectifsBataille(G, nation, artillerieEngageeMax[nation].ToString("N0") + " / " + artillerieMax[nation].ToString("N0"), image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
                 }
 
                 SauvegardeImage(fichierImage);
@@ -1237,6 +1230,16 @@ namespace vaoc
             {
                 return "TraitementTitre Exception in: " + e.ToString();
             }
+        }
+
+        private int AfficheEffectifsBataille(Graphics G, int nation, string texte, Bitmap image, Font police, int y, int largeurBase)
+        {
+            SizeF tailleTexteFinal = G.MeasureString(texte, police);
+            int xunite = nation * m_largeur / 2 + (m_largeur / 2 - (int)largeurBase - image.Width) / 2 + (int)(largeurBase - tailleTexteFinal.Width) / 2;
+            int yunite = y + (int)(tailleTexteFinal.Height * 3 / 2);
+            G.DrawString(texte, police, Brushes.Black, xunite, yunite);
+            G.DrawImage(image, xunite + tailleTexteFinal.Width, yunite);
+            return yunite;
         }
 
         private void AfficheOfficierBataille(Graphics G, string nom, Font policeNom, Rectangle rect)

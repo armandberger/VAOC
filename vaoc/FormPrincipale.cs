@@ -183,7 +183,28 @@ namespace vaoc
 
         private void Correctifs()
         {
-            /* Reprise d'un ordre ancien en ordre courant */
+            #region messagers qui n'ont plus d'ordres...
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePion.B_DETRUIT && lignePion.estMessager)
+                {
+                    int i = 0;
+                    while (i<Donnees.m_donnees.TAB_ORDRE.Count)
+                    {
+                        if (Donnees.m_donnees.TAB_ORDRE[i].ID_PION == lignePion.ID_PION) break;
+                        i++;
+                    }
+                    if (i >= Donnees.m_donnees.TAB_ORDRE.Count)
+                    {
+                        Debug.WriteLine("suppression du messager " + lignePion.ID_PION + ":" + lignePion.S_NOM);
+                        lignePion.B_DETRUIT = true;
+                    }
+                }
+            }
+            int t = 0;
+            #endregion
+
+            #region Reprise d'un ordre ancien en ordre courant 
             //ClassTraitementHeure traitement = new ClassTraitementHeure();
             //Donnees.TAB_ORDRE_ANCIENRow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE_ANCIEN.FindByID_ORDRE(51951);
             //ligneOrdreAncien.I_TOUR_FIN = Constantes.NULLENTIER;
@@ -207,6 +228,7 @@ namespace vaoc
             //    }
             //}
             //int t = 0;
+            #endregion
 
             //blessés/pions avec le nombre de troupes initiales non renseignées
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)

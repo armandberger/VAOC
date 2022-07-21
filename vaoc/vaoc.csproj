@@ -761,7 +761,7 @@
     <Content Include="images\scherbatov.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="images\schwarzenberg.jpg">
+    <Content Include="images\prince_schwarzenberg.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="images\prince_von_blucher.jpg">

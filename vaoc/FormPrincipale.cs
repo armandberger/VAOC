@@ -184,24 +184,24 @@ namespace vaoc
         private void Correctifs()
         {
             #region messagers qui n'ont plus d'ordres...
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            {
-                if (!lignePion.B_DETRUIT && lignePion.estMessager)
-                {
-                    int i = 0;
-                    while (i<Donnees.m_donnees.TAB_ORDRE.Count)
-                    {
-                        if (Donnees.m_donnees.TAB_ORDRE[i].ID_PION == lignePion.ID_PION) break;
-                        i++;
-                    }
-                    if (i >= Donnees.m_donnees.TAB_ORDRE.Count)
-                    {
-                        Debug.WriteLine("suppression du messager " + lignePion.ID_PION + ":" + lignePion.S_NOM);
-                        lignePion.B_DETRUIT = true;
-                    }
-                }
-            }
-            int t = 0;
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (!lignePion.B_DETRUIT && lignePion.estMessager)
+            //    {
+            //        int i = 0;
+            //        while (i<Donnees.m_donnees.TAB_ORDRE.Count)
+            //        {
+            //            if (Donnees.m_donnees.TAB_ORDRE[i].ID_PION == lignePion.ID_PION) break;
+            //            i++;
+            //        }
+            //        if (i >= Donnees.m_donnees.TAB_ORDRE.Count)
+            //        {
+            //            Debug.WriteLine("suppression du messager " + lignePion.ID_PION + ":" + lignePion.S_NOM);
+            //            lignePion.B_DETRUIT = true;
+            //        }
+            //    }
+            //}
+            //int t = 0;
             #endregion
 
             #region Reprise d'un ordre ancien en ordre courant 

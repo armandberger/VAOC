@@ -394,6 +394,19 @@ namespace WaocLib
             return tableEffaciteAuCombat[Math.Max(0, (materiel - 1) / 20), Math.Max(0, (ravitaillement - 1) / 20)];
         }
 
+        /// <summary>
+        /// tout en minuscule sans accents
+        /// </summary>
+        /// <param name="texte">texte source</param>
+        /// <returns>texte en minuscule et sans accents</returns>
+        public static string MinusculeSansAccents(string texte)
+        {
+            //les blancs remplacés par des soulignés et tout en minuscule sans accents
+            byte[] tempBytes;
+            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(texte);
+            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            return asciiStr;
+        }
         #endregion
     }
 }

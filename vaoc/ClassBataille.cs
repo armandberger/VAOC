@@ -732,6 +732,7 @@ namespace vaoc
                 SortedList listePertesMoral = new SortedList();
                 SortedList listePertesMateriel = new SortedList();
                 SortedList listePertesRavitaillement = new SortedList();
+                string ratio;
                 int effectifPoursuivantTotal;
                 int i;
 
@@ -808,17 +809,19 @@ namespace vaoc
 
                 rapport = (0 == effectifCavaleriePoursuivi) ? 4 : (decimal)effectifCavaleriePoursuivant / (decimal)effectifCavaleriePoursuivi;
                 modifRapport = 0;
-                if (rapport > 0.5m) { modifRapport = 1; }
-                if (rapport > 1m) { modifRapport = 2; }
-                if (rapport > 2m) { modifRapport = 3; }
-                if (rapport > 3m) { modifRapport = 4; }
+                ratio = "< 1/2";
+                if (rapport > 0.5m) { modifRapport = 1; ratio = "1/2"; }
+                if (rapport > 1m) { modifRapport = 2; ratio = "1/1"; }
+                if (rapport > 2m) { modifRapport = 3; ratio = "2/1"; }
+                if (rapport > 3m) { modifRapport = 4; ratio = "3/1"; }
+                if (rapport > 4m) { modifRapport = 5; ratio = "4/1"; }//avant 27/7/2022 cette ligne n'existait pas
 
                 message = string.Format("Poursuite : rapport={0} modifRapport={1}", rapport, modifRapport);
                 LogFile.Notifier(message);
 
                 de = Constantes.JetDeDes(1) + modifRapport -1;
                 if (de < 0) de = 0;
-                if (de > 9) de = 9;
+                if (de > 10) de = 10;//avant 27/7/2022 c'était 9
 
                 moral = Math.Min(3,(moralCavaleriePoursuivant - 1) / 10);
                 //pertes = ((Constantes.tablePoursuite[de, moral] * effectifCavaleriePoursuivant / 100) / Constantes.CST_PAS_DE_PERTES) * Constantes.CST_PAS_DE_PERTES;//on travaille par multiples de CST_PAS_DE_PERTES
@@ -875,7 +878,7 @@ namespace vaoc
                     for (int z = 0; z < 6; z++)
                     {
                         //on met le même chiffre global partout, le générateur de vidéo saura pendre la bonne zone
-                        this["S_COMBAT_" + Convert.ToString(z)] = string.Format("{0} dés, rapport = {1}", de, rapport);
+                        this["S_COMBAT_" + Convert.ToString(z)] = string.Format("{0} dés, ratio = {1}", de, ratio);
                         this["I_PERTES_" + Convert.ToString(z)] = pertes;
                     }
                 }
@@ -3089,13 +3092,16 @@ namespace vaoc
 
                         //recherche de la nation
                         TAB_PIONRow lignePion = m_donnees.TAB_PION.FindByID_PION(ligneBataillePionsVideo.ID_PION);
-                        if (ligneBataillePionsVideo.B_ENGAGEE && ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT < 3)
+                        if (ligneBataillePionsVideo.B_ENGAGEE && ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT>=0)
                         {
-                            iNation012 = lignePion.idNation;
-                        }
-                        else
-                        {
-                            iNation345 = lignePion.idNation;
+                            if (ligneBataillePionsVideo.I_ZONE_BATAILLE_ENGAGEMENT < 3)
+                            {
+                                iNation012 = lignePion.idNation;
+                            }
+                            else
+                            {
+                                iNation345 = lignePion.idNation;
+                            }
                         }
                     }
                 }
@@ -3209,6 +3215,11 @@ namespace vaoc
 
             private TIPEUNITEBATAILLE DefinitionTipeUniteBataille(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo)
             {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePionsVideo.ID_PION);
+                if (lignePion.estQG)
+                {
+                    return TIPEUNITEBATAILLE.QG;
+                }
                 TIPEUNITEBATAILLE retour = TIPEUNITEBATAILLE.AUTRE;
                 if (ligneBataillePionsVideo.I_INFANTERIE > 0)
                 {
@@ -3228,7 +3239,30 @@ namespace vaoc
                         }
                         else
                         {
-                            retour = TIPEUNITEBATAILLE.QG;
+                            //unite entièrement détruite, on se base sur les effectifs initiaux
+                            if (lignePion.I_INFANTERIE_INITIALE > 0)
+                            {
+                                retour = TIPEUNITEBATAILLE.INFANTERIE;
+                            }
+                            else
+                            {
+                                if (lignePion.I_CAVALERIE_INITIALE > 0)
+                                {
+                                    retour = TIPEUNITEBATAILLE.CAVALERIE;
+                                }
+                                else
+                                {
+                                    if (lignePion.I_ARTILLERIE_INITIALE > 0)
+                                    {
+                                        retour = TIPEUNITEBATAILLE.ARTILLERIE;
+                                    }
+                                    else
+                                    {
+                                        //on ne devrait pas arriver jusque là
+                                        retour = TIPEUNITEBATAILLE.QG;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -3239,31 +3273,32 @@ namespace vaoc
                 TAB_MODELE_TERRAINRow ligneTerrain = m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(iD_TERRAIN);
                 if (null != ligneTerrain)
                 {
-                    if (ligneTerrain.S_NOM.IndexOf("plaine", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    string nomterrain = Constantes.MinusculeSansAccents(ligneTerrain.S_NOM);
+                    if (nomterrain.IndexOf("plaine", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.PLAINE;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("colline", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("colline", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.COLLINE;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("foret", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("foret", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.FORET;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("forteresse", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("forteresse", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.FORTERESSE;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("ville", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("ville", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.VILLE;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("riviere", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("riviere", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.RIVIERE;
                     }
-                    if (ligneTerrain.S_NOM.IndexOf("fleuve", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                    if (nomterrain.IndexOf("fleuve", StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         return TIPETERRAINBATAILLE.FLEUVE;
                     }

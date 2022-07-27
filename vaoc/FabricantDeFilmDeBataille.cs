@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Linq;
+using WaocLib;
 
 namespace vaoc
 {
@@ -108,7 +109,7 @@ namespace vaoc
                 m_obstacles = iObstacle;
                 m_orientation = cOrientation;
                 m_fin = iFin;
-                m_nbEtapes = nbEtapes;
+                m_nbEtapes = nbEtapes + 1;//pour l'étape de bilan
                 m_police = police;
                 m_nomCampagne = nomCampagne;
                 m_nomFichier = nomFichier;
@@ -1139,7 +1140,7 @@ namespace vaoc
 
                 //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
                 //+1 car si aucune unité engagée, elle sont engagées "par défaut" uniquement sur le tour de fin..., cas quand il n'y a pas de leader présent
-                for (int t = debut; t < debut + m_nbEtapes + 1; t++)
+                for (int t = debut; t < debut + m_nbEtapes +1; t++)
                 {
                     int[] infanterie = new int[2];
                     int[] cavalerie = new int[2];
@@ -1327,15 +1328,7 @@ namespace vaoc
         private string NomRoleFichier(string nom)
         {
             if (string.Empty == nom ) { return "aucun_chef.png"; }
-            //le dernier mot
-            //int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
-            //return nom.Substring(pos, nom.Length - pos) + ".jpg";
-
-            //les blancs remplacés par des soulignés et tout en minuscule sans accents
-            byte[] tempBytes;
-            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(nom);
-            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
-            return asciiStr.Replace(" ", "_").Replace("'", "_").ToLower() + ".jpg";
+            return Constantes.MinusculeSansAccents(nom).Replace(" ", "_").Replace("'", "_").ToLower() + ".jpg";
         }
 
         /// <summary>

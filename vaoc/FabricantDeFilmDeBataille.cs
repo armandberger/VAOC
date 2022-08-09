@@ -194,6 +194,7 @@ namespace vaoc
                         return retour;
                     }
                 }
+                TraitementBilan(m_fin, debut, policeTitre, policeTitreEffectifs);
                 Terminer();
                 return string.Empty;
             }
@@ -201,6 +202,238 @@ namespace vaoc
             {
                 return "Initialisation - Exception in: " + e.ToString();
             }
+        }
+
+        private string TraitementBilan(TIPEFINBATAILLE m_fin, int debut,  Font policeTitre, Font policeTitreEffectifs)
+        {
+            Graphics G;
+            Brush brosseSymbole;
+            string texteTitre = "ERREUR";
+            Point[] symbole = new Point[0];//pour éviter l'erreur de non initialisation à la compilation
+            Brush couleurTexte = Brushes.Black;
+            //int yunite;
+
+            try
+            {
+                int[] pertes = new int[2];
+                if (m_iNation012 >= 0 && m_iNation345 >= 0)
+                {
+                    foreach (ZoneBataille zoneBataille in m_zonesBataille)
+                    {
+                        if (zoneBataille.iTour >= debut && zoneBataille.iTour <= debut + m_nbEtapes
+                            && null != zoneBataille.iPertes
+                            )
+                        {
+                            //si toutes les valeurs de pertes sont les mêmes sur toutes les zones, cas particulier de la poursuite
+                            bool bPoursuite = true;
+                            int p = 0;
+                            while (p < 5 && bPoursuite)
+                            {
+                                if (zoneBataille.iPertes[p] != zoneBataille.iPertes[p + 1])
+                                {
+                                    bPoursuite = false;
+                                }
+                                p++;
+                            }
+                            if (bPoursuite)
+                            {
+                                switch (m_fin)
+                                {
+                                    case TIPEFINBATAILLE.RETRAITE012:
+                                    case TIPEFINBATAILLE.VICTOIRE345:
+                                        pertes[m_iNation012] += zoneBataille.iPertes[0];
+                                        break;
+                                    case TIPEFINBATAILLE.VICTOIRE012:
+                                    case TIPEFINBATAILLE.RETRAITE345:
+                                        pertes[m_iNation345] += zoneBataille.iPertes[0];
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                for (int z = 0; z < 6; z++)
+                                {
+                                    if (z < 3)
+                                    {
+                                        pertes[m_iNation012] += zoneBataille.iPertes[z];
+                                    }
+                                    else
+                                    {
+                                        pertes[m_iNation345] += zoneBataille.iPertes[z];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                //recherche des effectifs max et min engagés, la différence ce sont les pertes
+                //int[] infanterieEngageeMin = new int[2];
+                //int[] cavalerieEngageeMin = new int[2];
+                //int[] artillerieEngageeMin = new int[2];
+                //int[] infanterieEngageeMax = new int[2];
+                //int[] cavalerieEngageeMax = new int[2];
+                //int[] artillerieEngageeMax = new int[2];
+                //for (int i=0; i<2; i++)
+                //{
+                //    infanterieEngageeMin[i] = int.MaxValue;
+                //    cavalerieEngageeMin[i] = int.MaxValue;
+                //    artillerieEngageeMin[i] = int.MaxValue;
+                //    infanterieEngageeMax[i] = 0;
+                //    cavalerieEngageeMax[i] = 0;
+                //    artillerieEngageeMax[i] = 0;
+                //}
+
+                //for (int t = debut; t < debut + m_nbEtapes + 1; t++)
+                //{
+                //    int[] infanterieEngagee = new int[2];
+                //    int[] cavalerieEngagee = new int[2];
+                //    int[] artillerieEngagee = new int[2];
+                //    foreach (UniteBataille unite in m_unitesBataille)
+                //    {
+                //        if (unite.iTour != t) { continue; }
+                //        if (unite.iZone > 0)
+                //        {
+                //            infanterieEngagee[unite.iNation] += unite.effectifInfanterie;
+                //            cavalerieEngagee[unite.iNation] += unite.effectifCavalerie;
+                //            artillerieEngagee[unite.iNation] += unite.effectifArtillerie;
+                //        }
+                //    }
+                //    for (int i = 0; i < 2; i++)
+                //    {
+                //        infanterieEngageeMin[i] = Math.Min(infanterieEngageeMax[i], infanterieEngagee[i]);
+                //        cavalerieEngageeMin[i] = Math.Min(cavalerieEngageeMax[i], cavalerieEngagee[i]);
+                //        artillerieEngageeMin[i] = Math.Min(artillerieEngageeMax[i], artillerieEngagee[i]);
+                //        infanterieEngageeMax[i] = Math.Max(infanterieEngageeMax[i], infanterieEngagee[i]);
+                //        cavalerieEngageeMax[i] = Math.Max(cavalerieEngageeMax[i], cavalerieEngagee[i]);
+                //        artillerieEngageeMax[i] = Math.Max(artillerieEngageeMax[i], artillerieEngagee[i]);
+                //    }
+                //}
+
+                //on determine les éléments graphiques suivant les cas
+                switch (m_fin)
+                {
+                    case TIPEFINBATAILLE.RETRAITE012:
+                        brosseSymbole = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
+                        texteTitre = "RETRAITE";
+                        symbole = SymboleRetraite();
+                        break;
+                    case TIPEFINBATAILLE.VICTOIRE012:
+                        brosseSymbole = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
+                        texteTitre = "VICTOIRE";
+                        break;
+                    case TIPEFINBATAILLE.RETRAITE345:
+                        brosseSymbole = (0 == m_iNation345) ? Brushes.Blue : Brushes.OrangeRed;
+                        texteTitre = "RETRAITE";
+                        symbole = SymboleRetraite();
+                        break;
+                    case TIPEFINBATAILLE.VICTOIRE345:
+                        brosseSymbole = (0 == m_iNation345) ? Brushes.Blue : Brushes.OrangeRed;
+                        texteTitre = "VICTOIRE";
+                        break;
+                    case TIPEFINBATAILLE.NUIT:
+                        brosseSymbole = Brushes.Black;
+                        texteTitre = "NUIT";
+                        break;
+                    default:
+                        brosseSymbole = Brushes.Green;//choix exprès d'une couleur bizarre car ce cas ne devrait pas arriver
+                        break;
+                }
+
+                //affichage
+                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                G = Graphics.FromImage(fichierImage);
+                G.PageUnit = GraphicsUnit.Pixel;
+
+                //mettre la texture sur le fond
+                //TextureFondBataille(G, "titrebataille.jpg", new Rectangle(0, 0, m_largeur, m_hauteur));
+                if (TIPEFINBATAILLE.NUIT == m_fin)
+                {
+                    //G.FillEllipse(brosseSymbole, m_largeur / 2, m_hauteur / 2, m_largeur / 2, m_hauteur / 2);
+                    G.FillRectangle(Brushes.Black, 0, 0, m_largeur, m_hauteur);
+                    couleurTexte = Brushes.White;
+                }
+                else
+                {
+                    int nation = -1;
+                    switch (m_fin)
+                    {
+                        case TIPEFINBATAILLE.RETRAITE012:
+                        case TIPEFINBATAILLE.VICTOIRE345:
+                            nation = m_iNation345;
+                            break;
+                        case TIPEFINBATAILLE.VICTOIRE012:
+                        case TIPEFINBATAILLE.RETRAITE345:
+                            nation = m_iNation012;
+                            break;
+                    }
+                    if( 0 == nation)
+                    {
+                        couleurTexte = Brushes.Black;
+                        //drapeau français
+                        G.FillRectangle(Brushes.Blue, 0, 0, m_largeur/3, m_hauteur);
+                        G.FillRectangle(Brushes.White, m_largeur / 3, 0, m_largeur / 3, m_hauteur);
+                        G.FillRectangle(Brushes.Red, 2 * m_largeur / 3, 0, m_largeur / 3, m_hauteur);
+                    }
+                    else
+                    {
+                        couleurTexte = Brushes.White;
+                        //drapeau autrichien
+                        G.FillRectangle(Brushes.Black, 0, 0, m_largeur, m_hauteur/2);
+                        G.FillRectangle(Brushes.Yellow, 0, m_hauteur / 2, m_largeur, m_hauteur/2);
+                    }
+                }
+
+                //afficher le titre
+                AfficheMultiLigne(G, texteTitre, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5), couleurTexte);
+
+                //afficher la date
+                //string titreDate = ClassMessager.DateHeure(debut, 0).ToString("dddd d MMMM yyyy");
+                //AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5));
+
+                //afficher les pertes
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Center;
+                for (int nation = 0; nation < 2; nation++)
+                {
+                    //on centre par rapport à la taille max des effectifs
+                    //SizeF tailleTexteBase = G.MeasureString("00 000", policeTitreEffectifs);
+
+                    //Bitmap image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.infanterie_0) : new Bitmap(vaoc.Properties.Resources.infanterie_1);
+                    //yunite = AfficheEffectifsBataille(G, nation, (infanterieEngageeMax[nation] - infanterieEngageeMin[nation]).ToString("N0") , image, policeTitreEffectifs, m_hauteur * 3 / 5 + (int)(tailleTexteBase.Height / 2), (int)tailleTexteBase.Width);
+
+                    //image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.cavalerie_0) : new Bitmap(vaoc.Properties.Resources.cavalerie_1);
+                    //yunite = AfficheEffectifsBataille(G, nation, (cavalerieEngageeMax[nation] - cavalerieEngageeMin[nation]).ToString("N0") , image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
+
+                    //image = (0 == nation) ? new Bitmap(vaoc.Properties.Resources.artillerie_0) : new Bitmap(vaoc.Properties.Resources.artillerie_1);
+                    //yunite = AfficheEffectifsBataille(G, nation, (artillerieEngageeMax[nation] - artillerieEngageeMin[nation]).ToString("N0"), image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
+
+                    int xtexte = m_largeur / 2;
+                    SizeF tailleTexte = G.MeasureString(pertes[nation].ToString() + " †", policeTitreEffectifs);
+                    G.DrawString(pertes[nation].ToString() + " †", policeTitreEffectifs, (0 == nation) ? Brushes.Blue : Brushes.OrangeRed,
+                        new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 2 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
+                }
+
+                SauvegardeImage(fichierImage);
+
+                G.Dispose();
+                fichierImage.Dispose();
+                return string.Empty;
+            }
+            catch (Exception e)
+            {
+                return "TraitementBilan Exception in: " + e.ToString();
+            }
+        }
+
+        private Point[] SymboleRetraite()
+        {
+            Point[] symbole = new Point[1];
+            int f = 0;//position du point dans le symbole
+
+            symbole[f].X = symbole[0].X; symbole[f++].Y = symbole[0].Y;
+            return symbole;
         }
 
         /// <summary>
@@ -713,13 +946,13 @@ namespace vaoc
                 switch (fin)
                 {
                     case TIPEFINBATAILLE.RETRAITE345:
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 18;//haut, gauche
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 5 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 9 * m_hauteur / 9;//pointe
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 5 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 18;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;//haut, gauche
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 6 * m_hauteur / 9;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 6 * m_hauteur / 9;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 7 * m_hauteur / 9;//pointe
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 6 * m_hauteur / 9;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 6 * m_hauteur / 9;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;
                         break;
                     case TIPEFINBATAILLE.VICTOIRE012:
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 11 * m_hauteur / 18;//haut, gauche
@@ -734,7 +967,7 @@ namespace vaoc
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 18;//haut, gauche
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 5 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 7 * m_hauteur / 9;//pointe
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 6 * m_hauteur / 9;//pointe
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 5 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 18;
@@ -751,13 +984,13 @@ namespace vaoc
                 switch (fin)
                 {
                     case TIPEFINBATAILLE.RETRAITE012:
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 0;//pointe
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 4 * m_hauteur / 9;
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 13 * m_hauteur / 18;//bas gauche
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 13 * m_hauteur / 18;
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 4 * m_hauteur / 9;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 2 * m_hauteur / 9;//pointe
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 3 * m_hauteur / 9;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 3 * m_hauteur / 9;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;//bas gauche
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 9;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 3 * m_hauteur / 9;
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 3 * m_hauteur / 9;
                         break;
                     case TIPEFINBATAILLE.VICTOIRE345:
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 0;//pointe
@@ -769,7 +1002,7 @@ namespace vaoc
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 2 * m_hauteur / 9;
                         break;
                     default:
-                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 2 * m_hauteur / 9;//pointe
+                        fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 3 * m_hauteur / 9;//pointe
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 4 * m_hauteur / 9;
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;
                         fleche[f].X = ((iZoneResultats - 3) * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 13 * m_hauteur / 18;//bas gauche
@@ -785,8 +1018,11 @@ namespace vaoc
             SizeF tailleTexte = G.MeasureString(zoneBataille.sCombat[iZoneResultats], m_police);
             G.DrawString(zoneBataille.sCombat[iZoneResultats], m_police, couleurTexte,
                 new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 - 2 * (int)tailleTexte.Height, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
-            tailleTexte = G.MeasureString(zoneBataille.iPertes[iZoneResultats].ToString() + " †", m_police);
-            G.DrawString(zoneBataille.iPertes[iZoneResultats].ToString() + " †", m_police, couleurTexte,
+
+            //pertes sur la zone opposée
+            string sPertes = zoneBataille.iPertes[(iZoneResultats + 3) % 6].ToString() + " †";
+            tailleTexte = G.MeasureString(sPertes, m_police);
+            G.DrawString(sPertes, m_police, couleurTexte,
                 new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 2 * (int)tailleTexte.Height, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
         }
 
@@ -811,11 +1047,11 @@ namespace vaoc
                 switch (fin)
                 {
                     case TIPEFINBATAILLE.RETRAITE345:
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 0;//pointe
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 2 * m_largeur / 9;//pointe
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 4 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 4 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 13 * m_largeur / 18;//bas gauche
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 13 * m_largeur / 18;
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 7 * m_largeur / 9;//bas gauche
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 7 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 4 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 4 * m_largeur / 9;
                         break;
@@ -828,8 +1064,8 @@ namespace vaoc
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 2 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 2 * m_largeur / 9;
                         break;
-                    default:
-                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 2 * m_largeur / 9;//pointe
+                    default://c'est à dire NUIT, la valeur par défaut mise durant les combats
+                        fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 3 * m_largeur / 9;//pointe
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 4 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 4 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 13 * m_largeur / 18;//bas gauche
@@ -849,28 +1085,28 @@ namespace vaoc
                 switch (fin)
                 {
                     case TIPEFINBATAILLE.RETRAITE012:
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;//haut, gauche
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 5 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 9 * m_largeur / 9;//pointe
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 5 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 4 * m_largeur / 9;//haut, gauche
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 6 * m_largeur / 9;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 6 * m_largeur / 9;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 7 * m_largeur / 9;//pointe
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 6 * m_largeur / 9;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 6 * m_largeur / 9;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 4 * m_largeur / 9;
                         break;
                     case TIPEFINBATAILLE.VICTOIRE345:
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 11 * m_largeur / 18;//haut, gauche
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;//haut, gauche
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 7 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 7 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 9 * m_largeur / 9;//pointe
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 7 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 7 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 11 * m_largeur / 18;
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;
                         break;
-                    default:
+                    default://c'est à dire NUIT, la valeur par défaut mise durant les combats
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;//haut, gauche
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 6; fleche[f++].X = 5 * m_largeur / 9;
-                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 7 * m_largeur / 9;//pointe
+                        fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 / 2; fleche[f++].X = 6 * m_largeur / 9;//pointe
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 6; fleche[f++].X = 5 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 9;
                         fleche[f].Y = ((iZoneResultats - 3) * m_hauteur / 3) + m_hauteur / 3 - m_hauteur / 3 / 4; fleche[f++].X = 5 * m_largeur / 18;
@@ -885,8 +1121,10 @@ namespace vaoc
                             ytexte - 2 * (int)tailleTexte.Height, 
                             (int)tailleTexte.Width + 2, (int)tailleTexte.Height),
                 format);
-            tailleTexte = G.MeasureString(zoneBataille.iPertes[iZoneResultats].ToString() + " †", m_police);
-            G.DrawString(zoneBataille.iPertes[iZoneResultats].ToString() + " †", m_police, couleurTexte,
+            //pertes sur la zone opposée
+            string sPertes = zoneBataille.iPertes[(iZoneResultats + 3) % 6].ToString() + " †";
+            tailleTexte = G.MeasureString(sPertes, m_police);
+            G.DrawString(sPertes, m_police, couleurTexte,
                 new Rectangle(m_largeur / 2 - (int)tailleTexte.Width / 2,
                             ytexte + 2 * (int)tailleTexte.Height, 
                             (int)tailleTexte.Width + 2, (int)tailleTexte.Height),
@@ -1181,11 +1419,11 @@ namespace vaoc
                 TextureFondBataille(G, "titrebataille.jpg", new Rectangle(0,0, m_largeur, m_hauteur));
 
                 //afficher le titre
-                AfficheMultiLigne(G, nomBataille, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5));
+                AfficheMultiLigne(G, nomBataille, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5), Brushes.Black);
 
                 //afficher la date
                 string titreDate = ClassMessager.DateHeure(debut, 0).ToString("dddd d MMMM yyyy");
-                AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5));
+                AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5), Brushes.Black);
 
                 //afficher les protagonistes + effectifs
                 for (int nation=0; nation < 2; nation++)
@@ -1270,7 +1508,7 @@ namespace vaoc
             G.DrawString(nom, policeNom, Brushes.Black, rect.X + (rect.Width - (int)tailleTexte.Width) / 2, rectImage.Bottom);
         }
 
-        private void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect)
+        private void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect, Brush couleurTexte)
         {
             string[] textes = texteSource.Split(' ');
             int largeurLigne = 0;
@@ -1306,7 +1544,7 @@ namespace vaoc
                 {
                     int x = rect.X + pos + (rect.Width - largeursLigne[ligne]) / 2;
                     int y = rect.Y + ligne * rect.Height / nbLignes;
-                    G.DrawString(textes[t], police, Brushes.Black, x, y);
+                    G.DrawString(textes[t], police, couleurTexte, x, y);
                     pos += (int)G.MeasureString(textes[t] + " ", police).Width;
                     t++;
                 }

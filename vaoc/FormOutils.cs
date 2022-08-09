@@ -378,94 +378,52 @@ namespace vaoc
                     {
                         string nomTable;
                         nomTable = element.Substring(0, element.IndexOf(':')-1);
-                        //Donnees.m_donnees.Tables[nomTable].Clear();
-                        //Donnees.m_donnees.Tables[nomTable].Merge(donneesImport.Tables[nomTable], false);
+                        Donnees.m_donnees.Tables[nomTable].Clear();
+                        Donnees.m_donnees.Tables[nomTable].Merge(donneesImport.Tables[nomTable], false);
 
-                        //Traitement très spécifique pour reprendre les données de bataille
-                        foreach(Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
-                        {
-                            //Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(130);
-                            if (!ligneBataille.IsI_TOUR_FINNull() && (ligneBataille.ID_LEADER_012<0 || ligneBataille.ID_LEADER_345<0))
-                            {
-                                //on reinjecte toutes les lignes de vidéo non présentes
-                                int s = 0;
-                                while (s < donneesImport.Tables[nomTable].Rows.Count)
-                                {
-                                    //var result2 = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
-                                    //             where ligneVideoD.I_TOUR == 636 && ligneVideoD.ID_PION == 172 && ligneVideoD.ID_BATAILLE == 130
-                                    //             select ligneVideoD.ID_PION;
-                                    //int test = result2.Count();
-                                    //result2 = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
-                                    //             where ligneVideoD.I_TOUR == 636 && ligneVideoD.ID_PION == 302 && ligneVideoD.ID_BATAILLE == 130
-                                    //             select ligneVideoD.ID_PION;
-                                    //test = result2.Count();
-                                    //result2 = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
-                                    //         where ligneVideoD.I_TOUR == 636 && ligneVideoD.ID_PION == 153 && ligneVideoD.ID_BATAILLE == 130
-                                    //         select ligneVideoD.ID_PION;
-                                    //test = result2.Count();
-                                    //result2 = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
-                                    //         where ligneVideoD.I_TOUR == 636 && ligneVideoD.ID_PION == 215 && ligneVideoD.ID_BATAILLE == 130
-                                    //         select ligneVideoD.ID_PION;
-                                    //test = result2.Count();
+                        #region Traitement très spécifique pour reprendre les données de bataille
+                        //foreach(Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+                        //{
+                        //    if (!ligneBataille.IsI_TOUR_FINNull() && (ligneBataille.ID_LEADER_012<0 || ligneBataille.ID_LEADER_345<0))
+                        //    {
+                        //        //on reinjecte toutes les lignes de vidéo non présentes
+                        //        int s = 0;
+                        //        while (s < donneesImport.Tables[nomTable].Rows.Count)
+                        //        {
+                        //            Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneVideoS = (Donnees.TAB_BATAILLE_PIONS_VIDEORow)donneesImport.Tables[nomTable].Rows[s];
+                        //            if (ligneVideoS.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                        //            {
+                        //                Debug.WriteLine(string.Format("{0}:{1}", ligneVideoS.I_TOUR, ligneVideoS.ID_PION));
+                        //                var result = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
+                        //                             where ligneVideoD.I_TOUR == ligneVideoS.I_TOUR && ligneVideoD.ID_PION == ligneVideoS.ID_PION && ligneVideoD.ID_BATAILLE == ligneVideoS.ID_BATAILLE
+                        //                             select ligneVideoD;
 
-                                    Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneVideoS = (Donnees.TAB_BATAILLE_PIONS_VIDEORow)donneesImport.Tables[nomTable].Rows[s];
-                                    if (ligneVideoS.ID_BATAILLE == ligneBataille.ID_BATAILLE)
-                                    {
-                                        Debug.WriteLine(string.Format("{0}:{1}", ligneVideoS.I_TOUR, ligneVideoS.ID_PION));
-                                        var result = from ligneVideoD in Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
-                                                     where ligneVideoD.I_TOUR == ligneVideoS.I_TOUR && ligneVideoD.ID_PION == ligneVideoS.ID_PION && ligneVideoD.ID_BATAILLE == ligneVideoS.ID_BATAILLE
-                                                     select ligneVideoD;
+                        //                if (0 == result.Count())
+                        //                {
+                        //                    Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.AddTAB_BATAILLE_PIONS_VIDEORow(ligneVideoS.ID_BATAILLE,
+                        //                        ligneVideoS.I_TOUR,
+                        //                        ligneVideoS.ID_PION,
+                        //                        ligneVideoS.ID_PROPRIETAIRE,
+                        //                        ligneVideoS.S_NOM,
+                        //                        ligneVideoS.ID_NATION,
+                        //                        ligneVideoS.B_ENGAGEE,
+                        //                        ligneVideoS.B_EN_DEFENSE,
+                        //                        ligneVideoS.I_INFANTERIE,
+                        //                        ligneVideoS.I_CAVALERIE,
+                        //                        ligneVideoS.I_ARTILLERIE,
+                        //                        ligneVideoS.I_MORAL,
+                        //                        ligneVideoS.I_FATIGUE,
+                        //                        ligneVideoS.B_RETRAITE,
+                        //                        ligneVideoS.B_ENGAGEMENT,
+                        //                        ligneVideoS.I_ZONE_BATAILLE_ENGAGEMENT);
+                        //                }
+                        //            }
+                        //            s++;
+                        //        }
+                        //    }
 
-                                        if (0 == result.Count())
-                                        {
-                                            Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.AddTAB_BATAILLE_PIONS_VIDEORow(ligneVideoS.ID_BATAILLE,
-                                                ligneVideoS.I_TOUR,
-                                                ligneVideoS.ID_PION,
-                                                ligneVideoS.ID_PROPRIETAIRE,
-                                                ligneVideoS.S_NOM,
-                                                ligneVideoS.ID_NATION,
-                                                ligneVideoS.B_ENGAGEE,
-                                                ligneVideoS.B_EN_DEFENSE,
-                                                ligneVideoS.I_INFANTERIE,
-                                                ligneVideoS.I_CAVALERIE,
-                                                ligneVideoS.I_ARTILLERIE,
-                                                ligneVideoS.I_MORAL,
-                                                ligneVideoS.I_FATIGUE,
-                                                ligneVideoS.B_RETRAITE,
-                                                ligneVideoS.B_ENGAGEMENT,
-                                                ligneVideoS.I_ZONE_BATAILLE_ENGAGEMENT);
-                                        }
-                                    }
-
-                                    //int d = 0;
-                                    //while (d < Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows.Count)
-                                    //{
-                                    //    Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneVideoD = (Donnees.TAB_BATAILLE_PIONS_VIDEORow)Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows[d];
-                                    //    if (ligneVideoS.ID_BATAILLE != ligneBataille.ID_BATAILLE || ligneVideoS.I_TOUR != ligneVideoD.I_TOUR)
-                                    //    {
-                                    //        Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows.Add(ligneVideoS);
-                                    //    }
-                                    //    if (s >= Donnees.m_donnees.Tables[nomTable].Rows.Count)
-                                    //    {
-                                    //    }
-                                    //    d++;
-                                    //}
-                                    s++;
-                                }
-
-                                //int d = 0;
-                                //while (d<Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows.Count)
-                                //{
-                                //    Donnees.TAB_BATAILLE_PIONS_VIDEORow ligneVideoD = (Donnees.TAB_BATAILLE_PIONS_VIDEORow) Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows[d];
-                                //    if (s >= Donnees.m_donnees.Tables[nomTable].Rows.Count)
-                                //    {
-                                //        Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO.Rows.Add(ligneVideoS);
-                                //    }
-                                //        d++;
-                                //}
-                            }
-
-                        }
+                        //}
+                        #endregion
                     }
                     MessageBox.Show("Tables importés avec succès", "Fin de l'imporation", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

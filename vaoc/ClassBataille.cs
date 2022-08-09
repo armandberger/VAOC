@@ -1888,17 +1888,22 @@ namespace vaoc
                 {
                     pertesMoral[i] = score[i + 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
-                    pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/) * score[i + 3] / 400;
-                    //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille012);
-                    this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
+                    int effectifsSurZone = EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/);
+                    pertesEffectifs[i] = effectifsSurZone  * score[i + 3] / 400;
+                    message = string.Format("EffectuerBataille zone: {0} score={1} effectifs={2} pertes={3}",
+                        i, score[i + 3], effectifsSurZone, pertesEffectifs[i]);
+                    LogFile.Notifier(message);
                 }
                 for (i = 3; i < 6; i++)
                 {
                     pertesMoral[i] = score[i - 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
-                    pertesEffectifs[i] = EffectifTotalSurZone(i, lignePionsEnBataille345, false /*bCombatif*/) * score[i - 3] / 400;
-                    this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
-                    //DemoralisationSurZone(ref pertesMoral[i], lignePionsEnBataille345);
+                    int effectifsSurZone = EffectifTotalSurZone(i, lignePionsEnBataille345, false /*bCombatif*/);
+                    pertesEffectifs[i] = effectifsSurZone * score[i - 3] / 400;
+
+                    message = string.Format("EffectuerBataille zone: {0} score={1} effectifs={2} pertes={3}",
+                        i, score[i - 3], effectifsSurZone, pertesEffectifs[i]);
+                    LogFile.Notifier(message);
                 }
                 #endregion
 
@@ -1957,6 +1962,11 @@ namespace vaoc
                                 LogFile.Notifier("i=" + (i + 3) + " le deuxième Camp est mis en déroute ou a donner l'ordre de retraite et n'inflige aucune perte à l'adversaire");
                             }
                         }
+                    }
+                    for (i = 0; i < 6; i++)
+                    {
+                        //pour les rapports video de batailles
+                        this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
                     }
                 }
                 #endregion

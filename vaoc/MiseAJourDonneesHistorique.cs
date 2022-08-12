@@ -458,7 +458,7 @@ namespace vaoc
             }
         }
 
-        private TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
+        public TIPEUNITEVIDEO tipeVideo(Donnees.TAB_VIDEORow ligneVideo)
         {
             if (ligneVideo.B_QG)
             {
@@ -488,11 +488,12 @@ namespace vaoc
             {
                 return TIPEUNITEVIDEO.PONTONNIER;
             }
-            if (0 == ligneVideo.I_INFANTERIE_INITIALE && ligneVideo.I_CAVALERIE_INITIALE > 0)
+            //les renforts n'ont pas d'infanterie et de calaverie initiale
+            if (0 == ligneVideo.I_INFANTERIE_INITIALE && (ligneVideo.I_CAVALERIE_INITIALE > 0 || ligneVideo.I_CAVALERIE>0))
             {
                 return TIPEUNITEVIDEO.CAVALERIE;
             }
-            if (ligneVideo.I_INFANTERIE_INITIALE > 0)
+            if (ligneVideo.I_INFANTERIE_INITIALE > 0 || ligneVideo.I_INFANTERIE>0)
             {
                 return TIPEUNITEVIDEO.INFANTERIE;
             }

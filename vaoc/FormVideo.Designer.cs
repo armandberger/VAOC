@@ -60,6 +60,7 @@
             this.buttonDonneesTravelling = new System.Windows.Forms.Button();
             this.checkBoxVideoParRole = new System.Windows.Forms.CheckBox();
             this.checkBoxAffichageCorps = new System.Windows.Forms.CheckBox();
+            this.checkBoxAffichageDepots = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
@@ -329,7 +330,7 @@
             // checkBoxVideoParRole
             // 
             this.checkBoxVideoParRole.AutoSize = true;
-            this.checkBoxVideoParRole.Location = new System.Drawing.Point(576, 183);
+            this.checkBoxVideoParRole.Location = new System.Drawing.Point(691, 183);
             this.checkBoxVideoParRole.Name = "checkBoxVideoParRole";
             this.checkBoxVideoParRole.Size = new System.Drawing.Size(74, 17);
             this.checkBoxVideoParRole.TabIndex = 38;
@@ -348,11 +349,22 @@
             this.checkBoxAffichageCorps.Text = "affichage Corps";
             this.checkBoxAffichageCorps.UseVisualStyleBackColor = true;
             // 
+            // checkBoxAffichageDepots
+            // 
+            this.checkBoxAffichageDepots.AutoSize = true;
+            this.checkBoxAffichageDepots.Location = new System.Drawing.Point(578, 183);
+            this.checkBoxAffichageDepots.Name = "checkBoxAffichageDepots";
+            this.checkBoxAffichageDepots.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxAffichageDepots.TabIndex = 40;
+            this.checkBoxAffichageDepots.Text = "affichage Dépôts";
+            this.checkBoxAffichageDepots.UseVisualStyleBackColor = true;
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(827, 547);
+            this.Controls.Add(this.checkBoxAffichageDepots);
             this.Controls.Add(this.checkBoxAffichageCorps);
             this.Controls.Add(this.checkBoxVideoParRole);
             this.Controls.Add(this.buttonDonneesTravelling);
@@ -423,6 +435,7 @@
         private System.Windows.Forms.Button buttonDonneesTravelling;
         private System.Windows.Forms.CheckBox checkBoxVideoParRole;
         private System.Windows.Forms.CheckBox checkBoxAffichageCorps;
+        private System.Windows.Forms.CheckBox checkBoxAffichageDepots;
     }
 }
 

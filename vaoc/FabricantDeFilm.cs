@@ -124,7 +124,7 @@ namespace vaoc
         private Dictionary<int, Travelling> m_travelling;
         private int m_hauteurCorps;
         private int m_largeurCorps;
-        private const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléporées ensuite
+        private const int CST_DEBUT_FILM = 1;//on ne prende pas le premier tour c'est un tour de discussion, les unités sont téléportées ensuite
         private const int CST_TAILLE_NOM_CORPS = 4;
         private const int CST_RAYON_CORPS = 4;//rayon autour de la taille du corps qui inclue les unités
         private const int CST_DESSIN_ALPHA = 100;
@@ -142,6 +142,7 @@ namespace vaoc
         private int m_effectifsMax = 0;
         private bool m_videoParRole = false;
         private bool m_affichageCorps = false;
+        private bool m_affichageDepots = true;
         private int m_effectifsRoleMoyen;
         private Dictionary<int, SolidBrush> m_couleursCorps;
         private readonly Color[,] couleursNations = new Color[2, 19]
@@ -162,7 +163,7 @@ namespace vaoc
 
         public string Initialisation(string repertoireImages, string repertoireVideo, Font police, string texteMasqueImage, 
                                     string[] texteImages, int largeurOptimale, int HauteurOptimale, int tailleUnite, int epaisseurUnite,
-                                    bool bTravelling, bool bvideoParRole, bool baffichageCorps,
+                                    bool bTravelling, bool bvideoParRole, bool baffichageCorps, bool baffichageDepots,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
                                     List<EffectifEtVictoire> effectifsEtVictoires, List<UniteRole> unitesRoles,
                                     int totalvictoire, int nbImages, 
@@ -201,6 +202,7 @@ namespace vaoc
                 m_bTravelling = bTravelling;
                 m_videoParRole = bvideoParRole;
                 m_affichageCorps = baffichageCorps;
+                m_affichageDepots = baffichageDepots;
                 if (m_videoParRole)
                 {
                     m_unitesRoles = unitesRoles;
@@ -1109,6 +1111,7 @@ namespace vaoc
                 }
                 else
                 {
+                    if (!m_affichageDepots && TIPEUNITEVIDEO.DEPOT==unite.tipe) { return; }
                     switch (unite.tipe)
                     {
                         case TIPEUNITEVIDEO.INFANTERIE:
@@ -1251,97 +1254,143 @@ namespace vaoc
             int xtravel = (xTravelling < 0) ? 0 : xTravelling;
             int ytravel = (yTravelling < 0) ? 0 : yTravelling;
 
-            G.FillRectangle(brosseRectangleUnite,
-                m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                m_tailleUnite,  
-                m_tailleUnite);
-
             switch (unite.tipe)
             {
                 case TIPEUNITEVIDEO.INFANTERIE:
-                    //barre haut gauche, bas droite
-                    G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
-                        );
-                    //barre haut droite , bas gauche
-                    G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
-                        );
-                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
-                    G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
+                    DessineUniteFilaireInfanterie(G, unite, styloUnite, brosseRectangleUnite, xtravel, ytravel);
                     break;
                 case TIPEUNITEVIDEO.CAVALERIE:
-                    //barre haut gauche, bas droite
-                    G.DrawLine(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
-                        );
-                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
-                    G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
+                    DessineUniteFilaireCavalerie(G, unite, styloUnite, brosseRectangleUnite, xtravel, ytravel);
                     break;
                 case TIPEUNITEVIDEO.ARTILLERIE:
-                    G.FillEllipse(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 4,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 4,
-                        m_tailleUnite / 2,
-                        m_tailleUnite / 2);
-                    //finir par le cadre pour éviter des problèmes de points de fin de ligne
-                    G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
+                    DessineUniteFilaireArtillerie(G, unite, styloUnite, brosseRectangleUnite, brosseUnite, xtravel, ytravel);
                     break;
                 case TIPEUNITEVIDEO.CONVOI:
-                    G.DrawEllipse(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
-                    G.FillPie(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite,
-                        0, 180);
+                    if (m_affichageDepots)
+                    {
+                        DessineUniteFilaireConvoi(G, unite, styloUnite, brosseRectangleUnite, brosseUnite, xtravel, ytravel);
+                    }
                     break;
                 case TIPEUNITEVIDEO.DEPOT:
-                    G.FillEllipse(brosseUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
+                    if (m_affichageDepots)
+                    {
+                        DessineUniteFilaireDepot(G, unite, styloUnite, brosseRectangleUnite, brosseUnite, xtravel, ytravel);
+                    }
                     break;
                 case TIPEUNITEVIDEO.PONTONNIER:
+                case TIPEUNITEVIDEO.BLESSE:
+                case TIPEUNITEVIDEO.PRISONNIER:
                     break;
                 default:
                     //carre vide
-                    G.DrawRectangle(styloUnite,
-                        m_largeurCote + (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
-                        (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
-                        m_tailleUnite,
-                        m_tailleUnite);
+                    //DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
                     break;
             }
+            //pour debug, afficher l'identifiant de l'unité dans le cadre
+            //if (m_affichageDepots || (TIPEUNITEVIDEO.DEPOT != unite.tipe && TIPEUNITEVIDEO.CONVOI != unite.tipe))
+            //{
+            //    Font policeDebug = new Font(FontFamily.GenericSansSerif, 7);
+            //    G.DrawString(unite.ID.ToString(), policeDebug, Brushes.DarkGreen,
+            //                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+            //                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2);
+            //}
+        }
+        void DessineFondUniteFilaire(Graphics G, UniteRemarquable unite, SolidBrush brosseRectangleUnite, int xtravel, int ytravel)
+        {
+            G.FillRectangle(brosseRectangleUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
         }
 
+        void DessineUniteFilaireInfanterie(Graphics G, UniteRemarquable unite, Pen styloUnite, SolidBrush brosseRectangleUnite, int xtravel, int ytravel)
+        {
+            DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
+
+            //barre haut gauche, bas droite
+            G.DrawLine(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
+                );
+            //barre haut droite , bas gauche
+            G.DrawLine(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
+                );
+            //finir par le cadre pour éviter des problèmes de points de fin de ligne
+            G.DrawRectangle(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+        }
+
+        void DessineUniteFilaireCavalerie(Graphics G, UniteRemarquable unite, Pen styloUnite, SolidBrush brosseRectangleUnite, int xtravel, int ytravel)
+        {
+            DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
+
+            //barre haut gauche, bas droite
+            G.DrawLine(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_X_CASE - xtravel) * m_rapport + m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport + m_tailleUnite / 2
+                );
+            //finir par le cadre pour éviter des problèmes de points de fin de ligne
+            G.DrawRectangle(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+        }
+
+        void DessineUniteFilaireArtillerie(Graphics G, UniteRemarquable unite, Pen styloUnite, SolidBrush brosseRectangleUnite, Brush brosseUnite, int xtravel, int ytravel)
+        {
+            DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
+
+            G.FillEllipse(brosseUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 4,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 4,
+                m_tailleUnite / 2,
+                m_tailleUnite / 2);
+            //finir par le cadre pour éviter des problèmes de points de fin de ligne
+            G.DrawRectangle(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+        }
+        void DessineUniteFilaireConvoi(Graphics G, UniteRemarquable unite, Pen styloUnite, SolidBrush brosseRectangleUnite, Brush brosseUnite, int xtravel, int ytravel)
+        {
+            DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
+
+            G.DrawEllipse(styloUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+            G.FillPie(brosseUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite,
+                0, 180);
+        }
+        void DessineUniteFilaireDepot(Graphics G, UniteRemarquable unite, Pen styloUnite, SolidBrush brosseRectangleUnite, Brush brosseUnite, int xtravel, int ytravel)
+        {
+            DessineFondUniteFilaire(G, unite, brosseRectangleUnite, xtravel, ytravel);
+
+            G.FillEllipse(brosseUnite,
+                (unite.i_X_CASE - xtravel) * m_rapport - m_tailleUnite / 2,
+                (unite.i_Y_CASE - ytravel) * m_rapport - m_tailleUnite / 2,
+                m_tailleUnite,
+                m_tailleUnite);
+        }
         /// <summary>
         /// Déterminer les positions des corps
         /// - pour toutes les unités d'un corps, calculer le poids de sa position en prenant ses effectifs+tous ceux des unités situé dans le "rayon"

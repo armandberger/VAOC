@@ -183,6 +183,15 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region correction sur le tipe video de l'unité
+            MiseAJourDonneesHistorique maj = new MiseAJourDonneesHistorique();
+            //foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
+            //{
+            //    ligneVideo.I_TYPE = (int)maj.tipeVideo(ligneVideo);
+            //}
+            //int t = 0;
+            #endregion
+
             #region messagers qui n'ont plus d'ordres...
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{

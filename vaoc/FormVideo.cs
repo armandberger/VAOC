@@ -297,7 +297,7 @@ namespace vaoc
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
                                         Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
                                         checkBoxTravelling.Checked,
-                                        checkBoxVideoParRole.Checked, checkBoxAffichageCorps.Checked,
+                                        checkBoxVideoParRole.Checked, checkBoxAffichageCorps.Checked, checkBoxAffichageDepots.Checked,
                                         m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, m_unitesRoles,
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);

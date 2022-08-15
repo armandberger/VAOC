@@ -141,7 +141,7 @@ namespace vaoc
                     Directory.CreateDirectory(repertoireVideo);
                 }
 
-                TraitementTitre(nomBataille, debut, policeTitre, policeTitreEffectifs);
+                TraitementTitre(nomBataille, debut, debut + m_nbEtapes, policeTitre, policeTitreEffectifs);
                 for (m_traitement = debut; m_traitement< debut+m_nbEtapes; m_traitement++)
                 {
                     //on  vérifie qu'il y a bien une unité à afficher (des fois il n'y a rien car c'est un inter tour de combat)
@@ -1352,7 +1352,7 @@ namespace vaoc
             G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
         }
 
-        private string TraitementTitre(string nomBataille, int debut, Font policeTitre, Font policeTitreEffectifs)
+        private string TraitementTitre(string nomBataille, int debut, int fin, Font policeTitre, Font policeTitreEffectifs)
         {
             Graphics G;
             int yunite;
@@ -1363,8 +1363,8 @@ namespace vaoc
                 for (int i = 0; i < 2; i++) { rolesBataille[i] = new List<string>(); }
                 foreach (RoleBataille role in m_rolesBataille)
                 {
-                    if (!role.nomLeader012.Equals(string.Empty) && !rolesBataille[0].Contains(role.nomLeader012)) { rolesBataille[0].Add(role.nomLeader012); }
-                    if (!role.nomLeader345.Equals(string.Empty) && !rolesBataille[1].Contains(role.nomLeader345)) { rolesBataille[1].Add(role.nomLeader345); }
+                    if (!role.nomLeader012.Equals(string.Empty) && !rolesBataille[m_iNation012].Contains(role.nomLeader012)) { rolesBataille[m_iNation012].Add(role.nomLeader012); }
+                    if (!role.nomLeader345.Equals(string.Empty) && !rolesBataille[m_iNation345].Contains(role.nomLeader345)) { rolesBataille[m_iNation345].Add(role.nomLeader345); }
                 }
 
                 //recherche des effectifs max
@@ -1423,7 +1423,11 @@ namespace vaoc
 
                 //afficher la date
                 string titreDate = ClassMessager.DateHeure(debut, 0).ToString("dddd d MMMM yyyy");
-                AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5), Brushes.Black);
+                AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 10), Brushes.Black);
+
+                //afficher heures de Début et de fin                
+                string titreHeure = string.Format("{0}h00 - {1}h00", ClassMessager.DateHeure(debut + 1, 0).Hour, ClassMessager.DateHeure(fin, 0).Hour);
+                AfficheMultiLigne(G, titreHeure, policeTitre, new Rectangle(0, 9 * m_hauteur / 10, m_largeur, m_hauteur / 10), Brushes.Black);
 
                 //afficher les protagonistes + effectifs
                 for (int nation=0; nation < 2; nation++)

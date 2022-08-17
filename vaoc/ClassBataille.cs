@@ -1872,11 +1872,10 @@ namespace vaoc
                 int[] pertesMoral = new int[6];
                 int[] pertesEffectifs = new int[6];
                 bool[] blessureChef = new bool[6];
-                int i;
                 int nb6;//nombre de '6' lancés sur un secteur
 
                 #region on lance les des et on calcule les pertes au moral et en effectifs infligés par chaque camp
-                for (i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     nb6 = 0;
                     score[i] = (des[i] > 0) ? Constantes.JetDeDes(des[i], modificateurs[i], relance[i], out nb6) : 0;
@@ -1884,21 +1883,21 @@ namespace vaoc
                     this["S_COMBAT_" + Convert.ToString(i)]=string.Format("{0} dés + {1}, {2} relances = {3}", des[i], modificateurs[i], relance[i], score[i]);
                 }
 
-                for (i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     pertesMoral[i] = score[i + 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
-                    int effectifsSurZone = EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/);
+                    int effectifsSurZone = EffectifTotalSurZone(i + 3, lignePionsEnBataille345, false /*bCombatif*/);
                     pertesEffectifs[i] = effectifsSurZone  * score[i + 3] / 400;
                     message = string.Format("EffectuerBataille zone: {0} score={1} effectifs={2} pertes={3}",
                         i, score[i + 3], effectifsSurZone, pertesEffectifs[i]);
                     LogFile.Notifier(message);
                 }
-                for (i = 3; i < 6; i++)
+                for (int i = 3; i < 6; i++)
                 {
                     pertesMoral[i] = score[i - 3] / 2;
                     //les pertes en effectifs sont égales au quart du score * effectifs engagés / 100
-                    int effectifsSurZone = EffectifTotalSurZone(i, lignePionsEnBataille345, false /*bCombatif*/);
+                    int effectifsSurZone = EffectifTotalSurZone(i - 3, lignePionsEnBataille012, false /*bCombatif*/);
                     pertesEffectifs[i] = effectifsSurZone * score[i - 3] / 400;
 
                     message = string.Format("EffectuerBataille zone: {0} score={1} effectifs={2} pertes={3}",
@@ -1915,14 +1914,15 @@ namespace vaoc
                 LogFile.Notifier(message);
 
                 #region on vérifie que chaque camp peut bien prendre toutes les pertes en moral et effectif, si ce n'est pas le cas, les pertes sont nuls pour l'autre camp
-                for (i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     bool bCamp012KO = true;
                     bool bCamp345KO = true;
 
                     if (des[i] > 0 && des[i + 3] > 0)
                     {
-                        //int effectifTotal = 0; -> Je ne vois pas comment une troupe ne pourrait plus avoir de soldats sans avoir, auparavant, perdu tout son moral
+                        //int effectifTotal = 0; -> Je ne vois pas comment une troupe ne pourrait plus avoir de soldats sans avoir, auparavant, perdu tout son moral -> si juste par des pertes si elle a un moral élevé et des effectifs faibles
+                        // => il faut donc aussi prendre en compte le moral
                         //mais si un camp ne peut pas supporter toutes les pertes, il est quand même KO !
                         if (pertesEffectifs[i] < EffectifTotalSurZone(i, lignePionsEnBataille012, false /*bCombatif*/))
                         {
@@ -1932,7 +1932,13 @@ namespace vaoc
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i) { continue; }
                                 //effectifTotal += lignePionEnBataille.effectifTotal;
-                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i]) { bCamp012KO = false; }
+                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i]) 
+                                {
+                                    message = string.Format("EffectuerBataille le premier camp n'est pas KO grace à l'unité {0}:{1} moral {2}>{3}",
+                                        lignePionEnBataille.ID_PION, lignePionEnBataille.S_NOM, lignePionEnBataille.I_MORAL, pertesMoral[i]);
+                                    LogFile.Notifier(message);
+                                    bCamp012KO = false; 
+                                }
                             }
                         }
 
@@ -1942,7 +1948,13 @@ namespace vaoc
                             {
                                 if (!lignePionEnBataille.estCombattif) { continue; }
                                 if (lignePionEnBataille.IsI_ZONE_BATAILLENull() || lignePionEnBataille.I_ZONE_BATAILLE != i + 3) { continue; }
-                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) { bCamp345KO = false; }
+                                if (!lignePionEnBataille.estArtillerie && lignePionEnBataille.I_MORAL > pertesMoral[i + 3]) 
+                                {
+                                    message = string.Format("EffectuerBataille le deuxième camp n'est pas KO grace à l'unité {0}:{1} moral {2}>{3}",
+                                        lignePionEnBataille.ID_PION, lignePionEnBataille.S_NOM, lignePionEnBataille.I_MORAL, pertesMoral[i+3]);
+                                    LogFile.Notifier(message);
+                                    bCamp345KO = false; 
+                                }
                             }
                         }
 
@@ -1963,16 +1975,16 @@ namespace vaoc
                             }
                         }
                     }
-                    for (i = 0; i < 6; i++)
-                    {
-                        //pour les rapports video de batailles
-                        this["I_PERTES_" + Convert.ToString(i)] = pertesEffectifs[i];
-                    }
+                }
+                for (int p = 0; p < 6; p++)
+                {
+                    //pour les rapports video de batailles
+                    this["I_PERTES_" + Convert.ToString(p)] = pertesEffectifs[p];
                 }
                 #endregion
 
                 #region Un des chefs présents est-il blessé ?
-                for (i = 0; i < 3; i++)
+                for (int i  = 0; i < 3; i++)
                 {
                     //Un des chefs présents est-il blessé ?
                     if (pertesMoral[i] > 0 && blessureChef[i])
@@ -1992,7 +2004,7 @@ namespace vaoc
                 }
                 #endregion
 
-                for (i = 0; i < 3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     if (des[i] > 0)
                     {

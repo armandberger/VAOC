@@ -867,6 +867,8 @@ namespace vaoc
             {
                 Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 B_DETRUIT = true;
+                I_INFANTERIE = 0;
+                I_CAVALERIE = 0;
                 I_ARTILLERIE = 0;//pas toujours remis à zéro quand l'unité est surtout composé de cavalerie et d'infanterie
                 I_MORAL = 0; //ainsi, les blessés légers d'une bataille sont mis automatiquement en bléssés graves (sinon, l'unité pourrait "renaitre" post bataille)
                 Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);

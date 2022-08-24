@@ -182,11 +182,12 @@ namespace vaoc
                 message = string.Format("FinDeBataille : après les pertes au combat il reste nbUnites012={0}  nbUnites345={1}",
                     nbUnites012, nbUnites345);
                 LogFile.Notifier(message);
-                if ((0 == nbUnites012 || 0 == nbUnites345 || bRetraite012 || bRetraite345)
+                if ((!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1))
+                    && (0 == nbUnites012 || 0 == nbUnites345 || bRetraite012 || bRetraite345)
                     && (nbUnites012 > 0 || nbUnites345 > 0)
                     && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT >= 2))
                 {
-                    //un des deux camps a remporté le combat, il engage une poursuite sur le vaincu
+                    //un des deux camps a remporté le combat, il engage une poursuite sur le vaincu si on est pas la nuit
                     int[] desRetraite;
                     int[] effectifsRetraite;
                     int[] canonsRetraite;

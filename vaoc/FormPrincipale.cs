@@ -3417,14 +3417,23 @@ namespace vaoc
             else
             {
                 RemiseEnVeille();
+                //recherche du nombre de nouvelles batailles 
+                int nbNouvellesBatailles = (from nb in Donnees.m_donnees.TAB_BATAILLE
+                             where nb.I_TOUR_DEBUT> Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION
+                             select nb.ID_BATAILLE).Count();
+                //recherche du nombre de batailles terminées
+                int nbAnciennesBatailles = (from nb in Donnees.m_donnees.TAB_BATAILLE
+                                            where !nb.IsI_TOUR_FINNull() &&  nb.I_TOUR_FIN > Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION
+                                            select nb.ID_BATAILLE).Count();
+
                 string message;
-                if (m_nbBatailles == Donnees.m_donnees.TAB_BATAILLE.Count)
+                if (0 == nbNouvellesBatailles && 0 == nbAnciennesBatailles)
                 {
                     message = "Traitement terminé avec succès";
                 }
                 else
                 {
-                    message = "Traitement terminé avec succès avec "+ (Donnees.m_donnees.TAB_BATAILLE.Count - m_nbBatailles).ToString() + " nouvelles batailles !";
+                    message = string.Format("Traitement terminé avec succès avec {0} nouvelles batailles et {1} batailles terminées !", nbNouvellesBatailles, nbAnciennesBatailles);
                 }
                 MessageBox.Show(message, "Fin de traitement", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 //ConstruireImageCarte(); ne peut pas être appelé depuis un autre process

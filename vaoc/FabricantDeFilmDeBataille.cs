@@ -22,6 +22,7 @@ namespace vaoc
         public int effectifInfanterie;
         public int effectifCavalerie;
         public int effectifArtillerie;
+        public int moral;
         public int ID;
         public string nom;
     }
@@ -268,48 +269,75 @@ namespace vaoc
                         }
                     }
                 }
-                //recherche des effectifs max et min engagés, la différence ce sont les pertes
-                //int[] infanterieEngageeMin = new int[2];
-                //int[] cavalerieEngageeMin = new int[2];
-                //int[] artillerieEngageeMin = new int[2];
-                //int[] infanterieEngageeMax = new int[2];
-                //int[] cavalerieEngageeMax = new int[2];
-                //int[] artillerieEngageeMax = new int[2];
-                //for (int i=0; i<2; i++)
-                //{
-                //    infanterieEngageeMin[i] = int.MaxValue;
-                //    cavalerieEngageeMin[i] = int.MaxValue;
-                //    artillerieEngageeMin[i] = int.MaxValue;
-                //    infanterieEngageeMax[i] = 0;
-                //    cavalerieEngageeMax[i] = 0;
-                //    artillerieEngageeMax[i] = 0;
-                //}
+                //recherche des unités démoralisées ou détruites
+                List<int>[] unitesMorales = new List<int>[2];
+                List<int>[] unitesDemoralisees = new List<int>[2];
+                List<int>[] unitesVivantes = new List<int>[2];
+                List<int>[] unitesDetruites = new List<int>[2];
+                int[] totalDemoralisees = new int[2];
+                int[] totalDetruites = new int[2];
+                for (int n = 0; n < 2; n++)
+                {
+                    unitesMorales[n] = new List<int>();
+                    unitesDemoralisees[n] = new List<int>();
+                    unitesVivantes[n] = new List<int>();
+                    unitesDetruites[n] = new List<int>();
+                }
 
-                //for (int t = debut; t < debut + m_nbEtapes + 1; t++)
-                //{
-                //    int[] infanterieEngagee = new int[2];
-                //    int[] cavalerieEngagee = new int[2];
-                //    int[] artillerieEngagee = new int[2];
-                //    foreach (UniteBataille unite in m_unitesBataille)
-                //    {
-                //        if (unite.iTour != t) { continue; }
-                //        if (unite.iZone > 0)
-                //        {
-                //            infanterieEngagee[unite.iNation] += unite.effectifInfanterie;
-                //            cavalerieEngagee[unite.iNation] += unite.effectifCavalerie;
-                //            artillerieEngagee[unite.iNation] += unite.effectifArtillerie;
-                //        }
-                //    }
-                //    for (int i = 0; i < 2; i++)
-                //    {
-                //        infanterieEngageeMin[i] = Math.Min(infanterieEngageeMax[i], infanterieEngagee[i]);
-                //        cavalerieEngageeMin[i] = Math.Min(cavalerieEngageeMax[i], cavalerieEngagee[i]);
-                //        artillerieEngageeMin[i] = Math.Min(artillerieEngageeMax[i], artillerieEngagee[i]);
-                //        infanterieEngageeMax[i] = Math.Max(infanterieEngageeMax[i], infanterieEngagee[i]);
-                //        cavalerieEngageeMax[i] = Math.Max(cavalerieEngageeMax[i], cavalerieEngagee[i]);
-                //        artillerieEngageeMax[i] = Math.Max(artillerieEngageeMax[i], artillerieEngagee[i]);
-                //    }
-                //}
+                foreach (UniteBataille unite in m_unitesBataille)
+                {
+                    if (unite.tipe == TIPEUNITEBATAILLE.INFANTERIE || unite.tipe == TIPEUNITEBATAILLE.CAVALERIE || unite.tipe == TIPEUNITEBATAILLE.ARTILLERIE)
+                    {
+                        if (unite.effectifInfanterie>0 || unite.effectifCavalerie>0 || unite.effectifArtillerie>0)
+                        { 
+                            if (!unitesVivantes[unite.iNation].Contains(unite.ID))
+                            {
+                                unitesVivantes[unite.iNation].Add(unite.ID);
+                            }
+                        }
+                        else
+                        {
+                            if (!unitesDetruites[unite.iNation].Contains(unite.ID))
+                            {
+                                unitesDetruites[unite.iNation].Add(unite.ID);
+                            }
+                        }
+                    }
+                    if (unite.tipe == TIPEUNITEBATAILLE.INFANTERIE || unite.tipe == TIPEUNITEBATAILLE.CAVALERIE)
+                    {
+                        if (unite.moral > 0)
+                        {
+                            if (!unitesMorales[unite.iNation].Contains(unite.ID))
+                            {
+                                unitesMorales[unite.iNation].Add(unite.ID);
+                            }
+                        }
+                        else
+                        {
+                            if (!unitesDemoralisees[unite.iNation].Contains(unite.ID))
+                            {
+                                unitesDemoralisees[unite.iNation].Add(unite.ID);
+                            }
+                        }
+                    }
+                }
+                for(int n=0; n<2; n++)
+                {
+                    foreach (int id in unitesDemoralisees[n])
+                    {
+                        if (unitesMorales[n].Contains(id))
+                        {
+                            totalDemoralisees[n]++;
+                        }
+                    }
+                    foreach (int id in unitesDetruites[n])
+                    {
+                        if (unitesVivantes[n].Contains(id))
+                        {
+                            totalDetruites[n]++;
+                        }
+                    }
+                }
 
                 //on determine les éléments graphiques suivant les cas
                 switch (m_fin)
@@ -410,9 +438,20 @@ namespace vaoc
                     //yunite = AfficheEffectifsBataille(G, nation, (artillerieEngageeMax[nation] - artillerieEngageeMin[nation]).ToString("N0"), image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
 
                     int xtexte = m_largeur / 2;
-                    SizeF tailleTexte = G.MeasureString(pertes[nation].ToString() + " †", policeTitreEffectifs);
-                    G.DrawString(pertes[nation].ToString() + " †", policeTitreEffectifs, (0 == nation) ? Brushes.Blue : Brushes.OrangeRed,
-                        new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 2 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
+                    string texte = pertes[nation].ToString() + " †";
+                    SizeF tailleTexte = G.MeasureString(texte, policeTitreEffectifs);
+                    G.DrawString(texte, policeTitreEffectifs, (0 == nation) ? Brushes.Blue : Brushes.OrangeRed,
+                        new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 6 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
+
+                    texte = (totalDemoralisees[nation]>1) ? totalDemoralisees[nation].ToString() + " unités démoralisées" : totalDemoralisees[nation].ToString() + " unité démoralisée";
+                    tailleTexte = G.MeasureString(texte, policeTitreEffectifs);
+                    G.DrawString(texte, policeTitreEffectifs, (0 == nation) ? Brushes.Blue : Brushes.OrangeRed,
+                        new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 2 * (int)tailleTexte.Height + 6 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
+
+                    texte = (totalDetruites[nation]>1) ? totalDetruites[nation].ToString() + " unités détruites" : totalDetruites[nation].ToString() + " unité détruite";
+                    tailleTexte = G.MeasureString(texte, policeTitreEffectifs);
+                    G.DrawString(texte, policeTitreEffectifs, (0 == nation) ? Brushes.Blue : Brushes.OrangeRed,
+                        new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 4 * (int)tailleTexte.Height + 6 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
                 }
 
                 SauvegardeImage(fichierImage);
@@ -473,20 +512,13 @@ namespace vaoc
             bool baction = false;
             try
             {
-                //recherche des leaders à ce moment de la bataille
-                //RoleBataille role = null;
-                //if (m_rolesBataille.Count > 0)
-                //{
-                //    int i = 0;
-                //    while (m_rolesBataille[i].iTour != m_traitement) i++;
-                //    role = m_rolesBataille[i];
-                //}
-
                 //recherche des unites
                 int[] reserve = new int[2];
                 int[] nbReserve = new int[2];
                 int[] zone = new int[6];
                 int[] nbZone = new int[6];
+                ZoneBataille zonebataille = null;
+
                 //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux et s'assurer d'une action
                 foreach (UniteBataille unite in m_unitesBataille)
                 {
@@ -501,7 +533,7 @@ namespace vaoc
                     }
                 }
 
-                if (iZoneResultats < 0)
+                if (!bFin)
                 {
                     baction = true;
                 }
@@ -527,7 +559,7 @@ namespace vaoc
                         default:
                             if (nbZone[iZoneResultats] > 0 && nbZone[iZoneResultats % 3 + 3] > 0)
                             {
-                                baction = true;
+                                baction = true;//ne doit jamais arrivé je pense ?
                             }
                             break;
                     }
@@ -543,16 +575,24 @@ namespace vaoc
                     m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 3 / NB_UNITES_PAR_LIGNE);
 
                     DessineFondBataille(G);
-
-                    if (iZoneResultats >= 0)
+                    int i = 0;
+                    while (i < m_zonesBataille.Count && m_zonesBataille[i].iTour != m_traitement) { i++; }
+                    if (i < m_zonesBataille.Count)
                     {
-                        foreach (ZoneBataille zoneBataille in m_zonesBataille)
+                        zonebataille = m_zonesBataille[i];
+
+                        //affichage des flèches
+                        if (iZoneResultats >= 0)
                         {
-                            if (zoneBataille.iTour != m_traitement
-                                || null == zoneBataille.sCombat[iZoneResultats]
-                                || zoneBataille.sCombat[iZoneResultats] == string.Empty
-                                ) { continue; }
-                            DessineFlecheHorizontale(G, iZoneResultats, zoneBataille, fin);
+                            int nbFlechesMax = (bFin) ? 1 : 3;
+                            for (int z = iZoneResultats; z < iZoneResultats + nbFlechesMax; z++)
+                            {
+                                if (null == zonebataille.sCombat[z]
+                                    || zonebataille.sCombat[z] == string.Empty
+                                    || zonebataille.iPertes[z] <= 0
+                                    ) { continue; }
+                                DessineFlecheHorizontale(G, z, zonebataille, fin);
+                            }
                         }
                     }
 
@@ -638,11 +678,19 @@ namespace vaoc
                     G.Dispose();
                     fichierImage.Dispose();
                 }
-                iZoneResultats++;
-                if (iZoneResultats<6 && !bFin)
+                if (iZoneResultats < 3 && !bFin && null != zonebataille)
                 {
-                    //on refait la même image mais avec les résultats de l'attaque cette fois !
-                    TraitementHorizontal(iZoneResultats, fin, bFin);
+                    //on regarde s'il y a un combat quelque part, sinon, inutile d'afficher des zones vides
+                    int z = 0;
+                    while (z < 6 && zonebataille.iPertes[z] <= 0) { z++; }
+                    //-1 = premier affichage des unités en place
+                    //on recommence avec les zone 0 à 2
+                    //puis avec les zones 3 à 5
+                    if (z < 6)
+                    {
+                        iZoneResultats = (iZoneResultats < 0) ? 0 : 3;
+                        TraitementHorizontal(iZoneResultats, fin, bFin);
+                    }
                 }
                 return string.Empty;
             }
@@ -1139,16 +1187,13 @@ namespace vaoc
             bool baction = false;
             try
             {
-                //recherche des leaders à ce moment de la bataille
-                //int i = 0;
-                //while (m_rolesBataille[i].iTour != m_traitement) i++;
-                //RoleBataille role = m_rolesBataille[i];
-
                 //recherche des unites
                 int[] reserve = new int[2];
                 int[] nbReserve = new int[2];
                 int[] zone = new int[6];
                 int[] nbZone = new int[6];
+                ZoneBataille zonebataille = null;
+
                 //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
                 foreach (UniteBataille unite in m_unitesBataille)
                 {
@@ -1163,7 +1208,7 @@ namespace vaoc
                     }
                 }
 
-                if (iZoneResultats < 0)
+                if (!bFin)
                 {
                     baction = true;
                 }
@@ -1189,7 +1234,7 @@ namespace vaoc
                         default:
                             if (nbZone[iZoneResultats] > 0 && nbZone[iZoneResultats % 3 + 3] > 0)
                             {
-                                baction = true;
+                                baction = true;//ne doit jamais arrivé je pense ?
                             }
                             break;
                     }
@@ -1204,16 +1249,24 @@ namespace vaoc
                     m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 9 / 2);
 
                     DessineFondBataille(G);
-                    //affichage des flèches
-                    if (iZoneResultats >= 0)
+                    int i = 0;
+                    while (i < m_zonesBataille.Count && m_zonesBataille[i].iTour != m_traitement) { i++; }
+                    if (i < m_zonesBataille.Count)
                     {
-                        foreach (ZoneBataille zoneBataille in m_zonesBataille)
+                        zonebataille = m_zonesBataille[i];
+
+                        //affichage des flèches
+                        if (iZoneResultats >= 0)
                         {
-                            if (zoneBataille.iTour != m_traitement
-                                || null == zoneBataille.sCombat[iZoneResultats]
-                                || zoneBataille.sCombat[iZoneResultats] == string.Empty
-                                ) { continue; }
-                            DessineFlecheVerticale(G, iZoneResultats, zoneBataille, fin);
+                            int nbFlechesMax = (bFin) ? 1 : 3;
+                            for (int z = iZoneResultats; z < iZoneResultats + nbFlechesMax; z++)
+                            {
+                                if (null == zonebataille.sCombat[z]
+                                    || zonebataille.sCombat[z] == string.Empty
+                                    || zonebataille.iPertes[z] <= 0
+                                    ) { continue; }
+                                DessineFlecheVerticale(G, z, zonebataille, fin);
+                            }
                         }
                     }
 
@@ -1271,7 +1324,7 @@ namespace vaoc
                             else
                             {
                                 if (nbZone[unite.iZone] <= NB_UNITES_PAR_LIGNE)
-                                {
+                               {
                                     //affichage sur une seule colonne
                                     xunite = 6 * m_largeur / 9 / 2;
                                     yunite = (unite.iZone - 3) * m_hauteur / 3 + (int)((zone[unite.iZone] + 0.5) * m_hauteur / 3 / nbZone[unite.iZone]);
@@ -1298,11 +1351,19 @@ namespace vaoc
                     G.Dispose();
                     fichierImage.Dispose();
                 }
-                iZoneResultats++;
-                if (iZoneResultats < 6 && !bFin)
+                if (iZoneResultats < 3 && !bFin && null!= zonebataille)
                 {
-                    //on refait la même image mais avec les résultats de l'attaque cette fois !
-                    TraitementVertical(iZoneResultats, fin, bFin);
+                    //on regarde s'il y a un combat quelque part, sinon, inutile d'afficher des zones vides
+                    int z = 0;
+                    while (z < 6 && zonebataille.iPertes[z] <= 0) { z++; }
+                    //-1 = premier affichage des unités en place
+                    //on recommence avec les zone 0 à 2
+                    //puis avec les zones 3 à 5
+                    if (z < 6)
+                    {
+                        iZoneResultats = (iZoneResultats < 0) ? 0 : 3;
+                        TraitementVertical(iZoneResultats, fin, bFin);
+                    }
                 }
                 return string.Empty;
             }

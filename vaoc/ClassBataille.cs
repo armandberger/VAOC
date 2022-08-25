@@ -2988,7 +2988,7 @@ namespace vaoc
             /// Generation du film résulmant la bataille
             /// </summary>
             /// <returns></returns>
-            public bool GenererFilm(string nomFichierPartie)
+            public string GenererFilm(string nomFichierPartie)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
                 List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
@@ -3108,6 +3108,7 @@ namespace vaoc
                             effectifInfanterie = ligneBataillePionsVideo.I_INFANTERIE, 
                             effectifCavalerie = ligneBataillePionsVideo.I_CAVALERIE, 
                             effectifArtillerie = ligneBataillePionsVideo.I_ARTILLERIE, 
+                            moral = ligneBataillePionsVideo.I_MORAL,
                             ID = ligneBataillePionsVideo.ID_PION, 
                             iNation = ligneBataillePionsVideo.ID_NATION, 
                             nom = ligneBataillePionsVideo.S_NOM
@@ -3231,9 +3232,9 @@ namespace vaoc
                 if (erreur !=string.Empty)
                 {
                     LogFile.Notifier("Erreur dans Bataille-GenererFilm :" + this.ID_BATAILLE + " : " + erreur);
-                    return false;
+                    return erreur;
                 }
-                return true;
+                return string.Empty;
             }
 
             private TIPEUNITEBATAILLE DefinitionTipeUniteBataille(TAB_BATAILLE_PIONS_VIDEORow ligneBataillePionsVideo)

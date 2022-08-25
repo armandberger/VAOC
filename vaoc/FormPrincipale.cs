@@ -3421,6 +3421,7 @@ namespace vaoc
                 int nbNouvellesBatailles = (from nb in Donnees.m_donnees.TAB_BATAILLE
                              where nb.I_TOUR_DEBUT> Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION
                              select nb.ID_BATAILLE).Count();
+
                 //recherche du nombre de batailles terminées
                 int nbAnciennesBatailles = (from nb in Donnees.m_donnees.TAB_BATAILLE
                                             where !nb.IsI_TOUR_FINNull() &&  nb.I_TOUR_FIN > Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION

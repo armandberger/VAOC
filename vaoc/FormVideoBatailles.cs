@@ -30,13 +30,14 @@ namespace vaoc
 
         private void buttonGenerer_Click(object sender, EventArgs e)
         {
+            string retour = string.Empty;
             if(comboBoxBatailles.SelectedItem.ToString().Equals("Toutes"))
             {
                 foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                 {
                     if (!ligneBataille.IsI_TOUR_FINNull())
                     {
-                        ligneBataille.GenererFilm(m_nomfichier);
+                        retour +=ligneBataille.GenererFilm(m_nomfichier);
                     }
                 }
             }
@@ -44,7 +45,14 @@ namespace vaoc
             {
                 ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier);
             }
-            MessageBox.Show(this, "Génération terminée", "Génération film de bataille", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (string.Empty == retour)
+            {
+                MessageBox.Show(this, "Génération terminée", "Génération film de bataille", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show(this, retour, "Génération film de bataille", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

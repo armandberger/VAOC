@@ -2988,7 +2988,7 @@ namespace vaoc
             /// Generation du film résulmant la bataille
             /// </summary>
             /// <returns></returns>
-            public string GenererFilm(string nomFichierPartie)
+            public string GenererFilm(string nomFichierPartie, int positionFilm, int hauteurFilm, int largeurFilm)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
                 List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
@@ -3129,6 +3129,10 @@ namespace vaoc
                         }
                     }
                 }
+                // -> pas logique mais sur l'historique il manque parfois des données, il faut compléter
+                if (iNation012 < 0) { iNation012 = (0==iNation345) ? 1 : 0; }
+                if (iNation345 < 0) { iNation345 = (0 == iNation012) ? 1 : 0; }
+
 
                 #region TEST
                 /* 
@@ -3218,7 +3222,8 @@ namespace vaoc
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
                     new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),//policeTitre
                     new Font(FontFamily.GenericSansSerif, 20, FontStyle.Regular | FontStyle.Bold),//policeTitreEffectifs
-                    1600, 1200, iNation012, iNation345,
+                    largeurFilm, hauteurFilm, positionFilm,
+                    iNation012, iNation345,
                     unitesBataille,
                     rolesBataille,
                     zonesBataille,
@@ -3227,7 +3232,8 @@ namespace vaoc
                     orientation, 
                     fin,
                     this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
-                    this.I_TOUR_DEBUT //debut
+                    this.I_TOUR_DEBUT, //debut
+                    this.I_PHASE_DEBUT
                     );
                 if (erreur !=string.Empty)
                 {

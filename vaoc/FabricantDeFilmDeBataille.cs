@@ -85,6 +85,7 @@ namespace vaoc
         public string Initialisation(string nomCampagne, string nomFichier, string repertoireVideo, 
                                     string nomBataille, Font police, Font policeTitre, Font policeTitreEffectifs,
                                     int largeur, int hauteur,
+                                    int positionFilm,
                                     int iNation012,
                                     int iNation345,
                                     List<UniteBataille> unitesBataille, 
@@ -95,7 +96,8 @@ namespace vaoc
                                     TIPEORIENTATIONBATAILLE cOrientation,
                                     TIPEFINBATAILLE iFin,
                                     int nbEtapes,
-                                    int debut
+                                    int tourDebut,
+                                    int phaseDebut
                                     )
         {
             try
@@ -114,7 +116,7 @@ namespace vaoc
                 m_police = police;
                 m_nomCampagne = nomCampagne;
                 m_nomFichier = nomFichier;
-                m_numeroImage = 0;
+                m_numeroImage = positionFilm;
                 m_iNation012 = iNation012;
                 m_iNation345 = iNation345;
 
@@ -142,8 +144,9 @@ namespace vaoc
                     Directory.CreateDirectory(repertoireVideo);
                 }
 
-                TraitementTitre(nomBataille, debut, debut + m_nbEtapes, policeTitre, policeTitreEffectifs);
-                for (m_traitement = debut; m_traitement< debut+m_nbEtapes; m_traitement++)
+                string retourTitre=TraitementTitre(nomBataille, tourDebut, phaseDebut, tourDebut + m_nbEtapes, policeTitre, policeTitreEffectifs);
+                if (string.Empty != retourTitre) { return "TraitementTitre : " + retourTitre; }
+                for (m_traitement = tourDebut; m_traitement< tourDebut+m_nbEtapes; m_traitement++)
                 {
                     //on  vérifie qu'il y a bien une unité à afficher (des fois il n'y a rien car c'est un inter tour de combat)
                     //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux et s'assurer d'une action
@@ -195,7 +198,7 @@ namespace vaoc
                         return retour;
                     }
                 }
-                TraitementBilan(m_fin, debut, policeTitre, policeTitreEffectifs);
+                TraitementBilan(m_fin, tourDebut, policeTitre, policeTitreEffectifs);
                 Terminer();
                 return string.Empty;
             }
@@ -1413,7 +1416,7 @@ namespace vaoc
             G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
         }
 
-        private string TraitementTitre(string nomBataille, int debut, int fin, Font policeTitre, Font policeTitreEffectifs)
+        private string TraitementTitre(string nomBataille, int tourDebut, int phaseDebut, int fin, Font policeTitre, Font policeTitreEffectifs)
         {
             Graphics G;
             int yunite;
@@ -1439,7 +1442,7 @@ namespace vaoc
 
                 //on compte d'abord le nombre d'unites par zone pour pouvoir les répartir au mieux
                 //+1 car si aucune unité engagée, elle sont engagées "par défaut" uniquement sur le tour de fin..., cas quand il n'y a pas de leader présent
-                for (int t = debut; t < debut + m_nbEtapes +1; t++)
+                for (int t = tourDebut; t < tourDebut + m_nbEtapes +1; t++)
                 {
                     int[] infanterie = new int[2];
                     int[] cavalerie = new int[2];
@@ -1483,11 +1486,12 @@ namespace vaoc
                 AfficheMultiLigne(G, nomBataille, policeTitre, new Rectangle(0, 0, m_largeur, m_hauteur / 5), Brushes.Black);
 
                 //afficher la date
-                string titreDate = ClassMessager.DateHeure(debut, 0).ToString("dddd d MMMM yyyy");
+                string titreDate = ClassMessager.DateHeure(tourDebut, phaseDebut).ToString("dddd d MMMM yyyy");
                 AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 10), Brushes.Black);
 
-                //afficher heures de Début et de fin                
-                string titreHeure = string.Format("{0}h00 - {1}h00", ClassMessager.DateHeure(debut + 1, 0).Hour, ClassMessager.DateHeure(fin, 0).Hour);
+                //afficher heures de Début et de fin
+                DateTime dateDebut = ClassMessager.DateHeure(tourDebut, phaseDebut);
+                string titreHeure = string.Format("{0}h{1} - {2}h00", dateDebut.Hour, dateDebut.Minute, ClassMessager.DateHeure(fin, 0).Hour);
                 AfficheMultiLigne(G, titreHeure, policeTitre, new Rectangle(0, 9 * m_hauteur / 10, m_largeur, m_hauteur / 10), Brushes.Black);
 
                 //afficher les protagonistes + effectifs

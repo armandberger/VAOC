@@ -31,19 +31,31 @@ namespace vaoc
         private void buttonGenerer_Click(object sender, EventArgs e)
         {
             string retour = string.Empty;
-            if(comboBoxBatailles.SelectedItem.ToString().Equals("Toutes"))
+            int hauteurFilm;
+            int largeurFilm;
+            try
+            {
+                hauteurFilm = Convert.ToInt32(textBoxHauteurBase.Text);
+                largeurFilm = Convert.ToInt32(textBoxLargeurBase.Text);
+            }
+            catch(ArithmeticException)
+            {
+                hauteurFilm = 1200;
+                largeurFilm = 1600;
+            }
+            if (comboBoxBatailles.SelectedItem.ToString().Equals("Toutes"))
             {
                 foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
                 {
                     if (!ligneBataille.IsI_TOUR_FINNull())
                     {
-                        retour +=ligneBataille.GenererFilm(m_nomfichier);
+                        retour +=ligneBataille.GenererFilm(m_nomfichier, 0, hauteurFilm, largeurFilm);
                     }
                 }
             }
             else
             {
-                ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier);
+               retour =  ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier, 0, hauteurFilm, largeurFilm);
             }
             if (string.Empty == retour)
             {
@@ -52,6 +64,16 @@ namespace vaoc
             else
             {
                 MessageBox.Show(this, retour, "Génération film de bataille", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonChoixPolice_Click(object sender, EventArgs e)
+        {
+            fontDialog.Font = labelPolice.Font;
+            if (DialogResult.OK == fontDialog.ShowDialog())
+            {
+                labelPolice.Font = fontDialog.Font;
+                labelPolice.Text = labelPolice.Font.ToString();
             }
         }
     }

@@ -3741,6 +3741,12 @@ namespace vaoc
             {
                 Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 lignePion.ID_CASE = ligneCaseCible.ID_CASE;
+                //si l'unité que l'on suit est engagé en bataille on doit l'être aussi.
+                if (!lignePionCible.IsID_BATAILLENull() && lignePion.IsID_BATAILLENull())
+                {
+                    Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePionCible.ID_BATAILLE);
+                    ligneBataille.AjouterPionDansLaBataille(lignePion, ligneCaseCible);
+                }
                 Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
             else

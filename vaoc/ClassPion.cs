@@ -515,6 +515,26 @@ namespace vaoc
             }
 
             /// <summary>
+            /// Indique si une unité de combats ou des renforts sont capturables
+            /// </summary>
+            /// <returns>true si c'est unité de combat avec des effectifs insuffisants, false sinon</returns>
+            public bool estCapturable
+            {
+                get
+                {
+                    if (this.I_INFANTERIE_INITIALE > 0 && this.infanterie < 300)
+                    {
+                        return true;
+                    }
+                    if (this.I_CAVALERIE_INITIALE > 0 && this.cavalerie < 300)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            /// <summary>
             /// indique si le pion a l'aptitude CONVOI + un niveau de dépôt ou pas 
             /// </summary>
             /// <returns>true si CONVOI de ravitaillement false sinon</returns>
@@ -1607,7 +1627,7 @@ namespace vaoc
                     return false;
                 }
 
-                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers)// || estRenfort) -> le renfort est une troupe combattive
+                if (estMessager || estPatrouille || estDepot || estConvoi || estPontonnier || estBlesses || estPrisonniers || estCapturable)// || estRenfort) -> le renfort est une troupe combattive
                 {
                     return false;
                 }
@@ -4064,7 +4084,7 @@ namespace vaoc
 
                     #region un convoi rencontre une unité ennemie, une capture ne peut avoir lieu que de jour, ceci afin d'éviter des captures par des mouvements ne déclenchant pas de combat
                     //aucune des deux unités ne doit être en fuite ou en retraite (pris en compte est l'appel à estCombattif)
-                    if ((estConvoi || estBlesses || estPrisonniers) && lignePionEnnemi.estCombattif)
+                    if ((estConvoi || estBlesses || estPrisonniers || estCapturable) && lignePionEnnemi.estCombattif)
                     {
                         ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
                         if (bEnDanger)
@@ -4072,7 +4092,7 @@ namespace vaoc
                             if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
                         }
                     }
-                    if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers) && estCombattif)
+                    if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers || lignePionEnnemi.estCapturable) && estCombattif)
                     {
                         ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
                         if (bEnDanger)

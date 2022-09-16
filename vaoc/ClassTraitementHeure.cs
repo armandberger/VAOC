@@ -35,14 +35,13 @@ namespace vaoc
 
         private void testDebug()
         {
-            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            {
-                if (lignePion.S_NOM.StartsWith("Bless") && !lignePion.B_BLESSES)
-                {
-                     Debug.WriteLine("erreur testdebug:"+lignePion.ID_PION+":"+System.Environment.StackTrace.ToString());
-                }
-            }
-
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (lignePion.S_NOM.StartsWith("Bless") && !lignePion.B_BLESSES)
+            //    {
+            //         Debug.WriteLine("erreur testdebug:"+lignePion.ID_PION+":"+System.Environment.StackTrace.ToString());
+            //    }
+            //}
         }
         public bool TraitementHeure(string fichierCourant, System.ComponentModel.BackgroundWorker travailleur, out string messageErreur)
         {

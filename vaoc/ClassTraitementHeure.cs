@@ -3927,7 +3927,7 @@ namespace vaoc
                             Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionDestinataire.ID_CASE);
                             if (Constantes.Distance(chemin[pos].I_X, chemin[pos].I_Y, ligneCaseNouvelleDestination.I_X, ligneCaseNouvelleDestination.I_Y) < lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                             {
-                                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, null, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                                 {
                                     message = string.Format("{0},ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif changement en visuel: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                                     LogFile.Notifier(message);

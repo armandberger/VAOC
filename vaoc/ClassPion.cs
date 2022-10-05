@@ -3588,6 +3588,7 @@ namespace vaoc
                 etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
+                etoile._ID_PION = this.ID_PION;//juste pour debug
                 if (!etoile.SearchSpace(ligneCaseDepart, espace, tableCoutsMouvementsTerrain, nombrePixelParCase, nation.ID_NATION, out listeIDCaseEspace, out erreur))
                 {
                     erreur = string.Format("{0}(ID={1}, erreur sur SearchPath dans RechercheEspace idDepart={2})",
@@ -3928,7 +3929,7 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             public bool RequisitionCase(Donnees.TAB_CASERow ligneCase, bool enMouvement, ref int nbplaces)
             {
-                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne())
+                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne() && !this.estAuCombat)
                 {
                     //pour les autres, on vérifie si ce mouvement ne fait pas entrer l'unité dans une zone de bataille, uniquement de jour
                     Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE.Rows.SyncRoot);
@@ -4608,6 +4609,8 @@ namespace vaoc
 
                 try
                 {
+                    message = string.Format("Debut PlacementPion :{0}(ID={1})", S_NOM, ID_PION);
+                    LogFile.Notifier(message, out messageErreur);
                     if (IDcase < 0)
                     {
                         message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, erreur demande de placement de pion sur une IDcase incorrect)", S_NOM, ID_PION, IDcase);
@@ -4647,22 +4650,36 @@ namespace vaoc
                             return LogFile.Notifier(message, out messageErreur);
                         }
 
+                        message = string.Format("PlacementPion : placement des effectifs PION={0}({1}) espacespossilbles={2} ; encombrement={3}",
+                            S_NOM, ID_PION, listeCaseEspace.Count, encombrement);
+                        LogFile.Notifier(message, out messageErreur);
+
                         i = 0;
                         nbplacesOccupes = 0;
                         while (i < listeCaseEspace.Count && nbplacesOccupes < encombrement)
                         {
                             Donnees.TAB_CASERow ligneOccupation = Donnees.m_donnees.TAB_CASE.FindParID_CASE(listeCaseEspace[i]);
-
+                            /*message = string.Format("PlacementPion : RequisitionCase PION={0}({1}) ID_CASE={2}({3},{4}) < nbplacesOccupes={5}",
+                                                            S_NOM, ID_PION, ligneOccupation.ID_CASE, ligneOccupation.I_X, ligneOccupation.I_Y, nbplacesOccupes);
+                            LogFile.Notifier(message, out messageErreur);*/
                             if (!RequisitionCase(ligneOccupation, false, ref nbplacesOccupes)) { return false; }
                             i++;
                         }
                         if (nbplacesOccupes < encombrement)
                         {
-                            message = string.Format("ALERTE PlacementPion : impossible de placer les effectifs PION={0}({1}) nbplacesOccupes={2}<encombrement={3}",
+                            message = string.Format("ALERTE PlacementPion : impossible de placer les effectifs PION={0}({1}) nbplacesOccupes={2} < encombrement={3}",
                                 S_NOM, ID_PION, nbplacesOccupes, encombrement);
                             LogFile.Notifier(message, out messageErreur);
                         }
+                        else
+                        {
+                            message = string.Format("OK PlacementPion : impossible de placer les effectifs PION={0}({1}) nbplacesOccupes={2} < encombrement={3}, etapes={4}",
+                                S_NOM, ID_PION, nbplacesOccupes, encombrement, i);
+                            LogFile.Notifier(message, out messageErreur);
+                        }
                     }
+                    message = string.Format("Fin PlacementPion :{0}(ID={1})", S_NOM, ID_PION);
+                    LogFile.Notifier(message, out messageErreur);
                 }
                 catch (Exception ex)
                 {
@@ -4683,6 +4700,9 @@ namespace vaoc
                 try
                 {
                     if (B_DETRUIT) { return true; }
+
+                    message = string.Format("Debut PlacerStatique :{0}(ID={1})", S_NOM, ID_PION);
+                    LogFile.Notifier(message, out messageErreur);
 
                     Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                     if (!MessageEnnemiObserve(ligneCase)) { return false; }
@@ -4719,7 +4739,9 @@ namespace vaoc
                             return LogFile.Notifier(message, out messageErreur);
                         }
                         PlacementPion(ligneNation, true);
-                    }                    
+                    }
+                    message = string.Format("Fin PlacerStatique :{0}(ID={1})", S_NOM, ID_PION);
+                    LogFile.Notifier(message, out messageErreur);
                 }
                 catch (Exception ex)
                 {
@@ -4754,6 +4776,8 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                 AStar etoile = new AStar();
 
+                message = string.Format("Debut PlacerPionEnRoute :{0}(ID={1})", S_NOM, ID_PION);
+                LogFile.Notifier(message, out messageErreur);
                 idCaseDebut = -1;
                 idCaseFin = ID_CASE;//valeur par défaut
                 int effectifInfanterie = (estDepot || estConvoiDeRavitaillement || estPontonnier) ? effectifTotalEnMouvement : infanterie;
@@ -4964,6 +4988,8 @@ namespace vaoc
                     }
                     #endregion
                 }
+                message = string.Format("Fin PlacerPionEnRoute :{0}(ID={1})", S_NOM, ID_PION);
+                LogFile.Notifier(message, out messageErreur);
                 return true;
             }
 

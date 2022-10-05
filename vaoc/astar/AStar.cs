@@ -63,7 +63,7 @@ namespace vaoc
 		private SortableList _Open, _Closed;
 		private Track _LeafToGoBackUp;
 		private int _NbIterations = -1;
-
+        public int _ID_PION=-1;//uniquement pour pouvoir mettre des points d'arrêts en debug
 		private SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
@@ -80,7 +80,6 @@ namespace vaoc
         private int yminBlocEnd;
         private int ymaxBlocEnd;
         private int m_espace;//espace recherché
-        private int m_espaceTrouve;//nombre d'espace trouvé
         private int m_idNation;//nation autorisé à se déplacer sur le parcours
         private Node m_cible = null;//private static Donnees.TAB_CASERow _Target = null; de Track
 
@@ -475,6 +474,7 @@ namespace vaoc
                     }
                     if ((m_minX != m_maxX) && (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY))
                     {
+                        LogFile.Notifier("AStar:Propagate depassement des bornes sur ID_PION="+_ID_PION.ToString());
                         continue;
                     }
                     Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
@@ -1186,78 +1186,6 @@ namespace vaoc
             return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
         }
 
-        /// <summary>
-        /// Recherche toutes les cases avec un cout de mouvement minimum autour d'un point donné. Les cases déjà occupées ne sont pas considérées
-        /// lors du calcul de coût mais uniquement lors de la recherche de cases disponibles.
-        /// </summary>
-        /// <param name="ligneCase">Case d'origine</param>
-        /// <param name="espace">Nombre de cases à trouver</param>
-        /// <param name="tableCoutsMouvementsTerrain">couts de mouvement suivant les terrains</param>
-        /// <param name="nombrePixelParCase>echelle en pixels par case</param>
-        /// <param name="listeCaseEspace>liste des cases du parcours, ordonnées par I_COUT</param>
-        /// <returns>true si OK, false si KO</returns>
-        internal bool SearchSpace0(Donnees.TAB_CASERow ligneCase, int espace, AstarTerrain[] tableCoutsMouvementsTerrain, int nombrePixelParCase, int idNation, out Donnees.TAB_CASERow[] listeCaseEspace, out string erreur)
-        {
-            //DateTime    timeStart;
-            //TimeSpan    perf;
-            string      requete;
-            bool        bEspaceFound;
-            //DataSetCoutDonnees.TAB_CASERow[] retour;
-
-            erreur = string.Empty;
-            Debug.WriteLine(string.Format("AStar.SearchSpace sur {0} espaces ", espace));
-            m_tableCoutsMouvementsTerrain = tableCoutsMouvementsTerrain;
-            m_nombrePixelParCase = nombrePixelParCase;
-            //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
-            //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
-            m_minX = 0;
-            m_minY = 0;
-            m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
-            m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
-            m_espace = espace * 2;//on double l'espace recherchée, une grande partie pouvant déjà être occupée par d'autres unités.
-            m_idNation = idNation;
-
-            listeCaseEspace = null;
-            bEspaceFound = false;
-            while (!bEspaceFound)
-            {
-                //recherche des coûts à partir de la case source
-                //timeStart = DateTime.Now;
-                InitializeSpace(ligneCase);
-                if (m_espace <= 1)
-                {
-                    listeCaseEspace = new Donnees.TAB_CASERow[0];
-                    return true;
-                }
-                //m_minX= Math.Max(0, ligneCase.I_X-espace);
-                //m_minY= Math.Max(0, ligneCase.I_Y-espace);
-                //m_maxX= Math.Min(Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE, ligneCase.I_X+espace);
-                //m_maxY = Math.Min(Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE, ligneCase.I_Y + espace);
-
-                while (NextSpaceStep()) { }
-                //perf = DateTime.Now - timeStart;
-                //Debug.WriteLine(string.Format("AStar.SearchSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-
-                //on vérifie qu'il y a assez de cases disponibles pour remplir l'encombrement
-                requete = string.Format("I_COUT<{0}", Constantes.CST_COUTMAX);
-                Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                listeCaseEspace = (Donnees.TAB_CASERow[])Donnees.m_donnees.TAB_CASE.Select(requete, "I_COUT");
-                Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
-                if (listeCaseEspace.Count() < m_espace)
-                {
-                    erreur = string.Format("SearchSpace ne trouve que {0} cases disponibles alors que l'unité en a besoin de {1} sur un espace global de {2}", listeCaseEspace.Count(), espace, m_espace);
-                    Debug.WriteLine(erreur);
-                    // on double l'espace et on recommence, en fait ça sert pas à grand chose a priori
-                    //m_espace *= 2;
-                }
-                //else
-                //{
-                    bEspaceFound=true;
-                //}
-            }
-            return bEspaceFound;
-        }
-
         internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
         {
             CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, false);
@@ -1312,7 +1240,7 @@ namespace vaoc
             }
         }
 
-        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, LigneCASE ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, LigneCASE ligneCaseDestination, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
             return RechercheChemin(tipePacours, lignePion,
                 Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
@@ -1320,7 +1248,7 @@ namespace vaoc
                 out chemin, out coutGlobal, out coutHorsRoute, out tableCoutsMouvementsTerrain, out erreur);
         }
 
-        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
+        public bool RechercheChemin(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, LigneCASE ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, out List<LigneCASE> chemin, out double coutGlobal, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string erreur)
         {
             return RechercheChemin(tipePacours, lignePion,
                 Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCaseDepart.ID_CASE),
@@ -1554,10 +1482,10 @@ namespace vaoc
                 m_nombrePixelParCase = nombrePixelParCase;
                 //SearchIdMeteo = idMeteo;//ID_METEO pour la recherche en cours
                 //SearchIdModeleMouvement = idModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
-                m_minX = 0;
-                m_minY = 0;
-                m_maxX = Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE;
-                m_maxY = Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE;
+                m_minX = Math.Max(ligneCase.I_X - nombrePixelParCase * 10 ,0);
+                m_minY = Math.Max(ligneCase.I_Y - nombrePixelParCase * 10, 0);
+                m_maxX = Math.Min(ligneCase.I_X + nombrePixelParCase * 10, Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE);
+                m_maxY = Math.Min(ligneCase.I_Y + nombrePixelParCase * 10, Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE);
                 m_espace = espace * 3;//on triple l'espace recherché, une grande partie pouvant déjà être occupée par d'autres unités.
                 m_idNation = idNation;
 
@@ -1629,7 +1557,6 @@ namespace vaoc
             _Open.Clear();
             _Open.Add(new Track(ligneCase, m_tailleBloc));
             _NbIterations = 0;
-            m_espaceTrouve = 0;
             _LeafToGoBackUp = null;//on utilise pas la variable mais...
 
             //foreach (Donnees.TAB_CASERow ligne in Donnees.m_donnees.TAB_CASE)
@@ -1644,6 +1571,7 @@ namespace vaoc
             //if (!Initialized) throw new InvalidOperationException("You must initialize AStar before launching the algorithm.");
             if (_Open.Count == 0)
             {
+                LogFile.Notifier("AStar:NextSpaceStep _Open.Count == 0 sur ID_PION="+_ID_PION.ToString());
                 return false;//c'est fini
             }
             //if (m_espaceTrouve > m_espace * 3)
@@ -1683,49 +1611,5 @@ namespace vaoc
             //}
             return _Open.Count > 0;
         }
-
-        private void PropagateSpace(Track TrackToPropagate)
-        {
-            //DateTime timeStart;
-            //TimeSpan perf;
-
-            //timeStart = DateTime.Now;
-            foreach (Node A in Donnees.m_donnees.TAB_CASE.CasesVoisines(TrackToPropagate.EndNode))
-            {
-                //BEA, je ne vois plus l'intéret du test qui suit, effectivement, le test est déjà fait dans CasesVoisines
-                //if (A.I_X < m_minX || A.I_Y < m_minY || A.I_X > m_maxX || A.I_Y > m_maxY)
-                //{
-                //    continue;
-                //}
-
-                int cout = Cout(TrackToPropagate.EndNode, A);
-                if (cout != Constantes.CST_COUTMAX)
-                {
-                    //DateTime timeStart2 = DateTime.Now;
-                    ///if (A.I_COUT == CST_COUTMAX || (TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))
-                    //if ((TrackToPropagate.EndNode.I_COUT + cout < A.I_COUT))//pas sur que ce soit bien A.I_COUT == CST_COUTMAX, 28/11/2011
-                    //{
-                        m_espaceTrouve++;//on vient de trouver une case de plus
-                        //A.I_COUT = TrackToPropagate.EndNode.I_COUT + cout;
-                        //if (A.I_COUT < 0)
-                        //{
-                        //    Debug.WriteLine("AStar.PropagateSpace cout négatif !!!");
-                        //}
-                        //if (A.I_X==100 && A.I_Y==100)
-                        //{
-                        //    Debug.WriteLine(string.Format("AStar.PropagateSpace 100,100 cout final= {0}, cout={1} de {2},{3} avec un cout de {4}",
-                        //        A.I_COUT, cout, TrackToPropagate.EndNode.I_X, TrackToPropagate.EndNode.I_Y, TrackToPropagate.EndNode.I_COUT));
-                        //}
-                        Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
-                        _Open.Add(Successor);
-                    //}
-                }
-                //perf = DateTime.Now - timeStart2;
-                //Debug.WriteLine(string.Format("AStar.PropagateSpace interne en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-            }
-            //perf = DateTime.Now - timeStart;
-            //Debug.WriteLine(string.Format("AStar.PropagateSpace en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds));
-        }
-
     }
 }

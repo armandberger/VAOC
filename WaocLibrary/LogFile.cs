@@ -92,7 +92,7 @@ namespace WaocLib
             try
             {
                 Monitor.Enter(m_verrouEcriture);
-                m_phrases.AppendFormat("{0}{1}:{2}|{3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
+                m_phrases.AppendFormat("{0}:{1}:{2}|{3}", DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, message);
                 file = new StreamWriter(m_fileName, true);
                 file.WriteLine(m_phrases.ToString());
                 file.Close();

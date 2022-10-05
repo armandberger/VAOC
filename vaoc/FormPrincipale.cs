@@ -4070,7 +4070,7 @@ namespace vaoc
 
                     int id_case = lignePion.ID_CASE;
                     lignePion.ID_CASE = m_departPlusCourtChemin.ID_CASE;
-                    if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, null,
+                    if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, 
                         out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
                     {
                             MessageBox.Show(string.Format("Il n'y a aucun chemin possible entre les points {0}:{1},{2} -> {3}:{4},{5}", 

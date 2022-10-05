@@ -742,7 +742,7 @@ namespace vaoc
                 ++i;
             }
             return true;
-             * */
+            */
         }
 
         /// <summary>

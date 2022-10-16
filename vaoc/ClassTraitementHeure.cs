@@ -1170,7 +1170,7 @@ namespace vaoc
                     {
                         //la fatigue, le ravitaillement, l'expérience et le matériel sont mis à jour au prorata des deux unités.
                         int effectifsARenforcer = lignePionARenforcer.effectifTotal;
-                        int effectifsRenforts = lignePion.effectifTotal;
+                        int effectifsRenforts = Math.Max(lignePion.I_INFANTERIE, lignePion.I_INFANTERIE_INITIALE) + Math.Max(lignePion.I_CAVALERIE, lignePion.I_CAVALERIE_INITIALE) + Math.Max(lignePion.I_ARTILLERIE, lignePion.I_ARTILLERIE_INITIALE);
                         int effectifsFinaux = effectifsARenforcer+effectifsRenforts;
                         Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                         lignePionARenforcer.I_EXPERIENCE = (lignePionARenforcer.I_EXPERIENCE * effectifsARenforcer + lignePion.I_EXPERIENCE * effectifsRenforts) / effectifsFinaux;
@@ -1184,9 +1184,9 @@ namespace vaoc
                         //lignePionARenforcer.I_MORAL = (lignePionARenforcer.I_MORAL * effectifsARenforcer + lignePion.I_MORAL * effectifsRenforts) / effectifsFinaux; //Le moral doit être celui de la source je pense
 
                         //on ajoute les nouveaux effectifs
-                        lignePionARenforcer.I_INFANTERIE += lignePion.I_INFANTERIE;
-                        lignePionARenforcer.I_CAVALERIE += lignePion.I_CAVALERIE;
-                        lignePionARenforcer.I_ARTILLERIE += lignePion.I_ARTILLERIE;
+                        lignePionARenforcer.I_INFANTERIE += Math.Max(lignePion.I_INFANTERIE, lignePion.I_INFANTERIE_INITIALE);
+                        lignePionARenforcer.I_CAVALERIE += Math.Max(lignePion.I_CAVALERIE, lignePion.I_CAVALERIE_INITIALE);
+                        lignePionARenforcer.I_ARTILLERIE += Math.Max(lignePion.I_ARTILLERIE, lignePion.I_ARTILLERIE_INITIALE);
                         Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
 
                         //on indique au joueur que le renfort a été fait

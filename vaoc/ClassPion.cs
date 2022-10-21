@@ -4153,6 +4153,7 @@ namespace vaoc
             {
                 string message;
 
+                
                 message = string.Format("CapturePion  : de {0}:{1} par {2} avec l'aptitude {3}",
                     this.ID_PION, this.S_NOM, idNouveauPionProprietaire, aptitude);
                 LogFile.Notifier(message);
@@ -4333,9 +4334,9 @@ namespace vaoc
                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
                 }
-                if (estBlesses)
+                if (estBlesses || estRenfort)
                 {
-                    //Le convoi devient un convoi de prisonniers
+                    //Le convoi ou l'unité de renforts non combattives (car effectif trop faible) devient un convoi de prisonniers
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_BLESSES = false;
                     B_PRISONNIERS = true;

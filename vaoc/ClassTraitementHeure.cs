@@ -1058,6 +1058,18 @@ namespace vaoc
                         LogFile.Notifier(message);
                         return false;
                     }
+                    if (lignePionARenforcer.B_DETRUIT)
+                    {
+                        //le dépôt à pu être détruit entre temps
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_IMPOSSIBLE))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_CREATION_DEPOT_IMPOSSIBLE dans ExecuterOrdreHorsMouvement sur dépôt détruit", lignePion.S_NOM, lignePion.ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                        lignePion.TerminerOrdre(ligneOrdre, false, true);
+                        break;//on ne fait pas la suite
+                    }
                     Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
                     Donnees.TAB_CASERow ligneCaseRenfort = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionARenforcer.ID_CASE);
 

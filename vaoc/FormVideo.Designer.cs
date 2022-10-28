@@ -61,6 +61,9 @@
             this.checkBoxVideoParRole = new System.Windows.Forms.CheckBox();
             this.checkBoxAffichageCorps = new System.Windows.Forms.CheckBox();
             this.checkBoxAffichageDepots = new System.Windows.Forms.CheckBox();
+            this.buttonStatistiquesBatailles = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBoxSeuilBatailles = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // buttonCreerFilm
@@ -318,7 +321,7 @@
             // 
             // buttonDonneesTravelling
             // 
-            this.buttonDonneesTravelling.Location = new System.Drawing.Point(130, 12);
+            this.buttonDonneesTravelling.Location = new System.Drawing.Point(127, 12);
             this.buttonDonneesTravelling.Name = "buttonDonneesTravelling";
             this.buttonDonneesTravelling.Size = new System.Drawing.Size(123, 23);
             this.buttonDonneesTravelling.TabIndex = 37;
@@ -359,11 +362,42 @@
             this.checkBoxAffichageDepots.Text = "affichage Dépôts";
             this.checkBoxAffichageDepots.UseVisualStyleBackColor = true;
             // 
+            // buttonStatistiquesBatailles
+            // 
+            this.buttonStatistiquesBatailles.Location = new System.Drawing.Point(268, 12);
+            this.buttonStatistiquesBatailles.Name = "buttonStatistiquesBatailles";
+            this.buttonStatistiquesBatailles.Size = new System.Drawing.Size(123, 23);
+            this.buttonStatistiquesBatailles.TabIndex = 41;
+            this.buttonStatistiquesBatailles.Tag = "";
+            this.buttonStatistiquesBatailles.Text = "Statistiques Batailles";
+            this.buttonStatistiquesBatailles.UseVisualStyleBackColor = true;
+            this.buttonStatistiquesBatailles.Click += new System.EventHandler(this.buttonStatistiquesBatailles_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(502, 227);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(116, 13);
+            this.label9.TabIndex = 42;
+            this.label9.Text = "Seuil batailles majeures";
+            // 
+            // textBoxSeuilBatailles
+            // 
+            this.textBoxSeuilBatailles.Location = new System.Drawing.Point(624, 224);
+            this.textBoxSeuilBatailles.Name = "textBoxSeuilBatailles";
+            this.textBoxSeuilBatailles.Size = new System.Drawing.Size(67, 20);
+            this.textBoxSeuilBatailles.TabIndex = 43;
+            this.textBoxSeuilBatailles.Text = "15";
+            // 
             // FormVideo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(827, 547);
+            this.Controls.Add(this.textBoxSeuilBatailles);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.buttonStatistiquesBatailles);
             this.Controls.Add(this.checkBoxAffichageDepots);
             this.Controls.Add(this.checkBoxAffichageCorps);
             this.Controls.Add(this.checkBoxVideoParRole);
@@ -436,6 +470,9 @@
         private System.Windows.Forms.CheckBox checkBoxVideoParRole;
         private System.Windows.Forms.CheckBox checkBoxAffichageCorps;
         private System.Windows.Forms.CheckBox checkBoxAffichageDepots;
+        private System.Windows.Forms.Button buttonStatistiquesBatailles;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox textBoxSeuilBatailles;
     }
 }
 

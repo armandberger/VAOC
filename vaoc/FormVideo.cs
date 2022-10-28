@@ -412,5 +412,56 @@ namespace vaoc
                 Donnees.m_donnees.TAB_TRAVELLING.Merge(fVideoTable.tableTravelling.Copy(), false);
             }
         }
+
+        /// <summary>
+        /// Affichage de statistiques du nombre de corps engagés par batailles pour déterminer un seuil de batailles majeures
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonStatistiquesBatailles_Click(object sender, EventArgs e)
+        {
+            int[] nbCorps = new int[100];
+            int maxUnites = 0;
+            m_oldcurseur = Cursor;
+            Cursor = Cursors.WaitCursor;
+            foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+            {
+                /*
+                int nbUnites012, nbUnites345;
+                int[] des;
+                Donnees.TAB_PIONRow[] lignePionsEnBataille012;
+                Donnees.TAB_PIONRow[] lignePionsEnBataille345;
+                ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out int[] modificateurs, out int[] effectifs, out int[] canons,
+                    out lignePionsEnBataille012, out lignePionsEnBataille345,
+                    true,//engagement
+                    false,//combattif
+                    true,//QG
+                    true//bArtillerie
+                    );
+                */
+                int nbUnites = (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                                    from Pion in Donnees.m_donnees.TAB_PION
+                                    where (BataillePion.ID_PION == Pion.ID_PION)
+                                    && (BataillePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                                    && BataillePion.B_ENGAGEMENT
+                                    select Pion.ID_PION ).Count();
+
+                if (nbUnites > maxUnites) { maxUnites = nbUnites; }
+                nbCorps[nbUnites]++;
+            }
+
+            string texte= "nbUnites   nombre    cumul\n";
+            int cumul = 0;
+            for (int i= maxUnites; i> 0; i--)
+            {
+                if (nbCorps[i] > 0)
+                {
+                    cumul += nbCorps[i];
+                    texte += string.Format("{0,10}{1,10}{2,10}\n", i, nbCorps[i], cumul);
+                }
+            }
+            Cursor = m_oldcurseur;
+            MessageBox.Show(texte, "Fabricant de Film : Statistiques de Batailles", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }

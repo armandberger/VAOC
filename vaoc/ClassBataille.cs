@@ -2987,8 +2987,9 @@ namespace vaoc
             /// <summary>
             /// Generation du film résulmant la bataille
             /// </summary>
+            /// <param name="nomFichier"></param>
             /// <returns></returns>
-            public string GenererFilm(string nomFichierPartie, int positionFilm, int hauteurFilm, int largeurFilm)
+            public string GenererFilm(string nomFichierPartie, string nomFichier, string repertoireVideo, ref int positionFilm, int hauteurFilm, int largeurFilm)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
                 List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
@@ -3212,17 +3213,19 @@ namespace vaoc
                 int positionPoint = nomFichierPartie.LastIndexOf("\\");
                 string repertoire = nomFichierPartie.Substring(0, positionPoint);
 
+                string nomFichierFinal = (string.Empty == nomFichier) ? Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", "") + "_bataille" + this.ID_BATAILLE : nomFichier;
+                string nomRepertoireFinal = (string.Empty == nomFichier) ? repertoire + "\\batailles" : repertoireVideo;
                 FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
                 //tout est fait dans initialisation
                 string erreur = film.Initialisation(
                     Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", ""),
-                    Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", "") + "_Bataille" +this.ID_BATAILLE,
-                    repertoire + "\\batailles",
+                    nomFichierFinal,
+                    nomRepertoireFinal,
                     this.S_NOM,
                     new Font(FontFamily.GenericSansSerif, 10, FontStyle.Regular | FontStyle.Bold),
                     new Font(FontFamily.GenericSansSerif, 50, FontStyle.Regular | FontStyle.Bold),//policeTitre
                     new Font(FontFamily.GenericSansSerif, 20, FontStyle.Regular | FontStyle.Bold),//policeTitreEffectifs
-                    largeurFilm, hauteurFilm, positionFilm,
+                    largeurFilm, hauteurFilm, ref positionFilm,
                     iNation012, iNation345,
                     unitesBataille,
                     rolesBataille,

@@ -33,6 +33,7 @@ namespace vaoc
             string retour = string.Empty;
             int hauteurFilm;
             int largeurFilm;
+            int positionFilm = 0;
             try
             {
                 hauteurFilm = Convert.ToInt32(textBoxHauteurBase.Text);
@@ -49,13 +50,13 @@ namespace vaoc
                 {
                     if (!ligneBataille.IsI_TOUR_FINNull())
                     {
-                        retour +=ligneBataille.GenererFilm(m_nomfichier, 0, hauteurFilm, largeurFilm);
+                        retour +=ligneBataille.GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm);
                     }
                 }
             }
             else
             {
-               retour =  ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier, 0, hauteurFilm, largeurFilm);
+               retour =  ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm);
             }
             if (string.Empty == retour)
             {

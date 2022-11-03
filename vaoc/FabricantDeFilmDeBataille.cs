@@ -85,7 +85,7 @@ namespace vaoc
         public string Initialisation(string nomCampagne, string nomFichier, string repertoireVideo, 
                                     string nomBataille, Font police, Font policeTitre, Font policeTitreEffectifs,
                                     int largeur, int hauteur,
-                                    int positionFilm,
+                                    ref int m_numeroImage,
                                     int iNation012,
                                     int iNation345,
                                     List<UniteBataille> unitesBataille, 
@@ -116,7 +116,7 @@ namespace vaoc
                 m_police = police;
                 m_nomCampagne = nomCampagne;
                 m_nomFichier = nomFichier;
-                m_numeroImage = positionFilm;
+                //m_numeroImage = positionFilm;
                 m_iNation012 = iNation012;
                 m_iNation345 = iNation345;
 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using WaocLib;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Specialized;
 
 namespace vaoc
 {
@@ -19,6 +20,7 @@ namespace vaoc
         private readonly List<EffectifEtVictoire> m_effectifsEtVictoires = new List<EffectifEtVictoire>();
         private readonly List<UniteRemarquable> m_unitesRemarquables = new List<UniteRemarquable>();
         private readonly List<UniteRole> m_unitesRoles = new List<UniteRole>();
+        private Donnees.TAB_BATAILLERow[] m_batailles;
         private string[] m_texteImages;
         delegate void FinTraitementCallBack(string strErreur);
         private string m_repertoireSource;
@@ -72,18 +74,18 @@ namespace vaoc
         {
             if (this.folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                this.textBoxRepertoireVideo.Text = this.folderBrowserDialog.SelectedPath+"\\video";
+                this.textBoxRepertoireVideo.Text = this.folderBrowserDialog.SelectedPath + "\\video";
             }
         }
 
         private void buttonCreerFilm_Click(object sender, EventArgs e)
         {
-            m_texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR+1];
+            m_texteImages = new string[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR + 1];
             this.buttonOuvrirFilm.Enabled = false;
             m_oldcurseur = Cursor;
             Cursor = Cursors.WaitCursor;
 
-            for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
+            for (int i = 0; i <= Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
             {
                 m_texteImages[i] = ClassMessager.DateHeure(i, 0, false);
             }
@@ -105,18 +107,18 @@ namespace vaoc
             }
 
             //on ajoute les effectifs et les points de victoire
-            for (int i=0; i<=Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
+            for (int i = 0; i <= Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; i++)
             {
-                for (int j=0; j<Donnees.m_donnees.TAB_NATION.Count; j++)
+                for (int j = 0; j < Donnees.m_donnees.TAB_NATION.Count; j++)
                 {
                     System.Nullable<int> effectifs =
                         (from video in Donnees.m_donnees.TAB_VIDEO
-                         where (video.I_TOUR == i) 
+                         where (video.I_TOUR == i)
                             && (video.ID_NATION == Donnees.m_donnees.TAB_NATION[j].ID_NATION)
                             && (false == video.B_DETRUIT)
                             && (false == video.B_PRISONNIERS)
                             && (false == video.B_BLESSES)
-                         select (video.I_INFANTERIE+video.I_CAVALERIE)*(100-video.I_FATIGUE)/100)
+                         select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
                         .Sum();
 
                     System.Nullable<int> victoires =
@@ -155,11 +157,11 @@ namespace vaoc
 
             //On ajoute les unites à représenter à l'écran
             LogFile.CreationLogFile("DonneesVideo.csv");
-            for (int j=0; j<Donnees.m_donnees.TAB_VIDEO.Count; j++)
+            for (int j = 0; j < Donnees.m_donnees.TAB_VIDEO.Count; j++)
             {
                 Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[j];
-                if (ligneVideo.ID_PION < 0 || ligneVideo.ID_CASE<0) 
-                { 
+                if (ligneVideo.ID_PION < 0 || ligneVideo.ID_CASE < 0)
+                {
                     continue; //case comptant seulement pour les points de victoire
                 }
                 //ligneVideo.B_QG a été ajouté à la fin et n'est pas fiable
@@ -182,15 +184,15 @@ namespace vaoc
                     };
                     //Donnees.m_donnees.TAB_CASE.ID_CASE_Vers_XY(ligneVideo.ID_CASE, out role.i_X_CASE, out role.i_Y_CASE);
                     System.Nullable<int> effectifs = (from video in Donnees.m_donnees.TAB_VIDEO
-                         where (video.I_TOUR == role.iTour)
-                            && (video.ID_PION_PROPRIETAIRE == ligneVideo.ID_PION)
-                            && (false == video.B_DETRUIT)
-                            && (false == video.B_PRISONNIERS)
-                            && (false == video.B_BLESSES)
-                         select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
+                                                      where (video.I_TOUR == role.iTour)
+                                                         && (video.ID_PION_PROPRIETAIRE == ligneVideo.ID_PION)
+                                                         && (false == video.B_DETRUIT)
+                                                         && (false == video.B_PRISONNIERS)
+                                                         && (false == video.B_BLESSES)
+                                                      select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
                         .Sum();
                     role.iEffectif = effectifs ?? 0;
-                    LogFile.Notifier(string.Format("{0};{1};{2}", role.nom,role.iTour,role.iEffectif)); ;
+                    LogFile.Notifier(string.Format("{0};{1};{2}", role.nom, role.iTour, role.iEffectif)); ;
                     m_unitesRoles.Add(role);
                 }
 
@@ -218,8 +220,10 @@ namespace vaoc
                 //unite.i_X_CASE = ligneCase.I_X;
                 //unite.i_Y_CASE = ligneCase.I_Y;
                 m_unitesRemarquables.Add(unite);
-            }            
+            }
 
+            //on ajoute les batailles dont il faut inclure les vidéos
+            m_batailles = ListeBatailles();
             /* -> deporté dans un traitement background ci-dessous
             FabricantDeFilm film = new FabricantDeFilm();
             string retour = film.CreerFilm(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, labelPolice.Font,
@@ -251,18 +255,18 @@ namespace vaoc
         {
             //le dernier mot
             int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
-            return nom.Substring(pos, nom.Length-pos);
+            return nom.Substring(pos, nom.Length - pos);
         }
 
         private void buttonOuvrirFilm_Click(object sender, EventArgs e)
         {
             if (this.checkBoxTravelling.Checked)
             {
-                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text,"\\video.mp4"));
+                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text, "\\video.mp4"));
             }
             else
             {
-                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text,"video.avi"));
+                Process.Start(Path.Combine(this.textBoxRepertoireVideo.Text, "video.avi"));
             }
         }
 
@@ -291,14 +295,14 @@ namespace vaoc
             string erreurTraitement = string.Empty;
             try
             {
-                erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text, 
+                erreurTraitement = cineaste.Initialisation(this.textBoxRepertoireImages.Text, this.textBoxRepertoireVideo.Text,
                                         labelPolice.Font,
                                         this.textBoxMasque.Text, m_texteImages,
                                         Convert.ToInt32(textBoxLargeurBase.Text), Convert.ToInt32(textBoxHauteurBase.Text),
                                         Convert.ToInt32(textBoxTailleUnite.Text), Convert.ToInt32(textBoxEpaisseurUnite.Text),
                                         checkBoxTravelling.Checked,
                                         checkBoxVideoParRole.Checked, checkBoxAffichageCorps.Checked, checkBoxAffichageDepots.Checked,
-                                        m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, m_unitesRoles,
+                                        m_listeLieux, m_unitesRemarquables, m_effectifsEtVictoires, m_unitesRoles, m_batailles,
                                         Donnees.m_donnees.TAB_PARTIE[0].I_NB_TOTAL_VICTOIRE, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                                         travailleur);
                 if (string.Empty != erreurTraitement)
@@ -352,7 +356,7 @@ namespace vaoc
             else
             {
                 textBoxMasque.Text = Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE;
-                this.textBoxRepertoireImages.Text = m_repertoireSource[m_repertoireSource.Length -1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length-1) : m_repertoireSource;
+                this.textBoxRepertoireImages.Text = m_repertoireSource[m_repertoireSource.Length - 1] == '\\' ? m_repertoireSource.Substring(0, m_repertoireSource.Length - 1) : m_repertoireSource;
             }
             this.textBoxRepertoireVideo.Text = this.textBoxRepertoireImages.Text + "\\video";
         }
@@ -426,33 +430,14 @@ namespace vaoc
             Cursor = Cursors.WaitCursor;
             foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
             {
-                /*
-                int nbUnites012, nbUnites345;
-                int[] des;
-                Donnees.TAB_PIONRow[] lignePionsEnBataille012;
-                Donnees.TAB_PIONRow[] lignePionsEnBataille345;
-                ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out int[] modificateurs, out int[] effectifs, out int[] canons,
-                    out lignePionsEnBataille012, out lignePionsEnBataille345,
-                    true,//engagement
-                    false,//combattif
-                    true,//QG
-                    true//bArtillerie
-                    );
-                */
-                int nbUnites = (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
-                                    from Pion in Donnees.m_donnees.TAB_PION
-                                    where (BataillePion.ID_PION == Pion.ID_PION)
-                                    && (BataillePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
-                                    && BataillePion.B_ENGAGEMENT
-                                    select Pion.ID_PION ).Count();
-
+                int nbUnites = NombreUnitesBataille(ligneBataille);
                 if (nbUnites > maxUnites) { maxUnites = nbUnites; }
                 nbCorps[nbUnites]++;
             }
 
-            string texte= "nbUnites   nombre    cumul\n";
+            string texte = "nbUnites   nombre    cumul\n";
             int cumul = 0;
-            for (int i= maxUnites; i> 0; i--)
+            for (int i = maxUnites; i > 0; i--)
             {
                 if (nbCorps[i] > 0)
                 {
@@ -462,6 +447,74 @@ namespace vaoc
             }
             Cursor = m_oldcurseur;
             MessageBox.Show(texte, "Fabricant de Film : Statistiques de Batailles", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private int NombreUnitesBataille(Donnees.TAB_BATAILLERow ligneBataille)
+        {
+            return (from BataillePion in Donnees.m_donnees.TAB_BATAILLE_PIONS
+                    from Pion in Donnees.m_donnees.TAB_PION
+                    where (BataillePion.ID_PION == Pion.ID_PION)
+                    && (BataillePion.ID_BATAILLE == ligneBataille.ID_BATAILLE)
+                    && BataillePion.B_ENGAGEMENT
+                    select Pion.ID_PION).Count();
+        }
+
+        /// <summary>
+        /// Liste des batailles à afficher dans la vidéo
+        /// </summary>
+        /// <returns>Liste des batailles, bataille à afficher par tour, NUL si aucune par niveau d'importance</returns>
+        private Donnees.TAB_BATAILLERow[] ListeBatailles()
+        {
+            OrderedDictionary liste = new OrderedDictionary();
+            int limiteUnites = Convert.ToInt32(this.textBoxTailleUnite.Text);
+
+            foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
+            {
+                int nbUnites = NombreUnitesBataille(ligneBataille);
+                if (nbUnites > limiteUnites && !ligneBataille.IsI_TOUR_FINNull())
+                {
+                    liste.Add(ligneBataille, nbUnites);
+                }
+            }
+
+            //comme je ne pas accéder à la liste par index, je recopie tout dans un tableau classique
+            Donnees.TAB_BATAILLERow[] tri = new Donnees.TAB_BATAILLERow[liste.Count];
+            int b = 0;
+            foreach(Donnees.TAB_BATAILLERow ligneBataille in liste)
+            {
+                tri[b++] = ligneBataille;
+            }
+
+            //liste des tours où l'on doit afficher une bataille
+            Donnees.TAB_BATAILLERow[] listeRetour = new Donnees.TAB_BATAILLERow[Donnees.m_donnees.TAB_PARTIE[0].I_TOUR];
+
+            //si des batailles se superposent sur les mêmes tours, on garde seulement la plus importante
+            int i = 0;
+            while (i < liste.Count)
+            {
+                Donnees.TAB_BATAILLERow ligneBatailleI = (Donnees.TAB_BATAILLERow)tri[i];
+                int j = 0;
+                bool bConflit = false;
+                while (j < i && !bConflit)
+                {
+                    //conflit sur les dates
+                    Donnees.TAB_BATAILLERow ligneBatailleJ = (Donnees.TAB_BATAILLERow)tri[j];
+                    if ((ligneBatailleJ.I_TOUR_DEBUT >= ligneBatailleI.I_TOUR_DEBUT && ligneBatailleJ.I_TOUR_DEBUT <= ligneBatailleI.I_TOUR_FIN)
+                        || (ligneBatailleI.I_TOUR_DEBUT >= ligneBatailleJ.I_TOUR_DEBUT && ligneBatailleI.I_TOUR_DEBUT <= ligneBatailleJ.I_TOUR_FIN))
+                    {
+                        bConflit = true;
+                    }
+                    j++;
+                }
+
+                if (!bConflit)
+                {
+                    listeRetour[ligneBatailleI.I_TOUR_DEBUT] = ligneBatailleI;
+                }
+                i++;
+            }
+            
+            return listeRetour;
         }
     }
 }

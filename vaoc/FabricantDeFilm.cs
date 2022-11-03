@@ -109,6 +109,7 @@ namespace vaoc
         private List<EffectifEtVictoire> m_effectifsEtVictoires;
         private List<UniteRemarquable> m_unitesRemarquables;
         private List<UniteRole> m_unitesRoles;
+        private Donnees.TAB_BATAILLERow[] m_batailles;
         private Dictionary<int, Role> m_roles;
         private int m_largeurMax;
         private int m_hauteurMax;
@@ -128,6 +129,9 @@ namespace vaoc
         private const int CST_TAILLE_NOM_CORPS = 4;
         private const int CST_RAYON_CORPS = 4;//rayon autour de la taille du corps qui inclue les unités
         private const int CST_DESSIN_ALPHA = 100;
+        private int m_numeroImage;
+        private string m_nomCampagne;
+        private string m_nomFichier;
 
         System.ComponentModel.BackgroundWorker m_travailleur;
         private const int BARRE_ECART = 2;
@@ -166,6 +170,7 @@ namespace vaoc
                                     bool bTravelling, bool bvideoParRole, bool baffichageCorps, bool baffichageDepots,
                                     List<LieuRemarquable> lieuxRemarquables, List<UniteRemarquable> unitesRemarquables, 
                                     List<EffectifEtVictoire> effectifsEtVictoires, List<UniteRole> unitesRoles,
+                                    Donnees.TAB_BATAILLERow[] batailles,
                                     int totalvictoire, int nbImages, 
                                     System.ComponentModel.BackgroundWorker worker)
         {
@@ -180,6 +185,9 @@ namespace vaoc
                 SizeF tailleTexte;
                 Graphics G;
                 Bitmap fichierImageSource;
+                m_numeroImage = 0;
+                m_nomCampagne = Donnees.m_donnees.TAB_JEU[0].S_NOM.Replace(" ", "");
+                m_nomFichier = "video";
                 m_largeur = int.MaxValue;
                 m_hauteur = int.MaxValue;
                 m_hauteurMax = 0;
@@ -187,6 +195,7 @@ namespace vaoc
                 m_repertoireVideo = repertoireVideo;
                 m_lieuxRemarquables = lieuxRemarquables;
                 m_unitesRemarquables = unitesRemarquables;
+                m_batailles = batailles;
                 m_effectifsEtVictoires = effectifsEtVictoires;
                 m_unitesRoles = unitesRoles;
                 m_texteImages = texteImages;
@@ -468,6 +477,11 @@ namespace vaoc
 
             try
             {
+                if (null != m_batailles[m_traitement])
+                {
+                    TraitementBataille(m_batailles[m_traitement]);
+                    m_traitement += m_batailles[m_traitement].I_TOUR_FIN - m_batailles[m_traitement].I_TOUR_FIN;
+                }
                 //Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
                 fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
@@ -830,6 +844,11 @@ namespace vaoc
             {
                 return "Traitement Exception in: " + e.ToString();
             }
+        }
+
+        private void TraitementBataille(Donnees.TAB_BATAILLERow ligneBataille)
+        {
+            ligneBataille.GenererFilm(m_repertoireVideo, m_nomFichier, m_repertoireVideo, ref m_numeroImage, m_hauteur, m_largeur);
         }
 
         public string TraitementV1()
@@ -1475,5 +1494,24 @@ namespace vaoc
             string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
             return asciiStr.Replace(" ", "_").Replace("'","").ToUpper();
         }
+
+        /// <summary>
+        /// ffmpeg -framerate 1 -i Automne_1813_Bataille118_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p video.mp4
+        /// Pour utiliser %04d dans ffmpeg il faut que les sequences ce suivent
+        /// La solution glob non supporté sur windows (globbing is not supported by this libavformat build), %4d ne supporte aucune rupture de sequence
+        /// Je n'arrive pas à le faire avec un fichier de concat media comme ffmpeg -r 5 -f concat -safe 0 -i liste.txt -c:v libx264 output.mp4
+        /// avec dans liste.txt
+        /// file Bataille118_0000_0000.png
+        /// file Bataille118_0440_0000.png
+        /// file Bataille118_0442_0000.png
+        /// </summary>
+        /// <param name="fichierImage">Image à sauvegarder</param>
+        private void SauvegardeImage(Bitmap fichierImage)
+        {
+            fichierImage.Save(m_repertoireVideo + "\\" + m_nomCampagne.Replace(' ', '_') + "_" + m_nomFichier
+                                + "_" + m_numeroImage++.ToString("0000")
+                                + ".png", ImageFormat.Png);
+        }
+
     }
 }

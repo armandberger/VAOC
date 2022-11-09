@@ -460,7 +460,7 @@ namespace vaoc
                 WindowStyle = ProcessWindowStyle.Normal,
                 FileName = "ffmpeg.exe",
                 WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
-                Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom)
+                Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", m_nomCampagne.Replace(' ', '_') + "_" + m_nomFichier)
             };
             Process.Start(processInfo);
         }
@@ -480,7 +480,7 @@ namespace vaoc
                 if (null != m_batailles[m_traitement])
                 {
                     TraitementBataille(m_batailles[m_traitement]);
-                    m_traitement += m_batailles[m_traitement].I_TOUR_FIN - m_batailles[m_traitement].I_TOUR_FIN;
+                    m_traitement += m_batailles[m_traitement].I_TOUR_FIN - m_batailles[m_traitement].I_TOUR_DEBUT;
                 }
                 //Debug.WriteLine("FabricantDeFilm:Traitement n°" + m_traitement);
                 FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
@@ -499,30 +499,7 @@ namespace vaoc
                 {
                     if (m_videoParRole)
                     {
-                        if (m_roles[m_traitementRole].iEffectifMax > 0)
-                        {
-                            Pen styloEff;
-                            int iNationRole = -1;
-                            Point[] pointsEff = new Point[m_traitement + 1];
-                            int nbTours = m_effectifsEtVictoires.Count / 2;
-                            foreach (UniteRole role in m_unitesRoles)
-                            {
-                                if (role.iTour > m_traitement)
-                                {
-                                    continue;
-                                }
-
-                                if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
-                                {
-                                    iNationRole = role.iNation;
-                                    pointsEff[role.iTour].X = rectBas.X + m_largeurCote + (role.iTour * largeurGraphEffectifs / nbTours);
-                                    pointsEff[role.iTour].Y = rectBas.Y + rectBas.Height + BARRE_ECART - (role.iEffectif * (rectBas.Height - BARRE_ECART) / m_roles[m_traitementRole].iEffectifMax);
-                                }
-                            }
-                            //on trace les lignes des effectifs
-                            styloEff = (0 == iNationRole) ? new Pen(Color.Blue, 3) : new Pen(Color.Red, 3);
-                            G.DrawLines(styloEff, pointsEff);
-                        }
+                        TraitementVictoireVideoParRole(G, rectBas, largeurGraphEffectifs);
                     }
                     else
                     {
@@ -590,27 +567,7 @@ namespace vaoc
                 // effectifs et indicateur de victoire par camp ou par role
                 if (m_videoParRole)
                 {
-                    foreach (UniteRole role in m_unitesRoles)
-                    {
-                        if (role.iTour != m_traitement)
-                        {
-                            continue;
-                        }
-                        
-                        if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
-                        {
-                            string strEffectif = role.iEffectif.ToString("###,000");
-                            tailleTexte = G.MeasureString(strEffectif, m_police);
-                            Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
-                            //affichage des effectifs
-                            G.DrawString(strEffectif, m_police, brosse,
-                                new Rectangle(BARRE_ECART + rectBas.X,
-                                                rectBas.Y + (int)(tailleTexte.Height),
-                                                (int)tailleTexte.Width + 1,
-                                                (int)tailleTexte.Height + 1));
-                            break;
-                        }
-                    }
+                    TraitementEffectifsVideoParRole(G, rectBas);
                 }
                 else
                 {
@@ -805,7 +762,7 @@ namespace vaoc
                 }
                 else
                 {
-                    fichierImage.Save(m_repertoireVideo + "\\" + "imageVideo_" + m_traitement.ToString("0000") + ".png", ImageFormat.Png);
+                    SauvegardeImage(fichierImage);
                 }
                 
                 G.Dispose();
@@ -846,9 +803,94 @@ namespace vaoc
             }
         }
 
+        private void TraitementEffectifsVideoParRole(Graphics G, Rectangle rectAffichage)
+        {
+            foreach (UniteRole role in m_unitesRoles)
+            {
+                if (role.iTour != m_traitement)
+                {
+                    continue;
+                }
+
+                if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
+                {
+                    string strEffectif = role.iEffectif.ToString("###,000");
+                    SizeF tailleTexte = G.MeasureString(strEffectif, m_police);
+                    Brush brosse = (0 == role.iNation) ? Brushes.Blue : Brushes.Red;
+                    //affichage des effectifs
+                    G.DrawString(strEffectif, m_police, brosse,
+                        new Rectangle(BARRE_ECART + rectAffichage.X,
+                                        rectAffichage.Y + (int)(tailleTexte.Height),
+                                        (int)tailleTexte.Width + 1,
+                                        (int)tailleTexte.Height + 1));
+                    break;
+                }
+            }
+        }
+
+        private void TraitementVictoireVideoParRole(Graphics G, Rectangle rectAffichage, int largeurGraphEffectifs)
+        {
+            if (m_roles[m_traitementRole].iEffectifMax > 0)
+            {
+                Pen styloEff;
+                int iNationRole = -1;
+                Point[] pointsEff = new Point[m_traitement + 1];
+                int nbTours = m_effectifsEtVictoires.Count / 2;
+                foreach (UniteRole role in m_unitesRoles)
+                {
+                    if (role.iTour > m_traitement)
+                    {
+                        continue;
+                    }
+
+                    if (m_roles[m_traitementRole].ID_ROLE == role.ID_ROLE)
+                    {
+                        iNationRole = role.iNation;
+                        pointsEff[role.iTour].X = rectAffichage.X + m_largeurCote + (role.iTour * largeurGraphEffectifs / nbTours);
+                        pointsEff[role.iTour].Y = rectAffichage.Y + rectAffichage.Height + BARRE_ECART - (role.iEffectif * (rectAffichage.Height - BARRE_ECART) / m_roles[m_traitementRole].iEffectifMax);
+                    }
+                }
+                //on trace les lignes des effectifs
+                styloEff = (0 == iNationRole) ? new Pen(Color.Blue, 3) : new Pen(Color.Red, 3);
+                G.DrawLines(styloEff, pointsEff);
+            }
+        }
+
         private void TraitementBataille(Donnees.TAB_BATAILLERow ligneBataille)
         {
-            ligneBataille.GenererFilm(m_repertoireVideo, m_nomFichier, m_repertoireVideo, ref m_numeroImage, m_hauteur, m_largeur);
+            //zoom progressif sur la zone de bataille
+            int xzoom, yzoom, largeur, hauteur;
+            FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
+            Bitmap fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
+            Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
+            Graphics G = Graphics.FromImage(fichierImage);
+            G.PageUnit = GraphicsUnit.Pixel;
+
+            //Rectangle rectBas = new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau);
+            //G.FillRectangle(Brushes.White, rectBas);
+            largeur = m_largeur;
+            hauteur = (m_hauteur + m_hauteurBandeau);
+            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE)/2 - largeur / 2);
+            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE)/2 - hauteur / 2);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur/2, hauteur/2), GraphicsUnit.Pixel);
+            SauvegardeImage(fichierImage);
+
+            largeur = m_largeur * 4;
+            hauteur = (m_hauteur + m_hauteurBandeau) * 4;
+            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2 - largeur / 4);
+            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2 - hauteur / 4);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur / 4, hauteur / 4), GraphicsUnit.Pixel);
+            SauvegardeImage(fichierImage);
+
+            largeur = m_largeur * 8;
+            hauteur = (m_hauteur + m_hauteurBandeau) * 8;
+            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2 - largeur / 8);
+            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2 - hauteur / 8);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur / 8, hauteur / 8), GraphicsUnit.Pixel);
+            SauvegardeImage(fichierImage);
+
+            //insertion de la bataille
+            ligneBataille.GenererFilm(m_repertoireVideo, m_nomFichier, m_repertoireVideo, ref m_numeroImage, m_hauteur, m_largeur, false);
         }
 
         public string TraitementV1()

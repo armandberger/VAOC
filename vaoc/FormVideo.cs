@@ -480,8 +480,9 @@ namespace vaoc
             //comme je ne pas accéder à la liste par index, je recopie tout dans un tableau classique
             Donnees.TAB_BATAILLERow[] tri = new Donnees.TAB_BATAILLERow[liste.Count];
             int b = 0;
-            foreach(Donnees.TAB_BATAILLERow ligneBataille in liste)
+            foreach(object valeur in liste.Keys)
             {
+                Donnees.TAB_BATAILLERow ligneBataille = (Donnees.TAB_BATAILLERow)valeur;
                 tri[b++] = ligneBataille;
             }
 

@@ -67,7 +67,7 @@ namespace vaoc
         private Font m_police;
         private string m_nomFichier;
         private string m_nomCampagne;
-        private int m_numeroImage;
+        //private int m_numeroImage;
         private Brush[] m_brossesTexte = new Brush[6];
         private const int NB_UNITES_LARGEUR = 5;
         private const int NB_UNITES_HAUTEUR = 3;
@@ -97,7 +97,8 @@ namespace vaoc
                                     TIPEFINBATAILLE iFin,
                                     int nbEtapes,
                                     int tourDebut,
-                                    int phaseDebut
+                                    int phaseDebut,
+                                    bool genererVideo
                                     )
         {
             try
@@ -122,21 +123,24 @@ namespace vaoc
 
                 if (Directory.Exists(repertoireVideo))
                 {
-                    //on supprime toutes les images qui pourraient exister d'un précédent traitement
-                    DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
-                    FileInfo[] listeFichiers = dir.GetFiles("*" + nomFichier + "*.png", SearchOption.TopDirectoryOnly);
-
-                    foreach (FileInfo fichier in listeFichiers)
+                    if (genererVideo)
                     {
-                        File.Delete(fichier.FullName);
-                    }
+                        //on supprime toutes les images qui pourraient exister d'un précédent traitement
+                        DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
+                        FileInfo[] listeFichiers = dir.GetFiles("*" + nomFichier + "*.png", SearchOption.TopDirectoryOnly);
+
+                        foreach (FileInfo fichier in listeFichiers)
+                        {
+                            File.Delete(fichier.FullName);
+                        }
 
 
-                    //on supprime également toutes les vidéos précédentes
-                    listeFichiers = dir.GetFiles("*" + nomFichier + "*.mp4", SearchOption.TopDirectoryOnly);
-                    foreach (FileInfo fichier in listeFichiers)
-                    {
-                        File.Delete(fichier.FullName);
+                        //on supprime également toutes les vidéos précédentes
+                        listeFichiers = dir.GetFiles("*" + nomFichier + "*.mp4", SearchOption.TopDirectoryOnly);
+                        foreach (FileInfo fichier in listeFichiers)
+                        {
+                            File.Delete(fichier.FullName);
+                        }
                     }
                 }
                 else
@@ -144,7 +148,7 @@ namespace vaoc
                     Directory.CreateDirectory(repertoireVideo);
                 }
 
-                string retourTitre=TraitementTitre(nomBataille, tourDebut, phaseDebut, tourDebut + m_nbEtapes, policeTitre, policeTitreEffectifs);
+                string retourTitre=TraitementTitre(nomBataille, tourDebut, phaseDebut, tourDebut + m_nbEtapes, policeTitre, policeTitreEffectifs, ref m_numeroImage);
                 if (string.Empty != retourTitre) { return "TraitementTitre : " + retourTitre; }
                 for (m_traitement = tourDebut; m_traitement< tourDebut+m_nbEtapes; m_traitement++)
                 {
@@ -157,10 +161,10 @@ namespace vaoc
                         switch (m_orientation)
                         {
                             case TIPEORIENTATIONBATAILLE.VERTICAL:
-                                TraitementVertical(-1, TIPEFINBATAILLE.NUIT, false);
+                                TraitementVertical(-1, TIPEFINBATAILLE.NUIT, false, ref m_numeroImage);
                                 break;
                             default:
-                                TraitementHorizontal(-1, TIPEFINBATAILLE.NUIT, false);
+                                TraitementHorizontal(-1, TIPEFINBATAILLE.NUIT, false, ref m_numeroImage);
                                 break;
                         }
                     }
@@ -187,10 +191,10 @@ namespace vaoc
                     switch (m_orientation)
                     {
                         case TIPEORIENTATIONBATAILLE.VERTICAL:
-                            retour = TraitementVertical(zone, m_fin, true);
+                            retour = TraitementVertical(zone, m_fin, true, ref m_numeroImage);
                             break;
                         default:
-                            retour = TraitementHorizontal(zone, m_fin, true);
+                            retour = TraitementHorizontal(zone, m_fin, true, ref m_numeroImage);
                             break;
                     }
                     if (string.Empty != retour)
@@ -198,8 +202,8 @@ namespace vaoc
                         return retour;
                     }
                 }
-                TraitementBilan(m_fin, tourDebut, policeTitre, policeTitreEffectifs);
-                Terminer();
+                TraitementBilan(m_fin, tourDebut, policeTitre, policeTitreEffectifs, ref m_numeroImage);
+                if (genererVideo) { Terminer(); }
                 return string.Empty;
             }
             catch (Exception e)
@@ -208,7 +212,7 @@ namespace vaoc
             }
         }
 
-        private string TraitementBilan(TIPEFINBATAILLE m_fin, int debut,  Font policeTitre, Font policeTitreEffectifs)
+        private string TraitementBilan(TIPEFINBATAILLE m_fin, int debut,  Font policeTitre, Font policeTitreEffectifs, ref int m_numeroImage)
         {
             Graphics G;
             Brush brosseSymbole;
@@ -457,7 +461,7 @@ namespace vaoc
                         new Rectangle(xtexte - (int)tailleTexte.Width / 2, m_hauteur / 2 + 4 * (int)tailleTexte.Height + 6 * (int)tailleTexte.Height * nation, (int)tailleTexte.Width + 2, (int)tailleTexte.Height), format);
                 }
 
-                SauvegardeImage(fichierImage);
+                SauvegardeImage(fichierImage, ref m_numeroImage);
 
                 G.Dispose();
                 fichierImage.Dispose();
@@ -507,7 +511,7 @@ namespace vaoc
             Process.Start(processInfo);
         }
 
-        public string TraitementHorizontal(int iZoneResultats, TIPEFINBATAILLE fin, bool bFin)
+        public string TraitementHorizontal(int iZoneResultats, TIPEFINBATAILLE fin, bool bFin, ref int m_numeroImage)
         {
             Graphics G;
             int xunite, yunite;
@@ -676,7 +680,7 @@ namespace vaoc
                         }
                     }
 
-                    SauvegardeImage(fichierImage);
+                    SauvegardeImage(fichierImage, ref m_numeroImage);
 
                     G.Dispose();
                     fichierImage.Dispose();
@@ -692,7 +696,7 @@ namespace vaoc
                     if (z < 6)
                     {
                         iZoneResultats = (iZoneResultats < 0) ? 0 : 3;
-                        TraitementHorizontal(iZoneResultats, fin, bFin);
+                        TraitementHorizontal(iZoneResultats, fin, bFin, ref m_numeroImage);
                     }
                 }
                 return string.Empty;
@@ -1182,7 +1186,7 @@ namespace vaoc
                 format);
         }
 
-        private string TraitementVertical(int iZoneResultats, TIPEFINBATAILLE fin, bool bFin)
+        private string TraitementVertical(int iZoneResultats, TIPEFINBATAILLE fin, bool bFin, ref int m_numeroImage)
         {
             Graphics G;
             int xunite, yunite;
@@ -1349,7 +1353,7 @@ namespace vaoc
                         }
                     }
 
-                    SauvegardeImage(fichierImage);
+                    SauvegardeImage(fichierImage, ref m_numeroImage);
 
                     G.Dispose();
                     fichierImage.Dispose();
@@ -1365,7 +1369,7 @@ namespace vaoc
                     if (z < 6)
                     {
                         iZoneResultats = (iZoneResultats < 0) ? 0 : 3;
-                        TraitementVertical(iZoneResultats, fin, bFin);
+                        TraitementVertical(iZoneResultats, fin, bFin, ref m_numeroImage);
                     }
                 }
                 return string.Empty;
@@ -1416,7 +1420,7 @@ namespace vaoc
             G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
         }
 
-        private string TraitementTitre(string nomBataille, int tourDebut, int phaseDebut, int fin, Font policeTitre, Font policeTitreEffectifs)
+        private string TraitementTitre(string nomBataille, int tourDebut, int phaseDebut, int fin, Font policeTitre, Font policeTitreEffectifs, ref int m_numeroImage)
         {
             Graphics G;
             int yunite;
@@ -1528,7 +1532,7 @@ namespace vaoc
                     yunite = AfficheEffectifsBataille(G, nation, artillerieEngageeMax[nation].ToString("N0") + " / " + artillerieMax[nation].ToString("N0"), image, policeTitreEffectifs, yunite, (int)tailleTexteBase.Width);
                 }
 
-                SauvegardeImage(fichierImage);
+                SauvegardeImage(fichierImage, ref m_numeroImage);
 
                 G.Dispose();
                 fichierImage.Dispose();
@@ -1649,7 +1653,7 @@ namespace vaoc
         /// file Bataille118_0442_0000.png
         /// </summary>
         /// <param name="fichierImage">Image à sauvegarder</param>
-        private void SauvegardeImage(Bitmap fichierImage)
+        private void SauvegardeImage(Bitmap fichierImage, ref int m_numeroImage)
         {            
             fichierImage.Save(m_repertoireVideo + "\\" + m_nomCampagne.Replace(' ','_') + "_" + m_nomFichier
                                 + "_" + m_numeroImage++.ToString("0000")

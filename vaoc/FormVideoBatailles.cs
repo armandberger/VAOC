@@ -50,13 +50,13 @@ namespace vaoc
                 {
                     if (!ligneBataille.IsI_TOUR_FINNull())
                     {
-                        retour +=ligneBataille.GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm);
+                        retour +=ligneBataille.GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm, true);
                     }
                 }
             }
             else
             {
-               retour =  ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm);
+               retour =  ((Donnees.TAB_BATAILLERow)comboBoxBatailles.SelectedItem).GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm, true);
             }
             if (string.Empty == retour)
             {

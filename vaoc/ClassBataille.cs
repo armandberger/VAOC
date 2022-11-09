@@ -2989,7 +2989,7 @@ namespace vaoc
             /// </summary>
             /// <param name="nomFichier"></param>
             /// <returns></returns>
-            public string GenererFilm(string nomFichierPartie, string nomFichier, string repertoireVideo, ref int positionFilm, int hauteurFilm, int largeurFilm)
+            public string GenererFilm(string nomFichierPartie, string nomFichier, string repertoireVideo, ref int positionFilm, int hauteurFilm, int largeurFilm, bool genererVideo)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
                 List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
@@ -3236,7 +3236,8 @@ namespace vaoc
                     fin,
                     this.I_TOUR_FIN - this.I_TOUR_DEBUT,//nbetapes
                     this.I_TOUR_DEBUT, //debut
-                    this.I_PHASE_DEBUT
+                    this.I_PHASE_DEBUT,
+                    genererVideo
                     );
                 if (erreur !=string.Empty)
                 {

@@ -859,7 +859,7 @@ namespace vaoc
         private void TraitementBataille(Donnees.TAB_BATAILLERow ligneBataille)
         {
             //zoom progressif sur la zone de bataille
-            int xzoom, yzoom, largeur, hauteur;
+            int xzoom, yzoom, xbataille, ybataille, largeur, hauteur;
             FileInfo fichier = 1 == m_listeFichiers.Length ? m_listeFichiers[0] : m_listeFichiers[m_traitement];
             Bitmap fichierImageSource = (Bitmap)Image.FromFile(fichier.FullName);
             Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur + m_hauteurBandeau, fichierImageSource.PixelFormat);
@@ -870,23 +870,23 @@ namespace vaoc
             //G.FillRectangle(Brushes.White, rectBas);
             largeur = m_largeur;
             hauteur = (m_hauteur + m_hauteurBandeau);
-            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE)/2 - largeur / 2);
-            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE)/2 - hauteur / 2);
-            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur/2, hauteur/2), GraphicsUnit.Pixel);
+            //xbataille = (int)(m_rapport * (ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2));
+            //ybataille = (int)(m_rapport * (ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2));
+            xbataille = (int)(1 * (ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2));
+            ybataille = (int)(1 * (ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2));
+            xzoom = Math.Max(0, xbataille - largeur / 2);
+            yzoom = Math.Max(0, ybataille - hauteur / 2);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur, hauteur), GraphicsUnit.Pixel);
             SauvegardeImage(fichierImage);
 
-            largeur = m_largeur * 4;
-            hauteur = (m_hauteur + m_hauteurBandeau) * 4;
-            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2 - largeur / 4);
-            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2 - hauteur / 4);
+            xzoom = Math.Max(0, xbataille - largeur / 4);
+            yzoom = Math.Max(0, ybataille - hauteur / 4);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur / 2, hauteur / 2), GraphicsUnit.Pixel);
+            SauvegardeImage(fichierImage);
+
+            xzoom = Math.Max(0, xbataille - largeur / 8);
+            yzoom = Math.Max(0, ybataille - hauteur / 8);
             G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur / 4, hauteur / 4), GraphicsUnit.Pixel);
-            SauvegardeImage(fichierImage);
-
-            largeur = m_largeur * 8;
-            hauteur = (m_hauteur + m_hauteurBandeau) * 8;
-            xzoom = Math.Max(0, ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2 - largeur / 8);
-            yzoom = Math.Max(0, ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2 - hauteur / 8);
-            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur / 8, hauteur / 8), GraphicsUnit.Pixel);
             SauvegardeImage(fichierImage);
 
             //insertion de la bataille

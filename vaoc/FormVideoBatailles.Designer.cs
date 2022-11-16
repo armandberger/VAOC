@@ -72,7 +72,7 @@ namespace vaoc
             // 
             // textBoxHauteurBase
             // 
-            this.textBoxHauteurBase.Location = new System.Drawing.Point(100, 50);
+            this.textBoxHauteurBase.Location = new System.Drawing.Point(211, 50);
             this.textBoxHauteurBase.Name = "textBoxHauteurBase";
             this.textBoxHauteurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxHauteurBase.TabIndex = 18;
@@ -80,7 +80,7 @@ namespace vaoc
             // 
             // textBoxLargeurBase
             // 
-            this.textBoxLargeurBase.Location = new System.Drawing.Point(260, 50);
+            this.textBoxLargeurBase.Location = new System.Drawing.Point(73, 50);
             this.textBoxLargeurBase.Name = "textBoxLargeurBase";
             this.textBoxLargeurBase.Size = new System.Drawing.Size(67, 20);
             this.textBoxLargeurBase.TabIndex = 17;
@@ -89,7 +89,7 @@ namespace vaoc
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(49, 50);
+            this.label4.Location = new System.Drawing.Point(160, 50);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(45, 13);
             this.label4.TabIndex = 16;
@@ -98,7 +98,7 @@ namespace vaoc
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(211, 50);
+            this.label3.Location = new System.Drawing.Point(24, 50);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(43, 13);
             this.label3.TabIndex = 15;

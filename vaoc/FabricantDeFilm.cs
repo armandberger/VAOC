@@ -866,14 +866,16 @@ namespace vaoc
             Graphics G = Graphics.FromImage(fichierImage);
             G.PageUnit = GraphicsUnit.Pixel;
 
-            //Rectangle rectBas = new Rectangle(0, m_hauteur, m_largeur, m_hauteurBandeau);
-            //G.FillRectangle(Brushes.White, rectBas);
             largeur = m_largeur;
             hauteur = (m_hauteur + m_hauteurBandeau);
-            //xbataille = (int)(m_rapport * (ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2));
-            //ybataille = (int)(m_rapport * (ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2));
             xbataille = (int)(1 * (ligneBataille.I_X_CASE_HAUT_GAUCHE + (ligneBataille.I_X_CASE_BAS_DROITE - ligneBataille.I_X_CASE_HAUT_GAUCHE) / 2));
             ybataille = (int)(1 * (ligneBataille.I_Y_CASE_HAUT_GAUCHE + (ligneBataille.I_Y_CASE_BAS_DROITE - ligneBataille.I_Y_CASE_HAUT_GAUCHE) / 2));
+
+            xzoom = Math.Max(0, xbataille - largeur);
+            yzoom = Math.Max(0, ybataille - hauteur);
+            G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur*2, hauteur*2), GraphicsUnit.Pixel);
+            SauvegardeImage(fichierImage);
+
             xzoom = Math.Max(0, xbataille - largeur / 2);
             yzoom = Math.Max(0, ybataille - hauteur / 2);
             G.DrawImage(fichierImageSource, new Rectangle(0, 0, largeur, hauteur), new Rectangle(xzoom, yzoom, largeur, hauteur), GraphicsUnit.Pixel);

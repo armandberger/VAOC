@@ -2616,6 +2616,16 @@ namespace vaoc
                 //si l'unité n'est pas en repos complet, elle ne peut pas se ravitailler à un dépôt
                 if (!reposComplet)
                 {
+                    if (estRavitaillableDirect(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE))
+                    {
+                        //on prévient le joueur que le ravitaillement direct n'a pas été possible car l'unite ne s'est pas reposée
+                        if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE_SANS_REPOS))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE_SANS_REPOS dans RavitaillementUnite", S_NOM, ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
+                    }
                     message = string.Format("{0}(ID={1}, l'unité a fait des actions, pas de ravitaillement par dépôt)", S_NOM, ID_PION);
                     LogFile.Notifier(message);
                     return true;

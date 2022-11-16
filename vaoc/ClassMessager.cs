@@ -317,12 +317,16 @@ namespace vaoc
             //Renseignements pris auprès des divisions sur place, leurs officiers sont positionnés à {22}.
             //{1} vos aides de camp ont intérrogés les autres soldats présents, ils nout ont informés que leurs officiers sont à {22}
             //En interrogeant les soldats à {2} nous avons appris que leurs chefs sont à {22}
-            MESSAGE_AUCUN_ENNEMI_PROCHE = 96
+            MESSAGE_AUCUN_ENNEMI_PROCHE = 96,
             //A {0}, je ne trouve aucun ennemi à proximité de ma position, je ne peux donc passer à l'attaque comme vous me l'avez ordonnné.
             //Aussi loin que porte mon regard, je ne trouve aucun adversaire à affronter dans les environs. Votre ordre ne peut donc être suivi.
             //MESSAGE_ENNEMI_PROCHE_INATTAQUABLE = 97
             //J'ai bien tenté de passer à l'attaque à {2} mais d'autres unités m'empèchent d'engager le combat. Les unités suivantes sont actuellement observables : {21}.
             //Il y a bien une unité ennemie à coté de moi mais je ne peux la combattre car elle est protégée par d'autres forces. Voilà ce que j'observe depuis ma position : {21}
+            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE_SANS_REPOS = 97
+            //Nous n'avons pas pu nous ravitailler directemente sur un dépôt comme vous l'aviez ordonné car nous avons effectué d'autres activités ce jour. L'ordre est annulé.
+            //Nous n'avons pu nous ravitailler directement sur un dépôt car nous vous nous aviez assigné d'autres tâches ce jour. L'ordre est annulé.
+            //Pour effectuer un ravitaillement direct, nous devons y consacrer toute notre journée, ce qui ne fut pas le cas aujourd'hui. L'ordre est annulé.
         }
         /*
                DateHeure(true), //0

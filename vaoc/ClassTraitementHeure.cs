@@ -1123,8 +1123,7 @@ namespace vaoc
                         }
                     }
 
-                    //on indique au joueur que le renfort est arrivé (et, comme ça, il sait aussi que l'unité est détruite !)
-                    lignePion.DetruirePion();
+                    //on indique au joueur que le renfort est arrivé 
                     if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_ARRIVE_A_DESTINATION))
                     {
                         message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_ARRIVE_A_DESTINATION dans ExecuterOrdreHorsMouvement", lignePion.S_NOM, lignePion.ID_PION);
@@ -1157,6 +1156,7 @@ namespace vaoc
                                 LogFile.Notifier(message);
                                 return false;
                             }
+                            lignePion.TerminerOrdre(ligneOrdre, false, true);
                         }
                         else
                         {
@@ -1176,6 +1176,8 @@ namespace vaoc
                                 LogFile.Notifier(message);
                                 return false;
                             }
+                            lignePion.TerminerOrdre(ligneOrdre, false, true);
+                            lignePion.DetruirePion();
                         }
                     }
                     else
@@ -1208,6 +1210,8 @@ namespace vaoc
                             LogFile.Notifier(message);
                             return false;
                         }
+                        lignePion.TerminerOrdre(ligneOrdre, false, true);
+                        lignePion.DetruirePion();
                     }
 
                     break;

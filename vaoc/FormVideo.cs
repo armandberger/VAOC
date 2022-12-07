@@ -192,7 +192,7 @@ namespace vaoc
                                                       select (video.I_INFANTERIE + video.I_CAVALERIE) * (100 - video.I_FATIGUE) / 100)
                         .Sum();
                     role.iEffectif = effectifs ?? 0;
-                    LogFile.Notifier(string.Format("{0};{1};{2}", role.nom, role.iTour, role.iEffectif)); ;
+                    LogFile.Notifier(string.Format("{0};{1};{2}", role.nom, role.iTour, role.iEffectif));
                     m_unitesRoles.Add(role);
                 }
 

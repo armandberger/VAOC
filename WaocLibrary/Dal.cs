@@ -446,7 +446,7 @@ namespace WaocLib
                         {
                             Directory.CreateDirectory(repertoire);
                         }
-                        string nomfichier = NomFichierCases(x, y, tour, phase, repertoire); ;
+                        string nomfichier = NomFichierCases(x, y, tour, phase, repertoire);
 
                         if (File.Exists(nomfichier))
                         {

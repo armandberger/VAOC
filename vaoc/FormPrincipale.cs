@@ -2531,7 +2531,7 @@ namespace vaoc
 
                 if (nomCarteTopographique != general.nomCarteTopographique)
                 {
-                    ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE = general.nomCarteTopographique.Substring(general.nomCarteTopographique.LastIndexOf('\\') + 1); ;
+                    ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE = general.nomCarteTopographique.Substring(general.nomCarteTopographique.LastIndexOf('\\') + 1);
                     repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_TOPOGRAPHIQUE;
                     if (repertoireDest != general.nomCarteTopographique)
                     {

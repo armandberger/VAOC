@@ -712,7 +712,7 @@ namespace vaoc
                 listeOrdres.Add(ordre);
             }
             // tri par numero d'ordre
-            return listeOrdres.OrderBy(o => o.ID_ORDRE).ToList(); ;
+            return listeOrdres.OrderBy(o => o.ID_ORDRE).ToList();
         }
 
         public List<ClassDataModeles> ListeModeles(int idPartie)

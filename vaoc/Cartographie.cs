@@ -406,14 +406,14 @@ namespace vaoc
                         break;
                     case 2://En Haut à droite
                         x = ligneCase.I_X;
-                        y = ligneCase.I_Y - (int)tailleLigne.Height; ;
+                        y = ligneCase.I_Y - (int)tailleLigne.Height;
                         break;
                     case 3://A droite
                         x = ligneCase.I_X;
                         y = (int)Math.Floor(ligneCase.I_Y - tailleLigne.Height / 2);
                         break;
                     case 4://En bas à droite
-                        x = ligneCase.I_X; ;
+                        x = ligneCase.I_X;
                         y = ligneCase.I_Y;
                         break;
                     case 5://En bas
@@ -430,7 +430,7 @@ namespace vaoc
                         break;
                     case 8://En haut à gauche
                         x = ligneCase.I_X - (int)tailleLigne.Width;
-                        y = ligneCase.I_Y - (int)tailleLigne.Height; ;
+                        y = ligneCase.I_Y - (int)tailleLigne.Height;
                         break;
                 }
                 graph.DrawString(ligneNom.S_NOM, police, brosse, x, y);

@@ -258,8 +258,8 @@ namespace vaoc
 			_Closed.Clear();
 			_Open.Clear();
             m_cible = new Node(EndNode);
-            m_xBlocEnd = EndNode.I_X / m_tailleBloc; ;
-            m_yBlocEnd = EndNode.I_Y / m_tailleBloc; ;
+            m_xBlocEnd = EndNode.I_X / m_tailleBloc;
+            m_yBlocEnd = EndNode.I_Y / m_tailleBloc;
             xminBlocEnd = m_xBlocEnd * m_tailleBloc;
             xmaxBlocEnd = xminBlocEnd + m_tailleBloc;
             yminBlocEnd = m_yBlocEnd * m_tailleBloc;

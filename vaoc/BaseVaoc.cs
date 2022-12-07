@@ -2099,7 +2099,7 @@ namespace vaoc
                         }
 
                     }
-                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
+                    if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); return false; }
                     baseCases.Rows.Clear();
                     Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                 }
@@ -2131,7 +2131,7 @@ namespace vaoc
             //            }
 
             //        }
-            //        if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); ; return false; }
+            //        if (!this.TAB_CASE.SauvegarderCases(baseCases, x, y, iTour, iPhase)) { Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot); return false; }
             //        baseCases.Rows.Clear();
             //        Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
             //    }

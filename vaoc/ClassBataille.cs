@@ -77,7 +77,7 @@ namespace vaoc
                         bEnDefense = !lignePion.OrdreActif(ligneOrdre);
                     }
 
-                    LogFile.Notifier(string.Format("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow {0},{1}", 
+                    LogFile.Notifier(string.Format("AjouterPionDansLaBataille:AddTAB_BATAILLE_PIONSRow {0},{1}",
                         lignePion.S_NOM, lignePion.ID_PION));
                     Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                     if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
@@ -118,6 +118,38 @@ namespace vaoc
                     message = string.Format("AjouterPionDansLaBataille : ajout du pion {0} à la bataille {1}, defensif={2} sur idcase={3}",
                         lignePion.ID_PION, ID_BATAILLE, bEnDefense, lignePion.ID_CASE);
                     LogFile.Notifier(message);
+
+                    //si un leader suivait l'unité, il doit être inclus immédiatement
+                    foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+                    {
+                        Donnees.TAB_PIONRow lignePionRole = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                        Donnees.TAB_ORDRERow ligneOrdreRole = Donnees.m_donnees.TAB_ORDRE.Mouvement(lignePionRole.ID_PION);
+                        if ((null != ligneOrdreRole) && (ligneOrdreRole.I_ORDRE_TYPE == Constantes.ORDRES.SUIVRE_UNITE) && (ligneOrdreRole.ID_CIBLE == lignePion.ID_PION))
+                        {
+                            AjouterPionDansLaBataille(lignePionRole, ligneCaseCombat);
+                            //on s'assure que l'ajout de ce chef ne modifie pas le responsable de la bataille
+                            int nbUnites012, nbUnites345, idLeader;
+                            int[] des, modificateurs, effectifs, canons;
+                            Donnees.TAB_PIONRow[] tablePionsPresents012;
+                            Donnees.TAB_PIONRow[] tablePionsPresents345;
+                            if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsPresents012, out tablePionsPresents345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
+                            {
+                                message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille QG");
+                                LogFile.Notifier(message);
+                            }
+
+                            //trouver le leader avec le plus haut niveau hierarchique
+                            if (lignePionRole.nation.ID_NATION==this.ID_NATION_012)
+                            {
+                                idLeader = TrouverLeaderBataille(tablePionsPresents012, true);
+                            }
+                            else
+                            {
+                                idLeader = TrouverLeaderBataille(tablePionsPresents345, false);
+                            }
+                        }
+
+                    }
                 }
                 return true;
             }
@@ -2992,7 +3024,7 @@ namespace vaoc
             public string GenererFilm(string nomFichierPartie, string nomFichier, string repertoireVideo, ref int positionFilm, int hauteurFilm, int largeurFilm, bool genererVideo)
             {
                 List<ZoneBataille> zonesBataille = new List<ZoneBataille>();
-                List<UniteBataille> unitesBataille = new List<UniteBataille>(); ;
+                List<UniteBataille> unitesBataille = new List<UniteBataille>();
                 List<RoleBataille> rolesBataille=new List<RoleBataille>();
                 TIPETERRAINBATAILLE[] terrains= new TIPETERRAINBATAILLE[6];
                 TIPETERRAINBATAILLE[] obstacles = new TIPETERRAINBATAILLE[3];

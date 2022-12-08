@@ -372,7 +372,7 @@ namespace vaoc
                     testDebug();
                     Donnees.m_donnees.TAB_PARTIE[0].I_PHASE++;
 
-                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE || 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //)
+                    if (99 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 50 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)// || 30 == Donnees.m_donnees.TAB_PARTIE[0].I_PHASE ) //)
                     {
                         //au cas où il y aurait un chargement de case par la souris, la collection va changée, provoquant un crash
                         Monitor.Enter(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);

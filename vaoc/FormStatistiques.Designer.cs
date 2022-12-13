@@ -48,6 +48,7 @@
             this.buttonCouleurOrdre = new System.Windows.Forms.Button();
             this.couleurDialog = new System.Windows.Forms.ColorDialog();
             this.buttonFichiers = new System.Windows.Forms.Button();
+            this.button_volubilite = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridOrdres)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridMessages)).BeginInit();
             this.groupBoxCouleurs.SuspendLayout();
@@ -229,11 +230,21 @@
             this.buttonFichiers.UseVisualStyleBackColor = true;
             this.buttonFichiers.Click += new System.EventHandler(this.buttonFichiers_Click);
             // 
+            // button_volubilite
+            // 
+            this.button_volubilite.Location = new System.Drawing.Point(881, 12);
+            this.button_volubilite.Name = "button_volubilite";
+            this.button_volubilite.Size = new System.Drawing.Size(132, 23);
+            this.button_volubilite.TabIndex = 18;
+            this.button_volubilite.Text = "Volubilité (Giulay)";
+            this.button_volubilite.UseVisualStyleBackColor = true;
+            // 
             // FormStatistiques
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1234, 425);
+            this.Controls.Add(this.button_volubilite);
             this.Controls.Add(this.buttonFichiers);
             this.Controls.Add(this.groupBoxCouleurs);
             this.Controls.Add(this.label1);
@@ -277,5 +288,6 @@
         private System.Windows.Forms.Button buttonCouleurRecu;
         private System.Windows.Forms.ColorDialog couleurDialog;
         private System.Windows.Forms.Button buttonFichiers;
+        private System.Windows.Forms.Button button_volubilite;
     }
 }

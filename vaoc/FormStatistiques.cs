@@ -456,6 +456,69 @@ namespace vaoc
             return table;
         }
 
+        /// <summary>
+        /// Recherche des joueurs les plus communiquants
+        /// </summary>
+        /// <returns></returns>
+        private System.Windows.Forms.DataGridView StatistiquesVolubile()
+        {
+            System.Windows.Forms.DataGridView table = new DataGridView();
+            table.Columns.Add("role", "Role");
+            table.Columns.Add("nbmessages", "Nombre Messages");
+            table.Columns.Add("pctmessages", "% Nb messages");
+            table.Columns.Add("volumemessages", "Volumes Messages");
+            table.Columns.Add("volmessages", "% Volumes messages");
+
+            int c = 0;
+            string[] nomRole = new string[Donnees.m_donnees.TAB_ROLE.Count];
+            int[] nbMessages = new int[Donnees.m_donnees.TAB_ROLE.Count];
+            int[] lgMessages = new int[Donnees.m_donnees.TAB_ROLE.Count];
+            foreach (Donnees.TAB_ROLERow ligneRole in Donnees.m_donnees.TAB_ROLE)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneRole.ID_PION);
+                nomRole[c] = ligneRole.S_NOM;
+
+                foreach(Donnees.TAB_MESSAGERow ligneMessage in Donnees.m_donnees.TAB_MESSAGE)
+                {
+                    if (ligneMessage.ID_PION_EMETTEUR==lignePion.ID_PION)
+                    {
+                        nbMessages[c]++;
+                        lgMessages[c] += ligneMessage.S_TEXTE.Length;
+                    }
+                }
+                foreach (Donnees.TAB_MESSAGE_ANCIENRow ligneMessage in Donnees.m_donnees.TAB_MESSAGE_ANCIEN)
+                {
+                    if (ligneMessage.ID_PION_EMETTEUR == lignePion.ID_PION)
+                    {
+                        nbMessages[c]++;
+                        lgMessages[c] += ligneMessage.S_TEXTE.Length;
+                    }
+                }
+                c++;
+            }
+
+            //on fait la somme des totaux
+            int totalNbMessages = 0;
+            int totalLgMessages = 0;
+            for (int i=0; i< Donnees.m_donnees.TAB_ROLE.Count;i++)
+            {
+                totalNbMessages += nbMessages[i];
+                totalLgMessages += lgMessages[i];
+            }
+
+            //on ajoute les lignes
+            for (int i = 0; i < Donnees.m_donnees.TAB_ROLE.Count; i++)
+            {
+                table.Rows.Add(nomRole[i], 
+                                nbMessages[i], 
+                                Math.Round((decimal)nbMessages[i]*100 / totalNbMessages, 2, MidpointRounding.AwayFromZero), 
+                                lgMessages[i], Math.Round((decimal)lgMessages[i]*100 / totalLgMessages, 2, MidpointRounding.AwayFromZero)
+                    );
+            }
+
+            return table;
+        }
+
         private void buttonFichiers_Click(object sender, EventArgs e)
         {
             //on exporte déjà les données des tables au format csv
@@ -477,7 +540,9 @@ namespace vaoc
             messageErreur += Dal.exportCSV(StatistiquesMoral(), "MoralMoyen", out nomfichier);
             nomsfichier += nomfichier + ",";
             messageErreur += Dal.exportCSV(StatistiquesDepots(), "Depots", out nomfichier);
-            nomsfichier += nomfichier + ",";           
+            nomsfichier += nomfichier + ",";
+            messageErreur += Dal.exportCSV(StatistiquesVolubile(), "Volubile", out nomfichier);
+            nomsfichier += nomfichier + ",";
 
             if (string.Empty == messageErreur)
             {
@@ -489,5 +554,6 @@ namespace vaoc
                     "FormPion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

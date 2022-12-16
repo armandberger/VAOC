@@ -4933,9 +4933,9 @@ namespace vaoc
                         idCaseFin = idCaseDebut;
                         PlacementPion(ligneOrdre.ID_CASE_DESTINATION, lignePion, ligneNation, false, lignePion.effectifTotalEnMouvement);
                         */
-                        message = string.Format("{0}(ID={1}, PlacerPionEnRoute Erreur fin du mouvement, complètement arrivée : cas normalement impossible)", S_NOM, ID_PION);
+                        message = string.Format("{0}(ID={1}, PlacerPionEnRoute Erreur fin du mouvement, complètement arrivée : cas normalement impossible -> enfin peut etre que si...)", S_NOM, ID_PION);
                         LogFile.Notifier(message);
-                        return false;
+                        return true;
                     }
                     #endregion
                 }

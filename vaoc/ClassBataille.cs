@@ -3245,7 +3245,7 @@ namespace vaoc
                 int positionPoint = nomFichierPartie.LastIndexOf("\\");
                 string repertoire = nomFichierPartie.Substring(0, positionPoint);
 
-                string nomFichierFinal = (string.Empty == nomFichier) ? Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", "") + "_bataille" + this.ID_BATAILLE : nomFichier;
+                string nomFichierFinal = (string.Empty == nomFichier) ? Donnees.m_donnees.TAB_PARTIE[0].S_NOM.Replace(" ", "") + "_Bataille" + this.ID_BATAILLE : nomFichier;
                 string nomRepertoireFinal = (string.Empty == nomFichier) ? repertoire + "\\batailles" : repertoireVideo;
                 FabricantDeFilmDeBataille film = new FabricantDeFilmDeBataille();
                 //tout est fait dans initialisation

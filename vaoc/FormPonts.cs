@@ -133,6 +133,7 @@ namespace vaoc
                 textBoxResultat.Text += string.Format("{4}-{0} / {5} : {1} ({2},{3}) \r\n",
                     nom.S_NOM, nom.ID_CASE, ligneCase.I_X, ligneCase.I_Y, i++, nom.S_NOM_INDEX);
             }
+            textBoxResultat.Text += "Attention ! S'il y a des bacs, il faut les nommer à la main car ils n'ont aucune caractéristiques particulières pour pouvoir les nommer automatiquement.";
         }
     }
 

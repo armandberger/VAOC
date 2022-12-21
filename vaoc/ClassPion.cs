@@ -5183,7 +5183,28 @@ namespace vaoc
 
             internal string NomDeLaPatrouille()
             {
-                return "Patrouille du " + S_NOM;
+                bool bExistant = true;
+                string nom = string.Format("Patrouille du {0}", S_NOM);
+                int iNumero = 1;
+
+                Monitor.Enter(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
+                while (bExistant)
+                {
+                    int i = 0;
+                    while (i < m_donnees.TAB_NOMS_PIONS.Count && m_donnees.TAB_NOMS_PIONS[i].S_NOM != nom) i++;
+                    if (i < m_donnees.TAB_NOMS_PIONS.Count)
+                    {
+                        iNumero++;
+                        nom = string.Format("Patrouille n°{1} du {0}", S_NOM, iNumero);
+                    }
+                    else
+                    {
+                        bExistant = false;
+                    }
+                }
+                m_donnees.TAB_NOMS_PIONS.AddTAB_NOMS_PIONSRow(nom);
+                Monitor.Exit(Donnees.m_donnees.TAB_NOMS_PIONS.Rows.SyncRoot);
+                return nom;
             }
 
             internal bool IsI_TRINull()

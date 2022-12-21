@@ -323,10 +323,14 @@ namespace vaoc
             //MESSAGE_ENNEMI_PROCHE_INATTAQUABLE = 97
             //J'ai bien tenté de passer à l'attaque à {2} mais d'autres unités m'empèchent d'engager le combat. Les unités suivantes sont actuellement observables : {21}.
             //Il y a bien une unité ennemie à coté de moi mais je ne peux la combattre car elle est protégée par d'autres forces. Voilà ce que j'observe depuis ma position : {21}
-            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE_SANS_REPOS = 97
+            MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE_SANS_REPOS = 97,
             //Nous n'avons pas pu nous ravitailler directemente sur un dépôt comme vous l'aviez ordonné car nous avons effectué d'autres activités ce jour. L'ordre est annulé.
             //Nous n'avons pu nous ravitailler directement sur un dépôt car nous vous nous aviez assigné d'autres tâches ce jour. L'ordre est annulé.
             //Pour effectuer un ravitaillement direct, nous devons y consacrer toute notre journée, ce qui ne fut pas le cas aujourd'hui. L'ordre est annulé.
+            MESSAGE_RENFORT_TERMINE = 98,
+            // Les renforts sont parvenus à destination. Cette unité est donc dissoute.
+            // Nous avons renforcées l'unité souhaitée, cette formation n'a plus lieu d'exister.
+            // Notre tâche est maintenant accompli et nous existons dorénavant à travers notre nouvelle unité.
         }
         /*
                DateHeure(true), //0

@@ -183,8 +183,20 @@ namespace vaoc
 
         private void Correctifs()
         {
+            #region dernier message de pions détruits, doit être indiqué comme tel
+            Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NOT NULL");
+            foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
+                if (lignePion.B_DETRUIT)
+                {
+                    ligneMessage.B_DETRUIT = true;
+                }
+            }
+            #endregion
+
             #region correction sur le tipe video de l'unité
-            MiseAJourDonneesHistorique maj = new MiseAJourDonneesHistorique();
+            //MiseAJourDonneesHistorique maj = new MiseAJourDonneesHistorique();
             //foreach(Donnees.TAB_VIDEORow ligneVideo in Donnees.m_donnees.TAB_VIDEO)
             //{
             //    ligneVideo.I_TYPE = (int)maj.tipeVideo(ligneVideo);
@@ -239,26 +251,6 @@ namespace vaoc
             //int t = 0;
             #endregion
 
-            //blessés/pions avec le nombre de troupes initiales non renseignées
-            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            //{
-            //    if (!lignePion.B_DETRUIT)
-            //    {
-            //        if (lignePion.I_INFANTERIE_INITIALE == 0 && lignePion.I_INFANTERIE > lignePion.I_INFANTERIE_INITIALE)
-            //        {
-            //            lignePion.I_INFANTERIE_INITIALE = lignePion.I_INFANTERIE;
-            //        }
-            //        if (lignePion.I_CAVALERIE_INITIALE==0 && lignePion.I_CAVALERIE>lignePion.I_CAVALERIE_INITIALE)
-            //        {
-            //            lignePion.I_CAVALERIE_INITIALE = lignePion.I_CAVALERIE;
-            //        }
-            //    }
-            //}
-            //for (int y=3309; y<=3319; y++)
-            //{
-            //    Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY(2820, y);
-            //    ligneCase.ID_MODELE_TERRAIN = 68;
-            //}
             #region messages non arrivés sur des pions détruits !!!
             //Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
             //foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
@@ -377,31 +369,6 @@ namespace vaoc
             //    4922413, 0, "Bitterfeld", 0, 0, 0, 0, 1, 0, false, false, 0, 0, 0, 0, 0, 0, false, "Bitterfeld", 1533, 1483, false);
             //ligneNomPlus.ID_NOM = 206;
 
-            /*
-            int y = 1204;
-            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709,y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            ligneCase = Donnees.m_donnees.TAB_CASE.FindByXY(1709, y++);
-            if (ligneCase.ID_MODELE_TERRAIN == 65) { ligneCase.ID_MODELE_TERRAIN = 59; }
-            */
 
             #region Tests sur des chemins en doublon
             /*

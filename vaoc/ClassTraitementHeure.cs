@@ -1178,6 +1178,13 @@ namespace vaoc
                             }
                             lignePion.TerminerOrdre(ligneOrdre, false, true);
                             lignePion.DetruirePion();
+                            //on informe que le renfort n'est plus disponible
+                            if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_TERMINE))
+                            {
+                                message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_TERMINE dans ExecuterOrdreHorsMouvement", lignePionARenforcer.S_NOM, lignePionARenforcer.ID_PION);
+                                LogFile.Notifier(message);
+                                return false;
+                            }
                         }
                     }
                     else
@@ -1212,6 +1219,13 @@ namespace vaoc
                         }
                         lignePion.TerminerOrdre(ligneOrdre, false, true);
                         lignePion.DetruirePion();
+                        //on informe que le renfort n'est plus disponible
+                        if (!ClassMessager.EnvoyerMessage(lignePion, ClassMessager.MESSAGES.MESSAGE_RENFORT_TERMINE))
+                        {
+                            message = string.Format("{0},ID={1}, erreur sur EnvoyerMessage avec MESSAGE_RENFORT_TERMINE dans ExecuterOrdreHorsMouvement", lignePionARenforcer.S_NOM, lignePionARenforcer.ID_PION);
+                            LogFile.Notifier(message);
+                            return false;
+                        }
                     }
 
                     break;

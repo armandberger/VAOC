@@ -7,9 +7,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using WaocLib;
@@ -2203,29 +2205,43 @@ namespace vaoc
         private void buttonData_Click(object sender, EventArgs e)
         {
 
-            InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb("toto.txt", string.Empty, true);
-            try
+            string url = string.Format("http://{0}/vaocservicemiseajour.php?id_partie={1}&date_prochaintour={2}",
+                Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
+                Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
+                Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
+            HttpClient client = new HttpClient();
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, url);
+            HttpResponseMessage response = client.Send(message);
+            //Task<HttpResponseMessage> response = client..GetAsync(url).Wait(new TimeSpan(0, 0, 3, 0, 0));
+            if (!response.IsSuccessStatusCode)
             {
-                WebRequest requete = WebRequest.Create("http://localhost:8080/vaoc/service.php?op=utilisateurs");
-                WebResponse reponse = requete.GetResponse();
-                if (reponse is HttpWebResponse)
-                {
-                    StreamReader sr = new StreamReader(reponse.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
-                    string strXML = sr.ReadToEnd();
-                    XmlDocument docXML = new XmlDocument();
-                    docXML.LoadXml(strXML);
-                    XmlElement elem=docXML["UTILISATEURS"];
-                    foreach (XmlNode noeud in elem.ChildNodes)
-                    {
-                        string nom=noeud["S_NOM"].InnerText;
-                    }
+                MessageBox.Show("Timeout durant l'envoi de la date de mise à jour. Tout est correct sinon.",
+                    "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
-                }
-            }
-            catch (Exception exp)
-            {
-                MessageBox.Show("Erreur sur buttonData_Click :" + exp.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            //    InterfaceVaocWeb iWeb = ClassVaocWebFactory.CreerVaocWeb("toto.txt", string.Empty, true);
+            //    try
+            //    {
+            //        WebRequest requete = WebRequest.Create("http://localhost:8080/vaoc/service.php?op=utilisateurs");
+            //        WebResponse reponse = requete.GetResponse();
+            //        if (reponse is HttpWebResponse)
+            //        {
+            //            StreamReader sr = new StreamReader(reponse.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
+            //            string strXML = sr.ReadToEnd();
+            //            XmlDocument docXML = new XmlDocument();
+            //            docXML.LoadXml(strXML);
+            //            XmlElement elem=docXML["UTILISATEURS"];
+            //            foreach (XmlNode noeud in elem.ChildNodes)
+            //            {
+            //                string nom=noeud["S_NOM"].InnerText;
+            //            }
+
+            //        }
+            //    }
+            //    catch (Exception exp)
+            //    {
+            //        MessageBox.Show("Erreur sur buttonData_Click :" + exp.Message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    }
 
         }
 
@@ -3569,10 +3585,13 @@ namespace vaoc
                             Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
                             Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
-                        WebRequest request = HttpWebRequest.Create(url);
-                        WebResponse response = request.GetResponse();
-                        StreamReader reader = new StreamReader(response.GetResponseStream());
-                        string responseText = reader.ReadToEnd();
+                        HttpClient client = new HttpClient();
+                        Task<HttpResponseMessage> response = client.GetAsync(url).WaitAsync(new TimeSpan(0, 0, 3, 0, 0));
+                        if (!response.IsCompletedSuccessfully)
+                        {
+                            MessageBox.Show("Timeout durant l'envoi de la date de mise à jour. Tout est correct sinon.",
+                                "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
                     }
                     catch(Exception exWeb)
                     {

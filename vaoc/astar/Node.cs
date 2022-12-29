@@ -49,7 +49,7 @@ namespace vaoc
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
                 Debug.WriteLine(messageEX);
-                throw ex;
+                throw;
             }
         }
     }

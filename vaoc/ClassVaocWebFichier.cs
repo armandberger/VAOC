@@ -14,11 +14,11 @@ namespace vaoc
 {
     class ClassVaocWebFichier : InterfaceVaocWeb
     {
-        private string m_fileNameSQL;
-        private string m_fileNameXML;
+        private readonly string m_fileNameSQL;
+        private readonly string m_fileNameXML;
         private List<ClassDataUtilisateur> m_listeUtilisateursTous;
         private List<ClassDataUtilisateur> m_listeUtilisateursActifs;
-        private enum tipeNoms {hopitaux, prisons, depotsA };
+        private enum TipeNoms {hopitaux, prisons, depotsA };
 
         #region proprietes
         public string fileNameSQL
@@ -38,7 +38,7 @@ namespace vaoc
         {
             int positionPoint = connexion.LastIndexOf(".");
             //recopie de la chaine avant l'extension
-            string nomFichier = connexion.Substring(0, positionPoint);
+            string nomFichier = connexion[..positionPoint];
 
             int tourfichier = -1;//indication du tour courant dans le nom du fichier
             int i = nomFichier.Length - 1;
@@ -48,7 +48,7 @@ namespace vaoc
             if (tourfichier > 0 && Donnees.m_donnees.TAB_PARTIE[0].I_TOUR > tourfichier)
             {
                 m_fileNameSQL = string.Format("{0}{1}{2}.sql",
-                        nomFichier.Substring(0, i + 1),
+                        nomFichier[..(i + 1)],
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,
                         complement);
             }
@@ -71,8 +71,8 @@ namespace vaoc
         public List<ClassDataPion> ListePions(int idPartie)
         {
             string xpath;
-            List<ClassDataPion> listePions = new List<ClassDataPion>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataPion> listePions = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             if (idPartie >= 0)
@@ -92,83 +92,76 @@ namespace vaoc
             return listePions;
         }
 
-        private ClassDataPion ConversionPion(XmlNode noeud)
+        private static ClassDataPion ConversionPion(XmlNode noeud)
         {
-            ClassDataPion pion = new ClassDataPion();
-            try
-            {
-                var ciPHP = CultureInfo.InvariantCulture.Clone() as CultureInfo;
-                ciPHP.NumberFormat.NumberDecimalSeparator = ".";
+            ClassDataPion pion = new();
+            var ciPHP = CultureInfo.InvariantCulture.Clone() as CultureInfo;
+            ciPHP.NumberFormat.NumberDecimalSeparator = ".";
 
-                pion.ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText);
-                pion.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
-                pion.ID_PION_PROPRIETAIRE = Convert.ToInt32(noeud["ID_PION_PROPRIETAIRE"].InnerText);
-                pion.ID_PION_REMPLACE = Convert.ToInt32(noeud["ID_PION_REMPLACE"].InnerText);
-                pion.ID_MODELE_PION = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText);
-                pion.S_NOM = noeud["S_NOM"].InnerText;
-                pion.I_INFANTERIE = Convert.ToInt32(noeud["I_INFANTERIE"].InnerText);
-                pion.I_INFANTERIE_REEL = Convert.ToInt32(noeud["I_INFANTERIE_REEL"].InnerText);
-                pion.I_INFANTERIE_INITIALE = Convert.ToInt32(noeud["I_INFANTERIE_INITIALE"].InnerText);
-                pion.I_CAVALERIE = Convert.ToInt32(noeud["I_CAVALERIE"].InnerText);
-                pion.I_CAVALERIE_REEL = Convert.ToInt32(noeud["I_CAVALERIE_REEL"].InnerText);
-                pion.I_CAVALERIE_INITIALE = Convert.ToInt32(noeud["I_CAVALERIE_INITIALE"].InnerText);
-                pion.I_ARTILLERIE = Convert.ToInt32(noeud["I_ARTILLERIE"].InnerText);
-                pion.I_ARTILLERIE_REEL = Convert.ToInt32(noeud["I_ARTILLERIE_REEL"].InnerText);
-                pion.I_ARTILLERIE_INITIALE = Convert.ToInt32(noeud["I_ARTILLERIE_INITIALE"].InnerText);
-                pion.I_FATIGUE = Convert.ToInt32(noeud["I_FATIGUE"].InnerText);
-                pion.I_FATIGUE_REEL = Convert.ToInt32(noeud["I_FATIGUE_REEL"].InnerText);
-                pion.I_MORAL = Convert.ToInt32(noeud["I_MORAL"].InnerText);
-                pion.I_MORAL_REEL = Convert.ToInt32(noeud["I_MORAL_REEL"].InnerText);
-                pion.I_MORAL_MAX = Convert.ToInt32(noeud["I_MORAL_MAX"].InnerText);
-                pion.I_EXPERIENCE = Convert.ToDecimal(noeud["I_EXPERIENCE"].InnerText, ciPHP);
-                pion.I_TACTIQUE = Convert.ToInt32(noeud["I_TACTIQUE"].InnerText);
-                pion.B_QG = noeud["B_QG"].InnerText == "1" ? true : false;
-                pion.I_STRATEGIQUE = Convert.ToInt32(noeud["I_STRATEGIQUE"].InnerText);
-                pion.C_NIVEAU_HIERARCHIQUE = Convert.ToChar(noeud["C_NIVEAU_HIERARCHIQUE"].InnerText);
-                pion.I_MATERIEL = Convert.ToInt32(noeud["I_MATERIEL"].InnerText);
-                pion.I_RAVITAILLEMENT = Convert.ToInt32(noeud["I_RAVITAILLEMENT"].InnerText);
-                pion.I_NIVEAU_FORTIFICATION = Convert.ToInt32(noeud["I_NIVEAU_FORTIFICATION"].InnerText);
-                pion.I_RETRAITE = Convert.ToInt32(noeud["I_RETRAITE"].InnerText);
-                pion.ID_BATAILLE = Convert.ToInt32(noeud["ID_BATAILLE"].InnerText);
-                pion.I_ZONE_BATAILLE = Convert.ToInt32(noeud["I_ZONE_BATAILLE"].InnerText);
-                pion.S_POSITION = noeud["S_POSITION"].InnerText;
-                pion.B_DETRUIT = noeud["B_DETRUIT"].InnerText == "1" ? true : false;
-                pion.B_FUITE_AU_COMBAT = noeud["B_FUITE_AU_COMBAT"].InnerText == "1" ? true : false;
-                pion.B_REDITION_RAVITAILLEMENT = noeud["B_REDITION_RAVITAILLEMENT"].InnerText == "1" ? true : false;
-                pion.B_DEPOT = noeud["B_DEPOT"].InnerText == "1" ? true : false;
-                if (noeud["C_NIVEAU_DEPOT"].InnerText.Length > 0) pion.C_NIVEAU_DEPOT = Convert.ToChar(noeud["C_NIVEAU_DEPOT"].InnerText); else pion.C_NIVEAU_DEPOT = null;
-                pion.I_TOUR_CONVOI_CREE = Convert.ToInt32(noeud["I_TOUR_CONVOI_CREE"].InnerText);
-                pion.I_SOLDATS_RAVITAILLES = Convert.ToInt32(noeud["I_SOLDATS_RAVITAILLES"].InnerText);
-                pion.ID_DEPOT_SOURCE = Convert.ToInt32(noeud["ID_DEPOT_SOURCE"].InnerText);
-                pion.B_CAVALERIE_DE_LIGNE = noeud["B_CAVALERIE_DE_LIGNE"].InnerText == "1" ? true : false;
-                pion.B_CAVALERIE_LOURDE = noeud["B_CAVALERIE_LOURDE"].InnerText == "1" ? true : false;
-                pion.B_GARDE = noeud["B_GARDE"].InnerText == "1" ? true : false;
-                pion.B_VIEILLE_GARDE = noeud["B_VIEILLE_GARDE"].InnerText == "1" ? true : false;
-                pion.B_PONTONNIER = noeud["B_PONTONNIER"].InnerText == "1" ? true : false;
-                pion.B_CONVOI = noeud["B_CONVOI"].InnerText == "1" ? true : false;
-                pion.B_RENFORT = noeud["B_RENFORT"].InnerText == "1" ? true : false;
-                pion.B_BLESSES = noeud["B_BLESSES"].InnerText == "1" ? true : false;
-                pion.B_PRISONNIERS = noeud["B_PRISONNIERS"].InnerText == "1" ? true : false;
-                pion.I_PATROUILLES_DISPONIBLES = Convert.ToInt32(noeud["I_PATROUILLES_DISPONIBLES"].InnerText);
-                pion.I_PATROUILLES_MAX = Convert.ToInt32(noeud["I_PATROUILLES_MAX"].InnerText);
-                pion.I_VITESSE = Convert.ToDecimal(noeud["I_VITESSE"].InnerText);
-                pion.I_X = Convert.ToInt32(noeud["I_X"].InnerText);
-                pion.I_Y = Convert.ToInt32(noeud["I_Y"].InnerText);
-                pion.S_ORDRE_COURANT = noeud["S_ORDRE_COURANT"].InnerText;
-                pion.I_TRI = Convert.ToInt32(noeud["I_TRI"].InnerText);
-            }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
+            pion.ID_PION = Convert.ToInt32(noeud["ID_PION"].InnerText);
+            pion.ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText);
+            pion.ID_PION_PROPRIETAIRE = Convert.ToInt32(noeud["ID_PION_PROPRIETAIRE"].InnerText);
+            pion.ID_PION_REMPLACE = Convert.ToInt32(noeud["ID_PION_REMPLACE"].InnerText);
+            pion.ID_MODELE_PION = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText);
+            pion.S_NOM = noeud["S_NOM"].InnerText;
+            pion.I_INFANTERIE = Convert.ToInt32(noeud["I_INFANTERIE"].InnerText);
+            pion.I_INFANTERIE_REEL = Convert.ToInt32(noeud["I_INFANTERIE_REEL"].InnerText);
+            pion.I_INFANTERIE_INITIALE = Convert.ToInt32(noeud["I_INFANTERIE_INITIALE"].InnerText);
+            pion.I_CAVALERIE = Convert.ToInt32(noeud["I_CAVALERIE"].InnerText);
+            pion.I_CAVALERIE_REEL = Convert.ToInt32(noeud["I_CAVALERIE_REEL"].InnerText);
+            pion.I_CAVALERIE_INITIALE = Convert.ToInt32(noeud["I_CAVALERIE_INITIALE"].InnerText);
+            pion.I_ARTILLERIE = Convert.ToInt32(noeud["I_ARTILLERIE"].InnerText);
+            pion.I_ARTILLERIE_REEL = Convert.ToInt32(noeud["I_ARTILLERIE_REEL"].InnerText);
+            pion.I_ARTILLERIE_INITIALE = Convert.ToInt32(noeud["I_ARTILLERIE_INITIALE"].InnerText);
+            pion.I_FATIGUE = Convert.ToInt32(noeud["I_FATIGUE"].InnerText);
+            pion.I_FATIGUE_REEL = Convert.ToInt32(noeud["I_FATIGUE_REEL"].InnerText);
+            pion.I_MORAL = Convert.ToInt32(noeud["I_MORAL"].InnerText);
+            pion.I_MORAL_REEL = Convert.ToInt32(noeud["I_MORAL_REEL"].InnerText);
+            pion.I_MORAL_MAX = Convert.ToInt32(noeud["I_MORAL_MAX"].InnerText);
+            pion.I_EXPERIENCE = Convert.ToDecimal(noeud["I_EXPERIENCE"].InnerText, ciPHP);
+            pion.I_TACTIQUE = Convert.ToInt32(noeud["I_TACTIQUE"].InnerText);
+            pion.B_QG = noeud["B_QG"].InnerText == "1";
+            pion.I_STRATEGIQUE = Convert.ToInt32(noeud["I_STRATEGIQUE"].InnerText);
+            pion.C_NIVEAU_HIERARCHIQUE = Convert.ToChar(noeud["C_NIVEAU_HIERARCHIQUE"].InnerText);
+            pion.I_MATERIEL = Convert.ToInt32(noeud["I_MATERIEL"].InnerText);
+            pion.I_RAVITAILLEMENT = Convert.ToInt32(noeud["I_RAVITAILLEMENT"].InnerText);
+            pion.I_NIVEAU_FORTIFICATION = Convert.ToInt32(noeud["I_NIVEAU_FORTIFICATION"].InnerText);
+            pion.I_RETRAITE = Convert.ToInt32(noeud["I_RETRAITE"].InnerText);
+            pion.ID_BATAILLE = Convert.ToInt32(noeud["ID_BATAILLE"].InnerText);
+            pion.I_ZONE_BATAILLE = Convert.ToInt32(noeud["I_ZONE_BATAILLE"].InnerText);
+            pion.S_POSITION = noeud["S_POSITION"].InnerText;
+            pion.B_DETRUIT = noeud["B_DETRUIT"].InnerText == "1";
+            pion.B_FUITE_AU_COMBAT = noeud["B_FUITE_AU_COMBAT"].InnerText == "1";
+            pion.B_REDITION_RAVITAILLEMENT = noeud["B_REDITION_RAVITAILLEMENT"].InnerText == "1";
+            pion.B_DEPOT = noeud["B_DEPOT"].InnerText == "1";
+            if (noeud["C_NIVEAU_DEPOT"].InnerText.Length > 0) pion.C_NIVEAU_DEPOT = Convert.ToChar(noeud["C_NIVEAU_DEPOT"].InnerText); else pion.C_NIVEAU_DEPOT = null;
+            pion.I_TOUR_CONVOI_CREE = Convert.ToInt32(noeud["I_TOUR_CONVOI_CREE"].InnerText);
+            pion.I_SOLDATS_RAVITAILLES = Convert.ToInt32(noeud["I_SOLDATS_RAVITAILLES"].InnerText);
+            pion.ID_DEPOT_SOURCE = Convert.ToInt32(noeud["ID_DEPOT_SOURCE"].InnerText);
+            pion.B_CAVALERIE_DE_LIGNE = noeud["B_CAVALERIE_DE_LIGNE"].InnerText == "1";
+            pion.B_CAVALERIE_LOURDE = noeud["B_CAVALERIE_LOURDE"].InnerText == "1";
+            pion.B_GARDE = noeud["B_GARDE"].InnerText == "1";
+            pion.B_VIEILLE_GARDE = noeud["B_VIEILLE_GARDE"].InnerText == "1";
+            pion.B_PONTONNIER = noeud["B_PONTONNIER"].InnerText == "1";
+            pion.B_CONVOI = noeud["B_CONVOI"].InnerText == "1";
+            pion.B_RENFORT = noeud["B_RENFORT"].InnerText == "1";
+            pion.B_BLESSES = noeud["B_BLESSES"].InnerText == "1";
+            pion.B_PRISONNIERS = noeud["B_PRISONNIERS"].InnerText == "1";
+            pion.I_PATROUILLES_DISPONIBLES = Convert.ToInt32(noeud["I_PATROUILLES_DISPONIBLES"].InnerText);
+            pion.I_PATROUILLES_MAX = Convert.ToInt32(noeud["I_PATROUILLES_MAX"].InnerText);
+            pion.I_VITESSE = Convert.ToDecimal(noeud["I_VITESSE"].InnerText);
+            pion.I_X = Convert.ToInt32(noeud["I_X"].InnerText);
+            pion.I_Y = Convert.ToInt32(noeud["I_Y"].InnerText);
+            pion.S_ORDRE_COURANT = noeud["S_ORDRE_COURANT"].InnerText;
+            pion.I_TRI = Convert.ToInt32(noeud["I_TRI"].InnerText);
             return pion;
         }
 
         public List<ClassDataRole> ListeRoles(int idPartie)
         {
             string xpath;
-            List<ClassDataRole> listeRoles = new List<ClassDataRole>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataRole> listeRoles = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
 
@@ -183,7 +176,7 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataRole role = new ClassDataRole
+                ClassDataRole role = new()
                 {
                     ID_ROLE = Convert.ToInt32(noeud["ID_ROLE"].InnerText),
                     ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText),
@@ -208,8 +201,8 @@ namespace vaoc
             if (!bPresent && null != m_listeUtilisateursTous) { return m_listeUtilisateursTous; }
 
             string xpath;
-            List<ClassDataUtilisateur> listeUtilisateurs = new List<ClassDataUtilisateur>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataUtilisateur> listeUtilisateurs = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             xpath = "/vaoc/tab_utilisateurs";
@@ -229,7 +222,7 @@ namespace vaoc
 
         private ClassDataUtilisateur AffecterUtilisateur(XmlNode noeud)
         {
-            ClassDataUtilisateur utilisateur = new ClassDataUtilisateur
+            ClassDataUtilisateur utilisateur = new()
             {
                 ID_UTILISATEUR = Convert.ToInt32(noeud["ID_UTILISATEUR"].InnerText),
                 DT_CREATION = Convert.ToDateTime(noeud["DT_CREATION"].InnerText),
@@ -246,7 +239,7 @@ namespace vaoc
         private int CalculNombreDeToursSansOrdre(int id_utilisateur)
         {
             Donnees.TAB_ROLERow[] lignesRole = (Donnees.TAB_ROLERow[])Donnees.m_donnees.TAB_ROLE.Select("ID_UTILISATEUR = " + id_utilisateur.ToString());
-            if (0 == lignesRole.Count())
+            if (0 == lignesRole.Length)
             {
                 //le joueur n'a pas de pion sur le terrain
                 return -1;
@@ -307,8 +300,8 @@ namespace vaoc
                 m_listeUtilisateursTous = ListeUtilisateurs(false);
             }
             int i = 0;
-            while (i < m_listeUtilisateursTous.Count() && !m_listeUtilisateursTous[i].ID_UTILISATEUR.Equals(id_utilisateur)) { i++; }
-            if (i < m_listeUtilisateursTous.Count())
+            while (i < m_listeUtilisateursTous.Count && !m_listeUtilisateursTous[i].ID_UTILISATEUR.Equals(id_utilisateur)) { i++; }
+            if (i < m_listeUtilisateursTous.Count)
             {
                 return m_listeUtilisateursTous[i];
             }
@@ -350,8 +343,8 @@ namespace vaoc
                 m_listeUtilisateursTous = ListeUtilisateurs(false);
             }
             int i = 0;
-            while (i < m_listeUtilisateursTous.Count() && !m_listeUtilisateursTous[i].S_LOGIN.Equals(s_login)) { i++; }
-            if (i < m_listeUtilisateursTous.Count())
+            while (i < m_listeUtilisateursTous.Count && !m_listeUtilisateursTous[i].S_LOGIN.Equals(s_login)) { i++; }
+            if (i < m_listeUtilisateursTous.Count)
             {
                 return m_listeUtilisateursTous[i];
             }
@@ -361,15 +354,15 @@ namespace vaoc
         public List<ClassDataJeu> ListeJeux()
         {
             string xpath;
-            List<ClassDataJeu> listeJeux = new List<ClassDataJeu>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataJeu> listeJeux = new();
+            XmlDocument xDoc = new ();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             xpath = "/vaoc/tab_vaoc_jeu";
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataJeu jeu = new ClassDataJeu
+                ClassDataJeu jeu = new ()
                 {
                     DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText),
                     ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
@@ -388,7 +381,7 @@ namespace vaoc
         public ClassDataJeu GetJeu(int idJeu)
         {
             string xpath;
-            XmlDocument xDoc = new XmlDocument();
+            XmlDocument xDoc = new ();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             xpath = string.Format("/vaoc/tab_vaoc_jeu[ID_JEU={0}]", idJeu);
@@ -398,7 +391,7 @@ namespace vaoc
             {
                 return null;
             }
-            ClassDataJeu jeu = new ClassDataJeu
+            ClassDataJeu jeu = new()
             {
                 DT_INITIALE = Convert.ToDateTime(noeud["DT_INITIALE"].InnerText),
                 ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
@@ -418,9 +411,9 @@ namespace vaoc
             return ListeParties(-1);
         }
 
-        private ClassDataPartie ConversionPartie(XmlNode noeud)
+        private static ClassDataPartie ConversionPartie(XmlNode noeud)
         {
-            ClassDataPartie partie = new ClassDataPartie
+            ClassDataPartie partie = new ()
             {
                 ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
                 ID_JEU = Convert.ToInt32(noeud["ID_JEU"].InnerText),
@@ -455,8 +448,8 @@ namespace vaoc
             partie.H_JOUR = Convert.ToInt32(noeud["H_JOUR"].InnerText);
             partie.H_NUIT = Convert.ToInt32(noeud["H_NUIT"].InnerText);
             partie.S_REPERTOIRE = noeud["S_REPERTOIRE"].InnerText;
-            partie.FL_MISEAJOUR = ("1"==noeud["FL_MISEAJOUR"].InnerText) ? true : false;
-            partie.FL_DEMARRAGE = ("1"==noeud["FL_DEMARRAGE"].InnerText) ? true : false;
+            partie.FL_MISEAJOUR = ("1"==noeud["FL_MISEAJOUR"].InnerText);
+            partie.FL_DEMARRAGE = ("1" == noeud["FL_DEMARRAGE"].InnerText);
             partie.I_NB_CARTE_X = Convert.ToInt32(noeud["I_NB_CARTE_X"].InnerText);
             partie.I_NB_CARTE_Y = Convert.ToInt32(noeud["I_NB_CARTE_Y"].InnerText);
             partie.I_NB_CARTE_ZOOM_X = Convert.ToInt32(noeud["I_NB_CARTE_ZOOM_X"].InnerText);
@@ -472,8 +465,8 @@ namespace vaoc
         public List<ClassDataPartie> ListeParties(int idJeu, int idPartie = -1)
         {
             string xpath;
-            List<ClassDataPartie> listeParties = new List<ClassDataPartie>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataPartie> listeParties = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             if (idJeu >= 0)
@@ -489,7 +482,7 @@ namespace vaoc
             }
             else
             {
-                xpath = string.Format("/vaoc/tab_vaoc_partie", idJeu);
+                xpath = "/vaoc/tab_vaoc_partie";
             }
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
@@ -503,7 +496,7 @@ namespace vaoc
         public ClassDataPartie GetPartie(int idPartie)
         {
             string xpath;
-            XmlDocument xDoc = new XmlDocument();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             //xpath = string.Format("/vaoc/tab_vaoc_partie[ID_JEU={0} and ID_PARTIE={1}]", idJeu, idPartie);//and ou or en minuscules absolument
@@ -522,8 +515,8 @@ namespace vaoc
         public List<ClassDataMessage> ListeMessages(int idPartie)
         {
             string xpath;
-            List<ClassDataMessage> listeMessages = new List<ClassDataMessage>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataMessage> listeMessages = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             if (idPartie >= 0)
@@ -537,7 +530,7 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataMessage message = new ClassDataMessage
+                ClassDataMessage message = new ()
                 {
                     ID_MESSAGE = Convert.ToInt32(noeud["ID_MESSAGE"].InnerText),
                     ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
@@ -556,8 +549,8 @@ namespace vaoc
         public List<ClassDataOrdre> ListeOrdres(int idJeu, int idPartie)
         {
             string xpath;
-            List<ClassDataOrdre> listeOrdres = new List<ClassDataOrdre>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataOrdre> listeOrdres = new();
+            XmlDocument xDoc = new();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             if (idJeu >= 0 && idPartie >= 0)
@@ -572,7 +565,7 @@ namespace vaoc
             //Donnees.TAB_ORDRERow ligneOrdreDebug = Donnees.m_donnees.TAB_ORDRE.FindByID_ORDRE(1067);
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataOrdre ordre = new ClassDataOrdre
+                ClassDataOrdre ordre = new()
                 {
                     ID_ORDRE = Convert.ToInt32(noeud["ID_ORDRE"].InnerText),
                     ID_ORDRE_SUIVANT = null != noeud["ID_ORDRE_SUIVANT"] ? Convert.ToInt32(noeud["ID_ORDRE_SUIVANT"].InnerText) : -1,
@@ -718,8 +711,8 @@ namespace vaoc
         public List<ClassDataModeles> ListeModeles(int idPartie)
         {
             string xpath;
-            List<ClassDataModeles> listeModeles = new List<ClassDataModeles>();
-            XmlDocument xDoc = new XmlDocument();
+            List<ClassDataModeles> listeModeles = new();
+            XmlDocument xDoc = new ();
             //xDoc.Load(m_fileNameXML);
             xDoc.Load(LecteurXML.LireFichier(m_fileNameXML));
             if (idPartie >= 0)
@@ -733,7 +726,7 @@ namespace vaoc
 
             foreach (XmlNode noeud in xDoc.SelectNodes(xpath))
             {
-                ClassDataModeles modele = new ClassDataModeles
+                ClassDataModeles modele = new()
                 {
                     ID_MODELE_PION = Convert.ToInt32(noeud["ID_MODELE_PION"].InnerText),
                     ID_PARTIE = Convert.ToInt32(noeud["ID_PARTIE"].InnerText),
@@ -758,7 +751,7 @@ namespace vaoc
         public void SauvegardeForum(int idPartie)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new ();
             bool bPremier = true;
 
             //On remet la table à vide pour la partie
@@ -826,7 +819,7 @@ namespace vaoc
         public void SauvegardeNomsCarte(int idPartie)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new();
             //on reconstitue systématiquement tous les noms
             requete = string.Format("delete from tab_vaoc_noms_carte WHERE ID_PARTIE={0};",
                                     idPartie);
@@ -834,16 +827,16 @@ namespace vaoc
 
             requete = "INSERT INTO `tab_vaoc_noms_carte` (`ID_NOM`, `ID_PARTIE`, `S_NOM`, `I_X`, `I_Y`, `B_PONT`) VALUES ";
             listeRequete.AppendLine(requete);
-            for (int i=0; i < Donnees.m_donnees.TAB_NOMS_CARTE.Count(); i++)
+            for (int i=0; i < Donnees.m_donnees.TAB_NOMS_CARTE.Count; i++)
             {
                 Donnees.TAB_NOMS_CARTERow ligneNom = Donnees.m_donnees.TAB_NOMS_CARTE[i];
                 int bPont = (ligneNom.B_PONT) ? 1 : 0;
                 string nomCarte = (ligneNom.IsS_NOM_INDEXNull() || ligneNom.S_NOM_INDEX == string.Empty) ? ligneNom.S_NOM : ligneNom.S_NOM_INDEX;
                 requete = string.Format("({0}, {1}, '{2}', {3}, {4}, {5}){6}",
                                         ligneNom.ID_NOM, idPartie, 
-                                        Constantes.ChaineSQL(ligneNom.S_NOM),
+                                        Constantes.ChaineSQL(nomCarte),
                                         ligneNom.I_X, ligneNom.I_Y, bPont,
-                                        (i== Donnees.m_donnees.TAB_NOMS_CARTE.Count()-1) ? ";": ",");
+                                        (i== Donnees.m_donnees.TAB_NOMS_CARTE.Count-1) ? ";": ",");
                 listeRequete.AppendLine(requete);
             }
             AjouterLigne(listeRequete.ToString());
@@ -875,8 +868,8 @@ namespace vaoc
         /// <param name="tourSansEnvoi">premier tour pour lequel on a pas enovyés les messags sql : pour éviter d'avoir un .sql trop important</param>
         public void SauvegardeMessage(int idPartie, int tourSansEnvoi)
         {
-            string requete, nomZoneGeographique;
-            StringBuilder listeRequete = new StringBuilder();
+            string requete;
+            StringBuilder listeRequete = new ();
             bool bInsert = true;
             int nblignes = 0;
             //INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_MESSAGE`) VALUES (1, 1, 2, 1, '1805-06-15 02:04:18', '1805-06-15 22:40:15', 'La division a reçu un ordre : aller à Grenoble en partant à 8h00 durant 6 heures/jour'), (2, 1, 3, 1, '1805-06-02 22:52:27', '1805-06-03 12:52:27', 'La division vient d''arriver à Lyon et attend vos Constantes.ORDRES.');
@@ -889,7 +882,7 @@ namespace vaoc
                 AjouterLigne(requete);
             }
 
-            for (int i = 0; i< Donnees.m_donnees.TAB_MESSAGE.Count(); i++)
+            for (int i = 0; i< Donnees.m_donnees.TAB_MESSAGE.Count; i++)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 if (!ligneMessage.IsI_TOUR_ARRIVEENull() && !ligneMessage.IsI_PHASE_ARRIVEENull() 
@@ -913,14 +906,14 @@ namespace vaoc
 
                     if (bInsert)
                     {
-                        if (nblignes>0) { listeRequete.Append(";"); }
+                        if (nblignes>0) { listeRequete.Append(';'); }
                         requete = "INSERT INTO `tab_vaoc_message` (`ID_MESSAGE`, `I_TYPE`, `ID_PARTIE`, `ID_EMETTEUR`, `ID_PION_PROPRIETAIRE`, `DT_DEPART`, `DT_ARRIVEE`, `S_ORIGINE`, `S_MESSAGE`) VALUES ";
                         listeRequete.AppendLine(requete);
                         bInsert = false;
                     }
-                    else { listeRequete.Append(","); }
+                    else { listeRequete.Append(','); }
                     if (!bInsert && 0 == nblignes % 50) { bInsert = true; }
-                    ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
+                    ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out string nomZoneGeographique);
                     requete = string.Format("({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', '{8}')",
                                             ligneMessage.ID_MESSAGE,
                                             ligneMessage.I_TYPE,
@@ -935,7 +928,7 @@ namespace vaoc
                     nblignes++;
                 }
             }
-            listeRequete.Append(";");
+            listeRequete.Append(';');
             AjouterLigne(listeRequete.ToString());
         }
 
@@ -947,7 +940,7 @@ namespace vaoc
         public void SauvegardePion(int idPartie)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new ();
             bool bPremier = true;
 
             //on reconstitue systématiquement tous les noms
@@ -1062,7 +1055,6 @@ namespace vaoc
             int bPontonnier;
             int iPatrouillesDisponibles;
             int iPatrouillesMax;
-            string nomZoneGeographique;
             string sPosition;
             int bDetruit;
             string sVitesse;
@@ -1142,7 +1134,7 @@ namespace vaoc
             {
                 if (ligneMessage.ID_CASE_DEBUT != ligneMessage.ID_CASE_FIN)
                 {
-                    ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_DEBUT, out nomZoneGeographique);
+                    ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_DEBUT, out string nomZoneGeographique);
                     sPosition = "Entre " + nomZoneGeographique;
                     ClassMessager.CaseVersZoneGeographique(ligneMessage.ID_CASE_FIN, out nomZoneGeographique);
                     sPosition += " et " + nomZoneGeographique;
@@ -1155,8 +1147,8 @@ namespace vaoc
             sOrdreCourant = (null== ligneMessage) ? "aucune ordre connu" : lignePion.DescriptifOrdreEnCours(ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
             sPosition = sPosition.Replace("'", "''");//remplacement des apostrophes pour l'insertion en base
 
-            Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
-            Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
+            //Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePion.modelePion;
+            //Donnees.TAB_MODELE_MOUVEMENTRow ligneModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT.FindByID_MODELE_MOUVEMENT(ligneModelePion.ID_MODELE_MOUVEMENT);
             Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
 
             sVitesse = lignePion.CalculVitesseMouvement().ToString().Replace(",", ".");
@@ -1265,7 +1257,7 @@ namespace vaoc
         public void SauvegardeMeteo(int idJeu)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new ();
 
             //Supression des valeurs précédentes
             requete = string.Format("delete from tab_vaoc_meteo WHERE ID_JEU={0};",
@@ -1274,7 +1266,7 @@ namespace vaoc
 
             requete = "INSERT INTO `tab_vaoc_meteo` (`ID_JEU`, `ID_METEO`, `S_NOM`, `I_CHANCE`) VALUES";
             listeRequete.AppendLine(requete);
-            for(int i= 0; i< Donnees.m_donnees.TAB_METEO.Count(); i++)
+            for(int i= 0; i< Donnees.m_donnees.TAB_METEO.Count; i++)
             {
                 Donnees.TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO[i];
                 requete = string.Format("({0},{1},'{2}',{3}){4}",
@@ -1282,7 +1274,7 @@ namespace vaoc
                                         ligneMeteo.ID_METEO,
                                         ligneMeteo.S_NOM,                                        
                                         ligneMeteo.I_CHANCE,
-                                        (i == Donnees.m_donnees.TAB_METEO.Count() - 1) ? ";" : ",");
+                                        (i == Donnees.m_donnees.TAB_METEO.Count - 1) ? ";" : ",");
 
                 listeRequete.AppendLine(requete);
             }
@@ -1296,7 +1288,7 @@ namespace vaoc
         public void SauvegardeModelesMouvement(int idJeu)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new();
             bool bPremier = true;
 
             //Supression des valeurs précédentes
@@ -1448,41 +1440,40 @@ namespace vaoc
                 {
                     idMaxMessage = Math.Max(idMaxMessage, ligneMessage.ID_MESSAGE);
                 }
-                requete = string.Format("UPDATE `tab_vaoc_partie` SET `ID_JEU`={1}, `S_NOM`='{2}', `I_TOUR`={3},`DT_TOUR`='{4}',`I_PHASE`={5},`DT_MISEAJOUR`=NOW(), `H_JOUR`={7}, " +
-                                        "`H_NUIT`={8}, `S_REPERTOIRE`='{9}', `FL_DEMARRAGE`={10}, `I_NB_CARTE_X`={11}, `I_NB_CARTE_Y`={12}, "+
-                                        "`I_NB_CARTE_ZOOM_X`={13}, `I_NB_CARTE_ZOOM_Y`={14}, `D_MULT_ZOOM_X`={15}, `D_MULT_ZOOM_Y`={16}, `I_LARGEUR_CARTE_ZOOM`={17}, `I_HAUTEUR_CARTE_ZOOM`={18}, "+
-                                        "`I_ECHELLE`={19}, `ID_VICTOIRE`={20}, `S_METEO`='{21}', `DT_PROCHAINTOUR`='{22}', `MAX_ID_ORDRE`={23}, `MAX_ID_MESSAGE`={24}, "+
-                                        " S_HOPITAUX='{25}', S_PRISONS='{26}', S_DEPOTSA='{27}' WHERE (ID_PARTIE={0});",
+                requete = string.Format("UPDATE `tab_vaoc_partie` SET `ID_JEU`={1}, `S_NOM`='{2}', `I_TOUR`={3},`DT_TOUR`='{4}',`I_PHASE`={5},`DT_MISEAJOUR`=NOW(), `H_JOUR`={6}, " +
+                                        "`H_NUIT`={7}, `S_REPERTOIRE`='{8}', `FL_DEMARRAGE`={9}, `I_NB_CARTE_X`={10}, `I_NB_CARTE_Y`={11}, "+
+                                        "`I_NB_CARTE_ZOOM_X`={12}, `I_NB_CARTE_ZOOM_Y`={13}, `D_MULT_ZOOM_X`={14}, `D_MULT_ZOOM_Y`={15}, `I_LARGEUR_CARTE_ZOOM`={16}, `I_HAUTEUR_CARTE_ZOOM`={17}, "+
+                                        "`I_ECHELLE`={18}, `ID_VICTOIRE`={19}, `S_METEO`='{20}', `DT_PROCHAINTOUR`='{21}', `MAX_ID_ORDRE`={22}, `MAX_ID_MESSAGE`={23}, "+
+                                        " S_HOPITAUX='{24}', S_PRISONS='{25}', S_DEPOTSA='{26}' WHERE (ID_PARTIE={0});",
                                         idPartie,
                                         lignePartie.ID_JEU,
                                         lignePartie.S_NOM,
                                         lignePartie.I_TOUR,
                                         ClassMessager.DateHeureSQL(lignePartie.I_TOUR, lignePartie.I_PHASE), //DT_TOUR,
                                         lignePartie.I_PHASE,//5
-                                        //ClassMessager.DateHeureSQL(DateTime.Now), //DT_CREATION,
-                                        Constantes.DateHeureSQL(DateTime.Now),//DT_MISEAJOUR -> remplacé dans le code par le fonction NOW
+                                        //Constantes.DateHeureSQL(DateTime.Now),//DT_MISEAJOUR -> remplacé dans le code par le fonction NOW
                                         ligneJeu.I_LEVER_DU_SOLEIL,//H_JOUR
                                         ligneJeu.I_COUCHER_DU_SOLEIL,//H_NUIT
-                                        repertoireTour, //9, S_REPERTOIRE
+                                        repertoireTour, //8, S_REPERTOIRE
                                         //1,//FL_MISEAJOUR
-                                        flDemmarage, //10, FL_DEMARRAGE
+                                        flDemmarage, //9, FL_DEMARRAGE
                                         (int)Math.Ceiling((double)largeur/lignePartie.I_LARGEUR_CARTE_ZOOM_WEB),//`I_NB_CARTE_X`
                                         (int)Math.Ceiling((double)hauteur/lignePartie.I_HAUTEUR_CARTE_ZOOM_WEB),//`I_NB_CARTE_Y`
                                         (int)Math.Ceiling((double)largeurZoom/lignePartie.I_LARGEUR_CARTE_ZOOM_WEB),// `I_NB_CARTE_ZOOM_X`
                                         (int)Math.Ceiling((double)hauteurZoom/lignePartie.I_HAUTEUR_CARTE_ZOOM_WEB),//`I_NB_CARTE_ZOOM_Y`
-                                        sMultZoomX,//15, `D_MULT_ZOOM_X`
+                                        sMultZoomX,//14, `D_MULT_ZOOM_X`
                                         sMultZoomY,//`D_MULT_ZOOM_Y`
                                         lignePartie.I_LARGEUR_CARTE_ZOOM_WEB,//`I_LARGEUR_CARTE_ZOOM`
                                         lignePartie.I_HAUTEUR_CARTE_ZOOM_WEB,//`I_HAUTEUR_CARTE_ZOOM`
-                                        ligneJeu.I_ECHELLE,//19, `I_ECHELLE`     
+                                        ligneJeu.I_ECHELLE,//18, `I_ECHELLE`     
                                         idVictoire,
                                         sMeteo,
                                         Constantes.DateHeureSQL(lignePartie.DT_PROCHAINTOUR),
-                                        idMaxOrdre,
+                                        idMaxOrdre,//22
                                         idMaxMessage,
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.depotsA))
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.hopitaux)),
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.prisons)),
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.depotsA))
                                         );                                        
             }
             else
@@ -1517,9 +1508,9 @@ namespace vaoc
                                         sMeteo,//23
                                         0,
                                         0,
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.hopitaux)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.prisons)),
-                                        Constantes.ChaineSQL(ListeNoms(tipeNoms.depotsA))
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.hopitaux)),
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.prisons)),
+                                        Constantes.ChaineSQL(ListeNoms(TipeNoms.depotsA))
                                         );
             }
             AjouterLigne(requete);
@@ -1530,21 +1521,21 @@ namespace vaoc
         /// </summary>
         /// <param name="tipe">noms à générer</param>
         /// <returns></returns>
-        private string ListeNoms(tipeNoms tipe)
+        private static string ListeNoms(TipeNoms tipe)
         {
-            SortedList noms = new SortedList();
+            SortedList noms = new ();
             string retour=string.Empty;
             foreach(Donnees.TAB_NOMS_CARTERow ligneNom in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
                 switch(tipe)
                 {
-                    case tipeNoms.hopitaux:
+                    case TipeNoms.hopitaux:
                         if (ligneNom.B_HOPITAL) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
                         break;
-                    case tipeNoms.prisons:
+                    case TipeNoms.prisons:
                         if (ligneNom.B_PRISON) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
                         break;
-                    case tipeNoms.depotsA:
+                    case TipeNoms.depotsA:
                         if (ligneNom.B_CREATION_DEPOT) { noms.Add(ligneNom.S_NOM, ligneNom.S_NOM); }
                         break;
                     default:
@@ -1566,11 +1557,10 @@ namespace vaoc
         public void SauvegardeRole(int idPartie)
         {
             string requete;
-            bool bExiste, bEnDanger;
+            bool bExiste;
             int i, iAucontact;
             List<ClassDataRole> listeRoles = ListeRoles(idPartie);
             Donnees.TAB_MODELE_PIONRow ligneModele;
-            string sUnitesVisibles, sUnitesCombattivesVisibles;
 
             //INSERT INTO `tab_vaoc_modele_pion` (`ID_MODELE_PION`, `ID_PARTIE`, `S_NOM`,`S_IMAGE`) VALUES (1, 1, 'Napoleon', 'napoleon_tete.jpeg')
             //on reconstitue systématiquement tous les noms
@@ -1599,7 +1589,7 @@ namespace vaoc
                 //si le role existe déjà, on fait un update, sinon un insert
                 bExiste = false;
                 i = 0;
-                while (!bExiste && i<listeRoles.Count)
+                while (!bExiste && i < listeRoles.Count)
                 {
                     if (listeRoles[i].ID_ROLE == ligneRole.ID_ROLE && listeRoles[i].ID_PARTIE == idPartie)
                     {
@@ -1608,13 +1598,13 @@ namespace vaoc
                     i++;
                 }
 
-                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, false, out sUnitesVisibles, out bEnDanger))
+                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, false, out string sUnitesVisibles, out bool bEnDanger))
                 {
-                    throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={0}", ligneRole.ID_ROLE, lignePion.ID_PION));
+                    throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={1}", ligneRole.ID_ROLE, lignePion.ID_PION));
                 }
-                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, true, out sUnitesCombattivesVisibles, out bEnDanger))
+                if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, null, true, out string sUnitesCombattivesVisibles, out bEnDanger))
                 {
-                    throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={0}", ligneRole.ID_ROLE, lignePion.ID_PION));
+                    throw new NotImplementedException(string.Format("SauvegardeRole : PionsEnvironnants renvoie une erreur pour le role ID_ROLE={0}, ID_PION={1}", ligneRole.ID_ROLE, lignePion.ID_PION));
                 }
 
                 //regarde si le QG est "au contact" de l'ennemi sans protection
@@ -1632,9 +1622,9 @@ namespace vaoc
                                             Constantes.ChaineSQL(sUnitesVisibles),
                                             Constantes.ChaineSQL(sUnitesCombattivesVisibles),
                                             iAucontact);
-                                            //"black", à ne pas mettre à jour
-                                            //"white" à ne pas mettre à jour
-                                            
+                    //"black", à ne pas mettre à jour
+                    //"white" à ne pas mettre à jour
+
                 }
                 else
                 {
@@ -1667,18 +1657,15 @@ namespace vaoc
         public void SauvegardeBataille(int idPartie)
         {
             string requete;
-            List<ClassDataRole> listeRoles = ListeRoles(idPartie);
+            //List<ClassDataRole> listeRoles = ListeRoles(idPartie);
             Donnees.TAB_MODELE_PIONRow ligneModele;
             Donnees.TAB_PIONRow lignePion;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new ();
 
             int bEngagee, bEnDefense, bRetraite, bEngagement;
-            string s_terrain0, s_terrain1, s_terrain2, s_terrain3, s_terrain4, s_terrain5;
-            string s_couleurTerrain0,s_couleurTerrain1,s_couleurTerrain2,s_couleurTerrain3,s_couleurTerrain4,s_couleurTerrain5;
-            string s_obstacle0,s_obstacle1,s_obstacle2,s_couleurObstacle0,s_couleurObstacle1,s_couleurObstacle2;
             string dateFin;
             
-            if (0== Donnees.m_donnees.TAB_BATAILLE.Count()) { return; }
+            if (0== Donnees.m_donnees.TAB_BATAILLE.Count) { return; }
 
             //Batailles
             requete = string.Format("DELETE FROM tab_vaoc_bataille WHERE ID_PARTIE={0};",
@@ -1688,19 +1675,19 @@ namespace vaoc
             requete = "INSERT INTO `tab_vaoc_bataille` (`ID_PARTIE`, `ID_BATAILLE`, `S_NOM`, `DT_BATAILLE_DEBUT`, `C_ORIENTATION`, `S_TERRAIN0`, `S_TERRAIN1`, `S_TERRAIN2`, `S_TERRAIN3`, `S_TERRAIN4`, `S_TERRAIN5`, `S_COULEURTERRAIN0`, `S_COULEURTERRAIN1`, `S_COULEURTERRAIN2`, `S_COULEURTERRAIN3`, `S_COULEURTERRAIN4`, `S_COULEURTERRAIN5`, `S_OBSTACLE0`, `S_OBSTACLE1`, `S_OBSTACLE2`, `S_COULEUROBSTACLE0`, `S_COULEUROBSTACLE1`, `S_COULEUROBSTACLE2`, `ID_NATION_012`, `ID_NATION_345`, `ID_LEADER_012`, `ID_LEADER_345`, `DT_BATAILLE_FIN`, `I_TOUR_DEBUT`, `S_COMBAT_0`, `S_COMBAT_1`, `S_COMBAT_2`, `S_COMBAT_3`, `S_COMBAT_4`, `S_COMBAT_5`, `I_ENGAGEMENT_0`, `I_ENGAGEMENT_1`, `I_ENGAGEMENT_2`, `I_ENGAGEMENT_3`, `I_ENGAGEMENT_4`, `I_ENGAGEMENT_5`, `B_ZONE_UNIQUE`) VALUES";
             listeRequete.AppendLine(requete);
 
-            for (int i=0; i< Donnees.m_donnees.TAB_BATAILLE.Count(); i++)
+            for (int i=0; i< Donnees.m_donnees.TAB_BATAILLE.Count; i++)
             {
                 Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[i];
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_0, out s_terrain0, out s_couleurTerrain0);
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_1, out s_terrain1, out s_couleurTerrain1);
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_2, out s_terrain2, out s_couleurTerrain2);
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_3, out s_terrain3, out s_couleurTerrain3);
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_4, out s_terrain4, out s_couleurTerrain4);
-                FormatTerrainBataille(ligneBataille.ID_TERRAIN_5, out s_terrain5, out s_couleurTerrain5);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_0, out string s_terrain0, out string s_couleurTerrain0);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_1, out string s_terrain1, out string s_couleurTerrain1);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_2, out string s_terrain2, out string s_couleurTerrain2);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_3, out string s_terrain3, out string s_couleurTerrain3);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_4, out string s_terrain4, out string s_couleurTerrain4);
+                FormatTerrainBataille(ligneBataille.ID_TERRAIN_5, out string s_terrain5, out string s_couleurTerrain5);
 
-                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_03, out s_obstacle0, out s_couleurObstacle0);
-                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_14, out s_obstacle1, out s_couleurObstacle1);
-                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_25, out s_obstacle2, out s_couleurObstacle2);
+                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_03, out string s_obstacle0, out string s_couleurObstacle0);
+                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_14, out string s_obstacle1, out string s_couleurObstacle1);
+                FormatTerrainBataille(ligneBataille.ID_OBSTACLE_25, out string s_obstacle2, out string s_couleurObstacle2);
 
                 dateFin = ligneBataille.IsI_PHASE_FINNull() ? string.Empty : ClassMessager.DateHeureSQL(ligneBataille.I_TOUR_FIN, ligneBataille.I_PHASE_FIN);
 
@@ -1747,7 +1734,7 @@ namespace vaoc
                                         ligneBataille.I_ENGAGEMENT_4,
                                         ligneBataille.I_ENGAGEMENT_5,
                                         ligneBataille.B_ZONE_UNIQUE ? 1 : 0,
-                                        (i == Donnees.m_donnees.TAB_BATAILLE.Count() - 1) ? ";" : ","
+                                        (i == Donnees.m_donnees.TAB_BATAILLE.Count - 1) ? ";" : ","
                                         );
 
                 listeRequete.AppendLine(requete);
@@ -1762,7 +1749,7 @@ namespace vaoc
                     ",`I_INFANTERIE_DEBUT`,`I_INFANTERIE_FIN`,`I_CAVALERIE_DEBUT`,`I_CAVALERIE_FIN`,`I_ARTILLERIE_DEBUT`,`I_ARTILLERIE_FIN`,`I_MORAL_DEBUT`,`I_MORAL_FIN`" +
                     ",`I_FATIGUE_DEBUT`,`I_FATIGUE_FIN`,`B_RETRAITE`,`B_ENGAGEMENT`,`I_ZONE_BATAILLE_ENGAGEMENT`) VALUES";
             listeRequete.AppendLine(requete);
-            for(int i = 0; i < Donnees.m_donnees.TAB_BATAILLE_PIONS.Count(); i++)
+            for(int i = 0; i < Donnees.m_donnees.TAB_BATAILLE_PIONS.Count; i++)
             {
                 Donnees.TAB_BATAILLE_PIONSRow ligneBataillePion = Donnees.m_donnees.TAB_BATAILLE_PIONS[i];
                 lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePion.ID_PION);
@@ -1793,7 +1780,7 @@ namespace vaoc
                                         bRetraite,
                                         bEngagement,
                                         ligneBataillePion.IsI_ZONE_BATAILLE_ENGAGEMENTNull() ? -1 : ligneBataillePion.I_ZONE_BATAILLE_ENGAGEMENT,//18
-                                        (i == Donnees.m_donnees.TAB_BATAILLE_PIONS.Count() - 1) ? ";" : ","
+                                        (i == Donnees.m_donnees.TAB_BATAILLE_PIONS.Count - 1) ? ";" : ","
                                         );
 
                 listeRequete.AppendLine(requete);
@@ -1809,7 +1796,7 @@ namespace vaoc
         {
             string requete;
             int id=0;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new ();
             bool bPremier = true;
 
             //Supression des valeurs précédentes
@@ -1848,7 +1835,7 @@ namespace vaoc
         public void SauvegardeBataillesRoles(int idPartie)
         {
             string requete;
-            StringBuilder listeRequete = new StringBuilder();
+            StringBuilder listeRequete = new();
             bool bPremier = true;
             
             //Supression des valeurs précédentes
@@ -1867,7 +1854,7 @@ namespace vaoc
                                 group Message by new { Message.ID_PION_EMETTEUR, role.ID_ROLE } into MessageEmetteur
                                 select new { idpion = MessageEmetteur.Key.ID_PION_EMETTEUR, idrole= MessageEmetteur.Key.ID_ROLE, MaxTour = MessageEmetteur.Max(x => x.I_TOUR_ARRIVEE) }).ToList();
 
-            Debug.WriteLine(string.Format("{0} resultMessage", resultMessage.Count()));
+            Debug.WriteLine(string.Format("{0} resultMessage", resultMessage.Count));
             perf = DateTime.Now - timeStart;
             Debug.WriteLine(string.Format("resultMessage en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
@@ -1904,7 +1891,7 @@ namespace vaoc
                     }
                 }
             }
-            Debug.WriteLine(string.Format("{0} resultBatailles", listeBatailleRole.Count()));
+            Debug.WriteLine(string.Format("{0} resultBatailles", listeBatailleRole.Count));
             perf = DateTime.Now - timeStart;
             Debug.WriteLine(string.Format("resultBatailles en {0} heures, {1} minutes, {2} secondes, {3} millisecondes", perf.Hours, perf.Minutes, perf.Seconds, perf.Milliseconds));
 
@@ -2021,7 +2008,7 @@ namespace vaoc
             file.Close();
         }
 
-        private void FormatTerrainBataille(int idTerrain, out string sTerrain, out string sCouleur)
+        private static void FormatTerrainBataille(int idTerrain, out string sTerrain, out string sCouleur)
         {
             Donnees.TAB_MODELE_TERRAINRow ligneTerrain;
             Donnees.TAB_GRAPHISMERow ligneGraphique;

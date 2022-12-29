@@ -4,12 +4,16 @@ using System.Text;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WaocLib
 {
     public class PHPService
     {
         protected string m_http;
+        static readonly HttpClient m_client = new HttpClient();
+        public XmlDocument m_docXML;
 
         /// <summary>
         /// Constructeur du service
@@ -25,27 +29,32 @@ namespace WaocLib
         /// </summary>
         /// <param name="docXML">données XML renvoyées par le service, VERSION ou ERREUR</param>
         /// <returns>true si OK, false si KO</returns>
-        public bool Version(out XmlDocument docXML)
+        public bool Version()
         {
-            docXML = new XmlDocument();
             try
             {
-                WebRequest requete = WebRequest.Create(m_http + "?op=version");
-                WebResponse reponse = requete.GetResponse();
-                if (reponse is HttpWebResponse)
+                if (null == m_docXML) { m_docXML = new XmlDocument(); }
+                Task<HttpResponseMessage> response = m_client.GetAsync(m_http + "?op=version").WaitAsync(new TimeSpan(0, 0, 3, 0, 0));
+                if (response.IsCompletedSuccessfully)
                 {
-                    StreamReader sr = new StreamReader(reponse.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
+                    Stream src = response.Result.Content.ReadAsStream();
+                    StreamReader sr = new StreamReader(src, Encoding.GetEncoding("ISO-8859-1"));
                     string strXML = sr.ReadToEnd();
-                    docXML.LoadXml(strXML);
+                    m_docXML.LoadXml(strXML);
+                }
+                else
+                {
+                    XmlNode noeurErreur = m_docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
+                    noeurErreur.InnerText = "PHPService: Version timeout";
                 }
             }
             catch (Exception exp)
             {
-                XmlNode noeurErreur = docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
-                noeurErreur.InnerText = "PHPService: Utilisateurs :" + exp.Message;
+                XmlNode noeurErreur = m_docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
+                noeurErreur.InnerText = "PHPService: Version :" + exp.Message;
                 return false;
             }
-            if (null != docXML["ERREUR"])
+            if (null != m_docXML["ERREUR"])
             {
                 return false;
             }
@@ -58,32 +67,40 @@ namespace WaocLib
         /// </summary>
         /// <param name="docXML">données XML renvoyées par le service, UTILISATEURS ou ERREUR</param>
         /// <returns>true si OK, false si KO</returns>
-        public bool Utilisateurs(ref XmlDocument docXML)
+        public bool Utilisateurs()
         {
             try
             {
-                WebRequest requete = WebRequest.Create(m_http+"?op=utilisateurs");
-                WebResponse reponse = requete.GetResponse();
-                if (reponse is HttpWebResponse)
+                if (null == m_docXML) { m_docXML = new XmlDocument(); }
+                Task<HttpResponseMessage> response = m_client.GetAsync(m_http + "?op=utilisateurs").WaitAsync(new TimeSpan(0,0,3,0,0));
+                if (response.IsCompletedSuccessfully)
                 {
-                    StreamReader sr = new StreamReader(reponse.GetResponseStream(), Encoding.GetEncoding("ISO-8859-1"));
+                    Stream src = response.Result.Content.ReadAsStream();
+                    StreamReader sr = new StreamReader(src, Encoding.GetEncoding("ISO-8859-1"));
                     string strXML = sr.ReadToEnd();
-                    docXML.LoadXml(strXML);
-                    XmlElement elem=docXML["UTILISATEURS"];
+
+                    m_docXML.LoadXml(strXML);
+                    XmlElement elem = m_docXML["UTILISATEURS"];
                     foreach (XmlNode noeud in elem.ChildNodes)
                     {
-                        string nom=noeud["S_NOM"].InnerText;
+                        string nom = noeud["S_NOM"].InnerText;
                     }
+                }
+                else
+                {
+                    m_docXML.InnerXml = String.Empty;
+                    XmlNode noeurErreur = m_docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
+                    noeurErreur.InnerText = "PHPService: Utilisateurs timeout";
                 }
             }
             catch (Exception exp)
             {
-                docXML.InnerXml = String.Empty;
-                XmlNode noeurErreur=docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
+                m_docXML.InnerXml = String.Empty;
+                XmlNode noeurErreur= m_docXML.CreateNode(XmlNodeType.Element, "ERREUR", "");
                 noeurErreur.InnerText="PHPService: Utilisateurs :" + exp.Message;
                 return false;
             }
-            if (null != docXML["ERREUR"])
+            if (null != m_docXML["ERREUR"])
             {
                 return false;
             }

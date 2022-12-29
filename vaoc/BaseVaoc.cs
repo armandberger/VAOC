@@ -1329,7 +1329,7 @@ namespace vaoc
                     string messageErreur = "Erreur sur TABCASEDataTables.ChargerCases :" + ex.Message;
                     LogFile.Notifier(messageErreur);
                     MessageBox.Show(messageErreur, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw ex;//tres grave en fait
+                    throw;//tres grave en fait
                 }
                 return true;
             }
@@ -1560,7 +1560,7 @@ namespace vaoc
                            ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                            ex.StackTrace, ex.GetType().ToString());
                     LogFile.Notifier(message);
-                    throw ex;
+                    throw;
                 }
             }
 

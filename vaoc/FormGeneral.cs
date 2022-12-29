@@ -29,13 +29,12 @@ namespace vaoc
         {
             //test du site de référence
             PHPService service = new PHPService(e.Link.Name);
-            XmlDocument docXML;
 
-            if (service.Version(out docXML))
+            if (service.Version())
             {
-                if (null != docXML["VERSION"])
+                if (null != service.m_docXML["VERSION"])
                 {
-                    MessageBox.Show("Appel réussi, numéro de version de l'interface :" + docXML["VERSION"].InnerText, "Interface valide", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Appel réussi, numéro de version de l'interface :" + service.m_docXML["VERSION"].InnerText, "Interface valide", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -44,9 +43,9 @@ namespace vaoc
             }
             else
             {
-                if (null != docXML["ERREUR"])
+                if (null != service.m_docXML["ERREUR"])
                 {
-                    MessageBox.Show("linkLabelPHP_LinkClicked :" + docXML["ERREUR"].InnerText, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("linkLabelPHP_LinkClicked :" + service.m_docXML["ERREUR"].InnerText, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {

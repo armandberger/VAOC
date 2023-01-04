@@ -120,6 +120,7 @@ namespace vaoc
                 //m_numeroImage = positionFilm;
                 m_iNation012 = iNation012;
                 m_iNation345 = iNation345;
+                string retour = string.Empty;
 
                 if (Directory.Exists(repertoireVideo))
                 {
@@ -187,7 +188,6 @@ namespace vaoc
                             zone = 0;
                             break;
                     }
-                    string retour;
                     switch (m_orientation)
                     {
                         case TIPEORIENTATIONBATAILLE.VERTICAL:
@@ -203,8 +203,8 @@ namespace vaoc
                     }
                 }
                 TraitementBilan(m_fin, tourDebut, policeTitre, policeTitreEffectifs, ref m_numeroImage);
-                if (genererVideo) { Terminer(); }
-                return string.Empty;
+                if (genererVideo) { retour=Terminer(); }
+                return retour;
             }
             catch (Exception e)
             {
@@ -506,6 +506,7 @@ namespace vaoc
                 WindowStyle = ProcessWindowStyle.Normal,
                 FileName = "ffmpeg.exe",
                 WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
+                UseShellExecute= true,
                 Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne, m_nomFichier)
             };
             Process.Start(processInfo);

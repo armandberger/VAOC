@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 
 namespace WaocLib
 {
@@ -401,10 +399,12 @@ namespace WaocLib
         /// <returns>texte en minuscule et sans accents</returns>
         public static string MinusculeSansAccents(string texte)
         {
+            EncodingProvider instance = CodePagesEncodingProvider.Instance;
+            Encoding.RegisterProvider(instance);
             //les blancs remplacés par des soulignés et tout en minuscule sans accents
             byte[] tempBytes;
-            tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(texte);
-            string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            tempBytes = Encoding.GetEncoding("ISO-8859-8").GetBytes(texte);
+            string asciiStr = Encoding.UTF8.GetString(tempBytes);
             return asciiStr;
         }
         #endregion

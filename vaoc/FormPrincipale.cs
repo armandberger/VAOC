@@ -3586,8 +3586,9 @@ namespace vaoc
                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
                             Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
                         HttpClient client = new HttpClient();
-                        Task<HttpResponseMessage> response = client.GetAsync(url).WaitAsync(new TimeSpan(0, 0, 3, 0, 0));
-                        if (!response.IsCompletedSuccessfully)
+                        HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, url);
+                        HttpResponseMessage response = client.Send(message);
+                        if (!response.IsSuccessStatusCode)
                         {
                             MessageBox.Show("Timeout durant l'envoi de la date de mise à jour. Tout est correct sinon.",
                                 "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -4263,7 +4264,7 @@ namespace vaoc
             //recherche d'un nom de carte déjà existant à proximité
             while (i < Donnees.m_donnees.TAB_NOMS_CARTE.Rows.Count && Constantes.CST_IDNULL == id_case)
             {
-                if (Constantes.Distance(clicX, clicY, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_X, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_Y) < Properties.Settings.Default.distanceRechercheNom)
+                if (Constantes.Distance(clicX, clicY, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_X, Donnees.m_donnees.TAB_NOMS_CARTE[i].I_Y) < Convert.ToInt32(Properties.Resources.distanceRechercheNom))
                 {
                     ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_NOMS_CARTE[i].ID_CASE);
                     id_case = ligneCase.ID_CASE;

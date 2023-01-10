@@ -522,9 +522,13 @@ namespace vaoc
             {
                 get
                 {
-                    if (this.I_INFANTERIE_INITIALE > 0 && this.infanterie < 300)
+                    if (this.I_INFANTERIE_INITIALE > 0)
                     {
-                        return true;
+                        if (this.infanterie < 300)
+                        {
+                            return true;
+                        }
+                        return false;
                     }
                     if (this.I_CAVALERIE_INITIALE > 0 && this.cavalerie < 300)
                     {

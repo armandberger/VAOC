@@ -5147,11 +5147,11 @@ namespace vaoc
                 LogFile.Notifier(message);
 
                 //on modifie en conséquence les effectifs de départ et de destination
+                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_EFFECTIF_DEPART = Math.Max(0, ligneOrdre.I_EFFECTIF_DEPART - iInfanterie - iCavalerie - iArtillerie);
                 iInfanterieDestination += iInfanterie;
                 iCavalerieDestination += iCavalerie;
                 iArtillerieDestination += iArtillerie;
-                Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 ligneOrdre.I_EFFECTIF_DESTINATION = iInfanterieDestination + iCavalerieDestination + iArtillerieDestination;
                 Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
 

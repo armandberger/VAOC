@@ -204,7 +204,7 @@
     <None Update="images\marechal_lannes.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="images\marechal_mac_donald.jpg">
+    <None Update="images\marechal_macdonald.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="images\marechal_marmont.jpg">

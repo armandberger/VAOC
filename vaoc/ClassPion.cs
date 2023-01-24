@@ -776,7 +776,7 @@ namespace vaoc
                 foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
                 {
                     //je detecte deux cases sur des colonnnes/lignes différentes en espéant ne plus avoir l'effet d'unités en bordure qui apparaissent/disparaissent en emettant un message à chaque fois
-                    if (this.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
+                    if (estEnnemi(ligneCaseVue, ligneModelePion, true, true))
                     {
                         sEnnemiObservable = ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE.ToString();
                         break;
@@ -827,7 +827,7 @@ namespace vaoc
                            ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                            ex.StackTrace, ex.GetType().ToString());
                     LogFile.Notifier(messageEX);
-                    throw ex;
+                    throw;
                 }
             }
 
@@ -917,7 +917,7 @@ namespace vaoc
                 CalculerRepartitionEffectif(iInfanterie, cavalerie, artillerie, effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
             }
 
-            public void CalculerRepartitionEffectif(int iINFANTERIESource, int iCAVALERIESource, int iARTILLERIESource, int effectif, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
+            public static void CalculerRepartitionEffectif(int iINFANTERIESource, int iCAVALERIESource, int iARTILLERIESource, int effectif, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE)
             {
                 //on considère que la cavalerie arrive en premier, l'infanterie en second, l'artillerie au final
                 if (effectif > iCAVALERIESource)
@@ -1204,12 +1204,12 @@ namespace vaoc
                 return (estEnnemi(ligneCase, ligneModele, bCombattif));
             }
 
-            public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif)
+            public static bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif)
             {
                 return estEnnemi(ligneCase, ligneModele, bCombattif, true);//BEA le 24/03/2021 true au lieu de false, sinon, la nuit les unités démoralisées peuvent être traversées
             }
 
-            public bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif, bool bCombattifSansMoral)
+            public static bool estEnnemi(TAB_CASERow ligneCase, TAB_MODELE_PIONRow ligneModele, bool bCombattif, bool bCombattifSansMoral)
             {
                 TAB_PIONRow lignePionAdversaire;
 
@@ -1233,7 +1233,7 @@ namespace vaoc
                 return false;
             }
 
-            private bool estPionEnnemi(TAB_PIONRow lignePionAdversaire, int iNationPion, bool bCombattif, bool bCombattifSansMoral)
+            private static bool estPionEnnemi(TAB_PIONRow lignePionAdversaire, int iNationPion, bool bCombattif, bool bCombattifSansMoral)
             {
                 if (null == lignePionAdversaire)
                 {
@@ -1453,7 +1453,7 @@ namespace vaoc
                 Monitor.Exit(m_donnees.TAB_APTITUDES.Rows.SyncRoot);
 
                 //recherche si le modele de pion possède l'aptitude demandée
-                if (0 == resModelePion.Count() || 0 == resAptitude.Count())
+                if (0 == resModelePion.Length || 0 == resAptitude.Length)
                 {
                     return false;
                 }
@@ -1680,7 +1680,7 @@ namespace vaoc
                 string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT>={1} AND I_PHASE_DEBUT>={2} AND I_ORDRE_TYPE={3}",
                                                 this.ID_PION, tourDebut, phaseDebut, Constantes.ORDRES.RAVITAILLEMENT_DIRECT);
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "I_TOUR_DEBUT DESC");
-                if (resOrdre.Count() > 0)
+                if (resOrdre.Length > 0)
                 {
                     //if (tour - resOrdre[0].I_TOUR_DEBUT<=24) { return true; }//l'ordre n'est valable que 24 heures
                     return true;//la calcul de validité avant minuit est fait dans le calcul du tour précédent
@@ -1780,7 +1780,7 @@ namespace vaoc
                     Donnees.TAB_CASERow ligneCaseEnnemi = null;
                     foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
                     {
-                        if (this.estEnnemi(ligneCaseVue, ligneModelePion, true, true))
+                        if (estEnnemi(ligneCaseVue, ligneModelePion, true, true))
                         {
                             double distance = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
                             if (distance < distanceMin)
@@ -1896,12 +1896,12 @@ namespace vaoc
                 //TAB_MESSAGERow[] resMessages = (TAB_MESSAGERow[])m_donnees.TAB_MESSAGE.Select(requete);
                 requete = string.Format("I_ORDRE_TYPE={0} AND ID_DESTINATAIRE={1} AND ID_PION = {2} AND I_TOUR_FIN = {2}", Constantes.ORDRES.PATROUILLE, ID_PION, Constantes.NULLENTIER);
                 TAB_ORDRERow[] resMessages = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
-                if (resMessages.Count() > 0)
+                if (resMessages.Length > 0)
                 {
                     int desbugs = 0;
                     desbugs++;
                 }
-                nbPatrouilles += resMessages.Count();
+                nbPatrouilles += resMessages.Length;
                 return nbPatrouilles;
             }
 
@@ -1957,7 +1957,7 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCasePion;
 
                 i = 0;
-                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                int nbPions = Donnees.m_donnees.TAB_PION.Count;
                 while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
@@ -1988,7 +1988,7 @@ namespace vaoc
             /// <param name="baseDuree">durée élémentaire pour faire 100m d'ouvrage</param>
             /// <param name="tourInitial">tour auquel commence le travail</param>
             /// <returns></returns>
-            private int CalculDureeConstructionGenie(int longueur, int baseDuree, int tourInitial)
+            private static int CalculDureeConstructionGenie(int longueur, int baseDuree, int tourInitial)
             {
                 int lg = Math.Min(4, longueur); //maximum longueur de 400m même si c'est plus
                 int dureeNocturne = Donnees.m_donnees.TAB_PARTIE.DureeNocturne(tourInitial, lg * baseDuree);
@@ -2443,7 +2443,7 @@ namespace vaoc
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 double cout, coutHorsRoute;
                 Donnees.TAB_PIONRow ligneMeilleurDepot = null;
-                AStar etoile = new AStar();
+                AStar etoile = new();
 
                 meilleurPourcentageRavitaillement = 0;
                 meilleurPourcentageMateriel = 0;
@@ -2532,7 +2532,7 @@ namespace vaoc
                 AstarTerrain[] tableCoutsMouvementsTerrain;
                 double cout, coutHorsRoute;
                 Donnees.TAB_PIONRow ligneMeilleurDepot = null;
-                AStar etoile = new AStar();
+                AStar etoile = new();
 
                 meilleurDistanceRavitaillement = -1;
                 meilleurPourcentageRavitaillement = 0;
@@ -2768,7 +2768,7 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
 
                 encombrementTotal = CalculerEncombrement(this.infanterie, this.cavalerie, this.artillerie, true);
-                AStar etoile = new AStar();
+                AStar etoile = new();
                 if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
                 {
                     message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans CalculPionPositionRelativeAvancement:{2}", S_NOM, ID_PION, messageErreur);
@@ -2788,7 +2788,7 @@ namespace vaoc
                     CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
                                                 out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
                     encombrementArrivee = CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
-                    poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count());
+                    poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count);
                     message = string.Format("CalculPionPositionRelativeAvancement :effectif à destination :i={0} c={1} a={2} avec un encombrement de {3} et un poids de {4}",
                                             iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, encombrementArrivee, poidsEncombrementArrivee);
                     LogFile.Notifier(message);
@@ -3528,7 +3528,6 @@ namespace vaoc
             /// 
             /// </summary>
             /// <param name="lignePion">Pion recherchant l'espace</param>
-            /// <param name="depart"></param>
             /// <param name="ligneCaseDepart">Case de départ</param>
             /// <param name="espace">taille de l'espace recherché</param>
             /// <param name="nombrePixelParCase"></param>
@@ -3536,7 +3535,7 @@ namespace vaoc
             /// <param name="listeCaseEspace>liste des cases du parcours, ordonnées par I_COUT</param>
             /// <param name="erreur">message d'erreur</param>
             /// <returns>true si OK, false si KO</returns>
-            internal bool RechercheEspace(bool depart, Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeIDCaseEspace, out string erreur)
+            internal bool RechercheEspace(Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeIDCaseEspace, out string erreur)
             {
                 string message;
                 //char typeEspace;
@@ -3598,7 +3597,7 @@ namespace vaoc
                 }
                 */
                 //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
-                AStar etoile = new AStar();
+                AStar etoile = new();
                 etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
@@ -4657,7 +4656,7 @@ namespace vaoc
                         AstarTerrain[] tableCoutsMouvementsTerrain;
                         //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
                         //if (!m_etoile.SearchSpace(ligneCase, encombrement, tableCoutsMouvementsTerrain, DataSetCoutDonnees.m_donnees.TAB_JEU[0].I_ECHELLE, out message))
-                        if (!RechercheEspace(depart, ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out tableCoutsMouvementsTerrain, out listeCaseEspace, out message))
+                        if (!RechercheEspace(ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out tableCoutsMouvementsTerrain, out listeCaseEspace, out message))
                         {
                             LogFile.Notifier(message, out messageErreur);
                             message = string.Format("PlacementPion :{0}(ID={1} encombrement={2}, Impossible de trouver l'espace necessaire au pion)",
@@ -4702,7 +4701,7 @@ namespace vaoc
                            ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                            ex.StackTrace, ex.GetType().ToString());
                     LogFile.Notifier(messageEX);
-                    throw ex;
+                    throw;
                 }
                 return true;
             }
@@ -4764,7 +4763,7 @@ namespace vaoc
                            ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                            ex.StackTrace, ex.GetType().ToString());
                     LogFile.Notifier(messageEX);//ne marche si une exception est lancé semble-t-il...
-                    throw ex;
+                    throw;
                 }
                 return true;
             }
@@ -4789,7 +4788,7 @@ namespace vaoc
                 double cout, coutHorsRoute;
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
-                AStar etoile = new AStar();
+                AStar etoile = new();
 
                 message = string.Format("Debut PlacerPionEnRoute :{0}(ID={1})", S_NOM, ID_PION);
                 LogFile.Notifier(message, out messageErreur);

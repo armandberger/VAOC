@@ -499,7 +499,7 @@ namespace vaoc
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
                 LogFile.Notifier(messageEX);
-                throw ex;
+                throw ;
             }
         }
 
@@ -1165,7 +1165,7 @@ namespace vaoc
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
                 LogFile.Notifier(messageEX);
-                throw ex;
+                throw ;
             }
             return retour;
         }
@@ -1543,7 +1543,7 @@ namespace vaoc
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
                 LogFile.Notifier(message);
-                throw ex;
+                throw;
             }
             return bEspaceFound;
         }

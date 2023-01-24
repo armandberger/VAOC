@@ -28,12 +28,12 @@ namespace vaoc
     {     
         #region constantes
         public enum COMPAS { CST_NORD = 0, CST_NORD_OUEST = 1, CST_OUEST = 2 , CST_SUD_OUEST = 3, CST_SUD = 4, CST_SUD_EST = 5, CST_EST = 6, CST_NORD_EST = 7 , CST_INDETERMINE = 8};
-        private static string[] lieuxMasculins= { "pont","carrefour", "chemin","fleuve" };
-        private static char[] voyelles = { 'a','e','i','o','u','y','î','ï','é','è','ê','ù','à' };
+        private static readonly string[] lieuxMasculins= { "pont","carrefour", "chemin","fleuve" };
+        private static readonly char[] voyelles = { 'a','e','i','o','u','y','î','ï','é','è','ê','ù','à' };
         private const double degre45 = 0.70710678118654752440084436210485;
-        private static string[] sequenceceFeminin = { "", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
+        private static readonly string[] sequenceceFeminin = { "", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
                                                         "onzième", "douzième", "treizième", "quatorzième", "quinzième", "seizième", "dixseptième", "dixhuitième", "dixneuvième", "vingtième" };
-        private static string[] sequenceceMasculin = { "", "second", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
+        private static readonly string[] sequenceceMasculin = { "", "second", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
                                                         "onzième", "douzième", "treizième", "quatorzième", "quinzième", "seizième", "dixseptième", "dixhuitième", "dixneuvième", "vingtième" };
 
         public const int CST_MESSAGE_FREQUENCE_ALERTE = 6;//nombre de tours entre deux messages d'alerte
@@ -378,76 +378,36 @@ namespace vaoc
 
         public static COMPAS DirectionOrdreVersCompas(int i_direction)
         {
-            COMPAS compas;
-
-            switch (i_direction)
+            COMPAS compas = i_direction switch
             {
-                case 0:
-                    compas = ClassMessager.COMPAS.CST_NORD;
-                    break;
-                case 1:
-                    compas = ClassMessager.COMPAS.CST_NORD_EST;
-                    break;
-                case 2:
-                    compas = ClassMessager.COMPAS.CST_EST;
-                    break;
-                case 3:
-                    compas = ClassMessager.COMPAS.CST_SUD_EST;
-                    break;
-                case 4:
-                    compas = ClassMessager.COMPAS.CST_SUD;
-                    break;
-                case 5:
-                    compas = ClassMessager.COMPAS.CST_SUD_OUEST;
-                    break;
-                case 6:
-                    compas = ClassMessager.COMPAS.CST_OUEST;
-                    break;
-                case 7:
-                    compas = ClassMessager.COMPAS.CST_NORD_OUEST;
-                    break;
-                default:
-                    compas = ClassMessager.COMPAS.CST_INDETERMINE;
-                    break;
-            }
+                0 => ClassMessager.COMPAS.CST_NORD,
+                1 => ClassMessager.COMPAS.CST_NORD_EST,
+                2 => ClassMessager.COMPAS.CST_EST,
+                3 => ClassMessager.COMPAS.CST_SUD_EST,
+                4 => ClassMessager.COMPAS.CST_SUD,
+                5 => ClassMessager.COMPAS.CST_SUD_OUEST,
+                6 => ClassMessager.COMPAS.CST_OUEST,
+                7 => ClassMessager.COMPAS.CST_NORD_OUEST,
+                _ => ClassMessager.COMPAS.CST_INDETERMINE,
+            };
             return compas;
         }
 
         public static string DirectionOrdreVersCompasString(COMPAS compas, bool avecLiaison)
         {
-            string strDirection;
-
-            switch (compas)
+            string strDirection = compas switch
             {
-                case COMPAS.CST_NORD:
-
-                    strDirection = (avecLiaison) ? "au Nord" : "le Nord";
-                    break;
-                case COMPAS.CST_NORD_OUEST:
-                    strDirection = (avecLiaison) ? "au Nord-Ouest" : "le Nord-Ouest";
-                    break;
-                case COMPAS.CST_OUEST:
-                    strDirection = (avecLiaison) ? "à l'Ouest" : "l'Ouest";
-                    break;
-                case COMPAS.CST_SUD_OUEST:
-                    strDirection = (avecLiaison) ? "au Sud-Ouest": "le Sud-Ouest";
-                    break;
-                case COMPAS.CST_SUD:
-                    strDirection = (avecLiaison) ? "au Sud" : "le Sud";
-                    break;
-                case COMPAS.CST_SUD_EST:
-                    strDirection = (avecLiaison) ? "au Sud-Est" : "le Sud-Est";
-                    break;
-                case COMPAS.CST_EST:
-                    strDirection = (avecLiaison) ? "à l'Est" : "l'Est";
-                    break;
-                case COMPAS.CST_NORD_EST:
-                    strDirection = (avecLiaison) ? "au Nord-Est" : "le Nord-Est";
-                    break;
-                default:
-                    strDirection = "Indéterminé";
-                    break;
-            }
+                COMPAS.CST_NORD => (avecLiaison) ? "au Nord" : "le Nord",
+                COMPAS.CST_NORD_OUEST => (avecLiaison) ? "au Nord-Ouest" : "le Nord-Ouest",
+                COMPAS.CST_OUEST => (avecLiaison) ? "à l'Ouest" : "l'Ouest",
+                COMPAS.CST_SUD_OUEST => (avecLiaison) ? "au Sud-Ouest" : "le Sud-Ouest",
+                COMPAS.CST_SUD => (avecLiaison) ? "au Sud" : "le Sud",
+                COMPAS.CST_SUD_EST => (avecLiaison) ? "au Sud-Est" : "le Sud-Est",
+                COMPAS.CST_EST => (avecLiaison) ? "à l'Est" : "l'Est",
+                COMPAS.CST_NORD_EST => (avecLiaison) ? "au Nord-Est" : "le Nord-Est",
+                COMPAS.CST_INDETERMINE => "Indéterminé",
+                _ => "Indéterminé",
+            };
             return strDirection;
         }
 
@@ -470,7 +430,6 @@ namespace vaoc
 
         public static bool CaseVersCompas(int CaseSourceX, int CaseSourceY, int CaseDestinationX, int CaseDestinationY, out COMPAS direction)
         {
-            direction = COMPAS.CST_INDETERMINE;
             double angle;
 
             //recherche de la direction générale
@@ -532,7 +491,6 @@ namespace vaoc
         {
             int distance;
             double dist;
-            COMPAS direction;
 
             nomDistance = string.Empty;
             Donnees.TAB_CASERow ligneCaseSource = Donnees.m_donnees.TAB_CASE.FindParID_CASE(id_caseSource);
@@ -546,7 +504,7 @@ namespace vaoc
                 return false;
             }
 
-            if (!CaseVersCompas(ligneCaseSource, ligneCaseDestination, out direction))
+            if (!CaseVersCompas(ligneCaseSource, ligneCaseDestination, out COMPAS direction))
             {
                 return false;
             }
@@ -564,10 +522,7 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         public static bool CaseVersZoneGeographique(int id_case, out string nomZoneGeographique)
         {
-            decimal distance;
-            COMPAS direction;
-            int id_lieu;
-            if (!CaseVersZoneGeographique(id_case, out distance, out direction, out id_lieu))
+            if (!CaseVersZoneGeographique(id_case, out decimal distance, out COMPAS direction, out int id_lieu))
             {
                 nomZoneGeographique = string.Empty;
                 return false;
@@ -802,7 +757,7 @@ namespace vaoc
                                   orderby Constantes.Distance(ligneCaseFinale.I_X, ligneCaseFinale.I_Y, lCase.I_X, lCase.I_Y)
                                   select lCase;
 
-                    if (0 == result2.Count()) { return false; }
+                    if (!result2.Any()) { return false; }
 
                     id_case = result2.ElementAt(0).ID_CASE;
                 }
@@ -881,7 +836,7 @@ namespace vaoc
             for (int i = 0; i < lieuxMasculins.Length; i++)
             {
                 string lieu = lieuxMasculins[i];
-                if (nomLieu.Substring(0, Math.Min(nomLieu.Length, lieu.Length)).Equals(lieu, StringComparison.CurrentCultureIgnoreCase))
+                if (nomLieu[..Math.Min(nomLieu.Length, lieu.Length)].Equals(lieu, StringComparison.CurrentCultureIgnoreCase))
                 {
                     bnomMasculin = true;
                 }
@@ -897,8 +852,6 @@ namespace vaoc
 
         public static bool NomDeBataille(Donnees.TAB_CASERow ligneCaseSource, out string nomDeBataille)
         {
-            int id_lieu = -1, i;
-            string nomLieu=string.Empty;
             nomDeBataille = "La bataille introuvable";
 
             if (null == ligneCaseSource)
@@ -906,7 +859,7 @@ namespace vaoc
                 return false;
             }
 
-            bool bRecherhe = RechercheNomLieuProche(ligneCaseSource, out id_lieu, out nomLieu);
+            bool bRecherhe = RechercheNomLieuProche(ligneCaseSource, out int id_lieu, out string nomLieu);
             if (!bRecherhe || id_lieu <0)
             {
                 return false;
@@ -929,7 +882,7 @@ namespace vaoc
                 else
                 {
                     //si le nom commence par une voyelle, il faut mettre une apostrophe
-                    i = 0;
+                    int i = 0;
                     while (i < voyelles.Length && nomLieu[0] != voyelles[i] && nomLieu[0] != char.ToUpper(voyelles[i])) i++;
                     if (i < voyelles.Length)
                     {
@@ -943,7 +896,7 @@ namespace vaoc
 
                 //on regarde si le nom trouvé n'existe pas déjà
                 int j = 0;
-                while (!bUtilise && j<Donnees.m_donnees.TAB_BATAILLE.Count())
+                while (!bUtilise && j<Donnees.m_donnees.TAB_BATAILLE.Count)
                 {
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[j];
                     if (ligneBataille.S_NOM.Equals(nomDeBataille)) { bUtilise = true; u++; }
@@ -956,8 +909,6 @@ namespace vaoc
 
         public static bool NomDeDepot(Donnees.TAB_CASERow ligneCaseSource, out string nomDeDepot)
         {
-            int id_lieu = -1, i;
-            string nomLieu = string.Empty;
             nomDeDepot = "La dépôt introuvable";
 
             if (null == ligneCaseSource)
@@ -965,7 +916,7 @@ namespace vaoc
                 return false;
             }
 
-            bool bRecherhe = RechercheNomLieuProche(ligneCaseSource, out id_lieu, out nomLieu);
+            bool bRecherhe = RechercheNomLieuProche(ligneCaseSource, out int id_lieu, out string nomLieu);
             if (!bRecherhe || id_lieu < 0)
             {
                 return false;
@@ -989,7 +940,7 @@ namespace vaoc
                 else
                 {
                     //si le nom commence par une voyelle, il faut mettre une apostrophe
-                    i = 0;
+                    int i = 0;
                     while (i < voyelles.Length && nomLieu[0] != voyelles[i] && nomLieu[0] != char.ToUpper(voyelles[i])) i++;
                     if (i < voyelles.Length)
                     {
@@ -1003,7 +954,7 @@ namespace vaoc
 
                 //on regarde si le nom trouvé n'existe pas déjà
                 int j = 0;
-                int nbNoms = Donnees.m_donnees.TAB_NOMS_PIONS.Count();
+                int nbNoms = Donnees.m_donnees.TAB_NOMS_PIONS.Count;
                 while (!bUtilise && j < nbNoms)
                 {
                     if (Donnees.m_donnees.TAB_NOMS_PIONS[j].S_NOM.Equals(nomDeDepot)) { bUtilise = true; u++; }
@@ -1049,7 +1000,7 @@ namespace vaoc
 
         public static string DateHeure(int tour, int phase, bool bhasard)
         {
-            string retour = string.Empty;
+            string retour;
 
             //calcul de la date courante
             DateTime temps = DateHeure(tour, phase);
@@ -1061,19 +1012,13 @@ namespace vaoc
             }
             else
             {
-                Random de = new Random();
-                switch (de.Next(3))
+                Random de = new();
+                retour = de.Next(3) switch
                 {
-                    case 0:
-                        retour = DateHeure(temps);
-                        break;
-                    case 1:
-                        retour = temps.ToString("dddd d MMMM yyyy à HH:mm");
-                        break;
-                    default:
-                        retour = temps.ToString("dddd d MMMM") + " de l'an de grâce " + temps.ToString("yyyy, HH:mm");
-                        break;
-                }
+                    0 => DateHeure(temps),
+                    1 => temps.ToString("dddd d MMMM yyyy à HH:mm"),
+                    _ => temps.ToString("dddd d MMMM") + " de l'an de grâce " + temps.ToString("yyyy, HH:mm"),
+                };
             }
             return retour;
         }
@@ -1125,7 +1070,7 @@ namespace vaoc
         private static bool NomDuSuperieur(Donnees.TAB_PIONRow lignePion, out string nomDuSuperieur)
         {
             nomDuSuperieur = string.Empty;
-            Donnees.TAB_PIONRow lignePionLeader = null;
+            Donnees.TAB_PIONRow lignePionLeader;
 
             //s'il s'agit d'un joueur, son supérieur c'est lui-même, sauf  dans le cas d'un message personnel mais dans ce cas, on appelle
             //pas cette méthode liée à la génération automatique de phrases.
@@ -1209,7 +1154,7 @@ namespace vaoc
 
         public static bool EnvoyerMessage(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, decimal distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, bool bImmediat, string message, List<Donnees.TAB_PIONRow> lignePionsEnBataille)
         {
-            Donnees.TAB_PIONRow lignePionLeader = null;
+            Donnees.TAB_PIONRow lignePionLeader;
             string phrase;
 
             if (string.Empty == message)
@@ -1257,8 +1202,8 @@ namespace vaoc
             bool bMessageDirect;
             Donnees.TAB_PIONRow lignePionMessager;
             Donnees.TAB_MODELE_PIONRow ligneModelePion = lignePionEmetteur.modelePion;
-            int iDCaseDebut, iDCaseFin;
-            if (!lignePionEmetteur.CasesDebutFin(out iDCaseDebut, out iDCaseFin)) {return false;}
+
+            if (!lignePionEmetteur.CasesDebutFin(out int iDCaseDebut, out int iDCaseFin)) {return false;}
 
             if (bImmediat)
             {
@@ -1472,7 +1417,8 @@ namespace vaoc
 
                     //et maintenant, un ordre de mouvement
                     Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                    //Donnees.TAB_ORDRERow ligneOrdre = 
+                        Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                         Constantes.NULLENTIER,//id_ordre_transmis
                         Constantes.NULLENTIER,//id_ordre_suivant
                         Constantes.NULLENTIER,
@@ -1651,12 +1597,9 @@ namespace vaoc
         public static string GenererPhrase(Donnees.TAB_PIONRow lignePion, ClassMessager.MESSAGES typeMessage, int iPertesInfanterie, int iPertesCavalerie, int artilleriePerduOuGagne, int moralPerduOuGagne, int fatiguePerduOuGagne, Donnees.TAB_BATAILLERow ligneBataille, Donnees.TAB_PIONRow lignePionCible, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrainDestination, int distanceRavitaillement, int ravitaillementGagneOuPerdu, int materielGagneOuPerdu, string depotRavitaillement, List<Donnees.TAB_PIONRow> lignePionsEnBataille)
         {
             string phraseFormat = Donnees.m_donnees.TAB_PHRASE.DonneUnePhrase(typeMessage);
-            string phrase = string.Empty;
+            string phrase;
             string nomZoneGeographique;
-            string criRalliement;
-            string nomDuSuperieur;
             string unitesAttaquantes, nationsAttaquantes;
-            string unitesEnvironnantes;
             string ordreType="ordre non défini";
             string nomZoneGeographiqueOrdre="ordre zone géographique non définie";
             int ordreHeureDebut = 0;
@@ -1667,7 +1610,6 @@ namespace vaoc
             string nomCible = string.Empty;
             Donnees.TAB_CASERow ligneCase; 
             Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
-            bool bEnDanger;
             string nomDuChefRemplace = "chef non défini";
 
             if (string.Empty == phraseFormat)
@@ -1767,8 +1709,8 @@ namespace vaoc
             string effectifs = ChaineEffectifs(lignePion.infanterie, lignePion.cavalerie, lignePion.artillerie);
             string effectifsPerdus = ChaineEffectifs(iPertesInfanterie, iPertesCavalerie, artilleriePerduOuGagne);
 
-            CriDeRalliement(lignePion.ID_MODELE_PION, out criRalliement);
-            NomDuSuperieur(lignePion, out nomDuSuperieur);
+            CriDeRalliement(lignePion.ID_MODELE_PION, out string criRalliement);
+            NomDuSuperieur(lignePion, out string nomDuSuperieur);
             if (null== lignePionsEnBataille)
             {
                 PionsAttaquants(lignePion, out unitesAttaquantes, out nationsAttaquantes);
@@ -1778,7 +1720,7 @@ namespace vaoc
                 PhrasesPionsNations(lignePionsEnBataille, out unitesAttaquantes, out nationsAttaquantes);
             }
 
-            PionsEnvironnants(lignePion, typeMessage, ligneCaseDestination, false, out unitesEnvironnantes, out bEnDanger);
+            PionsEnvironnants(lignePion, typeMessage, ligneCaseDestination, false, out string unitesEnvironnantes, out _);
             Donnees.TAB_ORDRERow ligneOrdreCourant = Donnees.m_donnees.TAB_ORDRE.Courant(lignePion.ID_PION);//ID_PION_PROPRIETAIRE
             if (null != ligneOrdreCourant)
             {
@@ -1950,7 +1892,7 @@ namespace vaoc
 
         internal static string MessageDecrivantUnOrdre(Donnees.TAB_ORDRERow ligneOrdre, bool avecProprietaire)
         {
-            string retour = "MessageDecrivantUnOrdre : ordre indescriptible";
+            string retour;// = "MessageDecrivantUnOrdre : ordre indescriptible";
             string zoneGeographique;
             Donnees.TAB_PIONRow lignePionDestinataire;
             if ((ligneOrdre.IsID_DESTINATAIRENull()))
@@ -1975,8 +1917,7 @@ namespace vaoc
                                     lignePionDestinataire.S_NOM,
                                     zoneGeographique)
                                 :
-                                    string.Format("mouvement vers {1}.",
-                                    lignePionDestinataire.S_NOM,
+                                    string.Format("mouvement vers {0}.",
                                     zoneGeographique);
                     }
                     else
@@ -1988,8 +1929,7 @@ namespace vaoc
                                     ligneOrdre.I_HEURE_DEBUT,
                                     ligneOrdre.I_DUREE)
                                 :
-                                    string.Format("mouvement vers {1} à partir de {2}h00 durant {3} heures.",
-                                    lignePionDestinataire.S_NOM,
+                                    string.Format("mouvement vers {0} à partir de {1}h00 durant {2} heures.",
                                     zoneGeographique,
                                     ligneOrdre.I_HEURE_DEBUT,
                                     ligneOrdre.I_DUREE);
@@ -2024,7 +1964,7 @@ namespace vaoc
                     break;
 
                 case Constantes.ORDRES.CONSTRUIRE_PONTON:
-                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DESTINATION, out zoneGeographique);
+                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DESTINATION, out _);
                     retour = avecProprietaire ?
                                 string.Format("{0} a pour ordre de construire un ponton.",
                                 lignePionDestinataire.S_NOM)
@@ -2037,14 +1977,13 @@ namespace vaoc
                                 string.Format("{0} a pour ordre d'endommager un pont.",
                                 lignePionDestinataire.S_NOM)
                              :
-                                string.Format("endommager un pont.",
-                                lignePionDestinataire.S_NOM);
+                                "endommager un pont.";
                     break;
 
                 case Constantes.ORDRES.REPARER_PONT:
                     //ligneOrdre.ID_CASE_DEPART et non destination car il n'y a pas destination, sur un ordre de destruction de pont
                     // c'est la case la plus proche
-                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DEPART, out zoneGeographique);
+                    CaseVersZoneGeographique(ligneOrdre.ID_CASE_DEPART, out _);
                     retour = avecProprietaire ?
                                 string.Format("{0} a pour ordre de réparer un pont.",
                                 lignePionDestinataire.S_NOM)
@@ -2068,8 +2007,8 @@ namespace vaoc
                                 string.Format("{0} doit transférer l'unité {1} à {2}.",
                                 lignePionProprietaire.S_NOM, lignePionCible.S_NOM, lignePionDestinataire.S_NOM)
                             :
-                                string.Format("transférer l'unité {1} à {2}.",
-                                "inconnu", lignePionCible.S_NOM, lignePionDestinataire.S_NOM);
+                                string.Format("transférer l'unité {0} à {1}.",
+                                lignePionCible.S_NOM, lignePionDestinataire.S_NOM);
                     break;
 
                 case Constantes.ORDRES.GENERERCONVOI:
@@ -2183,7 +2122,6 @@ namespace vaoc
             string NomZoneGeographique;
             string nomType, femminin;
             //string requete;
-            int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
             bool bAmiCombattif;
 
             //bool test = Constantes.DebuteParUneVoyelle("armand");
@@ -2205,24 +2143,23 @@ namespace vaoc
                 }
 
                 Donnees.TAB_CASERow ligneCase = ligneCaseDestination ?? Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
-                lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+                lignePion.CadreVision(ligneCase, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite);
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
-                Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
+                Dictionary<int, Barycentre> unitesVisibles = new();
                 //dans le cas d'une patrouille, sur 2-4 (2d6) elle ne voit pas l'ennemi même s'il existe
                 if (typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT || Constantes.JetDeDes(2) > 5)
                 {
                     //on recherche toutes les unités visibles, et on se préparent à calculer le barycentre de leur position
 
-                    for (int l = 0; l < ligneCaseVues.Count(); l++)
+                    for (int l = 0; l < ligneCaseVues.Length; l++)
                     {
                         Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
                         if (!ligneCaseVue.IsID_PROPRIETAIRENull() && ligneCaseVue.ID_PROPRIETAIRE != lignePion.ID_PION)
                         {
-                            if (unitesVisibles.ContainsKey(ligneCaseVue.ID_PROPRIETAIRE))
+                            if (unitesVisibles.TryGetValue(ligneCaseVue.ID_PROPRIETAIRE, out Barycentre bar))
                             {
-                                Barycentre bar = unitesVisibles[ligneCaseVue.ID_PROPRIETAIRE];
                                 bar.x += ligneCaseVue.I_X;
                                 bar.y += ligneCaseVue.I_Y;
                                 bar.nb++;
@@ -2230,13 +2167,13 @@ namespace vaoc
                             }
                             else
                             {
-                                Barycentre bar = new Barycentre
+                                Barycentre barNouveau = new()
                                 {
                                     x = ligneCaseVue.I_X,
                                     y = ligneCaseVue.I_Y,
                                     nb = 1
                                 };
-                                unitesVisibles.Add(ligneCaseVue.ID_PROPRIETAIRE, bar);
+                                unitesVisibles.Add(ligneCaseVue.ID_PROPRIETAIRE, barNouveau);
                             }
                         }
                     }
@@ -2252,7 +2189,7 @@ namespace vaoc
                             if (lignePionVue.ID_PION != lignePion.ID_PION && 
                                 !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
                             {
-                                Barycentre bar = new Barycentre();
+                                Barycentre bar = new();
                                 bar.x += ligneCasePion.I_X;
                                 bar.y += ligneCasePion.I_Y;
                                 bar.nb = 1;
@@ -2482,8 +2419,7 @@ namespace vaoc
                                     }
                                     else
                                     {
-                                        COMPAS direction;
-                                        CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out direction);
+                                        CaseVersCompas(lignePionVoisin.ID_CASE, ligneOrdre.ID_CASE_DESTINATION, out COMPAS direction);
                                         unitesEnvironnantes += " en mouvement vers " + DirectionOrdreVersCompasString(direction, false);
                                     }
                                     break;
@@ -2543,8 +2479,8 @@ namespace vaoc
                 if (!bUniquementCombattives)
                 {
                     bool bPontOuGuet = false;
-                    Dictionary<int, Donnees.TAB_CASERow> listePonts = new Dictionary<int, Donnees.TAB_CASERow>();
-                    for (int l = 0; l < ligneCaseVues.Count(); l++)
+                    Dictionary<int, Donnees.TAB_CASERow> listePonts = new();
+                    for (int l = 0; l < ligneCaseVues.Length; l++)
                     {
                         Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
                         Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCaseVue.ID_MODELE_TERRAIN);
@@ -2554,7 +2490,7 @@ namespace vaoc
                             if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
                             {
                                 //si la case est trouvé on recherche toutes les cases de même type contigues
-                                List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>
+                                List<Donnees.TAB_CASERow> listeCasesVoisines = new ()
                                 {
                                     ligneCaseVue
                                 };
@@ -2617,7 +2553,6 @@ namespace vaoc
         /// <returns>ami le plus proche trouvé, null sinon</returns>
         public static Donnees.TAB_PIONRow AmiEnvironnant(Donnees.TAB_PIONRow lignePion)
         {
-            int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
             Donnees.TAB_PIONRow lignePionAmiCombattif=null;
             double distanceMin = double.MaxValue;
 
@@ -2630,12 +2565,12 @@ namespace vaoc
                 }
 
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
-                lignePion.CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+                lignePion.CadreVision(ligneCase, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite);
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
-                Dictionary<int, Barycentre> unitesVisibles = new Dictionary<int, Barycentre>();
-                for (int l = 0; l < ligneCaseVues.Count(); l++)
+                Dictionary<int, Barycentre> unitesVisibles = new();
+                for (int l = 0; l < ligneCaseVues.Length; l++)
                 {
                     Donnees.TAB_CASERow ligneCaseVue = ligneCaseVues[l];
                     Donnees.TAB_PIONRow lignePionCase = null;
@@ -2648,7 +2583,7 @@ namespace vaoc
                         lignePionCase = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneCaseVue.ID_NOUVEAU_PROPRIETAIRE);
                     }
 
-                    if (null != lignePionCase && !lignePion.estEnnemi(ligneCaseVue, ligneModelePion, true, false))
+                    if (null != lignePionCase && !Donnees.TAB_PIONRow.estEnnemi(ligneCaseVue, ligneModelePion, true, false))
                     {
                         double distance = Constantes.Distance(ligneCase.I_X, ligneCase.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
                         if (distance < distanceMin)
@@ -2685,14 +2620,14 @@ namespace vaoc
                        ex.Message, (null == ex.InnerException) ? "sans inner exception" : ex.InnerException.Message,
                        ex.StackTrace, ex.GetType().ToString());
                 LogFile.Notifier(messageEX);
-                throw ex;
+                throw;
             }
             return lignePionAmiCombattif;
         }
 
         private static bool PostionsOfficiersAmis(Donnees.TAB_PIONRow lignePion, Dictionary<int, Barycentre> unitesVisibles, out string positionOfficiers)
         {
-            List<int> listeOfficiersIndiques = new List<int>();
+            List<int> listeOfficiersIndiques = new();
             positionOfficiers = string.Empty;
             foreach (KeyValuePair<int, Barycentre> unite in unitesVisibles)
             {
@@ -2705,8 +2640,7 @@ namespace vaoc
                     if (lignePionVoisinLeader.estJoueur && !unitesVisibles.ContainsKey(lignePionVoisinLeader.ID_PION) && !listeOfficiersIndiques.Contains(lignePionVoisinLeader.ID_PION))
                     {
                         if (string.Empty != positionOfficiers) { positionOfficiers += ", "; }
-                        string NomZoneGeographique;
-                        CaseVersZoneGeographique(lignePionVoisinLeader.ID_CASE, out NomZoneGeographique);
+                        CaseVersZoneGeographique(lignePionVoisinLeader.ID_CASE, out string NomZoneGeographique);
                         positionOfficiers += lignePionVoisinLeader.S_NOM + " à " + NomZoneGeographique;
                         listeOfficiersIndiques.Add(lignePionVoisinLeader.ID_PION);
                     }
@@ -2726,7 +2660,7 @@ namespace vaoc
             return new string(a);
         }
 
-        [Obsolete]
+        [Obsolete("Ne plus utiliser")]
         public static bool PionsEnvironnantsParKm(Donnees.TAB_PIONRow lignePion, out string unitesEnvironnantes)
         {
             int visionKM;
@@ -2825,12 +2759,8 @@ namespace vaoc
             int[] effectifs = new int[6];
             int[] canons = new int[6];
             int[] modificateurs = new int[6];
-            int nbUnites;
             bool bZone012;
-            Donnees.TAB_PIONRow[] lignePionsEnBataille;
-            Collection<int> liste_nations;
 
-            liste_nations = new Collection<int>();
             unitesAttaquantes = "aucune unité attaquante";
             nationsAttaquantes = "aucune nation attaquante";
 
@@ -2853,12 +2783,12 @@ namespace vaoc
             {
                 bZone012 = true;
             }
-            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out nbUnites, ref des, ref modificateurs, ref effectifs, ref canons, out lignePionsEnBataille, true/*bEngagement*/, false/*bCombattif*/, true/*QG*/, true /*bArtillerie*/))
+            if (!ligneBataille.RecherchePionsEnBatailleParZone(ligneBataille.ID_BATAILLE, bZone012, out _, ref des, ref modificateurs, ref effectifs, ref canons, out Donnees.TAB_PIONRow[] lignePionsEnBataille, true/*bEngagement*/, false/*bCombattif*/, true/*QG*/, true /*bArtillerie*/))
             {
                 return false;
             }
 
-            List<Donnees.TAB_PIONRow> listePionsEnBataille = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> listePionsEnBataille = new();
             foreach(Donnees.TAB_PIONRow lignePionListe in lignePionsEnBataille) { listePionsEnBataille.Add(lignePionListe); }
             PhrasesPionsNations(listePionsEnBataille, out unitesAttaquantes, out nationsAttaquantes);
 
@@ -2867,7 +2797,7 @@ namespace vaoc
 
         public static void PhrasesPionsNations(List<Donnees.TAB_PIONRow> lignePions, out string unites, out string nations)
         {
-            Collection<int> liste_nations = new Collection<int>();
+            Collection<int> liste_nations = new();
             unites = string.Empty;
             for (int i = 0; i < lignePions.Count; i++)
             {
@@ -2908,6 +2838,6 @@ namespace vaoc
                 }
                 nations += ligneNation.S_NOM;
             }
-        }    
+        }
     }
 }

@@ -215,11 +215,11 @@ namespace vaoc
                                             ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsEngages012, out tablePionsEngages345, true/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/);
                                             if (i < 3)
                                             {
-                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = ligneBataille.EffectifTotalSurZone(i, tablePionsEngages012.ToList(), false /*bCombatif*/) * score / 400;
+                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = Donnees.TAB_BATAILLERow.EffectifTotalSurZone(i, tablePionsEngages012.ToList(), false /*bCombatif*/) * score / 400;
                                             }
                                             else
                                             {
-                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = ligneBataille.EffectifTotalSurZone(i, tablePionsEngages345.ToList(), false /*bCombatif*/) * score / 400;
+                                                ligneBataille["I_PERTES_" + Convert.ToString(i)] = Donnees.TAB_BATAILLERow.EffectifTotalSurZone(i, tablePionsEngages345.ToList(), false /*bCombatif*/) * score / 400;
                                             }
                                         }
                                     }

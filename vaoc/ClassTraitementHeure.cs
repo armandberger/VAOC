@@ -386,7 +386,7 @@ namespace vaoc
 
                 /************ A la fin de l'heure ****************/
                 testDebug();
-                //on regarde toutes les unités qui participent à un combat
+                //on regarde toutes les unités qui participent à un combat, reaffecte aussi les leaders de bataille
                 for (int l=0; l < Donnees.m_donnees.TAB_BATAILLE.Count; l++)
                 {
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE[l];

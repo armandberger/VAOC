@@ -20,7 +20,7 @@ namespace vaoc
 {
     public partial class FormPrincipale : Form
     {
-        private uint fPreviousExecutionState;//pour empécher la mise en veille
+        private readonly uint fPreviousExecutionState;//pour empécher la mise en veille
 
         //protected DataSetCoutDonnees DataSetCoutDonnees.m_donnees; mis en static dans BaseVaoc
         protected decimal m_zoom;//niveau de zoom sur l'image
@@ -68,18 +68,10 @@ namespace vaoc
 
             mruMenu = new MruStripMenuInline(fichierToolStripMenuItem, fichiersRecentsToolStripMenuItem, new MruStripMenu.ClickedHandler(OnMruFile), Constantes.CST_CLEFDEREGISTRE + "\\MRU");
 
-            IncFilename();
             #endregion
         }
 
         #region gestion du fichier le plus récent
-        private int m_curFileNum = 0;
-
-        private void IncFilename()
-        {
-            m_curFileNum++;
-        }
-
         private void OnMruFile(int number, String filename)
         {
             InitialiserDonnees();
@@ -2209,8 +2201,8 @@ namespace vaoc
                 Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
                 Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
                 Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
-            HttpClient client = new HttpClient();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, url);
+            HttpClient client = new();
+            HttpRequestMessage message = new(HttpMethod.Get, url);
             HttpResponseMessage response = client.Send(message);
             //Task<HttpResponseMessage> response = client..GetAsync(url).Wait(new TimeSpan(0, 0, 3, 0, 0));
             if (!response.IsSuccessStatusCode)
@@ -2307,13 +2299,13 @@ namespace vaoc
 
         private void AProposToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAPropos apropos = new FormAPropos();
+            FormAPropos apropos = new();
             apropos.ShowDialog();
         }
 
         private void generalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormGeneral general = new FormGeneral();
+            FormGeneral general = new();
             string nomCarte, nomCarteZoom, nomCarteGris, nomCarteTopographique;
             string repertoireDest;
             bool fl_demmarage = false;
@@ -2582,7 +2574,7 @@ namespace vaoc
 
         private void carteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormCarte fCarte = new FormCarte
+            FormCarte fCarte = new()
             {
 
                 //affectation des tables
@@ -2621,7 +2613,7 @@ namespace vaoc
 
         private void meteoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMeteo fMeteo = new FormMeteo
+            FormMeteo fMeteo = new()
             {
                 tableMeteo = Donnees.m_donnees.TAB_METEO
             };
@@ -2639,7 +2631,7 @@ namespace vaoc
 
         private void modelesDeMOuvementsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormModelesMouvements fModeleMouvement = new FormModelesMouvements
+            FormModelesMouvements fModeleMouvement = new()
             {
                 tableModeleMouvement = Donnees.m_donnees.TAB_MODELE_MOUVEMENT
             };
@@ -2784,7 +2776,7 @@ namespace vaoc
             {
                 //on affiche les zones des cases non chargées
                 Graphics graph = Graphics.FromImage(ImageCarte.Image);
-                Pen styloCadrillage = new Pen(Color.DarkSeaGreen, 5);
+                Pen styloCadrillage = new(Color.DarkSeaGreen, 5);
                 //styloCadrillage.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 //styloCadrillage.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
                 //float[] traits = new float[2];
@@ -2831,7 +2823,7 @@ namespace vaoc
                 int tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
                 int nbBlocsHorizontaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE / (decimal)tailleBloc);
                 int nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
-                Pen styloCadrillage = new Pen(Color.DarkSeaGreen, 1);
+                Pen styloCadrillage = new(Color.DarkSeaGreen, 1);
                 styloCadrillage.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 styloCadrillage.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
                 float[] traits= new float[2];
@@ -2855,7 +2847,7 @@ namespace vaoc
                 graph.Dispose();
 
                 List<int> listeCases;// = new List<int>;
-                List<Donnees.TAB_CASERow> cheminPCCTrajet = new List<Donnees.TAB_CASERow>();
+                List<Donnees.TAB_CASERow> cheminPCCTrajet = new();
                 foreach (Donnees.TAB_PCC_COUTSRow lignePCCTrajet in Donnees.m_donnees.TAB_PCC_COUTS)
                 //foreach(Donnees.TAB_PCC_CASE_BLOCSRow lignePCCTrajet in Donnees.m_donnees.TAB_PCC_CASE_BLOCS)
                 {
@@ -2890,7 +2882,7 @@ namespace vaoc
             if (this.toolStripButtonTrajetsVilles.CheckState == CheckState.Checked)
             {
                 List<int> listeCases;// = new List<int>;
-                List<Donnees.TAB_CASERow> cheminPCCTrajet = new List<Donnees.TAB_CASERow>();
+                List<Donnees.TAB_CASERow> cheminPCCTrajet = new();
                 foreach (Donnees.TAB_PCC_VILLESRow lignePCCVille in Donnees.m_donnees.TAB_PCC_VILLES)
                 {
                     cheminPCCTrajet.Clear();
@@ -2948,7 +2940,7 @@ namespace vaoc
 
         private void policeDeCaractèresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPolice fPolice = new FormPolice
+            FormPolice fPolice = new()
             {
                 tablePolice = Donnees.m_donnees.TAB_POLICE
             };
@@ -2962,7 +2954,7 @@ namespace vaoc
 
         private void fondDeCarteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormFondDeCarte fFondDeCarte = new FormFondDeCarte();
+            FormFondDeCarte fFondDeCarte = new();
 
             //initialisation des données de la form
             if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
@@ -3113,7 +3105,7 @@ namespace vaoc
 
         private void utilisateursToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormUtilisateur fUtilisateur = new FormUtilisateur
+            FormUtilisateur fUtilisateur = new()
             {
                 fichierCourant = curFileName
             };
@@ -3122,7 +3114,7 @@ namespace vaoc
 
         private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormRole fRole = new FormRole
+            FormRole fRole = new()
             {
                 fichierCourant = curFileName,
                 tableRole = Donnees.m_donnees.TAB_ROLE
@@ -3137,7 +3129,7 @@ namespace vaoc
 
         private void aptitudesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAptitude fAptitude = new FormAptitude();
+            FormAptitude fAptitude = new();
 
             fAptitude.tableAptitudes = Donnees.m_donnees.TAB_APTITUDES;
             if (DialogResult.OK == fAptitude.ShowDialog())
@@ -3150,7 +3142,7 @@ namespace vaoc
 
         private void modelesDeCombatToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNation fNation = new FormNation
+            FormNation fNation = new()
             {
                 tableNation = Donnees.m_donnees.TAB_NATION
             };
@@ -3164,7 +3156,7 @@ namespace vaoc
 
         private void modelesDePIonsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormModelesPions fModelePions = new FormModelesPions();
+            FormModelesPions fModelePions = new();
 
             fModelePions.tableModelesPions = Donnees.m_donnees.TAB_MODELE_PION;
             if (DialogResult.OK == fModelePions.ShowDialog())
@@ -3177,7 +3169,7 @@ namespace vaoc
 
         private void aptitudesModelesDePIonsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAptitudesModelesPions fAptitudesModelePions = new FormAptitudesModelesPions();
+            FormAptitudesModelesPions fAptitudesModelePions = new();
 
             fAptitudesModelePions.tableAptitudesModelesPions = Donnees.m_donnees.TAB_APTITUDES_PION;
             if (DialogResult.OK == fAptitudesModelePions.ShowDialog())
@@ -3190,7 +3182,7 @@ namespace vaoc
 
         private void pionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPion fPion = new FormPion
+            FormPion fPion = new()
             {
                 tablePions = Donnees.m_donnees.TAB_PION
             };
@@ -3239,7 +3231,7 @@ namespace vaoc
 
         private void ordresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormOrdre fOrdre = new FormOrdre();
+            FormOrdre fOrdre = new();
 
             fOrdre.tableOrdre = Donnees.m_donnees.TAB_ORDRE;
             if (DialogResult.OK == fOrdre.ShowDialog())
@@ -3350,7 +3342,7 @@ namespace vaoc
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
         {
-            ClassTraitementHeure traitement = new ClassTraitementHeure();
+            ClassTraitementHeure traitement = new();
             BackgroundWorker travailleur = sender as BackgroundWorker;
 
             //si la partie est terminée, on ne devrait pas appeler cette méthode !
@@ -3442,7 +3434,7 @@ namespace vaoc
         {
             //on s'assure que toutes les cases des unités sont bien chargées
             int i = 0;
-            while (i< Donnees.m_donnees.TAB_PION.Count()) 
+            while (i< Donnees.m_donnees.TAB_PION.Count) 
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i++];
                 if (lignePion.B_DETRUIT)
@@ -3477,7 +3469,7 @@ namespace vaoc
 
         private void phrasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPhrase fPhrase = new FormPhrase();
+            FormPhrase fPhrase = new();
 
             fPhrase.tablePhrase = Donnees.m_donnees.TAB_PHRASE;
             if (DialogResult.OK == fPhrase.ShowDialog())
@@ -3490,7 +3482,7 @@ namespace vaoc
 
         private void bataillesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBatailles fBatailles = new FormBatailles();
+            FormBatailles fBatailles = new();
 
             fBatailles.tableBataille = Donnees.m_donnees.TAB_BATAILLE;
             fBatailles.tableBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS;
@@ -3519,7 +3511,7 @@ namespace vaoc
 
         private void mEssagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMessage fMessages = new FormMessage();
+            FormMessage fMessages = new();
 
             fMessages.tableMessage = Donnees.m_donnees.TAB_MESSAGE;
             if (DialogResult.OK == fMessages.ShowDialog())
@@ -3532,13 +3524,13 @@ namespace vaoc
 
         private void testsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormTests fTests = new FormTests();
+            FormTests fTests = new();
             fTests.ShowDialog();
         }
 
         private void outilsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormOutils fOutils = new FormOutils();
+            FormOutils fOutils = new();
             fOutils.ShowDialog(this);
         }
 
@@ -3550,7 +3542,7 @@ namespace vaoc
                 toolStripAfficherUnites.Checked = true;
                 AfficherUnites();
             }
-            ClassTraitementWeb web = new ClassTraitementWeb(fichierCourant);
+            ClassTraitementWeb web = new(fichierCourant);
             if (!web.GenerationWeb())
             {
                 MessageBox.Show("Erreur durant la génération des fichiers Web. Consultez le fichier de log", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3563,7 +3555,7 @@ namespace vaoc
 
         private void notificationAuxJoueursToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMessageArbitre formMessageArbitre = new FormMessageArbitre();
+            FormMessageArbitre formMessageArbitre = new();
             formMessageArbitre.textBoxMessage.Text = Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE;
             formMessageArbitre.fichierCourant = this.curFileName;
             if (formMessageArbitre.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -3571,7 +3563,7 @@ namespace vaoc
                 Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE = formMessageArbitre.textBoxMessage.Text;
                 Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR = formMessageArbitre.dateEtHeure.Value;
 
-                ClassNotificationJoueurs notification = new ClassNotificationJoueurs(fichierCourant);
+                ClassNotificationJoueurs notification = new(fichierCourant);
                 if (!notification.NotificationJoueurs())
                 {
                     MessageBox.Show("Erreur durant les notifications", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -3585,8 +3577,8 @@ namespace vaoc
                             Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
                             Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
                             Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
-                        HttpClient client = new HttpClient();
-                        HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Get, url);
+                        HttpClient client = new();
+                        HttpRequestMessage message = new(HttpMethod.Get, url);
                         HttpResponseMessage response = client.Send(message);
                         if (!response.IsSuccessStatusCode)
                         {
@@ -3609,7 +3601,7 @@ namespace vaoc
 
         private void renfortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormRenfort fRenfort = new FormRenfort();
+            FormRenfort fRenfort = new();
 
             fRenfort.tableRenfort = Donnees.m_donnees.TAB_RENFORT;
             if (DialogResult.OK == fRenfort.ShowDialog())
@@ -3623,7 +3615,7 @@ namespace vaoc
 
         private void miseÀJourInternetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClassTraitementHeure traitement = new ClassTraitementHeure();
+            ClassTraitementHeure traitement = new();
 
             string messageErreur;
             if (!traitement.miseÀJourInternet(fichierCourant, out messageErreur))
@@ -3686,7 +3678,7 @@ namespace vaoc
                     }
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     double cout, coutHorsRoute;
-                    AStar etoile = new AStar();
+                    AStar etoile = new();
 
                     if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
                         m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
@@ -3718,7 +3710,7 @@ namespace vaoc
 
         private void hPAStarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormHPA fHPA = new FormHPA();
+            FormHPA fHPA = new();
 
             //affectation des tables
             //fHPA.tableCaseBlocs = Donnees.m_donnees.TAB_PCC_CASE_BLOCS;
@@ -4004,7 +3996,7 @@ namespace vaoc
                     //recherche du plus court chemin
                     labelInformationTempsPasse.Text = string.Empty;
                     AstarTerrain[] tableCoutsMouvementsTerrain;
-                    ClassTraitementHeure traitementtest = new ClassTraitementHeure();
+                    ClassTraitementHeure traitementtest = new();
 
                     #region version Hors Route
                     /* fonctionne pas du tout !
@@ -4251,7 +4243,7 @@ namespace vaoc
         private void AjouterModifierNomSurCarte(int clicX, int clicY)
         {
             //ajout, suppression, modifications de noms sur la carte
-            FormNomCarte fNomCarte = new FormNomCarte();
+            FormNomCarte fNomCarte = new();
             fNomCarte.X = clicX;
             fNomCarte.Y = clicY;
             fNomCarte.tablePolice = Donnees.m_donnees.TAB_POLICE;
@@ -4482,7 +4474,7 @@ namespace vaoc
             Donnees.m_donnees.TAB_ESPACE.SupprimerEspacePion(m_lignePionSelection.ID_PION);
             Donnees.m_donnees.TAB_PARCOURS.SupprimerParcoursPion(m_lignePionSelection.ID_PION);
             //Recalcul du nouveau trajet
-            AStar etoile = new AStar();
+            AStar etoile = new();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
                 m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, 
                 out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
@@ -4526,7 +4518,7 @@ namespace vaoc
         private void genererLeFilmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //MessageBox.Show("La génération de vidéo se fait sur un projet séparé car il utilise des méthodes qui ne sont pas 'safe'.", "Generation de Vidéo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            FormVideo frmVideo = new FormVideo();
+            FormVideo frmVideo = new();
             frmVideo.repertoireSource = Constantes.repertoireDonnees;
             frmVideo.fichierCourant = this.fichierCourant;
             frmVideo.Show(this);
@@ -4594,7 +4586,7 @@ namespace vaoc
 
         private void nomsDesLeadesPromusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNomsPromus fNomsPromus = new FormNomsPromus();
+            FormNomsPromus fNomsPromus = new();
 
             fNomsPromus.tableNomsPromus = Donnees.m_donnees.TAB_NOMS_PROMUS;
             if (DialogResult.OK == fNomsPromus.ShowDialog())
@@ -4607,13 +4599,13 @@ namespace vaoc
 
         private void statistiquesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormStatistiques fStatistiques = new FormStatistiques(fichierCourant);
+            FormStatistiques fStatistiques = new(fichierCourant);
             fStatistiques.ShowDialog();
         }
 
         private void pontsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPonts fPonts = new FormPonts();
+            FormPonts fPonts = new();
             if (DialogResult.OK == fPonts.ShowDialog(this))
             {
                 //Mise à jour des noms des ponts
@@ -4639,7 +4631,7 @@ namespace vaoc
                     bool bNouveau = true;
                     //on regarde s'il existe déjà un nom sur la même case avec le mot "pont"
                     Donnees.TAB_NOMS_CARTERow[] listeNomCarte = (Donnees.TAB_NOMS_CARTERow[])Donnees.m_donnees.TAB_NOMS_CARTE.Select(string.Format("ID_CASE={0}",nom.ID_CASE));
-                    if (listeNomCarte.Count() > 0)
+                    if (listeNomCarte.Length > 0)
                     {
                         foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in listeNomCarte)
                         {
@@ -4688,7 +4680,7 @@ namespace vaoc
 
         private void messagesAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMessageAncien fMessagesAncien = new FormMessageAncien();
+            FormMessageAncien fMessagesAncien = new();
 
             fMessagesAncien.tableMessage = Donnees.m_donnees.TAB_MESSAGE_ANCIEN;
             if (DialogResult.OK == fMessagesAncien.ShowDialog())
@@ -4701,7 +4693,7 @@ namespace vaoc
 
         private void pionsAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPionAncien fPion = new FormPionAncien();
+            FormPionAncien fPion = new();
 
             fPion.tablePions = Donnees.m_donnees.TAB_PION_ANCIEN;
             if (DialogResult.OK == fPion.ShowDialog())
@@ -4715,7 +4707,7 @@ namespace vaoc
 
         private void ordresAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormOrdreAncien fOrdre = new FormOrdreAncien();
+            FormOrdreAncien fOrdre = new();
 
             fOrdre.tableOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN;
             if (DialogResult.OK == fOrdre.ShowDialog())
@@ -4728,7 +4720,7 @@ namespace vaoc
 
         private void repriseDeDonnéesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormReprise fReprise = new FormReprise();
+            FormReprise fReprise = new();
 
             fReprise.fichierCourant = this.fichierCourant;
             if (DialogResult.OK == fReprise.ShowDialog())
@@ -4739,7 +4731,7 @@ namespace vaoc
 
         private void donneesVidéoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormVideoTable fVideoTable = new FormVideoTable
+            FormVideoTable fVideoTable = new()
             {
                 tableVideo = Donnees.m_donnees.TAB_VIDEO
             };
@@ -4758,27 +4750,27 @@ namespace vaoc
 
         private void actuelsAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int nbPions = Donnees.m_donnees.TAB_PION.Count();
-            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
-            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();
+            int nbPions = Donnees.m_donnees.TAB_PION.Count;
+            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count;
+            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count;
 
-            ClassTraitementHeure traitement = new ClassTraitementHeure();
+            ClassTraitementHeure traitement = new();
             traitement.ActuelsVersAnciens();
 
             MessageBox.Show(string.Format("Après actuelsAnciens #pions avant={0} après={1} #messages avant={2} après={3} #ordres avant={4} après={5}",
                 nbPions,
-                Donnees.m_donnees.TAB_PION.Count(),
+                Donnees.m_donnees.TAB_PION.Count,
                 nbMessage,
-                Donnees.m_donnees.TAB_MESSAGE.Count(),
+                Donnees.m_donnees.TAB_MESSAGE.Count,
                 nbOrdres,
-                Donnees.m_donnees.TAB_ORDRE.Count()),"Résultat",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Donnees.m_donnees.TAB_ORDRE.Count),"Résultat",MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void anciensActuelsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int nbPions = Donnees.m_donnees.TAB_PION.Count();
-            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
-            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();
+            int nbPions = Donnees.m_donnees.TAB_PION.Count;
+            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count;
+            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count;
             int i = 0;
 
             #region Backup des messages, ordres et pions détruits ou passés
@@ -4856,7 +4848,7 @@ namespace vaoc
             */
             #region récupératon des ordres anciens
             i = 0;
-            while (i<Donnees.m_donnees.TAB_ORDRE_ANCIEN.Count())
+            while (i<Donnees.m_donnees.TAB_ORDRE_ANCIEN.Count)
             {
                 Donnees.TAB_ORDRE_ANCIENRow ligneOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN[i];
                 if (ligneOrdre.I_ORDRE_TYPE != Constantes.ORDRES.RAVITAILLEMENT_DIRECT)
@@ -4967,18 +4959,18 @@ namespace vaoc
            */
             MessageBox.Show(string.Format("Après anciensActuels #pions avant={0} après={1} #messages avant={2} après={3} #ordres avant={4} après={5}",
                 nbPions,
-                Donnees.m_donnees.TAB_PION.Count(),
+                Donnees.m_donnees.TAB_PION.Count,
                 nbMessage,
-                Donnees.m_donnees.TAB_MESSAGE.Count(),
+                Donnees.m_donnees.TAB_MESSAGE.Count,
                 nbOrdres,
-                Donnees.m_donnees.TAB_ORDRE.Count()), "Résultat", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Donnees.m_donnees.TAB_ORDRE.Count), "Résultat", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             #endregion
         }
 
         private void nomsPionsUniquesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNomsPions fNompsPionsTable = new FormNomsPions();
+            FormNomsPions fNompsPionsTable = new();
 
             fNompsPionsTable.tableNomsPions = Donnees.m_donnees.TAB_NOMS_PIONS;
             if (DialogResult.OK == fNompsPionsTable.ShowDialog())
@@ -5028,26 +5020,26 @@ namespace vaoc
 
         private void broderiequadrillageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBroderie broderie = new FormBroderie();
+            FormBroderie broderie = new();
             broderie.ShowDialog();
         }
 
         private void copieDeSauvegardeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBackup copieDeSauvegarde = new FormBackup();
+            FormBackup copieDeSauvegarde = new();
             copieDeSauvegarde.fichierCourant = fichierCourant;
             copieDeSauvegarde.ShowDialog();
         }
 
         private void forcesInitialesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormForcesInitiales forcesInitiales = new FormForcesInitiales();
+            FormForcesInitiales forcesInitiales = new();
             forcesInitiales.ShowDialog();
         }
 
         private void miseÀJourProprietairesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMajCases majDesCases = new FormMajCases();
+            FormMajCases majDesCases = new();
             majDesCases.ShowDialog();
         }
 
@@ -5058,7 +5050,7 @@ namespace vaoc
 
         private void bataillesVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBataillesVideo fBataillesVideo = new FormBataillesVideo();
+            FormBataillesVideo fBataillesVideo = new();
 
             fBataillesVideo.tableBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO;
             fBataillesVideo.tableBataillePionsVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO;
@@ -5087,7 +5079,7 @@ namespace vaoc
 
         private void genererLesFilmsDeBatailleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormVideoBatailles fVideoBatailles = new FormVideoBatailles();
+            FormVideoBatailles fVideoBatailles = new();
             fVideoBatailles.m_nomfichier = this.curFileName;
             fVideoBatailles.ShowDialog();
         }

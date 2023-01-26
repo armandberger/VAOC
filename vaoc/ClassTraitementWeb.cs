@@ -100,7 +100,7 @@ namespace vaoc
                     nomfichier = string.Format("{0}\\carte_{1}_{2}.png",
                         repertoireCarte,
                         i, j);
-                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
+                    if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 1)) { return false; }
                 }
             }
 
@@ -123,7 +123,7 @@ namespace vaoc
                         nomfichier = string.Format("{0}\\carteZoom_{1}_{2}.png",
                             repertoireCarte,
                             i, j);
-                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, Constantes.CST_FACTEUR_ZOOM)) { return false; }
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, Constantes.CST_FACTEUR_ZOOM)) { return false; }
                     }
                 }
             }
@@ -145,7 +145,7 @@ namespace vaoc
                         nomfichier = string.Format("{0}\\carteZoom_{1}_{2}.png",
                             repertoireCarte,
                             i, j);
-                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 1)) { return false; }
                     }
                 }
             }
@@ -268,25 +268,25 @@ namespace vaoc
                 //fichier vision historique de la bataille
                 nomfichier = string.Format("{0}\\bataille_{1}.png",
                     repertoireTour,ligneBataille.ID_BATAILLE);
-                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 1)) { return false; }
 
                 //fichier topographique de la bataille
                 nomfichier = string.Format("{0}\\bataille_{1}_topographique.png",
                     repertoireTour, ligneBataille.ID_BATAILLE);
-                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, 0, 1)) { return false; }
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.TOPOGRAPHIQUE, nomfichier, rect, 1)) { return false; }
             }
             #endregion
 
             #region Carte général pour afficher en fin de partie
             nomfichier = string.Format("{0}\\carte_general_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
             rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.HISTORIQUE), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.HISTORIQUE));
-            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 0, 1)) { return false; }
+            if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.HISTORIQUE, nomfichier, rect, 1)) { return false; }
 
             if (null != Cartographie.GetImage(Constantes.MODELESCARTE.ZOOM))
             {
                 nomfichier = string.Format("{0}\\carte_generalzoom_{1}.png", repertoireHistorique, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR);
                 rect = new Rectangle(0, 0, Cartographie.GetImageLargeur(Constantes.MODELESCARTE.ZOOM), Cartographie.GetImageHauteur(Constantes.MODELESCARTE.ZOOM));
-                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 1)) { return false; }
             }
             #endregion
 
@@ -324,7 +324,7 @@ namespace vaoc
             {
                 LogFile.Notifier(string.Format("GenerationWebFilmRoles : Film pour le rôle ID_ROLE={0} : {1}",
                     ligneRole.ID_ROLE, ligneRole.S_NOM));
-                GifAnime gif = new GifAnime(string.Format("{0}\\filmrole_{1}_zoom.gif",
+                GifAnime gif = new(string.Format("{0}\\filmrole_{1}_zoom.gif",
                         repertoireTourDestination,
                         ligneRole.ID_ROLE));
                 for (int tour = itourDebut; tour < Donnees.m_donnees.TAB_PARTIE[0].I_TOUR; tour++)
@@ -339,7 +339,7 @@ namespace vaoc
                             phase);
                         if (File.Exists(nomfichier))
                         {
-                            Bitmap im = new Bitmap(nomfichier);
+                            Bitmap im = new(nomfichier);
                             AjouterHeure(im, ClassMessager.DateHeure(tour, phase).ToShortTimeString());
                             gif.WriteFrame(im);
                             im.Dispose();
@@ -480,7 +480,7 @@ namespace vaoc
                                  (int)(Cartographie.rapportZoom * (ligneCase.I_Y - vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)),
                                 (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2),
                                 (int)(vision * Cartographie.rapportZoom * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE * 2));
-                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 0, 1)) { return false; }
+                        if (!Cartographie.DecoupeFichier(Constantes.MODELESCARTE.ZOOM, nomfichier, rect, 1)) { return false; }
                     }
                 }
             }

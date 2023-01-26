@@ -145,13 +145,13 @@ namespace WaocLib
         }
 
         //Heures de levée du soleil suivant les mois janvier - décembre
-        public static short[] tableHeuresLeveeDuSoleil = new short[12] { 8, 7, 6, 5, 4, 3, 3, 4, 5, 6, 7, 8 };
+        public static readonly short[] tableHeuresLeveeDuSoleil = new short[12] { 8, 7, 6, 5, 4, 3, 3, 4, 5, 6, 7, 8 };
 
         //Heures de cocuher du soleil suivant les mois janvier - décembre
-        public static short[] tableHeuresCoucherDuSoleil = new short[12] { 18, 18, 19, 20, 21, 22, 22, 21, 20, 19, 18, 18 };
+        public static readonly short[] tableHeuresCoucherDuSoleil = new short[12] { 18, 18, 19, 20, 21, 22, 22, 21, 20, 19, 18, 18 };
 
         //premiere colonne, type de dépôt, deuxième, distance en kilometre, il s'agit du pourcentage de gain en équipement et matériel
-        public static int[,] tableRavitaillementDepot = new int[4, 5] 
+        public static readonly int[,] tableRavitaillementDepot = new int[4, 5] 
         {   { 25, 20, 15, 10, 5}, 
             { 15, 10,  7,  5, 3},
             { 10,  7,  5,  3, 1},
@@ -167,17 +167,17 @@ namespace WaocLib
             {  0,  1,  1,  2,  2}
          };
 
-        public static int[] CST_ENCOMBREMENT_DEPOT = new int[4] { 25, 20, 15, 10 };//un dépôt, ça prend de la place ! choix personnel, je n'ai pas trouvé l'info dans les règles 
-        public static int CST_ENCOMBREMENT_INFANTERIE = 2000;
-        public static int CST_ENCOMBREMENT_CAVALERIE = 500;
-        public static int CST_ENCOMBREMENT_ARTILLERIE = 20;
-        public static int CST_ENCOMBREMENT_ARRET = 10000;
+        public static readonly int[] CST_ENCOMBREMENT_DEPOT = new int[4] { 25, 20, 15, 10 };//un dépôt, ça prend de la place ! choix personnel, je n'ai pas trouvé l'info dans les règles 
+        public static readonly int CST_ENCOMBREMENT_INFANTERIE = 2000;
+        public static readonly int CST_ENCOMBREMENT_CAVALERIE = 500;
+        public static readonly int CST_ENCOMBREMENT_ARTILLERIE = 20;
+        public static readonly int CST_ENCOMBREMENT_ARRET = 10000;
 
-        public static int[] tableLimiteRavitaillementDepot = new int[]
+        public static readonly int[] tableLimiteRavitaillementDepot = new int[]
         {50000, 40000, 30000, 20000};
 
         //première colonne jet de dé, deuxième moral (le tout est modifié par le rapport)
-        public static int[,] tablePoursuite = new int[11, 4] 
+        public static readonly int[,] tablePoursuite = new int[11, 4] 
         {   { 0, 0, 0, 0},
             { 0, 2, 4, 6}, 
             { 2, 4, 6, 8},
@@ -191,23 +191,23 @@ namespace WaocLib
             {18,20,22,24} };
 
         //pts de fatigue par heure de marche
-        public static int[] tableFatigueInfanterie = new int[25] 
+        public static readonly int[] tableFatigueInfanterie = new int[25] 
         { 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 };
 
-        public static int[] tableFatigueCavalerie = new int[25] 
+        public static readonly int[] tableFatigueCavalerie = new int[25] 
         { 1, 1, 1, 1, 1, 1, 2, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32 };
 
         //Libellés pour le moral des unités de 0 à 50, de 10 en 10: 0 - 1-10, 11-20, 21-30, 31-40, 41-50
-        public static string[] tableLibelleMoral = new string[] { "déroute", "milice", "novice", "ligne", "élite", "garde"};
+        public static readonly string[] tableLibelleMoral = new string[] { "déroute", "milice", "novice", "ligne", "élite", "garde"};
 
         //Libellés pour l'expérience des unités de -2 à 2, de 1 en 1
-        public static string[] tableLibelleExperience = new string[] { "bleu", "novice", "profesionnel", "élite", "garde" };
+        public static readonly string[] tableLibelleExperience = new string[] { "bleu", "novice", "profesionnel", "élite", "garde" };
 
         //Libellés pour la fatigue des unités de 0 à 80, de 20 en 20 : 0 - 1-20, 21-40, 41-60, 61-80, 81-100
-        public static string[] tableLibelleFatigue = new string[] { "aucune", "faible", "conséquante", "épuisé", "exténué", "désintégré" };
+        public static readonly string[] tableLibelleFatigue = new string[] { "aucune", "faible", "conséquante", "épuisé", "exténué", "désintégré" };
 
         //Libellés pour l'équipement et le ravitaillement des unités de 0 à 80, de 20 en 20 : 0 - 1-20, 21-40, 41-60, 61-80, 81-99, 100
-        public static string[] tableLibelleMaterielRavitaillement = new string[] { "aucun", "faible", "médiocre", "bon", "excellent", "complet", "maximum" };
+        public static readonly string[] tableLibelleMaterielRavitaillement = new string[] { "aucun", "faible", "médiocre", "bon", "excellent", "complet", "maximum" };
 
         #endregion
 
@@ -224,7 +224,7 @@ namespace WaocLib
             }
             set
             {
-                m_repertoireDonnee = value.Substring(0, value.LastIndexOf('\\') + 1);
+                m_repertoireDonnee = value[..(value.LastIndexOf('\\') + 1)];
             }
         }
 
@@ -268,7 +268,7 @@ namespace WaocLib
         public static int JetDeDes(int nombre)
         {
             int i, resultat=0;
-            Random de = new Random();
+            Random de = new();
 
             for (i = 0; i < nombre; i++)
             {
@@ -289,7 +289,7 @@ namespace WaocLib
             int i;
             int resultat = 0;
             nb6 = 0;
-            Random de = new Random();
+            Random de = new();
 
             for (i = 0; i < nombre; i++)
             {
@@ -361,7 +361,7 @@ namespace WaocLib
         public static string LibelleMaterielRavitaillement(int iMaterielRavitaillement)
         {
             if (iMaterielRavitaillement == 0) { return tableLibelleMaterielRavitaillement[0]; }
-            if (iMaterielRavitaillement >= 100) { return tableLibelleMaterielRavitaillement[tableLibelleMaterielRavitaillement.Length-1]; }
+            if (iMaterielRavitaillement >= 100) { return tableLibelleMaterielRavitaillement[^1]; }
             return tableLibelleMaterielRavitaillement[(int)Math.Ceiling((decimal)iMaterielRavitaillement / (decimal)20)];
         }
 

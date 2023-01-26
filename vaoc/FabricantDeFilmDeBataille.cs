@@ -68,7 +68,7 @@ namespace vaoc
         private string m_nomFichier;
         private string m_nomCampagne;
         //private int m_numeroImage;
-        private Brush[] m_brossesTexte = new Brush[6];
+        private readonly Brush[] m_brossesTexte = new Brush[6];
         private const int NB_UNITES_LARGEUR = 5;
         private const int NB_UNITES_HAUTEUR = 3;
         private const int EPAISSEUR_BORDURE = 2;
@@ -127,7 +127,7 @@ namespace vaoc
                     if (genererVideo)
                     {
                         //on supprime toutes les images qui pourraient exister d'un précédent traitement
-                        DirectoryInfo dir = new DirectoryInfo(repertoireVideo);
+                        DirectoryInfo dir = new(repertoireVideo);
                         FileInfo[] listeFichiers = dir.GetFiles("*" + nomFichier + "*.png", SearchOption.TopDirectoryOnly);
 
                         foreach (FileInfo fichier in listeFichiers)
@@ -172,31 +172,17 @@ namespace vaoc
                 }
                 if (m_fin != TIPEFINBATAILLE.NUIT)
                 {
-                    //afficher les valeurs de poursuite en cas de retraite ou de victoire directe
-                    int zone;
-                    switch(m_fin)
+                    int zone = m_fin switch
                     {
-                        case TIPEFINBATAILLE.RETRAITE012:
-                        case TIPEFINBATAILLE.VICTOIRE345:
-                            zone = 4;
-                            break;
-                        case TIPEFINBATAILLE.RETRAITE345:
-                        case TIPEFINBATAILLE.VICTOIRE012:
-                            zone = 1;
-                            break;
-                        default:
-                            zone = 0;
-                            break;
-                    }
-                    switch (m_orientation)
+                        TIPEFINBATAILLE.RETRAITE012 or TIPEFINBATAILLE.VICTOIRE345 => 4,
+                        TIPEFINBATAILLE.RETRAITE345 or TIPEFINBATAILLE.VICTOIRE012 => 1,
+                        _ => 0,
+                    };
+                    retour = m_orientation switch
                     {
-                        case TIPEORIENTATIONBATAILLE.VERTICAL:
-                            retour = TraitementVertical(zone, m_fin, true, ref m_numeroImage);
-                            break;
-                        default:
-                            retour = TraitementHorizontal(zone, m_fin, true, ref m_numeroImage);
-                            break;
-                    }
+                        TIPEORIENTATIONBATAILLE.VERTICAL => TraitementVertical(zone, m_fin, true, ref m_numeroImage),
+                        _ => TraitementHorizontal(zone, m_fin, true, ref m_numeroImage),
+                    };
                     if (string.Empty != retour)
                     {
                         return retour;
@@ -217,8 +203,8 @@ namespace vaoc
             Graphics G;
             Brush brosseSymbole;
             string texteTitre = "ERREUR";
-            Point[] symbole = new Point[0];//pour éviter l'erreur de non initialisation à la compilation
-            Brush couleurTexte = Brushes.Black;
+            Point[] symbole; //= new Point[0];//pour éviter l'erreur de non initialisation à la compilation
+            Brush couleurTexte;
             //int yunite;
 
             try
@@ -377,7 +363,7 @@ namespace vaoc
                 }
 
                 //affichage
-                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                Bitmap fichierImage = new(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
 
@@ -428,8 +414,10 @@ namespace vaoc
                 //AfficheMultiLigne(G, titreDate, policeTitre, new Rectangle(0, 4 * m_hauteur / 5, m_largeur, m_hauteur / 5));
 
                 //afficher les pertes
-                StringFormat format = new StringFormat();
-                format.LineAlignment = StringAlignment.Center;
+                StringFormat format = new()
+                {
+                    LineAlignment = StringAlignment.Center
+                };
                 for (int nation = 0; nation < 2; nation++)
                 {
                     //on centre par rapport à la taille max des effectifs
@@ -473,7 +461,7 @@ namespace vaoc
             }
         }
 
-        private Point[] SymboleRetraite()
+        private static Point[] SymboleRetraite()
         {
             Point[] symbole = new Point[1];
             int f = 0;//position du point dans le symbole
@@ -490,7 +478,7 @@ namespace vaoc
         {
             try
             {
-                FilmMpeg(m_nomFichier);
+                FilmMpeg();
             }
             catch (Exception e)
             {
@@ -499,9 +487,9 @@ namespace vaoc
             return string.Empty;
         }
 
-        private void FilmMpeg(string nom)
+        private void FilmMpeg()
         {
-            ProcessStartInfo processInfo = new ProcessStartInfo
+            ProcessStartInfo processInfo = new()
             {
                 WindowStyle = ProcessWindowStyle.Normal,
                 FileName = "ffmpeg.exe",
@@ -576,7 +564,7 @@ namespace vaoc
                 //affichage
                 if (baction)
                 {
-                    Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                    Bitmap fichierImage = new(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                     G = Graphics.FromImage(fichierImage);
                     G.PageUnit = GraphicsUnit.Pixel;
 
@@ -616,8 +604,7 @@ namespace vaoc
                                 DessineUniteImage(G,
                                                 unite,
                                                 (int)((reserve[unite.iNation] + 0.5) * m_largeur / nbReserve[unite.iNation]),
-                                                m_hauteur / 9 / 2,
-                                                Brushes.Black);
+                                                m_hauteur / 9 / 2);
                                 reserve[unite.iNation]++;
                             }
                             else
@@ -639,8 +626,7 @@ namespace vaoc
                                 DessineUniteImage(G,
                                                 unite,
                                                 xunite,
-                                                yunite,
-                                                m_brossesTexte[unite.iZone]);
+                                                yunite);
                                 zone[unite.iZone]++;
                             }
                         }
@@ -652,8 +638,7 @@ namespace vaoc
                                 DessineUniteImage(G,
                                                 unite,
                                                 (int)((reserve[unite.iNation] + 0.5) * m_largeur / nbReserve[unite.iNation]),
-                                                7 * m_hauteur / 9 + m_hauteur / 9 / 2,
-                                                Brushes.Black);
+                                                7 * m_hauteur / 9 + m_hauteur / 9 / 2);
                                 reserve[unite.iNation]++;
                             }
                             else
@@ -674,8 +659,7 @@ namespace vaoc
                                 }
                                 DessineUniteImage(G,
                                                 unite,
-                                                xunite, yunite,
-                                                m_brossesTexte[unite.iZone]);
+                                                xunite, yunite);
                                 zone[unite.iZone]++;
                             }
                         }
@@ -719,15 +703,15 @@ namespace vaoc
             {
                 //Bataille verticale
                 //Reserve droite
-                Rectangle rectReserveDroite = new Rectangle(7 * m_largeur / 9, 0, 2 * m_largeur / 9, m_hauteur);
+                Rectangle rectReserveDroite = new(7 * m_largeur / 9, 0, 2 * m_largeur / 9, m_hauteur);
                 G.FillRectangle(Brushes.White, rectReserveDroite);
 
                 //Reserve gauche
-                Rectangle rectReserveGauche = new Rectangle(0, 0, 2 * m_largeur / 9, m_hauteur);
+                Rectangle rectReserveGauche = new(0, 0, 2 * m_largeur / 9, m_hauteur);
                 G.FillRectangle(Brushes.White, rectReserveGauche);
 
                 //Terrains
-                for (int t = 0; t < m_terrains.Count(); t++)
+                for (int t = 0; t < m_terrains.Length; t++)
                 {
                     Bitmap tuile;
                     switch (m_terrains[t])
@@ -767,17 +751,16 @@ namespace vaoc
                         rectTerrain = new Rectangle(2 * m_largeur / 9, (t-3) * m_hauteur / 3, 2 * m_largeur / 9, m_hauteur / 3);
                     }
 
-                    TextureBrush bt = new TextureBrush(tuile, System.Drawing.Drawing2D.WrapMode.Tile,
-                        new Rectangle(0, 0, tuile.Width, tuile.Height));
+                    TextureBrush bt = new(tuile, System.Drawing.Drawing2D.WrapMode.Tile, new Rectangle(0, 0, tuile.Width, tuile.Height));
                     G.FillRectangle(bt, rectTerrain);
                     bt.Dispose();
                 }
 
                 //Obstacles
-                for (int t = 0; t < m_obstacles.Count(); t++)
+                for (int t = 0; t < m_obstacles.Length; t++)
                 {
                     Brush brosse = Brushes.HotPink;
-                    Bitmap tuile = new Bitmap(vaoc.Properties.Resources.zoomMoins);
+                    Bitmap tuile = new(vaoc.Properties.Resources.zoomMoins);
                     switch (m_obstacles[t])
                     {
                         case TIPETERRAINBATAILLE.RIVIERE:
@@ -801,8 +784,7 @@ namespace vaoc
                     }
                     else
                     {
-                        TextureBrush bt = new TextureBrush(tuile, System.Drawing.Drawing2D.WrapMode.Tile,
-                            new Rectangle(0, 0, tuile.Width, tuile.Height));
+                        TextureBrush bt = new(tuile, System.Drawing.Drawing2D.WrapMode.Tile, new Rectangle(0, 0, tuile.Width, tuile.Height));
                         G.FillRectangle(bt, rectObstacle);
                         bt.Dispose();
                     }
@@ -813,15 +795,15 @@ namespace vaoc
             {
                 //Bataille horizontale
                 //Reserve haute
-                Rectangle rectReserveHaut = new Rectangle(0, 0, m_largeur, 2 * m_hauteur / 9);
+                Rectangle rectReserveHaut = new(0, 0, m_largeur, 2 * m_hauteur / 9);
                 G.FillRectangle(Brushes.White, rectReserveHaut);
 
                 //Reserve basse
-                Rectangle rectReserveBas = new Rectangle(0, 7 * m_hauteur / 9, m_largeur, 2 * m_hauteur / 9);
+                Rectangle rectReserveBas = new(0, 7 * m_hauteur / 9, m_largeur, 2 * m_hauteur / 9);
                 G.FillRectangle(Brushes.White, rectReserveBas);
 
                 //Terrains
-                for (int t = 0; t < m_terrains.Count(); t++)
+                for (int t = 0; t < m_terrains.Length; t++)
                 {
                     Bitmap tuile;
                     switch (m_terrains[t])
@@ -861,17 +843,16 @@ namespace vaoc
                         rectTerrain = new Rectangle((t - 3) * m_largeur / 3, 5 * m_hauteur / 9, m_largeur / 3, 2 * m_hauteur / 9);
                     }
                     //G.FillRectangle(brosse, rectTerrain);                    
-                    TextureBrush bt = new TextureBrush(tuile, System.Drawing.Drawing2D.WrapMode.Tile, 
-                        new Rectangle(0,0,tuile.Width,tuile.Height));
+                    TextureBrush bt = new(tuile, System.Drawing.Drawing2D.WrapMode.Tile, new Rectangle(0, 0, tuile.Width, tuile.Height));
                     G.FillRectangle(bt, rectTerrain);
                     bt.Dispose();
                 }
 
                 //Obstacles
-                for (int t = 0; t < m_obstacles.Count(); t++)
+                for (int t = 0; t < m_obstacles.Length; t++)
                 {
                     Brush brosse = Brushes.HotPink;
-                    Bitmap tuile = new Bitmap(vaoc.Properties.Resources.zoomMoins);
+                    Bitmap tuile = new(vaoc.Properties.Resources.zoomMoins);
                     switch (m_obstacles[t])
                     {
                         case TIPETERRAINBATAILLE.RIVIERE:
@@ -895,8 +876,7 @@ namespace vaoc
                     }
                     else
                     {
-                        TextureBrush bt = new TextureBrush(tuile, System.Drawing.Drawing2D.WrapMode.Tile,
-                            new Rectangle(0, 0, tuile.Width, tuile.Height));
+                        TextureBrush bt = new(tuile, System.Drawing.Drawing2D.WrapMode.Tile, new Rectangle(0, 0, tuile.Width, tuile.Height));
                         G.FillRectangle(bt, rectObstacle);
                         bt.Dispose();
                     }
@@ -905,7 +885,7 @@ namespace vaoc
             }
         }
 
-        private void DessineUniteImage(Graphics G, UniteBataille unite, int x, int y, Brush brosseTexte)
+        private void DessineUniteImage(Graphics G, UniteBataille unite, int x, int y)
         {
             Image image= new Bitmap(vaoc.Properties.Resources.qg_0);//toutes les images doivent avoir la même taille
             int pos = 0;
@@ -914,21 +894,14 @@ namespace vaoc
             int nb_unites_artillerie = (int)Math.Ceiling((decimal)unite.effectifArtillerie / 10);
             int nb_unites_largeur = Math.Min(NB_UNITES_LARGEUR, nb_unites_infanterie + nb_unites_cavalerie + nb_unites_artillerie);
             int nb_unites_hauteur = NB_UNITES_HAUTEUR;// on considère qu'il y a toujours le même nombre lignes au maximum
-            int ximage=-1, yimage=-1;
+            int ximage, yimage;
 
             //emplacement du texte
             unite.nom = ChaineAffiche(m_maxLongueurChaine, unite.nom);
             SizeF tailleTexte = G.MeasureString(unite.nom, m_police);
-            Rectangle rectText = new Rectangle(x - (int)tailleTexte.Width / 2,
-                                    y - (image.Height * nb_unites_hauteur) / 2 + image.Height * nb_unites_hauteur, 
-                                    (int)tailleTexte.Width + 1,
-                                    (int)tailleTexte.Height + 1);
+            Rectangle rectText = new(x - (int)tailleTexte.Width / 2, y - (image.Height * nb_unites_hauteur) / 2 + image.Height * nb_unites_hauteur, (int)tailleTexte.Width + 1, (int)tailleTexte.Height + 1);
             //cadre de l'unité
-            Rectangle rectCadre = new Rectangle(Math.Min(rectText.Left, x - (nb_unites_largeur * image.Width) / 2) - EPAISSEUR_BORDURE,
-                y - (image.Height * nb_unites_hauteur) /2 - EPAISSEUR_BORDURE,
-                Math.Max(rectText.Right, x + (nb_unites_largeur * image.Width) / 2) - Math.Min(rectText.Left, 
-                x - (nb_unites_largeur * image.Width) / 2) + EPAISSEUR_BORDURE * 2,
-                rectText.Bottom - y + (image.Height * nb_unites_hauteur) / 2 + EPAISSEUR_BORDURE * 2);
+            Rectangle rectCadre = new(Math.Min(rectText.Left, x - (nb_unites_largeur * image.Width) / 2) - EPAISSEUR_BORDURE, y - (image.Height * nb_unites_hauteur) / 2 - EPAISSEUR_BORDURE, Math.Max(rectText.Right, x + (nb_unites_largeur * image.Width) / 2) - Math.Min(rectText.Left, x - (nb_unites_largeur * image.Width) / 2) + EPAISSEUR_BORDURE * 2, rectText.Bottom - y + (image.Height * nb_unites_hauteur) / 2 + EPAISSEUR_BORDURE * 2);
             G.FillRectangle(Brushes.White, rectCadre);
             G.DrawRectangle(new Pen(Color.Black, EPAISSEUR_BORDURE), rectCadre);
 
@@ -967,13 +940,15 @@ namespace vaoc
                     pos++;
                 }
             }
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
+            StringFormat format = new()
+            {
+                LineAlignment = StringAlignment.Center
+            };
             //G.DrawString(unite.nom, m_police, brosseTexte, rectText, format);
             G.DrawString(unite.nom, m_police, Brushes.Black, rectText, format);
         }
 
-        public string ChaineFichier(string source)
+        public static string ChaineFichier(string source)
         {
             byte[] tempBytes;
             tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(source);
@@ -989,9 +964,11 @@ namespace vaoc
             int xtexte;
 
             //on dessine la flèche
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Center;
+            StringFormat format = new()
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = StringAlignment.Center
+            };
             if (iZoneResultats < 3)
             {
                 brosse = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
@@ -1090,9 +1067,11 @@ namespace vaoc
             int ytexte;
 
             //on dessine la flèche
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Center;
+            StringFormat format = new()
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = StringAlignment.Center
+            };
             if (iZoneResultats < 3)
             {
                 brosse = (0 == m_iNation012) ? Brushes.Blue : Brushes.OrangeRed;
@@ -1251,7 +1230,7 @@ namespace vaoc
                 //affichage
                 if (baction)
                 {
-                    Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                    Bitmap fichierImage = new(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                     G = Graphics.FromImage(fichierImage);
                     G.PageUnit = GraphicsUnit.Pixel;
                     m_maxLongueurChaine = RechercheLongueurMaximale(G, m_police, m_largeur / 9 / 2);
@@ -1290,8 +1269,7 @@ namespace vaoc
                                 DessineUniteImage(G,
                                                 unite,
                                                 16 * m_largeur / 9 / 2,
-                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
-                                                Brushes.Black);
+                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]));
                                 reserve[unite.iNation]++;
                             }
                             else
@@ -1312,8 +1290,7 @@ namespace vaoc
                                 }
                                 DessineUniteImage(G,
                                                 unite,
-                                                xunite, yunite,
-                                                m_brossesTexte[unite.iZone]);
+                                                xunite, yunite);
                                 zone[unite.iZone]++;
                             }
                         }
@@ -1325,8 +1302,7 @@ namespace vaoc
                                 DessineUniteImage(G,
                                                 unite,
                                                 2 * m_largeur / 9 / 2,
-                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]),
-                                                Brushes.Black);
+                                                (int)((reserve[unite.iNation] + 0.5) * m_hauteur / nbReserve[unite.iNation]));
                                 reserve[unite.iNation]++;
                             }
                             else
@@ -1347,8 +1323,7 @@ namespace vaoc
                                 }
                                 DessineUniteImage(G,
                                                 unite,
-                                                xunite, yunite,
-                                                m_brossesTexte[unite.iZone]);
+                                                xunite, yunite);
                                 zone[unite.iZone]++;
                             }
                         }
@@ -1381,20 +1356,20 @@ namespace vaoc
             }
         }
 
-        private string ChaineAffiche(int lgmax, string texteSource)
+        private static string ChaineAffiche(int lgmax, string texteSource)
         {
             string texte = texteSource;
             int position = 0;
             while (texte.Length > lgmax)
             {
                 position = texteSource.IndexOf(' ', position + 1);
-                if (position < 0) { return texte.Substring(0,lgmax); }
-                texte = texteSource.Substring(position + 1);
+                if (position < 0) { return texte[..lgmax]; }
+                texte = texteSource[(position + 1)..];
             }
             return texte;
         }
 
-        private int RechercheLongueurMaximale(Graphics g, Font police, int taille)
+        private static int RechercheLongueurMaximale(Graphics g, Font police, int taille)
         {
             string texte = "X";
             SizeF tailleTexte = g.MeasureString(texte, police);
@@ -1406,16 +1381,16 @@ namespace vaoc
             return texte.Length - 1;
         }
 
-        private void AfficherHeure(Graphics G, int tour, int x, int y, int taille)
+        private static void AfficherHeure(Graphics G, int tour, int x, int y, int taille)
         {
             double[] tableAngle = { 90,60,30,0,330,300,270,240,210,180,150,120 };
             int heure = ClassMessager.DateHeure(tour, 0).Hour % 12;
             //cadran
-            Pen styloCadran = new Pen(Color.Black, 8);
+            Pen styloCadran = new(Color.Black, 8);
             G.FillEllipse(Brushes.White, x - taille/2, y - taille / 2, taille, taille);
             G.DrawEllipse(styloCadran, x - taille / 2, y - taille / 2, taille, taille);
             //aiguille
-            Pen styloAiguille = new Pen(Color.Black, 3);
+            Pen styloAiguille = new(Color.Black, 3);
             int xFinAiguille = (int)(x + taille / 3 * Math.Cos(tableAngle[heure] * 2 * Math.PI/360));
             int yFinAiguille = (int)(y + taille / 3 * -1 * Math.Sin(tableAngle[heure] * 2 * Math.PI / 360));//il faut inverser le signe car l'axe des y est du haut vers le bas
             G.DrawLine(styloAiguille, x, y, xFinAiguille, yFinAiguille);
@@ -1480,7 +1455,7 @@ namespace vaoc
                 }
 
                 //affichage
-                Bitmap fichierImage = new Bitmap(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
+                Bitmap fichierImage = new(m_largeur, m_hauteur, PixelFormat.Format24bppRgb);
                 G = Graphics.FromImage(fichierImage);
                 G.PageUnit = GraphicsUnit.Pixel;
 
@@ -1555,7 +1530,7 @@ namespace vaoc
             return yunite;
         }
 
-        private void AfficheOfficierBataille(Graphics G, string nom, Font policeNom, Rectangle rect)
+        private static void AfficheOfficierBataille(Graphics G, string nom, Font policeNom, Rectangle rect)
         {
             SizeF tailleTexte = G.MeasureString(nom, policeNom);
             Image imageOfficier = Bitmap.FromFile(AppContext.BaseDirectory+"images\\" + NomRoleFichier(nom));
@@ -1575,14 +1550,12 @@ namespace vaoc
                 largeurImage = (int)(imageOfficier.Width * rapportLargeur);
                 hauteurImage = (int)(imageOfficier.Height * rapportLargeur);
             }
-            Rectangle rectImage = new Rectangle(rect.X + (rect.Width - largeurImage) / 2, 
-                                                rect.Y + (rect.Height - hauteurImage - (int)tailleTexte.Height)/2, 
-                                                largeurImage, hauteurImage);
+            Rectangle rectImage = new(rect.X + (rect.Width - largeurImage) / 2, rect.Y + (rect.Height - hauteurImage - (int)tailleTexte.Height) / 2, largeurImage, hauteurImage);
             G.DrawImage(imageOfficier, rectImage);
             G.DrawString(nom, policeNom, Brushes.Black, rect.X + (rect.Width - (int)tailleTexte.Width) / 2, rectImage.Bottom);
         }
 
-        private void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect, Brush couleurTexte)
+        private static void AfficheMultiLigne(Graphics G, string texteSource, Font police, Rectangle rect, Brush couleurTexte)
         {
             string[] textes = texteSource.Split(' ');
             int largeurLigne = 0;
@@ -1590,7 +1563,7 @@ namespace vaoc
             int nbLignes = 1;
             int t = 0;
             //calcul du nombre de lignes et de leur largeur
-            while (t<textes.Count())
+            while (t<textes.Length)
             {
                 int largeurMot = (int)G.MeasureString(textes[t] + " ", police).Width;
                 if (largeurLigne + largeurMot >= rect.Width)
@@ -1607,7 +1580,7 @@ namespace vaoc
             int pos = 0;
             t = 0;
             int ligne = 0;
-            while (t < textes.Count())
+            while (t < textes.Length)
             {                
                 if (pos + (int)G.MeasureString(textes[t] + " ", police).Width >= rect.Width)
                 {
@@ -1625,10 +1598,10 @@ namespace vaoc
             }
         }
 
-        private void TextureFondBataille(Graphics G, string fichierTexture, Rectangle rect)
+        private static void TextureFondBataille(Graphics G, string fichierTexture, Rectangle rect)
         {
             Image image = Bitmap.FromFile(AppContext.BaseDirectory + "images\\" + fichierTexture);
-            TextureBrush brosse = new TextureBrush(image);
+            TextureBrush brosse = new(image);
             G.FillRectangle(brosse, rect);
         }
 
@@ -1637,7 +1610,7 @@ namespace vaoc
         /// </summary>
         /// <param name="nom">nom de l'unité de base</param>
         /// <returns>>Nom contracté</returns>
-        private string NomRoleFichier(string nom)
+        private static string NomRoleFichier(string nom)
         {
             if (string.Empty == nom ) { return "aucun_chef.png"; }
             return Constantes.MinusculeSansAccents(nom).Replace(" ", "_").Replace("'", "_").ToLower() + ".jpg";

@@ -60,11 +60,11 @@ namespace vaoc
 	/// </summary>
 	public class AStar
 	{
-		private SortableList _Open, _Closed;
+		private readonly SortableList _Open, _Closed;
 		private Track _LeafToGoBackUp;
 		private int _NbIterations = -1;
         public int _ID_PION=-1;//uniquement pour pouvoir mettre des points d'arrêts en debug
-		private SortableList.Equality SameNodesReached = new SortableList.Equality( Track.SameEndNode );
+		private readonly SortableList.Equality SameNodesReached = new( Track.SameEndNode );
 
         //public static long SearchIdMeteo;//ID_METEO pour la recherche en cours
         //public static long SearchIdModeleMouvement;//ID_MODELE_MOUVEMENT pour la recherche en cours
@@ -111,7 +111,7 @@ namespace vaoc
                 m_tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
             }
 
-            List<Bloc> listeBlocs = new List<Bloc>();
+            List<Bloc> listeBlocs = new();
             int xBloc = x / m_tailleBloc;
             int yBloc = y / m_tailleBloc;
 
@@ -254,8 +254,12 @@ namespace vaoc
 		/// <param name="EndNode">The node to which the path must end.</param>
         public void Initialize(Donnees.TAB_CASERow StartNode, Donnees.TAB_CASERow EndNode)
 		{
-			if ( StartNode==null || EndNode==null ) throw new ArgumentNullException();
-			_Closed.Clear();
+			if ( StartNode==null || EndNode==null )
+            {
+                throw new ArgumentNullException();
+            }
+
+            _Closed.Clear();
 			_Open.Clear();
             m_cible = new Node(EndNode);
             m_xBlocEnd = EndNode.I_X / m_tailleBloc;
@@ -422,7 +426,7 @@ namespace vaoc
                 //{
                 //    continue;
                 //}
-                Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
+                Track Successor = new(TrackToPropagate, A, this);// le cout est calculé dans le new
                 int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
                 if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
                 int PosNO = _Open.IndexOf(Successor, SameNodesReached);
@@ -477,7 +481,7 @@ namespace vaoc
                         LogFile.Notifier("AStar:Propagate depassement des bornes sur ID_PION="+_ID_PION.ToString());
                         continue;
                     }
-                    Track Successor = new Track(TrackToPropagate, A, this);// le cout est calculé dans le new
+                    Track Successor = new(TrackToPropagate, A, this);// le cout est calculé dans le new
                     int PosNF = _Closed.IndexOf(Successor, SameNodesReached);
                     if (PosNF >= 0 && Successor.Cost >= ((Track)_Closed[PosNF]).Cost) continue;
                     int PosNO = _Open.IndexOf(Successor, SameNodesReached);
@@ -531,7 +535,7 @@ namespace vaoc
 		/// </summary>
 		public int StepCounter { get { return _NbIterations; } }
 
-		private void CheckSearchHasEnded()
+		private static void CheckSearchHasEnded()
 		{
             //si on renvoit un parcours il dit que la recherche n'est pas terminée (même pas commencée en fait)
 			//if ( !SearchEnded ) throw new InvalidOperationException("You cannot get a result unless the search has ended.");
@@ -573,8 +577,7 @@ namespace vaoc
         {
             get
             {
-                int CostOfPath;
-                ResultInformation(out _, out CostOfPath, out _);
+                ResultInformation(out _, out int CostOfPath, out _);
                 return CostOfPath;
             }
         }
@@ -583,8 +586,7 @@ namespace vaoc
         {
             get
             {
-                int outRoad;
-                ResultInformation(out _, out _, out outRoad);
+                ResultInformation(out _, out _, out int outRoad);
                 return outRoad;
             }
         }
@@ -678,11 +680,10 @@ namespace vaoc
             }
         }
 
-        private List<LigneCASE> GoBackUpNodes(Track T)
+        private static List<LigneCASE> GoBackUpNodes(Track T)
         {
             int Nb = T.NbArcsVisited, j;
-            List<LigneCASE> Path = new List<LigneCASE>();
-            List<int> listeCases;
+            List<LigneCASE> Path = new();
 
             for (int i = Nb; i >= 0; i--, T = T.Queue)
             {
@@ -692,7 +693,7 @@ namespace vaoc
                 }
                 else
                 {
-                    if (Dal.ChargerTrajet(T.EndNodeHPA.ID_TRAJET, out listeCases))
+                    if (Dal.ChargerTrajet(T.EndNodeHPA.ID_TRAJET, out List<int> listeCases))
                     {
                         if (listeCases[0] == T.EndNodeHPA.ID_CASE_FIN)
                         {
@@ -728,10 +729,10 @@ namespace vaoc
         /// </summary>
         /// <param name="chemin"></param>
         /// <returns></returns>
-        public List<Donnees.TAB_CASERow> ParcoursOptimise(List<Donnees.TAB_CASERow> chemin)
+        public static List<Donnees.TAB_CASERow> ParcoursOptimise(List<Donnees.TAB_CASERow> chemin)
         {
             if (null == chemin) { return null; }
-            List<Donnees.TAB_CASERow> cheminRetour = new List<Donnees.TAB_CASERow>();
+            List<Donnees.TAB_CASERow> cheminRetour = new();
             int i = 0;
             while (i < chemin.Count)
             {
@@ -759,10 +760,10 @@ namespace vaoc
         /// </summary>
         /// <param name="chemin"></param>
         /// <returns></returns>
-        public List<LigneCASE> ParcoursOptimise(List<LigneCASE> chemin)
+        public static List<LigneCASE> ParcoursOptimise(List<LigneCASE> chemin)
         {
             if (null == chemin) { return null; }
-            List<LigneCASE> cheminRetour = new List<LigneCASE>();
+            List<LigneCASE> cheminRetour = new();
             int i = 0;
             while (i < chemin.Count)
             {
@@ -915,7 +916,7 @@ namespace vaoc
             return listeRetour;
         }
 
-        private void AjouterBlocHPA(Donnees.TAB_PCC_COUTSRow ligneCout, ref System.Collections.Generic.IList<Track> listeRetour)
+        private static void AjouterBlocHPA(Donnees.TAB_PCC_COUTSRow ligneCout, ref System.Collections.Generic.IList<Track> listeRetour)
         {
             //Donnees.TAB_CASERow lDebug1, lDebug2;
             Track nouveauPoint;
@@ -1186,17 +1187,17 @@ namespace vaoc
             return (m_tableCoutsMouvementsTerrain[caseFinale.ID_MODELE_TERRAIN].route) ? 0 : (int)Cout(caseSource, caseFinale);
         }
 
-        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
+        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain)
         {
             CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, false);
         }
 
-        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier)
+        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier)
         {
             CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain, bRoutier, false);
         }
 
-        internal void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
+        internal static void CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain, bool bRoutier, bool bHorsRoute)
         {
             int maxNumeroModeleTerrain = (int)Donnees.m_donnees.TAB_MODELE_TERRAIN.Compute("Max(ID_MODELE_TERRAIN)", null);
             tableCoutsMouvementsTerrain = new AstarTerrain[maxNumeroModeleTerrain + 1];
@@ -1550,7 +1551,11 @@ namespace vaoc
 
         private void InitializeSpace(Donnees.TAB_CASERow ligneCase)
         {
-            if (ligneCase == null) throw new ArgumentNullException();
+            if (ligneCase == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             _Closed.Clear();//on utilise pas la liste mais...
             m_cible = new Node(ligneCase);//on utilise pas la liste mais il faut l'affecter car c'est testé de nombreuse fois dans Track
             //Track.tailleBloc = m_tailleBloc;

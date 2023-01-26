@@ -262,7 +262,7 @@ namespace vaoc
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
         {
-            ClassHPAStarCreation traitementHPA = new ClassHPAStarCreation(fichierCourant, this.tailleBloc);
+            ClassHPAStarCreation traitementHPA = new(fichierCourant, this.tailleBloc);
             BackgroundWorker travailleur = sender as BackgroundWorker;
             bool bTraitement = true;
             try
@@ -451,8 +451,8 @@ namespace vaoc
             Donnees.TAB_PCC_CASE_BLOCSRow[] listeCases;
             Donnees.TAB_CASERow ligneCaseArrivee;
             int xmin, xmax, ymin, ymax;
-            List<int> listeCasesTrajet = new List<int>();
-            AStar m_etoile = new AStar();
+            List<int> listeCasesTrajet = new();
+            AStar m_etoile = new();
             int m_idTrajet;
 
             //Debug.WriteLine(string.Format("GenerationTrajets xBloc={0}, yBloc={1}, case ={2}({3},{4})", 
@@ -476,8 +476,8 @@ namespace vaoc
                     //recherche du plus court chemin
                     AstarTerrain[] tableCoutsMouvementsTerrain;
                     //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
-                    ClassTraitementHeure traitementtest = new ClassTraitementHeure();
-                    m_etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    ClassTraitementHeure traitementtest = new();
+                    AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
                     if (!m_etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                     {
                         Debug.WriteLine(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi {8}",
@@ -519,7 +519,7 @@ namespace vaoc
         /// <summary>
         /// il manque au moins un des trajet du coin, on regenere les trajets manquants
         /// </summary>
-        private void AjouterCoin(Donnees.TAB_CASERow ligneCase, int xBloc, int yBloc)
+        private static void AjouterCoin(Donnees.TAB_CASERow ligneCase, int xBloc, int yBloc)
         {
             Donnees.m_donnees.TAB_PCC_CASE_BLOCS.AddTAB_PCC_CASE_BLOCSRow(ligneCase.ID_CASE, xBloc, yBloc);
         }

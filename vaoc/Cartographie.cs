@@ -55,7 +55,7 @@ namespace vaoc
             {
                 if (null == m_imageCarteHistorique || bForcage)
                 {
-                    if (null != m_imageCarteHistorique) { m_imageCarteHistorique.Dispose(); }
+                    m_imageCarteHistorique?.Dispose();
                     m_imageCarteHistorique = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
                 }
             }
@@ -69,7 +69,7 @@ namespace vaoc
                 //dorénavant on prend la même carte que la carte historique
                 if (null == m_imageCarteGris || bForcage) /*&& !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_GRISNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS.Length > 0)*/
                 {
-                    if (null != m_imageCarteGris) { m_imageCarteGris.Dispose(); }
+                    m_imageCarteGris ?.Dispose();
                     //m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_GRIS);
                     m_imageCarteGris = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_HISTORIQUE);
                 }
@@ -83,7 +83,7 @@ namespace vaoc
             {
                 if((null == m_imageCarteZoom || bForcage) && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_ZOOMNull() && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM.Length > 0)
                 {
-                    if (null != m_imageCarteZoom) { m_imageCarteZoom.Dispose(); }
+                    m_imageCarteZoom?.Dispose();
                     m_imageCarteZoom = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_ZOOM);
                 }
             }
@@ -96,7 +96,7 @@ namespace vaoc
             {
                 if (null == m_imageCarteTopographique || bForcage)
                 {
-                    if (null != m_imageCarteTopographique) { m_imageCarteTopographique.Dispose(); }
+                    m_imageCarteTopographique?.Dispose();
                     m_imageCarteTopographique = (Bitmap)Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE);
                 }
             }
@@ -114,7 +114,7 @@ namespace vaoc
         {
             try
             {
-                Pen stylo = new Pen(Color.Red);
+                Pen stylo = new(Color.Red);
                 Graphics graph = Graphics.FromImage(imageSource);
 
                 foreach (Donnees.TAB_BATAILLERow ligneBataille in Donnees.m_donnees.TAB_BATAILLE)
@@ -141,7 +141,7 @@ namespace vaoc
         public static void AfficherArriveeDepart(Bitmap imageSource, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseArrivee, Color couleur, int taillePinceau)
         {
             Graphics graph = Graphics.FromImage(imageSource);
-            Pen stylo = new Pen(couleur, taillePinceau);
+            Pen stylo = new(couleur, taillePinceau);
 
             if (null != ligneCaseDepart)
             {
@@ -162,7 +162,7 @@ namespace vaoc
         public static void AfficherArriveeDepart(Bitmap imageSource, LigneCASE ligneCaseDepart, LigneCASE ligneCaseArrivee, Color couleur, int taillePinceau)
         {
             Graphics graph = Graphics.FromImage(imageSource);
-            Pen stylo = new Pen(couleur, taillePinceau);
+            Pen stylo = new(couleur, taillePinceau);
 
             if (null != ligneCaseDepart)
             {
@@ -185,7 +185,7 @@ namespace vaoc
             Graphics graph = Graphics.FromImage(imageSource);
             int x1, y1;
             
-            Pen stylo = new Pen(couleur,taillePinceau);
+            Pen stylo = new(couleur, taillePinceau);
             //stylo.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             //stylo.DashOffset = 5;
             //System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
@@ -219,7 +219,7 @@ namespace vaoc
             Graphics graph = Graphics.FromImage(imageSource);
             int x1, y1;
 
-            Pen stylo = new Pen(couleur, taillePinceau);
+            Pen stylo = new(couleur, taillePinceau);
             x1 = y1 = -1;
             foreach (LigneCASE noeud in chemin)
             {
@@ -483,6 +483,8 @@ namespace vaoc
                     return m_imageCarteZoom;
                 case Constantes.MODELESCARTE.TOPOGRAPHIQUE:
                     return m_imageCarteTopographique;
+                default:
+                    break;
             }
             return null;
         }
@@ -504,7 +506,7 @@ namespace vaoc
         /// <param name="rect">rectangle dans l'image finale</param>
         /// <param name="angleRotation">angle en degrés</param>
         /// <returns></returns>
-        internal static bool DecoupeFichier(Constantes.MODELESCARTE modele, string nomFichierFinal, Rectangle rect, float angleRotation, float zoom)
+        internal static bool DecoupeFichier(Constantes.MODELESCARTE modele, string nomFichierFinal, Rectangle rect, float zoom)
         {
             Bitmap imageSource = GetImage(modele);
             Bitmap imageFinale;
@@ -517,7 +519,7 @@ namespace vaoc
 
             if (1 == zoom)
             {
-                BitmapData imageCible = new BitmapData();
+                BitmapData imageCible = new();
                 imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
                 imageSource.UnlockBits(imageCible);
                 imageFinale = new Bitmap((int)(imageCible.Width), (int)(imageCible.Height), imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
@@ -630,7 +632,7 @@ namespace vaoc
         /// <returns>true si ok, false si ko</returns>
         internal static bool ConstructionCarte()
         {
-            string message, messageErreur = string.Empty;
+            string message;
             Debug.WriteLine("ConstructionCarteFinale");
 
             //unité statiques
@@ -655,7 +657,7 @@ namespace vaoc
                         if (!lignePion.PlacerPionEnRoute(ligneOrdre, ligneNation))
                         {
                             message = "Erreur durant le traitement PlacerPionEnRoute";
-                            LogFile.Notifier(message, out messageErreur);
+                            LogFile.Notifier(message, out _);
                             return false;
                         }
                     }
@@ -687,7 +689,7 @@ namespace vaoc
             //int i = 0;
             try
             {
-                List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+                List<Donnees.TAB_PIONRow> liste = new();
                 foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
                 {
                     if (!lignePion.B_DETRUIT)
@@ -753,14 +755,14 @@ namespace vaoc
         /// <returns>true si ok, false si ko</returns>
         internal static bool NouvelleBataille(Donnees.TAB_CASERow ligneCaseBataille, Donnees.TAB_PIONRow lignePion)
         {
-            string message, messageErreur;
+            string message;
             bool nouvelleBataille;
             Donnees.TAB_PIONRow lignePionEnnemi;
 
             try
             { 
                 message = string.Format("NouvelleBataille : en idCASE={0}", ligneCaseBataille.ID_CASE);
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message, out string messageErreur);
 
                 int heureCourante = Donnees.m_donnees.TAB_PARTIE.HeureCourante();
                 if (Donnees.m_donnees.TAB_PARTIE.NocturneOuBatailleImpossible())
@@ -813,7 +815,7 @@ namespace vaoc
                              where (BataillePionUn.ID_PION == lignePion.ID_PION) && (BataillePionDeux.ID_PION == lignePionEnnemi.ID_PION)
                              select BataillePionUn.ID_BATAILLE;
                 */
-                if (result.Count() > 0)
+                if (result.Any())
                 {
                     var idBataille = result.ElementAt(0);
                     message = string.Format("NouvelleBataille : les deux unités id={0} et id={1} sont déjà engagées dans la bataille {2}",
@@ -890,21 +892,15 @@ namespace vaoc
         /// <returns>nouvelle bataille si OK, null si KO</returns>
         internal static Donnees.TAB_BATAILLERow CreationBataille(Donnees.TAB_CASERow ligneCaseBataille, Donnees.TAB_PIONRow lignePionOrigineBataille, Donnees.TAB_PIONRow lignePionOrigineBataille2)
         {
-            string nomBataille;
             char orientation;
             int[] idModeleTerrain = new int[6];
             int idLeader012 = -1;
             int idLeader345 = -1;
-            int xCaseHautGauche;
-            int yCaseHautGauche;
-            int xCaseBasDroite;
-            int yCaseBasDroite;
-            char niveauHierarchique;
             string message, messageErreur, requete;
             Donnees.TAB_CASERow ligneCasePion;
             Donnees.TAB_BATAILLERow ligneBataille;
             int idNation0 = -1, idNation1 = -1, izone;
-            int idNation012 = -1, idNation345 = -1;
+            int idNation012, idNation345;
             char niveauHierarchique012 = 'Z', niveauHierarchique345 = 'Z';
             int[] zone0_H = new int[6];
             int[] zone1_H = new int[6];
@@ -917,17 +913,17 @@ namespace vaoc
             Donnees.TAB_PIONRow lignePion;
 
             //nom de la bataille
-            if (!ClassMessager.NomDeBataille(ligneCaseBataille, out nomBataille))
+            if (!ClassMessager.NomDeBataille(ligneCaseBataille, out string nomBataille))
             {
                 message = string.Format("CreationBataille : erreur ClassMessager.NomDeBataille renvoie FAUX");
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message);
                 return null;
             }
 
             message = string.Format("CreationBataille : bataille de {0}", nomBataille);
-            LogFile.Notifier(message, out messageErreur);
+            LogFile.Notifier(message);
 
-            RectangleChampDeBataille(ligneCaseBataille, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+            RectangleChampDeBataille(ligneCaseBataille, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite);
 
             #region recherche de l'orientation
             Donnees.TAB_CASERow[] lignesCaseBataille = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
@@ -1101,7 +1097,7 @@ namespace vaoc
             {
                 if (lignePionBataille.B_DETRUIT) { continue; }
                 //unité QG et non présente dans un autre combat
-                if (lignePionBataille.estQGHierarchique(out niveauHierarchique) && !lignePionBataille.estAuCombat && lignePionBataille.estJoueur)
+                if (lignePionBataille.estQGHierarchique(out char niveauHierarchique) && !lignePionBataille.estAuCombat && lignePionBataille.estJoueur)
                 {
                     ligneCasePion = lignePionBataille.CaseCourante();
                     if (ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite &&
@@ -1227,7 +1223,6 @@ namespace vaoc
             for (i = 0; i < 3; i++)
             {
                 //si la somme des obstacles dans une zone est supérieur à 10% aux autres, alors on prend l'obstacle majoritaire
-                int nbCases = 0;
                 int nbObstacles = 0;
                 int idObstacleMajoritaire=-1;
                 int valeurMajoritaire=0;
@@ -1238,8 +1233,7 @@ namespace vaoc
 
                 for (k = 0; k < 2; k++)
                 {
-                    nbTerrain = 0;
-                    nbCases = 0;
+                    int nbCases = 0;
                     for (j = 0; j < listeModelesBase[i+k*3].Count; j++)
                     {
                         idTerrain = Convert.ToInt32(listeModelesBase[i + k * 3].GetKey(j));
@@ -1310,7 +1304,7 @@ namespace vaoc
             if (null == ligneBataille)
             {
                 message = string.Format("CreationBataille : impossible d'ajouter la bataille sur la case {0}", ligneCaseBataille.ID_CASE);
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message);
                 return null;
             }
             ligneBataille.SetI_TOUR_FINNull();
@@ -1356,7 +1350,7 @@ namespace vaoc
 
             ligneBataille.AjouterDonneesVideo(Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_BATAILLE_VIDEO, Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO);
             message = string.Format("Fin de création de la bataille ID={0}", ligneBataille.ID_BATAILLE);
-            LogFile.Notifier(message, out messageErreur);
+            LogFile.Notifier(message);
             return ligneBataille;
         }
 
@@ -1443,9 +1437,9 @@ namespace vaoc
             return izone;
         }
 
-        static public int AvancementPourRecalcul(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_ORDRERow ligneOrdre, out string erreur)
+        static public int AvancementPourRecalcul(Constantes.TYPEPARCOURS tipePacours, Donnees.TAB_PIONRow lignePion, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, out string erreur)
         {
-            string requete, messageErreur, tri;
+            string requete, tri;
             int i;
             
             erreur = string.Empty;
@@ -1453,7 +1447,7 @@ namespace vaoc
             if (null == lignePion || null == ligneCaseDepart || null == ligneCaseDestination)
             {
                 erreur = string.Format("PositionPourRecalcul : lignePion ou ligneCaseDepart ou ligneCaseDestination null");
-                LogFile.Notifier(erreur, out messageErreur);
+                LogFile.Notifier(erreur);
                 return -1;
             }
 
@@ -1470,7 +1464,7 @@ namespace vaoc
 
             if ((null != parcoursExistant) && (0 < parcoursExistant.Length))
             {
-                if (ligneCaseDestination.ID_CASE == parcoursExistant[parcoursExistant.Length - 1].ID_CASE)
+                if (ligneCaseDestination.ID_CASE == parcoursExistant[^1].ID_CASE)
                 {
                     //cherche où l'unité se trouve dans le chemin existant
                     i = 0;
@@ -1490,9 +1484,9 @@ namespace vaoc
         {
             Bitmap imageSource = GetImage(Constantes.MODELESCARTE.HISTORIQUE);
 
-            Rectangle rect = new Rectangle(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite - xCaseHautGauche, yCaseBasDroite - yCaseHautGauche);
+            Rectangle rect = new(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite - xCaseHautGauche, yCaseBasDroite - yCaseHautGauche);
 
-            BitmapData imageCible = new BitmapData();
+            BitmapData imageCible = new();
             imageSource.LockBits(rect, ImageLockMode.ReadOnly, imageSource.PixelFormat, imageCible);
             imageSource.UnlockBits(imageCible);
             Bitmap imageFinale;

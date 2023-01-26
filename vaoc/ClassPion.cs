@@ -3562,7 +3562,7 @@ namespace vaoc
                 */
                 //calcul des couts, à renvoyer pour connaitre le cout pour avancer d'une case supplémentaire
                 AStar etoile = new();
-                etoile.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
 
                 //calcul du nouvel espace
                 etoile._ID_PION = this.ID_PION;//juste pour debug

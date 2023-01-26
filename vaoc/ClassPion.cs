@@ -767,9 +767,8 @@ namespace vaoc
             {
                 string sEnnemiObservable = string.Empty;
                 //string requete;
-                int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
 
-                CadreVision(ligneCase, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+                CadreVision(ligneCase, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite);
 
                 Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                 Donnees.TAB_MODELE_PIONRow ligneModelePion = this.modelePion;
@@ -974,9 +973,7 @@ namespace vaoc
                 int effectif;
                 int echelle = Donnees.m_donnees.TAB_JEU[0].I_ECHELLE;
                 decimal encombrementReel;
-                int rapportMoral = 100;
-
-                iINFANTERIE = iCAVALERIE = iARTILLERIE = 0;
+                int rapportMoral;
 
                 // on retire les fourgons, on tenant compte, en même temps, du "bonus" moral, pour éviter les problèmes d'arrondis si cela est fait séparement
                 if (estDepot || estConvoiDeRavitaillement || estPontonnier)
@@ -991,6 +988,7 @@ namespace vaoc
 
                 if (enMouvement)
                 {
+                    iINFANTERIE = iARTILLERIE = 0;
                     //encombrement sur route
                     encombrementCavalerie = iCavalerieInitial * (100 - I_FATIGUE) / 100 * echelle / Constantes.CST_ENCOMBREMENT_CAVALERIE;
                     if (encombrementReel < encombrementCavalerie)
@@ -1688,14 +1686,11 @@ namespace vaoc
                 return false;
             }
 
-            internal bool RavitaillementDirect(TAB_ORDRERow ligneOrdre, int tour, int phase, out string nomDepot)
+            internal bool RavitaillementDirect(out string nomDepot)
             {
                 string message;
-                int effectifsRavitailles;
-                int meilleurPourcentageRavitaillement;
-                int meilleurPourcentageMateriel;
                 nomDepot = string.Empty;
-                Donnees.TAB_PIONRow ligneDepot = RechercheMeilleurDepotDirect(out effectifsRavitailles, out meilleurPourcentageRavitaillement, out meilleurPourcentageMateriel);
+                Donnees.TAB_PIONRow ligneDepot = RechercheMeilleurDepotDirect(out int effectifsRavitailles, out int meilleurPourcentageRavitaillement, out int meilleurPourcentageMateriel);
                 if (null == ligneDepot || 0 == effectifsRavitailles)
                 {
                     if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_RAVITAILLEMENT_DIRECT_IMPOSSIBLE))
@@ -1759,8 +1754,6 @@ namespace vaoc
                     }
                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 }
-                //l'ordre est terminé
-                TerminerOrdre(ligneOrdre, false, true);
                 return true;
             }
 
@@ -1771,8 +1764,7 @@ namespace vaoc
                 {
                     //l'unité ne bouge pas vers l'unité la plus proche, il faut donc la chercher
                     Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindByID_CASE(this.ID_CASE);
-                    int xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite;
-                    this.CadreVision(ligneCasePion, out xCaseHautGauche, out yCaseHautGauche, out xCaseBasDroite, out yCaseBasDroite);
+                    this.CadreVision(ligneCasePion, out int xCaseHautGauche, out int yCaseHautGauche, out int xCaseBasDroite, out int yCaseBasDroite);
 
                     Donnees.TAB_CASERow[] ligneCaseVues = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
                     Donnees.TAB_MODELE_PIONRow ligneModelePion = modelePion;
@@ -1829,7 +1821,8 @@ namespace vaoc
                         //On se déplace vers l'unité à attaquer
                         //et maintenant, un ordre de mouvement
                         Monitor.Enter(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
-                        Donnees.TAB_ORDRERow ligneOrdreMouvement = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                        //Donnees.TAB_ORDRERow ligneOrdreMouvement = 
+                        Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                             Constantes.NULLENTIER,//id_ordre_transmis
                             ligneOrdre.ID_ORDRE,//id_ordre_suivant
                             Constantes.NULLENTIER,
@@ -1896,11 +1889,11 @@ namespace vaoc
                 //TAB_MESSAGERow[] resMessages = (TAB_MESSAGERow[])m_donnees.TAB_MESSAGE.Select(requete);
                 requete = string.Format("I_ORDRE_TYPE={0} AND ID_DESTINATAIRE={1} AND ID_PION = {2} AND I_TOUR_FIN = {2}", Constantes.ORDRES.PATROUILLE, ID_PION, Constantes.NULLENTIER);
                 TAB_ORDRERow[] resMessages = (TAB_ORDRERow[])m_donnees.TAB_ORDRE.Select(requete);
-                if (resMessages.Length > 0)
-                {
-                    int desbugs = 0;
-                    desbugs++;
-                }
+                //if (resMessages.Length > 0)
+                //{
+                //    int desbugs = 0;
+                //    desbugs++;
+                //}
                 nbPatrouilles += resMessages.Length;
                 return nbPatrouilles;
             }
@@ -2076,11 +2069,10 @@ namespace vaoc
             public bool ExecuterEndommagerPont(Donnees.TAB_ORDRERow ligneOrdre, int tour, int phase)
             {
                 string message;
-                Donnees.TAB_CASERow ligneCasePont;
 
                 if (ligneOrdre.I_PHASE_DEBUT == phase)
                 {
-                  if (!InitialisationActionPont(Constantes.CST_DUREE_ENDOMMAGE_PONT, ligneOrdre, tour, phase, out ligneCasePont))
+                    if (!InitialisationActionPont(Constantes.CST_DUREE_ENDOMMAGE_PONT, ligneOrdre, tour, phase, out TAB_CASERow ligneCasePont))
                     {
                         LogFile.Notifier("Erreur sur InitialisationActionPont dans ExecuterEndommagerPont");
                         return false;
@@ -2172,11 +2164,10 @@ namespace vaoc
             public bool ExecuterReparerPont(Donnees.TAB_ORDRERow ligneOrdre, int tour, int phase)
             {
                 string message;
-                Donnees.TAB_CASERow ligneCasePont;
 
                 if (ligneOrdre.I_PHASE_DEBUT == phase)
                 {
-                    if (!InitialisationActionPont(Constantes.CST_DUREE_REPARER_PONT, ligneOrdre, tour, phase, out ligneCasePont))
+                    if (!InitialisationActionPont(Constantes.CST_DUREE_REPARER_PONT, ligneOrdre, tour, phase, out TAB_CASERow ligneCasePont))
                     {
                         LogFile.Notifier("Erreur sur InitialisationActionPont dans ExecuterReparerPont");
                         return false;
@@ -2268,11 +2259,10 @@ namespace vaoc
             public bool ExecuterConstruirePonton(Donnees.TAB_ORDRERow ligneOrdre, int tour, int phase)
             {
                 string message;
-                Donnees.TAB_CASERow ligneCasePont;
 
                 if (ligneOrdre.I_PHASE_DEBUT == phase)
                 {
-                    if (!InitialisationActionPont(Constantes.CST_DUREE_CONSTRUIRE_PONTON, ligneOrdre, tour, phase, out ligneCasePont))
+                    if (!InitialisationActionPont(Constantes.CST_DUREE_CONSTRUIRE_PONTON, ligneOrdre, tour, phase, out TAB_CASERow ligneCasePont))
                     {
                         LogFile.Notifier("Erreur sur InitialisationActionPont dans ExecuterConstruirePonton");
                         return false;
@@ -2438,11 +2428,8 @@ namespace vaoc
             /// <returns>Null si ne trouve aucun dépot, le meilleur depôt sinon</returns>
             public Donnees.TAB_PIONRow RechercheMeilleurDepotDirect(out int effectifsRavitailles, out int meilleurPourcentageRavitaillement, out int meilleurPourcentageMateriel)
             {
-                string message, messageErreur;
-                List<LigneCASE> chemin;
-                AstarTerrain[] tableCoutsMouvementsTerrain;
-                double cout, coutHorsRoute;
-                Donnees.TAB_PIONRow ligneMeilleurDepot = null;
+                string message;
+                TAB_PIONRow ligneMeilleurDepot = null;
                 AStar etoile = new();
 
                 meilleurPourcentageRavitaillement = 0;
@@ -2455,7 +2442,7 @@ namespace vaoc
                     if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
                     Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneDepot.ID_CASE);
 
-                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, out List<LigneCASE> chemin, out double cout, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string messageErreur))
                     {
                         message = string.Format("{0}(ID={1}, erreur sur RechercheMeilleurDepotDirect :{2})", S_NOM, ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -2527,11 +2514,8 @@ namespace vaoc
             /// <returns>Null si ne trouve aucun dépot, le meilleur depôt sinon</returns>
             public Donnees.TAB_PIONRow RechercheMeilleurDepot(out decimal meilleurDistanceRavitaillement, out int meilleurPourcentageRavitaillement)
             {
-                string message, messageErreur;
-                List<LigneCASE> chemin;
-                AstarTerrain[] tableCoutsMouvementsTerrain;
-                double cout, coutHorsRoute;
-                Donnees.TAB_PIONRow ligneMeilleurDepot = null;
+                string message;
+                TAB_PIONRow ligneMeilleurDepot = null;
                 AStar etoile = new();
 
                 meilleurDistanceRavitaillement = -1;
@@ -2542,7 +2526,7 @@ namespace vaoc
                     if (ligneDepot.B_DETRUIT || !ligneDepot.estDepot || ligneDepot.estEnnemi(this)) { continue; } //on ne ravitaille que ses copains
                     Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneDepot.ID_CASE);
 
-                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.RAVITAILLEMENT, this, ligneCaseDepart, ligneCaseDestination, out List<LigneCASE> chemin, out double cout, out double coutHorsRoute, out AstarTerrain[] tableCoutsMouvementsTerrain, out string messageErreur))
                     {
                         message = string.Format("{0}(ID={1}, erreur sur RechercheMeilleurDepot :{2})", S_NOM, ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -2584,18 +2568,14 @@ namespace vaoc
             public bool RavitaillementUnite(out bool bUniteRavitaillee, out decimal meilleurDistanceRavitaillement, out string depotRavitaillement)
             {
                 string message;
-                Donnees.TAB_PIONRow ligneMeilleurDepot = null;
-                int meilleurPourcentageRavitaillement;
-                Donnees.TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO.FindByID_METEO(Donnees.m_donnees.TAB_PARTIE[0].ID_METEO);
-                Donnees.TAB_NATIONRow ligneNation;
-                //AStar etoile = new AStar();
+                TAB_PIONRow ligneMeilleurDepot;
+                TAB_METEORow ligneMeteo = Donnees.m_donnees.TAB_METEO.FindByID_METEO(Donnees.m_donnees.TAB_PARTIE[0].ID_METEO);
 
                 bUniteRavitaillee = false;
                 meilleurDistanceRavitaillement = -1;
                 depotRavitaillement = string.Empty;
 
                 if (!estRavitaillable) { bUniteRavitaillee = true; return true; } //seules les unités combattantes doivent être ravitaillées
-                ligneNation = this.nation;
 
                 #region consommation journaliere
                 //quelle que soit l'activité, l'unité perd 10% de son ravitaillement
@@ -2635,7 +2615,7 @@ namespace vaoc
                     return true;
                 }
 
-                ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out meilleurPourcentageRavitaillement);
+                ligneMeilleurDepot = RechercheMeilleurDepot(out meilleurDistanceRavitaillement, out int meilleurPourcentageRavitaillement);
 
                 //modification suivant la météo en cours
                 
@@ -2654,8 +2634,7 @@ namespace vaoc
                 {
                     message = string.Format("{0}(ID={1}, estRavitaillableDirect)", S_NOM, ID_PION);
                     LogFile.Notifier(message);
-                    string nomDepot;
-                    if (!this.RavitaillementDirect(null, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE, out nomDepot))
+                    if (!RavitaillementDirect(out string nomDepot))
                     {
                         return false;
                     }
@@ -2749,14 +2728,9 @@ namespace vaoc
             /// <returns>position relative dans le parcours</returns>
             public int CalculPionPositionRelativeAvancement(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation, out List<LigneCASE> chemin)
             {
-                string message, messageErreur;
-                decimal encombrementRoute = 0, encombrementArrivee = 0, encombrementTotal;
-                int poidsEncombrementRoute = 0, poidsEncombrementArrivee = 0;
-                int iCavalerie, iInfanterie, iArtillerie;
-                int iCavalerieDestination, iInfanterieDestination, iArtillerieDestination;
-                AstarTerrain[] tableCoutsMouvementsTerrain;
-                double cout, coutHorsRoute;
-                int nouvellePosition = 0;
+                string message;
+                decimal encombrementRoute, encombrementArrivee, encombrementTotal;
+                int poidsEncombrementRoute = 0, poidsEncombrementArrivee;
 
                 chemin = null;
                 if (null == ligneOrdre || null == ligneNation)
@@ -2769,7 +2743,7 @@ namespace vaoc
 
                 encombrementTotal = CalculerEncombrement(this.infanterie, this.cavalerie, this.artillerie, true);
                 AStar etoile = new();
-                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out string messageErreur))
                 {
                     message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans CalculPionPositionRelativeAvancement:{2}", S_NOM, ID_PION, messageErreur);
                     LogFile.Notifier(message);
@@ -2786,7 +2760,7 @@ namespace vaoc
 
                     //effectifs actuellement à l'arrivée
                     CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
-                                                out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
+                                                out int iInfanterieDestination, out int iCavalerieDestination, out int iArtillerieDestination);
                     encombrementArrivee = CalculerEncombrement(iInfanterieDestination, iCavalerieDestination, iArtillerieDestination, true);
                     poidsEncombrementArrivee = (int)(encombrementArrivee * chemin.Count);
                     message = string.Format("CalculPionPositionRelativeAvancement :effectif à destination :i={0} c={1} a={2} avec un encombrement de {3} et un poids de {4}",
@@ -2824,14 +2798,14 @@ namespace vaoc
                     //on calcule de combien de cases le pion a déjà avancé
                     this.CalculerRepartitionEffectif(
                         this.effectifTotalEnMouvement - ligneOrdre.I_EFFECTIF_DEPART,
-                        out iInfanterie, out iCavalerie, out iArtillerie);
+                        out int iInfanterie, out int iCavalerie, out int iArtillerie);
                     message = string.Format("PlacerPionEnBivouac :effectif sur route: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                     LogFile.Notifier(message);
 
                     encombrementRoute = CalculerEncombrement(iInfanterie, iCavalerie, iArtillerie, true);
 
                     //recherche du plus court chemin
-                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out messageErreur))
                     {
                         message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans CalculPionPositionRelativeAvancement: {2})", S_NOM, ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -2855,7 +2829,7 @@ namespace vaoc
                 }
 
                 //calcul de la case finale sur le bivouac, avec des pbs d'arrondi, il est possible que la nouvelle position dépasse la taille du chemin
-                nouvellePosition = (int)Math.Min(chemin.Count - 1, (poidsEncombrementArrivee + poidsEncombrementRoute) / encombrementTotal);
+                int nouvellePosition = (int)Math.Min(chemin.Count - 1, (poidsEncombrementArrivee + poidsEncombrementRoute) / encombrementTotal);
                 message = string.Format("{0}(ID={1}) CalculPionPositionRelativeAvancement, la troupe en {2} position en {3}", S_NOM, ID_PION, ID_CASE, nouvellePosition);
                 LogFile.Notifier(message);
 
@@ -2878,8 +2852,6 @@ namespace vaoc
             public bool PlacerPionEnBivouac(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation)
             {
                 string message;
-                List<LigneCASE> chemin;
-                int nouvellePosition = 0;
 
                 if (null == ligneOrdre || null == ligneNation)
                 {
@@ -2894,7 +2866,7 @@ namespace vaoc
                 if (ligneOrdre.I_ORDRE_TYPE != Constantes.ORDRES.MOUVEMENT) { return true; }
 
                 //calcul de la case finale sur le bivouac, avec des pbs d'arrondi, il est possible que la nouvelle position dépasse la taille du chemin
-                nouvellePosition = CalculPionPositionRelativeAvancement(ligneOrdre, ligneNation, out chemin);
+                int nouvellePosition = CalculPionPositionRelativeAvancement(ligneOrdre, ligneNation, out List<LigneCASE> chemin);
                 if (nouvellePosition >= 0)
                 {
                     message = string.Format("{0}(ID={1}) PlacerPionEnBivouac, la troupe en {2} fait son bivouac en {3}", S_NOM, ID_PION, ID_CASE, chemin[nouvellePosition].ID_CASE);
@@ -2928,7 +2900,7 @@ namespace vaoc
             /// <returns>valeur d'encombrement en pixels</returns>
             public decimal CalculerEncombrement(int effectifInfanterie, int effectifCavalerie, int effectifArtillerie, bool enMouvement)
             {
-                decimal encombrement = 0;
+                decimal encombrement;
 
                 if (this.estDepot || this.estConvoiDeRavitaillement || this.estPontonnier)
                 {
@@ -3013,13 +2985,6 @@ namespace vaoc
             [Obsolete("Il faut utiliser CreationRemplacantChefBlesse2")]
             public Donnees.TAB_PIONRow CreationRemplacantChefBlesse()
             {
-                int[] des;
-                int[] effectifs;
-                int[] canons;
-                int[] modificateurs;
-                int nbUnites012 = 0, nbUnites345 = 0;//pour les bonus stratégiques
-                Donnees.TAB_PIONRow[] lignePionsEnBataille012;
-                Donnees.TAB_PIONRow[] lignePionsEnBataille345;
                 int idLeader;
                 string message;
                 string nom = string.Empty;
@@ -3043,7 +3008,7 @@ namespace vaoc
                 }
 
                 Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
-                Donnees.TAB_PIONRow lignePionRemplacant = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
+                TAB_PIONRow lignePionRemplacant = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     ID_MODELE_PION,
                     ID_PION_PROPRIETAIRE,
                     -1,//int ID_NOUVEAU_PION_PROPRIETAIRE,
@@ -3120,8 +3085,8 @@ namespace vaoc
                 else
                 {
                     lignePionRemplacant.ID_BATAILLE = ID_BATAILLE;
-                    Monitor.Enter(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot); 
-                    if (null == Donnees.m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
+                    Monitor.Enter(m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot); 
+                    if (null == m_donnees.TAB_BATAILLE_PIONS.AddTAB_BATAILLE_PIONSRow(
                         lignePionRemplacant.ID_BATAILLE, lignePionRemplacant.ID_PION, lignePionRemplacant.nation.ID_NATION, false, false /*bEnDefense*/,
                         lignePionRemplacant.I_INFANTERIE,
                         -1,//i_INFANTERIE_FIN
@@ -3138,9 +3103,9 @@ namespace vaoc
                         -1 // I_ZONE_BATAILLE_ENGAGEMENT
                     ))
                     {
-                        Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
+                        Monitor.Exit(m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
                         LogFile.Notifier("CreationRemplacantChefBlesse : Erreur à l'appel de AddTAB_BATAILLE_PIONSRow");
-                        Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                        Verrou.Deverrouiller(m_donnees.TAB_PION.Rows.SyncRoot);
                         return null;
                     }
                     Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);
@@ -3153,7 +3118,7 @@ namespace vaoc
 
                     //si le chef blessé dirigeait le combat, il faut déterminer qui est le nouveau commandant sur le champ de bataille
                     Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(lignePionRemplacant.ID_BATAILLE);
-                    if (!ligneBataille.RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out lignePionsEnBataille012, out lignePionsEnBataille345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, false /*bArtillerie*/))
+                    if (!ligneBataille.RecherchePionsEnBataille(out _, out _, out _, out _, out _, out _, out TAB_PIONRow[] lignePionsEnBataille012, out TAB_PIONRow[] lignePionsEnBataille345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, false /*bArtillerie*/))
                     {
                         message = string.Format("CreationRemplacantChefBlesse : erreur dans RecherchePionsEnBataille QG");
                         LogFile.Notifier(message);
@@ -3537,12 +3502,11 @@ namespace vaoc
             /// <returns>true si OK, false si KO</returns>
             internal bool RechercheEspace(Donnees.TAB_CASERow ligneCaseDepart, int espace, int nombrePixelParCase, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeIDCaseEspace, out string erreur)
             {
-                string message;
+                //string message;
                 //char typeEspace;
 
-                DateTime timeStart;
-                TimeSpan perf;
-                timeStart = DateTime.Now;
+                //DateTime timeStart = DateTime.Now;
+                //TimeSpan perf;
                 tableCoutsMouvementsTerrain = null;
                 //List <Donnees.TAB_CASERow> listeCaseEspace = null;
                 listeIDCaseEspace = null;
@@ -3609,8 +3573,9 @@ namespace vaoc
                     LogFile.Notifier(erreur);
                     return false;
                 }
-                perf = DateTime.Now - timeStart;
-                message = string.Format("RechercheEspace : nouveau en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
+                //perf = DateTime.Now - timeStart;
+                //message = string.Format("RechercheEspace : nouveau en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
+                //LogFile.Notifier(message);
                 /*
                 int nbCaseEspace = listeCaseEspace.Count;
                 listeIDCaseEspace = new int[nbCaseEspace];
@@ -3633,9 +3598,9 @@ namespace vaoc
                 //AcceptChanges only updates your rows in the (in memory) dataset, that is - marks them as "not needed for actual database update".
                 //Donnees.m_donnees.TAB_ESPACE.AcceptChanges();
 
-                perf = DateTime.Now - timeStart;
-                message = string.Format("RechercheEspace : nouveau et stockage en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
-                LogFile.Notifier(message);
+                //perf = DateTime.Now - timeStart;
+                //message = string.Format("RechercheEspace : nouveau et stockage en {0} minutes, {1} secondes, {2} millisecondes", perf.Minutes, perf.Seconds, perf.Milliseconds);
+                //LogFile.Notifier(message);
                 return true;
             }
 
@@ -3767,10 +3732,8 @@ namespace vaoc
 
             internal TAB_PIONRow CreerConvoi(Donnees.TAB_PIONRow lignePionProprietaire, bool bBlesses, bool bPrisonniers, bool bRenfort)
             {
-                Donnees.TAB_PIONRow lignePionConvoi = null;
-
-                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot); 
-                lignePionConvoi = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                Donnees.TAB_PIONRow lignePionConvoi = Donnees.m_donnees.TAB_PION.AddTAB_PIONRow(
                     -1,//idModeleCONVOI,
                     lignePionProprietaire.ID_PION,
                     -1,
@@ -4326,11 +4289,8 @@ namespace vaoc
             /// <returns>true si ok, false si ko</returns>
             internal bool CaptureConvoiBlessesPrisonniers(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
-                bool bEnDanger;
-                string message;
-
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out message, out bEnDanger);
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out string _, out bool bEnDanger);
                 if (!bEnDanger) { return true; }
 
                 //if (lignePion.estDepot) -> pas un bon test, c'est un convoi à ce moment là, pas un dépôt
@@ -4422,10 +4382,9 @@ namespace vaoc
             {
                 int idNouveauPionProprietaire;
                 int idNationCaptureur;
-                bool bEnDanger;
 
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out _, out bEnDanger);
+                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out _, out bool bEnDanger);
                 if (!bEnDanger) { return true; }
 
                 // Un dépôt capturé est réduit d'un niveau (règle avancé) et capturé
@@ -4592,14 +4551,12 @@ namespace vaoc
             /// <returns>true si OK, false si KO</returns>
             internal bool PlacementPion(int IDcase, Donnees.TAB_NATIONRow ligneNation, bool depart, int effectif)
             {
-                int iINFANTERIE, iCAVALERIE, iARTILLERIE;
-
                 if (effectif <= 0 || B_DETRUIT)
                 {
                     return true; //il n'y a rien à placer en réalité !
                 }
 
-                CalculerRepartitionEffectif(effectif, out iINFANTERIE, out iCAVALERIE, out iARTILLERIE);
+                CalculerRepartitionEffectif(effectif, out int iINFANTERIE, out int iCAVALERIE, out int iARTILLERIE);
                 return PlacementPion(IDcase, ligneNation, depart, iINFANTERIE, iCAVALERIE, iARTILLERIE);
             }
 
@@ -4617,14 +4574,12 @@ namespace vaoc
             {
                 decimal encombrement;
                 int i, nbplacesOccupes;
-                string message, messageErreur;
-                //string requete;
-                List<int> listeCaseEspace = null;
+                string message;
 
                 try
                 {
                     message = string.Format("Debut PlacementPion :{0}(ID={1})", S_NOM, ID_PION);
-                    LogFile.Notifier(message, out messageErreur);
+                    LogFile.Notifier(message, out string messageErreur);
                     if (IDcase < 0)
                     {
                         message = string.Format("PlacementPion: {0}(ID={1}, ID_CASE:{2}, erreur demande de placement de pion sur une IDcase incorrect)", S_NOM, ID_PION, IDcase);
@@ -4653,10 +4608,9 @@ namespace vaoc
                     }
                     else
                     {
-                        AstarTerrain[] tableCoutsMouvementsTerrain;
                         //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
                         //if (!m_etoile.SearchSpace(ligneCase, encombrement, tableCoutsMouvementsTerrain, DataSetCoutDonnees.m_donnees.TAB_JEU[0].I_ECHELLE, out message))
-                        if (!RechercheEspace(ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out tableCoutsMouvementsTerrain, out listeCaseEspace, out message))
+                        if (!RechercheEspace(ligneCase, (int)encombrement, Donnees.m_donnees.TAB_JEU[0].I_ECHELLE, out AstarTerrain[] tableCoutsMouvementsTerrain, out List<int> listeCaseEspace, out message))
                         {
                             LogFile.Notifier(message, out messageErreur);
                             message = string.Format("PlacementPion :{0}(ID={1} encombrement={2}, Impossible de trouver l'espace necessaire au pion)",
@@ -4708,7 +4662,7 @@ namespace vaoc
 
             internal bool PlacerStatique()
             {
-                string messageErreur, message;
+                string message;
                 Donnees.TAB_NATIONRow ligneNation;
 
                 try
@@ -4716,7 +4670,7 @@ namespace vaoc
                     if (B_DETRUIT) { return true; }
 
                     message = string.Format("Debut PlacerStatique :{0}(ID={1})", S_NOM, ID_PION);
-                    LogFile.Notifier(message, out messageErreur);
+                    LogFile.Notifier(message, out string messageErreur);
 
                     Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ID_CASE);
                     if (!MessageEnnemiObserve(ligneCase)) { return false; }
@@ -4770,34 +4724,27 @@ namespace vaoc
 
             internal bool PlacerPionEnRoute(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation)
             {
-                int idCaseD, idCaseF;
-                return PlacerPionEnRoute(ligneOrdre, ligneNation, false, out idCaseD, out idCaseF);
+                return PlacerPionEnRoute(ligneOrdre, ligneNation, false, out  _, out _);
             }
 
             internal bool PlacerPionEnRoute(Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_NATIONRow ligneNation, bool rechercheIdCase, out int idCaseDebut, out int idCaseFin)
             {
-                string messageErreur, message;
+                string message;
                 decimal encombrement, encombrementTotal;
-                int iCavalerie, iInfanterie, iArtillerie;
-                int iCavalerieDestination, iInfanterieDestination, iArtillerieDestination;
-                int iCavalerieRoute, iInfanterieRoute, iArtillerieRoute;
-                AstarTerrain[] tableCoutsMouvementsTerrain;
-                List<LigneCASE> chemin;
                 int i,j;
                 int nbplacesOccupes;
-                double cout, coutHorsRoute;
                 Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
                 Donnees.TAB_CASERow ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART);
                 AStar etoile = new();
 
                 message = string.Format("Debut PlacerPionEnRoute :{0}(ID={1})", S_NOM, ID_PION);
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message, out _);
                 idCaseDebut = -1;
                 idCaseFin = ID_CASE;//valeur par défaut
                 int effectifInfanterie = (estDepot || estConvoiDeRavitaillement || estPontonnier) ? effectifTotalEnMouvement : infanterie;
                 encombrementTotal = CalculerEncombrement(effectifInfanterie, cavalerie, artillerie, true);
                 //recherche du plus court chemin
-                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, this, ligneCaseDepart, ligneCaseDestination, out List<LigneCASE> chemin, out _, out _, out _, out string messageErreur))
                 {
                     message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans PlacerPionEnRoute: {2})", S_NOM, ID_PION, messageErreur);
                     LogFile.Notifier(message);
@@ -4822,7 +4769,7 @@ namespace vaoc
 
                         //effectifs actuellement à l'arrivée
                         CalculerRepartitionEffectif(ligneOrdre.I_EFFECTIF_DESTINATION,
-                                                    out iInfanterieDestination, out iCavalerieDestination, out iArtillerieDestination);
+                                                    out int iInfanterieDestination, out int iCavalerieDestination, out int iArtillerieDestination);
                         message = string.Format("PlacerPionEnRoute : {0},ID={1}, effectif à destination :i={2} c={3} a={4}",
                                                 S_NOM, ID_PION,
                                                 iInfanterieDestination, iCavalerieDestination, iArtillerieDestination);
@@ -4837,7 +4784,7 @@ namespace vaoc
                                 encombrementTotal - encombrementArrivee,
                                 //chemin.Count, 
                                 true,
-                                out iInfanterieRoute, out iCavalerieRoute, out iArtillerieRoute))
+                                out int iInfanterieRoute, out int iCavalerieRoute, out int iArtillerieRoute))
                         {
                             message = string.Format("PlacerPionEnRoute :{0}, ID={1}, erreur CalculerEffectif sur la route renvoie false)", S_NOM, ID_PION);
                             LogFile.Notifier(message);
@@ -4952,7 +4899,7 @@ namespace vaoc
 
                     //on calcule de combien de cases le pion a déjà avancé
                     CalculerRepartitionEffectif(Math.Max(0,effectifTotalEnMouvement - ligneOrdre.I_EFFECTIF_DEPART),
-                        out iInfanterie, out iCavalerie, out iArtillerie);
+                        out int iInfanterie, out int iCavalerie, out int iArtillerie);
                     message = string.Format("PlacerPionEnRoute :effectif: i={0} c={1} a={2}", iInfanterie, iCavalerie, iArtillerie);
                     LogFile.Notifier(message);
 
@@ -5003,7 +4950,7 @@ namespace vaoc
                     #endregion
                 }
                 message = string.Format("Fin PlacerPionEnRoute :{0}(ID={1})", S_NOM, ID_PION);
-                LogFile.Notifier(message, out messageErreur);
+                LogFile.Notifier(message, out _);
                 return true;
             }
 

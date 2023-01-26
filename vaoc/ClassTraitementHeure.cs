@@ -3416,7 +3416,6 @@ namespace vaoc
         private bool FatigueEtRepos()
         {
             string message;
-            string requete;
             int moral, diffmoral;
             int fatigue, diffatigue;
             int i;
@@ -3433,8 +3432,8 @@ namespace vaoc
                     && !lignePion.estPatrouille && !lignePion.estPontonnier && !lignePion.estPrisonniers)
                 {
                     //est-ce que l'unité a fait un combat durant cette journée ?
-                    requete = string.Format("ID_PION={0} AND B_ENGAGEE=True", lignePion.ID_PION);
-                    Donnees.TAB_BATAILLE_PIONSRow[] resBataillePions = (Donnees.TAB_BATAILLE_PIONSRow[])Donnees.m_donnees.TAB_BATAILLE_PIONS.Select(requete);
+                    //string requete = string.Format("ID_PION={0} AND B_ENGAGEE=True", lignePion.ID_PION);
+                    //Donnees.TAB_BATAILLE_PIONSRow[] resBataillePions = (Donnees.TAB_BATAILLE_PIONSRow[])Donnees.m_donnees.TAB_BATAILLE_PIONS.Select(requete);
 
                     //est-ce que l'unité a fait une activité ce jour ?
                     if (!lignePion.reposComplet)
@@ -3579,12 +3578,12 @@ namespace vaoc
         private bool RecuperationFatigue(Donnees.TAB_PIONRow lignePion, out int diffatigue, Donnees.TAB_METEORow ligneMeteo)
         {
             string message;
-            int nbInfanteriePerdus = 0;
-            int nbCavaleriePerdus = 0;
-            int nbArtilleriePerdus = 0;
-            int recuperationFantassin = 0;
-            int recuperationCavalerie = 0;
-            int recuperationArtillerie = 0;
+            int nbInfanteriePerdus;
+            int nbCavaleriePerdus;
+            int nbArtilleriePerdus;
+            int recuperationFantassin;
+            int recuperationCavalerie;
+            int recuperationArtillerie;
 
             //modification d'après la météo courante
             diffatigue = -1;
@@ -3840,12 +3839,11 @@ namespace vaoc
         {
             string messageErreur, message;
             decimal vitesse;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
             List<LigneCASE> chemin;
             //Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain;
             Donnees.TAB_PIONRow lignePionDestinataire = null;
             Donnees.TAB_PIONRow lignePionNouveauDestinataire;
-            double cout, coutHorsRoute;
+            double cout;
             AStar etoile = new();
 
             if (null == lignePion || null == ligneOrdre || null == ligneCaseDepart || null == ligneCaseDestination || null == ligneNation || null == ligneModelePion || null == ligneModeleMouvement)
@@ -4046,7 +4044,7 @@ namespace vaoc
                                     //Calcul de la distance entre les deux zones indiquées
                                     Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionDestinataire.ID_CASE);
 
-                                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDestination, ligneCaseNouvelleDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDestination, ligneCaseNouvelleDestination, out _, out cout, out _, out _, out messageErreur))
                                     {
                                         message = string.Format("{0}(ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                                         LogFile.Notifier(message);

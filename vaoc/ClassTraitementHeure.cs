@@ -33,7 +33,7 @@ namespace vaoc
         {
         }
 
-        private void testDebug()
+        private static void testDebug()
         {
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
@@ -66,8 +66,7 @@ namespace vaoc
             if (!NouveauxMessages()) { LogFile.Notifier("Erreur rencontrée dans NouveauxMessages()"); return false; }
             if (Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE)
             {
-                bool bNouveauxOrdres;
-                if (!NouveauxOrdres(out nbTourExecutes, out bNouveauxOrdres)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
+                if (!NouveauxOrdres(out nbTourExecutes, out bool bNouveauxOrdres)) { LogFile.Notifier("Erreur rencontrée dans NouveauxOrdres()"); return false; }
                 if (bNouveauxOrdres)
                 {
                     if (!NouveauxNomsEtTri()) { LogFile.Notifier("Erreur rencontrée dans NouveauxNoms()"); return false; }
@@ -362,7 +361,7 @@ namespace vaoc
                         //    Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
                         //}
 
-                        ClassTraitementWeb webRoles = new ClassTraitementWeb(fichierCourant);
+                        ClassTraitementWeb webRoles = new(fichierCourant);
                         if (!webRoles.GenerationWebFichiersRoles(true))
                         {
                             LogFile.Notifier("Erreur durant la génération des fichiers roles Web. Consultez le fichier de log");
@@ -400,7 +399,7 @@ namespace vaoc
 
                 // Une unité envoie un message régulièrement, ça rassure le joueur s'il n'est pas proche de ses troupes !
                 i = 0;
-                int nbPions = Donnees.m_donnees.TAB_PION.Count();
+                int nbPions = Donnees.m_donnees.TAB_PION.Count;
                 while (i < nbPions)
                 {
                     Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
@@ -443,7 +442,7 @@ namespace vaoc
                 //}
 
                 //on met à jour les données pour le film vidéo de fin de partie
-                MiseAJourDonneesHistorique majVideo = new MiseAJourDonneesHistorique();
+                MiseAJourDonneesHistorique majVideo = new();
                 majVideo.Initialisation(string.Empty, false, Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, null);
                 majVideo.MiseAjourVideo(Donnees.m_donnees.TAB_VIDEO);
 
@@ -498,7 +497,7 @@ namespace vaoc
 
                 //génération des fichiers web et sql
                 //on vient de terminer un tour, on lance la génération des fichiers web et sql
-                ClassTraitementWeb web = new ClassTraitementWeb(fichierCourant);
+                ClassTraitementWeb web = new(fichierCourant);
                 if (!web.GenerationWeb())
                 {
                     LogFile.Notifier("Erreur durant la génération des fichiers Web. Consultez le fichier de log");
@@ -568,14 +567,12 @@ namespace vaoc
 
                     if (bTourSuivant)
                     {
-                        double distanceMin, distanceMinEnMouvement;
-                        Donnees.TAB_PIONRow lignePionMin1, lignePionMin2, lignePionMax1, lignePionMax2;
-                        DistanceMinimaleEntreEnnemis(out distanceMin, out distanceMinEnMouvement, 
-                                                    out lignePionMin1, out lignePionMin2,
-                                                    out lignePionMax1, out lignePionMax2);
+                        DistanceMinimaleEntreEnnemis(out double distanceMin, out double distanceMinEnMouvement, 
+                                                    out Donnees.TAB_PIONRow lignePionMin1, out Donnees.TAB_PIONRow lignePionMin2,
+                                                    out Donnees.TAB_PIONRow lignePionMax1, out Donnees.TAB_PIONRow lignePionMax2);
                         if (null== lignePionMax1 || lignePionMax2==null)
                         {
-                            LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : aucune unité en mouvement !)",
+                            LogFile.Notifier(string.Format("Test de tours contigus : nb tours consécutifs={0} Distance entre deux unités ennemies : {1} ({3}:{4} <-> {5}:{6}) Distance entre deux unités ennemies en mouvement : {2} aucune unité en mouvement !)",
                                nbTourExecutes,
                                distanceMin / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
                                distanceMinEnMouvement / Donnees.m_donnees.TAB_JEU[0].I_ECHELLE,
@@ -660,8 +657,7 @@ namespace vaoc
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
                 if (!lignePion.B_DETRUIT && lignePion.estJoueur)
                 {
-                    string message;
-                    if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS, null, false, out message, out _))
+                    if (!ClassMessager.PionsEnvironnants(lignePion, ClassMessager.MESSAGES.MESSAGE_POSITION_OFFICIERS, null, false, out string message, out _))
                     { 
                         LogFile.Notifier("Erreur durant IndiquerPositionsOfficiers:PionsEnvironnants."); 
                         return false; 
@@ -719,7 +715,7 @@ namespace vaoc
                 i++;
             }*/
 
-            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> liste = new();
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
@@ -746,7 +742,7 @@ namespace vaoc
 
         private bool ExecuterMouvementAvecEffectifsEnParallele()
         {
-            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> liste = new();
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
@@ -769,7 +765,7 @@ namespace vaoc
 
         private bool ExecuterMouvementSansEffectifsEnParallele()
         {
-            List<Donnees.TAB_PIONRow> liste = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> liste = new();
             for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[l];
@@ -800,7 +796,7 @@ namespace vaoc
             distanceMinEnMouvement = double.MaxValue;
 
             //on constitue la liste des cases de chaque nation
-            Dictionary<int, List<Donnees.TAB_CASERow>> lignesCasesProprietaires = new Dictionary<int, List<Donnees.TAB_CASERow>>();
+            Dictionary<int, List<Donnees.TAB_CASERow>> lignesCasesProprietaires = new();
             //List<Donnees.TAB_CASERow>[] lignesCasesProprietaires = new List<Donnees.TAB_CASERow>[Donnees.m_donnees.TAB_NATION.Count];
             for (int l=0; l< Donnees.m_donnees.TAB_NATION.Count; l++)
             {
@@ -1346,13 +1342,10 @@ namespace vaoc
         /// Relire, la règle
         /// </summary>
         /// <returns></returns>
-        private bool Ravitaillement()
+        private static bool Ravitaillement()
         {
             string message;
-            decimal distanceRavitaillement;
             int i;
-            string depotRavitaillement;
-            bool bUniteRavitaillee;
             int ravitaillementInitial;
             int materielInitial;
 
@@ -1366,7 +1359,7 @@ namespace vaoc
                 if (!lignePion.estRavitaillable) { i++;  continue; }
                 ravitaillementInitial = lignePion.I_RAVITAILLEMENT;
                 materielInitial = lignePion.I_MATERIEL;
-                if (!lignePion.RavitaillementUnite(out bUniteRavitaillee, out distanceRavitaillement, out depotRavitaillement)) { return false; }
+                if (!lignePion.RavitaillementUnite(out bool bUniteRavitaillee, out decimal distanceRavitaillement, out string depotRavitaillement)) { return false; }
 
                 if (!bUniteRavitaillee)
                 {
@@ -1438,7 +1431,7 @@ namespace vaoc
         /// Vérifie si l'un des cas a gagné ou si la partie est terminée, dans ce cas, le vainqueur est déterminé
         /// </summary>
         /// <returns>true si ok, false si ko</returns>
-        private bool VictoireDefaite(out bool bFinDePartie)
+        private static bool VictoireDefaite(out bool bFinDePartie)
         {
             bFinDePartie = false;
             int[] victoire = new int[2];
@@ -1902,8 +1895,8 @@ namespace vaoc
             string requete;
             int idNation0 = -1, idNation1 = -1;
             int[] zone = new int[2];
-            List<Donnees.TAB_PIONRow> listePionControle0 = new List<Donnees.TAB_PIONRow>();
-            List<Donnees.TAB_PIONRow> listePionControle1 = new List<Donnees.TAB_PIONRow>();
+            List<Donnees.TAB_PIONRow> listePionControle0 = new();
+            List<Donnees.TAB_PIONRow> listePionControle1 = new();
             LogFile.Notifier("Debut ControleDesVilles");
 
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
@@ -1930,7 +1923,7 @@ namespace vaoc
                     Donnees.TAB_CASERow[] lignesCaseRecherche = Donnees.m_donnees.TAB_CASE.CasesCadre(xCaseHautGauche, yCaseHautGauche, xCaseBasDroite, yCaseBasDroite);
 
                     zone[0] = zone[1] = 0;
-                    for (int l = 0; l < lignesCaseRecherche.Count(); l++)
+                    for (int l = 0; l < lignesCaseRecherche.Length; l++)
                     {
                         Donnees.TAB_CASERow ligneCaseRecherche = lignesCaseRecherche[l];
                         if (!ligneCaseRecherche.EstInnocupe()) //.ID_PROPRIETAIRE. != DataSetCoutDonnees.CST_AUCUNPROPRIETAIRE)
@@ -2003,7 +1996,7 @@ namespace vaoc
                             requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                             Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            for (int l = 0; l < lignesPionResultat.Count(); l++)
+                            for (int l = 0; l < lignesPionResultat.Length; l++)
                             {
                                 Donnees.TAB_PIONRow lignePionBlesses = lignesPionResultat[l];
                                 if (lignePionBlesses.effectifTotal / 2 < Constantes.CST_TAILLE_MINIMUM_UNITE)
@@ -2025,13 +2018,13 @@ namespace vaoc
                         }
 
                         //Quand une prison change de camp, les prisonniers deviennent des renforts
-                        Random de = new Random();
+                        Random de = new();
                         if (ligneNomCarte.B_PRISON)
                         {
                             requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                             Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                             Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                            for (int l = 0; l < lignesPionResultat.Count(); l++)
+                            for (int l = 0; l < lignesPionResultat.Length; l++)
                             {
                                 //on tire au hasard le pion qui a fait la libération
                                 Donnees.TAB_PIONRow lignePionLiberateur = (nationControle == idNation0) ? listePionControle0.ElementAt(de.Next(0,listePionControle0.Count)) : listePionControle1.ElementAt(de.Next(0,listePionControle1.Count));
@@ -2113,7 +2106,7 @@ namespace vaoc
             return true;
         }
 
-        private bool TransfertsDesliens(Donnees.TAB_PIONRow ligneAncienPion, Donnees.TAB_PIONRow ligneNouveauPion)
+        private static bool TransfertsDesliens(Donnees.TAB_PIONRow ligneAncienPion, Donnees.TAB_PIONRow ligneNouveauPion)
         {
             string requete;
             Donnees.TAB_PIONRow[] resPions;
@@ -2122,7 +2115,7 @@ namespace vaoc
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            for (int l=0; l< resPions.Count(); l++)
+            for (int l=0; l< resPions.Length; l++)
             {
                 Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
@@ -2130,7 +2123,7 @@ namespace vaoc
 
             requete = string.Format("ID_NOUVEAU_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            for (int l = 0; l < resPions.Count(); l++)
+            for (int l = 0; l < resPions.Length; l++)
             {
                 Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_NOUVEAU_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
@@ -2138,7 +2131,7 @@ namespace vaoc
 
             requete = string.Format("ID_ANCIEN_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             resPions = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-            for (int l = 0; l < resPions.Count(); l++)
+            for (int l = 0; l < resPions.Length; l++)
             {
                 Donnees.TAB_PIONRow lignePion = resPions[l];
                 lignePion.ID_ANCIEN_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
@@ -2148,7 +2141,7 @@ namespace vaoc
             requete = string.Format("ID_PION_PROPRIETAIRE = {0}", ligneAncienPion.ID_PION);
             Monitor.Enter(Donnees.m_donnees.TAB_MESSAGE.Rows.SyncRoot);
             resMessages = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select(requete);
-            for (int l=0; l<resMessages.Count(); l++)
+            for (int l=0; l<resMessages.Length; l++)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = resMessages[l];
                 ligneMessage.ID_PION_PROPRIETAIRE = ligneNouveauPion.ID_PION;
@@ -2230,9 +2223,8 @@ namespace vaoc
                         LogFile.Notifier("NouveauxMessages: Impossible de trouver un pion emetteur pour le message ID=" + message.ID_MESSAGE);
                         return false;
                     }
-                    int tourDepart, phaseDepart, tourArrivee, phaseArrivee;
-                    ClassMessager.TourPhase(message.DT_DEPART, out tourDepart, out phaseDepart);
-                    ClassMessager.TourPhase(message.DT_ARRIVEE, out tourArrivee, out phaseArrivee);
+                    ClassMessager.TourPhase(message.DT_DEPART, out int tourDepart, out int phaseDepart);
+                    ClassMessager.TourPhase(message.DT_ARRIVEE, out int tourArrivee, out int phaseArrivee);
                     int iTourSansRavitaillement = lignePionEmetteur.I_TOUR_SANS_RAVITAILLEMENT;
 
                     Donnees.m_donnees.TAB_MESSAGE.AddTAB_MESSAGERow(
@@ -2430,11 +2422,11 @@ namespace vaoc
                 //Déplacement des ordres terminés et des pions détruits vers une autre table pour améliorer les performances. Fait uniquement après des nouveaux ordres pour ne pas toucher au maxid
                 if (0 == nbTourExecutes && 0== Donnees.m_donnees.TAB_PARTIE[0].I_PHASE)
                 {
-                    LogFile.Notifier("Nb messages avant archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
-                    LogFile.Notifier("Nb pions avant archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                    LogFile.Notifier("Nb messages avant archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count);
+                    LogFile.Notifier("Nb pions avant archivage :" + Donnees.m_donnees.TAB_PION.Count);
                     ActuelsVersAnciens(); //-> problème sur le maxid des messages potentiels et quand on recharge une partie au milieu, il y a un crash
-                    LogFile.Notifier("Nb messages après archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count());
-                    LogFile.Notifier("Nb pions après archivage :" + Donnees.m_donnees.TAB_PION.Count());
+                    LogFile.Notifier("Nb messages après archivage :" + Donnees.m_donnees.TAB_MESSAGE.Count);
+                    LogFile.Notifier("Nb pions après archivage :" + Donnees.m_donnees.TAB_PION.Count);
                 }
             }
 
@@ -3063,7 +3055,7 @@ namespace vaoc
             {
                 totalPourcentage += ligneMeteo.I_CHANCE;
             }
-            Random de = new Random();
+            Random de = new();
             int pourcentResultatMeteo = de.Next(totalPourcentage);
             LogFile.Notifier(string.Format("Nouvelle meteo de={0} sur un total de {1}", pourcentResultatMeteo, totalPourcentage));
 
@@ -3134,7 +3126,7 @@ namespace vaoc
             return true;
         }
 
-        private bool RapportQuotidienHorsRavitaillement()
+        private static bool RapportQuotidienHorsRavitaillement()
         {
             int i=0;
 
@@ -3154,7 +3146,7 @@ namespace vaoc
             return true;
         }
 
-        private bool SoinsAuxBlesses()
+        private static bool SoinsAuxBlesses()
         {
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
@@ -3168,7 +3160,7 @@ namespace vaoc
                     string requete = string.Format("B_BLESSES=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    for (int l = 0; l < lignesPionResultat.Count(); l++)
+                    for (int l = 0; l < lignesPionResultat.Length; l++)
                     {
                         Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
                         if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal > 0))
@@ -3247,7 +3239,7 @@ namespace vaoc
                             //Donnees.TAB_PIONRow lignePionRapport = ClassMessager.CreerMessager(lignePionLeader); -> il ne faut pas créer un messager sinon on a un mauvais emetteur dans les messages sur le web
                             // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
                             Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomHopital + "' AND ID_PION_PROPRIETAIRE=" + lignePionLeader.ID_PION, "ID_PION");
-                            if (listePionRapport.Count() > 0)
+                            if (listePionRapport.Length > 0)
                             {
                                 lignePionRapport = listePionRapport[0];
                             }
@@ -3280,7 +3272,7 @@ namespace vaoc
             return true;
         }
 
-        private bool RapportDesPrisons()
+        private static bool RapportDesPrisons()
         {
             foreach (Donnees.TAB_NOMS_CARTERow ligneNomCarte in Donnees.m_donnees.TAB_NOMS_CARTE)
             {
@@ -3294,7 +3286,7 @@ namespace vaoc
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     string requete = string.Format("B_PRISONNIERS=true AND ID_LIEU_RATTACHEMENT={0}", ligneNomCarte.ID_NOM);
                     Donnees.TAB_PIONRow[] lignesPionResultat = (Donnees.TAB_PIONRow[])Donnees.m_donnees.TAB_PION.Select(requete);
-                    for (int l = 0; l < lignesPionResultat.Count(); l++)
+                    for (int l = 0; l < lignesPionResultat.Length; l++)
                     {
                         Donnees.TAB_PIONRow lignePion = lignesPionResultat[l];
                         if ((ligneNomCarte.ID_NATION_CONTROLE == lignePion.nation.ID_NATION) && (lignePion.effectifTotal > 0))
@@ -3318,7 +3310,7 @@ namespace vaoc
                             string nomPrison = "Prison de " + ligneNomCarte.S_NOM;
                             // on vérifie si un pion de même nom et même chef n'a pas déjà été crée par le passé
                             Donnees.TAB_PIONRow[] listePionRapport = (Donnees.TAB_PIONRow[]) Donnees.m_donnees.TAB_PION.Select("S_NOM = '" + nomPrison + "' AND ID_PION_PROPRIETAIRE=" + lignePionLeader.ID_PION, "ID_PION");
-                            if (listePionRapport.Count()>0)
+                            if (listePionRapport.Length >0)
                             {
                                 lignePionRapport = listePionRapport[0];
                             }
@@ -3353,7 +3345,7 @@ namespace vaoc
             return true;
         }
 
-        private bool ReductionDesDepots()
+        private static bool ReductionDesDepots()
         {
             string message;
             int i;
@@ -3760,7 +3752,7 @@ namespace vaoc
         /// <param name="lignePion">Pion executant l'ordre</param>
         /// <param name="ligneOrdre">Ordre suivre</param>
         /// <returns>null si l'ordre de suivi a été executé, l'ordre de mouvement sinon</returns>
-        private Donnees.TAB_ORDRERow ExecuterOrdreSuivreMouvement(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre)
+        private static Donnees.TAB_ORDRERow ExecuterOrdreSuivreMouvement(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre)
         {
             Donnees.TAB_ORDRERow ligneOrdreMouvement = null;
             Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePion.ID_CASE);
@@ -3854,7 +3846,7 @@ namespace vaoc
             Donnees.TAB_PIONRow lignePionDestinataire = null;
             Donnees.TAB_PIONRow lignePionNouveauDestinataire;
             double cout, coutHorsRoute;
-            AStar etoile = new AStar();
+            AStar etoile = new();
 
             if (null == lignePion || null == ligneOrdre || null == ligneCaseDepart || null == ligneCaseDestination || null == ligneNation || null == ligneModelePion || null == ligneModeleMouvement)
             {
@@ -3896,7 +3888,7 @@ namespace vaoc
                 if (lignePion.ID_CASE != ligneOrdre.ID_CASE_DESTINATION)
                 {
                     //lignePion.ID_CASE = ligneCaseDepart.ID_CASE;//ajout le 11/02/2021, sinon, c'était refait dans rechercheChemin mais je ne sais pas pourquoi cela peut se décaler
-                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                    if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out messageErreur))
                     {
                         message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementSansEffectif :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                         LogFile.Notifier(message);
@@ -3957,7 +3949,7 @@ namespace vaoc
                             Donnees.TAB_CASERow ligneCaseNouvelleDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionDestinataire.ID_CASE);
                             if (Constantes.Distance(chemin[pos].I_X, chemin[pos].I_Y, ligneCaseNouvelleDestination.I_X, ligneCaseNouvelleDestination.I_Y) < lignePion.vision * Donnees.m_donnees.TAB_JEU[0].I_ECHELLE)
                             {
-                                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, chemin[pos], ligneCaseNouvelleDestination, out chemin, out _, out _, out _, out messageErreur))
                                 {
                                     message = string.Format("{0},ID={1}, erreur sur RechercheChemin dans ExecuterMouvementSansEffectif changement en visuel: message a un destinataire :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                                     LogFile.Notifier(message);
@@ -4183,16 +4175,11 @@ namespace vaoc
                                             else
                                             {
                                                 if (!ChangerOrdreCourant(lignePionDestinataire, ligneOrdreCourant, ligneOrdreNouveau, true)) { return false; }
-                                                switch (ligneOrdreNouveau.I_ORDRE_TYPE)
+                                                tipeMessage = ligneOrdreNouveau.I_ORDRE_TYPE switch
                                                 {
-                                                    case Constantes.ORDRES.MOUVEMENT:
-                                                    case Constantes.ORDRES.SUIVRE_UNITE:
-                                                        tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_MOUVEMENT_RECU;
-                                                        break;
-                                                    default:
-                                                        tipeMessage = ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU;
-                                                        break;
-                                                }
+                                                    Constantes.ORDRES.MOUVEMENT or Constantes.ORDRES.SUIVRE_UNITE => ClassMessager.MESSAGES.MESSAGE_ORDRE_MOUVEMENT_RECU,
+                                                    _ => ClassMessager.MESSAGES.MESSAGE_ORDRE_RECU,
+                                                };
                                             }
                                             break;
 
@@ -4409,9 +4396,7 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         private bool EtablirCheminPratiquable(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_MODELE_PIONRow ligneModelePion)
         {
-            string message, messageErreur;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
-            double cout, coutHorsRoute;
+            string message;
             List<LigneCASE> chemin;
 
             //a-t-on déjà envoyé un message pour prévenir mon supérieur recemment ?                            
@@ -4431,8 +4416,8 @@ namespace vaoc
             ligneOrdre.ID_CASE_DEPART = lignePion.ID_CASE;
             Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
             Donnees.TAB_CASERow ligneCaseDepart = lignePion.CaseCourante();
-            AStar etoile = new AStar();
-            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+            AStar etoile = new();
+            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out string messageErreur))
             {
                 message = string.Format("{0}(ID={1}, erreur sur EtablirCheminPratiquable :{2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                 LogFile.Notifier(message);
@@ -4661,8 +4646,6 @@ namespace vaoc
             decimal encombrement;
             int nbplacesOccupes;
             int iCavalerie, iInfanterie, iArtillerie;
-            double cout, coutHorsRoute;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
             List<LigneCASE> chemin;
             int i, j, id_case_finale, id_case_source;
 
@@ -4685,8 +4668,8 @@ namespace vaoc
             //calcul du plus court chemin
             //CalculModeleMouvementsPion(lignePion, out tableCoutsMouvementsTerrain);
             //if (!m_etoile.SearchPath(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain, DataSetCoutDonnees.m_donnees.TAB_JEU[0].I_ECHELLE))
-            AStar etoile = new AStar();
-            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+            AStar etoile = new();
+            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out messageErreur))
             {
                 message = string.Format("{0},ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementAvecEffectifForcesEnRoute: {2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                 LogFile.Notifier(message);
@@ -4900,8 +4883,6 @@ namespace vaoc
             decimal encombrement;
             int nbplacesOccupes;
             int iCavalerie, iInfanterie, iArtillerie;
-            double cout, coutHorsRoute;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
             List<LigneCASE> chemin;
             int i;
 
@@ -4931,8 +4912,8 @@ namespace vaoc
             LogFile.Notifier(message);
 
             //calcul du plus court chemin
-            AStar etoile = new AStar();
-            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+            AStar etoile = new();
+            if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out messageErreur))
             {
                 message = string.Format("{0}(ID={1}, erreur sur RechercheChemin (cas 2) dans ExecuterMouvementAvecEffectifForcesAuDepart: {2})", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                 LogFile.Notifier(message);
@@ -5051,7 +5032,7 @@ namespace vaoc
         /// L'unité est arrivée, il faut donc "écouler" les éléments qui ne sont pas encore arrivés s'il y en a
         /// </summary>
         /// <returns></returns>
-        private bool ExecuterMouvementAvecEffectifForcesADestination(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_NATIONRow ligneNation)
+        private static bool ExecuterMouvementAvecEffectifForcesADestination(Donnees.TAB_PIONRow lignePion, Donnees.TAB_ORDRERow ligneOrdre, Donnees.TAB_CASERow ligneCaseDepart, Donnees.TAB_CASERow ligneCaseDestination, Donnees.TAB_NATIONRow ligneNation)
         {
             string message, messageErreur;
             decimal encombrement, encombrementTotal;
@@ -5059,8 +5040,6 @@ namespace vaoc
             int iCavalerie, iInfanterie, iArtillerie;
             int iCavalerieDestination, iInfanterieDestination, iArtillerieDestination;
             int iCavalerieRoute, iInfanterieRoute, iArtillerieRoute;
-            double cout, coutHorsRoute;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
             List<LigneCASE> chemin;
             int i;
 
@@ -5078,8 +5057,8 @@ namespace vaoc
             {
                 //il faut faire avancer la "queue" de troupes jusqu'à l'arrivée
                 //on avance suivant le modele par défaut, sur route, dont on calcule le cout
-                AStar etoile = new AStar();
-                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                AStar etoile = new();
+                if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion, ligneCaseDepart, ligneCaseDestination, out chemin, out _, out _, out _, out messageErreur))
                 {
                     message = string.Format("{0}(ID={1}, ALERTE erreur sur RechercheChemin dans ExecuterMouvementAvecEffectifForcesADestination:{2}", lignePion.S_NOM, lignePion.ID_PION, messageErreur);
                     LogFile.Notifier(message);
@@ -5344,7 +5323,7 @@ namespace vaoc
             Monitor.Exit(Donnees.m_donnees.TAB_CASE.Rows.SyncRoot);
         }
 
-        internal bool miseÀJourInternet(string fichierCourant, out string messageErreur)
+        internal static bool miseÀJourInternet(string fichierCourant, out string messageErreur)
         {
             InterfaceVaocWeb iWeb;
             if (string.Empty == LogFile.nomfichier) { LogFile.CreationLogFile("internet", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE); }
@@ -5403,7 +5382,7 @@ namespace vaoc
             TestCreationOrdres(); // en commentaire pour tester le placement statique
         }
 
-        private void TestCreationPhrases()
+        private static void TestCreationPhrases()
         {
             foreach (ClassMessager.MESSAGES tipeMessage in Enum.GetValues(typeof(ClassMessager.MESSAGES)))
             {
@@ -5414,9 +5393,9 @@ namespace vaoc
         /// <summary>
         /// Creation d'ordres fictifs pour faire des tests de performances
         /// </summary>
-        private void TestCreationOrdres()
+        private static void TestCreationOrdres()
         {
-            Random hasard = new Random();
+            Random hasard = new();
             foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             {
                 int heureDebut = 0; // hasard.Next(12);
@@ -5429,7 +5408,7 @@ namespace vaoc
                         lignePion.ID_PION,
                         lignePion.ID_CASE,
                         lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE,
-                        Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count())].ID_CASE,//ID_CASE_DESTINATION
+                        Donnees.m_donnees.TAB_CASE[hasard.Next(Donnees.m_donnees.TAB_CASE.Count)].ID_CASE,//ID_CASE_DESTINATION
                         Constantes.NULLENTIER,//id ville de destination
                         0,//I_EFFECTIF_DESTINATION
                         Donnees.m_donnees.TAB_PARTIE[0].I_TOUR,//I_TOUR_DEBUT
@@ -5464,9 +5443,9 @@ namespace vaoc
 
         /// <param name="nbUnites">nombre d'unités</param>
 
-        private void TestCreationUnite(int idNation, int nbUnites)
+        private static void TestCreationUnite(int idNation, int nbUnites)
         {
-            Random hasard = new Random();
+            Random hasard = new();
             for (int i = 0; i < nbUnites; i++)
             {
                 string requete;
@@ -5648,18 +5627,18 @@ namespace vaoc
         /// </summary>
         public void ActuelsVersAnciens()
         {
-            int nbPions = Donnees.m_donnees.TAB_PION.Count();
-            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count();
-            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count();
+            int nbPions = Donnees.m_donnees.TAB_PION.Count;
+            int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count;
+            int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count;
             int i;
 
             #region Suppression des pions
             /* complexe aussi sur les pions, quand on remonte sur proprietaire dans sauvegardeMesage de ClassVaocWebFichier, il faut des fois être sur un ancien des fois non et pas possible
              *  a priori de faire un cast automatique entre les deux */
             //On commence par ajouter tous les pions elligibles
-            List<int> listeArchiveUnites = new List<int>();
+            List<int> listeArchiveUnites = new();
             i = 0;
-            while (i < Donnees.m_donnees.TAB_PION.Count())
+            while (i < Donnees.m_donnees.TAB_PION.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 if (lignePion.B_DETRUIT && lignePion.estMessager)
@@ -5671,7 +5650,7 @@ namespace vaoc
 
             //On vérifie que toutes les unités restantes ont bien toutes leurs proprietaires non détruites, sinon, on les remets !
             i = 0;
-            while (i < Donnees.m_donnees.TAB_PION.Count())
+            while (i < Donnees.m_donnees.TAB_PION.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 if (!(lignePion.B_DETRUIT && lignePion.estMessager))
@@ -5683,7 +5662,7 @@ namespace vaoc
 
             //On vérifie que toutes les messages restants ont bien toutes leurs emetteurs non détruits, sinon, on les remets !
             i = 0;
-            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
+            while (i < Donnees.m_donnees.TAB_MESSAGE.Count)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
@@ -5696,7 +5675,7 @@ namespace vaoc
 
             //On retire effectivement les unités
             i = 0;
-            while (i < listeArchiveUnites.Count())
+            while (i < listeArchiveUnites.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(listeArchiveUnites[i]);
                 Donnees.TAB_PION_ANCIENRow lignePionAncienExiste = Donnees.m_donnees.TAB_PION_ANCIEN.FindByID_PION(lignePion.ID_PION);
@@ -5770,9 +5749,9 @@ namespace vaoc
             #region Backup des messages
             int tourSansEnvoi = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION;
             //Liste de tous les messages elligibles à la destruction
-            List<int> listeArchiveMessages = new List<int>();
+            List<int> listeArchiveMessages = new();
             i = 0;
-            while (i < Donnees.m_donnees.TAB_MESSAGE.Count())
+            while (i < Donnees.m_donnees.TAB_MESSAGE.Count)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE[i];
                 //attention il faut aussi garder le dernier ordre reçu par chaque unité sinon, celle-ci ne s'affiche plus dans la mise à jour web !
@@ -5785,7 +5764,7 @@ namespace vaoc
             }
             //on vérifie que toutes les unités restantes ont conserve bien le dernier message sinon, on le remets !
             i = 0;
-            while (i < Donnees.m_donnees.TAB_PION.Count())
+            while (i < Donnees.m_donnees.TAB_PION.Count)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[i];
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.ID_PION_PROPRIETAIRE);
@@ -5806,7 +5785,7 @@ namespace vaoc
 
             //on retire effectivement les messages
             i = 0;
-            while (i < listeArchiveMessages.Count())
+            while (i < listeArchiveMessages.Count)
             {
                 Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.FindByID_MESSAGE(listeArchiveMessages[i]);
                 Donnees.TAB_MESSAGE_ANCIENRow ligneMessageAncien = Donnees.m_donnees.TAB_MESSAGE_ANCIEN.AddTAB_MESSAGE_ANCIENRow(
@@ -5880,7 +5859,7 @@ namespace vaoc
 
             #region suppression des anciens ordres, pas facile a suivre ensuite
             i = 0;
-            while (i < Donnees.m_donnees.TAB_ORDRE.Count())
+            while (i < Donnees.m_donnees.TAB_ORDRE.Count)
             {
                 bool bdetruire = false;
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE[i];

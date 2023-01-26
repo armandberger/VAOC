@@ -75,7 +75,7 @@ namespace vaoc
         private void OnMruFile(int number, String filename)
         {
             InitialiserDonnees();
-            if (ChargementPartie(filename, Donnees.m_donnees))
+            if (ChargementPartie(filename))
             {
                 mruMenu.SetFirstFile(number);
             }
@@ -100,25 +100,9 @@ namespace vaoc
 
         #endregion
 
-        private bool ChargementPartie(string filename, Donnees donnees)
+        private bool ChargementPartie(string filename)
         {
             long memoireAvant, memoireApres;
-
-            //memoireAvant = GC.GetTotalMemory(true);
-            //for (int i = 0; i < 1000000; i++)
-            //{
-            //    Donnees.m_donnees.TAB_CASE.AddTAB_CASERow(0, i, 1, 1, 1, 1, 600, 0);
-            //}
-            //memoireApres = GC.GetTotalMemory(true);//taille mémoire utilisée par le garbage collector en octets
-            //Debug.WriteLine("ajout de 1000000 cases en base ko=" + (memoireApres - memoireAvant) / 1024);
-
-            //memoireAvant = GC.GetTotalMemory(true);
-            //for (int i = 0; i < 1000000; i++)
-            //{
-            //    ClassDataTest.liste.Add(new ClassDataTest(0, i, 1, 1, 1, 1, 600, 0));
-            //}
-            //memoireApres = GC.GetTotalMemory(true);//taille mémoire utilisée par le garbage collector en octets
-            //Debug.WriteLine("ajout de 1000000 cases en memoire ko=" + (memoireApres - memoireAvant) / 1024);
 
             memoireAvant = GC.GetTotalMemory(false);
             Constantes.repertoireDonnees = filename;
@@ -175,7 +159,7 @@ namespace vaoc
             }
         }
 
-        private void Correctifs()
+        private static void Correctifs()
         {
             #region dernier message de pions détruits, doit être indiqué comme tel
             Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NOT NULL");
@@ -1516,279 +1500,7 @@ namespace vaoc
             Debug.WriteLine("Fin Correctifs");
         }
 
-        private void ChargementInitial()
-        {
-            /*
-            Donnees.TAB_PIONRow lignePion;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(0); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(1); lignePion.ID_CASE = 7437579; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(2); lignePion.ID_CASE = 7407347; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(3); lignePion.ID_CASE = 7377116; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(4); lignePion.ID_CASE = 7308012; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(5); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(6); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.S_NOM = "Dépôt de Leipsic"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(7); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.S_NOM = "Dépôt de Torgau"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(10); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(11); lignePion.ID_CASE = 7606000; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(12); lignePion.ID_CASE = 7593044; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(13); lignePion.ID_CASE = 7575774; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(14); lignePion.ID_CASE = 7549863; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(20); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(21); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 20; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(22); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 20; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(23); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 20; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(30); lignePion.ID_CASE = 11844595; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(31); lignePion.ID_CASE = 11814301; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(32); lignePion.ID_CASE = 11784038; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(33); lignePion.ID_CASE = 11334844; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(34); lignePion.ID_CASE = 11844595; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(35); lignePion.ID_CASE = 11784038; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(40); lignePion.ID_CASE = 7053553; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(41); lignePion.ID_CASE = 7053553; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(42); lignePion.ID_CASE = 7044937; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(43); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(44); lignePion.ID_CASE = 7019060; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(45); lignePion.ID_CASE = 7053553; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(50); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(51); lignePion.ID_CASE = 7109156; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(52); lignePion.ID_CASE = 7044389; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(53); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(54); lignePion.ID_CASE = 6703072; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(55); lignePion.ID_CASE = 6750630; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(56); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(57); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(58); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(60); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(61); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(62); lignePion.ID_CASE = 6625171; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(63); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(64); lignePion.ID_CASE = 6625171; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(65); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(70); lignePion.ID_CASE = 6335839; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(71); lignePion.ID_CASE = 6206158; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(72); lignePion.ID_CASE = 6223449; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(73); lignePion.ID_CASE = 5856320; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(74); lignePion.ID_CASE = 6141327; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(75); lignePion.ID_CASE = 6253707; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(80); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(81); lignePion.ID_CASE = 7295057; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(82); lignePion.ID_CASE = 7208669; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(83); lignePion.ID_CASE = 7130920; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(84); lignePion.ID_CASE = 7001335; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(85); lignePion.ID_CASE = 7074767; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(91); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(92); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(93); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(94); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(95); lignePion.ID_CASE = 7536908; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(100); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(101); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(102); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(103); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(104); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(105); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(110); lignePion.ID_CASE = 7533072; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(111); lignePion.ID_CASE = 7533072; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(112); lignePion.ID_CASE = 7498501; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(113); lignePion.ID_CASE = 7459609; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(114); lignePion.ID_CASE = 7649744; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(115); lignePion.ID_CASE = 7412070; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(120); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(121); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(122); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(123); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(124); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(125); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(130); lignePion.ID_CASE = 363213; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(131); lignePion.ID_CASE = 363213; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(132); lignePion.ID_CASE = 363213; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(133); lignePion.ID_CASE = 363188; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(134); lignePion.ID_CASE = 181765; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(135); lignePion.ID_CASE = 224962; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(136); lignePion.ID_CASE = 363188; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(137); lignePion.ID_CASE = 363213; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(138); lignePion.ID_CASE = 181765; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(139); lignePion.ID_CASE = 181765; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(140); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(141); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(142); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(143); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(144); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(145); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(146); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(150); lignePion.ID_CASE = 7657825; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(151); lignePion.ID_CASE = 7670785; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(152); lignePion.ID_CASE = 7657825; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(153); lignePion.ID_CASE = 7964478; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(154); lignePion.ID_CASE = 7843545; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(155); lignePion.ID_CASE = 7701018; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(161); lignePion.ID_CASE = 7657825; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(162); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 20; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(163); lignePion.ID_CASE = 10993244; lignePion.ID_PION_PROPRIETAIRE = 20; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(164); lignePion.ID_CASE = 7515315; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(171); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 140; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(172); lignePion.ID_CASE = 7856502; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(173); lignePion.ID_CASE = 7731250; lignePion.ID_PION_PROPRIETAIRE = 150; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(174); lignePion.ID_CASE = 7493722; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(175); lignePion.ID_CASE = 3182801; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(176); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(177); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(180); lignePion.ID_CASE = 6880373; lignePion.ID_PION_PROPRIETAIRE = 80; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(181); lignePion.ID_CASE = 5830376; lignePion.ID_PION_PROPRIETAIRE = 70; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(182); lignePion.ID_CASE = 7467809; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(183); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 120; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(184); lignePion.ID_CASE = 363213; lignePion.ID_PION_PROPRIETAIRE = 130; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(185); lignePion.ID_CASE = 6997486; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(186); lignePion.ID_CASE = 3182801; lignePion.ID_PION_PROPRIETAIRE = 30; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(187); lignePion.ID_CASE = 6685770; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(188); lignePion.ID_CASE = 7225749; lignePion.ID_PION_PROPRIETAIRE = 60; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(189); lignePion.ID_CASE = 7429362; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(190); lignePion.ID_CASE = 7412070; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(191); lignePion.ID_CASE = 3182801; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(192); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(193); lignePion.ID_CASE = 8603755; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(194); lignePion.ID_CASE = 5124741; lignePion.ID_PION_PROPRIETAIRE = 100; lignePion.S_NOM = "Dépôt d'Osterburg"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(195); lignePion.ID_CASE = 8500950; lignePion.ID_PION_PROPRIETAIRE = 110; lignePion.S_NOM = "Dépôt de Chemnitz"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(197); lignePion.ID_CASE = 11001911; lignePion.ID_PION_PROPRIETAIRE = 40; lignePion.S_NOM = "Dépôt de Dresde"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(198); lignePion.ID_CASE = 6141327; lignePion.ID_PION_PROPRIETAIRE = 50; lignePion.S_NOM = "Dépôt de Zorbiq"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(199); lignePion.ID_CASE = 15209495; lignePion.ID_PION_PROPRIETAIRE = 0; lignePion.S_NOM = "Dépôt de Gorlitz"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(200); lignePion.ID_CASE = 9069404; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(201); lignePion.ID_CASE = 9069404; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(202); lignePion.ID_CASE = 9203284; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(203); lignePion.ID_CASE = 9367532; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(204); lignePion.ID_CASE = 4689113; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(205); lignePion.ID_CASE = 4689113; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(206); lignePion.ID_CASE = 8732412; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.S_NOM = "Dépôt de Potzdam"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(210); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(211); lignePion.ID_CASE = 9233501; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(212); lignePion.ID_CASE = 9462528; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(213); lignePion.ID_CASE = 9484117; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(214); lignePion.ID_CASE = 9406117; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(215); lignePion.ID_CASE = 9069404; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(220); lignePion.ID_CASE = 8909375; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(221); lignePion.ID_CASE = 9077860; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(222); lignePion.ID_CASE = 9026017; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(223); lignePion.ID_CASE = 9056411; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(224); lignePion.ID_CASE = 8943937; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(225); lignePion.ID_CASE = 8909375; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(226); lignePion.ID_CASE = 8861854; lignePion.ID_PION_PROPRIETAIRE = 220; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(231); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(232); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(233); lignePion.ID_CASE = 2488562; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(234); lignePion.ID_CASE = 2332997; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(235); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(240); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(241); lignePion.ID_CASE = 9812350; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(242); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(243); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(244); lignePion.ID_CASE = 9808010; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(245); lignePion.ID_CASE = 9816659; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(246); lignePion.ID_CASE = 9855604; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(247); lignePion.ID_CASE = 9821003; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(248); lignePion.ID_CASE = 9803668; lignePion.ID_PION_PROPRIETAIRE = 240; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(250); lignePion.ID_CASE = 2488504; lignePion.ID_PION_PROPRIETAIRE = 200; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(251); lignePion.ID_CASE = 1542494; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(252); lignePion.ID_CASE = 2168876; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(253); lignePion.ID_CASE = 2333060; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(254); lignePion.ID_CASE = 2207727; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(255); lignePion.ID_CASE = 2488504; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(256); lignePion.ID_CASE = 2332997; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(257); lignePion.ID_CASE = 2488504; lignePion.ID_PION_PROPRIETAIRE = 250; lignePion.S_NOM = "Dépôt de Ratzleburg"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(300); lignePion.ID_CASE = 8417823; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(301); lignePion.ID_CASE = 8318390; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(302); lignePion.ID_CASE = 8236441; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(303); lignePion.ID_CASE = 8828224; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(304); lignePion.ID_CASE = 10707218; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.S_NOM = "Dépôt de Luckau"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(305); lignePion.ID_CASE = 8016071; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(306); lignePion.ID_CASE = 8633815; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(310); lignePion.ID_CASE = 9005449; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(311); lignePion.ID_CASE = 9221363; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(312); lignePion.ID_CASE = 8698785; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(313); lignePion.ID_CASE = 8698785; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(314); lignePion.ID_CASE = 9221363; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(315); lignePion.ID_CASE = 8698785; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(316); lignePion.ID_CASE = 9221363; lignePion.ID_PION_PROPRIETAIRE = 310; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(317); lignePion.ID_CASE = 8828224; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(320); lignePion.ID_CASE = 6931602; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(321); lignePion.ID_CASE = 6430523; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(322); lignePion.ID_CASE = 7385203; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(323); lignePion.ID_CASE = 6430523; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(324); lignePion.ID_CASE = 7290068; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(325); lignePion.ID_CASE = 6417582; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(326); lignePion.ID_CASE = 7290068; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(330); lignePion.ID_CASE = 8016071; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(331); lignePion.ID_CASE = 8633815; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(332); lignePion.ID_CASE = 5700238; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(333); lignePion.ID_CASE = 8828224; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(334); lignePion.ID_CASE = 6395930; lignePion.ID_PION_PROPRIETAIRE = 320; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(335); lignePion.ID_CASE = 5739131; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(336); lignePion.ID_CASE = 8828224; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(340); lignePion.ID_CASE = 5739131; lignePion.ID_PION_PROPRIETAIRE = 300; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(341); lignePion.ID_CASE = 5618109; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(342); lignePion.ID_CASE = 5631092; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(343); lignePion.ID_CASE = 5648386; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(344); lignePion.ID_CASE = 5674310; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(345); lignePion.ID_CASE = 5631100; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(346); lignePion.ID_CASE = 5635404; lignePion.ID_PION_PROPRIETAIRE = 340; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(400); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(401); lignePion.ID_CASE = 13944783; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(402); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(403); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(404); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(405); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(406); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(407); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.S_NOM = "Dépôt de Prague"; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(411); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(412); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(413); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(414); lignePion.ID_CASE = 13525900; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(420); lignePion.ID_CASE = 13214850; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(421); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(422); lignePion.ID_CASE = 13167329; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(423); lignePion.ID_CASE = 13214850; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(424); lignePion.ID_CASE = 13262369; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(430); lignePion.ID_CASE = 12933916; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(431); lignePion.ID_CASE = 12653074; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(432); lignePion.ID_CASE = 12653074; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(433); lignePion.ID_CASE = 12653074; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(434); lignePion.ID_CASE = 12653074; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(435); lignePion.ID_CASE = 12653074; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(436); lignePion.ID_CASE = 12838817; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(441); lignePion.ID_CASE = 13910259; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(442); lignePion.ID_CASE = 13378898; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(443); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(444); lignePion.ID_CASE = 12825877; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(450); lignePion.ID_CASE = 13944783; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(451); lignePion.ID_CASE = 13815273; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(452); lignePion.ID_CASE = 13776416; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(453); lignePion.ID_CASE = 13845498; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(454); lignePion.ID_CASE = 13884356; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(455); lignePion.ID_CASE = 13815273; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(456); lignePion.ID_CASE = 13776416; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(457); lignePion.ID_CASE = 13823907; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(458); lignePion.ID_CASE = 13944783; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(461); lignePion.ID_CASE = 13927525; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(462); lignePion.ID_CASE = 13214850; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(463); lignePion.ID_CASE = 13214850; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(464); lignePion.ID_CASE = 12825877; lignePion.ID_PION_PROPRIETAIRE = 430; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(470); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 400; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(471); lignePion.ID_CASE = 13054914; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(472); lignePion.ID_CASE = 13054914; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(473); lignePion.ID_CASE = 13098144; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(474); lignePion.ID_CASE = 13098144; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(475); lignePion.ID_CASE = 13024665; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(476); lignePion.ID_CASE = 13089487; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(477); lignePion.ID_CASE = 13089487; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(481); lignePion.ID_CASE = 13944783; lignePion.ID_PION_PROPRIETAIRE = 450; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(482); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(483); lignePion.ID_CASE = 13365919; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(484); lignePion.ID_CASE = 13352942; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(485); lignePion.ID_CASE = 13106794; lignePion.ID_PION_PROPRIETAIRE = 470; lignePion.B_TELEPORTATION = true;
-            lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(486); lignePion.ID_CASE = 13322849; lignePion.ID_PION_PROPRIETAIRE = 420; lignePion.B_TELEPORTATION = true;
-            */
-        }
-
-        private void TestsDePerformance()
+        private static void TestsDePerformance()
         {
             //DateTime timeStart;
             //TimeSpan perf;
@@ -2237,16 +1949,6 @@ namespace vaoc
 
         }
 
-        private void imprimerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FonctionNonImplementée("imprimerToolStripMenuItem_Click");
-        }
-
-        private DialogResult FonctionNonImplementée(string libelle)
-        {
-            return MessageBox.Show(libelle, "Fonction non implémentée", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -2289,7 +1991,7 @@ namespace vaoc
             InitialiserDonnees();
             if (DialogResult.OK == this.openFileDialog.ShowDialog(this))
             {
-                if (ChargementPartie(openFileDialog.FileName, Donnees.m_donnees))
+                if (ChargementPartie(openFileDialog.FileName))
                 {
                     mruMenu.AddFile(curFileName);
                     mruMenu.SaveToRegistry();
@@ -2435,7 +2137,7 @@ namespace vaoc
                 //si les images de carte à changer, il faut les mettre à jour
                 if (nomCarte != general.nomCarte)
                 {
-                    ligneJeu.S_NOM_CARTE_HISTORIQUE = general.nomCarte.Substring(general.nomCarte.LastIndexOf('\\') + 1);
+                    ligneJeu.S_NOM_CARTE_HISTORIQUE = general.nomCarte[(general.nomCarte.LastIndexOf('\\') + 1)..];
                     repertoireDest = Constantes.repertoireDonnees + ligneJeu.S_NOM_CARTE_HISTORIQUE;
 
                     if (general.nomCarte != repertoireDest)
@@ -2821,11 +2523,13 @@ namespace vaoc
                 //on trace le cadrillage des blocs
                 Graphics graph = Graphics.FromImage(ImageCarte.Image);
                 int tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
-                int nbBlocsHorizontaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE / (decimal)tailleBloc);
-                int nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
-                Pen styloCadrillage = new(Color.DarkSeaGreen, 1);
-                styloCadrillage.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-                styloCadrillage.DashCap = System.Drawing.Drawing2D.DashCap.Flat;
+                //int nbBlocsHorizontaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE / (decimal)tailleBloc);
+                //int nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
+                Pen styloCadrillage = new(Color.DarkSeaGreen, 1)
+                {
+                    DashStyle = System.Drawing.Drawing2D.DashStyle.Dash,
+                    DashCap = System.Drawing.Drawing2D.DashCap.Flat
+                };
                 float[] traits= new float[2];
                 traits[0]=2;
                 traits[1]=8;
@@ -2846,7 +2550,7 @@ namespace vaoc
                 //}
                 graph.Dispose();
 
-                List<int> listeCases;// = new List<int>;
+                // = new List<int>;
                 List<Donnees.TAB_CASERow> cheminPCCTrajet = new();
                 foreach (Donnees.TAB_PCC_COUTSRow lignePCCTrajet in Donnees.m_donnees.TAB_PCC_COUTS)
                 //foreach(Donnees.TAB_PCC_CASE_BLOCSRow lignePCCTrajet in Donnees.m_donnees.TAB_PCC_CASE_BLOCS)
@@ -2866,7 +2570,7 @@ namespace vaoc
                         lignePCCTrajet.I_COUT));
 
                     cheminPCCTrajet.Clear();
-                    Dal.ChargerTrajet(lignePCCTrajet.ID_TRAJET, out listeCases);
+                    Dal.ChargerTrajet(lignePCCTrajet.ID_TRAJET, out List<int> listeCases);
                     cheminPCCTrajet.Capacity = listeCases.Count;
                     int j = 0;
                     while (j < listeCases.Count)
@@ -2881,12 +2585,11 @@ namespace vaoc
 
             if (this.toolStripButtonTrajetsVilles.CheckState == CheckState.Checked)
             {
-                List<int> listeCases;// = new List<int>;
                 List<Donnees.TAB_CASERow> cheminPCCTrajet = new();
                 foreach (Donnees.TAB_PCC_VILLESRow lignePCCVille in Donnees.m_donnees.TAB_PCC_VILLES)
                 {
                     cheminPCCTrajet.Clear();
-                    Dal.ChargerTrajet(lignePCCVille.ID_TRAJET, Constantes.CST_TRAJET_VILLE, out listeCases);
+                    Dal.ChargerTrajet(lignePCCVille.ID_TRAJET, Constantes.CST_TRAJET_VILLE, out List<int> listeCases);
                     cheminPCCTrajet.Capacity = listeCases.Count;
                     int j = 0;
                     while (j < listeCases.Count)
@@ -2928,7 +2631,7 @@ namespace vaoc
                     {
                         Cartographie.AfficherChemin((Bitmap)ImageCarte.Image, m_cheminVerifierTrajet, Color.LavenderBlush, 2);
                     }
-                    Cartographie.AfficherArriveeDepart((Bitmap)ImageCarte.Image, m_cheminSelection[0], m_cheminSelection[m_cheminSelection.Count-1], Color.DarkGreen, 1);
+                    Cartographie.AfficherArriveeDepart((Bitmap)ImageCarte.Image, m_cheminSelection[0], m_cheminSelection[^1], Color.DarkGreen, 1);
                 }
                 else
                 {
@@ -2990,11 +2693,8 @@ namespace vaoc
                     || (!Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull() &&
                     Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE != nomCarteTopographique))
                 {
-                    if (null != ImageCarte.Image)
-                    {
-                        //on relache l'image courante pour que l'on puisse, eventuellement, la modifier dans la form Carte
-                        ImageCarte.Image.Dispose();
-                    }
+                    //on relache l'image courante pour que l'on puisse, eventuellement, la modifier dans la form Carte
+                    ImageCarte.Image?.Dispose();
 
                     Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE = nomCarteTopographique;
 
@@ -3129,9 +2829,10 @@ namespace vaoc
 
         private void aptitudesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAptitude fAptitude = new();
-
-            fAptitude.tableAptitudes = Donnees.m_donnees.TAB_APTITUDES;
+            FormAptitude fAptitude = new()
+            {
+                tableAptitudes = Donnees.m_donnees.TAB_APTITUDES
+            };
             if (DialogResult.OK == fAptitude.ShowDialog())
             {
                 m_modification = true;
@@ -3156,9 +2857,10 @@ namespace vaoc
 
         private void modelesDePIonsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormModelesPions fModelePions = new();
-
-            fModelePions.tableModelesPions = Donnees.m_donnees.TAB_MODELE_PION;
+            FormModelesPions fModelePions = new()
+            {
+                tableModelesPions = Donnees.m_donnees.TAB_MODELE_PION
+            };
             if (DialogResult.OK == fModelePions.ShowDialog())
             {
                 m_modification = true;
@@ -3169,9 +2871,10 @@ namespace vaoc
 
         private void aptitudesModelesDePIonsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormAptitudesModelesPions fAptitudesModelePions = new();
-
-            fAptitudesModelePions.tableAptitudesModelesPions = Donnees.m_donnees.TAB_APTITUDES_PION;
+            FormAptitudesModelesPions fAptitudesModelePions = new()
+            {
+                tableAptitudesModelesPions = Donnees.m_donnees.TAB_APTITUDES_PION
+            };
             if (DialogResult.OK == fAptitudesModelePions.ShowDialog())
             {
                 m_modification = true;
@@ -3207,19 +2910,19 @@ namespace vaoc
                 {
                     if (lignePion.estMessager || lignePion.estPatrouille)
                     {
-                            Donnees.TAB_MODELE_PIONRow ligneModeleProprietaire = lignePion.modelePion;
+                        Donnees.TAB_MODELE_PIONRow ligneModeleProprietaire = lignePion.modelePion;
                         if (lignePion.possedeAptitude("MESSAGER"))
                         {
-                            if (0 == ligneModeleProprietaire.ID_NATION && lignePion.ID_MODELE_PION != 5)
-                            {
-                                int pb = 0;
-                                pb++;
-                            }
-                            if (0 != ligneModeleProprietaire.ID_NATION && lignePion.ID_MODELE_PION != 6)
-                            {
-                                int pb = 0;
-                                pb++;
-                            }
+                        //    if (0 == ligneModeleProprietaire.ID_NATION && lignePion.ID_MODELE_PION != 5)
+                        //    {
+                        //        int pb = 0;
+                        //        pb++;
+                        //    }
+                        //    if (0 != ligneModeleProprietaire.ID_NATION && lignePion.ID_MODELE_PION != 6)
+                        //    {
+                        //        int pb = 0;
+                        //        pb++;
+                        //    }
                             lignePion.ID_MODELE_PION = (0 == ligneModeleProprietaire.ID_NATION) ? 5 : 6;
                         }
                     }
@@ -3231,9 +2934,10 @@ namespace vaoc
 
         private void ordresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormOrdre fOrdre = new();
-
-            fOrdre.tableOrdre = Donnees.m_donnees.TAB_ORDRE;
+            FormOrdre fOrdre = new()
+            {
+                tableOrdre = Donnees.m_donnees.TAB_ORDRE
+            };
             if (DialogResult.OK == fOrdre.ShowDialog())
             {
                 m_modification = true;
@@ -3353,10 +3057,9 @@ namespace vaoc
                 e.Result = "La partie est déjà terminée avec la victoire de la nation ID=" + Donnees.m_donnees.TAB_PARTIE[0].ID_VICTOIRE;
             }
 
-            string messageErreur;
             e.Cancel = false;
             m_nbBatailles = Donnees.m_donnees.TAB_BATAILLE.Count;
-            if (!traitement.TraitementHeure(fichierCourant, travailleur, out messageErreur))
+            if (!traitement.TraitementHeure(fichierCourant, travailleur, out string messageErreur))
             {
                 e.Cancel = true;
                 e.Result = messageErreur;
@@ -3469,9 +3172,10 @@ namespace vaoc
 
         private void phrasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPhrase fPhrase = new();
-
-            fPhrase.tablePhrase = Donnees.m_donnees.TAB_PHRASE;
+            FormPhrase fPhrase = new()
+            {
+                tablePhrase = Donnees.m_donnees.TAB_PHRASE
+            };
             if (DialogResult.OK == fPhrase.ShowDialog())
             {
                 m_modification = true;
@@ -3482,10 +3186,11 @@ namespace vaoc
 
         private void bataillesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBatailles fBatailles = new();
-
-            fBatailles.tableBataille = Donnees.m_donnees.TAB_BATAILLE;
-            fBatailles.tableBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS;
+            FormBatailles fBatailles = new()
+            {
+                tableBataille = Donnees.m_donnees.TAB_BATAILLE,
+                tableBataillePions = Donnees.m_donnees.TAB_BATAILLE_PIONS
+            };
             if (DialogResult.OK == fBatailles.ShowDialog())
             {
                 m_modification = true;
@@ -3511,9 +3216,10 @@ namespace vaoc
 
         private void mEssagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMessage fMessages = new();
-
-            fMessages.tableMessage = Donnees.m_donnees.TAB_MESSAGE;
+            FormMessage fMessages = new()
+            {
+                tableMessage = Donnees.m_donnees.TAB_MESSAGE
+            };
             if (DialogResult.OK == fMessages.ShowDialog())
             {
                 m_modification = true;
@@ -3601,9 +3307,10 @@ namespace vaoc
 
         private void renfortsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormRenfort fRenfort = new();
-
-            fRenfort.tableRenfort = Donnees.m_donnees.TAB_RENFORT;
+            FormRenfort fRenfort = new()
+            {
+                tableRenfort = Donnees.m_donnees.TAB_RENFORT
+            };
             if (DialogResult.OK == fRenfort.ShowDialog())
             {
                 m_modification = true;
@@ -3615,10 +3322,7 @@ namespace vaoc
 
         private void miseÀJourInternetToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ClassTraitementHeure traitement = new();
-
-            string messageErreur;
-            if (!traitement.miseÀJourInternet(fichierCourant, out messageErreur))
+            if (!ClassTraitementHeure.miseÀJourInternet(fichierCourant, out string messageErreur))
             {
                 MessageBox.Show("Erreur durant la mise à jour du Web. Consultez le fichier de log : " + messageErreur, "miseÀJourInternet", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -3657,7 +3361,7 @@ namespace vaoc
                 labelInformationIDCASE.Text = String.Format("ID_CASE:{0:00000}", ligneCase.ID_CASE);
 
                 //recherche du trajet de l'unité en mémoire s'il existe pour l'affichage
-                if (null != m_cheminSelection) { m_cheminSelection.Clear(); }
+                m_cheminSelection?.Clear();
                 this.buttonRecalculTrajet.Enabled = false;
                 this.buttonVerifierTrajet.Enabled = false;
                 Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
@@ -3676,12 +3380,10 @@ namespace vaoc
                         ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
                         ligneCaseDepart = Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
                     }
-                    AstarTerrain[] tableCoutsMouvementsTerrain;
-                    double cout, coutHorsRoute;
                     AStar etoile = new();
 
                     if (etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
-                        m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
+                        m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, out m_cheminSelection, out _, out _, out _, out _))
                     {
                         this.buttonVerifierTrajet.Enabled = true;
                         this.buttonRecalculTrajet.Enabled = true;
@@ -3710,14 +3412,15 @@ namespace vaoc
 
         private void hPAStarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormHPA fHPA = new();
-
-            //affectation des tables
-            //fHPA.tableCaseBlocs = Donnees.m_donnees.TAB_PCC_CASE_BLOCS;
-            fHPA.tailleBloc = Donnees.m_donnees.TAB_JEU[0].IsI_TAILLEBLOC_PCCNull() ? 20 : Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
-            //fHPA.tablePCCCouts = Donnees.m_donnees.TAB_PCC_COUTS;
-            //fHPA.tablePCCTrajet = Donnees.m_donnees.TAB_PCC_TRAJET;
-            fHPA.fichierCourant = this.fichierCourant;
+            FormHPA fHPA = new()
+            {
+                //affectation des tables
+                //fHPA.tableCaseBlocs = Donnees.m_donnees.TAB_PCC_CASE_BLOCS;
+                tailleBloc = Donnees.m_donnees.TAB_JEU[0].IsI_TAILLEBLOC_PCCNull() ? 20 : Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC,
+                //fHPA.tablePCCCouts = Donnees.m_donnees.TAB_PCC_COUTS;
+                //fHPA.tablePCCTrajet = Donnees.m_donnees.TAB_PCC_TRAJET;
+                fichierCourant = this.fichierCourant
+            };
 
             fHPA.ShowDialog();
             m_modification = true;
@@ -3995,8 +3698,7 @@ namespace vaoc
 
                     //recherche du plus court chemin
                     labelInformationTempsPasse.Text = string.Empty;
-                    AstarTerrain[] tableCoutsMouvementsTerrain;
-                    ClassTraitementHeure traitementtest = new();
+                    //AstarTerrain[] tableCoutsMouvementsTerrain;
 
                     #region version Hors Route
                     /* fonctionne pas du tout !
@@ -4036,7 +3738,7 @@ namespace vaoc
                     //maintenant on compare avec la version HPA
                     //Donnees.m_donnees.TAB_PCC_COUTS.Initialisation(); -> deja fait au chargement
                     if (null == m_etoileHPA) m_etoileHPA = new AStar();
-                    m_etoileHPA.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    m_etoileHPA.CalculModeleMouvementsPion(out _);
                     timeStart = DateTime.Now;
                     //if (!m_etoileHPA.InitialisationProprietaireTrajet())
                     //{
@@ -4044,13 +3746,11 @@ namespace vaoc
                     //    return;
                     //}
                     //if (!m_etoileHPA.SearchPathHPA(m_departPlusCourtChemin, m_arriveePlusCourtChemin, tableCoutsMouvementsTerrain, -1))
-                    List<LigneCASE> chemin;
-                    double cout, coutHorsRoute;
 
                     int id_case = lignePion.ID_CASE;
                     lignePion.ID_CASE = m_departPlusCourtChemin.ID_CASE;
                     if (!m_etoileHPA.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT, lignePion,m_departPlusCourtChemin, m_arriveePlusCourtChemin, 
-                        out chemin, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out _))
+                        out List<LigneCASE> chemin, out _, out _, out _, out _))
                     {
                             MessageBox.Show(string.Format("Il n'y a aucun chemin possible entre les points {0}:{1},{2} -> {3}:{4},{5}", 
                             m_departPlusCourtChemin.ID_CASE, m_departPlusCourtChemin.I_X, m_departPlusCourtChemin.I_Y,
@@ -4183,7 +3883,7 @@ namespace vaoc
             {
                 Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParXY((int)Math.Round(e.X / m_zoom, 0), (int)Math.Round(e.Y / m_zoom, 0));
                 Donnees.TAB_CASERow ligneCasePont = ligneCase.RecherchePontouPonton(true, false, out lgPontOuGue);
-                Donnees.TAB_CASERow ligneCasePonton = ligneCase.RecherchePontouPonton(false, false, out lgPontOuGue);
+                Donnees.TAB_CASERow ligneCasePonton = ligneCase.RecherchePontouPonton(false, false, out int lgPonton);
                 if (null == ligneCasePont && null == ligneCasePonton)
                 {
                     MessageBox.Show("Il n'y a aucun pont ou ponton à proximité", "Destruction de pont", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -4198,7 +3898,7 @@ namespace vaoc
                         }
                         else
                         {
-                            MessageBox.Show("ponton détruit sur une longueur de " + lgPontOuGue.ToString(), "Pont Endommagé/Ponton détruit", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("ponton détruit sur une longueur de " + lgPonton.ToString(), "Pont Endommagé/Ponton détruit", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     else
@@ -4243,11 +3943,13 @@ namespace vaoc
         private void AjouterModifierNomSurCarte(int clicX, int clicY)
         {
             //ajout, suppression, modifications de noms sur la carte
-            FormNomCarte fNomCarte = new();
-            fNomCarte.X = clicX;
-            fNomCarte.Y = clicY;
-            fNomCarte.tablePolice = Donnees.m_donnees.TAB_POLICE;
-            fNomCarte.id_nom = Constantes.CST_IDNULL;
+            FormNomCarte fNomCarte = new()
+            {
+                X = clicX,
+                Y = clicY,
+                tablePolice = Donnees.m_donnees.TAB_POLICE,
+                id_nom = Constantes.CST_IDNULL
+            };
             int id_case = Constantes.CST_IDNULL;
             int i = 0;
             Donnees.TAB_CASERow ligneCase = null;
@@ -4415,7 +4117,6 @@ namespace vaoc
 
         private void buttonVerifierTrajet_Click(object sender, EventArgs e)
         {
-            AstarTerrain[] tableCoutsMouvementsTerrain;
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
             Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
             Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.I_INFANTERIE > 0 || m_lignePionSelection.I_CAVALERIE > 0 || m_lignePionSelection.I_ARTILLERIE > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
@@ -4425,7 +4126,7 @@ namespace vaoc
             requete = string.Format("ID_VILLE_DEBUT=50 AND ID_VILLE_FIN=26");
             Donnees.TAB_PCC_VILLESRow[] lignesCout2 = (Donnees.TAB_PCC_VILLESRow[])Donnees.m_donnees.TAB_PCC_VILLES.Select(requete);*/
             
-            m_etoileHPA.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+            m_etoileHPA.CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain);
             if (!m_etoileHPA.SearchPathHPA(ligneCaseDepart, ligneCaseDestination, tableCoutsMouvementsTerrain))
             {
                 MessageBox.Show("Il n'y a aucun chemin possible entre les deux points", "buttonVerifierTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -4439,14 +4140,11 @@ namespace vaoc
 
         private void buttonRecalculTrajet_Click(object sender, EventArgs e)
         {
-            string messageErreur;
             Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Mouvement(m_lignePionSelection.ID_PION);
             Donnees.TAB_CASERow ligneCaseDestination = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DESTINATION);
             Donnees.TAB_CASERow ligneCaseDepart = (m_lignePionSelection.effectifTotal > 0) ? Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART) : Donnees.m_donnees.TAB_CASE.FindParID_CASE(m_lignePionSelection.ID_CASE);
             Donnees.TAB_NATIONRow ligneNation = m_lignePionSelection.nation; // Donnees.m_donnees.TAB_PION.TrouveNation(m_lignePionSelection);
             //Donnees.TAB_NOMS_CARTERow ligneNom=null;
-            AstarTerrain[] tableCoutsMouvementsTerrain;
-            double cout, coutHorsRoute;
             int avancementPion;
 
             //if (!ligneOrdre.IsID_NOM_DESTINATIONNull())
@@ -4461,7 +4159,7 @@ namespace vaoc
             }
             else
             {
-                avancementPion = Cartographie.AvancementPourRecalcul(Constantes.TYPEPARCOURS.MOUVEMENT, m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out messageErreur);
+                avancementPion = Cartographie.AvancementPourRecalcul(Constantes.TYPEPARCOURS.MOUVEMENT, m_lignePionSelection, ligneCaseDepart, ligneCaseDestination, ligneOrdre, out _);
             }
 
             if (avancementPion < 0)
@@ -4477,7 +4175,7 @@ namespace vaoc
             AStar etoile = new();
             if (!etoile.RechercheChemin(Constantes.TYPEPARCOURS.MOUVEMENT,
                 m_lignePionSelection, Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneOrdre.ID_CASE_DEPART), ligneCaseDestination, 
-                out m_cheminSelection, out cout, out coutHorsRoute, out tableCoutsMouvementsTerrain, out messageErreur))
+                out m_cheminSelection, out _, out _, out _, out string messageErreur))
             {
                 MessageBox.Show("Erreur dans RechercheChemin : "+ messageErreur, "buttonRecalculTrajet_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -4488,7 +4186,7 @@ namespace vaoc
                 if (avancementPion >= m_cheminSelection.Count)
                 {
                     //l'unité devrait déjà être arrivée
-                    m_lignePionSelection.ID_CASE = m_cheminSelection[m_cheminSelection.Count - 1].ID_CASE;
+                    m_lignePionSelection.ID_CASE = m_cheminSelection[^1].ID_CASE;
                     ligneOrdre.I_EFFECTIF_DEPART = 0;
                     ligneOrdre.I_EFFECTIF_DESTINATION = m_lignePionSelection.effectifTotal;
                 }
@@ -4503,7 +4201,7 @@ namespace vaoc
             {
                 if (avancementPion >= m_cheminSelection.Count)
                 {
-                    m_lignePionSelection.ID_CASE = m_cheminSelection[m_cheminSelection.Count - 1].ID_CASE;
+                    m_lignePionSelection.ID_CASE = m_cheminSelection[^1].ID_CASE;
                 }
                 else
                 {
@@ -4518,9 +4216,11 @@ namespace vaoc
         private void genererLeFilmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //MessageBox.Show("La génération de vidéo se fait sur un projet séparé car il utilise des méthodes qui ne sont pas 'safe'.", "Generation de Vidéo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            FormVideo frmVideo = new();
-            frmVideo.repertoireSource = Constantes.repertoireDonnees;
-            frmVideo.fichierCourant = this.fichierCourant;
+            FormVideo frmVideo = new()
+            {
+                repertoireSource = Constantes.repertoireDonnees,
+                fichierCourant = this.fichierCourant
+            };
             frmVideo.Show(this);
         }
 
@@ -4586,9 +4286,10 @@ namespace vaoc
 
         private void nomsDesLeadesPromusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNomsPromus fNomsPromus = new();
-
-            fNomsPromus.tableNomsPromus = Donnees.m_donnees.TAB_NOMS_PROMUS;
+            FormNomsPromus fNomsPromus = new()
+            {
+                tableNomsPromus = Donnees.m_donnees.TAB_NOMS_PROMUS
+            };
             if (DialogResult.OK == fNomsPromus.ShowDialog())
             {
                 m_modification = true;
@@ -4680,9 +4381,10 @@ namespace vaoc
 
         private void messagesAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormMessageAncien fMessagesAncien = new();
-
-            fMessagesAncien.tableMessage = Donnees.m_donnees.TAB_MESSAGE_ANCIEN;
+            FormMessageAncien fMessagesAncien = new()
+            {
+                tableMessage = Donnees.m_donnees.TAB_MESSAGE_ANCIEN
+            };
             if (DialogResult.OK == fMessagesAncien.ShowDialog())
             {
                 m_modification = true;
@@ -4693,9 +4395,10 @@ namespace vaoc
 
         private void pionsAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormPionAncien fPion = new();
-
-            fPion.tablePions = Donnees.m_donnees.TAB_PION_ANCIEN;
+            FormPionAncien fPion = new()
+            {
+                tablePions = Donnees.m_donnees.TAB_PION_ANCIEN
+            };
             if (DialogResult.OK == fPion.ShowDialog())
             {
                 m_modification = true;
@@ -4707,9 +4410,10 @@ namespace vaoc
 
         private void ordresAnciensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormOrdreAncien fOrdre = new();
-
-            fOrdre.tableOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN;
+            FormOrdreAncien fOrdre = new()
+            {
+                tableOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN
+            };
             if (DialogResult.OK == fOrdre.ShowDialog())
             {
                 m_modification = true;
@@ -4720,9 +4424,10 @@ namespace vaoc
 
         private void repriseDeDonnéesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormReprise fReprise = new();
-
-            fReprise.fichierCourant = this.fichierCourant;
+            FormReprise fReprise = new()
+            {
+                fichierCourant = this.fichierCourant
+            };
             if (DialogResult.OK == fReprise.ShowDialog())
             {
                 m_modification = true;
@@ -4771,11 +4476,11 @@ namespace vaoc
             int nbPions = Donnees.m_donnees.TAB_PION.Count;
             int nbMessage = Donnees.m_donnees.TAB_MESSAGE.Count;
             int nbOrdres = Donnees.m_donnees.TAB_ORDRE.Count;
-            int i = 0;
 
             #region Backup des messages, ordres et pions détruits ou passés
             /* Retrait de l'optimisation sur les messages, en effets, certains pouvant être crées sur le web d'autres par l'interface, cela crée des bugs d'identifiants. */
             /*
+            int i = 0;
             while (i<Donnees.m_donnees.TAB_MESSAGE_ANCIEN.Count())
             {
                 Donnees.TAB_MESSAGE_ANCIENRow ligneMessage = Donnees.m_donnees.TAB_MESSAGE_ANCIEN[i];
@@ -4847,7 +4552,7 @@ namespace vaoc
             }
             */
             #region récupératon des ordres anciens
-            i = 0;
+            int i = 0;
             while (i<Donnees.m_donnees.TAB_ORDRE_ANCIEN.Count)
             {
                 Donnees.TAB_ORDRE_ANCIENRow ligneOrdre = Donnees.m_donnees.TAB_ORDRE_ANCIEN[i];
@@ -4857,7 +4562,8 @@ namespace vaoc
                 }
                 else
                 {
-                    Donnees.TAB_ORDRERow ligneOrdreAncien = Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
+                    //Donnees.TAB_ORDRERow ligneOrdreAncien = 
+                    Donnees.m_donnees.TAB_ORDRE.AddTAB_ORDRERow(
                     //ligneOrdre.ID_ORDRE,
                     ligneOrdre.ID_ORDRE_TRANSMIS,
                     ligneOrdre.ID_ORDRE_SUIVANT,
@@ -4970,9 +4676,10 @@ namespace vaoc
 
         private void nomsPionsUniquesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormNomsPions fNompsPionsTable = new();
-
-            fNompsPionsTable.tableNomsPions = Donnees.m_donnees.TAB_NOMS_PIONS;
+            FormNomsPions fNompsPionsTable = new()
+            {
+                tableNomsPions = Donnees.m_donnees.TAB_NOMS_PIONS
+            };
             if (DialogResult.OK == fNompsPionsTable.ShowDialog())
             {
                 m_modification = true;
@@ -4983,12 +4690,11 @@ namespace vaoc
 
         private void extractionDeLaBaseEnCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string nomfichier;
             string nomsfichier = string.Empty;
             string messageErreur = string.Empty;
             foreach (DataTable table in Donnees.m_donnees.Tables)
             {
-                messageErreur += Dal.exportCSV(table, out nomfichier);
+                messageErreur += Dal.exportCSV(table, out string nomfichier);
                 nomsfichier += nomfichier + ",";
             }
 
@@ -5026,8 +4732,10 @@ namespace vaoc
 
         private void copieDeSauvegardeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBackup copieDeSauvegarde = new();
-            copieDeSauvegarde.fichierCourant = fichierCourant;
+            FormBackup copieDeSauvegarde = new()
+            {
+                fichierCourant = fichierCourant
+            };
             copieDeSauvegarde.ShowDialog();
         }
 
@@ -5050,10 +4758,11 @@ namespace vaoc
 
         private void bataillesVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormBataillesVideo fBataillesVideo = new();
-
-            fBataillesVideo.tableBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO;
-            fBataillesVideo.tableBataillePionsVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO;
+            FormBataillesVideo fBataillesVideo = new()
+            {
+                tableBatailleVideo = Donnees.m_donnees.TAB_BATAILLE_VIDEO,
+                tableBataillePionsVideo = Donnees.m_donnees.TAB_BATAILLE_PIONS_VIDEO
+            };
             if (DialogResult.OK == fBataillesVideo.ShowDialog())
             {
                 m_modification = true;
@@ -5079,17 +4788,19 @@ namespace vaoc
 
         private void genererLesFilmsDeBatailleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormVideoBatailles fVideoBatailles = new();
-            fVideoBatailles.m_nomfichier = this.curFileName;
+            FormVideoBatailles fVideoBatailles = new()
+            {
+                m_nomfichier = this.curFileName
+            };
             fVideoBatailles.ShowDialog();
         }
     }
 
-    internal static class NativeMethods
+    internal static partial class NativeMethods
     {
         // Import SetThreadExecutionState Win32 API and necessary flags
-        [DllImport("kernel32.dll")]
-        public static extern uint SetThreadExecutionState(uint esFlags);
+        [LibraryImport("kernel32.dll")]
+        public static partial uint SetThreadExecutionState(uint esFlags);
         public const uint ES_CONTINUOUS = 0x80000000;
         public const uint ES_SYSTEM_REQUIRED = 0x00000001;
     }

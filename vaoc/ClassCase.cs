@@ -174,28 +174,28 @@ namespace vaoc
             internal bool ConstruirePonton()
             {
                 string message;
-                List<Bloc> listeBlocsARecomposer = new List<Bloc>();
+                List<Bloc> listeBlocsARecomposer = new();
 
                 try
                 {
                     Debug.WriteLine(string.Format("Début ConstruirePonton sur la case ID={0}({1},{2})", ID_CASE, I_X, I_Y));
                     DateTime timeStartGlobal = DateTime.Now;
-                    ClassHPAStarCreation hpaStarCreation = new ClassHPAStarCreation(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
+                    ClassHPAStarCreation hpaStarCreation = new(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
                     hpaStarCreation.InitialisationIdTrajet();//pour calculer le prochain IdTrajet en création
 
                     //recherche de toutes les cases constituant le ponton
-                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>
+                    List<Donnees.TAB_CASERow> listeCasesPont = new()
                     {
-                        this
+                        this //ajout this à la collection
                     };
                     ListeCasesVoisinesDeMemeType(ref listeCasesPont);
-                    Debug.WriteLine(string.Format("ConstruirePonton sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count()));
+                    Debug.WriteLine(string.Format("ConstruirePonton sur la case ID={0}({1},{2}) sur une longueur de {3}", ID_CASE, I_X, I_Y, listeCasesPont.Count));
 
                     foreach (Donnees.TAB_CASERow ligneCasePont in listeCasesPont)
                     {
                         Donnees.TAB_MODELE_TERRAINRow ligneModeleTerrain = Donnees.m_donnees.TAB_MODELE_TERRAIN.FindByID_MODELE_TERRAIN(ligneCasePont.ID_MODELE_TERRAIN);
                         //dans quels blocs se trouve-t-on ?
-                        AStar etoile = new AStar();
+                        AStar etoile = new();
                         List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(ligneCasePont.I_X, ligneCasePont.I_Y);
 
                         //modification des blocs
@@ -243,17 +243,17 @@ namespace vaoc
             internal bool EndommagerReparerPont()
             {
                 string message;
-                int surcoutMouvement = 0;
-                List<Bloc> listeBlocsARecomposer = new List<Bloc>();
+                int surcoutMouvement;
+                List<Bloc> listeBlocsARecomposer = new();
 
                 try
                 {
                     //Debug.WriteLine(string.Format("Début EndommagerReparerPont sur la case ID={0}({1},{2})", ID_CASE, I_X, I_Y));
                     DateTime timeStartGlobal = DateTime.Now;
-                    ClassHPAStarCreation hpaStarCreation = new ClassHPAStarCreation(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
+                    ClassHPAStarCreation hpaStarCreation = new(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
 
                     //recherche de toutes les cases constituant le pont
-                    List<Donnees.TAB_CASERow> listeCasesPont = new List<Donnees.TAB_CASERow>
+                    List<Donnees.TAB_CASERow> listeCasesPont = new()
                     {
                         this
                     };
@@ -275,7 +275,7 @@ namespace vaoc
                         }
 
                         //dans quels blocs se trouve-t-on ?
-                        AStar etoile = new AStar();
+                        AStar etoile = new();
                         List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(ligneCasePont.I_X, ligneCasePont.I_Y);
 
                         //modification des parcours
@@ -287,8 +287,7 @@ namespace vaoc
                             foreach (Donnees.TAB_PCC_COUTSRow trajet in listeTrajets)
                             {
                                 //on regarde si la case fait partie du trajet
-                                List<int> listeCases;
-                                Dal.ChargerTrajet(trajet.ID_TRAJET, out listeCases);
+                                Dal.ChargerTrajet(trajet.ID_TRAJET, out List<int> listeCases);
                                 if (listeCases.IndexOf(ligneCasePont.ID_CASE) >= 0)
                                 {
                                     if (ligneModeleTerrain.B_PONTON)
@@ -349,7 +348,7 @@ namespace vaoc
             /// <param name="idModeleTerrainAvant"></param>
             /// <param name="idModeleTerrainApres"></param>
             /// <returns></returns>
-            internal int CalculModificationCout(int idModeleTerrainAvant, int idModeleTerrainApres)
+            internal static int CalculModificationCout(int idModeleTerrainAvant, int idModeleTerrainApres)
             {
                 //cacul du surcout
                 int coutCaseAvant = Donnees.m_donnees.TAB_MODELE_MOUVEMENT[0].CoutCase(idModeleTerrainAvant);
@@ -404,12 +403,12 @@ namespace vaoc
                 //si la case est trouvé on recherche toutes les cases de même type contigues
                 if (null != ligneCasePontGue)
                 {
-                    List<Donnees.TAB_CASERow> listeCasesVoisines = new List<Donnees.TAB_CASERow>
+                    List<Donnees.TAB_CASERow> listeCasesVoisines = new()
                     {
                         ligneCasePontGue
                     };
                     ligneCasePontGue.ListeCasesVoisinesDeMemeType(ref listeCasesVoisines);
-                    tailleDuPontOuGue = listeCasesVoisines.Count();
+                    tailleDuPontOuGue = listeCasesVoisines.Count;
                 }
                 return ligneCasePontGue;
             }

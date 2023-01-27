@@ -262,7 +262,7 @@ namespace vaoc
 
         private void backgroundTraitement_DoWork(object sender, DoWorkEventArgs e)
         {
-            ClassHPAStarCreation traitementHPA = new(fichierCourant, this.tailleBloc);
+            ClassHPAStarCreation traitementHPA = new(this.tailleBloc);
             BackgroundWorker travailleur = sender as BackgroundWorker;
             bool bTraitement = true;
             try

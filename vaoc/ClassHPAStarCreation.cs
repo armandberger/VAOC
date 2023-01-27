@@ -27,10 +27,10 @@ namespace vaoc
     {
         #region Donnees
         private const int CST_LGPCC = 5;//longueur limite pour laquelle on ajoute deux points de sortie pour le PCC
-        private AStar m_etoile = new AStar();
+        //private readonly AStar m_etoile = new();
         private int m_idTrajet;
-        static readonly object m_verrouIDTrajet = new object();
-        static ReaderWriterLockSlim _rwPCCCOUT = new ReaderWriterLockSlim();
+        static readonly object m_verrouIDTrajet = new();
+        static readonly ReaderWriterLockSlim _rwPCCCOUT = new();
         
         //protected LogFile m_log = null;
         private int m_nbBlocsHorizontaux;//nombre de blocs sur l'axe des abscisses
@@ -40,7 +40,7 @@ namespace vaoc
         private int m_etape;//etape de traitement
         private int m_tailleBloc;
         private System.ComponentModel.BackgroundWorker m_travailleur=null;
-        private List<Task<bool>> m_tasks = new List<Task<bool>>();
+        private readonly List<Task<bool>> m_tasks = new();
         public const int NB_TACHES = 1000;//cela n'a pas l'air de changer grand chose de mettre 10 ou 10000 tâches en parallèle.
         private AStar[] m_etoileParallele;
         #endregion
@@ -63,13 +63,6 @@ namespace vaoc
         #endregion
 
         #region Constructors
-        public ClassHPAStarCreation(string fichierCourant, int nouveauTailleBloc)
-        {
-            LogFile.CreationLogFile("creationHPA", 0, 0);
-            tailleBloc = nouveauTailleBloc;
-            LogFile.Notifier("ClassHPAStarCreation");
-        }
-
         public ClassHPAStarCreation(int nouveauTailleBloc)
         {
             tailleBloc = nouveauTailleBloc;
@@ -213,12 +206,9 @@ namespace vaoc
         /// <returns>true si OK, false si KO</returns>
         private bool CréationsPointsPCCBloc(int xBloc, int yBloc)
         {
-            //LogFile.Notifier(string.Format("TraitementPCCBloc xBloc={0}, yBloc={1}", xBloc, yBloc));
-            int xmin, xmax, ymin, ymax;
-
             try
             {
-                PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
+                PCCMinMax(xBloc, yBloc, out int xmin, out int xmax, out int ymin, out int ymax);
                 //si l'on est sur le bord droit, inutile d'ajouter des points, il n'y a pas de voisins
                 if (xmax < Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE)
                 {
@@ -515,14 +505,13 @@ namespace vaoc
             //TimeSpan perf;
             Donnees.TAB_PCC_CASE_BLOCSRow[] listeCases;
             Donnees.TAB_CASERow ligneCaseDepart, ligneCaseArrivee;
-            int xmin, xmax, ymin, ymax;
-            List<int> listeCasesTrajet = new List<int>();
+            List<int> listeCasesTrajet = new();
             int nbTrajets = 0; //pour debug
 
             //LogFile.Notifier(string.Format("CalculCheminPCCBloc xBloc={0}, yBloc={1}, numeroTache={2} ", xBloc, yBloc, numeroTache));
             try
             {
-                PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
+                PCCMinMax(xBloc, yBloc, out int xmin, out int xmax, out int ymin, out int ymax);
 
                 //recherche de tous les points dans le bloc
                 listeCases = Donnees.m_donnees.TAB_PCC_CASE_BLOCS.ListeCasesBloc(xBloc, yBloc);
@@ -556,13 +545,12 @@ namespace vaoc
                         }
 
                         //recherche du plus court chemin
-                        AstarTerrain[] tableCoutsMouvementsTerrain;
                         //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                         //ClassTraitementHeure traitementtest = new ClassTraitementHeure();
                         //timeStart = DateTime.Now;
                         //Monitor.Enter(Donnees.m_donnees.TAB_CASE);
                         AStar etoile = (null == m_etoileParallele) ? new AStar() : m_etoileParallele[numeroTache];//m_etoileParallele peut être null si méthode appelée depuis le traitement de tour
-                        AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                        AStar.CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain);
                         //LogFile.Notifier(string.Format("etoile n°={0} ", numeroTache));
                         if (!etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                         {

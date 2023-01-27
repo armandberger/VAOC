@@ -23,7 +23,7 @@ namespace vaoc
         {
             LogFile.CreationLogFile("web", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
             int positionPoint = fichierCourant.LastIndexOf("\\");
-            m_repertoireSource = fichierCourant.Substring(0, positionPoint);
+            m_repertoireSource = fichierCourant[..positionPoint];
         }
 
         private string RepertoireTour()
@@ -356,7 +356,7 @@ namespace vaoc
             return true;
         }
 
-        private void AjouterHeure(Bitmap im, string heure)
+        private static void AjouterHeure(Bitmap im, string heure)
         {
             Graphics G;
             SizeF tailleTexte;

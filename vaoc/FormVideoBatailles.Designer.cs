@@ -45,18 +45,20 @@ namespace vaoc
             // buttonValider
             // 
             this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(283, 377);
+            this.buttonValider.Location = new System.Drawing.Point(330, 435);
+            this.buttonValider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonValider.Name = "buttonValider";
-            this.buttonValider.Size = new System.Drawing.Size(75, 23);
+            this.buttonValider.Size = new System.Drawing.Size(88, 27);
             this.buttonValider.TabIndex = 12;
             this.buttonValider.Text = "Fermer";
             this.buttonValider.UseVisualStyleBackColor = true;
             // 
             // buttonGenerer
             // 
-            this.buttonGenerer.Location = new System.Drawing.Point(26, 377);
+            this.buttonGenerer.Location = new System.Drawing.Point(30, 435);
+            this.buttonGenerer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonGenerer.Name = "buttonGenerer";
-            this.buttonGenerer.Size = new System.Drawing.Size(188, 23);
+            this.buttonGenerer.Size = new System.Drawing.Size(219, 27);
             this.buttonGenerer.TabIndex = 13;
             this.buttonGenerer.Text = "Gener le(s) Film(s)";
             this.buttonGenerer.UseVisualStyleBackColor = true;
@@ -65,59 +67,66 @@ namespace vaoc
             // comboBoxBatailles
             // 
             this.comboBoxBatailles.FormattingEnabled = true;
-            this.comboBoxBatailles.Location = new System.Drawing.Point(26, 12);
+            this.comboBoxBatailles.Location = new System.Drawing.Point(30, 14);
+            this.comboBoxBatailles.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.comboBoxBatailles.Name = "comboBoxBatailles";
-            this.comboBoxBatailles.Size = new System.Drawing.Size(332, 21);
+            this.comboBoxBatailles.Size = new System.Drawing.Size(867, 23);
             this.comboBoxBatailles.TabIndex = 14;
             // 
             // textBoxHauteurBase
             // 
-            this.textBoxHauteurBase.Location = new System.Drawing.Point(211, 50);
+            this.textBoxHauteurBase.Location = new System.Drawing.Point(246, 58);
+            this.textBoxHauteurBase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBoxHauteurBase.Name = "textBoxHauteurBase";
-            this.textBoxHauteurBase.Size = new System.Drawing.Size(67, 20);
+            this.textBoxHauteurBase.Size = new System.Drawing.Size(78, 23);
             this.textBoxHauteurBase.TabIndex = 18;
             this.textBoxHauteurBase.Text = "1200";
             // 
             // textBoxLargeurBase
             // 
-            this.textBoxLargeurBase.Location = new System.Drawing.Point(73, 50);
+            this.textBoxLargeurBase.Location = new System.Drawing.Point(85, 58);
+            this.textBoxLargeurBase.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.textBoxLargeurBase.Name = "textBoxLargeurBase";
-            this.textBoxLargeurBase.Size = new System.Drawing.Size(67, 20);
+            this.textBoxLargeurBase.Size = new System.Drawing.Size(78, 23);
             this.textBoxLargeurBase.TabIndex = 17;
             this.textBoxLargeurBase.Text = "1600";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(160, 50);
+            this.label4.Location = new System.Drawing.Point(187, 58);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(45, 13);
+            this.label4.Size = new System.Drawing.Size(50, 15);
             this.label4.TabIndex = 16;
             this.label4.Text = "Hauteur";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(24, 50);
+            this.label3.Location = new System.Drawing.Point(28, 58);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(47, 15);
             this.label3.TabIndex = 15;
             this.label3.Text = "Largeur";
             // 
             // labelPolice
             // 
-            this.labelPolice.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelPolice.Location = new System.Drawing.Point(26, 147);
+            this.labelPolice.Font = new System.Drawing.Font("Georgia", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelPolice.Location = new System.Drawing.Point(30, 170);
+            this.labelPolice.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPolice.Name = "labelPolice";
-            this.labelPolice.Size = new System.Drawing.Size(743, 151);
+            this.labelPolice.Size = new System.Drawing.Size(867, 174);
             this.labelPolice.TabIndex = 21;
             this.labelPolice.Text = "Police de caractère";
             // 
             // buttonChoixPolice
             // 
-            this.buttonChoixPolice.Location = new System.Drawing.Point(23, 103);
+            this.buttonChoixPolice.Location = new System.Drawing.Point(27, 119);
+            this.buttonChoixPolice.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.buttonChoixPolice.Name = "buttonChoixPolice";
-            this.buttonChoixPolice.Size = new System.Drawing.Size(178, 20);
+            this.buttonChoixPolice.Size = new System.Drawing.Size(208, 23);
             this.buttonChoixPolice.TabIndex = 20;
             this.buttonChoixPolice.Text = "Choix de la Police";
             this.buttonChoixPolice.UseVisualStyleBackColor = true;
@@ -125,9 +134,10 @@ namespace vaoc
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(223, 103);
+            this.label5.Location = new System.Drawing.Point(260, 119);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(555, 44);
+            this.label5.Size = new System.Drawing.Size(648, 51);
             this.label5.TabIndex = 19;
             this.label5.Text = "note : la taille de la vidéo finale garde la proportion de la source en ayant, po" +
     "ur maximum, soit la hauteur, soit la largeur de base, de façon à ce que aucune d" +
@@ -135,9 +145,9 @@ namespace vaoc
             // 
             // FormVideoBatailles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(935, 650);
+            this.ClientSize = new System.Drawing.Size(1091, 750);
             this.Controls.Add(this.labelPolice);
             this.Controls.Add(this.buttonChoixPolice);
             this.Controls.Add(this.label5);
@@ -148,6 +158,7 @@ namespace vaoc
             this.Controls.Add(this.comboBoxBatailles);
             this.Controls.Add(this.buttonGenerer);
             this.Controls.Add(this.buttonValider);
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FormVideoBatailles";
             this.Text = "FormVideoBatailles";
             this.Load += new System.EventHandler(this.FormVideoBatailles_Load);

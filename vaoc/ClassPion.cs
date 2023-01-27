@@ -4312,6 +4312,7 @@ namespace vaoc
                     //Le convoi ou l'unité de renforts non combattives (car effectif trop faible) devient un convoi de prisonniers
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_BLESSES = false;
+                    B_RENFORT = false;
                     B_PRISONNIERS = true;
                     S_NOM = "Prisonniers de " + S_NOM;
                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);

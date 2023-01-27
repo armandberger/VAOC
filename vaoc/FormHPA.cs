@@ -365,7 +365,7 @@ namespace vaoc
             Donnees.TAB_CASERow ligneCase;
             int tailleBloc = Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC;
             int m_nbBlocsHorizontaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_LARGEUR_CARTE / (decimal)tailleBloc);
-            int m_nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
+            //int m_nbBlocsVerticaux = (int)Math.Ceiling((decimal)Donnees.m_donnees.TAB_JEU[0].I_HAUTEUR_CARTE / (decimal)tailleBloc);
             string requete;
             for (int xBloc = 0; xBloc < m_nbBlocsHorizontaux; xBloc++)
             {
@@ -450,7 +450,6 @@ namespace vaoc
             int i, k;
             Donnees.TAB_PCC_CASE_BLOCSRow[] listeCases;
             Donnees.TAB_CASERow ligneCaseArrivee;
-            int xmin, xmax, ymin, ymax;
             List<int> listeCasesTrajet = new();
             AStar m_etoile = new();
             int m_idTrajet;
@@ -460,7 +459,7 @@ namespace vaoc
             m_idTrajet = (int)Donnees.m_donnees.TAB_PCC_COUTS.Compute("MAX(ID_TRAJET)", "");
             try
             {
-                PCCMinMax(xBloc, yBloc, out xmin, out xmax, out ymin, out ymax);
+                PCCMinMax(xBloc, yBloc, out int xmin, out int xmax, out int ymin, out int ymax);
 
                 //recherche de tous les points dans le bloc
                 listeCases = Donnees.m_donnees.TAB_PCC_CASE_BLOCS.ListeCasesBloc(xBloc, yBloc);
@@ -474,10 +473,9 @@ namespace vaoc
                     }
 
                     //recherche du plus court chemin
-                    AstarTerrain[] tableCoutsMouvementsTerrain;
                     //Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION[0];
                     ClassTraitementHeure traitementtest = new();
-                    AStar.CalculModeleMouvementsPion(out tableCoutsMouvementsTerrain);
+                    AStar.CalculModeleMouvementsPion(out AstarTerrain[] tableCoutsMouvementsTerrain);
                     if (!m_etoile.SearchPath(ligneCaseDepart, ligneCaseArrivee, tableCoutsMouvementsTerrain, xmin, xmax, ymin, ymax))
                     {
                         Debug.WriteLine(string.Format("CalculCheminPCCBloc:AStar : Il n'y a aucun chemin possible entre les cases {0}({1},{2}) et {3}({4},{5}), bloc ({6},{7}) posi {8}",
@@ -527,7 +525,7 @@ namespace vaoc
         /// <summary>
         /// Vérifie si un coin est présent ou pas
         /// </summary>
-        private bool TestCoin(Donnees.TAB_CASERow ligneCase, int xBloc, int yBloc)
+        private static bool TestCoin(Donnees.TAB_CASERow ligneCase, int xBloc, int yBloc)
         {
             if (xBloc < 0 || yBloc < 0) return true;
             string requete = string.Format("I_BLOCX={0} AND I_BLOCY={1} AND ID_CASE={2}", xBloc, yBloc, ligneCase.ID_CASE);

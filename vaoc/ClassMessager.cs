@@ -2266,13 +2266,13 @@ namespace vaoc
                                 {
                                     if (lignePionVoisin.estDepot)
                                     {
-                                        nomType = "un dépôt";
+                                        nomType = (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION) ? lignePionVoisin.S_NOM : "un dépôt";
                                     }
                                     else
                                     {
                                         if (lignePionVoisin.estConvoi)
                                         {
-                                            nomType = "un convoi";
+                                            nomType = (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION) ? lignePionVoisin.S_NOM : "un convoi";
                                         }
                                         else
                                         {
@@ -2282,14 +2282,7 @@ namespace vaoc
                                             }
                                             else
                                             {
-                                                if (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION)
-                                                {
-                                                    nomType = lignePionVoisin.S_NOM;
-                                                }
-                                                else
-                                                {
-                                                    nomType = "une formation";
-                                                }
+                                                nomType = (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION) ? lignePionVoisin.S_NOM : "une formation";
                                             }
                                         }
                                     }

@@ -1784,6 +1784,22 @@ namespace vaoc
                     }
                     if (distanceMin == double.MaxValue)
                     {
+                        //si on ne trouve aucune ennemi combattif, on cherche un ennemi non combattif !
+                        foreach (Donnees.TAB_CASERow ligneCaseVue in ligneCaseVues)
+                        {
+                            if (estEnnemi(ligneCaseVue, ligneModelePion, false, true))
+                            {
+                                double distance = Constantes.Distance(ligneCasePion.I_X, ligneCasePion.I_Y, ligneCaseVue.I_X, ligneCaseVue.I_Y);
+                                if (distance < distanceMin)
+                                {
+                                    distanceMin = distance;
+                                    ligneCaseEnnemi = ligneCaseVue;
+                                }
+                            }
+                        }
+                    }
+                    if (distanceMin == double.MaxValue)
+                    {
                         //il n'y a aucun ennemi a proximité, on arrête l'ordre et on prévient le joueur
                         if (!ClassMessager.EnvoyerMessage(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_ENNEMI_PROCHE))
                         {

@@ -213,9 +213,11 @@ namespace vaoc
                 message = string.Format("FinDeBataille : après les pertes au combat il reste nbUnites012={0}  nbUnites345={1}",
                     nbUnites012, nbUnites345);
                 LogFile.Notifier(message);
-                if ((!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1))
-                    && (0 == nbUnites012 || 0 == nbUnites345 || bRetraite012 || bRetraite345)
-                    && (nbUnites012 > 0 || nbUnites345 > 0)
+                if (bRetraite012 || bRetraite345 ||
+                    (!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante())//il ne faut pas mettre +1, même une phase avant la nuit, on peut encore faire un résultat de bataille
+                        && (0 == nbUnites012 || 0 == nbUnites345)
+                        && (nbUnites012 > 0 || nbUnites345 > 0)
+                    )
                     && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT >= 2))
                 {
                     //un des deux camps a remporté le combat, il engage une poursuite sur le vaincu si on est pas la nuit
@@ -763,13 +765,13 @@ namespace vaoc
                 int effectifPoursuivantTotal;
                 int i;
 
-                //aucune poursuite si la bataille se termine à la tombée de la nuit
-                if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
-                {
-                    message = string.Format("Poursuite : {0} aucune poursuite à cause de la nuit", S_NOM);
-                    LogFile.Notifier(message);
-                    return true;
-                }
+                //aucune poursuite si la bataille se termine à la tombée de la nuit -> testé auparavant et le test n'est pas bon
+                //if (Donnees.m_donnees.TAB_PARTIE.Nocturne((m_donnees.TAB_PARTIE.HeureCourante() + 1) % 24))
+                //{
+                //    message = string.Format("Poursuite : {0} aucune poursuite à cause de la nuit", S_NOM);
+                //    LogFile.Notifier(message);
+                //    return true;
+                //}
 
                 effectifCavaleriePoursuivant = 0;
                 moralCavaleriePoursuivant = 0;

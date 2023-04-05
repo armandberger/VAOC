@@ -513,6 +513,11 @@ namespace vaoc
                 nbTourExecutes++;
                 #region maintenant on regarde si l'on fait un tour de plus ou pas
                 LogFile.CreationLogFile("fintour", Donnees.m_donnees.TAB_PARTIE[0].I_TOUR, Donnees.m_donnees.TAB_PARTIE[0].I_PHASE);
+                //recherche du nombre de batailles terminées
+                //int nbAnciennesBatailles = (from nb in Donnees.m_donnees.TAB_BATAILLE
+                //                            where !nb.IsI_TOUR_FINNull() && nb.I_TOUR_FIN >= Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION
+                //                            select nb.ID_BATAILLE).Count();
+
                 if (bFinDePartie 
                     || !Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE
                     || 1==Donnees.m_donnees.TAB_PARTIE[0].I_TOUR //premier lancement, on ne continue pas pour que les joueurs donnent leurs ordres

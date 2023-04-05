@@ -155,9 +155,9 @@ namespace vaoc
                 return true;
             }
 
-            public bool FinDeBataille(out bool bFinDeBataille)
+            public bool FinDeBataille(ref bool bFinDeBataille)
             {
-                return FinDeBataille(false, false, out bFinDeBataille);
+                return FinDeBataille(false, false, ref bFinDeBataille);
             }
 
             /// <summary>
@@ -165,7 +165,7 @@ namespace vaoc
             /// </summary>
             /// <param name="ligneBataille">Bataille à terminer</param>
             /// <returns>true si OK, false si KO</returns>
-            public bool FinDeBataille(bool bRetraite012, bool bRetraite345, out bool bFinDeBataille)
+            public bool FinDeBataille(bool bRetraite012, bool bRetraite345, ref bool bFinDeBataille)
             {
                 string message;
                 Donnees.TAB_PIONRow[] lignePionsEnBataille012;
@@ -177,7 +177,6 @@ namespace vaoc
                 string requete;
                 bool bVictoire012 = true, bVictoire345 = true;
 
-                bFinDeBataille = false;
                 //fin de la bataille, toutes les unités engagées gagnent de l'expérience
                 I_TOUR_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 I_PHASE_FIN = Donnees.m_donnees.TAB_PARTIE[0].I_PHASE;
@@ -332,7 +331,8 @@ namespace vaoc
                 //ne pas le faire car on doit le garder pour savoir si, en fin de journée, l'unité s'est bien reposée
                 //DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[] resBataillePions=(DataSetCoutDonnees.TAB_BATAILLE_PIONSRow[])DataSetCoutDonnees.m_donnees.TAB_BATAILLE_PIONS.Select(requete);
                 //foreach (DataSetCoutDonnees.TAB_BATAILLE_PIONSRow lignePionBataille in resBataillePions) { lignePionBataille.Delete(); }
-                if (!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1)  && (this.ID_LEADER_012>=0 || this.ID_LEADER_345>=0))
+                //if (!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante() + 1)  && (this.ID_LEADER_012>=0 || this.ID_LEADER_345>=0))
+                if (this.ID_LEADER_012 >= 0 || this.ID_LEADER_345 >= 0)
                 {
                     //c'est une fin de bataille necessitant un arrêt du tour en cours que si un leader un présent et que l'on ne va pas s'arrêter de toute manière à cause de la nuit
                     bFinDeBataille = true;
@@ -1384,7 +1384,7 @@ namespace vaoc
                     //pas de combat la nuit
                     message = string.Format("EffectuerBataille sur ID_BATAILLE={0}: Fin de la bataille à cause de l'arrivée de la nuit.", ID_BATAILLE);
                     LogFile.Notifier(message);
-                    return FinDeBataille(out bFinDeBataille);
+                    return FinDeBataille(ref bFinDeBataille);
                 }
 
                 //on execute une bataille que toutes les deux heures
@@ -1424,7 +1424,7 @@ namespace vaoc
                     //même pour un ordre de retrait il doit au moins y avoir un tour de combat
                     if (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT > 2)
                     {
-                        return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                        return FinDeBataille(bRetraite012, bRetraite345, ref bFinDeBataille);
                     }
                 }
                 #endregion
@@ -1485,7 +1485,7 @@ namespace vaoc
                     {
                         message = string.Format("EffectuerBataille : il n'y a aucune unité combattive dans le secteur 012 pour la bataille ID_BATAILLE={0}", ID_BATAILLE);
                         LogFile.Notifier(message);
-                        return FinDeBataille(out bFinDeBataille);//cas d'un ordre de retraite global donné par un joueur
+                        return FinDeBataille(ref bFinDeBataille);//cas d'un ordre de retraite global donné par un joueur
                     }
                     if (!RecherchePionsEnBataille(out _, out _, out _, out _, out _, out _, 
                                                 out Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG012, out _, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
@@ -1516,7 +1516,7 @@ namespace vaoc
                     {
                         message = string.Format("EffectuerBataille : il n'y a aucune unité combattive dans le secteur 345 pour la bataille ID_BATAILLE={0}", ID_BATAILLE);
                         LogFile.Notifier(message);
-                        return FinDeBataille(out bFinDeBataille);//cas d'un ordre de retraite global donné par un joueur
+                        return FinDeBataille(ref bFinDeBataille);//cas d'un ordre de retraite global donné par un joueur
                     }
                     if (!RecherchePionsEnBataille(out _, out _, out _, out _, out _, out _, 
                                                     out _, out Donnees.TAB_PIONRow[] tablePionsNonEngagesSansQG345, false/*bengagement*/, false/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
@@ -1760,7 +1760,7 @@ namespace vaoc
                 //on regarde si la bataille ne se termine pas
                 if (0 == nbUnites012 || 0 == nbUnites345)
                 {
-                    return FinDeBataille(out bFinDeBataille);
+                    return FinDeBataille(ref bFinDeBataille);
                 }
                 else
                 {
@@ -1771,7 +1771,7 @@ namespace vaoc
                         message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Fin de la bataille à cause de l'arrivée de la nuit.",
                             S_NOM, ID_BATAILLE);
                         LogFile.Notifier(message);
-                        return FinDeBataille(out bFinDeBataille);
+                        return FinDeBataille(ref bFinDeBataille);
                     }
 
                     //si un leader ou une unite d'artillerie se retrouve dans une zone sans unité combattante, il doit être remis en réserve
@@ -1781,7 +1781,7 @@ namespace vaoc
                 //Si un ordre de retraite a été donné et que c'était au premier jour, il est effectué en fin de combat
                 if (bRetraite012 || bRetraite345)
                 {
-                    return FinDeBataille(bRetraite012, bRetraite345, out bFinDeBataille);
+                    return FinDeBataille(bRetraite012, bRetraite345, ref bFinDeBataille);
                 }
 
                 return true;

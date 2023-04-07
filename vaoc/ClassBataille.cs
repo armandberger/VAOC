@@ -203,7 +203,7 @@ namespace vaoc
                 }
 
                 if (!RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out _, out _, out _, out _,
-                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
+                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, null /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille II");
                     LogFile.Notifier(message);
@@ -1731,7 +1731,8 @@ namespace vaoc
                 //Y-a-t-il encore des combattants dans chaque camp ?
                 Donnees.TAB_PIONRow[] tablePionsCombattifs012;
                 Donnees.TAB_PIONRow[] tablePionsCombattifs345;
-                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsCombattifs012, out tablePionsCombattifs345, null/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out nbUnites012, out nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsCombattifs012, out tablePionsCombattifs345, 
+                                                null/*bengagement*/, true/*bcombattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille II");
                     LogFile.Notifier(message);
@@ -1999,11 +2000,6 @@ namespace vaoc
                         }
                     }
                 }
-                for (int p = 0; p < 6; p++)
-                {
-                    //pour les rapports video de batailles
-                    this["I_PERTES_" + Convert.ToString(p)] = pertesEffectifs[p];
-                }
                 #endregion
 
                 #region Un des chefs présents est-il blessé ?
@@ -2027,33 +2023,41 @@ namespace vaoc
                 }
                 #endregion
 
+                int pertesReelles;
                 for (int i = 0; i < 3; i++)
                 {
-                    if (des[i] > 0)
+                    if (des[i + 3] > 0)
                     {
                         message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}", i, score[i], des[i], pertesMoral[i], pertesEffectifs[i]);
                         LogFile.Notifier(message);
 
-                        if (!CalculDesPertesAuCombatParSecteur(i + 3, lignePionsEnBataille345, i, lignePionsEnBataille012, pertesMoral[i], pertesEffectifs[i]))
+                        if (!CalculDesPertesAuCombatParSecteur(i + 3, lignePionsEnBataille345, i, lignePionsEnBataille012, pertesMoral[i], pertesEffectifs[i], out pertesReelles))
                         {
                             message = string.Format("CalculDesPertesAuCombat erreur dans CalculDesPertesAuCombatParSecteur zone{0}", i);
                             LogFile.Notifier(message);
                             return false;
                         }
+                        pertesEffectifs[i] = pertesReelles;
                     }
 
-                    if (des[i + 3] > 0)
+                    if (des[i] > 0)
                     {
                         message = string.Format("EffectuerBataille score sur zone{0}={1} sur un lancé de {2} dés, pertes moral={3} effectifs={4}", i, score[i + 3], des[i + 3], pertesMoral[i + 3], pertesEffectifs[i + 3]);
                         LogFile.Notifier(message);
 
-                        if (!CalculDesPertesAuCombatParSecteur(i, lignePionsEnBataille012, i + 3, lignePionsEnBataille345, pertesMoral[i + 3], pertesEffectifs[i + 3]))
+                        if (!CalculDesPertesAuCombatParSecteur(i, lignePionsEnBataille012, i + 3, lignePionsEnBataille345, pertesMoral[i + 3], pertesEffectifs[i + 3], out pertesReelles))
                         {
                             message = string.Format("CalculDesPertesAuCombat erreur dans CalculDesPertesAuCombatParSecteur zone{0}", i);
                             LogFile.Notifier(message);
                             return false;
                         }
+                        pertesEffectifs[i+3] = pertesReelles;
                     }
+                }
+                for (int p = 0; p < 6; p++)
+                {
+                    //pour les rapports video de batailles
+                    this["I_PERTES_" + Convert.ToString(p)] = pertesEffectifs[p];
                 }
                 return true;
             }
@@ -2154,7 +2158,7 @@ namespace vaoc
                 return true;
             }
 
-            private bool CalculDesPertesAuCombatParSecteur(int zoneAttaquant, List<Donnees.TAB_PIONRow> lignePionsEnBatailleAttaquant, int zoneDefenseur, List<Donnees.TAB_PIONRow> lignePionsEnBatailleDefenseur, int pertesMoral, int pertesEffectif)
+            private bool CalculDesPertesAuCombatParSecteur(int zoneAttaquant, List<Donnees.TAB_PIONRow> lignePionsEnBatailleAttaquant, int zoneDefenseur, List<Donnees.TAB_PIONRow> lignePionsEnBatailleDefenseur, int pertesMoral, int pertesEffectif, out int pertesEffectifReels)
             {
                 string message, messageErreur;
                 int pertesInfanterieTotal, pertesCavalerieTotal, pertesArtillerieTotal;
@@ -2163,6 +2167,7 @@ namespace vaoc
                 List<Donnees.TAB_PIONRow> listePionsEnBatailleDefenseur = new();
 
                 pertesInfanterieTotal = pertesCavalerieTotal = pertesArtillerieTotal = 0;
+                pertesEffectifReels = 0;
 
                 //on reprend les unités qui ont vraiment participées au combat
                 foreach (Donnees.TAB_PIONRow lignePionEnBataille in lignePionsEnBatailleDefenseur)
@@ -2256,6 +2261,7 @@ namespace vaoc
                         return false;
                     }
                 }
+                pertesEffectifReels = pertesInfanterieTotal + pertesCavalerieTotal + pertesArtillerieTotal;
                 return true;
             }
 
@@ -2385,6 +2391,8 @@ namespace vaoc
                     lignePion = listePionsNonEngagesSansQG[de.Next(listePionsNonEngagesSansQG.Length)];
                 }
                 //if (this.ID_BATAILLE==19) lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(321);
+                //lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(171);//debug
+
 
                 lignePion.I_ZONE_BATAILLE = iZone;//toujours la zone centrale donc 1 ou 4
                 //engagement dans la bataille

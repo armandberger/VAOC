@@ -31,9 +31,9 @@ namespace vaoc
         private static readonly string[] lieuxMasculins= { "pont","carrefour", "chemin","fleuve" };
         private static readonly char[] voyelles = { 'a','e','i','o','u','y','î','ï','é','è','ê','ù','à' };
         private const double degre45 = 0.70710678118654752440084436210485;
-        private static readonly string[] sequenceceFeminin = { "", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
+        private static readonly string[] sequenceceFeminin = { "", "seconde", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dixième", 
                                                         "onzième", "douzième", "treizième", "quatorzième", "quinzième", "seizième", "dixseptième", "dixhuitième", "dixneuvième", "vingtième" };
-        private static readonly string[] sequenceceMasculin = { "", "second", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dizième", 
+        private static readonly string[] sequenceceMasculin = { "", "second", "troisième", "quatrième", "cinquième", "sixième", "septième", "huitième", "neuvième", "dixième", 
                                                         "onzième", "douzième", "treizième", "quatorzième", "quinzième", "seizième", "dixseptième", "dixhuitième", "dixneuvième", "vingtième" };
 
         public const int CST_MESSAGE_FREQUENCE_ALERTE = 6;//nombre de tours entre deux messages d'alerte

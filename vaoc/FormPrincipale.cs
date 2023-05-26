@@ -3274,34 +3274,31 @@ namespace vaoc
                 {
                     MessageBox.Show("Erreur durant les notifications", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else
+                //on met à jour la date du prochain tour dans tous les cas
+                try
                 {
-                    //on met à jour la date du prochain tour
-                    try
+                    string url = string.Format("http://{0}/vaocservicemiseajour.php?id_partie={1}&date_prochaintour={2}",
+                        Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
+                        Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
+                        Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
+                    HttpClient client = new();
+                    HttpRequestMessage message = new(HttpMethod.Get, url);
+                    HttpResponseMessage response = client.Send(message);
+                    if (!response.IsSuccessStatusCode)
                     {
-                        string url = string.Format("http://{0}/vaocservicemiseajour.php?id_partie={1}&date_prochaintour={2}",
-                            Donnees.m_donnees.TAB_PARTIE[0].S_HOST_SITEWEB,
-                            Donnees.m_donnees.TAB_PARTIE[0].ID_PARTIE,
-                            Constantes.DateHeureSQL(Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR));
-                        HttpClient client = new();
-                        HttpRequestMessage message = new(HttpMethod.Get, url);
-                        HttpResponseMessage response = client.Send(message);
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            MessageBox.Show("Timeout durant l'envoi de la date de mise à jour. Tout est correct sinon.",
-                                "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-                    }
-                    catch(Exception exWeb)
-                    {
-                        MessageBox.Show("Erreur durant l'envoi de la date de mise à jour. Tout est correct sinon"+exWeb.Message, 
+                        MessageBox.Show("Timeout durant l'envoi de la date de mise à jour. Tout est correct sinon.",
                             "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-
-                    MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
-                    Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);
                 }
+                catch(Exception exWeb)
+                {
+                    MessageBox.Show("Erreur durant l'envoi de la date de mise à jour. Tout est correct sinon"+exWeb.Message, 
+                        "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+                MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
+                Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);
             }            
         }
 

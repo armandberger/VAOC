@@ -3264,15 +3264,21 @@ namespace vaoc
             FormMessageArbitre formMessageArbitre = new();
             formMessageArbitre.textBoxMessage.Text = Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE;
             formMessageArbitre.fichierCourant = this.curFileName;
+            string erreur;
             if (formMessageArbitre.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Donnees.m_donnees.TAB_PARTIE[0].S_MESSAGE_ARBITRE = formMessageArbitre.textBoxMessage.Text;
                 Donnees.m_donnees.TAB_PARTIE[0].DT_PROCHAINTOUR = formMessageArbitre.dateEtHeure.Value;
 
                 ClassNotificationJoueurs notification = new(fichierCourant);
-                if (!notification.NotificationJoueurs())
+                erreur = notification.NotificationJoueurs();
+                if (string.Empty != erreur)
                 {
-                    MessageBox.Show("Erreur durant les notifications", "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Erreur durant les notifications :"+ erreur, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 //on met à jour la date du prochain tour dans tous les cas
                 try
@@ -3296,7 +3302,6 @@ namespace vaoc
                         "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
-                MessageBox.Show("Notifications envoyées sans erreur", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION = Donnees.m_donnees.TAB_PARTIE[0].I_TOUR;
                 Donnees.m_donnees.SauvegarderPartie(fichierCourant, false);
             }            

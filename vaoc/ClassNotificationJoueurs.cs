@@ -410,7 +410,7 @@ namespace vaoc
         /// Génération d'un courriel de notification pour tous les joueurs
         /// </summary>
         /// <returns>true si OK, false si KO</returns>
-        public bool NotificationJoueurs()
+        public string NotificationJoueurs()
         {
             StringBuilder texte;
             string titre, adresseCourriel;
@@ -418,7 +418,7 @@ namespace vaoc
             string message, messageErreur;
             Donnees.TAB_ROLERow[] ligneRoleResultat;
             CourrielService serviceCourriel;
-            bool retour = true;
+            string retour = string.Empty;
 
             serviceCourriel = new CourrielService(Donnees.m_donnees.TAB_PARTIE[0].S_HOST_COURRIEL,
                 Donnees.m_donnees.TAB_PARTIE[0].S_HOST_UTILISATEUR,
@@ -439,10 +439,7 @@ namespace vaoc
 
                 foreach (Donnees.TAB_ROLERow ligneRole in ligneRoleResultat)
                 {
-                    if (!NotificationRole(ligneRole, (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 0 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION, out titre, out texte))
-                    {
-                        return false;
-                    }
+                    NotificationRole(ligneRole, (Donnees.m_donnees.TAB_PARTIE[0].IsI_TOUR_NOTIFICATIONNull()) ? 0 : Donnees.m_donnees.TAB_PARTIE[0].I_TOUR_NOTIFICATION, out titre, out texte);
                     message = string.Format("NotificationJoueurs : envoie d'un message à {0} titre:{1} message={2}",
                         adresseCourriel, titre, texte.ToString());
                     LogFile.Notifier(message, out messageErreur);
@@ -452,11 +449,11 @@ namespace vaoc
                     }
                     catch(Exception ex)
                     {
-                        retour = false;
                         message = string.Format("NotificationJoueurs : Exception à l'envoi d'un message à {0}:{1}:{2}",
                             adresseCourriel, ex.Message, 
                             (null== ex.InnerException) ? string.Empty : ex.InnerException.Message);
                         LogFile.Notifier(message, out messageErreur);
+                        retour += string.Format("{0} {1} {2} {3}", titre, adresseCourriel, ex.InnerException.Message, Environment.NewLine);
                     }
                 }
             }

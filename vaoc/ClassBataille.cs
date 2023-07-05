@@ -129,25 +129,28 @@ namespace vaoc
                         {
                             AjouterPionDansLaBataille(lignePionRole, ligneCaseCombat);
                             //on s'assure que l'ajout de ce chef ne modifie pas le responsable de la bataille -> inutile fait dans effectuerbataille à la fin de chaque tour même si la bataille n'est pas terminée
-                            //int idLeader;
-                            //int[] des, modificateurs, effectifs, canons;
-                            //Donnees.TAB_PIONRow[] tablePionsPresents012;
-                            //Donnees.TAB_PIONRow[] tablePionsPresents345;
-                            //if (!RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsPresents012, out tablePionsPresents345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
-                            //{
-                            //    message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille QG");
-                            //    LogFile.Notifier(message);
-                            //}
+                            //si, il faut le faire, sinon, à la création initiale, le chef n'est pas là
+                            int idLeader;
+                            int[] des, modificateurs, effectifs, canons;
+                            Donnees.TAB_PIONRow[] tablePionsPresents012;
+                            Donnees.TAB_PIONRow[] tablePionsPresents345;
+                            if (!RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out des, out modificateurs, out effectifs, out canons, out tablePionsPresents012, out tablePionsPresents345, null/*bengagement*/, false/*bcombattif*/, true/*QG*/, true /*bArtillerie*/))
+                            {
+                                message = string.Format("EffectuerBataille : erreur dans RecherchePionsEnBataille QG");
+                                LogFile.Notifier(message);
+                            }
 
-                            ////trouver le leader avec le plus haut niveau hierarchique
-                            //if (lignePionRole.nation.ID_NATION==this.ID_NATION_012)
-                            //{
-                            //    idLeader = TrouverLeaderBataille(tablePionsPresents012, true);
-                            //}
-                            //else
-                            //{
-                            //    idLeader = TrouverLeaderBataille(tablePionsPresents345, false);
-                            //}
+                            //trouver le leader avec le plus haut niveau hierarchique
+                            if (lignePionRole.nation.ID_NATION == this.ID_NATION_012)
+                            {
+                                idLeader = TrouverLeaderBataille(tablePionsPresents012, true);
+                                this.ID_LEADER_012 = idLeader;
+                            }
+                            else
+                            {
+                                idLeader = TrouverLeaderBataille(tablePionsPresents345, false);
+                                this.ID_LEADER_345=idLeader;
+                            }
                         }
 
                     }

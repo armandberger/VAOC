@@ -905,15 +905,6 @@ namespace vaoc
                     return true;
                     #endregion
                 }
-                else
-                {
-                    for (int z = 0; z < 6; z++)
-                    {
-                        //on met le même chiffre global partout, le générateur de vidéo saura pendre la bonne zone
-                        this["S_COMBAT_" + Convert.ToString(z)] = string.Format("{0} dés, ratio = {1}", de, ratio);
-                        this["I_PERTES_" + Convert.ToString(z)] = pertes;
-                    }
-                }
 
                 //il faut repartir les pertes sur le poursuivant suivant l'ordre suivant :
                 //pion avec cavalerie, moral le moins élevé
@@ -1157,6 +1148,13 @@ namespace vaoc
                 for (i = 0; i < listePertesInfanterie.Count; i++) { pertesInfanterieTotal += (int)listePertesInfanterie.GetByIndex(i); }
                 for (i = 0; i < listePertesCavalerie.Count; i++) { pertesCavalerieTotal += (int)listePertesCavalerie.GetByIndex(i); }
                 for (i = 0; i < listePertesArtillerie.Count; i++) { pertesArtillerieTotal += (int)listePertesArtillerie.GetByIndex(i); }
+
+                for (int z = 0; z < 6; z++)
+                {
+                    //on met le même chiffre global partout, le générateur de vidéo saura pendre la bonne zone
+                    this["S_COMBAT_" + Convert.ToString(z)] = string.Format("{0} dés, ratio = {1}", de, ratio);
+                    this["I_PERTES_" + Convert.ToString(z)] = pertesCavalerieTotal + pertesInfanterieTotal + pertesArtillerieTotal;
+                }
 
                 if (pertes > 0)
                 {
@@ -2200,17 +2198,17 @@ namespace vaoc
                     //en-dessous d'une certaine taille, une unité est détruite pour ne pas avoir à gérer de trop petites unités, sauf si ce n'est que de l'artillerie
                     if ((pertesEffectif * rapporDePerteUnite)>=1 &&
                         (
-                        ((lignePionEnBataille.I_INFANTERIE>0 || lignePionEnBataille.I_CAVALERIE>0) &&
+                        ((lignePionEnBataille.infanterie>0 || lignePionEnBataille.I_CAVALERIE>0) &&
                         (lignePionEnBataille.effectifTotal - (pertesEffectif * rapporDePerteUnite) < Constantes.CST_TAILLE_MINIMUM_UNITE))
                         ||
-                        ((lignePionEnBataille.I_INFANTERIE == 0 && lignePionEnBataille.I_CAVALERIE == 0 && lignePionEnBataille.I_ARTILLERIE>0) &&
+                        ((lignePionEnBataille.infanterie == 0 && lignePionEnBataille.I_CAVALERIE == 0 && lignePionEnBataille.I_ARTILLERIE>0) &&
                         (lignePionEnBataille.effectifTotal - (pertesEffectif * rapporDePerteUnite) < 1))
                         ))
                     {
                         //Message indiquant une unité détruite
-                        pertesInfanterieTotal += lignePionEnBataille.I_INFANTERIE;
-                        pertesCavalerieTotal += lignePionEnBataille.I_CAVALERIE;
-                        pertesArtillerieTotal += lignePionEnBataille.I_ARTILLERIE;
+                        pertesInfanterieTotal += lignePionEnBataille.infanterie;
+                        pertesCavalerieTotal += lignePionEnBataille.cavalerie;
+                        pertesArtillerieTotal += lignePionEnBataille.artillerie;
 
                         //on detruit le pion et on envoie un message
                         lignePionEnBataille.DetruirePion();
@@ -2224,9 +2222,9 @@ namespace vaoc
                     }
 
                     //Pertes sur l'unité, repartie en pourcentage relatif du total
-                    pertesInfanterie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_INFANTERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
-                    pertesCavalerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_CAVALERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
-                    pertesArtillerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.I_ARTILLERIE * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesInfanterie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.infanterie * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesCavalerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.cavalerie * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
+                    pertesArtillerie = (0 == lignePionEnBataille.effectifTotal) ? 0 : (int)(lignePionEnBataille.artillerie * pertesEffectif * rapporDePerteUnite / lignePionEnBataille.effectifTotal);
                     pertesInfanterieTotal += pertesInfanterie;
                     pertesCavalerieTotal += pertesCavalerie;
                     pertesArtillerieTotal += pertesArtillerie;

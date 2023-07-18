@@ -585,9 +585,12 @@ namespace vaoc
                             {
                                 if (null == zonebataille.sCombat[z]
                                     || zonebataille.sCombat[z] == string.Empty
-                                    || zonebataille.iPertes[z] <= 0
-                                    ) { continue; }
-                                DessineFlecheHorizontale(G, z, zonebataille, fin);
+                                    ) 
+                                { continue; }
+                                if ((i < 3 && zonebataille.iPertes[z + 3] > 0) || (i > 2 && zonebataille.iPertes[z - 3] > 0))
+                                {
+                                    DessineFlecheHorizontale(G, z, zonebataille, fin);
+                                }
                             }
                         }
                     }
@@ -988,13 +991,13 @@ namespace vaoc
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 4 * m_hauteur / 9;
                         break;
                     case TIPEFINBATAILLE.VICTOIRE012:
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 11 * m_hauteur / 18;//haut, gauche
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 8 * m_hauteur / 18;//haut, gauche
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 7 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 6; fleche[f++].Y = 7 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 2; fleche[f++].Y = 9 * m_hauteur / 9;//pointe
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 6; fleche[f++].Y = 7 * m_hauteur / 9;
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 7 * m_hauteur / 9;
-                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 11 * m_hauteur / 18;
+                        fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 - m_largeur / 3 / 4; fleche[f++].Y = 8 * m_hauteur / 18;
                         break;
                     default:
                         fleche[f].X = (iZoneResultats * m_largeur / 3) + m_largeur / 3 / 4; fleche[f++].Y = 5 * m_hauteur / 18;//haut, gauche

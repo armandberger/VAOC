@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -50,7 +51,9 @@ namespace vaoc
                 {
                     if (!ligneBataille.IsI_TOUR_FINNull())
                     {
+                        positionFilm = 0;
                         retour +=ligneBataille.GenererFilm(m_nomfichier, string.Empty, string.Empty, ref positionFilm, hauteurFilm, largeurFilm, true);
+                        //Thread.Sleep(3000);
                     }
                 }
             }

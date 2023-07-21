@@ -489,15 +489,24 @@ namespace vaoc
 
         private void FilmMpeg()
         {
-            ProcessStartInfo processInfo = new()
+            try
             {
-                WindowStyle = ProcessWindowStyle.Normal,
-                FileName = "ffmpeg.exe",
-                WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
-                UseShellExecute= true,
-                Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne, m_nomFichier)
-            };
-            Process.Start(processInfo);
+                ProcessStartInfo processInfo = new()
+                {
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    FileName = "ffmpeg.exe",
+                    WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
+                    UseShellExecute = true,
+                    Arguments = string.Format("-framerate 1 -i {0}_{1}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}_{1}.mp4", m_nomCampagne, m_nomFichier)
+                };
+                Process process = Process.Start(processInfo);
+                //process.WaitForExit();
+            }
+            catch(Exception e) 
+            { 
+                Debug.WriteLine(e); 
+            }
+
         }
 
         public string TraitementHorizontal(int iZoneResultats, TIPEFINBATAILLE fin, bool bFin, ref int m_numeroImage)
@@ -587,7 +596,7 @@ namespace vaoc
                                     || zonebataille.sCombat[z] == string.Empty
                                     ) 
                                 { continue; }
-                                if ((i < 3 && zonebataille.iPertes[z + 3] > 0) || (i > 2 && zonebataille.iPertes[z - 3] > 0))
+                                if ((z < 3 && zonebataille.iPertes[z + 3] > 0) || (z > 2 && zonebataille.iPertes[z - 3] > 0))
                                 {
                                     DessineFlecheHorizontale(G, z, zonebataille, fin);
                                 }

@@ -2583,7 +2583,7 @@ namespace vaoc
 
                         if (!bCombattif || lignePion.estCombattif)
                         {
-                            if (bQG || (!lignePion.estQG && (!lignePion.estArtillerie || bArtillerie)))
+                            if (bQG || (!lignePion.estQG && !lignePion.estPontonnier && (!lignePion.estArtillerie || bArtillerie)))
                             {
                                 lignePionsEnBatailleZone[nb++] = lignePion;
                             }

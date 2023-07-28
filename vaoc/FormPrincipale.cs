@@ -161,12 +161,39 @@ namespace vaoc
 
         private static void Correctifs()
         {
+            #region
+            //retrait du rattachement pour toutes les unités à l'hopital ou en prison et qui n'ont plus d'effectifs
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (!lignePion.IsID_LIEU_RATTACHEMENTNull() && lignePion.I_CAVALERIE == 0 && lignePion.I_INFANTERIE == 0)
+            //    {
+            //        lignePion.SetID_LIEU_RATTACHEMENTNull();//pour éviter de conserver des lignes devenues totalement inutiles
+            //    }
+            //}
+            #endregion
+
+            #region
+            //suppression des unités rattachés à von bulow sans effectifs
+            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            //{
+            //    if (lignePion.ID_PION_PROPRIETAIRE==220 && lignePion.effectifTotal==0 && !lignePion.estQG && !lignePion.estMessager && !lignePion.estDepot && !lignePion.estConvoi && !lignePion.estPontonnier)
+            //    {
+            //        lignePion.DetruirePion();
+            //        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageEmis(lignePion.ID_PION);
+            //        if (null!= ligneMessage)
+            //        {
+            //            ligneMessage.B_DETRUIT = true;
+            //        }
+            //    }
+            //}
+            #endregion
+
             #region dernier message de pions détruits, doit être indiqué comme tel
             Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NOT NULL");
             foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
             {
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_EMETTEUR);
-                if (lignePion.B_DETRUIT)
+                if (lignePion.B_DETRUIT && !ligneMessage.B_DETRUIT)
                 {
                     ligneMessage.B_DETRUIT = true;
                 }

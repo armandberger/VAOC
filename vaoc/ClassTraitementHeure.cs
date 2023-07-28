@@ -3222,6 +3222,11 @@ namespace vaoc
                                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                                     return false;
                                 }
+                                //si l'unité n'a plus ni infanterie, ni cavalerie, il est inutile de la conserver
+                                if (lignePion.I_INFANTERIE==0 && lignePion.I_CAVALERIE==0)
+                                {
+                                    lignePion.SetID_LIEU_RATTACHEMENTNull();//pour éviter de conserver des lignes devenues totalement inutiles
+                                }
                             }
                             // pour le rapport d'effectifs
                             iBlessesInfanterie += lignePion.I_INFANTERIE;

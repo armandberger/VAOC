@@ -1262,9 +1262,11 @@ namespace vaoc
                             {
                                 if (null == zonebataille.sCombat[z]
                                     || zonebataille.sCombat[z] == string.Empty
-                                    || zonebataille.iPertes[z] <= 0
                                     ) { continue; }
-                                DessineFlecheVerticale(G, z, zonebataille, fin);
+                                if ((z < 3 && zonebataille.iPertes[z + 3] > 0) || (z > 2 && zonebataille.iPertes[z - 3] > 0))
+                                {
+                                    DessineFlecheVerticale(G, z, zonebataille, fin);
+                                }
                             }
                         }
                     }

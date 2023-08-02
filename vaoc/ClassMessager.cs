@@ -2132,7 +2132,6 @@ namespace vaoc
             //test = Constantes.DebuteParUneVoyelle("ô c'est difficile");
             unitesEnvironnantes = string.Empty;
             bEnDanger = false;
-            bAmiCombattif = false;
 
             try
             {
@@ -2211,20 +2210,16 @@ namespace vaoc
 
                         if (null == lignePionVoisin || lignePionVoisin.B_DETRUIT) { continue; }//note, null possible si j'ai détruit manuellement une unité
                         if (lignePion.ID_PION == lignePionVoisin.ID_PION) { continue; }
-                        bool bEstcombattif = lignePionVoisin.estCombattifQG(true, true, true);
+                        bool bEstcombattif = lignePionVoisin.estCombattifQG(false, true, true);
                         if (!bEstcombattif && bUniquementCombattives) { continue; }
 
-                        if (!bAmiCombattif && bEstcombattif)
+                        if (bEstcombattif && (lignePionVoisin.nation == lignePion.nation))
                         {
-                            if (lignePionVoisin.nation == lignePion.nation)
-                            {
-                                bAmiCombattif = true;
-                                bEnDanger = false;//il y a un ami pour le "protéger"
-                            }
-                            else
-                            {
-                                bEnDanger = true;
-                            }
+                            bEnDanger = false;//il y a un ami pour le "protéger"
+                        }
+                        else
+                        {
+                            bEnDanger = true;
                         }
 
                         Donnees.TAB_CASERow ligneCaseVoisin = Donnees.m_donnees.TAB_CASE.FindParXY(unite.Value.x / unite.Value.nb, unite.Value.y / unite.Value.nb);

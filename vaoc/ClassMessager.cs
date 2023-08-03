@@ -2122,7 +2122,6 @@ namespace vaoc
             string NomZoneGeographique;
             string nomType, femminin;
             //string requete;
-            bool bAmiCombattif;
 
             //bool test = Constantes.DebuteParUneVoyelle("armand");
             //test = Constantes.DebuteParUneVoyelle("berger");

@@ -2131,6 +2131,7 @@ namespace vaoc
             //test = Constantes.DebuteParUneVoyelle("ô c'est difficile");
             unitesEnvironnantes = string.Empty;
             bEnDanger = false;
+            bool bProtection = false;
 
             try
             {
@@ -2214,7 +2215,7 @@ namespace vaoc
 
                         if (bEstcombattif && (lignePionVoisin.nation == lignePion.nation))
                         {
-                            bEnDanger = false;//il y a un ami pour le "protéger"
+                            bProtection = true;//il y a un ami pour le "protéger"
                         }
                         else
                         {
@@ -2453,6 +2454,11 @@ namespace vaoc
                         }
                         unitesEnvironnantes += ".</LI>";
                     }
+                }
+
+                if (bProtection)
+                {
+                    bEnDanger = false;
                 }
 
                 unitesEnvironnantes += "</UL>";

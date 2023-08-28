@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Linq;
+using WaocLib;
 
 namespace vaoc
 {
@@ -436,12 +437,12 @@ namespace vaoc
                     {
                         foreach (Role role in m_roles.Values)
                         {
-                            FilmMpeg(ChaineFichier(role.nom));
+                            FilmMpeg(ChaineFichier(Constantes.MinusculeSansAccents(role.nom).Replace(" ", "_").Replace("'", "_")));
                         }
                     }
                     else
                     {
-                        FilmMpeg("imageVideo");
+                        FilmMpeg(m_nomCampagne.Replace(' ', '_') + "_" + m_nomFichier);
                     }
                 }
                 m_travailleur.ReportProgress(100);
@@ -458,9 +459,9 @@ namespace vaoc
             ProcessStartInfo processInfo = new ProcessStartInfo
             {
                 WindowStyle = ProcessWindowStyle.Normal,
-                FileName = "ffmpeg.exe",
+                FileName = m_repertoireVideo+"\\ffmpeg.exe",
                 WorkingDirectory = m_repertoireVideo, //Path.GetDirectoryName(YourApplicationPath);
-                Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", m_nomCampagne.Replace(' ', '_') + "_" + m_nomFichier)
+                Arguments = string.Format("-framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom)
             };
             Process.Start(processInfo);
         }
@@ -477,7 +478,7 @@ namespace vaoc
 
             try
             {
-                if (null != m_batailles[m_traitement])
+                if (null != m_batailles[m_traitement] && !m_videoParRole)
                 {
                     TraitementBataille(m_batailles[m_traitement]);
                     m_traitement += m_batailles[m_traitement].I_TOUR_FIN - m_batailles[m_traitement].I_TOUR_DEBUT;
@@ -758,7 +759,7 @@ namespace vaoc
 
                 if (m_videoParRole)
                 {
-                    fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + m_roles[m_traitementRole].nom + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
+                    fichierImage.Save(ChaineFichier(m_repertoireVideo + "\\" + Constantes.MinusculeSansAccents(m_roles[m_traitementRole].nom) + "_" + m_traitement.ToString("0000") + ".png"), ImageFormat.Png);
                 }
                 else
                 {

@@ -2277,7 +2277,7 @@ namespace vaoc
                                             }
                                             else
                                             {
-                                                nomType = (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION) ? lignePionVoisin.S_NOM : "une formation";
+                                                nomType = (ligneModelePion.ID_NATION == ligneNationVoisin.ID_NATION || Constantes.JetDeDes(1) > 2) ? lignePionVoisin.S_NOM : "une formation";
                                             }
                                         }
                                     }

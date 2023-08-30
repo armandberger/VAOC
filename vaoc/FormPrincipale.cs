@@ -188,6 +188,39 @@ namespace vaoc
             //}
             #endregion
 
+            #region Recherche puis suppression d'espaces ou des parcours pions appartenant à des pions detruits
+            List<int> listePions = new List<int>();
+            foreach(Donnees.TAB_ESPACERow ligneEspace in Donnees.m_donnees.TAB_ESPACE.Rows)
+            {
+                if (!listePions.Contains(ligneEspace.ID_PION))
+                {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneEspace.ID_PION);
+                    if (null != lignePion && lignePion.B_DETRUIT)
+                    {
+                        listePions.Add(ligneEspace.ID_PION);
+                    }
+                }
+            }
+
+            foreach (Donnees.TAB_PARCOURSRow ligneParcours in Donnees.m_donnees.TAB_PARCOURS.Rows)
+            {
+                if (!listePions.Contains(ligneParcours.ID_PION))
+                {
+                    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneParcours.ID_PION);
+                    if (null!= lignePion && lignePion.B_DETRUIT)
+                    {
+                        listePions.Add(ligneParcours.ID_PION);
+                    }
+                }
+            }
+            
+            foreach(int ID_PION in listePions)
+            {
+                Donnees.m_donnees.TAB_ESPACE.SupprimerEspacePion(ID_PION);
+                Donnees.m_donnees.TAB_PARCOURS.SupprimerParcoursPion(ID_PION);
+            }
+            #endregion
+
             #region dernier message de pions détruits, doit être indiqué comme tel
             Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NOT NULL");
             foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
@@ -210,23 +243,23 @@ namespace vaoc
             #endregion
 
             #region messagers qui n'ont plus d'ordres...
-            //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
-            //{
-            //    if (!lignePion.B_DETRUIT && lignePion.estMessager)
-            //    {
-            //        int i = 0;
-            //        while (i<Donnees.m_donnees.TAB_ORDRE.Count)
-            //        {
-            //            if (Donnees.m_donnees.TAB_ORDRE[i].ID_PION == lignePion.ID_PION) break;
-            //            i++;
-            //        }
-            //        if (i >= Donnees.m_donnees.TAB_ORDRE.Count)
-            //        {
-            //            Debug.WriteLine("suppression du messager " + lignePion.ID_PION + ":" + lignePion.S_NOM);
-            //            lignePion.B_DETRUIT = true;
-            //        }
-            //    }
-            //}
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (!lignePion.B_DETRUIT && lignePion.estMessager)
+                {
+                    int i = 0;
+                    while (i < Donnees.m_donnees.TAB_ORDRE.Count)
+                    {
+                        if (Donnees.m_donnees.TAB_ORDRE[i].ID_PION == lignePion.ID_PION) break;
+                        i++;
+                    }
+                    if (i >= Donnees.m_donnees.TAB_ORDRE.Count)
+                    {
+                        Debug.WriteLine("suppression du messager " + lignePion.ID_PION + ":" + lignePion.S_NOM);
+                        lignePion.B_DETRUIT = true;
+                    }
+                }
+            }
             //int t = 0;
             #endregion
 
@@ -257,25 +290,25 @@ namespace vaoc
             #endregion
 
             #region messages non arrivés sur des pions détruits !!!
-            //Donnees.TAB_MESSAGERow[] listeMessage = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
-            //foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessage)
-            //{
-            //    Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
-            //    if (lignePion.B_DETRUIT)
-            //    {
-            //        Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
-            //        if (null == ligneOrdre)
-            //        {
-            //            ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
-            //            ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
-            //        }
-            //        else
-            //        {
-            //            ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
-            //            ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;an
-            //        }
-            //    }
-            //}
+            Donnees.TAB_MESSAGERow[] listeMessageD = (Donnees.TAB_MESSAGERow[])Donnees.m_donnees.TAB_MESSAGE.Select("I_TOUR_ARRIVEE IS NULL");
+            foreach (Donnees.TAB_MESSAGERow ligneMessage in listeMessageD)
+            {
+                Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneMessage.ID_PION_PROPRIETAIRE);
+                if (null != lignePion && lignePion.B_DETRUIT)
+                {
+                    Donnees.TAB_ORDRERow ligneOrdre = Donnees.m_donnees.TAB_ORDRE.Premier(lignePion.ID_PION);
+                    if (null == ligneOrdre)
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneMessage.I_TOUR_DEPART;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneMessage.I_PHASE_DEPART;
+                    }
+                    else
+                    {
+                        ligneMessage.I_TOUR_ARRIVEE = ligneOrdre.I_TOUR_FIN;
+                        ligneMessage.I_PHASE_ARRIVEE = ligneOrdre.I_PHASE_FIN;
+                    }
+                }
+            }
             #endregion
 
             #region les blessés ne sont pas marqués comme tel...

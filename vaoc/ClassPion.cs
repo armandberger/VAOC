@@ -4060,8 +4060,11 @@ namespace vaoc
                     }
                     if ((lignePionEnnemi.estDepot || lignePionEnnemi.estArtillerie) && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
-                        if (bEnDanger)
+                        if (lignePionEnnemi.IsB_EN_DANGERNull())
+                        {
+                            ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
+                        }
+                        if ((bool)lignePionEnnemi.B_EN_DANGER)
                         {
                             if (lignePionEnnemi.estDepot)
                             {
@@ -4079,16 +4082,22 @@ namespace vaoc
                     //aucune des deux unités ne doit être en fuite ou en retraite (pris en compte est l'appel à estCombattif)
                     if ((estConvoi || estBlesses || estPrisonniers || estCapturable) && lignePionEnnemi.estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
-                        if (bEnDanger)
+                        if (this.IsB_EN_DANGERNull())
+                        {
+                            ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
+                        }
+                        if ((bool)this.B_EN_DANGER)
                         {
                             if (!CaptureConvoiBlessesPrisonniers(lignePionEnnemi, ligneCase)) return false;
                         }
                     }
                     if ((lignePionEnnemi.estConvoi || lignePionEnnemi.estBlesses || lignePionEnnemi.estPrisonniers || lignePionEnnemi.estCapturable) && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
-                        if (bEnDanger)
+                        if (lignePionEnnemi.IsB_EN_DANGERNull())
+                        {
+                            ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
+                        }
+                        if ((bool)lignePionEnnemi.B_EN_DANGER)
                         {
                             if (!lignePionEnnemi.CaptureConvoiBlessesPrisonniers(this, ligneCase)) return false;
                         }
@@ -4096,16 +4105,22 @@ namespace vaoc
 
                     if (estPontonnier && lignePionEnnemi.estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
-                        if (bEnDanger)
+                        if (this.IsB_EN_DANGERNull())
+                        {
+                            ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
+                        }
+                        if ((bool)this.B_EN_DANGER)
                         {
                             if (!CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "PONTONNIER", lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
                         }
                     }
                     if (lignePionEnnemi.estPontonnier && estCombattif)
                     {
-                        ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
-                        if (bEnDanger)
+                        if (lignePionEnnemi.IsB_EN_DANGERNull())
+                        {
+                            ClassMessager.PionsEnvironnants(lignePionEnnemi, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCase, false, out _, out bEnDanger);
+                        }
+                        if ((bool)lignePionEnnemi.B_EN_DANGER)
                         {
                             if (!lignePionEnnemi.CapturePion(this, ID_PION_PROPRIETAIRE, "PONTONNIER", nation.ID_NATION, ligneCase)) return false;
                         }
@@ -4306,8 +4321,11 @@ namespace vaoc
             internal bool CaptureConvoiBlessesPrisonniers(Donnees.TAB_PIONRow lignePionEnnemi, Donnees.TAB_CASERow ligneCaseCapture)
             {
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out string _, out bool bEnDanger);
-                if (!bEnDanger) { return true; }
+                if (this.IsB_EN_DANGERNull())
+                {
+                    ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out string _, out bool bEnDanger);
+                }
+                if (!(bool)this.B_EN_DANGER) { return true; }
 
                 //if (lignePion.estDepot) -> pas un bon test, c'est un convoi à ce moment là, pas un dépôt
                 if (estConvoiDeRavitaillement)
@@ -4401,8 +4419,11 @@ namespace vaoc
                 int idNationCaptureur;
 
                 //La capture ne peut avoir lieu que si aucune unité amie visible n'est à proximité
-                ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out _, out bool bEnDanger);
-                if (!bEnDanger) { return true; }
+                if (this.IsB_EN_DANGERNull())
+                {
+                    ClassMessager.PionsEnvironnants(this, ClassMessager.MESSAGES.MESSAGE_AUCUN_MESSAGE, ligneCaseCapture, false, out _, out bool bEnDanger);
+                }
+                if (!(bool)this.B_EN_DANGER) { return true; }
 
                 // Un dépôt capturé est réduit d'un niveau (règle avancé) et capturé
                 // s'il était au dernier niveau possible, le dépôt est détruit.
@@ -5199,6 +5220,12 @@ namespace vaoc
                 Verrou.Derrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
             }
             */
+            internal void SetB_EN_DANGER()
+            {
+                Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                this.B_EN_DANGER = null;
+                Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+            }
         }
     }
 }

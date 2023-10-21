@@ -217,6 +217,9 @@ namespace vaoc
                         if (!NouvelleHeure(Donnees.m_donnees.TAB_PARTIE[0].FL_DEMARRAGE,out bRenfort)) { return false; }
                     }
 
+                    //Initialisation des données
+                    InitialisationPhase();
+
                     //on place toutes les unités statiques
                     message = string.Format("**** Placement des unités statiques ****");
                     if (!LogFile.Notifier(message, out messageErreur)) { return false; }
@@ -648,6 +651,17 @@ namespace vaoc
                 nbPhases = Donnees.m_donnees.TAB_JEU[0].I_NOMBRE_PHASES;//le nombre de phases peut juste différer au premier tour, pas aux suivants
             }
             return true;
+        }
+
+        private void InitialisationPhase()
+        {
+            LogFile.Notifier("ClassTraitementHeure : InitialisationPhase debut");
+            //remise à null de b_endanger pour ne le recalculer qu'une seule fois ensuite par phase
+            for (int l = 0; l < Donnees.m_donnees.TAB_PION.Count; l++)
+            {
+                Donnees.m_donnees.TAB_PION[l].SetB_EN_DANGERNull();
+            }
+            LogFile.Notifier("ClassTraitementHeure : InitialisationPhase fin");
         }
 
         /// <summary>

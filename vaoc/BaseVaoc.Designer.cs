@@ -8490,7 +8490,9 @@ namespace vaoc {
             private global::System.Data.DataColumn columnS_ENNEMI_OBSERVABLE;
             
             private global::System.Data.DataColumn columnI_TOUR_ENNEMI_OBSERVABLE;
-            
+
+            private global::System.Data.DataColumn columnB_EN_DANGER;
+
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public TAB_PIONDataTable() {
@@ -9027,7 +9029,17 @@ namespace vaoc {
                     return this.columnI_TOUR_ENNEMI_OBSERVABLE;
                 }
             }
-            
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn B_EN_DANGERColumn
+            {
+                get
+                {
+                    return this.columnB_EN_DANGER;
+                }
+            }
+
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
@@ -9286,6 +9298,7 @@ namespace vaoc {
                 this.columnI_TRI = base.Columns["I_TRI"];
                 this.columnS_ENNEMI_OBSERVABLE = base.Columns["S_ENNEMI_OBSERVABLE"];
                 this.columnI_TOUR_ENNEMI_OBSERVABLE = base.Columns["I_TOUR_ENNEMI_OBSERVABLE"];
+                this.columnB_EN_DANGER = base.Columns["B_EN_DANGER"];                
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9419,6 +9432,9 @@ namespace vaoc {
                 base.Columns.Add(this.columnI_TOUR_ENNEMI_OBSERVABLE);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnID_PION}, true));
+                this.columnB_EN_DANGER = new global::System.Data.DataColumn("B_EN_DANGER", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnB_EN_DANGER);
+                
                 this.columnID_PION.AllowDBNull = false;
                 this.columnID_PION.Unique = true;
                 this.columnID_MODELE_PION.AllowDBNull = false;
@@ -9510,6 +9526,7 @@ namespace vaoc {
                 this.columnI_VICTOIRE.DefaultValue = ((int)(0));
                 this.columnI_TRI.AllowDBNull = false;
                 this.columnI_TRI.DefaultValue = ((int)(0));
+                this.columnB_EN_DANGER.AllowDBNull = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -27481,21 +27498,43 @@ namespace vaoc {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int I_TOUR_ENNEMI_OBSERVABLE {
+            public bool? B_EN_DANGER {
                 get {
                     try {
-                        return ((int)(this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn]));
+                        return ((bool?)(this[this.tableTAB_PION.B_EN_DANGERColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_ENNEMI_OBSERVABLE\' dans la table \'TAB_PION\' est" +
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'B_EN_DANGER\' dans la table \'TAB_PION\' est" +
                                 " DBNull.", e);
                     }
                 }
                 set {
+                    this[this.tableTAB_PION.B_EN_DANGERColumn] = value;
+                }
+            }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int I_TOUR_ENNEMI_OBSERVABLE
+            {
+                get
+                {
+                    try
+                    {
+                        return ((int)(this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn]));
+                    }
+                    catch (global::System.InvalidCastException e)
+                    {
+                        throw new global::System.Data.StrongTypingException("La valeur pour la colonne \'I_TOUR_ENNEMI_OBSERVABLE\' dans la table \'TAB_PION\' est" +
+                                " DBNull.", e);
+                    }
+                }
+                set
+                {
                     this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn] = value;
                 }
             }
-            
+
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsS_ENNEMI_OBSERVABLENull() {
@@ -27519,8 +27558,22 @@ namespace vaoc {
             public void SetI_TOUR_ENNEMI_OBSERVABLENull() {
                 this[this.tableTAB_PION.I_TOUR_ENNEMI_OBSERVABLEColumn] = global::System.Convert.DBNull;
             }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsB_EN_DANGERNull()
+            {
+                return this.IsNull(this.tableTAB_PION.B_EN_DANGERColumn);
+            }
+
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetB_EN_DANGERNull()
+            {
+                this[this.tableTAB_PION.B_EN_DANGERColumn] = global::System.Convert.DBNull;
+            }
         }
-        
+
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>

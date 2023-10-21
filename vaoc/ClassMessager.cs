@@ -2185,7 +2185,7 @@ namespace vaoc
                         Donnees.TAB_CASERow ligneCasePion = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionVue.ID_CASE);
                         if (ligneCasePion.I_X >= xCaseHautGauche && ligneCasePion.I_Y >= yCaseHautGauche && ligneCasePion.I_X <= xCaseBasDroite && ligneCasePion.I_Y <= yCaseBasDroite)
                         {
-                            if (lignePionVue.ID_PION != lignePion.ID_PION && 
+                            if (lignePionVue.ID_PION != lignePion.ID_PION &&
                                 !unitesVisibles.ContainsKey(lignePionVue.ID_PION))
                             {
                                 Barycentre bar = new();
@@ -2235,9 +2235,9 @@ namespace vaoc
                         {
                             nomType = "un état-major";
 
-                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT 
+                            if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT
                                     && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
-                                    && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE )
+                                    && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
                                 || Constantes.JetDeDes(1) > 5)
                             {
                                 nomType += (Constantes.DebuteParUneVoyelle(lignePionVoisin.S_NOM)) ? " de l'" : " du ";
@@ -2287,7 +2287,7 @@ namespace vaoc
                         if (0 == lignePionVoisin.I_INFANTERIE && 0 == lignePionVoisin.I_CAVALERIE && 0 == lignePionVoisin.I_ARTILLERIE)
                         {
                             if ((typeMessage != MESSAGES.MESSAGE_PATROUILLE_RAPPORT
-                                    && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI 
+                                    && typeMessage != MESSAGES.MESSAGE_PATROUILLE_CONTACT_ENNEMI
                                     && typeMessage != MESSAGES.MESSAGE_ENNEMI_OBSERVE)
                                 || Constantes.JetDeDes(1) > 2)
                             {
@@ -2483,7 +2483,7 @@ namespace vaoc
                             if (!listePonts.ContainsKey(ligneCaseVue.ID_CASE))
                             {
                                 //si la case est trouvé on recherche toutes les cases de même type contigues
-                                List<Donnees.TAB_CASERow> listeCasesVoisines = new ()
+                                List<Donnees.TAB_CASERow> listeCasesVoisines = new()
                                 {
                                     ligneCaseVue
                                 };
@@ -2508,6 +2508,12 @@ namespace vaoc
                     if (bPontOuGuet) { unitesEnvironnantes += "</UL>"; }
                 }
                 if (lignePion.estAuCombat) { bEnDanger = false; } //on est jamais en danger au combat c'est bien connu 
+                if (lignePion.IsB_EN_DANGERNull())
+                {
+                    Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                    lignePion.B_EN_DANGER = bEnDanger;
+                    Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
+                }
             }
             catch (Exception ex)
             {

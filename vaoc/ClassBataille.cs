@@ -2153,6 +2153,8 @@ namespace vaoc
                         }
                         // -> Le chef remplaçant n'est crée qu'après une période d'inactivité (voir NouvelleHeure)
                     }
+                    message = string.Format("BlessureChef {0}:{1} est blessé avec une gravité de {2} pour une durée de {3}", ligneChefBlesse.ID_PION, ligneChefBlesse.S_NOM, graviteBlessure, ligneChefBlesse.I_DUREE_HORS_COMBAT);
+                    LogFile.Notifier(message);
                 }
                 Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                 Monitor.Exit(Donnees.m_donnees.TAB_BATAILLE_PIONS.Rows.SyncRoot);

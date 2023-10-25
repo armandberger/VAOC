@@ -522,17 +522,13 @@ namespace vaoc
             {
                 get
                 {
-                    if (this.I_INFANTERIE_INITIALE > 0)
+                    if (this.I_INFANTERIE_INITIALE > 0 || this.I_CAVALERIE_INITIALE > 0)
                     {
-                        if (this.infanterie < 300)
+                        if (this.infanterie + this.cavalerie < 300)
                         {
                             return true;
                         }
                         return false;
-                    }
-                    if (this.I_CAVALERIE_INITIALE > 0 && this.cavalerie < 300)
-                    {
-                        return true;
                     }
                     return false;
                 }
@@ -3214,7 +3210,7 @@ namespace vaoc
                     ID_PION_PROPRIETAIRE,
                     -1,//int ID_NOUVEAU_PION_PROPRIETAIRE,
                     -1,//int ID_ANCIEN_PION_PROPRIETAIRE,
-                    S_NOM,
+                    nom,
                     I_INFANTERIE,
                     I_INFANTERIE,
                     I_CAVALERIE,
@@ -4341,9 +4337,9 @@ namespace vaoc
                     Verrou.Deverrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     return CapturePion(lignePionEnnemi, lignePionEnnemi.ID_PION_PROPRIETAIRE, "CONVOI", lignePionEnnemi.nation.ID_NATION, ligneCaseCapture);
                 }
-                if (estBlesses || estRenfort)
+                if (estBlesses || estRenfort || estCapturable)
                 {
-                    //Le convoi ou l'unité de renforts non combattives (car effectif trop faible) devient un convoi de prisonniers
+                    //Le convoi ou l'unité de renforts non combattives ou l'unité non combattive (car effectif trop faible) devient un convoi de prisonniers
                     Verrou.Verrouiller(Donnees.m_donnees.TAB_PION.Rows.SyncRoot);
                     B_BLESSES = false;
                     B_RENFORT = false;

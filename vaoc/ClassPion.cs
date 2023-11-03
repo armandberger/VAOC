@@ -4050,7 +4050,7 @@ namespace vaoc
                             }
                             if (estArtillerie)
                             {
-                                if (!this.CapturePion(lignePionEnnemi, this.proprietaire.ID_PION, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
+                                if (!this.CapturePion(lignePionEnnemi, lignePionEnnemi.proprietaire.ID_PION, string.Empty, lignePionEnnemi.nation.ID_NATION, ligneCase)) return false;
                             }                            
                         }
                     }

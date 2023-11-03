@@ -124,8 +124,16 @@ namespace vaoc
             //Donnees.TAB_CASERow ligneCase2 = Donnees.m_donnees.TAB_CASE.FindParID_CASE(Donnees.m_donnees.TAB_PION.FindByID_PION(420).ID_CASE);
 
             #region  correctifs
+            /* bataille
+            Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(107);
+            Donnees.TAB_PIONRow lignePionNouveau = Donnees.m_donnees.TAB_PION.FindByID_PION(443);
+            Donnees.TAB_CASERow ligneCase = Donnees.m_donnees.TAB_CASE.FindParID_CASE(lignePionNouveau.ID_CASE);
+            ligneCase.ID_PROPRIETAIRE = lignePionAncien.ID_PION;
+            ligneCase.ID_NOUVEAU_PROPRIETAIRE = lignePionAncien.ID_PION;
+            lignePionAncien.Rencontre(lignePionNouveau, ligneCase);
+            */
             /* transfert
-            Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(2016);
+            Donnees.TAB_PIONRow lignePionAncien = Donnees.m_donnees.TAB_PION.FindByID_PION(107);
             Donnees.TAB_PIONRow lignePionNouveau = Donnees.m_donnees.TAB_PION.FindByID_PION(6);
             TransfertsDesliens(lignePionAncien, lignePionNouveau);
             Donnees.TAB_ROLERow ligneRole = Donnees.m_donnees.TAB_ROLE.FindByID_ROLE(8);

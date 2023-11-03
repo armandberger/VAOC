@@ -4130,6 +4130,10 @@ namespace vaoc
                         //si l'un des deux unités est déjà engagée en bataille, elle ne peut pas créer une nouvelle bataille
                         // BEA 06/04/2022, le test sur EstEnnemi est necessaire car l'unité peut avoir changer de nationalité suite à une capture juste avant
                         // (ex : prisonniers capturé devient un renfort, le renfort est combattif alors que le prisonnier ne l'était pas, d'où bataille basé sur l'hypothèse devenue fausse que l'unité était ennemi
+                        bool btest1 = estCombattifQG(false, false);
+                        bool betest1 = lignePionEnnemi.estCombattifQG(false, true);
+                        bool btest2 = estCombattifQG(false, true);
+                        bool betest2 = lignePionEnnemi.estCombattifQG(false, false);
                         if (!estAuCombat && !lignePionEnnemi.estAuCombat &&
                             ((estCombattifQG(false, false) && lignePionEnnemi.estCombattifQG(false, true))
                             || (estCombattifQG(false, true) && lignePionEnnemi.estCombattifQG(false, false)))

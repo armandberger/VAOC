@@ -3676,7 +3676,7 @@ namespace vaoc
             // donc fatigue = (effectif theorique - effectif reel) * 100 / effectif theorique
             int effectifTheorique = lignePion.I_INFANTERIE + lignePion.I_CAVALERIE + lignePion.I_ARTILLERIE;
             int effectifReel = recuperationFantassin + recuperationCavalerie + recuperationArtillerie + lignePion.effectifTotal;
-            int fatigue = 100 - (int)Math.Round((double)effectifReel * 100 / (double)effectifTheorique);
+            int fatigue = Math.Max(0,100 - (int)Math.Round((double)effectifReel * 100 / (double)effectifTheorique));//Math.max ajouté suite à des unités retrouvés avec des fatigues négatives
             diffatigue = lignePion.I_FATIGUE - fatigue;
             lignePion.I_FATIGUE = fatigue;
             return true;

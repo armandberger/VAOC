@@ -924,9 +924,9 @@ namespace vaoc
                     {
                         Donnees.TAB_PIONRow lignePionPerte = Donnees.m_donnees.TAB_PION.FindByID_PION(idPion);
                         if (null == lignePionPerte || lignePionPerte.B_DETRUIT || lignePionPerte.estQG || lignePionPerte.effectifTotal <= 0) { continue; }
-                        if (lignePionPerte.I_CAVALERIE > 0)
+                        if (lignePionPerte.cavalerie > 0)
                         {
-                            int perteLocale = Math.Min(lignePionPerte.I_CAVALERIE, (lignePionPerte.Moral <= 0) ? Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_CAVALERIE) : Math.Min(Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_CAVALERIE));
+                            int perteLocale = Math.Min(lignePionPerte.cavalerie, (lignePionPerte.Moral <= 0) ? Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.cavalerie) : Math.Min(Constantes.CST_PAS_DE_PERTES, lignePionPerte.cavalerie));
                             if (listePertesCavalerie.ContainsKey(lignePionPerte.ID_PION))
                             {
                                 listePertesCavalerie[lignePionPerte.ID_PION] = (int)listePertesCavalerie[lignePionPerte.ID_PION] + perteLocale;
@@ -935,7 +935,14 @@ namespace vaoc
                             {
                                 listePertesCavalerie.Add(lignePionPerte.ID_PION, perteLocale);
                             }
-                            lignePionPerte.I_CAVALERIE -= perteLocale;
+                            if (lignePionPerte.cavalerie<=perteLocale)
+                            {
+                                lignePionPerte.I_CAVALERIE = 0;
+                            }
+                            else
+                            {
+                                lignePionPerte.I_CAVALERIE -= perteLocale;
+                            }
                             message = string.Format("Poursuite : pertes de {3} cavaliers reste {0} pour {1}:{2}", lignePionPerte.I_CAVALERIE, lignePionPerte.ID_PION, lignePionPerte.S_NOM, perteLocale);
                             LogFile.Notifier(message);
 
@@ -945,9 +952,9 @@ namespace vaoc
                         else
                         {
                             //une perte en infanterie coute le double d'une perte en cavalerie
-                            if (lignePionPerte.I_INFANTERIE > 0)
+                            if (lignePionPerte.infanterie > 0)
                             {
-                                int perteLocale = Math.Min(lignePionPerte.I_INFANTERIE, (lignePionPerte.Moral <= 0) ? Math.Min(4 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_INFANTERIE) : Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.I_INFANTERIE));
+                                int perteLocale = Math.Min(lignePionPerte.infanterie, (lignePionPerte.Moral <= 0) ? Math.Min(4 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.infanterie) : Math.Min(2 * Constantes.CST_PAS_DE_PERTES, lignePionPerte.infanterie));
                                 if (listePertesInfanterie.ContainsKey(lignePionPerte.ID_PION))
                                 {
                                     listePertesInfanterie[lignePionPerte.ID_PION] = (int)listePertesInfanterie[lignePionPerte.ID_PION] + perteLocale;
@@ -956,7 +963,14 @@ namespace vaoc
                                 {
                                     listePertesInfanterie.Add(lignePionPerte.ID_PION, perteLocale);
                                 }
-                                lignePionPerte.I_INFANTERIE -= perteLocale;
+                                if (lignePionPerte.infanterie <= perteLocale)
+                                {
+                                    lignePionPerte.I_INFANTERIE = 0;
+                                }
+                                else
+                                {
+                                    lignePionPerte.I_INFANTERIE -= perteLocale;
+                                }
                                 message = string.Format("Poursuite : pertes de {3} fantassins reste {0} pour {1}:{2}",
                                     lignePionPerte.I_INFANTERIE, lignePionPerte.ID_PION, lignePionPerte.S_NOM, perteLocale);
                                 LogFile.Notifier(message);

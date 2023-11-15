@@ -161,8 +161,7 @@ namespace vaoc
 
         private static void Correctifs()
         {
-            #region
-            //retrait du rattachement pour toutes les unités à l'hopital ou en prison et qui n'ont plus d'effectifs
+            #region retrait du rattachement pour toutes les unités à l'hopital ou en prison et qui n'ont plus d'effectifs
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
             //    if (!lignePion.IsID_LIEU_RATTACHEMENTNull() && lignePion.I_CAVALERIE == 0 && lignePion.I_INFANTERIE == 0)
@@ -172,8 +171,7 @@ namespace vaoc
             //}
             #endregion
 
-            #region
-            //suppression des unités rattachés à von bulow sans effectifs
+            #region suppression des unités rattachés à von bulow sans effectifs
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{
             //    if (lignePion.ID_PION_PROPRIETAIRE==220 && lignePion.effectifTotal==0 && !lignePion.estQG && !lignePion.estMessager && !lignePion.estDepot && !lignePion.estConvoi && !lignePion.estPontonnier)
@@ -187,6 +185,17 @@ namespace vaoc
             //    }
             //}
             #endregion
+
+            #region mise à zero de fatigue négatives
+            foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
+            {
+                if (lignePion.I_FATIGUE<0)
+                {
+                    lignePion.I_FATIGUE = 0;
+                }
+            }
+            #endregion
+
 
             #region Recherche puis suppression d'espaces ou des parcours pions appartenant à des pions detruits
             List<int> listePions = new List<int>();

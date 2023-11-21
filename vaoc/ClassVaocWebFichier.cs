@@ -1074,7 +1074,7 @@ namespace vaoc
             bRenfort = (lignePion.B_RENFORT) ? 1 : 0;
             bQG = (lignePion.estQG) ? 1 : 0;
 
-            if (lignePion.estQG || null == ligneMessage)
+            if (lignePion.estRole || null == ligneMessage)
             {
                 iZoneBataille = (lignePion.IsI_ZONE_BATAILLENull()) ? -1 : lignePion.I_ZONE_BATAILLE;//on voit toujours la position réelle en bataille
                 idBataille = (lignePion.IsID_BATAILLENull()) ? -1 : lignePion.ID_BATAILLE;

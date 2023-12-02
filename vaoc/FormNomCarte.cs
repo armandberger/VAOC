@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Windows.Forms;
 using WaocLib;
@@ -71,7 +72,8 @@ namespace vaoc
         public int id_nom
         {
             get { return m_ID_NOM; }
-            set { 
+            set
+            {
                 m_ID_NOM = value;
                 if (Constantes.CST_IDNULL != m_ID_NOM)
                 {
@@ -103,9 +105,9 @@ namespace vaoc
             }
         }
 
-    public int id_police
+        public int id_police
         {
-            set 
+            set
             {
                 int i = 0;
                 while (i < comboBoxPolice.Items.Count && m_tablePolice[i].ID_POLICE != value) i++;
@@ -131,7 +133,7 @@ namespace vaoc
             {
                 m_tablePolice = (Donnees.TAB_POLICEDataTable)value.Copy();
                 comboBoxPolice.Items.Clear();
-                for (int i=0; i<m_tablePolice.Rows.Count; i++)
+                for (int i = 0; i < m_tablePolice.Rows.Count; i++)
                 {
                     comboBoxPolice.Items.Add(m_tablePolice[i].S_NOM);
                 }
@@ -149,12 +151,13 @@ namespace vaoc
         public int victoire
         {
             set { textBoxVictoire.Text = value.ToString(); }
-            get {
+            get
+            {
                 try
                 {
                     return Convert.ToInt32(textBoxVictoire.Text);
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -172,7 +175,7 @@ namespace vaoc
                     if (i < comboBoxPionPropriétaire.Items.Count) comboBoxPionPropriétaire.SelectedIndex = i;
                 }
             }
-            get 
+            get
             {
                 //if (string.Equals(CST_RENFORT_AU_PLUS_PROCHE, (string)comboBoxPionPropriétaire.Items[comboBoxPionPropriétaire.SelectedIndex]))
                 if (comboBoxPionPropriétaire.Items[comboBoxPionPropriétaire.SelectedIndex] is string)
@@ -197,7 +200,7 @@ namespace vaoc
             get
             {
                 //if (string.Equals(CST_RENFORT_AU_PLUS_PROCHE, (string)comboBoxPionPropriétaire.Items[comboBoxPionPropriétaire.SelectedIndex]))
-                if (comboBoxProprietaire.SelectedIndex<0 || comboBoxProprietaire.Items[comboBoxProprietaire.SelectedIndex] is string)
+                if (comboBoxProprietaire.SelectedIndex < 0 || comboBoxProprietaire.Items[comboBoxProprietaire.SelectedIndex] is string)
                 {
                     return null;
                 }
@@ -218,7 +221,7 @@ namespace vaoc
             }
             get
             {
-                if (comboBoxModeleRenfort.Items.Count > 0 && comboBoxModeleRenfort.SelectedIndex>=0)
+                if (comboBoxModeleRenfort.Items.Count > 0 && comboBoxModeleRenfort.SelectedIndex >= 0)
                 {
                     return (Donnees.TAB_MODELE_PIONRow)comboBoxModeleRenfort.Items[comboBoxModeleRenfort.SelectedIndex];
                 }
@@ -295,11 +298,11 @@ namespace vaoc
 
         private void FormNomCarte_Load(object sender, EventArgs e)
         {
-            if (comboBoxPosition.Items.Count > 0 && comboBoxPosition.SelectedIndex<0)
+            if (comboBoxPosition.Items.Count > 0 && comboBoxPosition.SelectedIndex < 0)
             {
                 comboBoxPosition.SelectedIndex = 0;
             }
-            if (comboBoxPolice.Items.Count > 0 && comboBoxPolice.SelectedIndex<0)
+            if (comboBoxPolice.Items.Count > 0 && comboBoxPolice.SelectedIndex < 0)
             {
                 comboBoxPolice.SelectedIndex = 0;
             }
@@ -310,7 +313,7 @@ namespace vaoc
             if (comboBoxModeleRenfort.Items.Count > 0 && comboBoxModeleRenfort.SelectedIndex < 0)
             {
                 comboBoxModeleRenfort.SelectedIndex = 0;
-            }            
+            }
         }
 
         private void buttonSupprimerTout_Click(object sender, EventArgs e)
@@ -319,6 +322,60 @@ namespace vaoc
             MessageBox.Show("Tous les noms ont été supprimés", "Suppression de tous les noms", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = System.Windows.Forms.DialogResult.Abort;
             this.Close();
+        }
+
+        private void button_controlePCC_Click(object sender, EventArgs e)
+        {
+            List<Bloc> listeBlocsARecomposer = new();
+            AStar etoile = new();
+            List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(this.X, this.Y);
+
+            //modification des blocs
+            foreach (Bloc bloc in listeBlocs)
+            {
+                if (!listeBlocsARecomposer.Contains(bloc))
+                {
+                    listeBlocsARecomposer.Add(new Bloc(bloc.xBloc, bloc.yBloc));
+                }
+            }
+
+            FormControlePCC formControlePCC = new FormControlePCC();
+            formControlePCC.m_bloc = listeBlocs[0];
+            formControlePCC.ShowDialog();
+        }
+
+        private void buttonReconstructionPCC_Click(object sender, EventArgs e)
+        {
+            List<Bloc> listeBlocsARecomposer = new();
+            ClassHPAStarCreation hpaStarCreation = new(Donnees.m_donnees.TAB_JEU[0].I_TAILLEBLOC_PCC);
+            hpaStarCreation.InitialisationIdTrajet();//pour calculer le prochain IdTrajet en création
+
+            AStar etoile = new();
+            List<Bloc> listeBlocs = etoile.NuméroBlocParPosition(this.X, this.Y);
+
+            //modification des blocs
+            foreach (Bloc bloc in listeBlocs)
+            {
+                if (!listeBlocsARecomposer.Contains(bloc))
+                {
+                    listeBlocsARecomposer.Add(new Bloc(bloc.xBloc, bloc.yBloc));
+                }
+            }
+
+            foreach (Bloc bloc in listeBlocsARecomposer)
+            {
+                //il faut supprimer tous les trajets du bloc et les recalculer pour tenir des évolutions du modèle du terrain
+                //une destruction de ponton entraine un recalcul global de tous les trajets du bloc
+                if (!hpaStarCreation.RecalculCheminPCCBloc(bloc.xBloc, bloc.yBloc, false))
+                {
+                    string message = string.Format("buttonReconstructionPCC_Click: Erreur fatale sur RecalculCheminPCCBloc bloc X={0} Y={1}", bloc.xBloc, bloc.yBloc);
+                    MessageBox.Show(message, "buttonReconstructionPCC_Click", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            // Il faut recalculer la table d'optimisation HPA
+            Donnees.m_donnees.TAB_PCC_COUTS.Initialisation();
+
         }
     }
 }

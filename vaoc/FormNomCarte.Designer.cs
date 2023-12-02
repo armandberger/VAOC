@@ -28,620 +28,672 @@ namespace vaoc
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxPosition = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.buttonAnnuler = new System.Windows.Forms.Button();
-            this.buttonValider = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxNom = new System.Windows.Forms.TextBox();
-            this.comboBoxPolice = new System.Windows.Forms.ComboBox();
-            this.buttonSupprimer = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.labelX = new System.Windows.Forms.Label();
-            this.labelY = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBoxIDCASE = new System.Windows.Forms.TextBox();
-            this.textBoxIDNOM = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBoxVictoire = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.textBoxPourcentArriveeRenfort = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.comboBoxModeleRenfort = new System.Windows.Forms.ComboBox();
-            this.groupBoxNom = new System.Windows.Forms.GroupBox();
-            this.groupBoxRenfort = new System.Windows.Forms.GroupBox();
-            this.textBoxRenfortRavitaillement = new System.Windows.Forms.TextBox();
-            this.textBoxRenfortMateriel = new System.Windows.Forms.TextBox();
-            this.textBoxRenfortCavaliers = new System.Windows.Forms.TextBox();
-            this.textBoxRenfortMoral = new System.Windows.Forms.TextBox();
-            this.textBoxRenfortCanons = new System.Windows.Forms.TextBox();
-            this.textBoxRenfortFantassins = new System.Windows.Forms.TextBox();
-            this.comboBoxPionPropriétaire = new System.Windows.Forms.ComboBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label18 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.checkBoxPrison = new System.Windows.Forms.CheckBox();
-            this.checkBoxHopital = new System.Windows.Forms.CheckBox();
-            this.buttonSupprimerTout = new System.Windows.Forms.Button();
-            this.comboBoxProprietaire = new System.Windows.Forms.ComboBox();
-            this.label20 = new System.Windows.Forms.Label();
-            this.listBoxBlesses = new System.Windows.Forms.ListBox();
-            this.listBoxPrisonniers = new System.Windows.Forms.ListBox();
-            this.checkBoxCreationDepot = new System.Windows.Forms.CheckBox();
-            this.groupBoxNom.SuspendLayout();
-            this.groupBoxRenfort.SuspendLayout();
-            this.SuspendLayout();
+            comboBoxPosition = new System.Windows.Forms.ComboBox();
+            label1 = new System.Windows.Forms.Label();
+            buttonAnnuler = new System.Windows.Forms.Button();
+            buttonValider = new System.Windows.Forms.Button();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            textBoxNom = new System.Windows.Forms.TextBox();
+            comboBoxPolice = new System.Windows.Forms.ComboBox();
+            buttonSupprimer = new System.Windows.Forms.Button();
+            label4 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
+            label6 = new System.Windows.Forms.Label();
+            labelX = new System.Windows.Forms.Label();
+            labelY = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
+            textBoxIDCASE = new System.Windows.Forms.TextBox();
+            textBoxIDNOM = new System.Windows.Forms.TextBox();
+            label8 = new System.Windows.Forms.Label();
+            textBoxVictoire = new System.Windows.Forms.TextBox();
+            label9 = new System.Windows.Forms.Label();
+            label10 = new System.Windows.Forms.Label();
+            textBoxPourcentArriveeRenfort = new System.Windows.Forms.TextBox();
+            label11 = new System.Windows.Forms.Label();
+            label12 = new System.Windows.Forms.Label();
+            label13 = new System.Windows.Forms.Label();
+            label14 = new System.Windows.Forms.Label();
+            label15 = new System.Windows.Forms.Label();
+            comboBoxModeleRenfort = new System.Windows.Forms.ComboBox();
+            groupBoxNom = new System.Windows.Forms.GroupBox();
+            groupBoxRenfort = new System.Windows.Forms.GroupBox();
+            textBoxRenfortRavitaillement = new System.Windows.Forms.TextBox();
+            textBoxRenfortMateriel = new System.Windows.Forms.TextBox();
+            textBoxRenfortCavaliers = new System.Windows.Forms.TextBox();
+            textBoxRenfortMoral = new System.Windows.Forms.TextBox();
+            textBoxRenfortCanons = new System.Windows.Forms.TextBox();
+            textBoxRenfortFantassins = new System.Windows.Forms.TextBox();
+            comboBoxPionPropriétaire = new System.Windows.Forms.ComboBox();
+            label19 = new System.Windows.Forms.Label();
+            label18 = new System.Windows.Forms.Label();
+            label17 = new System.Windows.Forms.Label();
+            label16 = new System.Windows.Forms.Label();
+            checkBoxPrison = new System.Windows.Forms.CheckBox();
+            checkBoxHopital = new System.Windows.Forms.CheckBox();
+            buttonSupprimerTout = new System.Windows.Forms.Button();
+            comboBoxProprietaire = new System.Windows.Forms.ComboBox();
+            label20 = new System.Windows.Forms.Label();
+            listBoxBlesses = new System.Windows.Forms.ListBox();
+            listBoxPrisonniers = new System.Windows.Forms.ListBox();
+            checkBoxCreationDepot = new System.Windows.Forms.CheckBox();
+            button_controlePCC = new System.Windows.Forms.Button();
+            buttonReconstructionPCC = new System.Windows.Forms.Button();
+            groupBoxNom.SuspendLayout();
+            groupBoxRenfort.SuspendLayout();
+            SuspendLayout();
             // 
             // comboBoxPosition
             // 
-            this.comboBoxPosition.FormattingEnabled = true;
-            this.comboBoxPosition.Items.AddRange(new object[] {
-            "Central",
-            "En Haut",
-            "En Haut à droite",
-            "A droite",
-            "En bas à droite",
-            "En bas",
-            "En bas à gauche",
-            "A gauche",
-            "En Haut à gauche"});
-            this.comboBoxPosition.Location = new System.Drawing.Point(535, 62);
-            this.comboBoxPosition.Name = "comboBoxPosition";
-            this.comboBoxPosition.Size = new System.Drawing.Size(212, 21);
-            this.comboBoxPosition.TabIndex = 2;
+            comboBoxPosition.FormattingEnabled = true;
+            comboBoxPosition.Items.AddRange(new object[] { "Central", "En Haut", "En Haut à droite", "A droite", "En bas à droite", "En bas", "En bas à gauche", "A gauche", "En Haut à gauche" });
+            comboBoxPosition.Location = new System.Drawing.Point(624, 72);
+            comboBoxPosition.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxPosition.Name = "comboBoxPosition";
+            comboBoxPosition.Size = new System.Drawing.Size(247, 23);
+            comboBoxPosition.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(429, 62);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Position";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(500, 72);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(50, 15);
+            label1.TabIndex = 5;
+            label1.Text = "Position";
             // 
             // buttonAnnuler
             // 
-            this.buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonAnnuler.Location = new System.Drawing.Point(177, 558);
-            this.buttonAnnuler.Name = "buttonAnnuler";
-            this.buttonAnnuler.Size = new System.Drawing.Size(75, 23);
-            this.buttonAnnuler.TabIndex = 7;
-            this.buttonAnnuler.Text = "Annuler";
-            this.buttonAnnuler.UseVisualStyleBackColor = true;
+            buttonAnnuler.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            buttonAnnuler.Location = new System.Drawing.Point(206, 644);
+            buttonAnnuler.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonAnnuler.Name = "buttonAnnuler";
+            buttonAnnuler.Size = new System.Drawing.Size(88, 27);
+            buttonAnnuler.TabIndex = 7;
+            buttonAnnuler.Text = "Annuler";
+            buttonAnnuler.UseVisualStyleBackColor = true;
             // 
             // buttonValider
             // 
-            this.buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonValider.Location = new System.Drawing.Point(15, 558);
-            this.buttonValider.Name = "buttonValider";
-            this.buttonValider.Size = new System.Drawing.Size(75, 23);
-            this.buttonValider.TabIndex = 5;
-            this.buttonValider.Text = "Valider";
-            this.buttonValider.UseVisualStyleBackColor = true;
+            buttonValider.DialogResult = System.Windows.Forms.DialogResult.OK;
+            buttonValider.Location = new System.Drawing.Point(18, 644);
+            buttonValider.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonValider.Name = "buttonValider";
+            buttonValider.Size = new System.Drawing.Size(88, 27);
+            buttonValider.TabIndex = 5;
+            buttonValider.Text = "Valider";
+            buttonValider.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(429, 26);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Nom";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(500, 30);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(34, 15);
+            label2.TabIndex = 7;
+            label2.Text = "Nom";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Police";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(20, 72);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(39, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Police";
             // 
             // textBoxNom
             // 
-            this.textBoxNom.Location = new System.Drawing.Point(535, 29);
-            this.textBoxNom.MaxLength = 255;
-            this.textBoxNom.Name = "textBoxNom";
-            this.textBoxNom.Size = new System.Drawing.Size(212, 20);
-            this.textBoxNom.TabIndex = 0;
+            textBoxNom.Location = new System.Drawing.Point(624, 33);
+            textBoxNom.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxNom.MaxLength = 255;
+            textBoxNom.Name = "textBoxNom";
+            textBoxNom.Size = new System.Drawing.Size(247, 23);
+            textBoxNom.TabIndex = 0;
             // 
             // comboBoxPolice
             // 
-            this.comboBoxPolice.FormattingEnabled = true;
-            this.comboBoxPolice.Location = new System.Drawing.Point(120, 62);
-            this.comboBoxPolice.Name = "comboBoxPolice";
-            this.comboBoxPolice.Size = new System.Drawing.Size(286, 21);
-            this.comboBoxPolice.TabIndex = 1;
+            comboBoxPolice.FormattingEnabled = true;
+            comboBoxPolice.Location = new System.Drawing.Point(140, 72);
+            comboBoxPolice.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxPolice.Name = "comboBoxPolice";
+            comboBoxPolice.Size = new System.Drawing.Size(333, 23);
+            comboBoxPolice.TabIndex = 1;
             // 
             // buttonSupprimer
             // 
-            this.buttonSupprimer.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimer.Location = new System.Drawing.Point(96, 558);
-            this.buttonSupprimer.Name = "buttonSupprimer";
-            this.buttonSupprimer.Size = new System.Drawing.Size(75, 23);
-            this.buttonSupprimer.TabIndex = 6;
-            this.buttonSupprimer.Text = "Supprimer";
-            this.buttonSupprimer.UseVisualStyleBackColor = true;
-            this.buttonSupprimer.Click += new System.EventHandler(this.buttonSupprimer_Click);
+            buttonSupprimer.DialogResult = System.Windows.Forms.DialogResult.OK;
+            buttonSupprimer.Location = new System.Drawing.Point(112, 644);
+            buttonSupprimer.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonSupprimer.Name = "buttonSupprimer";
+            buttonSupprimer.Size = new System.Drawing.Size(88, 27);
+            buttonSupprimer.TabIndex = 6;
+            buttonSupprimer.Text = "Supprimer";
+            buttonSupprimer.UseVisualStyleBackColor = true;
+            buttonSupprimer.Click += buttonSupprimer_Click;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(17, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(70, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Coordonnées";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(20, 10);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(78, 15);
+            label4.TabIndex = 9;
+            label4.Text = "Coordonnées";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(202, 9);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(20, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Y=";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(236, 10);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(22, 15);
+            label5.TabIndex = 10;
+            label5.Text = "Y=";
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(128, 9);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(20, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "X=";
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(149, 10);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(22, 15);
+            label6.TabIndex = 11;
+            label6.Text = "X=";
             // 
             // labelX
             // 
-            this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(154, 9);
-            this.labelX.Name = "labelX";
-            this.labelX.Size = new System.Drawing.Size(37, 13);
-            this.labelX.TabIndex = 12;
-            this.labelX.Text = "00000";
+            labelX.AutoSize = true;
+            labelX.Location = new System.Drawing.Point(180, 10);
+            labelX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelX.Name = "labelX";
+            labelX.Size = new System.Drawing.Size(37, 15);
+            labelX.TabIndex = 12;
+            labelX.Text = "00000";
             // 
             // labelY
             // 
-            this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(228, 9);
-            this.labelY.Name = "labelY";
-            this.labelY.Size = new System.Drawing.Size(37, 13);
-            this.labelY.TabIndex = 13;
-            this.labelY.Text = "00000";
+            labelY.AutoSize = true;
+            labelY.Location = new System.Drawing.Point(266, 10);
+            labelY.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            labelY.Name = "labelY";
+            labelY.Size = new System.Drawing.Size(37, 15);
+            labelY.TabIndex = 13;
+            labelY.Text = "00000";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(19, 35);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(58, 13);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "ID_CASE :";
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(22, 40);
+            label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(57, 15);
+            label7.TabIndex = 14;
+            label7.Text = "ID_CASE :";
             // 
             // textBoxIDCASE
             // 
-            this.textBoxIDCASE.Location = new System.Drawing.Point(131, 35);
-            this.textBoxIDCASE.MaxLength = 255;
-            this.textBoxIDCASE.Name = "textBoxIDCASE";
-            this.textBoxIDCASE.ReadOnly = true;
-            this.textBoxIDCASE.Size = new System.Drawing.Size(121, 20);
-            this.textBoxIDCASE.TabIndex = 15;
+            textBoxIDCASE.Location = new System.Drawing.Point(153, 40);
+            textBoxIDCASE.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxIDCASE.MaxLength = 255;
+            textBoxIDCASE.Name = "textBoxIDCASE";
+            textBoxIDCASE.ReadOnly = true;
+            textBoxIDCASE.Size = new System.Drawing.Size(140, 23);
+            textBoxIDCASE.TabIndex = 15;
             // 
             // textBoxIDNOM
             // 
-            this.textBoxIDNOM.Location = new System.Drawing.Point(120, 26);
-            this.textBoxIDNOM.MaxLength = 255;
-            this.textBoxIDNOM.Name = "textBoxIDNOM";
-            this.textBoxIDNOM.ReadOnly = true;
-            this.textBoxIDNOM.Size = new System.Drawing.Size(121, 20);
-            this.textBoxIDNOM.TabIndex = 17;
+            textBoxIDNOM.Location = new System.Drawing.Point(140, 30);
+            textBoxIDNOM.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxIDNOM.MaxLength = 255;
+            textBoxIDNOM.Name = "textBoxIDNOM";
+            textBoxIDNOM.ReadOnly = true;
+            textBoxIDNOM.Size = new System.Drawing.Size(140, 23);
+            textBoxIDNOM.TabIndex = 17;
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 29);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(55, 13);
-            this.label8.TabIndex = 16;
-            this.label8.Text = "ID_NOM :";
+            label8.AutoSize = true;
+            label8.Location = new System.Drawing.Point(18, 33);
+            label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label8.Name = "label8";
+            label8.Size = new System.Drawing.Size(58, 15);
+            label8.TabIndex = 16;
+            label8.Text = "ID_NOM :";
             // 
             // textBoxVictoire
             // 
-            this.textBoxVictoire.Location = new System.Drawing.Point(452, 39);
-            this.textBoxVictoire.MaxLength = 5;
-            this.textBoxVictoire.Name = "textBoxVictoire";
-            this.textBoxVictoire.Size = new System.Drawing.Size(60, 20);
-            this.textBoxVictoire.TabIndex = 5;
-            this.textBoxVictoire.Text = "0";
-            this.textBoxVictoire.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxVictoire.Location = new System.Drawing.Point(527, 45);
+            textBoxVictoire.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxVictoire.MaxLength = 5;
+            textBoxVictoire.Name = "textBoxVictoire";
+            textBoxVictoire.Size = new System.Drawing.Size(69, 23);
+            textBoxVictoire.TabIndex = 5;
+            textBoxVictoire.Text = "0";
+            textBoxVictoire.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(343, 39);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(74, 13);
-            this.label9.TabIndex = 19;
-            this.label9.Text = "Pts de victoire";
+            label9.AutoSize = true;
+            label9.Location = new System.Drawing.Point(400, 45);
+            label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label9.Name = "label9";
+            label9.Size = new System.Drawing.Size(81, 15);
+            label9.TabIndex = 19;
+            label9.Text = "Pts de victoire";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(13, 26);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(96, 13);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "% d\'arrivée / heure";
+            label10.AutoSize = true;
+            label10.Location = new System.Drawing.Point(15, 30);
+            label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new System.Drawing.Size(106, 15);
+            label10.TabIndex = 20;
+            label10.Text = "% d'arrivée / heure";
             // 
             // textBoxPourcentArriveeRenfort
             // 
-            this.textBoxPourcentArriveeRenfort.Location = new System.Drawing.Point(118, 19);
-            this.textBoxPourcentArriveeRenfort.MaxLength = 5;
-            this.textBoxPourcentArriveeRenfort.Name = "textBoxPourcentArriveeRenfort";
-            this.textBoxPourcentArriveeRenfort.Size = new System.Drawing.Size(60, 20);
-            this.textBoxPourcentArriveeRenfort.TabIndex = 0;
-            this.textBoxPourcentArriveeRenfort.Text = "0";
-            this.textBoxPourcentArriveeRenfort.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxPourcentArriveeRenfort.Location = new System.Drawing.Point(138, 22);
+            textBoxPourcentArriveeRenfort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxPourcentArriveeRenfort.MaxLength = 5;
+            textBoxPourcentArriveeRenfort.Name = "textBoxPourcentArriveeRenfort";
+            textBoxPourcentArriveeRenfort.Size = new System.Drawing.Size(69, 23);
+            textBoxPourcentArriveeRenfort.TabIndex = 0;
+            textBoxPourcentArriveeRenfort.Text = "0";
+            textBoxPourcentArriveeRenfort.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(421, 27);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(65, 13);
-            this.label11.TabIndex = 22;
-            this.label11.Text = "Modèle pion";
+            label11.AutoSize = true;
+            label11.Location = new System.Drawing.Point(491, 31);
+            label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new System.Drawing.Size(74, 15);
+            label11.TabIndex = 22;
+            label11.Text = "Modèle pion";
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(13, 55);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(71, 13);
-            this.label12.TabIndex = 23;
-            this.label12.Text = "Nb fantassins";
+            label12.AutoSize = true;
+            label12.Location = new System.Drawing.Point(15, 63);
+            label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(78, 15);
+            label12.TabIndex = 23;
+            label12.Text = "Nb fantassins";
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(13, 84);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 13);
-            this.label13.TabIndex = 24;
-            this.label13.Text = "Nb canons";
+            label13.AutoSize = true;
+            label13.Location = new System.Drawing.Point(15, 97);
+            label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(64, 15);
+            label13.TabIndex = 24;
+            label13.Text = "Nb canons";
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(420, 56);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
-            this.label14.TabIndex = 25;
-            this.label14.Text = "Nb cavaliers";
+            label14.AutoSize = true;
+            label14.Location = new System.Drawing.Point(490, 65);
+            label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(71, 15);
+            label14.TabIndex = 25;
+            label14.Text = "Nb cavaliers";
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(421, 83);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 13);
-            this.label15.TabIndex = 26;
-            this.label15.Text = "Variation (%)";
+            label15.AutoSize = true;
+            label15.Location = new System.Drawing.Point(491, 96);
+            label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label15.Name = "label15";
+            label15.Size = new System.Drawing.Size(74, 15);
+            label15.TabIndex = 26;
+            label15.Text = "Variation (%)";
             // 
             // comboBoxModeleRenfort
             // 
-            this.comboBoxModeleRenfort.DisplayMember = "nomListe";
-            this.comboBoxModeleRenfort.FormattingEnabled = true;
-            this.comboBoxModeleRenfort.Items.AddRange(new object[] {
-            "Central",
-            "En Haut",
-            "En Haut à droite",
-            "A droite",
-            "En bas à droite",
-            "En bas",
-            "En bas à gauche",
-            "A gauche",
-            "En Haut à gauche"});
-            this.comboBoxModeleRenfort.Location = new System.Drawing.Point(525, 19);
-            this.comboBoxModeleRenfort.Name = "comboBoxModeleRenfort";
-            this.comboBoxModeleRenfort.Size = new System.Drawing.Size(214, 21);
-            this.comboBoxModeleRenfort.TabIndex = 1;
+            comboBoxModeleRenfort.DisplayMember = "nomListe";
+            comboBoxModeleRenfort.FormattingEnabled = true;
+            comboBoxModeleRenfort.Items.AddRange(new object[] { "Central", "En Haut", "En Haut à droite", "A droite", "En bas à droite", "En bas", "En bas à gauche", "A gauche", "En Haut à gauche" });
+            comboBoxModeleRenfort.Location = new System.Drawing.Point(612, 22);
+            comboBoxModeleRenfort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxModeleRenfort.Name = "comboBoxModeleRenfort";
+            comboBoxModeleRenfort.Size = new System.Drawing.Size(249, 23);
+            comboBoxModeleRenfort.TabIndex = 1;
             // 
             // groupBoxNom
             // 
-            this.groupBoxNom.Controls.Add(this.textBoxIDNOM);
-            this.groupBoxNom.Controls.Add(this.label8);
-            this.groupBoxNom.Controls.Add(this.comboBoxPolice);
-            this.groupBoxNom.Controls.Add(this.textBoxNom);
-            this.groupBoxNom.Controls.Add(this.label3);
-            this.groupBoxNom.Controls.Add(this.label2);
-            this.groupBoxNom.Controls.Add(this.comboBoxPosition);
-            this.groupBoxNom.Controls.Add(this.label1);
-            this.groupBoxNom.Location = new System.Drawing.Point(11, 107);
-            this.groupBoxNom.Name = "groupBoxNom";
-            this.groupBoxNom.Size = new System.Drawing.Size(753, 100);
-            this.groupBoxNom.TabIndex = 1;
-            this.groupBoxNom.TabStop = false;
-            this.groupBoxNom.Text = "Nom";
+            groupBoxNom.Controls.Add(textBoxIDNOM);
+            groupBoxNom.Controls.Add(label8);
+            groupBoxNom.Controls.Add(comboBoxPolice);
+            groupBoxNom.Controls.Add(textBoxNom);
+            groupBoxNom.Controls.Add(label3);
+            groupBoxNom.Controls.Add(label2);
+            groupBoxNom.Controls.Add(comboBoxPosition);
+            groupBoxNom.Controls.Add(label1);
+            groupBoxNom.Location = new System.Drawing.Point(13, 123);
+            groupBoxNom.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxNom.Name = "groupBoxNom";
+            groupBoxNom.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxNom.Size = new System.Drawing.Size(878, 115);
+            groupBoxNom.TabIndex = 1;
+            groupBoxNom.TabStop = false;
+            groupBoxNom.Text = "Nom";
             // 
             // groupBoxRenfort
             // 
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortRavitaillement);
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortMateriel);
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortCavaliers);
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortMoral);
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortCanons);
-            this.groupBoxRenfort.Controls.Add(this.textBoxRenfortFantassins);
-            this.groupBoxRenfort.Controls.Add(this.comboBoxPionPropriétaire);
-            this.groupBoxRenfort.Controls.Add(this.label19);
-            this.groupBoxRenfort.Controls.Add(this.label18);
-            this.groupBoxRenfort.Controls.Add(this.label17);
-            this.groupBoxRenfort.Controls.Add(this.label16);
-            this.groupBoxRenfort.Controls.Add(this.label10);
-            this.groupBoxRenfort.Controls.Add(this.label15);
-            this.groupBoxRenfort.Controls.Add(this.textBoxPourcentArriveeRenfort);
-            this.groupBoxRenfort.Controls.Add(this.comboBoxModeleRenfort);
-            this.groupBoxRenfort.Controls.Add(this.label13);
-            this.groupBoxRenfort.Controls.Add(this.label14);
-            this.groupBoxRenfort.Controls.Add(this.label11);
-            this.groupBoxRenfort.Controls.Add(this.label12);
-            this.groupBoxRenfort.Location = new System.Drawing.Point(15, 357);
-            this.groupBoxRenfort.Name = "groupBoxRenfort";
-            this.groupBoxRenfort.Size = new System.Drawing.Size(749, 178);
-            this.groupBoxRenfort.TabIndex = 4;
-            this.groupBoxRenfort.TabStop = false;
-            this.groupBoxRenfort.Text = "Renfort";
+            groupBoxRenfort.Controls.Add(textBoxRenfortRavitaillement);
+            groupBoxRenfort.Controls.Add(textBoxRenfortMateriel);
+            groupBoxRenfort.Controls.Add(textBoxRenfortCavaliers);
+            groupBoxRenfort.Controls.Add(textBoxRenfortMoral);
+            groupBoxRenfort.Controls.Add(textBoxRenfortCanons);
+            groupBoxRenfort.Controls.Add(textBoxRenfortFantassins);
+            groupBoxRenfort.Controls.Add(comboBoxPionPropriétaire);
+            groupBoxRenfort.Controls.Add(label19);
+            groupBoxRenfort.Controls.Add(label18);
+            groupBoxRenfort.Controls.Add(label17);
+            groupBoxRenfort.Controls.Add(label16);
+            groupBoxRenfort.Controls.Add(label10);
+            groupBoxRenfort.Controls.Add(label15);
+            groupBoxRenfort.Controls.Add(textBoxPourcentArriveeRenfort);
+            groupBoxRenfort.Controls.Add(comboBoxModeleRenfort);
+            groupBoxRenfort.Controls.Add(label13);
+            groupBoxRenfort.Controls.Add(label14);
+            groupBoxRenfort.Controls.Add(label11);
+            groupBoxRenfort.Controls.Add(label12);
+            groupBoxRenfort.Location = new System.Drawing.Point(18, 412);
+            groupBoxRenfort.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxRenfort.Name = "groupBoxRenfort";
+            groupBoxRenfort.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxRenfort.Size = new System.Drawing.Size(874, 205);
+            groupBoxRenfort.TabIndex = 4;
+            groupBoxRenfort.TabStop = false;
+            groupBoxRenfort.Text = "Renfort";
             // 
             // textBoxRenfortRavitaillement
             // 
-            this.textBoxRenfortRavitaillement.Location = new System.Drawing.Point(526, 114);
-            this.textBoxRenfortRavitaillement.MaxLength = 5;
-            this.textBoxRenfortRavitaillement.Name = "textBoxRenfortRavitaillement";
-            this.textBoxRenfortRavitaillement.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortRavitaillement.TabIndex = 7;
-            this.textBoxRenfortRavitaillement.Text = "0";
-            this.textBoxRenfortRavitaillement.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortRavitaillement.Location = new System.Drawing.Point(614, 132);
+            textBoxRenfortRavitaillement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortRavitaillement.MaxLength = 5;
+            textBoxRenfortRavitaillement.Name = "textBoxRenfortRavitaillement";
+            textBoxRenfortRavitaillement.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortRavitaillement.TabIndex = 7;
+            textBoxRenfortRavitaillement.Text = "0";
+            textBoxRenfortRavitaillement.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxRenfortMateriel
             // 
-            this.textBoxRenfortMateriel.Location = new System.Drawing.Point(525, 85);
-            this.textBoxRenfortMateriel.MaxLength = 5;
-            this.textBoxRenfortMateriel.Name = "textBoxRenfortMateriel";
-            this.textBoxRenfortMateriel.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortMateriel.TabIndex = 5;
-            this.textBoxRenfortMateriel.Text = "0";
-            this.textBoxRenfortMateriel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortMateriel.Location = new System.Drawing.Point(612, 98);
+            textBoxRenfortMateriel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortMateriel.MaxLength = 5;
+            textBoxRenfortMateriel.Name = "textBoxRenfortMateriel";
+            textBoxRenfortMateriel.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortMateriel.TabIndex = 5;
+            textBoxRenfortMateriel.Text = "0";
+            textBoxRenfortMateriel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxRenfortCavaliers
             // 
-            this.textBoxRenfortCavaliers.Location = new System.Drawing.Point(525, 56);
-            this.textBoxRenfortCavaliers.MaxLength = 5;
-            this.textBoxRenfortCavaliers.Name = "textBoxRenfortCavaliers";
-            this.textBoxRenfortCavaliers.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortCavaliers.TabIndex = 3;
-            this.textBoxRenfortCavaliers.Text = "0";
-            this.textBoxRenfortCavaliers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortCavaliers.Location = new System.Drawing.Point(612, 65);
+            textBoxRenfortCavaliers.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortCavaliers.MaxLength = 5;
+            textBoxRenfortCavaliers.Name = "textBoxRenfortCavaliers";
+            textBoxRenfortCavaliers.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortCavaliers.TabIndex = 3;
+            textBoxRenfortCavaliers.Text = "0";
+            textBoxRenfortCavaliers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxRenfortMoral
             // 
-            this.textBoxRenfortMoral.Location = new System.Drawing.Point(118, 110);
-            this.textBoxRenfortMoral.MaxLength = 5;
-            this.textBoxRenfortMoral.Name = "textBoxRenfortMoral";
-            this.textBoxRenfortMoral.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortMoral.TabIndex = 6;
-            this.textBoxRenfortMoral.Text = "0";
-            this.textBoxRenfortMoral.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortMoral.Location = new System.Drawing.Point(138, 127);
+            textBoxRenfortMoral.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortMoral.MaxLength = 5;
+            textBoxRenfortMoral.Name = "textBoxRenfortMoral";
+            textBoxRenfortMoral.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortMoral.TabIndex = 6;
+            textBoxRenfortMoral.Text = "0";
+            textBoxRenfortMoral.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxRenfortCanons
             // 
-            this.textBoxRenfortCanons.Location = new System.Drawing.Point(118, 81);
-            this.textBoxRenfortCanons.MaxLength = 5;
-            this.textBoxRenfortCanons.Name = "textBoxRenfortCanons";
-            this.textBoxRenfortCanons.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortCanons.TabIndex = 4;
-            this.textBoxRenfortCanons.Text = "0";
-            this.textBoxRenfortCanons.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortCanons.Location = new System.Drawing.Point(138, 93);
+            textBoxRenfortCanons.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortCanons.MaxLength = 5;
+            textBoxRenfortCanons.Name = "textBoxRenfortCanons";
+            textBoxRenfortCanons.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortCanons.TabIndex = 4;
+            textBoxRenfortCanons.Text = "0";
+            textBoxRenfortCanons.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxRenfortFantassins
             // 
-            this.textBoxRenfortFantassins.Location = new System.Drawing.Point(118, 52);
-            this.textBoxRenfortFantassins.MaxLength = 5;
-            this.textBoxRenfortFantassins.Name = "textBoxRenfortFantassins";
-            this.textBoxRenfortFantassins.Size = new System.Drawing.Size(60, 20);
-            this.textBoxRenfortFantassins.TabIndex = 2;
-            this.textBoxRenfortFantassins.Text = "0";
-            this.textBoxRenfortFantassins.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            textBoxRenfortFantassins.Location = new System.Drawing.Point(138, 60);
+            textBoxRenfortFantassins.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRenfortFantassins.MaxLength = 5;
+            textBoxRenfortFantassins.Name = "textBoxRenfortFantassins";
+            textBoxRenfortFantassins.Size = new System.Drawing.Size(69, 23);
+            textBoxRenfortFantassins.TabIndex = 2;
+            textBoxRenfortFantassins.Text = "0";
+            textBoxRenfortFantassins.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // comboBoxPionPropriétaire
             // 
-            this.comboBoxPionPropriétaire.DisplayMember = "nomListe";
-            this.comboBoxPionPropriétaire.FormattingEnabled = true;
-            this.comboBoxPionPropriétaire.Items.AddRange(new object[] {
-            "Central",
-            "En Haut",
-            "En Haut à droite",
-            "A droite",
-            "En bas à droite",
-            "En bas",
-            "En bas à gauche",
-            "A gauche",
-            "En Haut à gauche"});
-            this.comboBoxPionPropriétaire.Location = new System.Drawing.Point(116, 136);
-            this.comboBoxPionPropriétaire.Name = "comboBoxPionPropriétaire";
-            this.comboBoxPionPropriétaire.Size = new System.Drawing.Size(286, 21);
-            this.comboBoxPionPropriétaire.TabIndex = 8;
+            comboBoxPionPropriétaire.DisplayMember = "nomListe";
+            comboBoxPionPropriétaire.FormattingEnabled = true;
+            comboBoxPionPropriétaire.Items.AddRange(new object[] { "Central", "En Haut", "En Haut à droite", "A droite", "En bas à droite", "En bas", "En bas à gauche", "A gauche", "En Haut à gauche" });
+            comboBoxPionPropriétaire.Location = new System.Drawing.Point(135, 157);
+            comboBoxPionPropriétaire.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxPionPropriétaire.Name = "comboBoxPionPropriétaire";
+            comboBoxPionPropriétaire.Size = new System.Drawing.Size(333, 23);
+            comboBoxPionPropriétaire.TabIndex = 8;
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(421, 83);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(61, 13);
-            this.label19.TabIndex = 31;
-            this.label19.Text = "Matériel (%)";
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(491, 96);
+            label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(71, 15);
+            label19.TabIndex = 31;
+            label19.Text = "Matériel (%)";
             // 
             // label18
             // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(421, 114);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(93, 13);
-            this.label18.TabIndex = 30;
-            this.label18.Text = "Ravitaillement  (%)";
+            label18.AutoSize = true;
+            label18.Location = new System.Drawing.Point(491, 132);
+            label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label18.Name = "label18";
+            label18.Size = new System.Drawing.Size(106, 15);
+            label18.TabIndex = 30;
+            label18.Text = "Ravitaillement  (%)";
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(13, 142);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(83, 13);
-            this.label17.TabIndex = 29;
-            this.label17.Text = "Pion propriétaire";
+            label17.AutoSize = true;
+            label17.Location = new System.Drawing.Point(15, 164);
+            label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label17.Name = "label17";
+            label17.Size = new System.Drawing.Size(95, 15);
+            label17.TabIndex = 29;
+            label17.Text = "Pion propriétaire";
             // 
             // label16
             // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(13, 113);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(33, 13);
-            this.label16.TabIndex = 28;
-            this.label16.Text = "Moral";
+            label16.AutoSize = true;
+            label16.Location = new System.Drawing.Point(15, 130);
+            label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(38, 15);
+            label16.TabIndex = 28;
+            label16.Text = "Moral";
             // 
             // checkBoxPrison
             // 
-            this.checkBoxPrison.AutoSize = true;
-            this.checkBoxPrison.Location = new System.Drawing.Point(30, 253);
-            this.checkBoxPrison.Name = "checkBoxPrison";
-            this.checkBoxPrison.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBoxPrison.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxPrison.TabIndex = 2;
-            this.checkBoxPrison.Text = "Prison";
-            this.checkBoxPrison.UseVisualStyleBackColor = true;
+            checkBoxPrison.AutoSize = true;
+            checkBoxPrison.Location = new System.Drawing.Point(35, 292);
+            checkBoxPrison.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBoxPrison.Name = "checkBoxPrison";
+            checkBoxPrison.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            checkBoxPrison.Size = new System.Drawing.Size(59, 19);
+            checkBoxPrison.TabIndex = 2;
+            checkBoxPrison.Text = "Prison";
+            checkBoxPrison.UseVisualStyleBackColor = true;
             // 
             // checkBoxHopital
             // 
-            this.checkBoxHopital.AutoSize = true;
-            this.checkBoxHopital.Location = new System.Drawing.Point(438, 256);
-            this.checkBoxHopital.Name = "checkBoxHopital";
-            this.checkBoxHopital.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBoxHopital.Size = new System.Drawing.Size(59, 17);
-            this.checkBoxHopital.TabIndex = 3;
-            this.checkBoxHopital.Text = "Hopital";
-            this.checkBoxHopital.UseVisualStyleBackColor = true;
+            checkBoxHopital.AutoSize = true;
+            checkBoxHopital.Location = new System.Drawing.Point(511, 295);
+            checkBoxHopital.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBoxHopital.Name = "checkBoxHopital";
+            checkBoxHopital.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            checkBoxHopital.Size = new System.Drawing.Size(65, 19);
+            checkBoxHopital.TabIndex = 3;
+            checkBoxHopital.Text = "Hopital";
+            checkBoxHopital.UseVisualStyleBackColor = true;
             // 
             // buttonSupprimerTout
             // 
-            this.buttonSupprimerTout.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonSupprimerTout.Location = new System.Drawing.Point(540, 558);
-            this.buttonSupprimerTout.Name = "buttonSupprimerTout";
-            this.buttonSupprimerTout.Size = new System.Drawing.Size(224, 23);
-            this.buttonSupprimerTout.TabIndex = 20;
-            this.buttonSupprimerTout.Text = "Supprimer tous les noms de la carte";
-            this.buttonSupprimerTout.UseVisualStyleBackColor = true;
-            this.buttonSupprimerTout.Click += new System.EventHandler(this.buttonSupprimerTout_Click);
+            buttonSupprimerTout.DialogResult = System.Windows.Forms.DialogResult.OK;
+            buttonSupprimerTout.Location = new System.Drawing.Point(630, 644);
+            buttonSupprimerTout.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonSupprimerTout.Name = "buttonSupprimerTout";
+            buttonSupprimerTout.Size = new System.Drawing.Size(261, 27);
+            buttonSupprimerTout.TabIndex = 20;
+            buttonSupprimerTout.Text = "Supprimer tous les noms de la carte";
+            buttonSupprimerTout.UseVisualStyleBackColor = true;
+            buttonSupprimerTout.Click += buttonSupprimerTout_Click;
             // 
             // comboBoxProprietaire
             // 
-            this.comboBoxProprietaire.DisplayMember = "nomListe";
-            this.comboBoxProprietaire.FormattingEnabled = true;
-            this.comboBoxProprietaire.Location = new System.Drawing.Point(450, 70);
-            this.comboBoxProprietaire.Name = "comboBoxProprietaire";
-            this.comboBoxProprietaire.Size = new System.Drawing.Size(212, 21);
-            this.comboBoxProprietaire.TabIndex = 32;
+            comboBoxProprietaire.DisplayMember = "nomListe";
+            comboBoxProprietaire.FormattingEnabled = true;
+            comboBoxProprietaire.Location = new System.Drawing.Point(525, 81);
+            comboBoxProprietaire.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            comboBoxProprietaire.Name = "comboBoxProprietaire";
+            comboBoxProprietaire.Size = new System.Drawing.Size(247, 23);
+            comboBoxProprietaire.TabIndex = 32;
             // 
             // label20
             // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(343, 78);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(60, 13);
-            this.label20.TabIndex = 33;
-            this.label20.Text = "Propriétaire";
+            label20.AutoSize = true;
+            label20.Location = new System.Drawing.Point(400, 90);
+            label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(68, 15);
+            label20.TabIndex = 33;
+            label20.Text = "Propriétaire";
             // 
             // listBoxBlesses
             // 
-            this.listBoxBlesses.DisplayMember = "nomListeEffectifs";
-            this.listBoxBlesses.FormattingEnabled = true;
-            this.listBoxBlesses.HorizontalScrollbar = true;
-            this.listBoxBlesses.Location = new System.Drawing.Point(504, 253);
-            this.listBoxBlesses.Name = "listBoxBlesses";
-            this.listBoxBlesses.Size = new System.Drawing.Size(260, 95);
-            this.listBoxBlesses.TabIndex = 34;
+            listBoxBlesses.DisplayMember = "nomListeEffectifs";
+            listBoxBlesses.FormattingEnabled = true;
+            listBoxBlesses.HorizontalScrollbar = true;
+            listBoxBlesses.ItemHeight = 15;
+            listBoxBlesses.Location = new System.Drawing.Point(588, 292);
+            listBoxBlesses.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            listBoxBlesses.Name = "listBoxBlesses";
+            listBoxBlesses.Size = new System.Drawing.Size(303, 109);
+            listBoxBlesses.TabIndex = 34;
             // 
             // listBoxPrisonniers
             // 
-            this.listBoxPrisonniers.DisplayMember = "nomListeEffectifs";
-            this.listBoxPrisonniers.FormattingEnabled = true;
-            this.listBoxPrisonniers.HorizontalScrollbar = true;
-            this.listBoxPrisonniers.Location = new System.Drawing.Point(131, 256);
-            this.listBoxPrisonniers.Name = "listBoxPrisonniers";
-            this.listBoxPrisonniers.Size = new System.Drawing.Size(286, 95);
-            this.listBoxPrisonniers.TabIndex = 35;
+            listBoxPrisonniers.DisplayMember = "nomListeEffectifs";
+            listBoxPrisonniers.FormattingEnabled = true;
+            listBoxPrisonniers.HorizontalScrollbar = true;
+            listBoxPrisonniers.ItemHeight = 15;
+            listBoxPrisonniers.Location = new System.Drawing.Point(153, 295);
+            listBoxPrisonniers.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            listBoxPrisonniers.Name = "listBoxPrisonniers";
+            listBoxPrisonniers.Size = new System.Drawing.Size(333, 109);
+            listBoxPrisonniers.TabIndex = 35;
             // 
             // checkBoxCreationDepot
             // 
-            this.checkBoxCreationDepot.AutoSize = true;
-            this.checkBoxCreationDepot.Location = new System.Drawing.Point(29, 230);
-            this.checkBoxCreationDepot.Name = "checkBoxCreationDepot";
-            this.checkBoxCreationDepot.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.checkBoxCreationDepot.Size = new System.Drawing.Size(161, 17);
-            this.checkBoxCreationDepot.TabIndex = 36;
-            this.checkBoxCreationDepot.Text = "Création de dépôts autorisée";
-            this.checkBoxCreationDepot.UseVisualStyleBackColor = true;
+            checkBoxCreationDepot.AutoSize = true;
+            checkBoxCreationDepot.Location = new System.Drawing.Point(34, 265);
+            checkBoxCreationDepot.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            checkBoxCreationDepot.Name = "checkBoxCreationDepot";
+            checkBoxCreationDepot.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            checkBoxCreationDepot.Size = new System.Drawing.Size(177, 19);
+            checkBoxCreationDepot.TabIndex = 36;
+            checkBoxCreationDepot.Text = "Création de dépôts autorisée";
+            checkBoxCreationDepot.UseVisualStyleBackColor = true;
+            // 
+            // button_controlePCC
+            // 
+            button_controlePCC.Location = new System.Drawing.Point(513, 642);
+            button_controlePCC.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            button_controlePCC.Name = "button_controlePCC";
+            button_controlePCC.Size = new System.Drawing.Size(88, 27);
+            button_controlePCC.TabIndex = 37;
+            button_controlePCC.Text = "Contrôle PCC";
+            button_controlePCC.UseVisualStyleBackColor = true;
+            button_controlePCC.Click += button_controlePCC_Click;
+            // 
+            // buttonReconstructionPCC
+            // 
+            buttonReconstructionPCC.Location = new System.Drawing.Point(382, 644);
+            buttonReconstructionPCC.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonReconstructionPCC.Name = "buttonReconstructionPCC";
+            buttonReconstructionPCC.Size = new System.Drawing.Size(123, 27);
+            buttonReconstructionPCC.TabIndex = 38;
+            buttonReconstructionPCC.Text = "Reconstruction PCC";
+            buttonReconstructionPCC.UseVisualStyleBackColor = true;
+            buttonReconstructionPCC.Click += buttonReconstructionPCC_Click;
             // 
             // FormNomCarte
             // 
-            this.AcceptButton = this.buttonValider;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.buttonAnnuler;
-            this.ClientSize = new System.Drawing.Size(776, 590);
-            this.Controls.Add(this.checkBoxCreationDepot);
-            this.Controls.Add(this.listBoxPrisonniers);
-            this.Controls.Add(this.listBoxBlesses);
-            this.Controls.Add(this.label20);
-            this.Controls.Add(this.comboBoxProprietaire);
-            this.Controls.Add(this.buttonSupprimerTout);
-            this.Controls.Add(this.checkBoxHopital);
-            this.Controls.Add(this.checkBoxPrison);
-            this.Controls.Add(this.groupBoxRenfort);
-            this.Controls.Add(this.groupBoxNom);
-            this.Controls.Add(this.textBoxVictoire);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.textBoxIDCASE);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.labelY);
-            this.Controls.Add(this.labelX);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.buttonSupprimer);
-            this.Controls.Add(this.buttonAnnuler);
-            this.Controls.Add(this.buttonValider);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FormNomCarte";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "FormNomCarte";
-            this.Load += new System.EventHandler(this.FormNomCarte_Load);
-            this.groupBoxNom.ResumeLayout(false);
-            this.groupBoxNom.PerformLayout();
-            this.groupBoxRenfort.ResumeLayout(false);
-            this.groupBoxRenfort.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = buttonValider;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            CancelButton = buttonAnnuler;
+            ClientSize = new System.Drawing.Size(905, 681);
+            Controls.Add(buttonReconstructionPCC);
+            Controls.Add(button_controlePCC);
+            Controls.Add(checkBoxCreationDepot);
+            Controls.Add(listBoxPrisonniers);
+            Controls.Add(listBoxBlesses);
+            Controls.Add(label20);
+            Controls.Add(comboBoxProprietaire);
+            Controls.Add(buttonSupprimerTout);
+            Controls.Add(checkBoxHopital);
+            Controls.Add(checkBoxPrison);
+            Controls.Add(groupBoxRenfort);
+            Controls.Add(groupBoxNom);
+            Controls.Add(textBoxVictoire);
+            Controls.Add(label9);
+            Controls.Add(textBoxIDCASE);
+            Controls.Add(label7);
+            Controls.Add(labelY);
+            Controls.Add(labelX);
+            Controls.Add(label6);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(buttonSupprimer);
+            Controls.Add(buttonAnnuler);
+            Controls.Add(buttonValider);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FormNomCarte";
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "FormNomCarte";
+            Load += FormNomCarte_Load;
+            groupBoxNom.ResumeLayout(false);
+            groupBoxNom.PerformLayout();
+            groupBoxRenfort.ResumeLayout(false);
+            groupBoxRenfort.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -695,5 +747,7 @@ namespace vaoc
         private System.Windows.Forms.ListBox listBoxBlesses;
         private System.Windows.Forms.ListBox listBoxPrisonniers;
         private System.Windows.Forms.CheckBox checkBoxCreationDepot;
+        private System.Windows.Forms.Button button_controlePCC;
+        private System.Windows.Forms.Button buttonReconstructionPCC;
     }
 }

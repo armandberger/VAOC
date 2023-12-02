@@ -28,21 +28,61 @@
         /// </summary>
         private void InitializeComponent()
         {
+            groupBoxInfo = new System.Windows.Forms.GroupBox();
+            textBox1 = new System.Windows.Forms.TextBox();
+            label1 = new System.Windows.Forms.Label();
+            groupBoxInfo.SuspendLayout();
             SuspendLayout();
+            // 
+            // groupBoxInfo
+            // 
+            groupBoxInfo.Controls.Add(textBox1);
+            groupBoxInfo.Controls.Add(label1);
+            groupBoxInfo.Location = new System.Drawing.Point(316, 203);
+            groupBoxInfo.Name = "groupBoxInfo";
+            groupBoxInfo.Size = new System.Drawing.Size(216, 182);
+            groupBoxInfo.TabIndex = 0;
+            groupBoxInfo.TabStop = false;
+            groupBoxInfo.Text = "Info";
+            groupBoxInfo.Visible = false;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new System.Drawing.Point(65, 34);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new System.Drawing.Size(100, 23);
+            textBox1.TabIndex = 1;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(17, 33);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(38, 15);
+            label1.TabIndex = 0;
+            label1.Text = "label1";
             // 
             // FormControlePCC
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(800, 450);
+            Controls.Add(groupBoxInfo);
             Name = "FormControlePCC";
             Text = "Controle PCC";
             WindowState = System.Windows.Forms.FormWindowState.Maximized;
             Load += FormControlePCC_Load;
             Paint += FormControlePCC_Paint;
+            MouseClick += FormControlePCC_MouseClick;
+            groupBoxInfo.ResumeLayout(false);
+            groupBoxInfo.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
+
+        private System.Windows.Forms.GroupBox groupBoxInfo;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
     }
 }

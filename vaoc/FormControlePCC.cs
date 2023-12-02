@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -54,8 +55,24 @@ namespace vaoc
         }
         private void FormControlePCC_Paint(object sender, PaintEventArgs e)
         {
+            Graphics g = e.Graphics;
 
+            Font police = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+            g.DrawString((m_bloc.xBloc * m_tailleBloc)+ ","+(m_bloc.yBloc * m_tailleBloc), police, System.Drawing.Brushes.Black, new Point(0, 0));
+            string texte = (m_bloc.xBloc+1) * m_tailleBloc + "," + (m_bloc.yBloc + 1) * m_tailleBloc;
+            SizeF tailleTexte = g.MeasureString(texte, police);
+            g.DrawString(texte, police, System.Drawing.Brushes.Black, new Point(this.Right- (int)tailleTexte.Width, this.Bottom- (int)tailleTexte.Height));
+
+            
+            g.DrawLine(System.Drawing.Pens.Red, this.PointToClient(new Point(this.Left, this.Top)), this.PointToClient(new Point(this.Right, this.Bottom)));
+            g.DrawLine(System.Drawing.Pens.Green, 0, 0,
+                this.Right-20, this.Bottom-100);
+            Debug.WriteLine("R=" + this.Right + ", B=" + this.Bottom);
         }
 
+        private void FormControlePCC_MouseClick(object sender, MouseEventArgs e)
+        {
+            groupBoxInfo.Visible = !groupBoxInfo.Visible;
+        }
     }
 }

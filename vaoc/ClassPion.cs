@@ -1046,7 +1046,7 @@ namespace vaoc
                 //requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND I_PHASE_DEBUT<={2} AND ((I_TOUR_FIN IS NULL AND I_PHASE_FIN IS NULL) OR (I_TOUR_FIN>{1} AND I_PHASE_FIN>{2}))",
                 //    lignePion.ID_PION, ligneMessage.I_TOUR_DEPART, ligneMessage.I_PHASE_DEPART);
                 //string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN IS NULL) OR (I_TOUR_FIN>{1}))", lignePion.ID_PION, tour);
-                string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN = {3}) OR (I_TOUR_FIN>{1}) OR (I_TOUR_FIN={1} AND I_PHASE_FIN>{2}))",
+                string requete = string.Format("ID_PION={0} AND I_TOUR_DEBUT<={1} AND ((I_TOUR_FIN = {3}) OR (I_TOUR_FIN>{1}) OR (I_TOUR_FIN={1} AND I_PHASE_FIN>={2}))",
                                              this.ID_PION, tour, phase, Constantes.NULLENTIER);
                 Donnees.TAB_ORDRERow[] resOrdre = (Donnees.TAB_ORDRERow[])Donnees.m_donnees.TAB_ORDRE.Select(requete, "ID_ORDRE");
                 if (resOrdre.Length>0)

@@ -205,20 +205,20 @@ namespace vaoc
                     LogFile.Notifier(message);
                 }
 
-                if (!RecherchePionsEnBataille(out int nbUnites012, out int nbUnites345, out _, out _, out _, out _,
-                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, null /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
+                if (!RecherchePionsEnBataille(out int nbUnitesCombattifBataille012, out int nbUnitesCombattifBataille345, out _, out _, out _, out _,
+                    out lignePionsCombattifBataille012, out lignePionsCombattifBataille345, true /*engagement*/, true/*combattif*/, false/*QG*/, false /*bArtillerie*/))
                 {
                     message = string.Format("FinDeBataille : erreur dans RecherchePionsEnBataille II");
                     LogFile.Notifier(message);
                 }
 
-                message = string.Format("FinDeBataille : après les pertes au combat il reste nbUnites012={0}  nbUnites345={1}",
-                    nbUnites012, nbUnites345);
+                message = string.Format("FinDeBataille : après les pertes au combat il reste nbUnites012={0}  nbUnites345={1} combattives",
+                    nbUnitesCombattifBataille012, nbUnitesCombattifBataille345);
                 LogFile.Notifier(message);
                 if (bRetraite012 || bRetraite345 ||
                     (!Donnees.m_donnees.TAB_PARTIE.Nocturne(m_donnees.TAB_PARTIE.HeureCourante())//il ne faut pas mettre +1, même une phase avant la nuit, on peut encore faire un résultat de bataille
-                        && (0 == nbUnites012 || 0 == nbUnites345)
-                        && (nbUnites012 > 0 || nbUnites345 > 0)
+                        && (0 == nbUnitesCombattifBataille012 || 0 == nbUnitesCombattifBataille012)
+                        && (nbUnitesCombattifBataille012 > 0 || nbUnitesCombattifBataille012 > 0)
                     )
                     && (Donnees.m_donnees.TAB_PARTIE[0].I_TOUR - I_TOUR_DEBUT >= 2))
                 {
@@ -230,7 +230,7 @@ namespace vaoc
                         LogFile.Notifier(message);
                     }
 
-                    if (nbUnites012 > 0 || bRetraite345)
+                    if (nbUnitesCombattifBataille012 > 0 || bRetraite345)
                     {
                         Poursuite(ID_LEADER_012, lignePionsEnBataille012, ID_LEADER_345, lignePionsEnBataille345);
                         SortieDuChampDeBataille(lignePionsEnBatailleRetraite345);
@@ -1422,8 +1422,8 @@ namespace vaoc
                 Monitor.Exit(Donnees.m_donnees.TAB_ORDRE.Rows.SyncRoot);
                 if (resOrdreRetraite.Length > 0)
                 {
-                    message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Un ordre de retraite a été donné sur cette bataille.",
-                        S_NOM, ID_BATAILLE);
+                    message = string.Format("EffectuerBataille sur {0} (ID_BATAILLE={1}): Un ordre de retraite (ID={2}) a été donné sur cette bataille.",
+                        S_NOM, ID_BATAILLE, resOrdreRetraite[0].ID_ORDRE);
                     LogFile.Notifier(message);
                     foreach (Donnees.TAB_ORDRERow ligneOrdre in resOrdreRetraite)
                     {

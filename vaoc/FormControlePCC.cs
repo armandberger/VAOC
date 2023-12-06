@@ -67,7 +67,7 @@ namespace vaoc
         }
         private Point EcranToCase(int x, int y)
         {
-            return new Point((int)(x / m_taillePoint.Width) + m_ptBlocBase.X, (int)(y / m_taillePoint.Height) + m_ptBlocBase.Y;
+            return new Point((int)(x / m_taillePoint.Width) + m_ptBlocBase.X, (int)(y / m_taillePoint.Height) + m_ptBlocBase.Y);
         }
         private Point EcranToCase(Point pt)
         {

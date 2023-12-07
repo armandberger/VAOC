@@ -82,12 +82,6 @@ namespace vaoc
         {
             Graphics g = e.Graphics;
 
-            Font police = new(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
-            g.DrawString(m_ptBlocBase.X + "," + m_ptBlocBase.Y, police, System.Drawing.Brushes.Black, new Point(0, 0));
-            string texte = (m_ptBlocBase.X + m_tailleBloc) + "," + (m_ptBlocBase.Y + m_tailleBloc);
-            SizeF tailleTexte = g.MeasureString(texte, police);
-            g.DrawString(texte, police, System.Drawing.Brushes.Black, new Point(this.ClientSize.Width - (int)tailleTexte.Width, this.ClientSize.Height - (int)tailleTexte.Height));
-
             //g.DrawLine(System.Drawing.Pens.Red, this.PointToClient(new Point(this.Left, this.Top)), this.PointToClient(new Point(this.Right, this.Bottom)));
             //g.DrawLine(System.Drawing.Pens.Blue, new Point(0,0), new Point(this.ClientSize.Width, this.ClientSize.Height));
 
@@ -107,6 +101,13 @@ namespace vaoc
                 //g.FillRectangle(Brushes.Black, new Rectangle(CaseToEcran(Case.X, Case.Y), m_taillePoint));
                 Debug.WriteLine(string.Format("FormControlePCC_Paint ({0},{1}) -> ({2},{3})", ptDebut.X, ptDebut.Y, ptFin.X, ptFin.Y));
             }
+
+            //affichage des coordonnées des coins
+            Font police = new(FontFamily.GenericSansSerif, 15, FontStyle.Bold);
+            g.DrawString(m_ptBlocBase.X + "," + m_ptBlocBase.Y, police, System.Drawing.Brushes.DarkBlue, new Point(0, 0));
+            string texte = (m_ptBlocBase.X + m_tailleBloc) + "," + (m_ptBlocBase.Y + m_tailleBloc);
+            SizeF tailleTexte = g.MeasureString(texte, police);
+            g.DrawString(texte, police, System.Drawing.Brushes.DarkBlue, new Point(this.ClientSize.Width - (int)tailleTexte.Width, this.ClientSize.Height - (int)tailleTexte.Height));
         }
 
         private void FormControlePCC_MouseClick(object sender, MouseEventArgs e)
@@ -114,9 +115,12 @@ namespace vaoc
             BoiteInformation.Visible = !BoiteInformation.Visible;
             if (BoiteInformation.Visible)
             {
+                BoiteInformation.Location = e.Location;
+
                 //recherche de la ligne la plus proche du point de clic https://stackoverflow.com/questions/3120357/get-closest-point-to-a-line
                 Point clicCase = EcranToCase(e.Location);
                 double distanceMin = double.MaxValue;
+                CASETrajet trajetMin = new(-1,0,0,0,0,0);
 
                 foreach (CASETrajet trajet in m_listeCases)
                 {
@@ -130,24 +134,39 @@ namespace vaoc
                                              ((trajet.debut.X - trajet.fin.X) * (clicCase.Y - Q.Y) - (trajet.debut.X - trajet.fin.Y) * (clicCase.Y - Q.Y)),
                             ((trajet.debut.X * trajet.fin.Y - trajet.debut.Y * trajet.fin.X) * (clicCase.Y - Q.Y) - (trajet.debut.Y - trajet.fin.Y) * (clicCase.X * Q.Y - clicCase.Y * Q.X)) /
                             ((trajet.debut.X - trajet.fin.X) * (clicCase.Y - Q.Y) - (clicCase.Y - trajet.fin.Y) * (clicCase.Y - Q.Y)));
-                        double distance = Constantes.Distance(clicCase.X, clicCase.Y, I.X, I.Y);
+
+                        Point P = clicCase;
+                        Point A = trajet.debut;
+                        Point B = trajet.fin;
+                        Point a_to_p = new(P.X - A.X, P.Y - A.Y);     // Storing vector A->P
+                        a_to_b = new(B.X - A.X, B.Y - A.Y);     // Storing vector A->B
+
+                        double atb2 = Math.Pow(a_to_b.X, 2) + Math.Pow(a_to_b.Y, 2);  // **2 means "squared"  BasicallY finding the squared magnitude of a_to_b
+                        int atp_dot_atb = a_to_p.X * a_to_b.X + a_to_p.Y * a_to_b.Y;  // The dot product of a_to_p and a_to_b
+                        double t = atp_dot_atb / atb2;              // The normalized "distance" from a to Your closest point
+
+                        Point I2 = new((int)(A.X + a_to_b.X * t), (int)(A.Y + a_to_b.Y * t)); // Add the distance to A, moving towards B
+                        Debug.WriteLine(string.Format("FormControlePCC I1({0},{1}), I2 ({2},{3})", I.X, I.Y, I2.X, I2.Y));
+                        double distance = Constantes.Distance(clicCase.X, clicCase.Y, I2.X, I2.Y);
                         if (distance < distanceMin)
                         {
                             distanceMin = distance;
                             idTrajetSelection = trajet.id;
+                            trajetMin = trajet;
                         }
                     }
                 }
-
-
-
+                this.textBoxIDTrajet.Text = trajetMin.id.ToString();
+                this.textBoxCout.Text = trajetMin.cout.ToString();
+                this.textBoxDebut.Text = trajetMin.debut.X+","+trajetMin.debut.Y;
+                this.textBoxFin.Text= trajetMin.fin.X+","+trajetMin.fin.Y;
                 this.Invalidate();
             }
         }
 
         private void FormControlePCC_MouseMove(object sender, MouseEventArgs e)
         {
-            Debug.WriteLine("FormControlePCC_MouseMove X=" + e.X + ", Y=" + e.Y);
+            //Debug.WriteLine("FormControlePCC_MouseMove X=" + e.X + ", Y=" + e.Y);
             //m_ptSouris.X = e.X;
             //m_ptSouris.Y = e.Y;
             //if (label2.Visible)
@@ -171,6 +190,5 @@ namespace vaoc
         {
             TailleChange();
         }
-
     }
 }

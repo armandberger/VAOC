@@ -339,8 +339,10 @@ namespace vaoc
                 }
             }
 
-            FormControlePCC formControlePCC = new FormControlePCC();
-            formControlePCC.m_bloc = listeBlocs[0];
+            FormControlePCC formControlePCC = new()
+            {
+                m_bloc = listeBlocs[0]
+            };
             formControlePCC.ShowDialog();
         }
 

@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -40,7 +42,8 @@ namespace vaoc
         private Point m_ptSouris = new();
         private SizeF m_taillePoint = new();
         private int idTrajetSelection = -1;
-
+        private Bitmap m_imageFond;
+        
         public FormControlePCC()
         {
             InitializeComponent();
@@ -58,6 +61,25 @@ namespace vaoc
                 Donnees.TAB_CASERow ligneCaseDebut = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_DEBUT); ;
                 Donnees.TAB_CASERow ligneCaseFin = Donnees.m_donnees.TAB_CASE.FindParID_CASE(ligneCout.ID_CASE_FIN); ;
                 m_listeCases.Add(new CASETrajet(ligneCout.ID_TRAJET, ligneCaseDebut.I_X, ligneCaseDebut.I_Y, ligneCaseFin.I_X, ligneCaseFin.I_Y, ligneCout.I_COUT));
+            }
+
+            //Image de fond
+            if (Donnees.m_donnees.TAB_JEU.Count > 0 && !Donnees.m_donnees.TAB_JEU[0].IsS_NOM_CARTE_TOPOGRAPHIQUENull()
+                && Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE.Length > 0)
+            {
+                if (File.Exists(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE))
+                {
+                    Image imageCarte = Image.FromFile(Constantes.repertoireDonnees + Donnees.m_donnees.TAB_JEU[0].S_NOM_CARTE_TOPOGRAPHIQUE);
+                    BitmapData imageCible = new();
+                    Rectangle rect = new Rectangle(m_ptBlocBase.X, m_ptBlocBase.Y, m_tailleBloc, m_tailleBloc);
+                    ((Bitmap)imageCarte).LockBits(rect, ImageLockMode.ReadOnly, imageCarte.PixelFormat, imageCible);
+                    ((Bitmap)imageCarte).UnlockBits(imageCible);
+                    m_imageFond = new Bitmap(imageCible.Width, imageCible.Height, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+                }
+                else
+                {
+                    m_imageFond = null;
+                }
             }
         }
         private Point CaseToEcran(int x, int y)
@@ -84,6 +106,7 @@ namespace vaoc
 
             //g.DrawLine(System.Drawing.Pens.Red, this.PointToClient(new Point(this.Left, this.Top)), this.PointToClient(new Point(this.Right, this.Bottom)));
             //g.DrawLine(System.Drawing.Pens.Blue, new Point(0,0), new Point(this.ClientSize.Width, this.ClientSize.Height));
+            g.DrawImage(m_imageFond, 0, 0,this.ClientSize.Width, this.ClientSize.Height); 
 
             Pen styloSelection = new(Color.Red, 3);
             foreach (CASETrajet trajet in m_listeCases)

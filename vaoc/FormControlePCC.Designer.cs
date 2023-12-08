@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             BoiteInformation = new System.Windows.Forms.GroupBox();
+            textBoxFin = new System.Windows.Forms.TextBox();
+            textBoxDebut = new System.Windows.Forms.TextBox();
+            textBoxCout = new System.Windows.Forms.TextBox();
+            textBoxIDTrajet = new System.Windows.Forms.TextBox();
             label4 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label1 = new System.Windows.Forms.Label();
-            textBoxIDTrajet = new System.Windows.Forms.TextBox();
-            textBoxCout = new System.Windows.Forms.TextBox();
-            textBoxDebut = new System.Windows.Forms.TextBox();
-            textBoxFin = new System.Windows.Forms.TextBox();
             BoiteInformation.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,10 +52,38 @@
             BoiteInformation.Controls.Add(label1);
             BoiteInformation.Location = new System.Drawing.Point(470, 233);
             BoiteInformation.Name = "BoiteInformation";
-            BoiteInformation.Size = new System.Drawing.Size(200, 142);
+            BoiteInformation.Size = new System.Drawing.Size(181, 142);
             BoiteInformation.TabIndex = 0;
             BoiteInformation.TabStop = false;
             BoiteInformation.Text = "Information";
+            // 
+            // textBoxFin
+            // 
+            textBoxFin.Location = new System.Drawing.Point(65, 103);
+            textBoxFin.Name = "textBoxFin";
+            textBoxFin.Size = new System.Drawing.Size(100, 23);
+            textBoxFin.TabIndex = 7;
+            // 
+            // textBoxDebut
+            // 
+            textBoxDebut.Location = new System.Drawing.Point(65, 74);
+            textBoxDebut.Name = "textBoxDebut";
+            textBoxDebut.Size = new System.Drawing.Size(100, 23);
+            textBoxDebut.TabIndex = 6;
+            // 
+            // textBoxCout
+            // 
+            textBoxCout.Location = new System.Drawing.Point(65, 45);
+            textBoxCout.Name = "textBoxCout";
+            textBoxCout.Size = new System.Drawing.Size(100, 23);
+            textBoxCout.TabIndex = 5;
+            // 
+            // textBoxIDTrajet
+            // 
+            textBoxIDTrajet.Location = new System.Drawing.Point(65, 16);
+            textBoxIDTrajet.Name = "textBoxIDTrajet";
+            textBoxIDTrajet.Size = new System.Drawing.Size(100, 23);
+            textBoxIDTrajet.TabIndex = 4;
             // 
             // label4
             // 
@@ -92,34 +120,6 @@
             label1.Size = new System.Drawing.Size(48, 15);
             label1.TabIndex = 0;
             label1.Text = "ID trajet";
-            // 
-            // textBoxIDTrajet
-            // 
-            textBoxIDTrajet.Location = new System.Drawing.Point(65, 16);
-            textBoxIDTrajet.Name = "textBoxIDTrajet";
-            textBoxIDTrajet.Size = new System.Drawing.Size(100, 23);
-            textBoxIDTrajet.TabIndex = 4;
-            // 
-            // textBoxCout
-            // 
-            textBoxCout.Location = new System.Drawing.Point(65, 45);
-            textBoxCout.Name = "textBoxCout";
-            textBoxCout.Size = new System.Drawing.Size(100, 23);
-            textBoxCout.TabIndex = 5;
-            // 
-            // textBoxDebut
-            // 
-            textBoxDebut.Location = new System.Drawing.Point(65, 74);
-            textBoxDebut.Name = "textBoxDebut";
-            textBoxDebut.Size = new System.Drawing.Size(100, 23);
-            textBoxDebut.TabIndex = 6;
-            // 
-            // textBoxFin
-            // 
-            textBoxFin.Location = new System.Drawing.Point(65, 103);
-            textBoxFin.Name = "textBoxFin";
-            textBoxFin.Size = new System.Drawing.Size(100, 23);
-            textBoxFin.TabIndex = 7;
             // 
             // FormControlePCC
             // 

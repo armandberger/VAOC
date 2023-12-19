@@ -1427,7 +1427,9 @@ namespace vaoc
                     LogFile.Notifier(message);
                     foreach (Donnees.TAB_ORDRERow ligneOrdre in resOrdreRetraite)
                     {
-                        if (ligneOrdre.I_ZONE_BATAILLE <= 2)
+                        Donnees.TAB_PIONRow lignePionRetraite = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneOrdre.ID_PION);
+                        //if (ligneOrdre.I_ZONE_BATAILLE <= 2)//pas valabe, on a pas de zone d'engagement s'il n'y a jamais eu de combat
+                        if (lignePionRetraite.nation.ID_NATION == this.ID_NATION_012)
                         {
                             bRetraite012 = true;
                         }
@@ -1776,7 +1778,7 @@ namespace vaoc
                 //on regarde si la bataille ne se termine pas
                 if (0 == nbUnites012 || 0 == nbUnites345)
                 {
-                    return FinDeBataille(ref bFinDeBataille);
+                    return FinDeBataille(bRetraite012, bRetraite345, ref bFinDeBataille);
                 }
                 else
                 {

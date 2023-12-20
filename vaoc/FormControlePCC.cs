@@ -39,7 +39,7 @@ namespace vaoc
         Donnees.TAB_PCC_COUTSRow[] m_listeCouts;
         private int m_tailleBloc;
         private Point m_ptBlocBase;
-        private Point m_ptSouris = new();
+        //private Point m_ptSouris = new();
         private SizeF m_taillePoint = new();
         private int idTrajetSelection = -1;
         private Bitmap m_imageFond;

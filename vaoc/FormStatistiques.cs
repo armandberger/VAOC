@@ -72,7 +72,7 @@ namespace vaoc
             dataGridOrdres.Rows.Clear();
             foreach (Donnees.TAB_PIONRow lignePion in m_tablePion)
             {
-                if (lignePion.estJoueur)
+                if (lignePion.estQG && lignePion.C_NIVEAU_HIERARCHIQUE<'D')
                 {
                     //recherche du nombre d'ordres donnés par le joueur sur son propre pion ou les pions sous ses ordres
                     requete = "ID_PION = " + lignePion.ID_PION;
@@ -87,7 +87,8 @@ namespace vaoc
                     //les messages émis par le précédent pion restent marqués comme envoyés par le pion disparus
                     // => ID_PION_PROPRIETAIRE n'a pas à tenir du compte du remplacement mais ID_PION_EMETTEUR oui
                     var result = from message in m_tableMessage
-                                 where (message.ID_PION_EMETTEUR == lignePion.ID_PION) && (message.I_TOUR_DEPART > 0)
+                                     where (message.ID_PION_EMETTEUR == lignePion.ID_PION) && (message.I_TOUR_DEPART > 1)//il manque tous les messages directs
+                                 //where (message.ID_PION_EMETTEUR == lignePion.ID_PION) && (message.I_PHASE_DEPART == 0)
                                  group message by message.ID_PION_PROPRIETAIRE into grps
                                  select new { Key = grps.Key, Value = grps };
                     foreach (var valeur in result)
@@ -113,7 +114,8 @@ namespace vaoc
         private void AjouterMessagesEnvoyés(Donnees.TAB_PIONRow lignePionSource, Donnees.TAB_PIONRow lignePionRemplace)
         {
             var result = from message in m_tableMessage
-                         where (message.ID_PION_EMETTEUR == lignePionRemplace.ID_PION) && (message.I_TOUR_DEPART > 0)
+                         where (message.ID_PION_EMETTEUR == lignePionRemplace.ID_PION) && (message.I_TOUR_DEPART > 1)
+                         //where (message.ID_PION_EMETTEUR == lignePionRemplace.ID_PION) && (message.I_PHASE_DEPART == 0)//il manque tous les messages directs
                          group message by message.ID_PION_PROPRIETAIRE into grps
                          select new { Key = grps.Key, Value = grps };
             foreach (var valeur in result)

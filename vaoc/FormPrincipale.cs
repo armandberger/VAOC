@@ -161,6 +161,44 @@ namespace vaoc
 
         private static void Correctifs()
         {
+            #region Generation des chaines videos
+            //string NomQG(string nom)
+            //{
+            //    //le dernier mot
+            //    int pos = Math.Max(nom.LastIndexOf(' '), nom.LastIndexOf('\'')) + 1;
+            //    return nom.Substring(pos, nom.Length - pos);
+            //}
+            //string ChaineFichier(string source)
+            //{
+            //    byte[] tempBytes;
+            //    tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(source);
+            //    string asciiStr = System.Text.Encoding.UTF8.GetString(tempBytes);
+            //    return asciiStr.Replace(" ", "_").Replace("'", "").ToUpper();
+            //}
+
+            //List<String> listeRole = new List<String>();
+            //for (int j = 0; j < Donnees.m_donnees.TAB_VIDEO.Count; j++)
+            //{
+            //    Donnees.TAB_VIDEORow ligneVideo = Donnees.m_donnees.TAB_VIDEO[j];
+            //    if (ligneVideo.ID_PION < 0 || ligneVideo.ID_CASE < 0)
+            //    {
+            //        continue; //case comptant seulement pour les points de victoire
+            //    }
+            //    if (ligneVideo.B_QG)// || lignePion.estQG)
+            //    {
+            //        if (!listeRole.Contains(NomQG(ligneVideo.S_NOM)))
+            //        {
+            //            listeRole.Add(NomQG(ligneVideo.S_NOM));
+            //        }
+            //    }                
+            //}
+            //foreach (string role in listeRole)
+            //{
+            //    String nom = ChaineFichier(Constantes.MinusculeSansAccents(role).Replace(" ", "_").Replace("'", "_"));
+            //    Debug.WriteLine(string.Format("ffmpeg -framerate 1 -i {0}_%04d.png -c:v libx264 -r 30 -pix_fmt yuv420p {0}.mp4", nom));
+            //}
+            #endregion
+
             #region retrait du rattachement pour toutes les unités à l'hopital ou en prison et qui n'ont plus d'effectifs
             //foreach (Donnees.TAB_PIONRow lignePion in Donnees.m_donnees.TAB_PION)
             //{

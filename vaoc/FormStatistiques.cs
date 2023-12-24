@@ -72,7 +72,7 @@ namespace vaoc
             dataGridOrdres.Rows.Clear();
             foreach (Donnees.TAB_PIONRow lignePion in m_tablePion)
             {
-                if (lignePion.estQG && lignePion.C_NIVEAU_HIERARCHIQUE<'D')
+                if (lignePion.estRole || lignePion.ID_PION==30 || lignePion.ID_PION == 80 || lignePion.ID_PION == 240 || lignePion.ID_PION == 300 || lignePion.ID_PION == 310 || lignePion.ID_PION == 320)
                 {
                     //recherche du nombre d'ordres donnés par le joueur sur son propre pion ou les pions sous ses ordres
                     requete = "ID_PION = " + lignePion.ID_PION;

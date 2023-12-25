@@ -1679,7 +1679,7 @@ namespace vaoc
 
                         //on recherche qui le remplacait, s'il n'y a pas de remplaçant, c'est qu'il s'agissait d'une blessure légère
                         ligneChefRemplace = lignePion.pionRemplacant;
-                        if (null != ligneChefRemplace && lignePion.estRole)//test sur estrole car, curieusement, d'autres types sont dans ce cas... BEA 30/12/2021
+                        if (null != ligneChefRemplace && lignePion.estJoueur)//test sur estJoueur car, curieusement, d'autres types sont dans ce cas... BEA 30/12/2021
                         {
                             //on remet les caractéristiques du pion d'origine et c'est tout !
                             lignePion.S_NOM = ligneChefRemplace.S_NOM;
@@ -5991,7 +5991,7 @@ namespace vaoc
                 Donnees.TAB_BATAILLERow ligneBataille = Donnees.m_donnees.TAB_BATAILLE.FindByID_BATAILLE(ligneBataillePion.ID_BATAILLE);
                 if (ligneBataille.IsI_TOUR_FINNull()) { continue; }
                 Donnees.TAB_PIONRow lignePion = Donnees.m_donnees.TAB_PION.FindByID_PION(ligneBataillePion.ID_PION);
-                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estRole ? -1 : lignePion.ID_PION_PROPRIETAIRE);
+                Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estJoueur ? -1 : lignePion.ID_PION_PROPRIETAIRE);
                 if (null!=ligneMessage && 
                     (ligneMessage.I_TOUR_ARRIVEE>ligneBataille.I_TOUR_FIN
                     || (ligneMessage.I_TOUR_ARRIVEE == ligneBataille.I_TOUR_FIN && ligneMessage.I_PHASE_ARRIVEE==100)))

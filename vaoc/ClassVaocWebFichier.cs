@@ -1011,7 +1011,7 @@ namespace vaoc
                     {
                         //Tant qu'id nouveau proprietaire est renseigné, le nouveau propriétaire ne doit pas voir l'unité dans son bilan
                         //la valeur est remise à vide quand l'ancien proprietaire reçoit le message/ordre du transfert
-                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estRole ? -1 : lignePion.ID_PION_PROPRIETAIRE);
+                        Donnees.TAB_MESSAGERow ligneMessage = Donnees.m_donnees.TAB_MESSAGE.DernierMessageRecu(lignePion.ID_PION, lignePion.estJoueur ? -1 : lignePion.ID_PION_PROPRIETAIRE);
                         if (null == ligneMessage)
                         {
                             //il faut quand même générer une ligne pour l'unité, sinon, en cas de bataille, on ne la voit même pas !
@@ -1074,7 +1074,7 @@ namespace vaoc
             bRenfort = (lignePion.B_RENFORT) ? 1 : 0;
             bQG = (lignePion.estQG) ? 1 : 0;
 
-            if (lignePion.estRole || null == ligneMessage)
+            if (lignePion.estJoueur || null == ligneMessage)
             {
                 iZoneBataille = (lignePion.IsI_ZONE_BATAILLENull()) ? -1 : lignePion.I_ZONE_BATAILLE;//on voit toujours la position réelle en bataille
                 idBataille = (lignePion.IsID_BATAILLENull()) ? -1 : lignePion.ID_BATAILLE;
@@ -1125,7 +1125,7 @@ namespace vaoc
                 }
             }
 
-            if (lignePion.estRole || null == ligneMessage)
+            if (lignePion.estJoueur || null == ligneMessage)
             {
                 //s'il y a un role, c'est un joueur, il faut trouver sa position reelle
                 ClassMessager.CaseVersZoneGeographique(lignePion.ID_CASE, out sPosition);

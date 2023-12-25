@@ -421,27 +421,6 @@ namespace vaoc
             }
 
             /// <summary>
-            /// Indique si un pion est joué par un joueur réel
-            /// </summary>
-            /// <returns>true si joué directement, false sinon</returns>
-            public bool estJoueur
-            {
-                get
-                {
-                    //le pion est joué par un joueur s'il y a un role associé
-                    string requete = string.Format("ID_PION={0}", this.ID_PION);
-
-                    TAB_ROLERow[] resRole = (TAB_ROLERow[])m_donnees.tableTAB_ROLE.Select(requete);
-
-                    if (0 == resRole.Length)
-                    {
-                        return false;
-                    }
-                    return true;
-                }
-            }
-
-            /// <summary>
             /// Indique si le pion est engagé dans un combat ou pas
             /// </summary>
             /// <returns>true si l'unité est engagée au combat, false sinon</returns>
@@ -1598,7 +1577,7 @@ namespace vaoc
             /// <summary>
             /// indique si le pion est celui d'un rôle d'un joueur
             /// </summary>
-            public bool estRole
+            public bool estJoueur
             {
                 get 
                 {

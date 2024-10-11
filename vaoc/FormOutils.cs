@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Drawing.Imaging;
 using WaocLib;
 using System.Diagnostics;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace vaoc
 {
@@ -235,12 +236,12 @@ namespace vaoc
             try
             {
                 string nomFichierFinal;
-                Point ptCible= new Point(m_imageCarte.Width/2, m_imageCarte.Height/2);
+                Point ptCible = new Point(m_imageCarte.Width / 2, m_imageCarte.Height / 2);
                 Rectangle rect;
 
                 //prend la zone max entourant la cible dans la carte grisée
-                rect = new Rectangle(ptCible.X -m_imageCarte.Width / 4, 
-                                    ptCible.Y- m_imageCarte.Width / 4, 
+                rect = new Rectangle(ptCible.X - m_imageCarte.Width / 4,
+                                    ptCible.Y - m_imageCarte.Width / 4,
                                     m_imageCarte.Width / 2,
                                     m_imageCarte.Height / 2);
                 BitmapData imageZoneMax = new BitmapData();
@@ -249,8 +250,8 @@ namespace vaoc
 
 
                 //prend la zone autour de la cible dans la carte non grisée
-                rect = new Rectangle(ptCible.X -m_imageCarte.Width / 8, 
-                                    ptCible.Y- m_imageCarte.Width / 8, 
+                rect = new Rectangle(ptCible.X - m_imageCarte.Width / 8,
+                                    ptCible.Y - m_imageCarte.Width / 8,
                                     m_imageCarte.Width / 4,
                                     m_imageCarte.Height / 4);
                 BitmapData imageZoneCible = new BitmapData();
@@ -276,7 +277,6 @@ namespace vaoc
             }
             MessageBox.Show("Le traitement s'est terminé avec succès.", "zoom de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Cursor = oldcurseur;
-
         }
 
         private void buttonRepertoireSource_Click(object sender, EventArgs e)
@@ -377,7 +377,7 @@ namespace vaoc
                     foreach (string element in this.listBoxImport.SelectedItems)
                     {
                         string nomTable;
-                        nomTable = element.Substring(0, element.IndexOf(':')-1);
+                        nomTable = element.Substring(0, element.IndexOf(':') - 1);
                         Donnees.m_donnees.Tables[nomTable].Clear();
                         Donnees.m_donnees.Tables[nomTable].Merge(donneesImport.Tables[nomTable], false);
 
@@ -438,7 +438,7 @@ namespace vaoc
         {
             Cursor oldcurseur = Cursor;
             string nomFichier, extensionFichier;
-            int i, j;            
+            int i, j;
 
             textBoxFichierImage.Text = textBoxFichierImage.Text;
             try
@@ -624,7 +624,7 @@ namespace vaoc
                         //on supprime !
                         if (i == couleursAConserver.Count())
                         {
-                            LogFile.Notifier(string.Format("{0},{1} : RGB({2},{3},{4})", x,y, pixelColor.R, pixelColor.G, pixelColor.B));
+                            LogFile.Notifier(string.Format("{0},{1} : RGB({2},{3},{4})", x, y, pixelColor.R, pixelColor.G, pixelColor.B));
                             m_imageCarte.SetPixel(x, y, couleursAConserver[0]);
                         }
                     }
@@ -663,6 +663,94 @@ namespace vaoc
                 Cursor = oldcurseur;
                 MessageBox.Show(ex.Message, "Erreur dans le traitement d'image", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// A partir d'une image source, produire une autre image de la taille largeur, hauteur en recopiant l'image de base
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonMosaique_Click(object sender, EventArgs e)
+        {
+            Cursor oldcurseur = Cursor;
+            string nomFichier, extensionFichier;
+            string nomFichierFinal;
+            int h, l;
+            string test = "C:\\Users\\hoel\\Documents\\kitajouer\\ulule\\damier_clair.bmp";
+
+            textBoxFichierImage.Text = textBoxFichierImage.Text;
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                //m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
+                //nomFichier = textBoxFichierImage.Text.Substring(0, textBoxFichierImage.Text.LastIndexOf('.'));
+                //extensionFichier = textBoxFichierImage.Text.Substring(textBoxFichierImage.Text.LastIndexOf('.'));
+                m_imageCarte = (Bitmap)Image.FromFile(test);
+                nomFichier = test.Substring(0, test.LastIndexOf('.'));
+                extensionFichier = test.Substring(test.LastIndexOf('.'));
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show("Erreur au chargement de l'image : " + ex.Message, "Zoom de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                l = Convert.ToInt32(textBoxLargeur.Text);
+                h = Convert.ToInt32(textBoxHauteur.Text);
+                m_imageCarteFond = new Bitmap(m_imageCarte,new Size(l, h));                
+                /*
+                BitmapData imageCible = new BitmapData();
+                m_imageCarte.LockBits(new Rectangle(0,0, m_imageCarte.Width, m_imageCarte.Height), ImageLockMode.ReadWrite, m_imageCarte.PixelFormat, imageCible);
+                m_imageCarte.UnlockBits(imageCible);
+                m_imageCarteFond = new Bitmap(l, h, imageCible.Stride, imageCible.PixelFormat, imageCible.Scan0);
+                */
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show("Erreur au chargement de l'image de Fond: " + ex.Message, "Zoom de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                Point ptCible = new Point(0,0);
+                Graphics graph = Graphics.FromImage(m_imageCarteFond);
+                graph.FillRegion(Brushes.White, new Region(new Rectangle(0, 0, l, h)));
+
+                //recopier l'image en mosaique
+                while (ptCible.X < l)
+                {
+                    ptCible.Y = 0;
+                    while (ptCible.Y < h)
+                    {
+                        //m_imageCarte = (Bitmap)Image.FromFile(test);
+                        //graph.DrawImageUnscaled(m_imageCarte, ptCible.X, ptCible.Y, Math.Min(m_imageCarte.Width, m_imageCarteFond.Width- ptCible.X), Math.Min(m_imageCarte.Height,m_imageCarteFond.Height-ptCible.Y));
+                        Rectangle rect = new Rectangle(ptCible.X, ptCible.Y, Math.Min(m_imageCarte.Width, m_imageCarteFond.Width - ptCible.X), Math.Min(m_imageCarte.Height, m_imageCarteFond.Height - ptCible.Y));
+                        graph.DrawImageUnscaledAndClipped(m_imageCarte, rect);
+                        ptCible.Y += m_imageCarte.Height;
+                    }
+                    ptCible.X += m_imageCarte.Width;
+                }
+                graph.Dispose();
+
+                //sauvegarde
+                nomFichierFinal = string.Format("{0}_Mosaique{1}", nomFichier, extensionFichier);
+                m_imageCarteFond.Save(nomFichierFinal);
+
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show("Erreur durant le zoom/sauvegarde de l'image : " + ex.Message, "Decoupe de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            MessageBox.Show("Le traitement s'est terminé avec succès : "+ nomFichierFinal, "Mosaïque", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Cursor = oldcurseur;
+
         }
     }
 }

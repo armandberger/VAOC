@@ -28,320 +28,365 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.buttonImage = new System.Windows.Forms.Button();
-            this.textBoxFichierImage = new System.Windows.Forms.TextBox();
-            this.buttonRetraitCouleur = new System.Windows.Forms.Button();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonDecoupe = new System.Windows.Forms.Button();
-            this.buttonZoom = new System.Windows.Forms.Button();
-            this.textBoxFichierImageFond = new System.Windows.Forms.TextBox();
-            this.buttonImageFond = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxLargeur = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxHauteur = new System.Windows.Forms.TextBox();
-            this.groupBoxImages = new System.Windows.Forms.GroupBox();
-            this.textBoxNbCoteCarre = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.buttonFusion = new System.Windows.Forms.Button();
-            this.buttonCoupe = new System.Windows.Forms.Button();
-            this.groupBoxSQL = new System.Windows.Forms.GroupBox();
-            this.textBoxRepertoireSources = new System.Windows.Forms.TextBox();
-            this.buttonRepertoireSource = new System.Windows.Forms.Button();
-            this.buttonMinMaj = new System.Windows.Forms.Button();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.groupBoxImport = new System.Windows.Forms.GroupBox();
-            this.listBoxImport = new System.Windows.Forms.ListBox();
-            this.textBoxChoixFichierImport = new System.Windows.Forms.TextBox();
-            this.buttonChoixFichierImport = new System.Windows.Forms.Button();
-            this.buttonImport = new System.Windows.Forms.Button();
-            this.groupBoxImages.SuspendLayout();
-            this.groupBoxSQL.SuspendLayout();
-            this.groupBoxImport.SuspendLayout();
-            this.SuspendLayout();
+            buttonOK = new System.Windows.Forms.Button();
+            buttonImage = new System.Windows.Forms.Button();
+            textBoxFichierImage = new System.Windows.Forms.TextBox();
+            buttonRetraitCouleur = new System.Windows.Forms.Button();
+            openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            buttonDecoupe = new System.Windows.Forms.Button();
+            buttonZoom = new System.Windows.Forms.Button();
+            textBoxFichierImageFond = new System.Windows.Forms.TextBox();
+            buttonImageFond = new System.Windows.Forms.Button();
+            label1 = new System.Windows.Forms.Label();
+            textBoxLargeur = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            textBoxHauteur = new System.Windows.Forms.TextBox();
+            groupBoxImages = new System.Windows.Forms.GroupBox();
+            buttonMosaique = new System.Windows.Forms.Button();
+            textBoxNbCoteCarre = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            buttonFusion = new System.Windows.Forms.Button();
+            buttonCoupe = new System.Windows.Forms.Button();
+            groupBoxSQL = new System.Windows.Forms.GroupBox();
+            textBoxRepertoireSources = new System.Windows.Forms.TextBox();
+            buttonRepertoireSource = new System.Windows.Forms.Button();
+            buttonMinMaj = new System.Windows.Forms.Button();
+            folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            groupBoxImport = new System.Windows.Forms.GroupBox();
+            listBoxImport = new System.Windows.Forms.ListBox();
+            textBoxChoixFichierImport = new System.Windows.Forms.TextBox();
+            buttonChoixFichierImport = new System.Windows.Forms.Button();
+            buttonImport = new System.Windows.Forms.Button();
+            groupBoxImages.SuspendLayout();
+            groupBoxSQL.SuspendLayout();
+            groupBoxImport.SuspendLayout();
+            SuspendLayout();
             // 
             // buttonOK
             // 
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(295, 567);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(60, 27);
-            this.buttonOK.TabIndex = 3;
-            this.buttonOK.Text = "Fermer";
-            this.buttonOK.UseVisualStyleBackColor = true;
+            buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            buttonOK.Location = new System.Drawing.Point(344, 654);
+            buttonOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new System.Drawing.Size(70, 31);
+            buttonOK.TabIndex = 3;
+            buttonOK.Text = "Fermer";
+            buttonOK.UseVisualStyleBackColor = true;
             // 
             // buttonImage
             // 
-            this.buttonImage.Location = new System.Drawing.Point(17, 29);
-            this.buttonImage.Name = "buttonImage";
-            this.buttonImage.Size = new System.Drawing.Size(138, 23);
-            this.buttonImage.TabIndex = 4;
-            this.buttonImage.Text = "Ouvrir Image";
-            this.buttonImage.UseVisualStyleBackColor = true;
-            this.buttonImage.Click += new System.EventHandler(this.buttonImage_Click);
+            buttonImage.Location = new System.Drawing.Point(20, 33);
+            buttonImage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonImage.Name = "buttonImage";
+            buttonImage.Size = new System.Drawing.Size(161, 27);
+            buttonImage.TabIndex = 4;
+            buttonImage.Text = "Ouvrir Image";
+            buttonImage.UseVisualStyleBackColor = true;
+            buttonImage.Click += buttonImage_Click;
             // 
             // textBoxFichierImage
             // 
-            this.textBoxFichierImage.Location = new System.Drawing.Point(182, 31);
-            this.textBoxFichierImage.Name = "textBoxFichierImage";
-            this.textBoxFichierImage.Size = new System.Drawing.Size(449, 20);
-            this.textBoxFichierImage.TabIndex = 5;
+            textBoxFichierImage.Location = new System.Drawing.Point(212, 36);
+            textBoxFichierImage.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxFichierImage.Name = "textBoxFichierImage";
+            textBoxFichierImage.Size = new System.Drawing.Size(523, 23);
+            textBoxFichierImage.TabIndex = 5;
             // 
             // buttonRetraitCouleur
             // 
-            this.buttonRetraitCouleur.Location = new System.Drawing.Point(17, 108);
-            this.buttonRetraitCouleur.Name = "buttonRetraitCouleur";
-            this.buttonRetraitCouleur.Size = new System.Drawing.Size(138, 23);
-            this.buttonRetraitCouleur.TabIndex = 6;
-            this.buttonRetraitCouleur.Text = "Retrait des couleurs";
-            this.buttonRetraitCouleur.UseVisualStyleBackColor = true;
-            this.buttonRetraitCouleur.Click += new System.EventHandler(this.buttonRetraitCouleur_Click);
+            buttonRetraitCouleur.Location = new System.Drawing.Point(20, 125);
+            buttonRetraitCouleur.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonRetraitCouleur.Name = "buttonRetraitCouleur";
+            buttonRetraitCouleur.Size = new System.Drawing.Size(161, 27);
+            buttonRetraitCouleur.TabIndex = 6;
+            buttonRetraitCouleur.Text = "Retrait des couleurs";
+            buttonRetraitCouleur.UseVisualStyleBackColor = true;
+            buttonRetraitCouleur.Click += buttonRetraitCouleur_Click;
             // 
             // openFileDialog
             // 
-            this.openFileDialog.Filter = "JPEG|*.jpg|BMP|*.bmp|PNG|*.png|tous|*.*";
+            openFileDialog.Filter = "JPEG|*.jpg|BMP|*.bmp|PNG|*.png|tous|*.*";
             // 
             // buttonDecoupe
             // 
-            this.buttonDecoupe.Location = new System.Drawing.Point(17, 137);
-            this.buttonDecoupe.Name = "buttonDecoupe";
-            this.buttonDecoupe.Size = new System.Drawing.Size(75, 23);
-            this.buttonDecoupe.TabIndex = 7;
-            this.buttonDecoupe.Text = "Decoupe";
-            this.buttonDecoupe.UseVisualStyleBackColor = true;
-            this.buttonDecoupe.Click += new System.EventHandler(this.buttonDecoupe_Click);
+            buttonDecoupe.Location = new System.Drawing.Point(20, 158);
+            buttonDecoupe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonDecoupe.Name = "buttonDecoupe";
+            buttonDecoupe.Size = new System.Drawing.Size(88, 27);
+            buttonDecoupe.TabIndex = 7;
+            buttonDecoupe.Text = "Decoupe";
+            buttonDecoupe.UseVisualStyleBackColor = true;
+            buttonDecoupe.Click += buttonDecoupe_Click;
             // 
             // buttonZoom
             // 
-            this.buttonZoom.Location = new System.Drawing.Point(17, 166);
-            this.buttonZoom.Name = "buttonZoom";
-            this.buttonZoom.Size = new System.Drawing.Size(75, 23);
-            this.buttonZoom.TabIndex = 8;
-            this.buttonZoom.Text = "ZoomGris";
-            this.buttonZoom.UseVisualStyleBackColor = true;
-            this.buttonZoom.Click += new System.EventHandler(this.buttonZoom_Click);
+            buttonZoom.Location = new System.Drawing.Point(20, 192);
+            buttonZoom.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonZoom.Name = "buttonZoom";
+            buttonZoom.Size = new System.Drawing.Size(88, 27);
+            buttonZoom.TabIndex = 8;
+            buttonZoom.Text = "ZoomGris";
+            buttonZoom.UseVisualStyleBackColor = true;
+            buttonZoom.Click += buttonZoom_Click;
             // 
             // textBoxFichierImageFond
             // 
-            this.textBoxFichierImageFond.Location = new System.Drawing.Point(182, 70);
-            this.textBoxFichierImageFond.Name = "textBoxFichierImageFond";
-            this.textBoxFichierImageFond.Size = new System.Drawing.Size(449, 20);
-            this.textBoxFichierImageFond.TabIndex = 10;
+            textBoxFichierImageFond.Location = new System.Drawing.Point(212, 81);
+            textBoxFichierImageFond.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxFichierImageFond.Name = "textBoxFichierImageFond";
+            textBoxFichierImageFond.Size = new System.Drawing.Size(523, 23);
+            textBoxFichierImageFond.TabIndex = 10;
             // 
             // buttonImageFond
             // 
-            this.buttonImageFond.Location = new System.Drawing.Point(17, 68);
-            this.buttonImageFond.Name = "buttonImageFond";
-            this.buttonImageFond.Size = new System.Drawing.Size(138, 23);
-            this.buttonImageFond.TabIndex = 9;
-            this.buttonImageFond.Text = "Ouvrir Image Fond";
-            this.buttonImageFond.UseVisualStyleBackColor = true;
-            this.buttonImageFond.Click += new System.EventHandler(this.buttonImageFond_Click);
+            buttonImageFond.Location = new System.Drawing.Point(20, 78);
+            buttonImageFond.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonImageFond.Name = "buttonImageFond";
+            buttonImageFond.Size = new System.Drawing.Size(161, 27);
+            buttonImageFond.TabIndex = 9;
+            buttonImageFond.Text = "Ouvrir Image Fond";
+            buttonImageFond.UseVisualStyleBackColor = true;
+            buttonImageFond.Click += buttonImageFond_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(148, 146);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Largeur";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(173, 168);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(47, 15);
+            label1.TabIndex = 11;
+            label1.Text = "Largeur";
             // 
             // textBoxLargeur
             // 
-            this.textBoxLargeur.Location = new System.Drawing.Point(198, 146);
-            this.textBoxLargeur.Name = "textBoxLargeur";
-            this.textBoxLargeur.Size = new System.Drawing.Size(100, 20);
-            this.textBoxLargeur.TabIndex = 12;
+            textBoxLargeur.Location = new System.Drawing.Point(231, 168);
+            textBoxLargeur.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxLargeur.Name = "textBoxLargeur";
+            textBoxLargeur.Size = new System.Drawing.Size(116, 23);
+            textBoxLargeur.TabIndex = 12;
+            textBoxLargeur.Text = "760";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(315, 152);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Hauteur";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(368, 175);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(50, 15);
+            label2.TabIndex = 13;
+            label2.Text = "Hauteur";
             // 
             // textBoxHauteur
             // 
-            this.textBoxHauteur.Location = new System.Drawing.Point(377, 146);
-            this.textBoxHauteur.Name = "textBoxHauteur";
-            this.textBoxHauteur.Size = new System.Drawing.Size(100, 20);
-            this.textBoxHauteur.TabIndex = 14;
+            textBoxHauteur.Location = new System.Drawing.Point(440, 168);
+            textBoxHauteur.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxHauteur.Name = "textBoxHauteur";
+            textBoxHauteur.Size = new System.Drawing.Size(116, 23);
+            textBoxHauteur.TabIndex = 14;
+            textBoxHauteur.Text = "1344";
             // 
             // groupBoxImages
             // 
-            this.groupBoxImages.Controls.Add(this.textBoxNbCoteCarre);
-            this.groupBoxImages.Controls.Add(this.label3);
-            this.groupBoxImages.Controls.Add(this.buttonFusion);
-            this.groupBoxImages.Controls.Add(this.buttonCoupe);
-            this.groupBoxImages.Controls.Add(this.textBoxHauteur);
-            this.groupBoxImages.Controls.Add(this.label2);
-            this.groupBoxImages.Controls.Add(this.textBoxLargeur);
-            this.groupBoxImages.Controls.Add(this.label1);
-            this.groupBoxImages.Controls.Add(this.textBoxFichierImageFond);
-            this.groupBoxImages.Controls.Add(this.buttonImageFond);
-            this.groupBoxImages.Controls.Add(this.buttonZoom);
-            this.groupBoxImages.Controls.Add(this.buttonDecoupe);
-            this.groupBoxImages.Controls.Add(this.buttonRetraitCouleur);
-            this.groupBoxImages.Controls.Add(this.textBoxFichierImage);
-            this.groupBoxImages.Controls.Add(this.buttonImage);
-            this.groupBoxImages.Location = new System.Drawing.Point(7, 12);
-            this.groupBoxImages.Name = "groupBoxImages";
-            this.groupBoxImages.Size = new System.Drawing.Size(639, 260);
-            this.groupBoxImages.TabIndex = 15;
-            this.groupBoxImages.TabStop = false;
-            this.groupBoxImages.Text = "Traitment d\'images";
+            groupBoxImages.Controls.Add(buttonMosaique);
+            groupBoxImages.Controls.Add(textBoxNbCoteCarre);
+            groupBoxImages.Controls.Add(label3);
+            groupBoxImages.Controls.Add(buttonFusion);
+            groupBoxImages.Controls.Add(buttonCoupe);
+            groupBoxImages.Controls.Add(textBoxHauteur);
+            groupBoxImages.Controls.Add(label2);
+            groupBoxImages.Controls.Add(textBoxLargeur);
+            groupBoxImages.Controls.Add(label1);
+            groupBoxImages.Controls.Add(textBoxFichierImageFond);
+            groupBoxImages.Controls.Add(buttonImageFond);
+            groupBoxImages.Controls.Add(buttonZoom);
+            groupBoxImages.Controls.Add(buttonDecoupe);
+            groupBoxImages.Controls.Add(buttonRetraitCouleur);
+            groupBoxImages.Controls.Add(textBoxFichierImage);
+            groupBoxImages.Controls.Add(buttonImage);
+            groupBoxImages.Location = new System.Drawing.Point(8, 14);
+            groupBoxImages.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxImages.Name = "groupBoxImages";
+            groupBoxImages.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxImages.Size = new System.Drawing.Size(746, 300);
+            groupBoxImages.TabIndex = 15;
+            groupBoxImages.TabStop = false;
+            groupBoxImages.Text = "Traitment d'images";
+            // 
+            // buttonMosaique
+            // 
+            buttonMosaique.Location = new System.Drawing.Point(21, 225);
+            buttonMosaique.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonMosaique.Name = "buttonMosaique";
+            buttonMosaique.Size = new System.Drawing.Size(88, 27);
+            buttonMosaique.TabIndex = 19;
+            buttonMosaique.Text = "Mosaïque";
+            buttonMosaique.UseVisualStyleBackColor = true;
+            buttonMosaique.Click += buttonMosaique_Click;
             // 
             // textBoxNbCoteCarre
             // 
-            this.textBoxNbCoteCarre.Location = new System.Drawing.Point(428, 224);
-            this.textBoxNbCoteCarre.Name = "textBoxNbCoteCarre";
-            this.textBoxNbCoteCarre.Size = new System.Drawing.Size(64, 20);
-            this.textBoxNbCoteCarre.TabIndex = 18;
-            this.textBoxNbCoteCarre.Text = "3";
+            textBoxNbCoteCarre.Location = new System.Drawing.Point(499, 258);
+            textBoxNbCoteCarre.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxNbCoteCarre.Name = "textBoxNbCoteCarre";
+            textBoxNbCoteCarre.Size = new System.Drawing.Size(74, 23);
+            textBoxNbCoteCarre.TabIndex = 18;
+            textBoxNbCoteCarre.Text = "3";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(210, 222);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(212, 13);
-            this.label3.TabIndex = 17;
-            this.label3.Text = "Nombre de cotés du carré (ex: 3 pour 3x3) :";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(245, 256);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(234, 15);
+            label3.TabIndex = 17;
+            label3.Text = "Nombre de cotés du carré (ex: 3 pour 3x3) :";
             // 
             // buttonFusion
             // 
-            this.buttonFusion.Location = new System.Drawing.Point(116, 222);
-            this.buttonFusion.Name = "buttonFusion";
-            this.buttonFusion.Size = new System.Drawing.Size(75, 23);
-            this.buttonFusion.TabIndex = 16;
-            this.buttonFusion.Text = "Fusion";
-            this.buttonFusion.UseVisualStyleBackColor = true;
-            this.buttonFusion.Click += new System.EventHandler(this.buttonFusion_Click);
+            buttonFusion.Location = new System.Drawing.Point(135, 256);
+            buttonFusion.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonFusion.Name = "buttonFusion";
+            buttonFusion.Size = new System.Drawing.Size(88, 27);
+            buttonFusion.TabIndex = 16;
+            buttonFusion.Text = "Fusion";
+            buttonFusion.UseVisualStyleBackColor = true;
+            buttonFusion.Click += buttonFusion_Click;
             // 
             // buttonCoupe
             // 
-            this.buttonCoupe.Location = new System.Drawing.Point(18, 222);
-            this.buttonCoupe.Name = "buttonCoupe";
-            this.buttonCoupe.Size = new System.Drawing.Size(87, 23);
-            this.buttonCoupe.TabIndex = 15;
-            this.buttonCoupe.Text = "Coupe carree";
-            this.buttonCoupe.UseVisualStyleBackColor = true;
-            this.buttonCoupe.Click += new System.EventHandler(this.buttonCoupe_Click);
+            buttonCoupe.Location = new System.Drawing.Point(21, 256);
+            buttonCoupe.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonCoupe.Name = "buttonCoupe";
+            buttonCoupe.Size = new System.Drawing.Size(102, 27);
+            buttonCoupe.TabIndex = 15;
+            buttonCoupe.Text = "Coupe carree";
+            buttonCoupe.UseVisualStyleBackColor = true;
+            buttonCoupe.Click += buttonCoupe_Click;
             // 
             // groupBoxSQL
             // 
-            this.groupBoxSQL.Controls.Add(this.textBoxRepertoireSources);
-            this.groupBoxSQL.Controls.Add(this.buttonRepertoireSource);
-            this.groupBoxSQL.Controls.Add(this.buttonMinMaj);
-            this.groupBoxSQL.Location = new System.Drawing.Point(7, 278);
-            this.groupBoxSQL.Name = "groupBoxSQL";
-            this.groupBoxSQL.Size = new System.Drawing.Size(638, 96);
-            this.groupBoxSQL.TabIndex = 16;
-            this.groupBoxSQL.TabStop = false;
-            this.groupBoxSQL.Text = "Traitements bases";
+            groupBoxSQL.Controls.Add(textBoxRepertoireSources);
+            groupBoxSQL.Controls.Add(buttonRepertoireSource);
+            groupBoxSQL.Controls.Add(buttonMinMaj);
+            groupBoxSQL.Location = new System.Drawing.Point(8, 321);
+            groupBoxSQL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxSQL.Name = "groupBoxSQL";
+            groupBoxSQL.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxSQL.Size = new System.Drawing.Size(744, 111);
+            groupBoxSQL.TabIndex = 16;
+            groupBoxSQL.TabStop = false;
+            groupBoxSQL.Text = "Traitements bases";
             // 
             // textBoxRepertoireSources
             // 
-            this.textBoxRepertoireSources.Location = new System.Drawing.Point(182, 22);
-            this.textBoxRepertoireSources.Name = "textBoxRepertoireSources";
-            this.textBoxRepertoireSources.Size = new System.Drawing.Size(449, 20);
-            this.textBoxRepertoireSources.TabIndex = 15;
-            this.textBoxRepertoireSources.Text = "C:\\Projects\\PHP\\vaoc";
+            textBoxRepertoireSources.Location = new System.Drawing.Point(212, 25);
+            textBoxRepertoireSources.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxRepertoireSources.Name = "textBoxRepertoireSources";
+            textBoxRepertoireSources.Size = new System.Drawing.Size(523, 23);
+            textBoxRepertoireSources.TabIndex = 15;
+            textBoxRepertoireSources.Text = "C:\\Projects\\PHP\\vaoc";
             // 
             // buttonRepertoireSource
             // 
-            this.buttonRepertoireSource.Location = new System.Drawing.Point(17, 19);
-            this.buttonRepertoireSource.Name = "buttonRepertoireSource";
-            this.buttonRepertoireSource.Size = new System.Drawing.Size(138, 23);
-            this.buttonRepertoireSource.TabIndex = 16;
-            this.buttonRepertoireSource.Text = "Repertoire des sources";
-            this.buttonRepertoireSource.UseVisualStyleBackColor = true;
-            this.buttonRepertoireSource.Click += new System.EventHandler(this.buttonRepertoireSource_Click);
+            buttonRepertoireSource.Location = new System.Drawing.Point(20, 22);
+            buttonRepertoireSource.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonRepertoireSource.Name = "buttonRepertoireSource";
+            buttonRepertoireSource.Size = new System.Drawing.Size(161, 27);
+            buttonRepertoireSource.TabIndex = 16;
+            buttonRepertoireSource.Text = "Repertoire des sources";
+            buttonRepertoireSource.UseVisualStyleBackColor = true;
+            buttonRepertoireSource.Click += buttonRepertoireSource_Click;
             // 
             // buttonMinMaj
             // 
-            this.buttonMinMaj.Location = new System.Drawing.Point(17, 62);
-            this.buttonMinMaj.Name = "buttonMinMaj";
-            this.buttonMinMaj.Size = new System.Drawing.Size(138, 23);
-            this.buttonMinMaj.TabIndex = 15;
-            this.buttonMinMaj.Text = "Tables en minuscules";
-            this.buttonMinMaj.UseVisualStyleBackColor = true;
-            this.buttonMinMaj.Click += new System.EventHandler(this.buttonMinMaj_Click);
+            buttonMinMaj.Location = new System.Drawing.Point(20, 72);
+            buttonMinMaj.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonMinMaj.Name = "buttonMinMaj";
+            buttonMinMaj.Size = new System.Drawing.Size(161, 27);
+            buttonMinMaj.TabIndex = 15;
+            buttonMinMaj.Text = "Tables en minuscules";
+            buttonMinMaj.UseVisualStyleBackColor = true;
+            buttonMinMaj.Click += buttonMinMaj_Click;
             // 
             // groupBoxImport
             // 
-            this.groupBoxImport.Controls.Add(this.listBoxImport);
-            this.groupBoxImport.Controls.Add(this.textBoxChoixFichierImport);
-            this.groupBoxImport.Controls.Add(this.buttonChoixFichierImport);
-            this.groupBoxImport.Controls.Add(this.buttonImport);
-            this.groupBoxImport.Location = new System.Drawing.Point(8, 380);
-            this.groupBoxImport.Name = "groupBoxImport";
-            this.groupBoxImport.Size = new System.Drawing.Size(638, 181);
-            this.groupBoxImport.TabIndex = 17;
-            this.groupBoxImport.TabStop = false;
-            this.groupBoxImport.Text = "Import de tables d\'un autre fichier vaoc";
+            groupBoxImport.Controls.Add(listBoxImport);
+            groupBoxImport.Controls.Add(textBoxChoixFichierImport);
+            groupBoxImport.Controls.Add(buttonChoixFichierImport);
+            groupBoxImport.Controls.Add(buttonImport);
+            groupBoxImport.Location = new System.Drawing.Point(9, 438);
+            groupBoxImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxImport.Name = "groupBoxImport";
+            groupBoxImport.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBoxImport.Size = new System.Drawing.Size(744, 209);
+            groupBoxImport.TabIndex = 17;
+            groupBoxImport.TabStop = false;
+            groupBoxImport.Text = "Import de tables d'un autre fichier vaoc";
             // 
             // listBoxImport
             // 
-            this.listBoxImport.FormattingEnabled = true;
-            this.listBoxImport.Location = new System.Drawing.Point(182, 62);
-            this.listBoxImport.Name = "listBoxImport";
-            this.listBoxImport.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
-            this.listBoxImport.Size = new System.Drawing.Size(448, 108);
-            this.listBoxImport.Sorted = true;
-            this.listBoxImport.TabIndex = 17;
+            listBoxImport.FormattingEnabled = true;
+            listBoxImport.ItemHeight = 15;
+            listBoxImport.Location = new System.Drawing.Point(212, 72);
+            listBoxImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            listBoxImport.Name = "listBoxImport";
+            listBoxImport.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            listBoxImport.Size = new System.Drawing.Size(522, 124);
+            listBoxImport.Sorted = true;
+            listBoxImport.TabIndex = 17;
             // 
             // textBoxChoixFichierImport
             // 
-            this.textBoxChoixFichierImport.Location = new System.Drawing.Point(182, 22);
-            this.textBoxChoixFichierImport.Name = "textBoxChoixFichierImport";
-            this.textBoxChoixFichierImport.ReadOnly = true;
-            this.textBoxChoixFichierImport.Size = new System.Drawing.Size(449, 20);
-            this.textBoxChoixFichierImport.TabIndex = 15;
+            textBoxChoixFichierImport.Location = new System.Drawing.Point(212, 25);
+            textBoxChoixFichierImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxChoixFichierImport.Name = "textBoxChoixFichierImport";
+            textBoxChoixFichierImport.ReadOnly = true;
+            textBoxChoixFichierImport.Size = new System.Drawing.Size(523, 23);
+            textBoxChoixFichierImport.TabIndex = 15;
             // 
             // buttonChoixFichierImport
             // 
-            this.buttonChoixFichierImport.Location = new System.Drawing.Point(17, 19);
-            this.buttonChoixFichierImport.Name = "buttonChoixFichierImport";
-            this.buttonChoixFichierImport.Size = new System.Drawing.Size(138, 23);
-            this.buttonChoixFichierImport.TabIndex = 16;
-            this.buttonChoixFichierImport.Text = "Fichier source";
-            this.buttonChoixFichierImport.UseVisualStyleBackColor = true;
-            this.buttonChoixFichierImport.Click += new System.EventHandler(this.buttonChoixFichierImport_Click);
+            buttonChoixFichierImport.Location = new System.Drawing.Point(20, 22);
+            buttonChoixFichierImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonChoixFichierImport.Name = "buttonChoixFichierImport";
+            buttonChoixFichierImport.Size = new System.Drawing.Size(161, 27);
+            buttonChoixFichierImport.TabIndex = 16;
+            buttonChoixFichierImport.Text = "Fichier source";
+            buttonChoixFichierImport.UseVisualStyleBackColor = true;
+            buttonChoixFichierImport.Click += buttonChoixFichierImport_Click;
             // 
             // buttonImport
             // 
-            this.buttonImport.Location = new System.Drawing.Point(17, 62);
-            this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(138, 23);
-            this.buttonImport.TabIndex = 15;
-            this.buttonImport.Text = "Importer";
-            this.buttonImport.UseVisualStyleBackColor = true;
-            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
+            buttonImport.Location = new System.Drawing.Point(20, 72);
+            buttonImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonImport.Name = "buttonImport";
+            buttonImport.Size = new System.Drawing.Size(161, 27);
+            buttonImport.TabIndex = 15;
+            buttonImport.Text = "Importer";
+            buttonImport.UseVisualStyleBackColor = true;
+            buttonImport.Click += buttonImport_Click;
             // 
             // FormOutils
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 598);
-            this.Controls.Add(this.groupBoxImport);
-            this.Controls.Add(this.groupBoxSQL);
-            this.Controls.Add(this.groupBoxImages);
-            this.Controls.Add(this.buttonOK);
-            this.Name = "FormOutils";
-            this.Text = "FormOutils";
-            this.groupBoxImages.ResumeLayout(false);
-            this.groupBoxImages.PerformLayout();
-            this.groupBoxSQL.ResumeLayout(false);
-            this.groupBoxSQL.PerformLayout();
-            this.groupBoxImport.ResumeLayout(false);
-            this.groupBoxImport.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(760, 690);
+            Controls.Add(groupBoxImport);
+            Controls.Add(groupBoxSQL);
+            Controls.Add(groupBoxImages);
+            Controls.Add(buttonOK);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            Name = "FormOutils";
+            Text = "FormOutils";
+            groupBoxImages.ResumeLayout(false);
+            groupBoxImages.PerformLayout();
+            groupBoxSQL.ResumeLayout(false);
+            groupBoxSQL.PerformLayout();
+            groupBoxImport.ResumeLayout(false);
+            groupBoxImport.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -374,5 +419,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonFusion;
         private System.Windows.Forms.Button buttonCoupe;
+        private System.Windows.Forms.Button buttonMosaique;
     }
 }

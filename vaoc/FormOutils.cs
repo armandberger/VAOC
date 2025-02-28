@@ -11,6 +11,7 @@ using System.Drawing.Imaging;
 using WaocLib;
 using System.Diagnostics;
 using Microsoft.VisualBasic.ApplicationServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace vaoc
 {
@@ -98,7 +99,9 @@ namespace vaoc
                 #region coupure spécifique
                 //rect = new Rectangle(0, 1128 * 5, m_imageCarte.Width, m_imageCarte.Height-1128*5);
                 //rect = new Rectangle(0, 0, 5110, m_imageCarte.Height);
-                rect = new Rectangle(0, 0, 5110, 4320);
+                int l = Convert.ToInt32(textBoxLargeur.Text);
+                int h = Convert.ToInt32(textBoxHauteur.Text);
+                rect = new Rectangle(0, 0, l, h);
                 nomFichierFinal = string.Format("{0}_{1}{2}", nomFichier, 1, extensionFichier);
                 SauvegardeDecoupeFichier(nomFichierFinal, rect);
                 #endregion
@@ -700,7 +703,7 @@ namespace vaoc
             {
                 l = Convert.ToInt32(textBoxLargeur.Text);
                 h = Convert.ToInt32(textBoxHauteur.Text);
-                m_imageCarteFond = new Bitmap(m_imageCarte,new Size(l, h));                
+                m_imageCarteFond = new Bitmap(m_imageCarte, new Size(l, h));
                 /*
                 BitmapData imageCible = new BitmapData();
                 m_imageCarte.LockBits(new Rectangle(0,0, m_imageCarte.Width, m_imageCarte.Height), ImageLockMode.ReadWrite, m_imageCarte.PixelFormat, imageCible);
@@ -717,7 +720,7 @@ namespace vaoc
 
             try
             {
-                Point ptCible = new Point(0,0);
+                Point ptCible = new Point(0, 0);
                 Graphics graph = Graphics.FromImage(m_imageCarteFond);
                 graph.FillRegion(Brushes.White, new Region(new Rectangle(0, 0, l, h)));
 
@@ -748,9 +751,64 @@ namespace vaoc
                 MessageBox.Show("Erreur durant le zoom/sauvegarde de l'image : " + ex.Message, "Decoupe de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            MessageBox.Show("Le traitement s'est terminé avec succès : "+ nomFichierFinal, "Mosaïque", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Le traitement s'est terminé avec succès : " + nomFichierFinal, "Mosaïque", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Cursor = oldcurseur;
 
+        }
+
+        private void buttonCSS_Click(object sender, EventArgs e)
+        {
+            Cursor oldcurseur = Cursor;
+            string nomFichier, extensionFichier;
+            StringBuilder sb = new StringBuilder();
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
+                nomFichier = textBoxFichierImage.Text.Substring(0, textBoxFichierImage.Text.LastIndexOf('.'));
+                extensionFichier = textBoxFichierImage.Text.Substring(textBoxFichierImage.Text.LastIndexOf('.'));
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show("Erreur au chargement de l'image : " + ex.Message, "CSS", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                string nomFichierFinal;
+                decimal l = Convert.ToDecimal(textBoxLargeurElement.Text);
+                decimal h = Convert.ToDecimal(textBoxHauteurElement.Text);
+                string tag = textBoxTag.Text;
+                int id = 0;
+                decimal i = 0;
+                while (i< m_imageCarte.Height)
+                {
+                    decimal j = 0;
+                    while(j< m_imageCarte.Width)
+                    {
+                        string pourcentL = Math.Round(j*100 / (m_imageCarte.Width-l),3).ToString() + '%';
+                        string pourcentH = Math.Round(i*100 / (m_imageCarte.Height-h),3).ToString() + '%';
+                        sb.AppendLine(string.Format(".{0}{1} {{background-position:{2} {3};}}", tag, id.ToString(), pourcentL, pourcentH));
+                        id++;
+                        j += l;
+                    }
+                    i += h;
+                }
+                nomFichierFinal = string.Format("{0}_css.txt", nomFichier);
+                File.Delete(nomFichierFinal);
+                File.WriteAllText(nomFichierFinal, sb.ToString(), Encoding.GetEncoding("ISO-8859-1"));
+            }
+            catch (Exception ex)
+            {
+                Cursor = oldcurseur;
+                MessageBox.Show("Erreur durant le traitement : " + ex.Message, "Decoupe de fichiers", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            MessageBox.Show("Le traitement s'est terminé avec succès.", "CSS Sprites", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Cursor = oldcurseur;
         }
     }
 }

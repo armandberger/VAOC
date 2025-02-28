@@ -57,15 +57,24 @@
             textBoxChoixFichierImport = new System.Windows.Forms.TextBox();
             buttonChoixFichierImport = new System.Windows.Forms.Button();
             buttonImport = new System.Windows.Forms.Button();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            textBoxTag = new System.Windows.Forms.TextBox();
+            label6 = new System.Windows.Forms.Label();
+            textBoxHauteurElement = new System.Windows.Forms.TextBox();
+            label5 = new System.Windows.Forms.Label();
+            textBoxLargeurElement = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            buttonCSS = new System.Windows.Forms.Button();
             groupBoxImages.SuspendLayout();
             groupBoxSQL.SuspendLayout();
             groupBoxImport.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // buttonOK
             // 
             buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            buttonOK.Location = new System.Drawing.Point(344, 654);
+            buttonOK.Location = new System.Drawing.Point(344, 783);
             buttonOK.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             buttonOK.Name = "buttonOK";
             buttonOK.Size = new System.Drawing.Size(70, 31);
@@ -270,7 +279,7 @@
             groupBoxSQL.Controls.Add(textBoxRepertoireSources);
             groupBoxSQL.Controls.Add(buttonRepertoireSource);
             groupBoxSQL.Controls.Add(buttonMinMaj);
-            groupBoxSQL.Location = new System.Drawing.Point(8, 321);
+            groupBoxSQL.Location = new System.Drawing.Point(8, 450);
             groupBoxSQL.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxSQL.Name = "groupBoxSQL";
             groupBoxSQL.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -316,7 +325,7 @@
             groupBoxImport.Controls.Add(textBoxChoixFichierImport);
             groupBoxImport.Controls.Add(buttonChoixFichierImport);
             groupBoxImport.Controls.Add(buttonImport);
-            groupBoxImport.Location = new System.Drawing.Point(9, 438);
+            groupBoxImport.Location = new System.Drawing.Point(9, 567);
             groupBoxImport.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             groupBoxImport.Name = "groupBoxImport";
             groupBoxImport.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
@@ -368,11 +377,98 @@
             buttonImport.UseVisualStyleBackColor = true;
             buttonImport.Click += buttonImport_Click;
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(textBoxTag);
+            groupBox1.Controls.Add(label6);
+            groupBox1.Controls.Add(textBoxHauteurElement);
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(textBoxLargeurElement);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(buttonCSS);
+            groupBox1.Location = new System.Drawing.Point(9, 320);
+            groupBox1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            groupBox1.Size = new System.Drawing.Size(744, 111);
+            groupBox1.TabIndex = 17;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Traitements sprites";
+            // 
+            // textBoxTag
+            // 
+            textBoxTag.Location = new System.Drawing.Point(307, 66);
+            textBoxTag.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxTag.Name = "textBoxTag";
+            textBoxTag.Size = new System.Drawing.Size(116, 23);
+            textBoxTag.TabIndex = 23;
+            textBoxTag.Text = "card_type_";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(206, 66);
+            label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(25, 15);
+            label6.TabIndex = 22;
+            label6.Text = "Tag";
+            // 
+            // textBoxHauteurElement
+            // 
+            textBoxHauteurElement.Location = new System.Drawing.Point(556, 19);
+            textBoxHauteurElement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxHauteurElement.Name = "textBoxHauteurElement";
+            textBoxHauteurElement.Size = new System.Drawing.Size(116, 23);
+            textBoxHauteurElement.TabIndex = 21;
+            textBoxHauteurElement.Text = "827";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(439, 25);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(96, 15);
+            label5.TabIndex = 20;
+            label5.Text = "Hauteur element";
+            // 
+            // textBoxLargeurElement
+            // 
+            textBoxLargeurElement.Location = new System.Drawing.Point(307, 22);
+            textBoxLargeurElement.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            textBoxLargeurElement.Name = "textBoxLargeurElement";
+            textBoxLargeurElement.Size = new System.Drawing.Size(116, 23);
+            textBoxLargeurElement.TabIndex = 21;
+            textBoxLargeurElement.Text = "603";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(206, 22);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(93, 15);
+            label4.TabIndex = 20;
+            label4.Text = "Largeur element";
+            // 
+            // buttonCSS
+            // 
+            buttonCSS.Location = new System.Drawing.Point(20, 22);
+            buttonCSS.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            buttonCSS.Name = "buttonCSS";
+            buttonCSS.Size = new System.Drawing.Size(161, 27);
+            buttonCSS.TabIndex = 16;
+            buttonCSS.Text = "CSS";
+            buttonCSS.UseVisualStyleBackColor = true;
+            buttonCSS.Click += buttonCSS_Click;
+            // 
             // FormOutils
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(760, 690);
+            ClientSize = new System.Drawing.Size(760, 822);
+            Controls.Add(groupBox1);
             Controls.Add(groupBoxImport);
             Controls.Add(groupBoxSQL);
             Controls.Add(groupBoxImages);
@@ -386,6 +482,8 @@
             groupBoxSQL.PerformLayout();
             groupBoxImport.ResumeLayout(false);
             groupBoxImport.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -420,5 +518,13 @@
         private System.Windows.Forms.Button buttonFusion;
         private System.Windows.Forms.Button buttonCoupe;
         private System.Windows.Forms.Button buttonMosaique;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button buttonCSS;
+        private System.Windows.Forms.TextBox textBoxHauteurElement;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxLargeurElement;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBoxTag;
+        private System.Windows.Forms.Label label6;
     }
 }

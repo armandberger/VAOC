@@ -789,8 +789,8 @@ namespace vaoc
                     decimal j = 0;
                     while(j< m_imageCarte.Width)
                     {
-                        string pourcentL = Math.Round(j*100 / (m_imageCarte.Width-l),3).ToString() + '%';
-                        string pourcentH = Math.Round(i*100 / (m_imageCarte.Height-h),3).ToString() + '%';
+                        string pourcentL = Math.Round(j*100 / (m_imageCarte.Width-l),3).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
+                        string pourcentH = Math.Round(i*100 / (m_imageCarte.Height-h),3).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
                         sb.AppendLine(string.Format(".{0}{1} {{background-position:{2} {3};}}", tag, id.ToString(), pourcentL, pourcentH));
                         id++;
                         j += l;

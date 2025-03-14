@@ -97,11 +97,11 @@ namespace vaoc
                 */
 
                 #region coupure spécifique
-                //rect = new Rectangle(0, 1128 * 5, m_imageCarte.Width, m_imageCarte.Height-1128*5);
+                rect = new Rectangle(0, 0, m_imageCarte.Width, m_imageCarte.Height/4);
                 //rect = new Rectangle(0, 0, 5110, m_imageCarte.Height);
-                int l = Convert.ToInt32(textBoxLargeur.Text);
+                /*int l = Convert.ToInt32(textBoxLargeur.Text);
                 int h = Convert.ToInt32(textBoxHauteur.Text);
-                rect = new Rectangle(0, 0, l, h);
+                rect = new Rectangle(0, 0, l, h);*/
                 nomFichierFinal = string.Format("{0}_{1}{2}", nomFichier, 1, extensionFichier);
                 SauvegardeDecoupeFichier(nomFichierFinal, rect);
                 #endregion
@@ -789,8 +789,8 @@ namespace vaoc
                     decimal j = 0;
                     while(j< m_imageCarte.Width)
                     {
-                        string pourcentL = Math.Round(j*100 / (m_imageCarte.Width-l),3).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
-                        string pourcentH = Math.Round(i*100 / (m_imageCarte.Height-h),3).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
+                        string pourcentL = ((m_imageCarte.Width == l) ? 0 : Math.Round(j*100 / (m_imageCarte.Width-l),3)).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
+                        string pourcentH = ((m_imageCarte.Height == h) ? 0 : Math.Round(i*100 / (m_imageCarte.Height-h),3)).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
                         sb.AppendLine(string.Format(".{0}{1} {{background-position:{2} {3};}}", tag, id.ToString(), pourcentL, pourcentH));
                         id++;
                         j += l;

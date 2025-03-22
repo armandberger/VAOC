@@ -679,18 +679,14 @@ namespace vaoc
             string nomFichier, extensionFichier;
             string nomFichierFinal;
             int h, l;
-            string test = "C:\\Users\\hoel\\Documents\\kitajouer\\ulule\\damier_clair.bmp";
 
             textBoxFichierImage.Text = textBoxFichierImage.Text;
             try
             {
                 Cursor = Cursors.WaitCursor;
-                //m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
-                //nomFichier = textBoxFichierImage.Text.Substring(0, textBoxFichierImage.Text.LastIndexOf('.'));
-                //extensionFichier = textBoxFichierImage.Text.Substring(textBoxFichierImage.Text.LastIndexOf('.'));
-                m_imageCarte = (Bitmap)Image.FromFile(test);
-                nomFichier = test.Substring(0, test.LastIndexOf('.'));
-                extensionFichier = test.Substring(test.LastIndexOf('.'));
+                m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
+                nomFichier = textBoxFichierImage.Text.Substring(0, textBoxFichierImage.Text.LastIndexOf('.'));
+                extensionFichier = textBoxFichierImage.Text.Substring(textBoxFichierImage.Text.LastIndexOf('.'));
             }
             catch (Exception ex)
             {
@@ -703,6 +699,9 @@ namespace vaoc
             {
                 l = Convert.ToInt32(textBoxLargeur.Text);
                 h = Convert.ToInt32(textBoxHauteur.Text);
+                //m_imageCarteFond = new Bitmap(m_imageCarte, new Size(l, h));
+                l = 20 * 603;
+                h = 827;
                 m_imageCarteFond = new Bitmap(m_imageCarte, new Size(l, h));
                 /*
                 BitmapData imageCible = new BitmapData();
@@ -720,11 +719,26 @@ namespace vaoc
 
             try
             {
-                Point ptCible = new Point(0, 0);
                 Graphics graph = Graphics.FromImage(m_imageCarteFond);
                 graph.FillRegion(Brushes.White, new Region(new Rectangle(0, 0, l, h)));
 
+                //recopie les 13 cartes du haut
+                Rectangle rect = new Rectangle(0, 0, 13*603, h);
+                graph.DrawImageUnscaledAndClipped(m_imageCarte, rect);
+
+                //recopie les 2 dernières cartes du haut
+                Rectangle rectSource = new Rectangle(13 * 603, 0, 2 * 603, h);
+                Rectangle rectDestination = new Rectangle(18 * 603, 0, 2 * 603, h);
+                graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
+
+                //recopie les 5 cartes de la deuxième ligne
+                rectSource = new Rectangle(0, h, 5 * 603, h);
+                rectDestination = new Rectangle(13 * 603, 0, 5 * 603, h);
+                graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
+
                 //recopier l'image en mosaique
+                /*
+                Point ptCible = new Point(0, 0);
                 while (ptCible.X < l)
                 {
                     ptCible.Y = 0;
@@ -739,6 +753,7 @@ namespace vaoc
                     ptCible.X += m_imageCarte.Width;
                 }
                 graph.Dispose();
+                */
 
                 //sauvegarde
                 nomFichierFinal = string.Format("{0}_Mosaique{1}", nomFichier, extensionFichier);

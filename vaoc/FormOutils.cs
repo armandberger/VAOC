@@ -720,15 +720,15 @@ namespace vaoc
             try
             {
                 Graphics graph = Graphics.FromImage(m_imageCarteFond);
-                graph.FillRegion(Brushes.White, new Region(new Rectangle(0, 0, l, h)));
+                graph.FillRegion(Brushes.Red, new Region(new Rectangle(0, 0, l, h)));
 
                 //recopie les 13 cartes du haut
                 Rectangle rect = new Rectangle(0, 0, 13*603, h);
                 graph.DrawImageUnscaledAndClipped(m_imageCarte, rect);
 
-                //recopie les 2 dernières cartes du haut
-                Rectangle rectSource = new Rectangle(13 * 603, 0, 2 * 603, h);
-                Rectangle rectDestination = new Rectangle(18 * 603, 0, 2 * 603, h);
+                //recopie les 1 dernières cartes du haut
+                Rectangle rectSource = new Rectangle(14 * 603, 0, 1 * 603, h);
+                Rectangle rectDestination = new Rectangle(19 * 603, 0, 1 * 603, h);
                 graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
 
                 //recopie les 5 cartes de la deuxième ligne

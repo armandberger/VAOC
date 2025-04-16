@@ -679,14 +679,22 @@ namespace vaoc
             string nomFichier, extensionFichier;
             string nomFichierFinal;
             int h, l;
+            Bitmap[] m_imageTable = new Bitmap[5];
 
             textBoxFichierImage.Text = textBoxFichierImage.Text;
             try
             {
                 Cursor = Cursors.WaitCursor;
-                m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
+                for (int i = 1; i < 6; i++)
+                {
+                    m_imageTable[i-1] = (Bitmap)Image.FromFile("C:\\Users\\hoel\\Documents\\BGA\\skullsofsedlecarmand\\rules\\sos_origin_" + i.ToString() + ".png");
+                }
+                textBoxFichierImage.Text = "C:\\Users\\hoel\\Documents\\BGA\\skullsofsedlecarmand\\rules\\sos_origin_1.png";
+                //m_imageCarte = (Bitmap)Image.FromFile(textBoxFichierImage.Text);
                 nomFichier = textBoxFichierImage.Text.Substring(0, textBoxFichierImage.Text.LastIndexOf('.'));
                 extensionFichier = textBoxFichierImage.Text.Substring(textBoxFichierImage.Text.LastIndexOf('.'));
+
+                
             }
             catch (Exception ex)
             {
@@ -700,9 +708,13 @@ namespace vaoc
                 l = Convert.ToInt32(textBoxLargeur.Text);
                 h = Convert.ToInt32(textBoxHauteur.Text);
                 //m_imageCarteFond = new Bitmap(m_imageCarte, new Size(l, h));
-                l = 20 * 603;
-                h = 827;
-                m_imageCarteFond = new Bitmap(m_imageCarte, new Size(l, h));
+                l=0;h = 0;
+                for (int i = 0; i < 5; i++)
+                {
+                    l += m_imageTable[i].Width;
+                    h= Math.Max(h, m_imageTable[i].Height);
+                }
+                m_imageCarteFond = new Bitmap(m_imageTable[0], new Size(l, h));
                 /*
                 BitmapData imageCible = new BitmapData();
                 m_imageCarte.LockBits(new Rectangle(0,0, m_imageCarte.Width, m_imageCarte.Height), ImageLockMode.ReadWrite, m_imageCarte.PixelFormat, imageCible);
@@ -722,19 +734,33 @@ namespace vaoc
                 Graphics graph = Graphics.FromImage(m_imageCarteFond);
                 graph.FillRegion(Brushes.Red, new Region(new Rectangle(0, 0, l, h)));
 
+
+                int x = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    Rectangle rect = new Rectangle(x, 0, m_imageTable[i].Width, h);
+                    graph.DrawImageUnscaledAndClipped(m_imageTable[i], rect);
+                    x += m_imageTable[i].Width;
+                }
+                Rectangle rectSource = new Rectangle(m_imageTable[4].Width / 2, 0, m_imageTable[4].Width / 2, h);
+                Rectangle rectDestination = new Rectangle(x, 0, m_imageTable[4].Width / 2, h);
+                graph.DrawImage(m_imageTable[4], rectDestination, rectSource, GraphicsUnit.Pixel);
+
+                Rectangle rect2 = new Rectangle(x + m_imageTable[4].Width / 2, 0, m_imageTable[4].Width / 4, h);
+                graph.DrawImageUnscaledAndClipped(m_imageTable[4], rect2);
                 //recopie les 13 cartes du haut
-                Rectangle rect = new Rectangle(0, 0, 13*603, h);
-                graph.DrawImageUnscaledAndClipped(m_imageCarte, rect);
+                //Rectangle rect = new Rectangle(0, 0, 13*603, h);
+                //graph.DrawImageUnscaledAndClipped(m_imageCarte, rect);
 
-                //recopie les 1 dernières cartes du haut
-                Rectangle rectSource = new Rectangle(14 * 603, 0, 1 * 603, h);
-                Rectangle rectDestination = new Rectangle(19 * 603, 0, 1 * 603, h);
-                graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
+                ////recopie les 1 dernières cartes du haut
+                //Rectangle rectSource = new Rectangle(14 * 603, 0, 1 * 603, h);
+                //Rectangle rectDestination = new Rectangle(19 * 603, 0, 1 * 603, h);
+                //graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
 
-                //recopie les 5 cartes de la deuxième ligne
-                rectSource = new Rectangle(0, h, 5 * 603, h);
-                rectDestination = new Rectangle(13 * 603, 0, 5 * 603, h);
-                graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
+                ////recopie les 5 cartes de la deuxième ligne
+                //rectSource = new Rectangle(0, h, 5 * 603, h);
+                //rectDestination = new Rectangle(13 * 603, 0, 5 * 603, h);
+                //graph.DrawImage(m_imageCarte, rectDestination, rectSource, GraphicsUnit.Pixel);
 
                 //recopier l'image en mosaique
                 /*
@@ -806,7 +832,7 @@ namespace vaoc
                     {
                         string pourcentL = ((m_imageCarte.Width == l) ? 0 : Math.Round(j*100 / (m_imageCarte.Width-l),3)).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
                         string pourcentH = ((m_imageCarte.Height == h) ? 0 : Math.Round(i*100 / (m_imageCarte.Height-h),3)).ToString("0.000", System.Globalization.CultureInfo.InvariantCulture) + '%';
-                        sb.AppendLine(string.Format(".{0}{1} {{background-position:{2} {3};}}", tag, id.ToString(), pourcentL, pourcentH));
+                        sb.AppendLine(string.Format(".{0}{1} {{background-position:{2} {3};}}", tag, (id+1).ToString(), pourcentL, pourcentH));
                         id++;
                         j += l;
                     }
